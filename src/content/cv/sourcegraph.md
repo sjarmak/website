@@ -4,7 +4,7 @@ org: Sourcegraph
 category: work
 current: true
 range:
-  start: 2024-01-01
+  start: 2025-08-01
 summary: Applied research on AI agents and code intelligence, and advocacy for how agents change the way engineers work.
 highlights:
   - Research and advocacy on agentic systems for software engineering.

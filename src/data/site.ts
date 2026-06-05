@@ -27,11 +27,13 @@ export type SocialLink = { label: string; href: string; handle: string };
 
 export const socials: readonly SocialLink[] = [
   { label: "GitHub", href: "https://github.com/sjarmak", handle: "sjarmak" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/stephanie-jarmak", handle: "stephanie-jarmak" },
   {
     label: "Google Scholar",
-    href: "https://scholar.google.com/citations?user=sjarmak",
+    href: "https://scholar.google.com/citations?user=dnZkNoUAAAAJ&hl=en",
     handle: "Stephanie Jarmak",
   },
+  { label: "Medium", href: "https://medium.com/@sjarmak", handle: "@sjarmak" },
   { label: "Email", href: "mailto:steph.jarmak@gmail.com", handle: "steph.jarmak@gmail.com" },
 ];
 

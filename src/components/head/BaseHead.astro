@@ -69,15 +69,3 @@ const ogImage = new URL(image, site.url).href;
 
 <!-- Feeds -->
 <link rel="alternate" type="application/rss+xml" title={`${site.name} — Writing`} href="/rss.xml" />
-
-<!-- Privacy-friendly analytics (Cloudflare Web Analytics), production only. -->
-{
-  import.meta.env.PROD && (
-    <script
-      is:inline
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token":"REPLACE_WITH_CF_TOKEN"}'
-    />
-  )
-}

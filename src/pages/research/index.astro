@@ -5,7 +5,11 @@ import { getPublications } from "@/lib/collections";
 import { getCollection } from "astro:content";
 
 const publications = await getPublications();
-const press = (await getCollection("press")).sort((a, b) => +b.data.date - +a.data.date);
+const pressYear = (p: { data: { date?: Date; year?: number } }) =>
+  p.data.year ?? p.data.date?.getUTCFullYear();
+const press = (await getCollection("press")).sort(
+  (a, b) => (pressYear(b) ?? 0) - (pressYear(a) ?? 0),
+);
 ---
 
 <PageLayout
@@ -66,7 +70,8 @@ const press = (await getCollection("press")).sort((a, b) => +b.data.date - +a.da
                   {p.data.title}
                 </a>
                 <span class="muted">
-                  {p.data.outlet} · {p.data.date.getUTCFullYear()}
+                  {p.data.outlet}
+                  {pressYear(p) ? ` · ${pressYear(p)}` : ""}
                 </span>
               </li>
             ))}

@@ -59,7 +59,8 @@ const press = defineCollection({
   schema: z.object({
     title: z.string(),
     outlet: z.string(),
-    date: z.coerce.date(),
+    date: z.coerce.date().optional(),
+    year: z.number().int().optional(),
     url: z.string().url(),
     kind: z.enum(["article", "interview", "feature", "mention", "podcast"]).default("article"),
     excerpt: z.string().optional(),
