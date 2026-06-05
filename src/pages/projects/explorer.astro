@@ -46,7 +46,8 @@ const data = await buildGraph();
           data-graph-canvas
           role="img"
           aria-label="Interactive knowledge graph. An accessible list of the same content is below."
-          hidden></div>
+        >
+        </div>
         <aside class="graph-detail" data-graph-detail hidden role="dialog" aria-label="Node detail">
           <button type="button" class="graph-detail__close" data-detail-close aria-label="Close detail"
             >×</button
@@ -120,6 +121,11 @@ const data = await buildGraph();
     border-radius: var(--radius-l);
     border: var(--border-hairline);
     background: var(--graph-bg);
+    /* hidden until JS activates the canvas; no-JS falls back to the list */
+    display: none;
+  }
+  .graph-explorer[data-canvas-active="true"] .graph-canvas {
+    display: block;
   }
   .graph-detail {
     position: absolute;
@@ -160,8 +166,8 @@ const data = await buildGraph();
   .graph-fallback-wrap {
     margin-block-start: var(--space-l);
   }
-  /* When the canvas is live, the fallback becomes a secondary "list view". */
-  .graph-explorer[data-canvas-active="true"] .graph-fallback-wrap[hidden] {
+  /* Graph is the default view; the list is shown only when canvas is inactive. */
+  .graph-explorer[data-canvas-active="true"] .graph-fallback-wrap {
     display: none;
   }
 </style>

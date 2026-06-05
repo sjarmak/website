@@ -36,19 +36,25 @@ function setup(root: HTMLElement, data: GraphData) {
   const detail = root.querySelector<HTMLElement>("[data-graph-detail]");
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isNarrow = window.matchMedia("(max-width: 768px)").matches;
-  const canUseCanvas = !!stage && !!canvasEl && !isNarrow;
+  const canUseCanvas = !!stage && !!canvasEl;
 
   async function initCanvas() {
     if (cy || !canvasEl) return;
-    const [{ default: cytoscape }, { default: fcose }] = await Promise.all([
-      import("cytoscape"),
-      import("cytoscape-fcose"),
-    ]);
+    // Activate first so the canvas container has a real size before Cytoscape
+    // measures it (a display:none container would render at 0x0).
+    setCanvasActive(true);
+
+    const mods = await Promise.all([import("cytoscape"), import("cytoscape-fcose")]).catch(
+      () => null,
+    );
+    if (!mods) {
+      setCanvasActive(false); // fall back to the list if the libs fail to load
+      return;
+    }
+    const [{ default: cytoscape }, { default: fcose }] = mods;
     cytoscape.use(fcose);
 
     const tokens = readTokens();
-    canvasEl.hidden = false;
 
     cy = cytoscape({
       container: canvasEl,
@@ -179,17 +185,22 @@ function setup(root: HTMLElement, data: GraphData) {
   });
 
   // --- view toggle (graph <-> list) ---
+  // Visibility of the canvas vs. the list is driven by [data-canvas-active] in CSS.
   function setCanvasActive(active: boolean) {
     canvasActive = active;
     root.dataset.canvasActive = String(active);
-    if (fallback) fallback.hidden = active;
     if (viewToggle) {
       viewToggle.setAttribute("aria-pressed", String(active));
       viewToggle.textContent = active ? "List view" : "Graph view";
     }
+    // The canvas had zero size while hidden; resize/refit once it's shown again.
+    if (active && cy) {
+      cy.resize();
+      cy.fit(undefined, 40);
+    }
   }
   viewToggle?.addEventListener("click", async () => {
-    if (!cy && !canvasActive) {
+    if (!cy) {
       await initCanvas();
       return;
     }
@@ -206,19 +217,10 @@ function setup(root: HTMLElement, data: GraphData) {
     cy.style(buildStylesheet(tokens));
   });
 
-  // --- lazy init via IntersectionObserver ---
-  if (canUseCanvas && stage) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          io.disconnect();
-          initCanvas();
-        }
-      },
-      { rootMargin: "200px" },
-    );
-    io.observe(stage);
-  }
+  // The explorer page IS the graph, so show it eagerly as the default view.
+  // The accessible list remains available behind the "List view" toggle (and is
+  // what no-JS visitors see).
+  if (canUseCanvas) initCanvas();
 }
 
 function run() {
