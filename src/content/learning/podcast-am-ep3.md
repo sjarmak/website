@@ -1,0 +1,10 @@
+---
+title: "Procedural Memory & Skills"
+kind: podcast
+series: The Agentic Memory Reading Path
+episode: 3
+description: "Agents that write, store, and reuse their own skills, from Voyager's self-taught Minecraft tech tree onward."
+audioUrl: https://github.com/sjarmak/website/releases/download/podcasts-v1/podcast-agentic-memory-ep3-procedural-memory-and-skills.mp3
+date: 2026-06-04
+order: 3
+---

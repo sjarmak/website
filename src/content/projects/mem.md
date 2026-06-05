@@ -2,10 +2,10 @@
 title: mem
 status: active
 domain: research
-summary: Benchmark work for agentic memory, evaluating how agents store, retrieve, and use memory over long horizons.
+summary: Build and benchmark agentic memory using a multi-agent orchestrator's own work traces as the evaluation corpus, where every unit of work has a verifiable outcome.
 role: Creator
 repo: https://github.com/sjarmak/mem
-tech: [Python, Evaluation, Agent memory]
+tech: [TypeScript, Evaluation, Agent memory]
 featured: true
 featuredOrder: 6
 order: 21
@@ -13,4 +13,4 @@ topics: [agent-memory, agents, evaluation]
 tags: [benchmark, memory, evals]
 ---
 
-A benchmark for agentic memory, measuring how well agents manage memory across long-horizon tasks: what they keep, what they recall, and how that shapes downstream performance.
+Most agentic-memory work learns from a single agent's session prose. A multi-agent orchestrator produces something richer: a continuous stream of real work where every unit has a verifiable outcome (work item closed, PR merged, CI green or red) and a full trace of how it got there. `mem` turns that exhaust into a benchmark, asking whether retained, retrieved memory measurably improves future agent work, and which retention and retrieval strategies win.
