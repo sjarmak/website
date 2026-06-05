@@ -1,0 +1,114 @@
+/*
+  Design tokens — "warm archival atlas"
+  Two layers: primitive OKLCH ramps (theme-agnostic) -> semantic tokens (remapped per theme).
+  Never #fff / #000; every neutral is tinted warm toward the paper/ember hue.
+  Light is the default ("paper"); [data-theme="dark"] is the "viewing room".
+*/
+
+:root {
+  /* ---- primitive ramps (OKLCH: L C H) ---- */
+
+  /* warm paper neutrals (amber-leaning hue ~80-85) */
+  --paper-50: oklch(98.5% 0.008 85);
+  --paper-100: oklch(96.5% 0.012 83); /* page bg (light) */
+  --paper-200: oklch(93.5% 0.014 82); /* raised surface */
+  --paper-300: oklch(88% 0.016 80); /* hairlines, borders */
+  --paper-400: oklch(80% 0.018 78);
+
+  /* deep warm ink (low L, warm hue, never neutral grey) */
+  --ink-900: oklch(23% 0.02 60); /* primary text (light) */
+  --ink-700: oklch(38% 0.018 62); /* secondary text */
+  --ink-500: oklch(52% 0.015 64); /* muted / captions */
+
+  /* ember / amber accent */
+  --ember-300: oklch(82% 0.1 60); /* tint / selection */
+  --ember-500: oklch(60% 0.16 52); /* accent (links, active) */
+  --ember-600: oklch(53% 0.165 48); /* accent hover */
+
+  /* sage (third role — output nodes, subtle tags) */
+  --sage-500: oklch(62% 0.05 150);
+
+  /* dark "viewing room" neutrals (warm charcoal, never #000) */
+  --night-900: oklch(20% 0.012 70); /* page bg (dark) */
+  --night-800: oklch(24% 0.013 72); /* raised surface */
+  --night-700: oklch(31% 0.014 72); /* border */
+  --night-cream-100: oklch(92% 0.015 85); /* text on dark */
+  --night-cream-300: oklch(77% 0.013 80); /* secondary on dark */
+
+  /* ---- semantic tokens (LIGHT defaults) ---- */
+  --color-bg: var(--paper-100);
+  --color-bg-subtle: var(--paper-50);
+  --color-surface: var(--paper-200);
+  --color-border: var(--paper-300);
+  --color-text: var(--ink-900);
+  --color-text-secondary: var(--ink-700);
+  --color-text-muted: var(--ink-500);
+  --color-accent: var(--ember-500);
+  --color-accent-hover: var(--ember-600);
+  --color-focus: var(--ember-500);
+  --color-selection: var(--ember-300);
+  --color-tag-bg: var(--paper-200);
+
+  /*
+    Graph canvas tokens. Read by the Cytoscape island via getComputedStyle and
+    passed to a canvas color parser that does NOT understand oklch() — so these
+    are authored as hex, matched to the oklch palette above.
+  */
+  --graph-bg: #fbf8f2;
+  --graph-node-topic: #c15d28;
+  --graph-node-project: #4a423a;
+  --graph-node-output: #7a8f80;
+  --graph-edge: #cdc3b4;
+  --graph-label: #2d251f;
+  --graph-fade: 0.16;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --color-bg: var(--night-900);
+  --color-bg-subtle: var(--night-800);
+  --color-surface: var(--night-800);
+  --color-border: var(--night-700);
+  --color-text: var(--night-cream-100);
+  --color-text-secondary: var(--night-cream-300);
+  --color-text-muted: oklch(65% 0.012 78);
+  --color-accent: oklch(74% 0.15 58);
+  --color-accent-hover: oklch(80% 0.14 60);
+  --color-focus: oklch(74% 0.15 58);
+  --color-selection: oklch(40% 0.1 55);
+  --color-tag-bg: var(--night-700);
+
+  --graph-bg: #232019;
+  --graph-node-topic: #df9d5e;
+  --graph-node-project: #c6bdad;
+  --graph-node-output: #91b09b;
+  --graph-edge: #474038;
+  --graph-label: #ede5d6;
+  --graph-fade: 0.22;
+
+  color-scheme: dark;
+}
+
+/* ---- spacing, measure, radii (theme-agnostic) ---- */
+:root {
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 9rem;
+
+  --measure: 68ch;
+  --container: 72rem;
+  --container-narrow: 46rem;
+
+  --radius-s: 0.25rem;
+  --radius: 0.5rem;
+  --radius-l: 1rem;
+
+  --border-hairline: 1px solid var(--color-border);
+}

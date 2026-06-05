@@ -1,0 +1,54 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { site, socials, affiliations } from "@/data/site";
+
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  jobTitle: "Applied Research Scientist & AI Agent Advocate",
+  worksFor: affiliations.map((a) => ({ "@type": "Organization", name: a.name })),
+  sameAs: socials.filter((s) => s.label !== "Email").map((s) => s.href),
+};
+---
+
+<PageLayout
+  title="About"
+  kicker="Hello"
+  intro="Information scientist, AI agent advocate, astrophotographer, illustrator, and mom."
+  description="About Stephanie Jarmak."
+>
+  <div class="prose">
+    <p>
+      I'm an applied research scientist focused on how people and machines find knowledge.
+      At <strong>Sourcegraph</strong>, I work on AI agents and code intelligence, and I
+      advocate for the ways agents are reshaping engineering. As a research affiliate with
+      <strong>NASA's Science Explorer (SciX)</strong>, I continue work on AI-powered scientific
+      search: natural language processing, entity extraction, embeddings, and knowledge graphs.
+    </p>
+    <p>
+      My path here ran through planetary science. I earned a Ph.D. studying asteroids with space
+      telescopes, planetary rings, and the granular flows that shape them. That work taught me to
+      take messy, real-world data seriously, a habit that carries directly into evaluating AI and
+      search systems honestly.
+    </p>
+    <p>
+      Away from research, I photograph the night sky, make music, and illustrate children's books.
+      The same curiosity runs through all of it: pay attention, find the structure, share what you
+      see.
+    </p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      {socials.map((s) => (
+        <li>
+          <a href={s.href} rel="me noopener">{s.label}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</PageLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />

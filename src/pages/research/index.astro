@@ -1,0 +1,111 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import EmptyState from "@/components/primitives/EmptyState.astro";
+import { getPublications } from "@/lib/collections";
+import { getCollection } from "astro:content";
+
+const publications = await getPublications();
+const press = (await getCollection("press")).sort((a, b) => +b.data.date - +a.data.date);
+---
+
+<PageLayout
+  title="Research & press"
+  kicker="Scholarship"
+  intro="Peer-reviewed work, preprints, and selected press across planetary science and information science."
+  description="Publications and press for Stephanie Jarmak."
+>
+  <div class="stack stack-l">
+    <section>
+      <h2 class="sub">Publications</h2>
+      {
+        publications.length === 0 ? (
+          <EmptyState
+            title="Publication list in migration"
+            note="Peer-reviewed papers and preprints (from NASA ADS / SciX) are being curated here."
+          >
+            <p>
+              <a href="https://ui.adsabs.harvard.edu/search/q=author%3A%22Jarmak%2C+S%22" rel="noopener">
+                Search NASA ADS ↗
+              </a>
+            </p>
+          </EmptyState>
+        ) : (
+          <ol role="list" class="pubs">
+            {publications.map((p) => (
+              <li class="pub">
+                <p class="pub__title">
+                  {p.data.url ? (
+                    <a href={p.data.url} rel="noopener">
+                      {p.data.title}
+                    </a>
+                  ) : (
+                    p.data.title
+                  )}
+                </p>
+                <p class="muted">
+                  {p.data.authorString ?? p.data.authors.join(", ")}
+                  {p.data.venue ? ` · ${p.data.venue}` : ""} · {p.data.year}
+                </p>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+    </section>
+
+    <section>
+      <h2 class="sub">Press</h2>
+      {
+        press.length === 0 ? (
+          <EmptyState title="Press mentions coming soon" />
+        ) : (
+          <ul role="list" class="stack">
+            {press.map((p) => (
+              <li class="press-row">
+                <a href={p.data.url} rel="noopener" class="press-row__title">
+                  {p.data.title}
+                </a>
+                <span class="muted">
+                  {p.data.outlet} · {p.data.date.getUTCFullYear()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-m);
+  }
+  .pubs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  .pub__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+  .press-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    justify-content: space-between;
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .press-row__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .press-row__title:hover {
+    color: var(--color-accent);
+  }
+</style>

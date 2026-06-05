@@ -1,0 +1,99 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import EmptyState from "@/components/primitives/EmptyState.astro";
+import EmbeddedVideo from "@/components/talks/EmbeddedVideo.astro";
+import { getTalks } from "@/lib/collections";
+import { monthYear } from "@/lib/dates";
+
+const talks = await getTalks();
+const featured = talks.find((t) => t.data.featured) ?? talks[0];
+const rest = talks.filter((t) => t.id !== featured?.id);
+---
+
+<PageLayout
+  title="Talks"
+  kicker="Speaking"
+  intro="Webinars, conference talks, and conversations on agents, scientific search, and AI for research."
+  description="Talks and webinars by Stephanie Jarmak."
+>
+  {talks.length === 0 && (
+    <EmptyState
+      title="Talks are being added"
+      note="Recorded webinars and conference talks will appear here."
+    />
+  )}
+
+  {
+    featured && (
+      <section class="featured">
+        {featured.data.videoId && featured.data.videoProvider && (
+          <EmbeddedVideo
+            provider={featured.data.videoProvider}
+            id={featured.data.videoId}
+            title={featured.data.title}
+          />
+        )}
+        <div class="featured__meta stack stack-s">
+          <h2>{featured.data.title}</h2>
+          <p class="muted">{featured.data.event} · {monthYear(featured.data.date)}</p>
+          {featured.data.description && <p class="secondary measure">{featured.data.description}</p>}
+          <p class="cluster" style="--cluster-gap: var(--space-m)">
+            {featured.data.videoUrl && <a href={featured.data.videoUrl} rel="noopener">Watch ↗</a>}
+            {featured.data.slidesUrl && <a href={featured.data.slidesUrl} rel="noopener">Slides ↗</a>}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    rest.length > 0 && (
+      <section class="more">
+        <h2 class="more__heading">More talks</h2>
+        <ul role="list" class="stack">
+          {rest.map((t) => (
+            <li class="talk-row">
+              <div>
+                <p class="talk-row__title">{t.data.title}</p>
+                <p class="muted">{t.data.event}</p>
+              </div>
+              <div class="talk-row__links cluster" style="--cluster-gap: var(--space-s)">
+                <span class="muted">{monthYear(t.data.date)}</span>
+                {t.data.videoUrl && <a href={t.data.videoUrl} rel="noopener">Watch</a>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</PageLayout>
+
+<style>
+  .featured {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .more {
+    margin-block-start: var(--space-2xl);
+  }
+  .more__heading {
+    font-size: var(--step-1);
+    padding-block-end: var(--space-s);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-s);
+  }
+  .talk-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    justify-content: space-between;
+    align-items: baseline;
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .talk-row__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+</style>

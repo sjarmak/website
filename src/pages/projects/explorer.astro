@@ -1,0 +1,167 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GraphFallback from "@/components/graph/GraphFallback.astro";
+import { buildGraph } from "@/lib/graph/buildGraph";
+
+const data = await buildGraph();
+---
+
+<BaseLayout
+  title="Projects explorer"
+  description="An interactive knowledge graph of Stephanie Jarmak's projects, topics, and outputs."
+>
+  <div class="container">
+    <header class="explorer-head stack stack-s">
+      <p class="kicker">Projects explorer</p>
+      <h1>A map of the work</h1>
+      <p class="lead measure">
+        Projects, the topics they touch, and the outputs they produce, drawn as a graph.
+        Knowledge graphs are how I think about information, so here is mine. Click a node for
+        detail, filter by type, or read the structured list below.
+      </p>
+    </header>
+
+    <div class="graph-explorer" data-graph-explorer>
+      <div class="graph-toolbar">
+        <div class="filters" role="group" aria-label="Filter by node type">
+          <button type="button" class="chip" data-filter="project" aria-pressed="true">Projects</button>
+          <button type="button" class="chip" data-filter="topic" aria-pressed="true">Topics</button>
+          <button type="button" class="chip" data-filter="output" aria-pressed="true">Outputs</button>
+        </div>
+        <input
+          type="search"
+          class="graph-search"
+          data-graph-search
+          placeholder="Search the map…"
+          aria-label="Search nodes"
+        />
+        <button type="button" class="chip chip--toggle" data-view-toggle aria-pressed="false">
+          Graph view
+        </button>
+      </div>
+
+      <div class="graph-stage" data-graph-stage>
+        <div
+          class="graph-canvas"
+          data-graph-canvas
+          role="img"
+          aria-label="Interactive knowledge graph. An accessible list of the same content is below."
+          hidden></div>
+        <aside class="graph-detail" data-graph-detail hidden role="dialog" aria-label="Node detail">
+          <button type="button" class="graph-detail__close" data-detail-close aria-label="Close detail"
+            >×</button
+          >
+          <p class="graph-detail__type" data-detail-type></p>
+          <h2 class="graph-detail__title" data-detail-title></h2>
+          <p class="graph-detail__summary secondary" data-detail-summary></p>
+          <p class="graph-detail__links cluster" data-detail-links></p>
+        </aside>
+      </div>
+
+      <div class="graph-fallback-wrap" data-graph-fallback>
+        <GraphFallback data={data} />
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-graph-data set:html={JSON.stringify(data)} is:inline
+  ></script>
+
+  <script>
+    import "@/scripts/graph-explorer";
+  </script>
+</BaseLayout>
+
+<style>
+  .explorer-head {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl)) var(--space-l);
+  }
+  .graph-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    align-items: center;
+    margin-block-end: var(--space-m);
+  }
+  .filters {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+  .chip {
+    font-size: var(--step--1);
+    padding: 0.4em 0.9em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+    transition: all 0.15s ease;
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--paper-50);
+  }
+  .chip--toggle {
+    margin-inline-start: auto;
+  }
+  .graph-search {
+    flex: 1 1 12rem;
+    min-width: 8rem;
+    padding: 0.45em 0.8em;
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+    background: var(--color-bg);
+  }
+  .graph-stage {
+    position: relative;
+  }
+  .graph-canvas {
+    width: 100%;
+    height: min(70vh, 640px);
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: var(--graph-bg);
+  }
+  .graph-detail {
+    position: absolute;
+    top: var(--space-s);
+    right: var(--space-s);
+    width: min(22rem, calc(100% - 2 * var(--space-s)));
+    max-height: calc(100% - 2 * var(--space-s));
+    overflow-y: auto;
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: color-mix(in oklch, var(--color-surface) 96%, transparent);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px oklch(0% 0 0 / 0.12);
+  }
+  .graph-detail__close {
+    position: absolute;
+    top: var(--space-2xs);
+    right: var(--space-xs);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+  .graph-detail__type {
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
+  }
+  .graph-detail__title {
+    font-size: var(--step-2);
+    margin-block: var(--space-3xs) var(--space-xs);
+  }
+  .graph-detail__links {
+    margin-block-start: var(--space-s);
+    --cluster-gap: var(--space-m);
+  }
+  .graph-fallback-wrap {
+    margin-block-start: var(--space-l);
+  }
+  /* When the canvas is live, the fallback becomes a secondary "list view". */
+  .graph-explorer[data-canvas-active="true"] .graph-fallback-wrap[hidden] {
+    display: none;
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getCvByCategory } from "@/lib/collections";
+import { rangeLabel } from "@/lib/dates";
+
+const groups = await getCvByCategory();
+---
+
+<PageLayout
+  title="Curriculum Vitae"
+  kicker="CV"
+  intro="Experience, affiliations, and education. A downloadable PDF lives alongside the full publication list."
+  description="Stephanie Jarmak — CV: experience, affiliations, and education."
+>
+  <div class="stack stack-l">
+    {
+      groups.map((group) => (
+        <section class="cv-group">
+          <h2 class="cv-group__heading">{group.label}</h2>
+          <ul role="list" class="stack">
+            {group.entries.map((e) => (
+              <li class="cv-entry">
+                <div class="cv-entry__when">{rangeLabel(e.data.range.start, e.data.range.end)}</div>
+                <div class="cv-entry__what stack stack-s">
+                  <div>
+                    <p class="cv-entry__title">{e.data.title}</p>
+                    <p class="muted">
+                      {e.data.org}
+                      {e.data.location ? ` · ${e.data.location}` : ""}
+                    </p>
+                  </div>
+                  {e.data.summary && <p class="secondary measure">{e.data.summary}</p>}
+                  {e.data.highlights.length > 0 && (
+                    <ul class="cv-entry__highlights">
+                      {e.data.highlights.map((h) => (
+                        <li>{h}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</PageLayout>
+
+<style>
+  .cv-group__heading {
+    font-size: var(--step-2);
+    padding-block-end: var(--space-xs);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-m);
+  }
+  .cv-entry {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-s);
+  }
+  .cv-entry__when {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--step--1);
+    padding-block-start: 0.2em;
+  }
+  .cv-entry__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+  .cv-entry__highlights {
+    padding-inline-start: 1.1em;
+    color: var(--color-text-secondary);
+  }
+  .cv-entry__highlights li {
+    margin-block: 0.2em;
+  }
+  @media (max-width: 40rem) {
+    .cv-entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+</style>

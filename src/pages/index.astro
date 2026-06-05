@@ -1,0 +1,225 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { affiliations } from "@/data/site";
+
+const featuredProjects = (await getCollection("projects", (p) => p.data.featured))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .slice(0, 4);
+
+const recentWriting = (await getCollection("writing"))
+  .sort((a, b) => +b.data.date - +a.data.date)
+  .slice(0, 4);
+
+const fmtYear = (d: Date) => d.getFullYear();
+---
+
+<BaseLayout type="profile">
+  <section class="hero container">
+    <p class="kicker">Information scientist · AI agent advocate</p>
+    <h1 class="hero__title">
+      Stephanie<br />Jarmak
+    </h1>
+    <p class="hero__lead measure">
+      I study how people and agents find knowledge: retrieval, knowledge graphs, and the
+      evaluation of AI systems. Currently at <strong>Sourcegraph</strong>, and a research
+      affiliate with <strong>NASA SciX</strong>. After hours I photograph the night sky and
+      illustrate children's books.
+    </p>
+    <div class="hero__actions cluster" style="--cluster-gap: var(--space-m)">
+      <a class="btn" href="/work">See the work</a>
+      <a class="btn btn--ghost" href="/projects/explorer">Explore the graph</a>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="now">
+      <p class="kicker">Currently</p>
+      <ul role="list" class="now__list stack stack-s">
+        {
+          affiliations.map((a) => (
+            <li class="now__item">
+              <span class="now__role">{a.role}</span>
+              <span class="now__org">{a.name}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    featuredProjects.length > 0 && (
+      <section class="section container">
+        <header class="section-head">
+          <h2>Selected work</h2>
+          <a href="/projects" class="section-head__more">All projects →</a>
+        </header>
+        <ul role="list" class="auto-grid" style="--grid-min: 16rem">
+          {featuredProjects.map((p) => (
+            <li class="project-card">
+              <a href={`/projects/${p.id}`} class="project-card__link">
+                <h3 class="project-card__title">{p.data.title}</h3>
+              </a>
+              <p class="muted">{p.data.summary}</p>
+              {p.data.tech.length > 0 && (
+                <p class="cluster" style="--cluster-gap: var(--space-2xs)">
+                  {p.data.tech.slice(0, 4).map((t) => (
+                    <span class="tag">{t}</span>
+                  ))}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    recentWriting.length > 0 && (
+      <section class="section container">
+        <header class="section-head">
+          <h2>Recent writing</h2>
+          <a href="/writing" class="section-head__more">All writing →</a>
+        </header>
+        <ul role="list" class="stack">
+          {recentWriting.map((w) => (
+            <li class="writing-row">
+              <a href={w.data.url ?? `/writing/${w.id}`} class="writing-row__title">
+                {w.data.title}
+              </a>
+              <span class="writing-row__meta muted">
+                {w.data.source} · {fmtYear(w.data.date)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(var(--space-xl), 12vw, var(--space-3xl)) var(--space-l);
+  }
+  .hero__title {
+    font-size: var(--step-5);
+    line-height: 0.95;
+    margin-block: var(--space-s) var(--space-m);
+  }
+  .hero__lead {
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--color-text-secondary);
+  }
+  .hero__lead strong {
+    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+  }
+  .hero__actions {
+    margin-block-start: var(--space-l);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.7em 1.3em;
+    border-radius: var(--radius);
+    background: var(--color-accent);
+    color: var(--paper-50);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    border: 2px solid var(--color-accent);
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+  .btn:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    color: var(--paper-50);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+  .btn--ghost:hover {
+    background: transparent;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .now__list {
+    border-top: var(--border-hairline);
+  }
+  .now__item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    justify-content: space-between;
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .now__role {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+  .now__org {
+    color: var(--color-text-muted);
+    align-self: center;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-m);
+    margin-block-end: var(--space-l);
+    border-bottom: var(--border-hairline);
+    padding-block-end: var(--space-s);
+  }
+  .section-head__more {
+    text-decoration: none;
+    font-size: var(--step-0);
+    white-space: nowrap;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .project-card__link {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .project-card__title {
+    font-size: var(--step-1);
+  }
+  .project-card__link:hover .project-card__title {
+    color: var(--color-accent);
+  }
+
+  .writing-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    justify-content: space-between;
+    align-items: baseline;
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .writing-row__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .writing-row__title:hover {
+    color: var(--color-accent);
+  }
+  .writing-row__meta {
+    font-size: var(--step--1);
+    white-space: nowrap;
+  }
+</style>

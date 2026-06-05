@@ -1,0 +1,79 @@
+---
+import { Image } from "astro:assets";
+import PageLayout from "@/layouts/PageLayout.astro";
+import EmptyState from "@/components/primitives/EmptyState.astro";
+import { getCollection } from "astro:content";
+
+const works = (await getCollection("art")).sort(
+  (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999),
+);
+
+const mediumLabel: Record<string, string> = {
+  illustration: "Illustration",
+  music: "Music",
+  book: "Book",
+  mixed: "Mixed",
+};
+---
+
+<PageLayout
+  title="Art, music & books"
+  kicker="Studio"
+  intro="Children's-book illustration, music, and other work made away from the keyboard."
+  description="Art, music, and children's books by Stephanie Jarmak."
+>
+  {
+    works.length === 0 ? (
+      <EmptyState
+        title="The studio is being hung"
+        note="Illustration projects, music, and children's books will live here, each with its own page."
+      />
+    ) : (
+      <ul role="list" class="auto-grid" style="--grid-min: 16rem; --grid-gap: var(--space-l)">
+        {works.map((w) => (
+          <li class="work">
+            {w.data.cover && (
+              <Image
+                src={w.data.cover}
+                alt={w.data.title}
+                widths={[320, 640]}
+                sizes="(max-width: 700px) 100vw, 320px"
+                class="work__cover"
+                loading="lazy"
+              />
+            )}
+            <div class="stack stack-s">
+              <p class="kicker">{mediumLabel[w.data.medium]}</p>
+              <h2 class="work__title">{w.data.title}</h2>
+              {w.data.description && <p class="muted">{w.data.description}</p>}
+              <p class="cluster" style="--cluster-gap: var(--space-m)">
+                {w.data.purchaseUrl && <a href={w.data.purchaseUrl} rel="noopener">Get it ↗</a>}
+                {w.data.embedUrl && <a href={w.data.embedUrl} rel="noopener">Listen ↗</a>}
+                {w.data.links.map((l) => (
+                  <a href={l.url} rel="noopener">{l.label} ↗</a>
+                ))}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
+
+<style>
+  .work {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+  .work__cover {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+  }
+  .work__title {
+    font-size: var(--step-2);
+  }
+</style>

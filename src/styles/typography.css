@@ -1,0 +1,55 @@
+/*
+  Typography — Literata (display, warm literary serif) + Hanken Grotesk (body, humanist sans).
+  Self-hosted variable woff2 (Latin subset), font-display: swap. Preloaded in BaseHead.
+*/
+
+@font-face {
+  font-family: "Literata";
+  src: url("/fonts/literata-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Literata";
+  src: url("/fonts/literata-latin-wght-italic.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Literata", Georgia, "Times New Roman", serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+
+  /* modular scale ~1.25 (major third), fluid via clamp() */
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.56rem, 1.4rem + 0.8vw, 2rem);
+  --step-3: clamp(1.95rem, 1.7rem + 1.25vw, 2.75rem);
+  --step-4: clamp(2.44rem, 2rem + 2vw, 3.75rem);
+  --step-5: clamp(3.05rem, 2.4rem + 3vw, 5rem);
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.28;
+  --leading-normal: 1.6;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.04em;
+}

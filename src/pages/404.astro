@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Not found" noindex>
+  <section class="container notfound">
+    <p class="kicker">404</p>
+    <h1>Lost in space</h1>
+    <p class="lead measure">
+      That page drifted out of orbit. Let's get you back to something solid.
+    </p>
+    <p class="cluster" style="--cluster-gap: var(--space-m)">
+      <a class="link" href="/">Home</a>
+      <a class="link" href="/work">Work</a>
+      <a class="link" href="/projects/explorer">The graph</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: clamp(var(--space-2xl), 14vw, var(--space-3xl));
+  }
+  .notfound h1 {
+    font-size: var(--step-4);
+    margin-block: var(--space-s) var(--space-m);
+  }
+  .link {
+    font-size: var(--step-1);
+  }
+</style>

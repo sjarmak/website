@@ -1,0 +1,109 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getProjects } from "@/lib/collections";
+
+const projects = await getProjects();
+
+const statusLabel: Record<string, string> = {
+  active: "Active",
+  maintained: "Maintained",
+  archived: "Archived",
+  concept: "Concept",
+};
+---
+
+<PageLayout
+  title="Projects"
+  kicker="Work"
+  intro="Things I'm building across agents, scientific search, code intelligence, and evaluation. For how they connect, try the interactive graph."
+  description="Projects by Stephanie Jarmak across AI agents, scientific search, and code intelligence."
+>
+  <p class="explorer-link">
+    <a href="/projects/explorer">Open the knowledge graph →</a>
+  </p>
+
+  <ul role="list" class="auto-grid" style="--grid-min: 18rem; --grid-gap: var(--space-l)">
+    {
+      projects.map((p) => (
+        <li class="card">
+          <div class="card__head">
+            <a href={`/projects/${p.id}`} class="card__title-link">
+              <h2 class="card__title">{p.data.title}</h2>
+            </a>
+            <span class="card__status" data-status={p.data.status}>
+              {statusLabel[p.data.status]}
+            </span>
+          </div>
+          <p class="secondary">{p.data.summary}</p>
+          {p.data.tech.length > 0 && (
+            <p class="cluster" style="--cluster-gap: var(--space-2xs)">
+              {p.data.tech.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </p>
+          )}
+          <p class="cluster card__links" style="--cluster-gap: var(--space-m)">
+            <a href={`/projects/${p.id}`}>Details</a>
+            {p.data.repo && (
+              <a href={p.data.repo} rel="noopener">
+                Code
+              </a>
+            )}
+            {p.data.homepage && (
+              <a href={p.data.homepage} rel="noopener">
+                Live
+              </a>
+            )}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</PageLayout>
+
+<style>
+  .explorer-link {
+    margin-block-end: var(--space-l);
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    transition: border-color 0.15s ease;
+  }
+  .card:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+  .card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+  .card__title-link {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .card__title {
+    font-size: var(--step-2);
+  }
+  .card__title-link:hover .card__title {
+    color: var(--color-accent);
+  }
+  .card__status {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+  .card__status[data-status="active"] {
+    color: var(--color-accent);
+  }
+  .card__links {
+    margin-block-start: auto;
+    font-size: var(--step-0);
+  }
+</style>

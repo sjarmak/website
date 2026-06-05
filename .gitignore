@@ -1,3 +1,23 @@
+# build output
+dist/
+# generated types
+.astro/
+# dependencies
+node_modules/
+# logs
+*-debug.log*
+# environment
+.env
+.env.production
+.env.*.local
+# local QA artifacts (screenshots, scratch)
+.qa/
+
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
 
 # Beads / Dolt files (added by bd init)
 .dolt/

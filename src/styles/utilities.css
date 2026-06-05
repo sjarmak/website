@@ -1,0 +1,108 @@
+/* Layout utilities — composition primitives, not a framework. */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(var(--space-s), 5vw, var(--space-xl));
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+}
+
+/* vertical rhythm: even spacing between flow children */
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+.stack > * + * {
+  margin-block-start: var(--stack-gap, var(--space-m));
+}
+.stack-s {
+  --stack-gap: var(--space-s);
+}
+.stack-l {
+  --stack-gap: var(--space-l);
+}
+
+/* horizontal group that wraps */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--space-s));
+  align-items: var(--cluster-align, center);
+}
+
+/* responsive auto grid */
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min, 18rem), 1fr));
+  gap: var(--grid-gap, var(--space-m));
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.section {
+  padding-block: clamp(var(--space-xl), 8vw, var(--space-3xl));
+}
+
+.kicker {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+.secondary {
+  color: var(--color-text-secondary);
+}
+
+.lead {
+  font-size: var(--step-1);
+  line-height: var(--leading-snug);
+  color: var(--color-text-secondary);
+}
+
+.tag {
+  display: inline-block;
+  font-size: var(--step--1);
+  font-family: var(--font-mono);
+  padding: 0.15em 0.6em;
+  border-radius: var(--radius-s);
+  background: var(--color-tag-bg);
+  color: var(--color-text-secondary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.prose {
+  max-width: var(--measure);
+}
+.prose > * + * {
+  margin-block-start: var(--space-m);
+}
+.prose h2,
+.prose h3 {
+  margin-block-start: var(--space-l);
+}
+.prose img {
+  border-radius: var(--radius);
+}

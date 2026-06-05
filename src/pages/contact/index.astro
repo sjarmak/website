@@ -1,0 +1,40 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { site, socials } from "@/data/site";
+---
+
+<PageLayout
+  title="Contact"
+  kicker="Say hello"
+  intro="The best way to reach me is email. I'm also around on the platforms below."
+  description="Get in touch with Stephanie Jarmak."
+>
+  <div class="stack stack-l">
+    <p>
+      <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+    <ul role="list" class="cluster" style="--cluster-gap: var(--space-l)">
+      {
+        socials
+          .filter((s) => s.label !== "Email")
+          .map((s) => (
+            <li>
+              <a href={s.href} rel="me noopener">{s.label} ↗</a>
+            </li>
+          ))
+      }
+    </ul>
+  </div>
+</PageLayout>
+
+<style>
+  .email {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    text-decoration: none;
+  }
+  .email:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+</style>

@@ -1,0 +1,96 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import { getProjects } from "@/lib/collections";
+
+const topics = (await getCollection("topics")).sort((a, b) => b.data.weight - a.data.weight);
+const projects = (await getProjects()).slice(0, 6);
+---
+
+<PageLayout
+  title="Work & research"
+  kicker="Work"
+  intro="I work on how people and agents find knowledge: retrieval, knowledge graphs, agents, and the evaluation of the systems we build."
+  description="The research and engineering work of Stephanie Jarmak."
+>
+  <div class="stack stack-l">
+    <section>
+      <h2 class="sub">Focus areas</h2>
+      <ul role="list" class="auto-grid" style="--grid-min: 15rem">
+        {
+          topics.map((t) => (
+            <li class="focus">
+              <h3 class="focus__title">{t.data.title}</h3>
+              <p class="muted">{t.data.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <div class="row">
+        <h2 class="sub">Selected projects</h2>
+        <a href="/projects">All projects →</a>
+      </div>
+      <ul role="list" class="stack">
+        {
+          projects.map((p) => (
+            <li class="proj">
+              <a href={`/projects/${p.id}`} class="proj__title">
+                {p.data.title}
+              </a>
+              <p class="muted proj__summary">{p.data.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="explore"><a href="/projects/explorer">See how it all connects in the graph →</a></p>
+    </section>
+
+    <section>
+      <div class="row">
+        <h2 class="sub">Publications</h2>
+        <a href="/research">Research & press →</a>
+      </div>
+      <p class="muted">Peer-reviewed work and preprints in planetary science and information science.</p>
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-m);
+  }
+  .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-m);
+    margin-block-end: var(--space-m);
+  }
+  .focus__title {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-2xs);
+  }
+  .proj {
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .proj__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .proj__title:hover {
+    color: var(--color-accent);
+  }
+  .proj__summary {
+    margin-block-start: var(--space-3xs);
+  }
+  .explore {
+    margin-block-start: var(--space-m);
+  }
+</style>

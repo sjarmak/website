@@ -1,0 +1,87 @@
+---
+import type { GraphData } from "@/lib/graph/buildGraph";
+import { groupByTopic } from "@/lib/graph/buildGraph";
+
+interface Props {
+  data: GraphData;
+}
+const { data } = Astro.props;
+const groups = groupByTopic(data);
+---
+
+<section class="fallback" aria-label="Knowledge map (list view)">
+  <div class="fallback__groups stack stack-l">
+    {
+      groups.map((g) => (
+        <article class="topic" id={`topic-${g.topic.id}`}>
+          <h3 class="topic__title">{g.topic.label}</h3>
+          <p class="muted measure">{g.topic.summary}</p>
+
+          {g.projects.length > 0 && (
+            <div class="topic__sub">
+              <h4>Projects</h4>
+              <ul role="list" class="stack stack-s">
+                {g.projects.map((p) => (
+                  <li>
+                    <a href={`/projects/${p.id}`}>{p.label}</a>
+                    <span class="muted"> — {p.summary}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {g.outputs.length > 0 && (
+            <div class="topic__sub">
+              <h4>Outputs</h4>
+              <ul role="list" class="stack stack-s">
+                {g.outputs.map((o) => (
+                  <li>
+                    <a href={o.url} rel="noopener">
+                      {o.label}
+                    </a>
+                    {o.kind && <span class="tag">{o.kind}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {g.relatedTopics.length > 0 && (
+            <p class="topic__related muted">
+              Related:{" "}
+              {g.relatedTopics.map((t, i) => (
+                <>
+                  {i > 0 && ", "}
+                  <a href={`#topic-${t.id}`}>{t.label}</a>
+                </>
+              ))}
+            </p>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .topic__title {
+    font-size: var(--step-2);
+    color: var(--color-accent);
+  }
+  .topic__sub {
+    margin-block-start: var(--space-s);
+  }
+  .topic__sub h4 {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-muted);
+    margin-block-end: var(--space-2xs);
+  }
+  .topic__related {
+    margin-block-start: var(--space-s);
+    font-size: var(--step--1);
+  }
+</style>

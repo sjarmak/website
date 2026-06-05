@@ -1,0 +1,91 @@
+---
+// Facade video embed: shows a poster + play button, loads the iframe only on click.
+interface Props {
+  provider: "youtube" | "vimeo" | "other";
+  id: string;
+  title: string;
+}
+const { provider, id, title } = Astro.props;
+
+const embedSrc =
+  provider === "youtube"
+    ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`
+    : provider === "vimeo"
+      ? `https://player.vimeo.com/video/${id}?autoplay=1`
+      : id;
+
+const poster =
+  provider === "youtube" ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined;
+---
+
+<div class="video" data-embed-src={embedSrc}>
+  <button class="video__btn" type="button" aria-label={`Play: ${title}`}>
+    {poster && <img src={poster} alt="" loading="lazy" width="480" height="360" />}
+    <span class="video__play" aria-hidden="true">▶</span>
+  </button>
+</div>
+
+<style>
+  .video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-surface);
+    border: var(--border-hairline);
+  }
+  .video__btn {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: grid;
+    place-items: center;
+  }
+  .video img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video__play {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--paper-50);
+    font-size: 1.4rem;
+    padding-inline-start: 0.2em;
+  }
+  .video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
+
+<script>
+  function wire() {
+    document.querySelectorAll<HTMLElement>(".video").forEach((el) => {
+      const btn = el.querySelector("button");
+      const src = el.dataset.embedSrc;
+      if (!btn || !src || el.dataset.wired) return;
+      el.dataset.wired = "true";
+      btn.addEventListener("click", () => {
+        const iframe = document.createElement("iframe");
+        iframe.src = src;
+        iframe.allow = "autoplay; fullscreen; picture-in-picture";
+        iframe.allowFullscreen = true;
+        el.replaceChildren(iframe);
+      });
+    });
+  }
+  wire();
+  document.addEventListener("astro:after-swap", wire);
+</script>

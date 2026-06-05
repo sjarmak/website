@@ -1,0 +1,114 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { rangeLabel } from "@/lib/dates";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((p) => ({ params: { slug: p.id }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+
+// Resolve referenced topics for the "connected topics" list.
+const topics = await Promise.all(data.topics.map((ref) => getEntry(ref)));
+const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
+---
+
+<BaseLayout title={data.title} description={data.summary} type="article">
+  <article class="container container-narrow project">
+    <header class="project__head stack stack-s">
+      <p class="kicker">Project</p>
+      <h1>{data.title}</h1>
+      <p class="lead">{data.summary}</p>
+      <div class="cluster project__meta" style="--cluster-gap: var(--space-m)">
+        {data.role && <span class="muted">{data.role}</span>}
+        {data.period && <span class="muted">{rangeLabel(data.period.start, data.period.end)}</span>}
+        {data.repo && <a href={data.repo} rel="noopener">Code ↗</a>}
+        {data.homepage && <a href={data.homepage} rel="noopener">Live ↗</a>}
+      </div>
+      {
+        data.tech.length > 0 && (
+          <p class="cluster" style="--cluster-gap: var(--space-2xs)">
+            {data.tech.map((t) => (
+              <span class="tag">{t}</span>
+            ))}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="prose project__body">
+      <Content />
+    </div>
+
+    {
+      topics.length > 0 && (
+        <footer class="project__topics">
+          <h2 class="project__topics-heading">Connected topics</h2>
+          <ul role="list" class="cluster" style="--cluster-gap: var(--space-s)">
+            {topics.map((t) => (
+              <li>
+                <a class="topic-chip" href={`/projects/explorer?node=${t.id}`}>
+                  {t.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </footer>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class="project__related">
+          <h2 class="project__topics-heading">Related projects</h2>
+          <ul role="list" class="cluster" style="--cluster-gap: var(--space-m)">
+            {related.map((r) => (
+              <li>
+                <a href={`/projects/${r.id}`}>{r.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <p class="project__back"><a href="/projects">← All projects</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .project {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+  .project__body {
+    margin-block: var(--space-l);
+  }
+  .project__topics,
+  .project__related {
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+  }
+  .project__topics-heading {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+  .topic-chip {
+    display: inline-block;
+    padding: 0.25em 0.75em;
+    border-radius: 999px;
+    background: var(--color-tag-bg);
+    text-decoration: none;
+    color: var(--color-text-secondary);
+  }
+  .topic-chip:hover {
+    color: var(--color-accent);
+  }
+  .project__back {
+    margin-block-start: var(--space-xl);
+  }
+</style>

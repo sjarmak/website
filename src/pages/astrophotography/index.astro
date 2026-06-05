@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import PageLayout from "@/layouts/PageLayout.astro";
+import EmptyState from "@/components/primitives/EmptyState.astro";
+import { getCollection } from "astro:content";
+
+const photos = (await getCollection("astrophoto")).sort(
+  (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999),
+);
+---
+
+<PageLayout
+  title="Astrophotography"
+  kicker="The night sky"
+  intro="Long exposures of deep-sky objects and the solar system. Click any plate to view it full resolution."
+  description="Astrophotography by Stephanie Jarmak."
+>
+  {
+    photos.length === 0 ? (
+      <EmptyState
+        title="The gallery is being prepared"
+        note="Plates are processed and uploaded as Markdown entries with their capture details (target, gear, exposure)."
+      />
+    ) : (
+      <ul role="list" class="plates">
+        {photos.map((photo) => (
+          <li class="plate">
+            <a href={photo.data.remoteFull ?? "#"} rel="noopener" class="plate__link">
+              <Image
+                src={photo.data.image}
+                alt={photo.data.caption ?? photo.data.title}
+                widths={[400, 800, 1200]}
+                sizes="(max-width: 700px) 100vw, 360px"
+                class="plate__img"
+                loading="lazy"
+              />
+            </a>
+            <figcaption class="plate__cap">
+              <span class="plate__title">{photo.data.title}</span>
+              {photo.data.target && <span class="muted"> · {photo.data.target}</span>}
+            </figcaption>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
+
+<style>
+  .plates {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--space-m);
+  }
+  .plate {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  .plate__link {
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: var(--border-hairline);
+  }
+  .plate__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+  .plate__cap {
+    font-size: var(--step--1);
+  }
+  .plate__title {
+    font-family: var(--font-display);
+  }
+</style>

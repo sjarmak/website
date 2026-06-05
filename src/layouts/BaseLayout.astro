@@ -1,0 +1,40 @@
+---
+import { site } from "@/data/site";
+import BaseHead from "@/components/head/BaseHead.astro";
+import ThemeScript from "@/components/nav/ThemeScript.astro";
+import Header from "@/components/nav/Header.astro";
+import Footer from "@/components/nav/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  type?: "website" | "article" | "profile";
+}
+
+const { title, description, image, noindex, type } = Astro.props;
+---
+
+<!doctype html>
+<html lang={site.locale} data-theme="light">
+  <head>
+    <ThemeScript />
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      noindex={noindex}
+      type={type}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

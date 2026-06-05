@@ -1,0 +1,84 @@
+---
+// Light/dark toggle. Real <button>; reflects + persists the theme.
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  aria-label="Toggle color theme"
+  aria-pressed="false"
+  data-theme-toggle
+>
+  <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+    <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+    <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <line x1="12" y1="2.5" x2="12" y2="5"></line>
+      <line x1="12" y1="19" x2="12" y2="21.5"></line>
+      <line x1="2.5" y1="12" x2="5" y2="12"></line>
+      <line x1="19" y1="12" x2="21.5" y2="12"></line>
+      <line x1="5.1" y1="5.1" x2="6.8" y2="6.8"></line>
+      <line x1="17.2" y1="17.2" x2="18.9" y2="18.9"></line>
+      <line x1="18.9" y1="5.1" x2="17.2" y2="6.8"></line>
+      <line x1="6.8" y1="17.2" x2="5.1" y2="18.9"></line>
+    </g>
+  </svg>
+  <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+    <path
+      d="M20 14.5A8 8 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linejoin="round"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius);
+    color: var(--color-text-secondary);
+    border: var(--border-hairline);
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .theme-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  .theme-toggle__moon {
+    display: none;
+  }
+  :global([data-theme="dark"]) .theme-toggle__sun {
+    display: none;
+  }
+  :global([data-theme="dark"]) .theme-toggle__moon {
+    display: block;
+  }
+</style>
+
+<script>
+  function syncPressed(btn: HTMLButtonElement) {
+    btn.setAttribute("aria-pressed", document.documentElement.dataset.theme === "dark" ? "true" : "false");
+  }
+
+  function wire() {
+    const btn = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+    if (!btn) return;
+    syncPressed(btn);
+    btn.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+      syncPressed(btn);
+      // Let the graph island (and anything else) react to a theme change.
+      document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
+    });
+  }
+
+  wire();
+  document.addEventListener("astro:after-swap", wire);
+</script>

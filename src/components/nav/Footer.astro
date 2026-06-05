@@ -1,0 +1,55 @@
+---
+import { socials, affiliations, site } from "@/data/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="stack stack-s">
+      <p class="site-footer__name">Stephanie Jarmak</p>
+      <p class="muted">
+        {affiliations.map((a) => a.name).join(" · ")}
+      </p>
+    </div>
+
+    <nav aria-label="Elsewhere">
+      <ul role="list" class="cluster" style="--cluster-gap: var(--space-m)">
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} rel="me noopener">
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+  <div class="container site-footer__legal">
+    <p class="muted">© {year} {site.name}. Built with Astro, hosted on Render.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-block-start: var(--space-3xl);
+    border-top: var(--border-hairline);
+    padding-block: var(--space-xl) var(--space-l);
+  }
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    justify-content: space-between;
+    align-items: start;
+  }
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+  .site-footer__legal {
+    margin-block-start: var(--space-l);
+    font-size: var(--step--1);
+  }
+</style>

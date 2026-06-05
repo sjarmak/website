@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { monthYear } from "@/lib/dates";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", (p) => !p.data.draft);
+  return posts.map((p) => ({ params: { slug: p.id }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={data.title} description={data.description} type="article">
+  <article class="container container-narrow post">
+    <header class="post__head stack stack-s">
+      <p class="kicker">Essay</p>
+      <h1>{data.title}</h1>
+      <p class="muted">
+        {monthYear(data.date)}
+        {data.updated ? ` · updated ${monthYear(data.updated)}` : ""}
+      </p>
+    </header>
+    <div class="prose post__body">
+      <Content />
+    </div>
+    <p class="post__back"><a href="/writing">← All writing</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+  .post__body {
+    margin-block: var(--space-l);
+  }
+  .post__back {
+    margin-block-start: var(--space-xl);
+  }
+</style>
