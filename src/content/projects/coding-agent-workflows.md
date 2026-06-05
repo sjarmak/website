@@ -6,6 +6,8 @@ summary: Coding standards, agent roles, skills, and multi-step workflows that re
 role: Creator
 repo: https://github.com/sjarmak/coding-agent-workflows
 tech: [JavaScript, Agents]
+featured: true
+featuredOrder: 7
 order: 11
 topics: [agents, code-intelligence]
 tags: [agents, workflows]

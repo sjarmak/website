@@ -6,7 +6,6 @@ summary: A theory-of-mind agent for Claude Code that learns your coding preferen
 role: Creator
 repo: https://github.com/sjarmak/tom-swe
 tech: [TypeScript, Agents, Memory]
-featured: true
 order: 6
 topics: [agents, agent-memory]
 tags: [agents, memory]

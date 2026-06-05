@@ -6,6 +6,8 @@ summary: A behavioral taxonomy, annotation framework, and shareable dataset back
 role: Creator
 repo: https://github.com/sjarmak/agent-diagnostics
 tech: [Python, Evaluation, Agents]
+featured: true
+featuredOrder: 5
 order: 9
 topics: [evaluation, agents]
 tags: [evals, diagnostics]

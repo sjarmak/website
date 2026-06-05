@@ -3,9 +3,9 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { affiliations } from "@/data/site";
 
-const featuredProjects = (await getCollection("projects", (p) => p.data.featured))
-  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
-  .slice(0, 4);
+const featuredProjects = (await getCollection("projects", (p) => p.data.featured)).sort(
+  (a, b) => (a.data.featuredOrder ?? a.data.order ?? 99) - (b.data.featuredOrder ?? b.data.order ?? 99),
+);
 
 const recentWriting = (await getCollection("writing"))
   .sort((a, b) => +b.data.date - +a.data.date)

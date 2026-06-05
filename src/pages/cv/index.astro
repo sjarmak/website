@@ -37,6 +37,13 @@ const groups = await getCvByCategory();
                       ))}
                     </ul>
                   )}
+                  {e.data.links.length > 0 && (
+                    <p class="cluster" style="--cluster-gap: var(--space-m)">
+                      {e.data.links.map((l) => (
+                        <a href={l.url} rel="noopener">{l.label} ↗</a>
+                      ))}
+                    </p>
+                  )}
                 </div>
               </li>
             ))}

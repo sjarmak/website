@@ -4,76 +4,119 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
 import { getCollection } from "astro:content";
 
-const works = (await getCollection("art")).sort(
+const all = (await getCollection("art")).sort(
   (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999),
 );
 
-const mediumLabel: Record<string, string> = {
-  illustration: "Illustration",
-  music: "Music",
-  book: "Book",
-  mixed: "Mixed",
-};
+// Group by section, in a defined display order.
+const SECTION_ORDER = ["Books", "Digital art", "Fan art", "Music", "Other"];
+const grouped = SECTION_ORDER.map((section) => ({
+  section,
+  items: all.filter((a) => a.data.section === section),
+})).filter((g) => g.items.length > 0);
 ---
 
 <PageLayout
   title="Art, music & books"
   kicker="Studio"
-  intro="Children's-book illustration, music, and other work made away from the keyboard."
-  description="Art, music, and children's books by Stephanie Jarmak."
+  intro="Children's books I've written and illustrated, digital paintings, and fan art, work made away from the keyboard."
+  description="Art and children's books by Stephanie Jarmak."
 >
-  {
-    works.length === 0 ? (
-      <EmptyState
-        title="The studio is being hung"
-        note="Illustration projects, music, and children's books will live here, each with its own page."
-      />
-    ) : (
-      <ul role="list" class="auto-grid" style="--grid-min: 16rem; --grid-gap: var(--space-l)">
-        {works.map((w) => (
-          <li class="work">
-            {w.data.cover && (
-              <Image
-                src={w.data.cover}
-                alt={w.data.title}
-                widths={[320, 640]}
-                sizes="(max-width: 700px) 100vw, 320px"
-                class="work__cover"
-                loading="lazy"
-              />
-            )}
-            <div class="stack stack-s">
-              <p class="kicker">{mediumLabel[w.data.medium]}</p>
-              <h2 class="work__title">{w.data.title}</h2>
-              {w.data.description && <p class="muted">{w.data.description}</p>}
-              <p class="cluster" style="--cluster-gap: var(--space-m)">
-                {w.data.purchaseUrl && <a href={w.data.purchaseUrl} rel="noopener">Get it ↗</a>}
-                {w.data.embedUrl && <a href={w.data.embedUrl} rel="noopener">Listen ↗</a>}
-                {w.data.links.map((l) => (
-                  <a href={l.url} rel="noopener">{l.label} ↗</a>
-                ))}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  {grouped.length === 0 && <EmptyState title="The studio is being hung" />}
+
+  <div class="stack stack-l">
+    {
+      grouped.map((group) => (
+        <section class="art-section">
+          <h2 class="art-section__heading">{group.section}</h2>
+
+          {group.section === "Books" ? (
+            <ul role="list" class="auto-grid" style="--grid-min: 15rem; --grid-gap: var(--space-l)">
+              {group.items.map((w) => (
+                <li class="book">
+                  {w.data.cover && (
+                    <Image
+                      src={w.data.cover}
+                      alt={`${w.data.title} cover`}
+                      widths={[300, 600]}
+                      sizes="(max-width: 700px) 50vw, 300px"
+                      class="book__cover"
+                      loading="lazy"
+                    />
+                  )}
+                  <div class="stack stack-s">
+                    <h3 class="book__title">{w.data.title}</h3>
+                    {w.data.description && <p class="muted">{w.data.description}</p>}
+                    {w.data.purchaseUrl && (
+                      <p>
+                        <a href={w.data.purchaseUrl} rel="noopener">
+                          Get it ↗
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul role="list" class="gallery">
+              {group.items.map((w) => (
+                <li class="gallery__item">
+                  {w.data.cover && (
+                    <Image
+                      src={w.data.cover}
+                      alt={w.data.title}
+                      widths={[320, 640]}
+                      sizes="(max-width: 700px) 50vw, 320px"
+                      class="gallery__img"
+                      loading="lazy"
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))
+    }
+  </div>
 </PageLayout>
 
 <style>
-  .work {
+  .art-section__heading {
+    font-size: var(--step-2);
+    padding-block-end: var(--space-xs);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-m);
+  }
+  .book {
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
   }
-  .work__cover {
+  .book__cover {
     width: 100%;
     height: auto;
     border-radius: var(--radius);
     border: var(--border-hairline);
   }
-  .work__title {
-    font-size: var(--step-2);
+  .book__title {
+    font-size: var(--step-1);
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: var(--space-s);
+  }
+  .gallery__item {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: var(--border-hairline);
+  }
+  .gallery__img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
   }
 </style>

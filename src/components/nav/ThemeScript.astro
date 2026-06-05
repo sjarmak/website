@@ -7,8 +7,8 @@
     try {
       var key = "theme";
       var saved = localStorage.getItem(key);
-      var sys = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      document.documentElement.dataset.theme = saved === "light" || saved === "dark" ? saved : sys;
+      // Default to light; only honor an explicit saved preference.
+      document.documentElement.dataset.theme = saved === "dark" ? "dark" : "light";
     } catch (e) {
       document.documentElement.dataset.theme = "light";
     }

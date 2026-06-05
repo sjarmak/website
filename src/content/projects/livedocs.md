@@ -6,7 +6,6 @@ summary: Keep docs in sync with code. Livedocs extracts structural claims from s
 role: Creator
 repo: https://github.com/sjarmak/livedocs
 tech: [Go, MCP, tree-sitter]
-featured: true
 order: 4
 topics: [code-intelligence, agents, retrieval]
 tags: [mcp, code-intel]

@@ -26,6 +26,7 @@ const cv = defineCollection({
     current: z.boolean().default(false),
     summary: z.string().optional(),
     highlights: z.array(z.string()).default([]),
+    links: z.array(link).default([]),
     tags: z.array(z.string()).default([]),
     order: z.number().optional(),
   }),
@@ -84,6 +85,7 @@ const projects = defineCollection({
       tech: z.array(z.string()).default([]),
       cover: image().optional(),
       featured: z.boolean().default(false),
+      featuredOrder: z.number().optional(),
       topics: z.array(reference("topics")).default([]),
       outputs: z.array(reference("outputs")).default([]),
       related: z.array(reference("projects")).default([]),
@@ -200,6 +202,7 @@ const art = defineCollection({
     z.object({
       title: z.string(),
       medium: z.enum(["illustration", "music", "book", "mixed"]),
+      section: z.string().default("Other"),
       cover: image().optional(),
       year: z.number().int().optional(),
       description: z.string().optional(),
@@ -211,6 +214,24 @@ const art = defineCollection({
       featured: z.boolean().default(false),
       order: z.number().optional(),
     }),
+});
+
+// ---- learning (literature explorers + generated podcasts) ----
+const learning = defineCollection({
+  loader: base("learning"),
+  schema: z.object({
+    title: z.string(),
+    kind: z.enum(["explorer", "podcast"]),
+    description: z.string(),
+    url: z.string().url().optional(), // explorer link or external podcast page
+    audioUrl: z.string().url().optional(), // direct audio file
+    embedUrl: z.string().url().optional(), // Spotify/YouTube/etc embed
+    series: z.string().optional(), // podcast series grouping
+    episode: z.number().optional(),
+    meta: z.string().optional(), // e.g. "108 papers · 9 themes"
+    date: z.coerce.date().optional(),
+    order: z.number().optional(),
+  }),
 });
 
 export const collections = {
@@ -225,4 +246,5 @@ export const collections = {
   talks,
   astrophoto,
   art,
+  learning,
 };
