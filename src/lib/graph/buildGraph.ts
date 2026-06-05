@@ -117,7 +117,18 @@ export async function buildGraph(): Promise<GraphData> {
     }
   }
 
-  return { nodes, edges: dedupeEdges(edges) };
+  const finalEdges = dedupeEdges(edges);
+
+  // Drop disconnected nodes (degree 0) so standalone projects don't float as
+  // orphans in the graph. They still appear on the /projects index.
+  const connected = new Set<string>();
+  for (const e of finalEdges) {
+    connected.add(e.source);
+    connected.add(e.target);
+  }
+  const finalNodes = nodes.filter((n) => connected.has(n.id));
+
+  return { nodes: finalNodes, edges: finalEdges };
 }
 
 /** Group nodes by topic for the accessible fallback list. */

@@ -156,10 +156,11 @@ function setup(root: HTMLElement, data: GraphData) {
       quality: "default",
       animate: !prefersReduced,
       animationDuration: 500,
-      nodeSeparation: 110,
+      nodeSeparation: 160,
+      nodeRepulsion: 9000,
       idealEdgeLength: (edge: { data: (k: string) => string }) =>
-        edge.data("kind") === "topic-topic" ? 90 : 150,
-      padding: 30,
+        edge.data("kind") === "topic-topic" ? 120 : 190,
+      padding: 40,
     }).run();
 
     wireCanvasEvents();

@@ -6,8 +6,7 @@ summary: An agentic research assistant over the NASA SciX / ADS corpus, bridging
 role: Creator
 repo: https://github.com/sjarmak/scix-agent
 tech: [Python, Agents, MCP, Retrieval]
-featured: true
-order: 1
+order: 10
 topics: [agents, scientific-search, retrieval]
 tags: [scix, agents]
 ---

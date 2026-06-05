@@ -8,7 +8,7 @@ repo: https://github.com/sjarmak/lit_explorers
 homepage: https://sjarmak.github.io/lit_explorers/
 tech: [Knowledge graphs, Retrieval, SciX MCP]
 featured: true
-order: 2
+order: 3
 topics: [knowledge-graphs, retrieval, scientific-search, agent-memory]
 tags: [survey, knowledge-graph]
 ---

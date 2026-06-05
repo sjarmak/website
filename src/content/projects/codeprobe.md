@@ -6,7 +6,7 @@ summary: Tools for code analysis and intelligence gathering, supporting code com
 role: Creator
 repo: https://github.com/sjarmak/codeprobe
 tech: [Python, Code intelligence]
-order: 6
+order: 15
 topics: [code-intelligence, evaluation]
 tags: [code-intel]
 ---
