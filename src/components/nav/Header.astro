@@ -8,11 +8,9 @@ const isActive = (href: string) => path === href || (href !== "/" && path.starts
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a href="/" class="site-header__brand" aria-label={`${site.name} — home`}>
-      Stephanie Jarmak
-    </a>
+    <a href="/" class="site-header__brand" aria-label={`${site.name} — home`}>Stephanie Jarmak</a>
 
-    <nav class="site-nav" aria-label="Primary">
+    <nav id="site-nav-menu" class="site-nav" data-nav-menu aria-label="Primary">
       <ul role="list" class="site-nav__list">
         {
           nav.map((item) => (
@@ -30,7 +28,19 @@ const isActive = (href: string) => path === href || (href !== "/" && path.starts
       </ul>
     </nav>
 
-    <ThemeToggle />
+    <div class="site-header__controls">
+      <ThemeToggle />
+      <button
+        type="button"
+        class="nav-toggle"
+        data-nav-toggle
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="site-nav-menu"
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -60,11 +70,6 @@ const isActive = (href: string) => path === href || (href !== "/" && path.starts
   }
   .site-nav {
     margin-inline-start: auto;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .site-nav::-webkit-scrollbar {
-    display: none;
   }
   .site-nav__list {
     display: flex;
@@ -78,7 +83,9 @@ const isActive = (href: string) => path === href || (href !== "/" && path.starts
     white-space: nowrap;
     padding-block: var(--space-2xs);
     border-bottom: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
   }
   .site-nav__link:hover {
     color: var(--color-text);
@@ -87,9 +94,148 @@ const isActive = (href: string) => path === href || (href !== "/" && path.starts
     color: var(--color-text);
     border-bottom-color: var(--color-accent);
   }
+
+  .site-header__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+  .nav-toggle {
+    display: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+  }
+  .nav-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  /* hamburger icon drawn from a single element + pseudo-elements */
+  .nav-toggle__bars,
+  .nav-toggle__bars::before,
+  .nav-toggle__bars::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .nav-toggle__bars {
+    position: relative;
+  }
+  .nav-toggle__bars::before,
+  .nav-toggle__bars::after {
+    content: "";
+    position: absolute;
+    left: 0;
+  }
+  .nav-toggle__bars::before {
+    top: -6px;
+  }
+  .nav-toggle__bars::after {
+    top: 6px;
+  }
+  /* X when open */
+  .nav-toggle[aria-expanded="true"] .nav-toggle__bars {
+    background: transparent;
+  }
+  .nav-toggle[aria-expanded="true"] .nav-toggle__bars::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .nav-toggle[aria-expanded="true"] .nav-toggle__bars::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
   @media (max-width: 60rem) {
-    .site-header__brand {
-      font-size: var(--step-0);
+    .nav-toggle {
+      display: grid;
+    }
+    .site-header__controls {
+      margin-inline-start: auto;
+    }
+    .site-nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin: 0;
+      background: var(--color-bg);
+      border-bottom: var(--border-hairline);
+      box-shadow: 0 12px 30px oklch(0% 0 0 / 0.12);
+      /* hidden state */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-0.5rem);
+      transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s;
+    }
+    .site-nav[data-open="true"] {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .site-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-block: var(--space-2xs);
+    }
+    .site-nav__link {
+      display: block;
+      padding: var(--space-s) clamp(var(--space-s), 5vw, var(--space-xl));
+      border-bottom: none;
+      font-size: var(--step-1);
+      font-family: var(--font-display);
+    }
+    .site-nav__link[aria-current="page"] {
+      border-bottom: none;
+      color: var(--color-accent);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .site-nav {
+        transition: none;
+      }
     }
   }
 </style>
+
+<script>
+  function wireNav() {
+    const btn = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
+    const menu = document.querySelector<HTMLElement>("[data-nav-menu]");
+    if (!btn || !menu || btn.dataset.wired === "true") return;
+    btn.dataset.wired = "true";
+
+    const setOpen = (open: boolean) => {
+      btn.setAttribute("aria-expanded", String(open));
+      if (open) menu.setAttribute("data-open", "true");
+      else menu.removeAttribute("data-open");
+    };
+
+    btn.addEventListener("click", () => setOpen(btn.getAttribute("aria-expanded") !== "true"));
+
+    // close when a link is tapped
+    menu.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).closest("a")) setOpen(false);
+    });
+
+    // close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    // close on outside click
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target as Node) && !btn.contains(e.target as Node)) setOpen(false);
+    });
+  }
+
+  wireNav();
+  document.addEventListener("astro:after-swap", wireNav);
+</script>
