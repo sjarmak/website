@@ -1,0 +1,55 @@
+---
+import { buildGraph } from "@/lib/graph/buildGraph";
+const data = await buildGraph();
+---
+
+<div class="mini-graph" data-mini-graph>
+  <div
+    class="mini-graph__canvas"
+    data-mini-canvas
+    role="img"
+    aria-label="A live map of my projects, topics, and outputs. Opens the full searchable explorer."
+  >
+  </div>
+  <a class="mini-graph__cap" href="/projects/explorer">
+    Explore the full map <span aria-hidden="true">→</span>
+  </a>
+  <script type="application/json" data-graph-data set:html={JSON.stringify(data)} is:inline></script>
+</div>
+
+<script>
+  import "@/scripts/mini-graph";
+</script>
+
+<style>
+  .mini-graph {
+    max-width: 44rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--graph-bg);
+    transition: border-color 0.2s ease;
+  }
+  .mini-graph:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+  .mini-graph__canvas {
+    width: 100%;
+    height: clamp(220px, 30vw, 300px);
+  }
+  .mini-graph__cap {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4em;
+    padding: var(--space-2xs) var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-top: var(--border-hairline);
+    background: var(--color-bg-subtle);
+  }
+  .mini-graph__cap:hover {
+    color: var(--color-accent);
+  }
+</style>
