@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { affiliations } from "@/data/site";
+import graphMap from "@/assets/knowledge-graph-light.png";
 
 const featuredProjects = (await getCollection("projects", (p) => p.data.featured)).sort(
   (a, b) => (a.data.featuredOrder ?? a.data.order ?? 99) - (b.data.featuredOrder ?? b.data.order ?? 99),
@@ -17,9 +19,24 @@ const fmtYear = (d: Date) => d.getFullYear();
 <BaseLayout type="profile">
   <section class="hero container">
     <p class="kicker">Information scientist · AI agent advocate</p>
-    <h1 class="hero__title">
-      Stephanie<br />Jarmak
+    <h1 class="visually-hidden">
+      Stephanie Jarmak — information scientist and AI agent advocate
     </h1>
+    <a
+      href="/projects/explorer"
+      class="hero__map"
+      aria-label="Explore the interactive knowledge graph of my work"
+    >
+      <Image
+        src={graphMap}
+        alt="A knowledge graph linking my projects, the topics they touch, and the outputs they produce"
+        widths={[640, 960, 1280, 1600]}
+        sizes="(max-width: 64rem) 100vw, 64rem"
+        class="hero__map-img"
+        loading="eager"
+      />
+      <span class="hero__map-cap">A map of the work <span aria-hidden="true">→</span></span>
+    </a>
     <p class="hero__lead measure">
       I study how people and agents find knowledge: retrieval, knowledge graphs, and the
       evaluation of AI systems. Currently at <strong>Sourcegraph</strong>, and a research
@@ -102,12 +119,44 @@ const fmtYear = (d: Date) => d.getFullYear();
 
 <style>
   .hero {
-    padding-block: clamp(var(--space-xl), 12vw, var(--space-3xl)) var(--space-l);
+    padding-block: clamp(var(--space-l), 7vw, var(--space-2xl)) var(--space-l);
   }
-  .hero__title {
-    font-size: var(--step-5);
-    line-height: 0.95;
-    margin-block: var(--space-s) var(--space-m);
+  .hero__map {
+    display: block;
+    margin-block: var(--space-m) var(--space-l);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--paper-50);
+    box-shadow: 0 10px 40px oklch(0% 0 0 / 0.1);
+    transition:
+      transform 0.25s var(--ease, ease),
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .hero__map:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 56px oklch(0% 0 0 / 0.16);
+    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
+  }
+  .hero__map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .hero__map-cap {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4em;
+    padding: var(--space-2xs) var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    border-top: var(--border-hairline);
+    background: var(--color-bg-subtle);
+  }
+  .hero__map:hover .hero__map-cap {
+    color: var(--color-accent);
   }
   .hero__lead {
     font-size: var(--step-1);
