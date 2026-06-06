@@ -167,6 +167,7 @@ const talks = defineCollection({
       videoUrl: z.string().url().optional(),
       videoFile: z.string().optional(), // self-hosted mp4, path under /public
       videoPoster: z.string().optional(), // poster image path under /public
+      videoCaption: z.string().optional(), // e.g. "Live demo from the talk"
       slidesUrl: z.string().url().optional(),
       photo: image().optional(),
       photoAlt: z.string().optional(),

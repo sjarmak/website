@@ -247,6 +247,8 @@ const fmtYear = (d: Date) => d.getFullYear();
     height: auto;
     aspect-ratio: 3 / 2;
     object-fit: cover;
+    /* The source is very wide with the speaker on the left — keep her in frame. */
+    object-position: left center;
     border-radius: var(--radius-l);
     border: var(--border-hairline);
     display: block;

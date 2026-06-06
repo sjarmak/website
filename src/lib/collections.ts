@@ -52,7 +52,11 @@ export async function getWriting() {
 
 export async function getTalks() {
   const talks = await getCollection("talks");
-  return talks.sort((a, b) => +b.data.date - +a.data.date);
+  // Featured first, then newest.
+  return talks.sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return +b.data.date - +a.data.date;
+  });
 }
 
 export async function getPublications() {
