@@ -124,8 +124,8 @@ const writing = defineCollection({
   schema: z
     .object({
       title: z.string(),
-      date: z.coerce.date(),
-      source: z.enum(["medium", "sourcegraph", "on-site", "external"]),
+      date: z.coerce.date().optional(), // omit for undated items (e.g. ebooks)
+      source: z.enum(["medium", "sourcegraph", "ebook", "on-site", "external"]),
       url: z.string().url().optional(),
       post: reference("posts").optional(),
       description: z.string(),
@@ -155,18 +155,24 @@ const posts = defineCollection({
 // ---- talks ----
 const talks = defineCollection({
   loader: base("talks"),
-  schema: z.object({
-    title: z.string(),
-    event: z.string(),
-    date: z.coerce.date(),
-    kind: z.enum(["webinar", "conference", "panel", "invited", "podcast"]),
-    videoProvider: z.enum(["youtube", "vimeo", "other"]).optional(),
-    videoId: z.string().optional(),
-    videoUrl: z.string().url().optional(),
-    slidesUrl: z.string().url().optional(),
-    description: z.string().optional(),
-    featured: z.boolean().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      event: z.string(),
+      location: z.string().optional(),
+      date: z.coerce.date(),
+      kind: z.enum(["webinar", "conference", "panel", "invited", "podcast"]),
+      videoProvider: z.enum(["youtube", "vimeo", "other"]).optional(),
+      videoId: z.string().optional(),
+      videoUrl: z.string().url().optional(),
+      videoFile: z.string().optional(), // self-hosted mp4, path under /public
+      videoPoster: z.string().optional(), // poster image path under /public
+      slidesUrl: z.string().url().optional(),
+      photo: image().optional(),
+      photoAlt: z.string().optional(),
+      description: z.string().optional(),
+      featured: z.boolean().default(false),
+    }),
 });
 
 // ---- astrophotography ----

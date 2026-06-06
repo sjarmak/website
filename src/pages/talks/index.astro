@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
 import EmbeddedVideo from "@/components/talks/EmbeddedVideo.astro";
@@ -26,22 +27,47 @@ const rest = talks.filter((t) => t.id !== featured?.id);
   {
     featured && (
       <section class="featured">
-        {featured.data.videoId && featured.data.videoProvider && (
-          <EmbeddedVideo
-            provider={featured.data.videoProvider}
-            id={featured.data.videoId}
-            title={featured.data.title}
-          />
+        {featured.data.videoFile ? (
+          <video
+            class="featured__video"
+            controls
+            preload="metadata"
+            poster={featured.data.videoPoster}
+          >
+            <source src={featured.data.videoFile} type="video/mp4" />
+          </video>
+        ) : (
+          featured.data.videoId &&
+          featured.data.videoProvider && (
+            <EmbeddedVideo
+              provider={featured.data.videoProvider}
+              id={featured.data.videoId}
+              title={featured.data.title}
+            />
+          )
         )}
         <div class="featured__meta stack stack-s">
           <h2>{featured.data.title}</h2>
-          <p class="muted">{featured.data.event} · {monthYear(featured.data.date)}</p>
+          <p class="muted">
+            {featured.data.event} · {monthYear(featured.data.date)}
+            {featured.data.location && <span class="featured__loc"> · {featured.data.location}</span>}
+          </p>
           {featured.data.description && <p class="secondary measure">{featured.data.description}</p>}
           <p class="cluster" style="--cluster-gap: var(--space-m)">
-            {featured.data.videoUrl && <a href={featured.data.videoUrl} rel="noopener">Watch ↗</a>}
+            {featured.data.videoUrl && <a href={featured.data.videoUrl} rel="noopener">Watch the demo ↗</a>}
             {featured.data.slidesUrl && <a href={featured.data.slidesUrl} rel="noopener">Slides ↗</a>}
           </p>
         </div>
+        {featured.data.photo && (
+          <figure class="featured__photo">
+            <Image
+              src={featured.data.photo}
+              alt={featured.data.photoAlt ?? `${featured.data.title} — ${featured.data.event}`}
+              widths={[480, 800, 1200]}
+              sizes="(max-width: 50rem) 100vw, 50rem"
+            />
+          </figure>
+        )}
       </section>
     )
   }
@@ -73,6 +99,25 @@ const rest = talks.filter((t) => t.id !== featured?.id);
   .featured {
     display: grid;
     gap: var(--space-l);
+  }
+  .featured__video {
+    width: 100%;
+    aspect-ratio: 1264 / 1080;
+    max-height: 70vh;
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: var(--color-surface);
+    display: block;
+  }
+  .featured__photo {
+    margin: 0;
+  }
+  .featured__photo img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    display: block;
   }
   .more {
     margin-block-start: var(--space-2xl);

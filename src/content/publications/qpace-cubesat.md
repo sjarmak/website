@@ -5,5 +5,6 @@ authorString: "S. Jarmak, J. Brisset, J. Colwell, A. Dove, D. Maukonen, S. A. Ra
 venue: Acta Astronautica
 year: 2019
 type: journal
+url: https://www.sciencedirect.com/science/article/abs/pii/S0094576518310865
 tags: [planetary-science, cubesat, planetesimals]
 ---

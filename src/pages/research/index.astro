@@ -20,7 +20,16 @@ const press = (await getCollection("press")).sort(
 >
   <div class="stack stack-l">
     <section>
-      <h2 class="sub">Publications</h2>
+      <div class="sub-head">
+        <h2 class="sub">Publications</h2>
+        <a
+          class="sub-head__more"
+          href="https://scixplorer.org/search?p=1&q=author%3Ajarmak&sort=score+desc&sort=date+desc&d=general"
+          rel="noopener"
+        >
+          All publications on SciX ↗
+        </a>
+      </div>
       {
         publications.length === 0 ? (
           <EmptyState
@@ -49,6 +58,12 @@ const press = (await getCollection("press")).sort(
                 <p class="muted">
                   {p.data.authorString ?? p.data.authors.join(", ")}
                   {p.data.venue ? ` · ${p.data.venue}` : ""} · {p.data.year}
+                  {p.data.pdf && (
+                    <>
+                      {" · "}
+                      <a href={p.data.pdf} rel="noopener">PDF ↗</a>
+                    </>
+                  )}
                 </p>
               </li>
             ))}
@@ -83,6 +98,21 @@ const press = (await getCollection("press")).sort(
 </PageLayout>
 
 <style>
+  .sub-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-m);
+    margin-block-end: var(--space-m);
+  }
+  .sub-head .sub {
+    margin-block-end: 0;
+  }
+  .sub-head__more {
+    font-size: var(--step-0);
+    white-space: nowrap;
+  }
   .sub {
     font-size: var(--step-2);
     margin-block-end: var(--space-m);

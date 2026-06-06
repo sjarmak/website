@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { affiliations } from "@/data/site";
 import MiniGraph from "@/components/graph/MiniGraph.astro";
@@ -9,8 +10,16 @@ const featuredProjects = (await getCollection("projects", (p) => p.data.featured
 );
 
 const recentWriting = (await getCollection("writing"))
-  .sort((a, b) => +b.data.date - +a.data.date)
+  .filter((w) => !!w.data.date)
+  .sort((a, b) => +b.data.date! - +a.data.date!)
   .slice(0, 4);
+
+// Most recent talk with a speaking photo, for the homepage Speaking teaser.
+const talks = await getCollection("talks");
+const featuredTalk =
+  talks
+    .filter((t) => t.data.photo)
+    .sort((a, b) => +b.data.date - +a.data.date)[0] ?? null;
 
 const fmtYear = (d: Date) => d.getFullYear();
 ---
@@ -79,6 +88,31 @@ const fmtYear = (d: Date) => d.getFullYear();
   }
 
   {
+    featuredTalk && (
+      <section class="section container">
+        <header class="section-head">
+          <h2>Speaking</h2>
+          <a href="/talks" class="section-head__more">All talks →</a>
+        </header>
+        <a class="speaking" href="/talks">
+          <Image
+            class="speaking__photo"
+            src={featuredTalk.data.photo!}
+            alt={featuredTalk.data.photoAlt ?? `${featuredTalk.data.title} — ${featuredTalk.data.event}`}
+            widths={[400, 800]}
+            sizes="(max-width: 48rem) 100vw, 24rem"
+          />
+          <div class="speaking__meta">
+            <p class="kicker">Recent talk</p>
+            <h3 class="speaking__title">{featuredTalk.data.title}</h3>
+            <p class="muted">{featuredTalk.data.event} · {fmtYear(featuredTalk.data.date)}</p>
+          </div>
+        </a>
+      </section>
+    )
+  }
+
+  {
     recentWriting.length > 0 && (
       <section class="section container">
         <header class="section-head">
@@ -92,7 +126,7 @@ const fmtYear = (d: Date) => d.getFullYear();
                 {w.data.title}
               </a>
               <span class="writing-row__meta muted">
-                {w.data.source} · {fmtYear(w.data.date)}
+                {w.data.source} · {fmtYear(w.data.date!)}
               </span>
             </li>
           ))}
@@ -198,6 +232,37 @@ const fmtYear = (d: Date) => d.getFullYear();
   }
   .project-card__link:hover .project-card__title {
     color: var(--color-accent);
+  }
+
+  .speaking {
+    display: grid;
+    grid-template-columns: minmax(0, 24rem) 1fr;
+    gap: var(--space-l);
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .speaking__photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    display: block;
+  }
+  .speaking__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    margin-block: var(--space-2xs);
+  }
+  .speaking:hover .speaking__title {
+    color: var(--color-accent);
+  }
+  @media (max-width: 48rem) {
+    .speaking {
+      grid-template-columns: 1fr;
+    }
   }
 
   .writing-row {

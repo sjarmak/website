@@ -41,7 +41,13 @@ export async function getCvByCategory() {
 
 export async function getWriting() {
   const writing = await getCollection("writing");
-  return writing.sort((a, b) => +b.data.date - +a.data.date);
+  // Newest first; undated items (e.g. ebooks) sort last, then by title.
+  return writing.sort((a, b) => {
+    const ad = a.data.date ? +a.data.date : -Infinity;
+    const bd = b.data.date ? +b.data.date : -Infinity;
+    if (ad !== bd) return bd - ad;
+    return a.data.title.localeCompare(b.data.title);
+  });
 }
 
 export async function getTalks() {

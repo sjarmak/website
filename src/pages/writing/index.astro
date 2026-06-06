@@ -6,15 +6,33 @@ import { monthYear } from "@/lib/dates";
 
 const writing = await getWriting();
 
+type Entry = (typeof writing)[number];
+
 const sourceLabel: Record<string, string> = {
   medium: "Medium",
   sourcegraph: "Sourcegraph",
+  ebook: "Ebook",
   "on-site": "Essay",
   external: "External",
 };
 
-const hrefFor = (w: (typeof writing)[number]) =>
+const hrefFor = (w: Entry) =>
   w.data.source === "on-site" && w.data.post ? `/writing/${w.data.post.id}` : (w.data.url ?? "#");
+
+// Grouped, in reading order. getWriting() already sorts newest-first within each source.
+const groups: { heading: string; sources: Entry["data"]["source"][] }[] = [
+  { heading: "Essays", sources: ["medium", "on-site"] },
+  { heading: "Engineering blog", sources: ["sourcegraph"] },
+  { heading: "Guides & ebooks", sources: ["ebook"] },
+  { heading: "Elsewhere", sources: ["external"] },
+];
+
+const sections = groups
+  .map((g) => ({
+    heading: g.heading,
+    entries: writing.filter((w) => g.sources.includes(w.data.source)),
+  }))
+  .filter((s) => s.entries.length > 0);
 ---
 
 <PageLayout
@@ -30,29 +48,43 @@ const hrefFor = (w: (typeof writing)[number]) =>
         note="Posts from Medium and the Sourcegraph blog will be curated here. In the meantime:"
       >
         <p class="cluster" style="--cluster-gap: var(--space-m); justify-content: center">
-          <a href="https://medium.com/@sjarmak" rel="noopener">Medium ↗</a>
+          <a href="https://medium.com/@steph.jarmak" rel="noopener">Medium ↗</a>
           <a href="https://sourcegraph.com/blog" rel="noopener">Sourcegraph blog ↗</a>
         </p>
       </EmptyState>
     ) : (
-      <ul role="list" class="stack">
-        {writing.map((w) => (
-          <li class="row">
-            <a class="row__title" href={hrefFor(w)} rel="noopener">
-              {w.data.title}
-            </a>
-            <p class="muted row__desc">{w.data.description}</p>
-            <span class="row__meta muted">
-              {sourceLabel[w.data.source]} · {monthYear(w.data.date)}
-            </span>
-          </li>
+      <div class="stack stack-l">
+        {sections.map((section) => (
+          <section>
+            <h2 class="section__heading">{section.heading}</h2>
+            <ul role="list" class="stack">
+              {section.entries.map((w) => (
+                <li class="row">
+                  <a class="row__title" href={hrefFor(w)} rel="noopener">
+                    {w.data.title}
+                  </a>
+                  <p class="muted row__desc">{w.data.description}</p>
+                  <span class="row__meta muted">
+                    {sourceLabel[w.data.source]}
+                    {w.data.date && ` · ${monthYear(w.data.date)}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
-      </ul>
+      </div>
     )
   }
 </PageLayout>
 
 <style>
+  .section__heading {
+    font-size: var(--step-1);
+    padding-block-end: var(--space-s);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-s);
+  }
   .row {
     display: grid;
     grid-template-columns: 1fr auto;
