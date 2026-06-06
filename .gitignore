@@ -19,6 +19,10 @@ node_modules/
 !.vscode/extensions.json
 .idea/
 
+# Agent / tooling dot folders (local-only; solo repo)
+.beads/
+.claude/
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
