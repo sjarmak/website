@@ -2,7 +2,7 @@
 title: CodeScaleBench
 status: active
 domain: research
-summary: A benchmark suite for evaluating how AI coding agents leverage external context-retrieval tools on realistic developer tasks in large, enterprise-scale codebases.
+summary: A benchmark suite for evaluating how AI coding agents use external context-retrieval tools on realistic developer tasks in large, enterprise-scale codebases.
 role: Creator
 repo: https://github.com/sjarmak/CodeScaleBench
 tech: [C++, Evaluation, Retrieval]
