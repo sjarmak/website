@@ -34,4 +34,7 @@ services:
       - path: /fonts/*
         name: Cache-Control
         value: public, max-age=31536000, immutable
+      - path: /media/*
+        name: Cache-Control
+        value: public, max-age=604800
     # Single-page-style fallback is NOT needed; Astro emits real 404.html.

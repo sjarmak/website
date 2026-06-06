@@ -74,7 +74,9 @@ const standalone = podcasts.filter((p) => !p.data.series);
                           <iframe class="ep__embed" src={p.data.embedUrl} loading="lazy" title={p.data.title} />
                         )}
                         {!p.data.embedUrl && p.data.audioUrl && (
-                          <audio controls preload="none" src={p.data.audioUrl} />
+                          <audio controls preload="none">
+                            <source src={p.data.audioUrl} type="audio/mpeg" />
+                          </audio>
                         )}
                       </li>
                     ))}

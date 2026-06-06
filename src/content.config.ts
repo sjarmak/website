@@ -231,7 +231,7 @@ const learning = defineCollection({
     kind: z.enum(["explorer", "podcast"]),
     description: z.string(),
     url: z.string().url().optional(), // explorer link or external podcast page
-    audioUrl: z.string().url().optional(), // direct audio file
+    audioUrl: z.string().optional(), // direct audio file (absolute URL or site-relative path)
     embedUrl: z.string().url().optional(), // Spotify/YouTube/etc embed
     series: z.string().optional(), // podcast series grouping
     episode: z.number().optional(),
