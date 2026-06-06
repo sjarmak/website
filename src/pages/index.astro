@@ -245,10 +245,11 @@ const fmtYear = (d: Date) => d.getFullYear();
   .speaking__photo {
     width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 2 / 1;
     object-fit: cover;
-    /* The source is very wide with the speaker on the left — keep her in frame. */
-    object-position: left center;
+    /* Wide source: anchor so the speaker sits at the left edge and most of
+       the presentation slide stays visible. */
+    object-position: 75% center;
     border-radius: var(--radius-l);
     border: var(--border-hairline);
     display: block;
