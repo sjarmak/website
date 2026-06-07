@@ -1,0 +1,775 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LinkageExplorer from "@/components/knowledge/LinkageExplorer.astro";
+import { buildKnowledge } from "@/lib/knowledge/build";
+import type { KnowledgeThread, KnowledgeNode, Related } from "@/lib/knowledge/types";
+
+export async function getStaticPaths() {
+  const { threads, nodes, related } = await buildKnowledge();
+  return threads.map((thread, index) => ({
+    params: { slug: thread.id },
+    props: {
+      thread,
+      nodes,
+      related,
+      prevThread: index > 0 ? threads[index - 1] : null,
+      nextThread: index < threads.length - 1 ? threads[index + 1] : null,
+    } satisfies Props,
+  }));
+}
+
+interface Props {
+  thread: KnowledgeThread;
+  nodes: KnowledgeNode[];
+  related: Record<string, Related>;
+  prevThread: KnowledgeThread | null;
+  nextThread: KnowledgeThread | null;
+}
+
+const { thread, nodes, related, prevThread, nextThread } = Astro.props;
+
+// Build the scoped node subset for this thread's linkage explorer.
+// Union of artifact ids, paper ids, and reading-order node ids.
+const threadNodeIds = new Set<string>([
+  ...thread.artifacts.map((n) => n.id),
+  ...thread.papers.map((n) => n.id),
+  ...thread.readingOrder.map((r) => r.node.id),
+]);
+const threadNodes = nodes.filter((n) => threadNodeIds.has(n.id));
+
+const readingStopCount = thread.readingOrder.length;
+
+// Explorer section: normalize the explorer's opportunities (raw tuples or
+// strings) and theme sections in the frontmatter, where statements are allowed.
+const explorer = thread.explorer;
+type Opportunity = { title: string; desc?: string };
+const rawOpportunities = (explorer?.opportunities ?? []) as unknown[];
+const normalizedOpportunities: Opportunity[] = rawOpportunities.slice(0, 6).map((o) => {
+  if (Array.isArray(o)) {
+    const tuple = o as unknown[];
+    return {
+      title: String(tuple[0] ?? ""),
+      desc: tuple[1] != null ? String(tuple[1]) : undefined,
+    };
+  }
+  return { title: String(o) };
+});
+const explorerSections = explorer?.sections ?? [];
+const opportunityList: Opportunity[] =
+  normalizedOpportunities.length > 0
+    ? normalizedOpportunities
+    : explorerSections.map((s) => ({ title: s.label, desc: s.summary }));
+---
+
+<BaseLayout
+  title={thread.question}
+  description={thread.take}
+  type="article"
+>
+  <article class="container container-narrow thread">
+    <!-- 1. Header -->
+    <header class="thread__head stack stack-s">
+      <div class="thread__eyebrow">
+        <p class="kicker">Open thread</p>
+        <span class={`status-badge status-badge--${thread.status}`}>
+          {thread.status}
+        </span>
+      </div>
+      <h1 class="thread__question">{thread.question}</h1>
+      <p class="lead measure thread__take">{thread.take}</p>
+      {
+        thread.concepts.length > 0 && (
+          <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+            {thread.concepts.map((c) => (
+              <span class="tag">{c}</span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <!-- 2. The work -->
+    {
+      thread.artifacts.length > 0 && (
+        <section class="thread__section" aria-labelledby="work-heading">
+          <h2 class="section-heading" id="work-heading">The work</h2>
+          <ul role="list" class="artifact-list">
+            {thread.artifacts.map((node) => (
+              <li class="artifact-row">
+                <a
+                  href={node.url}
+                  class="artifact-row__title"
+                  rel={node.external ? "noopener noreferrer" : undefined}
+                  target={node.external ? "_blank" : undefined}
+                >
+                  {node.title}
+                  {node.external && <span aria-label="opens externally"> ↗</span>}
+                </a>
+                <span class="artifact-row__kind kind-chip">{node.meta}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- 3. Reading path -->
+    {
+      thread.readingOrder.length > 0 && (
+        <section class="thread__section" aria-labelledby="reading-path-heading">
+          <h2 class="section-heading" id="reading-path-heading">Reading path</h2>
+          <p class="reading-path__note muted">
+            A generated path through {readingStopCount} paper{readingStopCount === 1 ? "" : "s"} — assembled using her SciX literature tools (semantic embeddings, citation graphs, and reading-order signals).
+          </p>
+          <ol role="list" class="path-list" aria-label="Reading path stops">
+            {thread.readingOrder.map(({ node, why }, i) => (
+              <li class="path-stop">
+                <div class="path-stop__connector" aria-hidden="true">
+                  <span class="path-stop__number">{i + 1}</span>
+                  {i < thread.readingOrder.length - 1 && (
+                    <span class="path-stop__line" />
+                  )}
+                </div>
+                <div class="path-stop__content">
+                  <h3 class="path-stop__title">
+                    <a
+                      href={node.url}
+                      class="path-stop__link"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {node.title} ↗
+                    </a>
+                  </h3>
+                  <p class="path-stop__meta muted">{node.meta}</p>
+                  <p class="path-stop__why">{why}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    <!-- 4. Open literature -->
+    {
+      thread.papers.length > 0 && (
+        <section class="thread__section" aria-labelledby="lit-heading">
+          <h2 class="section-heading" id="lit-heading">Open literature</h2>
+          <ul role="list" class="paper-list">
+            {thread.papers.map((node) => (
+              <li class="paper-row">
+                <a
+                  href={node.url}
+                  class="paper-row__title"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {node.title} ↗
+                </a>
+                <span class="paper-row__meta muted">{node.meta}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- 5. ADS library -->
+    {
+      thread.libraries.length > 0 &&
+        thread.libraries.map((library) => {
+          const topPapers = [...library.papers]
+            .sort((a, b) => b.citationCount - a.citationCount)
+            .slice(0, 6);
+          return (
+            <section class="thread__section" aria-labelledby={`lib-heading-${library.id}`}>
+              <div class="lib__header">
+                <h2 class="section-heading" id={`lib-heading-${library.id}`}>
+                  From my ADS library
+                </h2>
+                <div class="lib__meta">
+                  <span class="lib__name">{library.name}</span>
+                  <span class="lib__count muted">{library.numDocuments} papers</span>
+                  <a
+                    href={`/library/${library.id}`}
+                    class="lib__browse"
+                  >
+                    Browse all →
+                  </a>
+                </div>
+              </div>
+              <ul role="list" class="ads-paper-list">
+                {topPapers.map((paper) => {
+                  const etAl =
+                    paper.authorCount !== undefined && paper.authorCount > 1;
+                  return (
+                    <li class="ads-paper-row">
+                      <a
+                        href={paper.adsUrl}
+                        class="ads-paper-row__title"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {paper.title} ↗
+                      </a>
+                      <span class="ads-paper-row__meta muted">
+                        {paper.firstAuthor}
+                        {etAl ? " et al." : ""}
+                        {paper.year ? ` · ${paper.year}` : ""}
+                        {" · "}
+                        {paper.citationCount} cites
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p class="lib__note muted">
+                Pulled from her curated ADS library.
+              </p>
+            </section>
+          );
+        })
+    }
+
+    <!-- 6. Explorer -->
+    {
+      explorer && (
+        <section class="thread__section" aria-labelledby="exp-heading">
+          <h2 class="section-heading" id="exp-heading">From my {explorer.title}</h2>
+          <div class="exp__summary">
+            <span class="muted">
+              {explorer.paperCount} papers · {explorer.themeCount} themes
+            </span>
+            <div class="exp__links">
+              <a href={explorer.homepage} class="exp__link" rel="noopener noreferrer" target="_blank">
+                Open explorer ↗
+              </a>
+              <a href="/learning" class="exp__link">On the site</a>
+            </div>
+          </div>
+          {explorerSections.length > 0 && (
+            <div class="cluster exp__tags" style="--cluster-gap: var(--space-2xs)">
+              {explorerSections.map((s) => (
+                <span class="tag">{s.label}</span>
+              ))}
+            </div>
+          )}
+          <ul role="list" class="opp-list">
+            {opportunityList.map((o) => (
+              <li class="opp-item">
+                <p class="opp-item__title">{o.title}</p>
+                {o.desc && <p class="opp-item__desc muted">{o.desc}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- 7. Linkage explorer (scoped to this thread) -->
+    {
+      threadNodes.length > 0 && (
+        <section class="thread__section" aria-labelledby="explorer-heading">
+          <LinkageExplorer
+            nodes={threadNodes}
+            related={related}
+            initialId={thread.artifacts[0]?.id}
+            heading="Explore the links"
+          />
+        </section>
+      )
+    }
+
+    <!-- 6. Footer nav -->
+    <nav class="thread-nav" aria-label="Thread navigation">
+      <a href="/threads" class="thread-nav__all">← All threads</a>
+      <div class="thread-nav__siblings">
+        {
+          prevThread && (
+            <a href={`/threads/${prevThread.id}`} class="thread-nav__sibling thread-nav__sibling--prev">
+              ← {prevThread.question}
+            </a>
+          )
+        }
+        {
+          nextThread && (
+            <a href={`/threads/${nextThread.id}`} class="thread-nav__sibling thread-nav__sibling--next">
+              {nextThread.question} →
+            </a>
+          )
+        }
+      </div>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  /* ---- Page shell ---- */
+
+  .thread {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+
+  /* ---- Header ---- */
+
+  .thread__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+
+  .thread__eyebrow .kicker {
+    margin: 0;
+  }
+
+  .thread__question {
+    font-family: var(--font-display);
+    font-size: clamp(var(--step-1), 3.5vw, var(--step-2));
+    line-height: 1.2;
+    margin-block: 0;
+    color: var(--color-text);
+  }
+
+  .thread__take {
+    color: var(--color-text-secondary);
+  }
+
+  /* ---- Status badge ---- */
+
+  .status-badge {
+    display: inline-block;
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .status-badge--open {
+    background: color-mix(in oklch, var(--color-border) 60%, transparent);
+    color: var(--color-text-secondary);
+  }
+
+  .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 22%, transparent);
+  }
+
+  /* ---- Section rhythm ---- */
+
+  .thread__section {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-block: 0 var(--space-m);
+  }
+
+  /* ---- Artifact list (the work) ---- */
+
+  .artifact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .artifact-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    padding: var(--space-s) var(--space-m);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    border: var(--border-hairline);
+    transition: border-color 0.15s ease;
+  }
+
+  .artifact-row:hover {
+    border-color: var(--color-accent);
+  }
+
+  .artifact-row__title {
+    font-size: var(--step-0);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .artifact-row__title:hover {
+    color: var(--color-accent);
+  }
+
+  .kind-chip {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.15em 0.6em;
+    border-radius: 999px;
+    background: var(--color-tag-bg);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ---- Reading path ---- */
+
+  .reading-path__note {
+    font-size: var(--step--1);
+    margin-block: 0 var(--space-l);
+    color: var(--color-text-muted);
+  }
+
+  .path-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .path-stop {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 var(--space-m);
+  }
+
+  /* Connector column */
+
+  .path-stop__connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .path-stop__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-bg-subtle);
+    border: 1.5px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .path-stop__line {
+    flex: 1;
+    width: 1.5px;
+    background: color-mix(in oklch, var(--color-accent) 30%, var(--color-border));
+    margin-block: var(--space-2xs);
+    min-height: var(--space-l);
+  }
+
+  /* Content column */
+
+  .path-stop__content {
+    padding-block-end: var(--space-xl);
+    padding-block-start: 0.15rem;
+  }
+
+  .path-stop:last-child .path-stop__content {
+    padding-block-end: 0;
+  }
+
+  .path-stop__title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    margin-block: 0 var(--space-2xs);
+    line-height: 1.3;
+  }
+
+  .path-stop__link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 40%, transparent);
+    text-underline-offset: 0.2em;
+    transition: color 0.15s ease;
+  }
+
+  .path-stop__link:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  .path-stop__meta {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    margin-block: 0 var(--space-2xs);
+  }
+
+  .path-stop__why {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ---- Open literature ---- */
+
+  .paper-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .paper-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    padding-block: var(--space-xs);
+    border-bottom: var(--border-hairline);
+  }
+
+  .paper-row:first-child {
+    border-top: var(--border-hairline);
+  }
+
+  .paper-row__title {
+    font-size: var(--step-0);
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 35%, transparent);
+    text-underline-offset: 0.2em;
+    flex: 1;
+    min-width: 0;
+    transition: color 0.15s ease;
+  }
+
+  .paper-row__title:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  .paper-row__meta {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ---- Thread nav ---- */
+
+  .thread-nav {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .thread-nav__all {
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .thread-nav__all:hover {
+    color: var(--color-accent);
+  }
+
+  .thread-nav__siblings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .thread-nav__sibling {
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    max-width: 45ch;
+    line-height: 1.4;
+    transition: color 0.15s ease;
+  }
+
+  .thread-nav__sibling--next {
+    margin-inline-start: auto;
+    text-align: right;
+  }
+
+  .thread-nav__sibling:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- ADS library ---- */
+
+  .lib__header {
+    margin-block-end: var(--space-m);
+  }
+
+  .lib__header .section-heading {
+    margin-block-end: var(--space-2xs);
+  }
+
+  .lib__meta {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    font-size: var(--step--1);
+  }
+
+  .lib__name {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .lib__count {
+    font-family: var(--font-mono);
+  }
+
+  .lib__browse {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .lib__browse:hover {
+    opacity: 0.75;
+  }
+
+  .ads-paper-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .ads-paper-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    padding-block: var(--space-xs);
+    border-bottom: var(--border-hairline);
+  }
+
+  .ads-paper-row:first-child {
+    border-top: var(--border-hairline);
+  }
+
+  .ads-paper-row__title {
+    font-size: var(--step-0);
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 35%, transparent);
+    text-underline-offset: 0.2em;
+    flex: 1;
+    min-width: 0;
+    transition: color 0.15s ease;
+  }
+
+  .ads-paper-row__title:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  .ads-paper-row__meta {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .lib__note {
+    font-size: var(--step--1);
+    margin-block: var(--space-s) 0;
+  }
+
+  /* ---- Explorer ---- */
+
+  .exp__summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-block-end: var(--space-m);
+    font-size: var(--step--1);
+  }
+
+  .exp__links {
+    display: flex;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+
+  .exp__link {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .exp__link:hover {
+    opacity: 0.75;
+  }
+
+  .exp__tags {
+    margin-block-end: var(--space-l);
+  }
+
+  .opp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .opp-item {
+    padding: var(--space-s) var(--space-m);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    border: var(--border-hairline);
+  }
+
+  .opp-item__title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2xs);
+    line-height: 1.3;
+  }
+
+  .opp-item__desc {
+    font-size: var(--step--1);
+    margin: 0;
+    line-height: 1.6;
+  }
+</style>

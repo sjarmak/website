@@ -1,0 +1,200 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { buildTimeline } from "@/lib/graph/buildTimeline";
+
+const data = await buildTimeline();
+---
+
+<PageLayout
+  kicker="Prototype"
+  title="Graph over time"
+  description="Scrub through years to watch the knowledge graph grow — seeing how the work migrated from planetary science through retrieval to agents."
+  intro="Drag the year slider — or press Play — to watch nodes and edges appear as they entered the timeline, revealing how the work migrated from planetary science through retrieval into agents."
+>
+  <div class="time-explorer" data-time-explorer>
+
+    <div class="controls" role="group" aria-label="Timeline controls">
+      <label class="year-label" for="year-slider">
+        <span class="year-label__word muted">Year</span>
+        <output class="year-readout" id="year-readout" for="year-slider"
+          >{data.minYear}</output
+        >
+      </label>
+      <input
+        type="range"
+        id="year-slider"
+        data-year-slider
+        min={data.minYear}
+        max={data.maxYear}
+        value={data.minYear}
+        step="1"
+        aria-label={`Year slider, ${data.minYear} to ${data.maxYear}`}
+        aria-valuetext={`Year ${data.minYear}`}
+      />
+      <button type="button" class="chip play-btn" data-play-btn aria-label="Play timeline animation">
+        ▸ Play
+      </button>
+    </div>
+
+    <div
+      class="graph-canvas"
+      data-time-canvas
+      role="img"
+      aria-label="Interactive knowledge graph filtered by year. An ordered list of the same content is below."
+    >
+    </div>
+
+    <p class="a11y-note muted" aria-live="polite">
+      Graph canvas requires JavaScript. The ordered list below always shows all
+      nodes sorted by year.
+    </p>
+
+    <ol class="fallback-list" data-fallback-list aria-label="Nodes sorted by year">
+      {
+        [...data.nodes]
+          .sort((a, b) => a.year - b.year || a.label.localeCompare(b.label))
+          .map((n) => (
+            <li class="fallback-item">
+              <span class={`chip chip--type chip--${n.type}`}>{n.type}</span>
+              <span class="fallback-item__label">{n.label}</span>
+              <span class="fallback-item__year muted">{n.year}</span>
+            </li>
+          ))
+      }
+    </ol>
+  </div>
+</PageLayout>
+
+<script
+  type="application/json"
+  data-time-data
+  set:html={JSON.stringify(data)}
+  is:inline
+></script>
+
+<script>
+  import "@/scripts/graph-time";
+</script>
+
+<style>
+  .time-explorer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    padding-block-end: var(--space-2xl);
+  }
+
+  /* Hide a11y note and list when canvas is active */
+  .time-explorer[data-canvas-active="true"] .a11y-note {
+    display: none;
+  }
+  .time-explorer[data-canvas-active="true"] .fallback-list {
+    display: none;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  .year-label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    white-space: nowrap;
+  }
+
+  .year-readout {
+    font-size: var(--step-1);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent);
+    min-width: 3.5ch;
+    display: inline-block;
+  }
+
+  #year-slider {
+    flex: 1 1 14rem;
+    min-width: 8rem;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+  }
+
+  .play-btn {
+    font-size: var(--step--1);
+    padding: 0.4em 0.9em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .play-btn[data-playing="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .graph-canvas {
+    width: 100%;
+    height: min(70vh, 640px);
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: var(--graph-bg);
+    /* hidden until JS activates; no-JS shows the fallback list */
+    display: none;
+  }
+  .time-explorer[data-canvas-active="true"] .graph-canvas {
+    display: block;
+  }
+
+  .a11y-note {
+    font-size: var(--step--1);
+  }
+
+  .fallback-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .fallback-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--step--1);
+  }
+
+  .fallback-item__label {
+    flex: 1;
+  }
+
+  .fallback-item__year {
+    font-variant-numeric: tabular-nums;
+    min-width: 4ch;
+    text-align: right;
+  }
+
+  .chip--type {
+    font-size: var(--step--1);
+    padding: 0.2em 0.6em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    color: var(--color-text-muted);
+  }
+  .chip--project {
+    color: var(--graph-node-project);
+    border-color: var(--graph-node-project);
+  }
+  .chip--topic {
+    color: var(--graph-node-topic);
+    border-color: var(--graph-node-topic);
+  }
+  .chip--output {
+    color: var(--graph-node-output);
+    border-color: var(--graph-node-output);
+  }
+</style>

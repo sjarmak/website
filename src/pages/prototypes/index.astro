@@ -1,0 +1,112 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+
+interface Proto {
+  href: string;
+  title: string;
+  shape: string;
+  blurb: string;
+}
+
+// Brainstorm prototypes, each a structurally distinct way into the site.
+const prototypes: Proto[] = [
+  {
+    href: "/prototypes/graph-time",
+    title: "Graph over time",
+    shape: "time-indexed diff over the knowledge graph",
+    blurb:
+      "Scrub a year slider and watch the work appear — the map of projects, topics, and outputs growing from planetary science toward agents.",
+  },
+  {
+    href: "/prototypes/receipts",
+    title: "Receipts",
+    shape: "claim → evidence binding in prose",
+    blurb:
+      "Every load-bearing claim carries an inline chip linking to the artifact that proves it: paper, repo, dataset, talk.",
+  },
+  {
+    href: "/prototypes/paths",
+    title: "Reading paths",
+    shape: "authored linear path over a nonlinear corpus",
+    blurb:
+      "Hand-curated tours that thread existing work into an order, with narration written between each stop.",
+  },
+  {
+    href: "/prototypes/questions",
+    title: "Open questions",
+    shape: "question-centric index",
+    blurb:
+      "A board organized around the unknowns I'm actively chasing — not finished answers — each accreting links over time.",
+  },
+  {
+    href: "/prototypes/starmap",
+    title: "Starmap",
+    shape: "dimensionality-reduced spatial map",
+    blurb:
+      "All content projected into a continuous field you pan like a star chart. Proximity is similarity; there are no edges.",
+  },
+  {
+    href: "/prototypes/research-atlas",
+    title: "Research atlas",
+    shape: "ADS / SciX literature map + auto reading path",
+    blurb:
+      "Pulls publications from NASA ADS / SciX and lays the scholarship out as a themed map with a generated way in.",
+  },
+];
+---
+
+<PageLayout
+  title="Prototypes"
+  kicker="Brainstorm · exploration"
+  intro="Six structurally distinct experiments for the site, each a working MVP. Rough edges expected — these probe the shape of an idea, not the finished feature."
+  description="Working prototypes of new directions for sjarmak.ai."
+  noindex={true}
+>
+  <ul role="list" class="auto-grid" style="--grid-min: 18rem; --grid-gap: var(--space-m)">
+    {
+      prototypes.map((p) => (
+        <li class="proto">
+          <a href={p.href} class="proto__link">
+            <h2 class="proto__title">{p.title}</h2>
+          </a>
+          <p class="proto__shape">{p.shape}</p>
+          <p class="muted">{p.blurb}</p>
+          <p class="proto__cta">
+            <a href={p.href}>Open →</a>
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</PageLayout>
+
+<style>
+  .proto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+  }
+  .proto__link {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .proto__title {
+    font-size: var(--step-1);
+  }
+  .proto__link:hover .proto__title {
+    color: var(--color-accent);
+  }
+  .proto__shape {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+  .proto__cta {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2xs);
+  }
+</style>

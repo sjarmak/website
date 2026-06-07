@@ -1,0 +1,182 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import LinkageExplorer from "@/components/knowledge/LinkageExplorer.astro";
+import { buildKnowledge } from "@/lib/knowledge/build";
+import type { KnowledgeThread } from "@/lib/knowledge/types";
+
+const { threads, nodes, related } = await buildKnowledge();
+---
+
+<PageLayout
+  title="Open threads"
+  kicker="Working knowledge"
+  intro="Each thread is a question I'm actively working on, with the writing, projects, talks, and papers that orbit it gathered in one place; the question is the subject, not me. Relationships between those pieces are computed three ways, by meaning (embeddings), by words (lexical), and by citation, the same retrieval lenses I build at SciX and Sourcegraph."
+  description="Active lines of inquiry gathering writing, talks, learning explorers, projects, and real ADS/SciX papers, organized by open question rather than by résumé."
+>
+  <div class="stack stack-l">
+    <ul role="list" class="auto-grid" style="--grid-min: 20rem; --grid-gap: var(--space-m)">
+      {
+        threads.map((thread: KnowledgeThread) => (
+          <li class="thread-card">
+            <div class="thread-card__top">
+              <span class={`status-badge status-badge--${thread.status}`} aria-label={`Status: ${thread.status}`}>
+                {thread.status}
+              </span>
+            </div>
+
+            <a href={`/threads/${thread.id}`} class="thread-card__question-link">
+              <h2 class="thread-card__question">{thread.question}</h2>
+            </a>
+
+            <p class="thread-card__take">{thread.take}</p>
+
+            {thread.concepts.length > 0 && (
+              <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+                {thread.concepts.map((c) => (
+                  <span class="tag">{c}</span>
+                ))}
+              </div>
+            )}
+
+            <p class="thread-card__counts">
+              {thread.artifacts.length} artifacts · {thread.papers.length} papers · {thread.readingOrder.length}-step reading path
+            </p>
+
+            <p class="thread-card__cta">
+              <a href={`/threads/${thread.id}`}>Follow the thread →</a>
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="section">
+      <h2 class="section__heading">See the links three ways</h2>
+      <p class="muted measure">
+        Pick anything — a paper, an essay, a project — and watch how "related" changes depending on whether you ask by meaning, by words, or by citations.
+      </p>
+      <LinkageExplorer nodes={nodes} related={related} />
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  /* ---- thread cards ---- */
+  .thread-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    transition: border-color 0.15s ease;
+  }
+
+  .thread-card:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+
+  .thread-card__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  /* status badges — reuses the pattern from questions.astro */
+  .status-badge {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.2em 0.65em;
+    border-radius: 999px;
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+  }
+
+  .status-badge--open {
+    background: color-mix(in oklch, var(--color-border) 60%, transparent);
+    color: var(--color-text-secondary);
+  }
+
+  .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 22%, transparent);
+  }
+
+  .thread-card__question-link {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .thread-card__question-link:hover .thread-card__question {
+    color: var(--color-accent);
+  }
+
+  .thread-card__question {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    margin: 0;
+
+    /* clamp to 3 lines — long questions are still readable, not truncated to a stub */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .thread-card__take {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
+
+    /* excerpt if long */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .thread-card__counts {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .thread-card__cta {
+    margin-block-start: auto;
+    padding-block-start: var(--space-2xs);
+  }
+
+  .thread-card__cta a {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .thread-card__cta a:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- linkage explorer section ---- */
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .section__heading {
+    font-size: var(--step-2);
+    margin: 0;
+  }
+</style>

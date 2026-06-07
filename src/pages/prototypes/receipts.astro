@@ -1,0 +1,107 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import Receipt from "@/components/receipts/Receipt.astro";
+---
+
+<PageLayout
+  kicker="Prototype"
+  title="Receipts"
+  intro="Every claim, linked to the artifact that proves it."
+>
+  <section class="receipts-demo stack stack-l">
+
+    <div class="prose measure">
+      <p>Stephanie Jarmak is an information scientist and AI agent advocate whose research spans
+        planetary science and machine intelligence. She <Receipt
+          kind="paper"
+          source="Jarmak et al. 2022 — Solar occultation observations of Saturn's rings with Cassini UVIS (Icarus)"
+          url="https://www.sciencedirect.com/science/article/abs/pii/S001910352200330X"
+        >co-authored peer-reviewed planetary science from Cassini ring occultations</Receipt>,
+        and <Receipt
+          kind="paper"
+          source="Blanco-Cuaresma, Ciucă, Accomazzi, Jarmak et al. 2023 — Experimenting with LLMs and vector embeddings in NASA SciX (arXiv:2312.14211)"
+          url="https://arxiv.org/abs/2312.14211"
+        >published work on LLM embeddings for scientific literature search</Receipt>
+        at NASA's Astrophysics Data System. Her transition from telescope to terminal has been
+        recognised in kind: <Receipt
+          kind="press"
+          source="WGSBN Bulletin Vol. 3, No. 9 — Asteroid (30232) Stephaniejarmak, IAU / JPL Small-Body Database"
+          url="https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=30232"
+        >she has an asteroid named after her</Receipt>
+        by the International Astronomical Union, in recognition of her work on asteroid spectroscopy,
+        regolith adhesion, and planetesimal formation.</p>
+
+      <p>Today Stephanie builds tools at the frontier of AI-assisted software development. She <Receipt
+          kind="repo"
+          source="CodeScaleBench — 275 tasks across 20 suites for evaluating AI coding agents on large, enterprise-scale codebases (GitHub: sjarmak/CodeScaleBench)"
+          url="https://github.com/sjarmak/CodeScaleBench"
+        >built CodeScaleBench for evaluating agents on large-scale software</Receipt>,
+        covering 9 developer work types with auditable per-task traces and dual-verifier support.
+        She also <Receipt
+          kind="talk"
+          source="Sourcegraph Webinar — Building a Software Factory (June 2026)"
+          url="https://sourcegraph.com/webinars/building-a-software-factory-06032026"
+        >gave a Sourcegraph webinar on building a software factory with AI agents</Receipt>,
+        and runs the <Receipt
+          kind="repo"
+          source="Code Intelligence Digest — weekly curated digest using hybrid LLM + BM25 + recency ranking (GitHub: sjarmak/code-intelligence-digest)"
+          url="https://github.com/sjarmak/code-intelligence-digest"
+        >Code Intelligence Digest</Receipt>,
+        a weekly curation of what's moving in code intelligence and autonomous agents.</p>
+    </div>
+
+    <div class="legend cluster" aria-label="Chip glyph legend">
+      <span class="legend__label">Chip glyphs:</span>
+      <span class="legend__item"><span class="legend__glyph">◆</span> Paper</span>
+      <span class="legend__item"><span class="legend__glyph">⌥</span> Repository</span>
+      <span class="legend__item"><span class="legend__glyph">⊞</span> Dataset</span>
+      <span class="legend__item"><span class="legend__glyph">▷</span> Talk / Webinar</span>
+      <span class="legend__item"><span class="legend__glyph">✦</span> Post</span>
+      <span class="legend__item"><span class="legend__glyph">★</span> Recognition</span>
+    </div>
+
+  </section>
+</PageLayout>
+
+<script>
+  import "@/scripts/receipts";
+</script>
+
+<style>
+  .receipts-demo {
+    padding-block: var(--space-l) var(--space-2xl);
+    max-width: var(--measure);
+  }
+
+  .legend {
+    --cluster-gap: var(--space-s);
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+    padding: var(--space-xs) var(--space-s);
+    background: var(--color-bg-subtle);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .legend__label {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono, monospace);
+    font-size: calc(var(--step--1) * 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  .legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+  }
+
+  .legend__glyph {
+    color: var(--color-accent);
+    font-size: 0.85em;
+  }
+</style>

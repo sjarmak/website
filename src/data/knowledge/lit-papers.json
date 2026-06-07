@@ -1,0 +1,150 @@
+{
+  "source": "scix MCP (hybrid search)",
+  "count": 18,
+  "papers": [
+    {
+      "bibcode": "2020arXiv200407180C",
+      "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+      "firstAuthor": "Cohan, Arman",
+      "year": 2020,
+      "citationCount": 125,
+      "abstract": "Citation-informed transformer embeddings for scientific documents; the lineage behind SPECTER2, one of the embedding models used in SciX."
+    },
+    {
+      "bibcode": "2020arXiv200302320H",
+      "title": "Knowledge Graphs",
+      "firstAuthor": "Hogan, Aidan",
+      "year": 2020,
+      "citationCount": 118,
+      "abstract": "A comprehensive introduction to knowledge graphs; the structural backbone for representing scientific knowledge beyond ranked lists."
+    },
+    {
+      "bibcode": "2020arXiv200410964G",
+      "title": "Don't Stop Pretraining: Adapt Language Models to Domains and Tasks",
+      "firstAuthor": "Gururangan, Suchin",
+      "year": 2020,
+      "citationCount": 463,
+      "abstract": "Domain-adaptive pretraining; the argument for domain-specific scientific models like INDUS over generic embeddings."
+    },
+    {
+      "bibcode": "2024ASPC..535..119G",
+      "title": "Building astroBERT, a Language Model for Astronomy & Astrophysics",
+      "firstAuthor": "Grezes, F.",
+      "year": 2024,
+      "citationCount": 17,
+      "abstract": "A domain language model for the NASA ADS corpus; co-cited with the SciX embeddings work."
+    },
+    {
+      "bibcode": "2022arXiv221200744G",
+      "title": "Improving astroBERT using Semantic Textual Similarity",
+      "firstAuthor": "Grezes, Felix",
+      "year": 2022,
+      "citationCount": 5,
+      "abstract": "STS fine-tuning of astroBERT over the ADS literature."
+    },
+    {
+      "bibcode": "2023arXiv230213971T",
+      "title": "LLaMA: Open and Efficient Foundation Language Models",
+      "firstAuthor": "Touvron, Hugo",
+      "year": 2023,
+      "citationCount": 9291,
+      "abstract": "Open foundation models; co-cited with the SciX embeddings work as the general-model backdrop."
+    },
+    {
+      "bibcode": "2023arXiv230308774O",
+      "title": "GPT-4 Technical Report",
+      "firstAuthor": "OpenAI",
+      "year": 2023,
+      "citationCount": 13534,
+      "abstract": "Frontier general model; co-cited with the SciX embeddings work."
+    },
+    {
+      "bibcode": "2024arXiv240716741W",
+      "title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+      "firstAuthor": "Wang, Xingyao",
+      "year": 2024,
+      "citationCount": 92,
+      "abstract": "An open platform for AI software-developer agents; a reference architecture for agents that act on real codebases."
+    },
+    {
+      "bibcode": "2024arXiv240510467L",
+      "title": "Agent Design Pattern Catalogue: Architectural Patterns for Foundation Model based Agents",
+      "firstAuthor": "Liu, Yue",
+      "year": 2024,
+      "citationCount": 9,
+      "abstract": "A catalogue of architectural patterns for foundation-model agents; vocabulary for reasoning about reliability."
+    },
+    {
+      "bibcode": "2026arXiv260408906Z",
+      "title": "Dissecting Bug Triggers and Failure Modes in Modern Agentic Frameworks: An Empirical Study",
+      "firstAuthor": "Zhang, Xiaowen",
+      "year": 2026,
+      "citationCount": 0,
+      "abstract": "Empirical study of where agentic frameworks (CrewAI, AutoGen) break; directly about reliability failure modes."
+    },
+    {
+      "bibcode": "2025arXiv250108243P",
+      "title": "Engineering an LLM-Powered Multi-agent Framework for Autonomous CloudOps",
+      "firstAuthor": "Parthasarathy, Kannan",
+      "year": 2025,
+      "citationCount": 0,
+      "abstract": "Engineering a production multi-agent system for autonomous operations; a real deployment case study."
+    },
+    {
+      "bibcode": "2024arXiv240902977L",
+      "title": "Large Language Model-Based Agents for Software Engineering: A Survey",
+      "firstAuthor": "Liu, Junwei",
+      "year": 2024,
+      "citationCount": 40,
+      "abstract": "A survey of LLM agents across the software-engineering lifecycle."
+    },
+    {
+      "bibcode": "2026arXiv260407487L",
+      "title": "CLEAR: Context Augmentation from Contrastive Learning of Experience via Agentic Reflection",
+      "firstAuthor": "Liu, Linbo",
+      "year": 2026,
+      "citationCount": 0,
+      "abstract": "Building task-relevant context from an agent's own experience via contrastive reflection; a memory/context-engineering approach."
+    },
+    {
+      "bibcode": "2026arXiv260407791F",
+      "title": "SEARL: Joint Optimization of Policy and Tool Graph Memory for Self-Evolving Agents",
+      "firstAuthor": "Feng, Xinshun",
+      "year": 2026,
+      "citationCount": 0,
+      "abstract": "A graph-structured tool memory jointly optimized with policy for self-evolving agents."
+    },
+    {
+      "bibcode": "2024arXiv240202047S",
+      "title": "Calibration and Correctness of Language Models for Code",
+      "firstAuthor": "Spiess, Claudio",
+      "year": 2024,
+      "citationCount": 28,
+      "abstract": "Whether code models know when they are right; calibration as an honest-evaluation signal."
+    },
+    {
+      "bibcode": "2024arXiv240600515J",
+      "title": "A Survey on Large Language Models for Code Generation",
+      "firstAuthor": "Jiang, Juyong",
+      "year": 2024,
+      "citationCount": 155,
+      "abstract": "A broad survey of code-generation LLMs and how they are measured."
+    },
+    {
+      "bibcode": "2023arXiv231114904J",
+      "title": "LLM-Assisted Code Cleaning For Training Accurate Code Generators",
+      "firstAuthor": "Jain, Naman",
+      "year": 2023,
+      "citationCount": 18,
+      "abstract": "Data quality for code generators; what goes in shapes what the benchmark sees come out."
+    },
+    {
+      "bibcode": "2024arXiv241220367W",
+      "title": "Enhancing Code LLMs with Reinforcement Learning in Code Generation: A Survey",
+      "firstAuthor": "Wang, Junqiao",
+      "year": 2024,
+      "citationCount": 7,
+      "abstract": "RL for code generation; moving evaluation from static benchmarks toward outcome signals."
+    }
+  ]
+}

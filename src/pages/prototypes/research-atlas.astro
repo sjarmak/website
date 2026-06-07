@@ -1,0 +1,515 @@
+---
+/**
+ * Research Atlas — prototype
+ *
+ * Pulls publications from NASA ADS / SciX at build time (live if ADS_API_TOKEN
+ * is set, offline fixture otherwise), lays them out as a themed literature map,
+ * and auto-generates a guided reading path through her own scholarship.
+ *
+ * Composes: learning-journey / embedding-map / guided-reading ideas + ADS API.
+ */
+import PageLayout from "@/layouts/PageLayout.astro";
+import { fetchAuthorPapers, type AdsPaper } from "@/lib/ads/client";
+
+const { papers, source } = await fetchAuthorPapers();
+
+// ── sort helpers ──────────────────────────────────────────────────────────────
+
+const planetary = papers.filter((p) => p.field === "planetary").sort((a, b) => a.year - b.year);
+const information = papers.filter((p) => p.field === "information").sort((a, b) => a.year - b.year);
+
+const allYears = papers.map((p) => p.year).filter((y) => y > 0);
+const minYear = Math.min(...allYears);
+const maxYear = Math.max(...allYears);
+const yearSpan = Math.max(maxYear - minYear, 1);
+
+// ── SVG map geometry ──────────────────────────────────────────────────────────
+
+const SVG_W = 900;
+const SVG_H = 340;
+const PAD_L = 52;
+const PAD_R = 24;
+const PAD_T = 20;
+const LANE_PLAN_Y = 95;   // y-center of planetary lane
+const LANE_INFO_Y = 230;  // y-center of information lane
+const AXIS_Y = 162;       // mid-axis
+const DOT_MIN = 6;
+const DOT_MAX = 18;
+const MAX_CITE = Math.max(...papers.map((p) => p.citationCount), 1);
+
+function xPos(year: number): number {
+  return PAD_L + ((year - minYear) / yearSpan) * (SVG_W - PAD_L - PAD_R);
+}
+
+function dotR(citationCount: number): number {
+  if (MAX_CITE === 0) return DOT_MIN;
+  return DOT_MIN + ((citationCount / MAX_CITE) * (DOT_MAX - DOT_MIN));
+}
+
+// ── guided reading path ───────────────────────────────────────────────────────
+// Career arc: planetary roots (oldest → newest) then information science pivot
+
+type ReadingEntry = { paper: AdsPaper; rationale: string };
+
+function guideRationale(paper: AdsPaper, index: number, total: number): string {
+  if (paper.field === "planetary") {
+    const era =
+      paper.year <= 2020 ? "Planetary science foundations" :
+      paper.year <= 2022 ? "Mid-career planetary work" :
+      "Recent planetary observations";
+    return `${era} (${paper.year})`;
+  }
+  const era =
+    index === 0 ? `Pivot to information science — first publication (${paper.year})` :
+    index === total - 1 ? `Current research frontier (${paper.year})` :
+    `Information science expansion (${paper.year})`;
+  return era;
+}
+
+const allPlanetaryAsc = planetary.slice(); // already sorted year asc
+const allInfoAsc = information.slice();
+
+const readingPath: ReadingEntry[] = [
+  ...allPlanetaryAsc.map((p, i) => ({
+    paper: p,
+    rationale: guideRationale(p, i, allPlanetaryAsc.length),
+  })),
+  ...allInfoAsc.map((p, i) => ({
+    paper: p,
+    rationale: guideRationale(p, i, allInfoAsc.length),
+  })),
+];
+
+// ── year tick marks ───────────────────────────────────────────────────────────
+
+const tickYears = Array.from(
+  new Set([minYear, ...papers.map((p) => p.year), maxYear]),
+).sort((a, b) => a - b);
+
+// Thin out ticks to avoid crowding (only render every year that appears, but
+// suppress label if it would be < 40px from prior rendered tick).
+const renderedTicks: { year: number; x: number }[] = [];
+for (const y of tickYears) {
+  const x = xPos(y);
+  const prev = renderedTicks.at(-1);
+  if (!prev || x - prev.x >= 38) {
+    renderedTicks.push({ year: y, x });
+  }
+}
+---
+
+<PageLayout
+  title="Research atlas"
+  kicker="Prototype · connects to NASA ADS / SciX"
+  intro="A themed map of my scholarship and a proposed way into it — from Saturn's rings to LLM embeddings, tracing the arc of a career."
+  description="Research atlas — a literature map and guided reading path across Stephanie Jarmak's planetary science and information science publications."
+>
+  <div class="stack stack-l">
+
+    <!-- data source badge -->
+    <div class="source-badge cluster">
+      <span class={`badge ${source === "live" ? "badge--live" : "badge--offline"}`}>
+        {source === "live" ? "Live — NASA ADS" : "Offline fixture"}
+      </span>
+      {source === "fixture" && (
+        <span class="muted" style="font-size: var(--step--1)">
+          Set <code>ADS_API_TOKEN</code> for live citation counts &amp; full corpus
+        </span>
+      )}
+    </div>
+
+    <!-- literature map -->
+    <section>
+      <h2 class="section-head">Literature map</h2>
+      <p class="muted measure" style="margin-block-end: var(--space-m)">
+        Each dot is a paper. Two lanes: <strong style="color: var(--color-planet)">planetary science</strong>
+        (top) and <strong style="color: var(--color-info)">information science</strong> (bottom).
+        Position = year published. Dot size scales with citation count (all dots minimum size in offline mode).
+      </p>
+
+      <div class="map-scroll">
+        <svg
+          class="atlas-map"
+          viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+          aria-label="Literature map: scatter plot of publications by year and field"
+          role="img"
+        >
+          <!-- lane backgrounds -->
+          <rect x={PAD_L - 8} y={PAD_T} width={SVG_W - PAD_L - PAD_R + 8} height={AXIS_Y - PAD_T - 8}
+            rx="6" class="lane lane--planet" />
+          <rect x={PAD_L - 8} y={AXIS_Y + 8} width={SVG_W - PAD_L - PAD_R + 8} height={SVG_H - AXIS_Y - 28}
+            rx="6" class="lane lane--info" />
+
+          <!-- lane labels -->
+          <text x={PAD_L - 10} y={LANE_PLAN_Y} class="lane-label" text-anchor="end" dominant-baseline="middle">
+            Planetary
+          </text>
+          <text x={PAD_L - 10} y={LANE_INFO_Y} class="lane-label" text-anchor="end" dominant-baseline="middle">
+            Information
+          </text>
+
+          <!-- axis line -->
+          <line x1={PAD_L} y1={AXIS_Y} x2={SVG_W - PAD_R} y2={AXIS_Y} class="axis" />
+
+          <!-- year ticks -->
+          {renderedTicks.map(({ year, x }) => (
+            <>
+              <line x1={x} y1={AXIS_Y - 4} x2={x} y2={AXIS_Y + 4} class="tick" />
+              <text x={x} y={AXIS_Y + 16} class="tick-label" text-anchor="middle">{year}</text>
+            </>
+          ))}
+
+          <!-- planetary dots -->
+          {planetary.map((p) => {
+            const cx = xPos(p.year);
+            const r = dotR(p.citationCount);
+            const label = `${p.title} (${p.year})`;
+            return (
+              <a href={p.url} target="_blank" rel="noopener" aria-label={label}>
+                <circle
+                  cx={cx}
+                  cy={LANE_PLAN_Y}
+                  r={r}
+                  class="dot dot--planet"
+                />
+                <title>{p.title} · {p.year} · {p.venue ?? p.type}</title>
+              </a>
+            );
+          })}
+
+          <!-- information dots -->
+          {information.map((p) => {
+            const cx = xPos(p.year);
+            const r = dotR(p.citationCount);
+            const label = `${p.title} (${p.year})`;
+            return (
+              <a href={p.url} target="_blank" rel="noopener" aria-label={label}>
+                <circle
+                  cx={cx}
+                  cy={LANE_INFO_Y}
+                  r={r}
+                  class="dot dot--info"
+                />
+                <title>{p.title} · {p.year} · {p.venue ?? p.type}</title>
+              </a>
+            );
+          })}
+        </svg>
+      </div>
+
+      <!-- paper index below map -->
+      <details class="paper-index">
+        <summary class="paper-index__toggle">Show all {papers.length} papers</summary>
+        <div class="auto-grid" style="--grid-min: 22rem; --grid-gap: var(--space-s); margin-block-start: var(--space-m)">
+          {papers
+            .slice()
+            .sort((a, b) => b.year - a.year)
+            .map((p) => (
+              <div class="paper-card">
+                <span class={`field-pip field-pip--${p.field}`} aria-label={p.field} />
+                <div>
+                  <a href={p.url} rel="noopener" class="paper-card__title">{p.title}</a>
+                  <p class="muted paper-card__meta">
+                    {p.authorString ?? p.authors.slice(0, 3).join(", ")}{p.authors.length > 3 ? ", et al." : ""}
+                    {p.venue ? ` · ${p.venue}` : ""} · {p.year}
+                  </p>
+                </div>
+              </div>
+            ))}
+        </div>
+      </details>
+    </section>
+
+    <!-- guided reading path -->
+    <section>
+      <h2 class="section-head">Guided reading path</h2>
+      <p class="muted measure" style="margin-block-end: var(--space-m)">
+        A proposed way in: planetary science foundations first, then the pivot into information science.
+        Read in order to trace the full career arc.
+      </p>
+
+      <ol role="list" class="reading-path stack">
+        {readingPath.map(({ paper, rationale }, i) => (
+          <li class="reading-step">
+            <span class="step-num">{i + 1}</span>
+            <div class="step-body">
+              <p class="step-rationale muted">{rationale}</p>
+              <a href={paper.url} rel="noopener" class={`step-title step-title--${paper.field}`}>
+                {paper.title}
+              </a>
+              <p class="step-meta muted">
+                {paper.authorString ?? paper.authors.slice(0, 3).join(", ")}{paper.authors.length > 3 ? ", et al." : ""}
+                {paper.venue ? ` · ${paper.venue}` : ""} · {paper.year}
+                {paper.arxiv && (
+                  <> · <a href={`https://arxiv.org/abs/${paper.arxiv}`} rel="noopener">arXiv ↗</a></>
+                )}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- footer / context -->
+    <footer class="atlas-footer">
+      <p class="muted measure">
+        This prototype composes the
+        <a href="/learning">literature-explorer</a> and embedding-map ideas with
+        the <a href="https://github.com/sjarmak/scix-agent" rel="noopener">SciX Agent</a>
+        and guided-reading-path concepts over the NASA ADS API libraries.
+      </p>
+      <nav class="cluster" aria-label="External publication searches">
+        <a
+          href="https://scixplorer.org/search?p=1&q=author%3Ajarmak&sort=score+desc&sort=date+desc&d=general"
+          rel="noopener"
+          class="ext-link"
+        >
+          All publications on SciX ↗
+        </a>
+        <a
+          href="https://ui.adsabs.harvard.edu/search/q=author%3A%22Jarmak%2C+S%22"
+          rel="noopener"
+          class="ext-link"
+        >
+          Search NASA ADS ↗
+        </a>
+      </nav>
+    </footer>
+
+  </div>
+</PageLayout>
+
+<style>
+  /* ── local color aliases (themed via tokens) ─────────────────────────────── */
+  :root {
+    --color-planet: var(--ember-500);
+    --color-info: var(--sage-500);
+  }
+  [data-theme="dark"] {
+    --color-planet: oklch(74% 0.15 58);
+    --color-info: oklch(70% 0.06 150);
+  }
+
+  /* ── section headings ────────────────────────────────────────────────────── */
+  .section-head {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-s);
+  }
+
+  /* ── source badge ────────────────────────────────────────────────────────── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.2em 0.7em;
+    border-radius: var(--radius-s);
+    border: var(--border-hairline);
+  }
+  .badge--live {
+    color: var(--color-info);
+    border-color: var(--color-info);
+  }
+  .badge--offline {
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+  .badge--live::before { content: "●"; margin-inline-end: 0.3em; }
+  .badge--offline::before { content: "○"; margin-inline-end: 0.3em; }
+
+  /* ── map scroll container ────────────────────────────────────────────────── */
+  .map-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    padding: var(--space-s) var(--space-xs);
+  }
+  .atlas-map {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    max-width: 900px;
+    height: auto;
+  }
+
+  /* ── SVG internals (use CSS vars, NOT oklch() directly on fill/stroke) ───── */
+  .lane {
+    fill: transparent;
+  }
+  .lane--planet {
+    fill: var(--color-surface);
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+  .lane--info {
+    fill: var(--color-bg-subtle);
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+
+  .lane-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    fill: var(--color-text-muted);
+  }
+
+  .axis {
+    stroke: var(--color-border);
+    stroke-width: 1.5;
+  }
+  .tick {
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+  .tick-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--color-text-muted);
+  }
+
+  .dot {
+    transition: r 0.15s ease, opacity 0.15s ease;
+  }
+  .dot:hover {
+    opacity: 0.8;
+  }
+  .dot--planet {
+    fill: var(--color-planet);
+    stroke: var(--color-bg);
+    stroke-width: 1.5;
+  }
+  .dot--info {
+    fill: var(--color-info);
+    stroke: var(--color-bg);
+    stroke-width: 1.5;
+  }
+
+  /* ── paper index ─────────────────────────────────────────────────────────── */
+  .paper-index {
+    margin-block-start: var(--space-m);
+  }
+  .paper-index__toggle {
+    cursor: pointer;
+    font-size: var(--step--1);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+  .paper-index__toggle::marker,
+  .paper-index__toggle::-webkit-details-marker { display: none; }
+  .paper-index__toggle::before { content: "▸"; }
+  details[open] .paper-index__toggle::before { content: "▾"; }
+
+  .paper-card {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: flex-start;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+  }
+  .field-pip {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-block-start: 0.4em;
+  }
+  .field-pip--planetary { background: var(--color-planet); }
+  .field-pip--information { background: var(--color-info); }
+
+  .paper-card__title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .paper-card__title:hover { color: var(--color-accent); }
+  .paper-card__meta {
+    font-size: var(--step--1);
+    margin-block-start: var(--space-3xs);
+  }
+
+  /* ── guided reading path ─────────────────────────────────────────────────── */
+  .reading-path {
+    --stack-gap: 0;
+    counter-reset: none;
+  }
+
+  .reading-step {
+    display: flex;
+    gap: var(--space-m);
+    align-items: flex-start;
+    padding-block: var(--space-m);
+    border-bottom: var(--border-hairline);
+  }
+  .reading-step:first-child { border-top: var(--border-hairline); }
+
+  .step-num {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: var(--border-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+
+  .step-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .step-rationale {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .step-title:hover { color: var(--color-accent); }
+  .step-title--planetary { border-left: 3px solid var(--color-planet); padding-inline-start: var(--space-xs); }
+  .step-title--information { border-left: 3px solid var(--color-info); padding-inline-start: var(--space-xs); }
+
+  .step-meta {
+    font-size: var(--step--1);
+    margin: 0;
+  }
+
+  /* ── footer ──────────────────────────────────────────────────────────────── */
+  .atlas-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    align-items: flex-start;
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+    flex-direction: column;
+  }
+  .ext-link {
+    font-size: var(--step--1);
+    color: var(--color-accent);
+  }
+  .ext-link:hover { color: var(--color-accent-hover); }
+</style>

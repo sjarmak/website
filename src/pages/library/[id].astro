@@ -1,0 +1,335 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getLibraries } from "@/lib/knowledge/build";
+import type { Library, LibraryPaper } from "@/lib/knowledge/types";
+
+export function getStaticPaths() {
+  return getLibraries().map((lib: Library) => ({
+    params: { id: lib.id },
+    props: { library: lib },
+  }));
+}
+
+interface Props {
+  library: Library;
+}
+
+const { library } = Astro.props;
+---
+
+<PageLayout
+  title={library.name}
+  kicker="Research library"
+  intro={library.description || undefined}
+>
+  <div class="stack stack-l">
+
+    <!-- Header row: count + back link -->
+    <div class="lib-head">
+      <p class="lib-count">
+        <span class="lib-count__num">{library.numDocuments}</span> documents
+        <span class={`visibility-chip ${library.public ? "visibility-chip--public" : "visibility-chip--private"}`}>
+          {library.public ? "public" : "private"}
+        </span>
+      </p>
+      <a href="/library" class="back-link">← All libraries</a>
+    </div>
+
+    <!-- Sort controls (client-side, vanilla) -->
+    <div class="sort-bar cluster" style="--cluster-gap: var(--space-xs)">
+      <span class="sort-label">Sort:</span>
+      <button class="sort-btn sort-btn--active" data-sort="newest" aria-pressed="true">Newest</button>
+      <button class="sort-btn" data-sort="cited" aria-pressed="false">Most cited</button>
+    </div>
+
+    <!-- Paper list -->
+    <ol role="list" class="paper-list" id="paper-list">
+      {
+        library.papers.map((paper: LibraryPaper, index: number) => {
+          const authorLine = paper.authorCount && paper.authorCount > 1
+            ? `${paper.firstAuthor} et al.`
+            : paper.firstAuthor;
+          return (
+            <li
+              class="paper"
+              data-year={String(paper.year ?? "")}
+              data-pubdate={paper.pubdate ?? ""}
+              data-cites={String(paper.citationCount)}
+              data-index={String(index)}
+            >
+              <div class="paper__top">
+                <a href={paper.adsUrl} rel="noopener noreferrer" class="paper__title">
+                  {paper.title} ↗
+                </a>
+              </div>
+              <p class="paper__meta muted">
+                {authorLine}
+                {paper.year && <> · {paper.year}</>}
+                {" · "}
+                <span class="paper__cites">{paper.citationCount} cites</span>
+                {paper.doctype && (
+                  <span class="tag paper__doctype">{paper.doctype}</span>
+                )}
+              </p>
+              {paper.abstract && (
+                <details class="paper__abstract">
+                  <summary class="paper__abstract-toggle">Abstract</summary>
+                  <p class="paper__abstract-text muted">{paper.abstract}</p>
+                </details>
+              )}
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <p class="back-footer">
+      <a href="/library">← All libraries</a>
+    </p>
+
+  </div>
+</PageLayout>
+
+<script>
+  const list = document.getElementById("paper-list");
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".sort-btn");
+
+  if (list) {
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.sort as "newest" | "cited";
+
+        buttons.forEach((b) => {
+          b.classList.remove("sort-btn--active");
+          b.setAttribute("aria-pressed", "false");
+        });
+        btn.classList.add("sort-btn--active");
+        btn.setAttribute("aria-pressed", "true");
+
+        const items = [...list.querySelectorAll<HTMLElement>("li[data-index]")];
+
+        items.sort((a, b) => {
+          if (mode === "newest") {
+            const da = a.dataset.pubdate || a.dataset.year || "";
+            const db = b.dataset.pubdate || b.dataset.year || "";
+            if (da !== db) return db.localeCompare(da);
+            return Number(a.dataset.index) - Number(b.dataset.index);
+          }
+          return Number(b.dataset.cites) - Number(a.dataset.cites);
+        });
+
+        items.forEach((item) => list.appendChild(item));
+      });
+    });
+  }
+</script>
+
+<style>
+  /* ---- header ---- */
+  .lib-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-m);
+  }
+
+  .lib-count {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .lib-count__num {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .back-link {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- sort bar ---- */
+  .sort-bar {
+    padding-block: var(--space-xs);
+    border-block: var(--border-hairline);
+  }
+
+  .sort-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+  }
+
+  .sort-btn {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+
+  .sort-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .sort-btn--active {
+    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .sort-btn--active {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+  }
+
+  /* ---- visibility chip ---- */
+  .visibility-chip {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.15em 0.55em;
+    border-radius: 999px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+
+  .visibility-chip--public {
+    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
+    color: var(--color-accent);
+  }
+
+  .visibility-chip--private {
+    background: color-mix(in oklch, var(--color-border) 60%, transparent);
+    color: var(--color-text-muted);
+  }
+
+  [data-theme="dark"] .visibility-chip--public {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+  }
+
+  /* ---- paper list ---- */
+  .paper-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .paper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    border-bottom: var(--border-hairline);
+  }
+
+  .paper:first-child {
+    border-top: var(--border-hairline);
+  }
+
+  .paper__top {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-s);
+  }
+
+  .paper__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .paper__title:hover {
+    color: var(--color-accent);
+  }
+
+  .paper__meta {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .paper__doctype {
+    font-size: var(--step--1);
+  }
+
+  /* ---- abstract toggle ---- */
+  .paper__abstract {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .paper__abstract-toggle {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.12s ease;
+  }
+
+  .paper__abstract-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .paper__abstract-toggle::before {
+    content: "+ ";
+  }
+
+  details[open] .paper__abstract-toggle::before {
+    content: "− ";
+  }
+
+  .paper__abstract-toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .paper__abstract-text {
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+    margin-block-start: var(--space-2xs);
+    margin: 0;
+    margin-block-start: var(--space-2xs);
+    max-width: var(--measure);
+  }
+
+  /* ---- footer back link ---- */
+  .back-footer {
+    padding-block-start: var(--space-m);
+    font-size: var(--step-0);
+  }
+
+  .back-footer a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .back-footer a:hover {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,325 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { readingPaths, type CollectionName } from "@/data/readingPaths";
+
+export async function getStaticPaths() {
+  return readingPaths.map((path) => ({
+    params: { slug: path.id },
+    props: { path },
+  }));
+}
+
+const { path } = Astro.props;
+
+// Load only the collections referenced in this path to avoid fetching everything.
+const neededCollections = [...new Set(path.stops.map((s) => s.collection))];
+
+interface EntryData {
+  title: string;
+  /** Canonical external or internal URL, resolved per-collection rules. */
+  url: string;
+}
+
+type EntryMap = Map<string, EntryData>;
+
+async function loadCollection(name: CollectionName): Promise<EntryMap> {
+  if (name === "projects") {
+    const entries = await getCollection("projects");
+    return new Map(
+      entries.map((e) => [e.id, { title: e.data.title, url: `/projects/${e.id}` }])
+    );
+  }
+  if (name === "writing") {
+    const entries = await getCollection("writing");
+    return new Map(
+      entries.map((e) => [
+        e.id,
+        { title: e.data.title, url: e.data.url ?? `/writing/${e.id}` },
+      ])
+    );
+  }
+  if (name === "talks") {
+    const entries = await getCollection("talks");
+    // No per-talk pages; link to the talks index.
+    return new Map(entries.map((e) => [e.id, { title: e.data.title, url: "/talks" }]));
+  }
+  if (name === "publications") {
+    const entries = await getCollection("publications");
+    return new Map(
+      entries.map((e) => [
+        e.id,
+        {
+          title: e.data.title,
+          url:
+            e.data.url ??
+            (e.data.bibcode
+              ? `https://ui.adsabs.harvard.edu/abs/${e.data.bibcode}`
+              : "/research"),
+        },
+      ])
+    );
+  }
+  // learning
+  const entries = await getCollection("learning");
+  return new Map(
+    entries.map((e) => [e.id, { title: e.data.title, url: e.data.url ?? "/learning" }])
+  );
+}
+
+const collectionMaps = new Map<CollectionName, EntryMap>();
+await Promise.all(
+  neededCollections.map(async (name) => {
+    collectionMaps.set(name, await loadCollection(name));
+  })
+);
+
+const kindLabel: Record<CollectionName, string> = {
+  projects: "Project",
+  writing: "Writing",
+  talks: "Talk",
+  publications: "Publication",
+  learning: "Learning",
+};
+
+interface ResolvedStop {
+  title: string;
+  url: string;
+  kindLabel: string;
+  why: string;
+}
+
+const resolvedStops: ResolvedStop[] = path.stops.map((stop) => {
+  const map = collectionMaps.get(stop.collection);
+  const entry = map?.get(stop.slug);
+  return {
+    title: entry?.title ?? stop.slug,
+    url: entry?.url ?? "/",
+    kindLabel: kindLabel[stop.collection],
+    why: stop.why,
+  };
+});
+
+const totalStops = resolvedStops.length;
+const estimatedMinutes = totalStops * 4;
+
+const currentIndex = readingPaths.findIndex((p) => p.id === path.id);
+const prevPath = currentIndex > 0 ? readingPaths[currentIndex - 1] : null;
+const nextPath =
+  currentIndex < readingPaths.length - 1
+    ? readingPaths[currentIndex + 1]
+    : null;
+---
+
+<PageLayout
+  title={path.title}
+  kicker="Reading path"
+  intro={path.audience}
+  description={path.blurb}
+>
+  <div class="path-layout container-narrow">
+    <p class="path-meta muted">
+      {totalStops} stops · ~{estimatedMinutes} min
+    </p>
+
+    <p class="path-blurb lead measure">{path.blurb}</p>
+
+    <ol role="list" class="stops-list" aria-label="Path stops">
+      {
+        resolvedStops.map((stop, i) => (
+          <li class="stop">
+            <div class="stop__connector" aria-hidden="true">
+              <span class="stop__number">{i + 1}</span>
+              {i < totalStops - 1 && <span class="stop__line" />}
+            </div>
+            <div class="stop__content">
+              <p class="stop__kind kicker">{stop.kindLabel}</p>
+              <h2 class="stop__title">
+                <a href={stop.url} class="stop__link">
+                  {stop.title}
+                </a>
+                {stop.kindLabel === "Talk" && (
+                  <span class="stop__talks-note muted">&nbsp;(all talks)</span>
+                )}
+              </h2>
+              <p class="stop__why">{stop.why}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <nav class="path-nav" aria-label="Other reading paths">
+      <a href="/prototypes/paths" class="path-nav__all">← All paths</a>
+      <div class="path-nav__siblings">
+        {
+          prevPath && (
+            <a href={`/prototypes/paths/${prevPath.id}`} class="path-nav__sibling">
+              ← {prevPath.title}
+            </a>
+          )
+        }
+        {
+          nextPath && (
+            <a href={`/prototypes/paths/${nextPath.id}`} class="path-nav__sibling">
+              {nextPath.title} →
+            </a>
+          )
+        }
+      </div>
+    </nav>
+  </div>
+</PageLayout>
+
+<style>
+  .path-layout {
+    padding-block-end: var(--space-2xl);
+  }
+
+  .path-meta {
+    font-size: var(--step--1);
+    margin-block: var(--space-xs) var(--space-m);
+  }
+
+  .path-blurb {
+    margin-block-end: var(--space-xl);
+    color: var(--color-text-secondary);
+  }
+
+  /* ---- Timeline list ---- */
+
+  .stops-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .stop {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 var(--space-m);
+    position: relative;
+  }
+
+  /* Connector column */
+  .stop__connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .stop__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-bg-surface);
+    border: 1.5px solid var(--color-accent);
+    color: var(--color-accent);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stop__line {
+    flex: 1;
+    width: 1.5px;
+    background: color-mix(in oklch, var(--color-accent) 30%, var(--color-border));
+    margin-block: var(--space-2xs);
+    min-height: var(--space-l);
+  }
+
+  /* Content column */
+  .stop__content {
+    padding-block-end: var(--space-xl);
+    padding-block-start: 0.2rem;
+  }
+
+  .stop:last-child .stop__content {
+    padding-block-end: 0;
+  }
+
+  .stop__kind {
+    margin-block: 0 var(--space-2xs);
+    font-size: var(--step--1);
+  }
+
+  .stop__title {
+    font-size: var(--step-1);
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin-block: 0 var(--space-xs);
+    line-height: 1.25;
+  }
+
+  .stop__link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 40%, transparent);
+    text-underline-offset: 0.2em;
+    transition: color 0.15s ease;
+  }
+
+  .stop__link:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  .stop__talks-note {
+    font-size: var(--step--1);
+    font-weight: 400;
+    font-family: inherit;
+  }
+
+  .stop__why {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  /* ---- Path nav ---- */
+
+  .path-nav {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .path-nav__all {
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .path-nav__all:hover {
+    color: var(--color-accent);
+  }
+
+  .path-nav__siblings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .path-nav__sibling {
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .path-nav__sibling:hover {
+    color: var(--color-accent);
+  }
+</style>

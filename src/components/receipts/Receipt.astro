@@ -1,0 +1,160 @@
+---
+interface Props {
+  kind: "paper" | "repo" | "dataset" | "talk" | "post" | "press";
+  source: string;
+  url: string;
+}
+
+const { kind, source, url } = Astro.props;
+
+const uid = `receipt-${crypto.randomUUID().slice(0, 8)}`;
+const popId = `${uid}-pop`;
+
+const kindGlyph: Record<Props["kind"], string> = {
+  paper: "◆",
+  repo: "⌥",
+  dataset: "⊞",
+  talk: "▷",
+  post: "✦",
+  press: "★",
+};
+
+const kindLabel: Record<Props["kind"], string> = {
+  paper: "Paper",
+  repo: "Repository",
+  dataset: "Dataset",
+  talk: "Talk / Webinar",
+  post: "Post",
+  press: "Recognition",
+};
+
+const glyph = kindGlyph[kind];
+const label = kindLabel[kind];
+---
+
+<span class="receipt" data-receipt>
+  <span class="receipt__claim"><slot /></span><button
+    class="receipt__chip"
+    data-receipt-btn
+    aria-expanded="false"
+    aria-describedby={popId}
+    aria-label={`Source: ${source}`}
+    type="button"
+  ><span aria-hidden="true">{glyph}</span></button><span
+    class="receipt__pop"
+    id={popId}
+    role="tooltip"
+    hidden
+  >
+    <span class="receipt__pop-kind">{label}</span>
+    <span class="receipt__pop-source">{source}</span>
+    <a
+      class="receipt__pop-link"
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+    >View source ↗</a>
+  </span>
+</span>
+
+<style>
+  .receipt {
+    display: inline;
+    position: relative;
+  }
+
+  .receipt__claim {
+    text-decoration: underline dotted var(--color-accent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+  }
+
+  .receipt__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: 0.15em;
+    padding: 0 0.35em;
+    height: 1.25em;
+    vertical-align: super;
+    font-size: 0.6em;
+    line-height: 1;
+    background: var(--color-tag-bg);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+
+  .receipt__chip:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border-color: var(--color-accent);
+  }
+
+  .receipt__chip:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .receipt__chip[aria-expanded="true"] {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border-color: var(--color-accent);
+  }
+
+  .receipt__pop {
+    position: absolute;
+    z-index: 100;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) var(--space-s);
+    max-width: min(22rem, 90vw);
+    background: var(--color-surface);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px oklch(0% 0 0 / 0.1);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    white-space: normal;
+    pointer-events: auto;
+  }
+
+  [data-theme="dark"] .receipt__pop {
+    box-shadow: 0 4px 16px oklch(0% 0 0 / 0.35);
+  }
+
+  .receipt__pop[hidden] {
+    display: none;
+  }
+
+  .receipt__pop-kind {
+    font-size: calc(var(--step--1) * 0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono, monospace);
+  }
+
+  .receipt__pop-source {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .receipt__pop-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .receipt__pop-link:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+  }
+</style>

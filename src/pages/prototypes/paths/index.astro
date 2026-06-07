@@ -1,0 +1,114 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { readingPaths } from "@/data/readingPaths";
+---
+
+<PageLayout
+  title="Reading paths"
+  kicker="Prototype"
+  intro="Hand-curated tours through the site — each one threads a sequence of projects, writing, talks, and research with connective narration to help you follow the through-line."
+  description="Curated guided reading paths through Stephanie Jarmak's work on agents, planetary science, and AI memory systems."
+>
+  <ul role="list" class="auto-grid paths-grid" style="--grid-min: 22rem">
+    {
+      readingPaths.map((path) => (
+        <li class="card path-card">
+          <div class="path-card__head">
+            <a href={`/prototypes/paths/${path.id}`} class="path-card__title-link">
+              <h2 class="path-card__title">{path.title}</h2>
+            </a>
+            <span class="path-card__count">{path.stops.length} stops</span>
+          </div>
+          <p class="path-card__audience kicker">{path.audience}</p>
+          <p class="path-card__blurb">{path.blurb}</p>
+          <p class="path-card__cta">
+            <a href={`/prototypes/paths/${path.id}`} class="btn">
+              Start the path →
+            </a>
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</PageLayout>
+
+<style>
+  .paths-grid {
+    --grid-gap: var(--space-l);
+    margin-block-start: var(--space-l);
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m) var(--space-l);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    transition: border-color 0.15s ease;
+  }
+
+  .card:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+
+  .path-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .path-card__title-link {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .path-card__title-link:hover .path-card__title {
+    color: var(--color-accent);
+  }
+
+  .path-card__title {
+    font-size: var(--step-1);
+    font-family: var(--font-display);
+  }
+
+  .path-card__count {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .path-card__audience {
+    margin-block: 0;
+  }
+
+  .path-card__blurb {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    flex-grow: 1;
+  }
+
+  .path-card__cta {
+    margin-block-start: var(--space-xs);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.45em 1.1em;
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+    background: var(--color-bg-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--step--1);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>

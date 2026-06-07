@@ -1,0 +1,394 @@
+---
+import type { KnowledgeNode, Related, NodeKind } from "@/lib/knowledge/types";
+
+interface Props {
+  nodes: KnowledgeNode[];
+  related: Record<string, Related>;
+  initialId?: string;
+  heading?: string;
+}
+
+const { nodes, related, initialId, heading } = Astro.props;
+
+const selectedId = initialId ?? nodes[0]?.id ?? "";
+
+// Group nodes by kind for the sidebar list
+const KIND_LABEL: Record<NodeKind, string> = {
+  project: "Project",
+  writing: "Writing",
+  talk: "Talk",
+  learning: "Learning",
+  publication: "Publication",
+  paper: "Paper",
+};
+
+const KIND_ORDER: NodeKind[] = ["project", "writing", "talk", "publication", "paper", "learning"];
+
+const byKind = new Map<NodeKind, KnowledgeNode[]>();
+for (const kind of KIND_ORDER) byKind.set(kind, []);
+for (const node of nodes) {
+  byKind.get(node.kind)?.push(node);
+}
+
+// Build the trimmed inline-JSON payload:
+// - Only nodes passed as props (already filtered by caller)
+// - Only related entries for those nodes
+// - Each lane's items filtered to ids present in the passed nodes
+const nodeIdSet = new Set(nodes.map((n) => n.id));
+
+const inlineNodes = nodes.map(({ id, title, kind, url, meta }) => ({
+  id,
+  title,
+  kind,
+  url,
+  meta,
+}));
+
+const inlineRelated: Record<string, Related> = {};
+for (const node of nodes) {
+  const r = related[node.id];
+  if (!r) continue;
+  inlineRelated[node.id] = {
+    semantic: r.semantic.filter((item) => nodeIdSet.has(item.id)),
+    lexical: r.lexical.filter((item) => nodeIdSet.has(item.id)),
+    graph: r.graph.filter((item) => nodeIdSet.has(item.id)),
+    recency: r.recency.filter((item) => nodeIdSet.has(item.id)),
+    fused: r.fused.filter((item) => nodeIdSet.has(item.id)),
+  };
+}
+
+const inlineData = { nodes: inlineNodes, related: inlineRelated };
+---
+
+<section class="le-wrap" data-linkage-explorer aria-label="Linkage explorer">
+  {heading && <h2 class="le-heading">{heading}</h2>}
+
+  <div class="le-card">
+    <!-- LEFT: node list -->
+    <div class="le-sidebar" role="navigation" aria-label="Select a node">
+      <div class="le-search-wrap">
+        <input
+          type="search"
+          class="le-search"
+          data-le-search
+          placeholder="Filter…"
+          aria-label="Filter nodes by title"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="le-list" data-le-list>
+        {
+          KIND_ORDER.map((kind) => {
+            const group = byKind.get(kind) ?? [];
+            if (group.length === 0) return null;
+            return (
+              <div class="le-group" data-kind={kind}>
+                <p class="le-group__label" aria-hidden="true">
+                  {KIND_LABEL[kind]}
+                </p>
+                {group.map((node) => (
+                  <button
+                    type="button"
+                    class="le-node-btn"
+                    data-node-id={node.id}
+                    aria-pressed={node.id === selectedId ? "true" : "false"}
+                  >
+                    {node.title}
+                  </button>
+                ))}
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+
+    <!-- RIGHT: detail panel -->
+    <div class="le-panel" data-le-panel aria-live="polite" aria-atomic="false">
+      <!-- Populated entirely by le-panel-placeholder at load; JS fills it -->
+      <div class="le-panel-placeholder" data-le-detail>
+        <div class="le-detail-head">
+          <h3 class="le-detail-title" data-le-title>
+            <a class="le-detail-link" data-le-title-link href="#" aria-label="Open selected node">
+              <span data-le-title-text></span>
+            </a>
+          </h3>
+          <p class="le-detail-meta muted" data-le-meta></p>
+        </div>
+
+        <div
+          class="le-tabs"
+          role="tablist"
+          aria-label="Retrieval lanes"
+          data-le-tabs
+        >
+          <button
+            role="tab"
+            type="button"
+            class="le-tab"
+            data-lane="semantic"
+            aria-selected="true"
+          >
+            Semantic
+          </button>
+          <button
+            role="tab"
+            type="button"
+            class="le-tab"
+            data-lane="lexical"
+            aria-selected="false"
+          >
+            Lexical
+          </button>
+          <button
+            role="tab"
+            type="button"
+            class="le-tab"
+            data-lane="graph"
+            aria-selected="false"
+          >
+            Graph
+          </button>
+          <button
+            role="tab"
+            type="button"
+            class="le-tab"
+            data-lane="recency"
+            aria-selected="false"
+          >
+            Recency
+          </button>
+          <button
+            role="tab"
+            type="button"
+            class="le-tab"
+            data-lane="fused"
+            aria-selected="false"
+          >
+            Fused
+          </button>
+        </div>
+
+        <p class="le-explainer muted" data-le-explainer></p>
+
+        <ol class="le-results" data-le-results aria-label="Related items"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" data-le-data set:html={JSON.stringify(inlineData)} is:inline>
+</script>
+
+<script>
+  import "@/scripts/linkage-explorer";
+</script>
+
+<style>
+  .le-wrap {
+    container-type: inline-size;
+  }
+
+  .le-heading {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-m);
+  }
+
+  /* The outer bordered card */
+  .le-card {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    min-height: 28rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--color-bg-subtle);
+  }
+
+  /* ---- LEFT sidebar ---- */
+  .le-sidebar {
+    display: flex;
+    flex-direction: column;
+    border-inline-end: var(--border-hairline);
+    overflow: hidden;
+  }
+
+  .le-search-wrap {
+    padding: var(--space-xs);
+    border-block-end: var(--border-hairline);
+    background: var(--color-surface);
+  }
+
+  .le-search {
+    width: 100%;
+    padding: 0.4em 0.7em;
+    font-size: var(--step--1);
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+    background: var(--color-bg);
+    color: var(--color-text);
+    outline-offset: 2px;
+  }
+
+  .le-search::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .le-list {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-block: var(--space-2xs);
+  }
+
+  .le-group {
+    padding-block-end: var(--space-2xs);
+  }
+
+  .le-group__label {
+    font-size: var(--step--1);
+    font-family: var(--font-body);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: var(--space-3xs) var(--space-xs);
+    margin-block-start: var(--space-xs);
+  }
+
+  .le-node-btn {
+    display: block;
+    width: 100%;
+    text-align: start;
+    padding: 0.45em var(--space-xs);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+    color: var(--color-text-secondary);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.1s ease, color 0.1s ease;
+    border-radius: var(--radius-s);
+  }
+
+  .le-node-btn:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .le-node-btn[aria-pressed="true"] {
+    background: color-mix(in oklch, var(--color-accent) 12%, var(--color-bg-subtle));
+    color: var(--color-accent);
+    font-weight: var(--weight-medium);
+  }
+
+  /* ---- RIGHT panel ---- */
+  .le-panel {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-m);
+    gap: var(--space-s);
+    min-width: 0;
+  }
+
+  .le-panel-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    flex: 1 1 0;
+  }
+
+  .le-detail-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .le-detail-title {
+    font-size: var(--step-1);
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+
+  .le-detail-link {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .le-detail-link:hover {
+    color: var(--color-accent);
+  }
+
+  .le-detail-meta {
+    font-size: var(--step--1);
+  }
+
+  /* ---- Lane tabs ---- */
+  .le-tabs {
+    display: flex;
+    gap: var(--space-2xs);
+    flex-wrap: wrap;
+    border-block-end: var(--border-hairline);
+    padding-block-end: var(--space-xs);
+  }
+
+  .le-tab {
+    font-size: var(--step--1);
+    padding: 0.35em 0.85em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .le-tab:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+    color: var(--color-text);
+  }
+
+  .le-tab[aria-selected="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--paper-50);
+  }
+
+  [data-theme="dark"] .le-tab[aria-selected="true"] {
+    color: var(--night-900);
+  }
+
+  /* ---- Explainer ---- */
+  .le-explainer {
+    font-size: var(--step--1);
+    font-style: italic;
+    line-height: var(--leading-normal);
+  }
+
+  /* ---- Results list ---- */
+  .le-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    flex: 1 1 0;
+    overflow-y: auto;
+  }
+
+  /* ---- Responsive: stack under ~40rem ---- */
+  @container (max-width: 40rem) {
+    .le-card {
+      grid-template-columns: 1fr;
+    }
+
+    .le-sidebar {
+      border-inline-end: none;
+      border-block-end: var(--border-hairline);
+      max-height: 14rem;
+    }
+  }
+</style>

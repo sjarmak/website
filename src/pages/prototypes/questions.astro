@@ -1,0 +1,338 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { researchQuestions } from "@/data/researchQuestions";
+import type { QuestionStatus } from "@/data/researchQuestions";
+
+const allTags = [...new Set(researchQuestions.flatMap((q) => q.tags))].sort();
+const statuses: { value: QuestionStatus | "all"; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "open", label: "Open" },
+  { value: "exploring", label: "Exploring" },
+  { value: "partial", label: "Partial" },
+];
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+---
+
+<PageLayout
+  title="Open questions"
+  kicker="Prototype"
+  description="A living board of the research questions Stephanie Jarmak is actively chasing — organized around unknowns, not finished answers."
+  intro="Organized around what I don't know yet. Each card is a question I'm actively chasing — it accretes thinking and links over time and won't graduate until the answer is genuinely settled (if ever)."
+>
+  <div class="stack stack-l">
+    <div class="filter-bar" role="group" aria-label="Filter questions">
+      <div class="filter-section">
+        <span class="filter-label">Status</span>
+        <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+          {
+            statuses.map(({ value, label }) => (
+              <button
+                type="button"
+                class="chip"
+                data-status-chip={value}
+                aria-pressed={value === "all" ? "true" : "false"}
+              >
+                {label}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      <div class="filter-section">
+        <span class="filter-label">Tag</span>
+        <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+          {
+            allTags.map((tag) => (
+              <button
+                type="button"
+                class="chip chip--tag"
+                data-tag-chip={tag}
+                aria-pressed="false"
+              >
+                {tag}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="board-meta">
+      <span class="muted" data-question-count>{researchQuestions.length} questions</span>
+      <a class="watch-link" href="/rss.xml">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"
+          ></path>
+        </svg>
+        Watch via RSS
+      </a>
+    </div>
+
+    <ul
+      role="list"
+      class="auto-grid"
+      style="--grid-min: 20rem; --grid-gap: var(--space-m)"
+    >
+      {
+        researchQuestions.map((q) => (
+          <li
+            class="q-card"
+            data-question-card
+            data-tags={q.tags.join(",")}
+            data-status={q.status}
+          >
+            <div class="q-card__top">
+              <span class={`status-badge status-badge--${q.status}`} aria-label={`Status: ${q.status}`}>
+                {q.status}
+              </span>
+              <time
+                class="q-card__updated"
+                datetime={q.updated}
+                aria-label={`Updated ${formatDate(q.updated)}`}
+              >
+                {formatDate(q.updated)}
+              </time>
+            </div>
+
+            <h2 class="q-card__question">{q.question}</h2>
+
+            <p class="q-card__note">{q.note}</p>
+
+            <div class="cluster" style="--cluster-gap: var(--space-2xs); margin-block-start: auto">
+              {q.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+
+            {
+              q.links.length > 0 && (
+                <ul role="list" class="q-card__links">
+                  {q.links.map((link) => (
+                    <li>
+                      <a href={link.url} class="q-card__link" rel="noopener">
+                        → {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</PageLayout>
+
+<script>
+  import "@/scripts/questions";
+</script>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+  }
+
+  .filter-section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    min-width: 4rem;
+    flex-shrink: 0;
+  }
+
+  .chip {
+    font-size: var(--step--1);
+    padding: 0.35em 0.85em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease,
+      border-color 0.12s ease;
+  }
+
+  .chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .chip[aria-pressed="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--paper-50);
+  }
+
+  [data-theme="dark"] .chip[aria-pressed="true"] {
+    color: var(--night-900);
+  }
+
+  .board-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+
+  .watch-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .watch-link:hover {
+    color: var(--color-accent);
+  }
+
+  .watch-link:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-s);
+  }
+
+  .q-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+  }
+
+  .q-card[hidden] {
+    display: none;
+  }
+
+  .q-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .status-badge {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    padding: 0.2em 0.65em;
+    border-radius: 999px;
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+  }
+
+  .status-badge--open {
+    background: color-mix(in oklch, var(--color-border) 60%, transparent);
+    color: var(--color-text-secondary);
+  }
+
+  .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    color: var(--color-accent);
+  }
+
+  .status-badge--partial {
+    background: color-mix(in oklch, var(--sage-500) 18%, transparent);
+    color: var(--sage-500);
+  }
+
+  [data-theme="dark"] .status-badge--exploring {
+    background: color-mix(in oklch, var(--color-accent) 22%, transparent);
+  }
+
+  [data-theme="dark"] .status-badge--partial {
+    background: color-mix(in oklch, var(--sage-500) 22%, transparent);
+  }
+
+  .q-card__updated {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .q-card__question {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .q-card__note {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .q-card__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-block-start: var(--space-2xs);
+    border-top: var(--border-hairline);
+    list-style: none;
+    padding-inline-start: 0;
+    margin: 0;
+  }
+
+  .q-card__link {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .q-card__link:hover {
+    color: var(--color-accent);
+  }
+
+  .q-card__link:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-s);
+  }
+</style>
