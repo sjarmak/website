@@ -133,7 +133,7 @@ def fetch_metadata(bibcodes: list[str], tok: str) -> dict:
                 "pubdate": doc.get("pubdate"),
                 "doctype": doc.get("doctype"),
                 "citationCount": doc.get("citation_count", 0),
-                "abstract": (doc.get("abstract") or "")[:700],
+                "abstract": doc.get("abstract") or "",
                 "adsUrl": f"https://ui.adsabs.harvard.edu/abs/{urllib.parse.quote(doc['bibcode'])}/abstract",
                 "arxiv": arxiv,
             }

@@ -112,7 +112,12 @@ const RESOURCE_CAP = 8;
                   ))}
                 </ul>
                 {overflow > 0 && (
-                  <p class="muted" style="font-size: var(--step--1)">+{overflow} more</p>
+                  <a
+                    class="resource-lib__more"
+                    href={rl.kind === "essay" ? "/writing" : "/learning"}
+                  >
+                    +{overflow} more
+                  </a>
                 )}
               </div>
             );
@@ -143,7 +148,7 @@ const RESOURCE_CAP = 8;
                 <tr>
                   <td>
                     <a href={item.url} rel="noopener noreferrer" class="digest-title">
-                      {item.title} ↗
+                      {item.title}
                     </a>
                   </td>
                   <td class="digest-table__col-lib">
@@ -350,6 +355,17 @@ const RESOURCE_CAP = 8;
     font-size: var(--step--1);
     font-family: var(--font-mono);
     white-space: nowrap;
+  }
+
+  .resource-lib__more {
+    display: inline-block;
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .resource-lib__more:hover {
+    color: var(--color-accent);
   }
 
   /* ---- digest table ---- */
