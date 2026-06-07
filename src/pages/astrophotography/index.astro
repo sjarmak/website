@@ -12,7 +12,7 @@ const photos = (await getCollection("astrophoto")).sort(
 <PageLayout
   title="Astrophotography"
   kicker="The night sky"
-  intro="Long exposures of deep-sky objects and the solar system. Click any plate to view it full resolution."
+  intro="The Moon at high magnification, stacked and processed to bring out the mineral color in the maria and the detail along the terminator. Just lunar plates for now, with more of the sky to come. Click any plate for the full-resolution version."
   description="Astrophotography by Stephanie Jarmak."
 >
   {
@@ -25,7 +25,12 @@ const photos = (await getCollection("astrophoto")).sort(
       <ul role="list" class="plates">
         {photos.map((photo) => (
           <li class="plate">
-            <a href={photo.data.remoteFull ?? "#"} rel="noopener" class="plate__link">
+            <a
+              href={photo.data.remoteFull ?? photo.data.image.src}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="plate__link"
+            >
               <Image
                 src={photo.data.image}
                 alt={photo.data.caption ?? photo.data.title}
