@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Bake semantic embeddings for every knowledge-hub node.
 
-The semantic lane needs a real embedding model. INDUS (nasa-smd-ibm-st-v2),
-the domain model used in scix_experiments, lives in a Python+Postgres stack and
-can't run on a static Render build — so we bake vectors ONCE here and commit
-them; the site reads them at build time (never ships them to the browser) and
-computes cosine similarity in TypeScript. INDUS is the production upgrade; this
-prototype uses all-MiniLM-L6-v2 (384-dim), a real general sentence model.
+The semantic lane uses a general-purpose sentence-similarity model
+(all-mpnet-base-v2, 768-dim). We bake the vectors ONCE here and commit them; the
+site reads them at build time (never ships them to the browser) and computes
+cosine similarity in TypeScript. Nothing runs at query time, so the page never
+exposes an embedding or LLM endpoint. Swap MODEL below for another general model
+(e.g. bge-base-en-v1.5) and rerun to re-bake.
 
 Node id scheme (MUST match src/lib/knowledge):
   on-site content : "<collection>:<slug>"   (slug = markdown filename stem)
@@ -107,15 +107,16 @@ def main():
     except ImportError:
         sys.exit("sentence-transformers not available — run with the brainstorm venv python")
 
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    MODEL = "sentence-transformers/all-mpnet-base-v2"
+    model = SentenceTransformer(MODEL)
     vecs = model.encode(texts, normalize_embeddings=True, batch_size=32, show_progress_bar=False)
 
     vectors = {i: [round(float(x), 5) for x in vecs[n]] for n, i in enumerate(ids)}
     out = {
-        "model": "all-MiniLM-L6-v2",
+        "model": MODEL.split("/")[-1],
         "dim": int(vecs.shape[1]),
         "normalized": True,
-        "note": "INDUS (nasa-smd-ibm-st-v2) is the production upgrade; see scix_experiments/src/scix/embed.py",
+        "note": "General-purpose sentence model, baked at build time. No runtime embedding/LLM endpoint.",
         "vectors": vectors,
     }
     path = os.path.join(KN, "embeddings.json")

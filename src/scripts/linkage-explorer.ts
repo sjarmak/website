@@ -26,7 +26,7 @@ interface ExplorerData {
 const LANES: Lane[] = ["semantic", "lexical", "graph", "recency", "fused"];
 
 const LANE_EXPLAINER: Record<Lane, string> = {
-  semantic: "Closest in meaning (MiniLM embeddings; INDUS is the production model).",
+  semantic: "Closest in meaning (mpnet sentence embeddings, baked at build time).",
   lexical: "Most word-overlap (BM25).",
   graph: "Linked by citations & references.",
   recency: "Newest first (the freshness prior from my digest's hybrid scorer).",
