@@ -39,9 +39,6 @@ const RESOURCE_CAP = 8;
               <li class="lib-card">
                 <div class="lib-card__head">
                   <h3 class="lib-card__title">{lib.name}</h3>
-                  <span class={`visibility-chip ${lib.public ? "visibility-chip--public" : "visibility-chip--private"}`}>
-                    {lib.public ? "public" : "private"}
-                  </span>
                 </div>
                 <p class="lib-card__count">{lib.numDocuments} documents</p>
                 {lib.description && <p class="lib-card__desc">{lib.description}</p>}
@@ -301,31 +298,6 @@ const RESOURCE_CAP = 8;
 
   .lib-card__cta a:hover {
     color: var(--color-accent);
-  }
-
-  /* ---- visibility chip ---- */
-  .visibility-chip {
-    flex-shrink: 0;
-    font-size: var(--step--1);
-    font-family: var(--font-mono);
-    padding: 0.15em 0.55em;
-    border-radius: 999px;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-  }
-
-  .visibility-chip--public {
-    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
-    color: var(--color-accent);
-  }
-
-  .visibility-chip--private {
-    background: color-mix(in oklch, var(--color-border) 60%, transparent);
-    color: var(--color-text-muted);
-  }
-
-  [data-theme="dark"] .visibility-chip--public {
-    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
   }
 
   /* ---- resource libraries ---- */

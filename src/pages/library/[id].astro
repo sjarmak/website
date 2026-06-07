@@ -28,9 +28,6 @@ const { library } = Astro.props;
     <div class="lib-head">
       <p class="lib-count">
         <span class="lib-count__num">{library.numDocuments}</span> documents
-        <span class={`visibility-chip ${library.public ? "visibility-chip--public" : "visibility-chip--private"}`}>
-          {library.public ? "public" : "private"}
-        </span>
       </p>
       <a href="/library" class="back-link">← All libraries</a>
     </div>
@@ -197,30 +194,6 @@ const { library } = Astro.props;
   }
 
   [data-theme="dark"] .sort-btn--active {
-    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
-  }
-
-  /* ---- visibility chip ---- */
-  .visibility-chip {
-    font-size: var(--step--1);
-    font-family: var(--font-mono);
-    padding: 0.15em 0.55em;
-    border-radius: 999px;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
-  }
-
-  .visibility-chip--public {
-    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
-    color: var(--color-accent);
-  }
-
-  .visibility-chip--private {
-    background: color-mix(in oklch, var(--color-border) 60%, transparent);
-    color: var(--color-text-muted);
-  }
-
-  [data-theme="dark"] .visibility-chip--public {
     background: color-mix(in oklch, var(--color-accent) 18%, transparent);
   }
 
