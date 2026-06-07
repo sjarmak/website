@@ -73,7 +73,7 @@ THREADS = [
             "and the papers I read to push on it."
         ),
         concepts=["retrieval", "embeddings", "knowledge-graphs", "scientific-search"],
-        ads_libraries=["Code Search", "Machine Learning"],
+        ads_libraries=["Scientific Search & SciX"],
         explorer=None,
         on_site=[
             dict(collection="projects", slug="scix-agent"),
@@ -103,7 +103,7 @@ THREADS = [
             "agents actually break."
         ),
         concepts=["agents", "code-intelligence", "evaluation"],
-        ads_libraries=["Agents"],
+        ads_libraries=["Coding Agents"],
         explorer="enterprise-reliability",
         on_site=[
             dict(collection="projects", slug="gascity"),
@@ -163,7 +163,7 @@ THREADS = [
             "Below is that work and the reading that keeps me honest about what good is supposed to mean."
         ),
         concepts=["evaluation", "agents", "code-intelligence"],
-        ads_libraries=["Benchmarks", "CodeContextBench Literature Review"],
+        ads_libraries=["Benchmarks", "Code Generation & Retrieval"],
         explorer=None,
         on_site=[
             dict(collection="projects", slug="codescalebench"),

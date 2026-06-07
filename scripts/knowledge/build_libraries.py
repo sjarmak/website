@@ -16,6 +16,7 @@ Output: src/data/knowledge/libraries.json
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.parse
@@ -26,6 +27,67 @@ SEARCH = "https://api.adsabs.harvard.edu/v1/search/query"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "src", "data", "knowledge"))
 META_FIELDS = "bibcode,title,author,year,pubdate,doctype,citation_count,abstract,identifier"
+
+# ---- site curation (display-only; does NOT modify anything on NASA ADS) ----
+# The site shows a clean thematic subset of the ADS libraries. To re-sync after
+# editing libraries on ADS, just rerun this script.
+EXCLUDE = {"CodeContextBench Literature Review", "Oreilly", "LLM Research"}
+RENAME = {
+    "Agents": "Coding Agents",
+    "Code Search": "Code Generation & Retrieval",
+}
+# display name -> (source ADS library names, description). Papers are deduped.
+MERGE = {
+    "Scientific Search & SciX": (
+        ["SciX 2024 Bibliography", "Machine Learning"],
+        "Navigating scientific literature: NASA ADS / SciX information systems, "
+        "scientific language models, and fine-grained classification of research text.",
+    ),
+}
+DESCRIPTIONS = {
+    "Coding Agents": "Software-engineering agents: architectures, multi-agent coding, and how developers work with them.",
+    "Benchmarks": "Evaluating coding agents and code models on real software work.",
+    "Code Generation & Retrieval": "Code generation, context retrieval, and localization for coding agents.",
+    "Agent Memory": "Long-horizon memory for LLM agents: storage, consolidation, and forgetting.",
+}
+ORDER = ["Coding Agents", "Benchmarks", "Code Generation & Retrieval", "Agent Memory", "Scientific Search & SciX"]
+
+
+def slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def curate(libs: list[dict]) -> list[dict]:
+    by_name = {L["name"]: L for L in libs}
+    curated: list[dict] = []
+    merged_sources: set[str] = set()
+
+    for disp, (sources, desc) in MERGE.items():
+        papers, seen, public = [], set(), False
+        for s in sources:
+            L = by_name.get(s)
+            if not L:
+                continue
+            merged_sources.add(s)
+            public = public or L["public"]
+            for p in L["papers"]:
+                if p["bibcode"] not in seen:
+                    seen.add(p["bibcode"])
+                    papers.append(p)
+        papers.sort(key=lambda p: (p.get("pubdate") or ""), reverse=True)
+        curated.append({"id": slug(disp), "name": disp, "description": desc,
+                        "public": public, "numDocuments": len(papers), "papers": papers})
+
+    for L in libs:
+        if L["name"] in EXCLUDE or L["name"] in merged_sources:
+            continue
+        name = RENAME.get(L["name"], L["name"])
+        curated.append({**L, "id": slug(name), "name": name,
+                        "description": DESCRIPTIONS.get(name, L["description"])})
+
+    rank = {n: i for i, n in enumerate(ORDER)}
+    curated.sort(key=lambda L: rank.get(L["name"], 99))
+    return curated
 
 
 def token() -> str:
@@ -99,11 +161,17 @@ def main() -> None:
             "numDocuments": L.get("num_documents", 0),
             "papers": papers,
         })
-        print(f"  {L.get('name'):<34} {len(papers)}/{L.get('num_documents')} papers")
+        print(f"  fetched {L.get('name'):<34} {len(papers)}/{L.get('num_documents')} papers")
+
+    curated = curate(out)
+    print("\ncurated for the site:")
+    for L in curated:
+        print(f"  {L['name']:<32} {L['numDocuments']} papers")
+
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "libraries.json")
     with open(path, "w") as f:
-        json.dump({"source": "NASA ADS biblib", "count": len(out), "libraries": out}, f, ensure_ascii=False)
+        json.dump({"source": "NASA ADS biblib", "count": len(curated), "libraries": curated}, f, ensure_ascii=False)
     print(f"wrote libraries.json ({os.path.getsize(path)} bytes)")
 
 
