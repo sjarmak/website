@@ -15,6 +15,11 @@ export function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** "Jun 9, 2026" — day-level precision, for dated items like digests. */
+export function fullDate(d: Date): string {
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 /** Render a CV-style range like "2021 – 2024", "2024 – Present", or a single "2023". */
 export function rangeLabel(start: Date, end?: Date): string {
   if (end && year(start) === year(end)) return year(start);

@@ -129,6 +129,35 @@ export interface DigestItem {
   citationCount: number;
 }
 
+// ---- digest library (generated + curated newsletter/podcast issues) ----
+
+/** A single linked resource surfaced inside a digest issue. */
+export interface DigestResource {
+  title: string;
+  url: string;
+  source?: string;
+  category?: string;
+}
+
+/**
+ * One published digest issue (newsletter + optional podcast). Distinct from
+ * `DigestItem`, which is a single paper row in the "what's new" stream.
+ */
+export interface DigestIssue {
+  slug: string;
+  title: string;
+  cadence: "daily" | "weekly" | "manual";
+  origin: "auto" | "manual";
+  date: Date;
+  summary: string;
+  topics: string[];
+  audioUrl?: string;
+  embedUrl?: string;
+  durationSec?: number;
+  items: DigestResource[];
+  highlights: string[];
+}
+
 // ---- threads ----
 
 export interface KnowledgeThread {

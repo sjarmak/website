@@ -1,0 +1,179 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fullDate } from "@/lib/dates";
+
+export async function getStaticPaths() {
+  const digests = await getCollection("digest");
+  return digests.map((d) => ({ params: { slug: d.id }, props: { entry: d } }));
+}
+
+interface Props {
+  entry: CollectionEntry<"digest">;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const CADENCE_LABEL: Record<typeof data.cadence, string> = {
+  daily: "Daily digest",
+  weekly: "Weekly digest",
+  manual: "Curated digest",
+};
+
+const durationLabel = data.durationSec ? `${Math.round(data.durationSec / 60)} min` : null;
+
+function topicLabel(slug: string): string {
+  return slug.replace(/-/g, " ");
+}
+---
+
+<BaseLayout title={data.title} description={data.summary} type="article">
+  <article class="container container-narrow digest">
+    <header class="digest__head stack stack-s">
+      <p class="kicker">
+        {CADENCE_LABEL[data.cadence]}
+        {data.origin === "manual" ? " · hand-curated" : ""}
+      </p>
+      <h1>{data.title}</h1>
+      <p class="muted">
+        {fullDate(data.date)}
+        {durationLabel ? ` · 🎧 ${durationLabel}` : ""}
+      </p>
+      {
+        data.topics.length > 0 && (
+          <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+            {data.topics.map((t) => (
+              <span class="tag">{topicLabel(t)}</span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      (data.audioUrl || data.embedUrl) && (
+        <div class="digest__player">
+          {data.embedUrl ? (
+            <iframe class="digest__embed" src={data.embedUrl} loading="lazy" title={data.title} />
+          ) : (
+            <audio controls preload="none">
+              <source src={data.audioUrl} type="audio/mpeg" />
+            </audio>
+          )}
+        </div>
+      )
+    }
+
+    <p class="lead measure">{data.summary}</p>
+
+    {
+      data.highlights.length > 0 && (
+        <section class="digest__highlights">
+          <h2 class="sub">Highlights</h2>
+          <ul role="list" class="stack stack-s">
+            {data.highlights.map((h) => (
+              <li>{h}</li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="prose digest__body">
+      <Content />
+    </div>
+
+    {
+      data.items.length > 0 && (
+        <section class="digest__sources">
+          <h2 class="sub">In this issue</h2>
+          <ul role="list" class="stack stack-s">
+            {data.items.map((item) => (
+              <li class="digest__source">
+                <a href={item.url} rel="noopener noreferrer" class="digest__source-title">
+                  {item.title}
+                </a>
+                <span class="digest__source-meta muted">
+                  {item.source ?? ""}
+                  {item.category ? ` · ${item.category}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <p class="digest__back"><a href="/digest">← All digests</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .digest {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+
+  .digest__player {
+    margin-block: var(--space-l);
+  }
+
+  .digest__player audio {
+    width: 100%;
+  }
+
+  .digest__embed {
+    width: 100%;
+    height: 152px;
+    border: 0;
+    border-radius: var(--radius);
+  }
+
+  .sub {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+
+  .digest__highlights,
+  .digest__sources {
+    margin-block: var(--space-xl);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .digest__body {
+    margin-block: var(--space-xl);
+  }
+
+  .digest__source {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .digest__source-title {
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: var(--leading-snug);
+    transition: color 0.12s ease;
+  }
+
+  .digest__source-title:hover {
+    color: var(--color-accent);
+  }
+
+  .digest__source-meta {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .digest__back {
+    margin-block-start: var(--space-xl);
+  }
+
+  .digest__back a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+</style>

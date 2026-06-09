@@ -241,6 +241,35 @@ const learning = defineCollection({
   }),
 });
 
+// ---- digest (generated + manually curated newsletter/podcast issues) ----
+const digest = defineCollection({
+  loader: base("digest"),
+  schema: z.object({
+    title: z.string(),
+    // cadence drives the primary filter facet
+    cadence: z.enum(["daily", "weekly", "manual"]),
+    // origin: produced by the cron agent, or hand-curated in code-intelligence-digest
+    origin: z.enum(["auto", "manual"]).default("auto"),
+    date: z.coerce.date(),
+    summary: z.string(),
+    topics: z.array(z.string()).default([]), // filter facets, e.g. "agentic-coding", "evals"
+    audioUrl: z.string().optional(), // podcast file: site-relative path or absolute URL
+    embedUrl: z.string().url().optional(), // Spotify/YouTube embed fallback
+    durationSec: z.number().int().optional(),
+    items: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.string().url(),
+          source: z.string().optional(), // publication / feed name
+          category: z.string().optional(),
+        }),
+      )
+      .default([]), // linked resources surfaced in the issue
+    highlights: z.array(z.string()).default([]),
+  }),
+});
+
 export const collections = {
   cv,
   publications,
@@ -254,4 +283,5 @@ export const collections = {
   astrophoto,
   art,
   learning,
+  digest,
 };

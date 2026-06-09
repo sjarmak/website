@@ -1,0 +1,266 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getDigests, getDigestTopics } from "@/lib/knowledge/build";
+import type { DigestIssue } from "@/lib/knowledge/types";
+import { fullDate } from "@/lib/dates";
+
+const digests: DigestIssue[] = await getDigests();
+const topics: string[] = await getDigestTopics();
+
+const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  manual: "Curated",
+};
+
+function topicLabel(slug: string): string {
+  return slug.replace(/-/g, " ");
+}
+
+function minutes(sec?: number): string | null {
+  if (!sec) return null;
+  return `${Math.round(sec / 60)} min`;
+}
+---
+
+<PageLayout
+  title="Digest"
+  kicker="Research"
+  intro="A running library of digest issues — newsletters and podcasts on agentic coding, evals, multi-agent orchestration, agent memory, and information retrieval. Most are generated from my code-intelligence-digest pipeline; some I curate by hand. Filter by cadence, topic, or format."
+>
+  <div class="stack stack-l">
+    <!-- filter bar -->
+    <form class="digest-filters" id="digest-filters" aria-label="Filter digests">
+      <label class="field">
+        <span class="field__label">Cadence</span>
+        <select id="f-cadence">
+          <option value="">All</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="manual">Curated</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field__label">Topic</span>
+        <select id="f-topic">
+          <option value="">All topics</option>
+          {topics.map((t) => <option value={t}>{topicLabel(t)}</option>)}
+        </select>
+      </label>
+      <label class="field field--check">
+        <input type="checkbox" id="f-podcast" />
+        <span class="field__label">Has podcast</span>
+      </label>
+      <label class="field field--grow">
+        <span class="field__label">Search</span>
+        <input type="search" id="f-search" placeholder="title or summary…" />
+      </label>
+    </form>
+
+    <p class="digest-count muted" id="digest-count">{digests.length} issues</p>
+
+    <ul role="list" class="auto-grid digest-grid" id="digest-grid" style="--grid-min: 20rem; --grid-gap: var(--space-m)">
+      {
+        digests.map((d) => (
+          <li
+            class="lib-card digest-card"
+            data-cadence={d.cadence}
+            data-topics={d.topics.join(" ")}
+            data-podcast={d.audioUrl || d.embedUrl ? "true" : "false"}
+            data-text={`${d.title} ${d.summary}`.toLowerCase()}
+          >
+            <div class="digest-card__meta">
+              <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
+              <span class="muted">{fullDate(d.date)}</span>
+              {(d.audioUrl || d.embedUrl) && (
+                <span class="digest-card__pod" title="Includes a podcast episode">
+                  🎧 {minutes(d.durationSec) ?? "audio"}
+                </span>
+              )}
+            </div>
+            <h3 class="lib-card__title">
+              <a href={`/digest/${d.slug}`}>{d.title}</a>
+            </h3>
+            <p class="lib-card__desc">{d.summary}</p>
+            {d.topics.length > 0 && (
+              <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+                {d.topics.map((t) => (
+                  <span class="tag">{topicLabel(t)}</span>
+                ))}
+              </div>
+            )}
+            <p class="lib-card__count">
+              {d.items.length} {d.items.length === 1 ? "link" : "links"}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="digest-empty muted" id="digest-empty" hidden>No issues match those filters.</p>
+
+    <p class="crosslink muted">
+      These come from my{" "}
+      <a href="/library">research library</a> pipeline.{" "}
+      <a href="/digest/rss.xml">Subscribe via RSS →</a>
+    </p>
+  </div>
+</PageLayout>
+
+<script>
+  const grid = document.getElementById("digest-grid");
+  const cadence = document.getElementById("f-cadence") as HTMLSelectElement;
+  const topic = document.getElementById("f-topic") as HTMLSelectElement;
+  const podcast = document.getElementById("f-podcast") as HTMLInputElement;
+  const search = document.getElementById("f-search") as HTMLInputElement;
+  const count = document.getElementById("digest-count");
+  const empty = document.getElementById("digest-empty");
+
+  if (grid) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".digest-card"));
+
+    const apply = () => {
+      const c = cadence.value;
+      const t = topic.value;
+      const wantPod = podcast.checked;
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+
+      for (const card of cards) {
+        const topics = (card.dataset.topics ?? "").split(" ");
+        const match =
+          (!c || card.dataset.cadence === c) &&
+          (!t || topics.includes(t)) &&
+          (!wantPod || card.dataset.podcast === "true") &&
+          (!q || (card.dataset.text ?? "").includes(q));
+        card.hidden = !match;
+        if (match) shown++;
+      }
+
+      if (count) count.textContent = `${shown} ${shown === 1 ? "issue" : "issues"}`;
+      if (empty) empty.hidden = shown !== 0;
+    };
+
+    for (const el of [cadence, topic, podcast, search]) {
+      el.addEventListener("input", apply);
+    }
+  }
+</script>
+
+<style>
+  .digest-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-s) var(--space-m);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .field--grow {
+    flex: 1 1 12rem;
+  }
+
+  .field--check {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-xs);
+    padding-block-end: var(--space-2xs);
+  }
+
+  .field__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+  }
+
+  .field select,
+  .field input[type="search"] {
+    font: inherit;
+    font-size: var(--step--1);
+    padding: var(--space-2xs) var(--space-xs);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .field input[type="search"] {
+    width: 100%;
+  }
+
+  .digest-count {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .digest-card {
+    gap: var(--space-xs);
+  }
+
+  .digest-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .digest-card__pod {
+    color: var(--color-accent);
+  }
+
+  .digest-card .lib-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .digest-card .lib-card__title a:hover {
+    color: var(--color-accent);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.1em 0.6em;
+    border-radius: var(--radius);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+  }
+
+  .badge--daily {
+    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
+    color: var(--color-accent);
+  }
+
+  .badge--weekly {
+    border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
+  }
+
+  .crosslink {
+    font-size: var(--step-0);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .crosslink a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .crosslink a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -14,6 +14,7 @@ import explorersData from "@/data/knowledge/explorers.json";
 import { buildBm25, bm25Query, dot, rrf, tokenize, type Scored } from "./retrieval";
 import type {
   DigestItem,
+  DigestIssue,
   Explorer,
   KnowledgeGraph,
   KnowledgeNode,
@@ -355,6 +356,33 @@ export function getDigestStream(limit = 40): DigestItem[] {
   }
   items.sort((a, b) => (b.pubdate ?? "").localeCompare(a.pubdate ?? ""));
   return items.slice(0, limit);
+}
+
+/** The digest library: published newsletter/podcast issues, newest first. */
+export async function getDigests(): Promise<DigestIssue[]> {
+  const entries = (await getCollection("digest")) as CollectionEntry<"digest">[];
+  return entries
+    .map((e) => ({
+      slug: e.id,
+      title: e.data.title,
+      cadence: e.data.cadence,
+      origin: e.data.origin,
+      date: e.data.date,
+      summary: e.data.summary,
+      topics: e.data.topics,
+      audioUrl: e.data.audioUrl,
+      embedUrl: e.data.embedUrl,
+      durationSec: e.data.durationSec,
+      items: e.data.items,
+      highlights: e.data.highlights,
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+/** Distinct topic facets across all digests, for the library's filter UI. */
+export async function getDigestTopics(): Promise<string[]> {
+  const digests = await getDigests();
+  return [...new Set(digests.flatMap((d) => d.topics))].sort();
 }
 
 export type { Lane };
