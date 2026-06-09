@@ -1,10 +1,11 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
-import { getWriting } from "@/lib/collections";
+import { getWriting, getPublications } from "@/lib/collections";
 import { monthYear } from "@/lib/dates";
 
 const writing = await getWriting();
+const publications = await getPublications();
 
 type Entry = (typeof writing)[number];
 
@@ -14,6 +15,15 @@ const sourceLabel: Record<string, string> = {
   ebook: "Ebook",
   "on-site": "Essay",
   external: "External",
+};
+
+const pubTypeLabel: Record<string, string> = {
+  journal: "Paper",
+  conference: "Paper",
+  preprint: "Preprint",
+  thesis: "Thesis",
+  abstract: "Abstract",
+  software: "Software",
 };
 
 const hrefFor = (w: Entry) =>
@@ -38,7 +48,7 @@ const sections = groups
 <PageLayout
   title="Writing"
   kicker="Words"
-  intro="Essays and posts on agents, retrieval, and research, gathered from Medium, the Sourcegraph blog, and here."
+  intro="Essays, posts, and peer-reviewed papers on agents, retrieval, and planetary science, gathered from Medium, the Sourcegraph blog, journals, and here."
   description="Writing by Stephanie Jarmak on AI agents, retrieval, and scientific search."
 >
   {
@@ -73,6 +83,35 @@ const sections = groups
             </ul>
           </section>
         ))}
+
+        {publications.length > 0 && (
+          <section>
+            <div class="sub-head">
+              <h2 class="section__heading section__heading--flush">Papers</h2>
+              <a class="sub-head__more muted" href="/research">All research &amp; press →</a>
+            </div>
+            <ul role="list" class="stack">
+              {publications.map((p) => (
+                <li class="row">
+                  {p.data.url ? (
+                    <a class="row__title" href={p.data.url} rel="noopener">
+                      {p.data.title}
+                    </a>
+                  ) : (
+                    <span class="row__title">{p.data.title}</span>
+                  )}
+                  <p class="muted row__desc">
+                    {p.data.authorString ?? p.data.authors.join(", ")}
+                    {p.data.venue ? ` · ${p.data.venue}` : ""}
+                  </p>
+                  <span class="row__meta muted">
+                    {pubTypeLabel[p.data.type] ?? "Paper"} · {p.data.year}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     )
   }
@@ -84,6 +123,29 @@ const sections = groups
     padding-block-end: var(--space-s);
     border-bottom: var(--border-hairline);
     margin-block-end: var(--space-s);
+  }
+  .sub-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-m);
+    padding-block-end: var(--space-s);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-s);
+  }
+  .section__heading--flush {
+    padding-block-end: 0;
+    border-bottom: 0;
+    margin-block-end: 0;
+  }
+  .sub-head__more {
+    font-size: var(--step--1);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .sub-head__more:hover {
+    color: var(--color-accent);
   }
   .row {
     display: grid;
