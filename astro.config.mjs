@@ -8,11 +8,6 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://sjarmak.ai",
   integrations: [mdx(), sitemap()],
-  image: {
-    // Full-resolution astrophotography originals live on Cloudinary; allow Astro
-    // to optimize them when referenced. Display masters are processed locally.
-    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
-  },
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",

@@ -176,32 +176,6 @@ const talks = defineCollection({
     }),
 });
 
-// ---- astrophotography ----
-const astrophoto = defineCollection({
-  loader: base("astrophoto"),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      image: image(),
-      remoteFull: z.string().url().optional(),
-      caption: z.string().optional(),
-      target: z.string().optional(),
-      capturedOn: z.coerce.date().optional(),
-      location: z.string().optional(),
-      gear: z
-        .object({
-          telescope: z.string().optional(),
-          camera: z.string().optional(),
-          mount: z.string().optional(),
-          filters: z.array(z.string()).optional(),
-        })
-        .optional(),
-      exposure: z.string().optional(),
-      featured: z.boolean().default(false),
-      order: z.number().optional(),
-    }),
-});
-
 // ---- art / music / children's books ----
 const art = defineCollection({
   loader: base("art"),
@@ -280,7 +254,6 @@ export const collections = {
   writing,
   posts,
   talks,
-  astrophoto,
   art,
   learning,
   digest,

@@ -6,9 +6,9 @@ export const site = {
   domain: "sjarmak.ai",
   url: "https://sjarmak.ai",
   email: "steph.jarmak@gmail.com",
-  tagline: "Information scientist, AI agent advocate, and astrophotographer.",
+  tagline: "Information scientist, AI agent advocate, and illustrator.",
   description:
-    "Stephanie Jarmak — information scientist and applied research scientist, AI agent advocate at Sourcegraph, NASA SciX research affiliate. Knowledge graphs, retrieval, agents, and astrophotography.",
+    "Stephanie Jarmak — information scientist and applied research scientist, AI agent advocate at Sourcegraph, NASA SciX research affiliate. Knowledge graphs, retrieval, and agents.",
   locale: "en",
 } as const;
 
@@ -22,7 +22,6 @@ export const nav: readonly NavItem[] = [
   { label: "Writing", href: "/writing" },
   { label: "Talks", href: "/talks" },
   { label: "CV", href: "/cv" },
-  { label: "Astrophotography", href: "/astrophotography" },
   { label: "Art", href: "/art" },
 ];
 

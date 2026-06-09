@@ -14,12 +14,41 @@ const grouped = SECTION_ORDER.map((section) => ({
   section,
   items: all.filter((a) => a.data.section === section),
 })).filter((g) => g.items.length > 0);
+
+// A music track embeds via SoundCloud or Suno, picked by the host of its URL.
+function isSuno(url: string): boolean {
+  return url.includes("suno.com");
+}
+
+// Build a SoundCloud player iframe src from a track or set URL. If an embed
+// player URL was supplied directly, use it unchanged.
+function soundcloudPlayer(url: string): string {
+  if (url.includes("w.soundcloud.com/player")) return url;
+  const params = new URLSearchParams({
+    url,
+    color: "#b4471f",
+    auto_play: "false",
+    hide_related: "true",
+    show_comments: "false",
+    show_reposts: "false",
+    show_teaser: "false",
+    visual: "false",
+  });
+  return `https://w.soundcloud.com/player/?${params.toString()}`;
+}
+
+// Turn a Suno song page URL (suno.com/song/<id>) into its embed player URL.
+// An embed URL passed directly is used unchanged.
+function sunoEmbed(url: string): string {
+  if (url.includes("/embed/")) return url;
+  return url.replace("/song/", "/embed/");
+}
 ---
 
 <PageLayout
   title="Art, music & books"
   kicker="Studio"
-  intro="Children's books I've written and illustrated, digital paintings, and fan art, work made away from the keyboard."
+  intro="Children's books I've written and illustrated, digital paintings, fan art, and piano recordings, work made away from the keyboard."
   description="Art and children's books by Stephanie Jarmak."
 >
   {grouped.length === 0 && <EmptyState title="The studio is being hung" />}
@@ -55,6 +84,48 @@ const grouped = SECTION_ORDER.map((section) => ({
                       </p>
                     )}
                   </div>
+                </li>
+              ))}
+            </ul>
+          ) : group.section === "Music" ? (
+            <ul role="list" class="stack stack-m">
+              {group.items.map((w) => (
+                <li class="track">
+                  <div class="stack stack-2xs">
+                    <h3 class="track__title">{w.data.title}</h3>
+                    {w.data.description && <p class="muted">{w.data.description}</p>}
+                  </div>
+                  {w.data.embedUrl ? (
+                    isSuno(w.data.embedUrl) ? (
+                      <iframe
+                        class="track__player track__player--suno"
+                        title={`Suno player: ${w.data.title}`}
+                        width="100%"
+                        height="240"
+                        scrolling="no"
+                        frameborder="no"
+                        loading="lazy"
+                        allow="autoplay"
+                        src={sunoEmbed(w.data.embedUrl)}
+                      />
+                    ) : (
+                      <iframe
+                        class="track__player"
+                        title={`SoundCloud player: ${w.data.title}`}
+                        width="100%"
+                        height="166"
+                        scrolling="no"
+                        frameborder="no"
+                        loading="lazy"
+                        allow="autoplay"
+                        src={soundcloudPlayer(w.data.embedUrl)}
+                      />
+                    )
+                  ) : (
+                    w.data.audioUrl && (
+                      <audio class="track__audio" controls preload="none" src={w.data.audioUrl} />
+                    )
+                  )}
                 </li>
               ))}
             </ul>
@@ -118,5 +189,21 @@ const grouped = SECTION_ORDER.map((section) => ({
     height: 100%;
     aspect-ratio: 1;
     object-fit: cover;
+  }
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    max-width: 40rem;
+  }
+  .track__title {
+    font-size: var(--step-0);
+  }
+  .track__player {
+    border: none;
+    border-radius: var(--radius);
+  }
+  .track__audio {
+    width: 100%;
   }
 </style>
