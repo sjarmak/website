@@ -18,6 +18,8 @@ topics:
   - knowledge-bases
   - benchmarks
   - reliability
+audioUrl: /media/digests/manual-enhancing-developer-productivity-with-google-colab-cli-and-agentic-observability.mp3
+durationSec: 1729
 items: []
 highlights: []
 ---
