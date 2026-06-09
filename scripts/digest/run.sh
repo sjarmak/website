@@ -5,6 +5,7 @@
 #
 #   scripts/digest/run.sh daily
 #   scripts/digest/run.sh weekly
+#   scripts/digest/run.sh curated <items.json>   # hand-picked items from the digest app
 #
 # Env:
 #   OPENAI_API_KEY  (required — used by tts-render.mjs)
@@ -14,10 +15,17 @@
 set -euo pipefail
 
 MODE="${1:-}"
+WINDOW=""; WORD_TARGET=""; MINUTES=""; ITEM_RANGE=""; ITEMS_FILE=""
 case "$MODE" in
   daily)  WINDOW="the last ~36 hours"; WORD_TARGET=1800; MINUTES=12; ITEM_RANGE="5-7" ;;
   weekly) WINDOW="the last 7 days";    WORD_TARGET=6750; MINUTES=45; ITEM_RANGE="12-15" ;;
-  *) echo "usage: run.sh <daily|weekly>" >&2; exit 2 ;;
+  curated)
+    WORD_TARGET=5400; MINUTES=30
+    ITEMS_FILE="${2:-}"
+    [ -n "$ITEMS_FILE" ] && [ -f "$ITEMS_FILE" ] || { echo "usage: run.sh curated <items.json>" >&2; exit 2; }
+    ITEMS_FILE="$(readlink -f "$ITEMS_FILE")"
+    ;;
+  *) echo "usage: run.sh <daily|weekly|curated <items.json>>" >&2; exit 2 ;;
 esac
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
@@ -38,6 +46,9 @@ LOG_DIR="$WEBSITE_DIR/.digest-runs"
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/${MODE}-$(date +%Y%m%d-%H%M%S).log"
 
+# Curated runs read a fixed, hand-picked item set; daily/weekly select from the MCP.
+if [ "$MODE" = "curated" ]; then TEMPLATE="scripts/digest/generate-curated.md"; else TEMPLATE="scripts/digest/generate.md"; fi
+
 PROMPT="$(sed \
   -e "s|{{MODE}}|${MODE}|g" \
   -e "s|{{WINDOW}}|${WINDOW}|g" \
@@ -46,8 +57,9 @@ PROMPT="$(sed \
   -e "s|{{ITEM_RANGE}}|${ITEM_RANGE}|g" \
   -e "s|{{DATE}}|${DATE}|g" \
   -e "s|{{WORK}}|${WORK}|g" \
+  -e "s|{{ITEMS_FILE}}|${ITEMS_FILE}|g" \
   -e "s|{{WEBSITE_DIR}}|${WEBSITE_DIR}|g" \
-  scripts/digest/generate.md)"
+  "$TEMPLATE")"
 
 CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,Write,Read,Edit,mcp__code-intel-copilot__search_items,mcp__code-intel-copilot__semantic_search_items,mcp__code-intel-copilot__aggregate_items,mcp__code-intel-copilot__get_item,mcp__code-intel-copilot__mirror_status}"
 
