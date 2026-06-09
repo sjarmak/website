@@ -211,6 +211,12 @@ export interface DigestIssue {
   durationSec?: number;
   items: DigestResource[];
   highlights: string[];
+  /**
+   * Number of distinct linked resources in the issue. Uses `items` when the
+   * frontmatter declares them (auto-pipeline issues), else counts the links in
+   * the rendered body (hand-curated issues keep their links inline).
+   */
+  linkCount: number;
 }
 
 // ---- threads ----

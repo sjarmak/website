@@ -452,8 +452,16 @@ export async function getDigests(): Promise<DigestIssue[]> {
       durationSec: e.data.durationSec,
       items: e.data.items,
       highlights: e.data.highlights,
+      linkCount: e.data.items.length || countBodyLinks(e.body ?? ""),
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+/** Count the distinct external links in a digest's markdown body. */
+function countBodyLinks(body: string): number {
+  const urls = new Set<string>();
+  for (const m of body.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)) urls.add(m[1]);
+  return urls.size;
 }
 
 /** Distinct topic facets across all digests, for the library's filter UI. */

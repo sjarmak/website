@@ -96,12 +96,8 @@ MEnvAgent goes after the shortage of verifiable software-engineering datasets by
 
 ## Community
 
-- **[RT by @swyx: Skill issue: Lessons from skilling up coding agents
-
-Getting agents to actually use Langfuse was a "skill issue" — literally. Marc Klingen from Clickhouse on teaching coding agents to use new tools, and why it's harder than you think.
-
-https://www.youtube.com/watch?v=vNCY9kXXyDQ](https://xcancel.com/aiDotEngineer/status/2062576719794430231#m)** — *swyx 🇸🇬 / @swyx*
-  Understanding these challenges aids in developing better training programs for coding agents, improving tool utilization.
+- **[RT by @swyx: Skill issue — lessons from skilling up coding agents](https://xcancel.com/aiDotEngineer/status/2062576719794430231#m)** — *swyx 🇸🇬 / @swyx*
+  Getting agents to actually use Langfuse was a "skill issue" — literally. Marc Klingen from Clickhouse on teaching coding agents to use new tools, and why it's harder than you think ([talk](https://www.youtube.com/watch?v=vNCY9kXXyDQ)). Understanding these challenges aids in developing better training programs for coding agents, improving tool utilization.
 
 - **[Show HN: I nerfed our coding agents on purpose](https://news.ycombinator.com/item?id=48419614)** — *Hacker News - Newest: ""codebase" ""code" "search"" ""coding" "agent"" ""context" "management"" ""developer" "productivity"" ""code" "understanding"""*
   Nerfguard helps developers save costs and improve productivity by optimizing the use of AI models for coding tasks.
@@ -109,12 +105,8 @@ https://www.youtube.com/watch?v=vNCY9kXXyDQ](https://xcancel.com/aiDotEngineer/s
 - **[Show HN: Keen Code – a context aware CLI coding agent built by coding agents](https://github.com/mochow13/keen-code)** — *Hacker News - Newest: ""codebase" ""code" "search"" ""coding" "agent"" ""context" "management"" ""developer" "productivity"" ""code" "understanding"""*
   Keen Code addresses the challenge of maintaining context in coding environments, which can streamline development workflows and reduce errors.
 
-- **[Benchmarks place GPT 5.5 as the best model on SWE, but is it the best at making apps end-to-end?
-
-Turns out Opus 4.8 continues to be the king of vibe coding on both price & performance.
-
-Introducing ViBench: the first benchmark for app creation based on real world tasks](https://xcancel.com/amasad/status/2062226152790675805#m)** — *Amjad Masad / @amasad*
-  The comparison reveals that while advanced models exist, practical application performance still relies on specific tools like Opus 4.8. ViBench could standardize app development evaluations.
+- **[Benchmarks place GPT 5.5 as the best model on SWE, but is it the best at making apps end-to-end?](https://xcancel.com/amasad/status/2062226152790675805#m)** — *Amjad Masad / @amasad*
+  Turns out Opus 4.8 continues to be the king of vibe coding on both price and performance. Introducing ViBench: the first benchmark for app creation based on real-world tasks. The comparison reveals that while advanced models exist, practical application performance still relies on specific tools like Opus 4.8. ViBench could standardize app development evaluations.
 
 ## Newsletters
 
