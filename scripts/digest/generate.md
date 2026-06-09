@@ -17,6 +17,27 @@ orchestration, agent memory systems, information retrieval**. Off-topic items ge
 - Working directory for intermediate files: **{{WORK}}**
 - Website repo (run scripts from here): **{{WEBSITE_DIR}}**
 
+## Writing voice (mandatory — newsletter, transcript, and anything published)
+
+Write as a practitioner for peers: direct, specific, opinionated, technically dense. After
+drafting, do a deliberate revision pass — reread every line and cut the tells. This cannot be
+done mechanically.
+
+Cut every instance of:
+- Em dashes used for staccato pivots (ceiling ~1 per 800 words; prefer commas, semicolons, or recast).
+- "It's not just X, it's Y"; "Here's the thing / here's why"; filler openers ("Let's dive in", "Great question").
+- Filler transitions opening a sentence (Furthermore, Moreover, Additionally, Importantly, Notably).
+- Meta-narration ("In this issue we'll explore", "As we've seen", "This shows that").
+- Hype verbs (leverage, unlock, enable, empower, harness, supercharge, accelerate, transform, revolutionize, redefine, disrupt) — use plain verbs.
+- Vague impact claims ("significant gains", "dramatic improvement") — cite the number or drop the claim.
+- "Imagine if…" openings, future-of-work gestures ("a fundamental shift in how software is built"), forced triads, exclamation points, gratuitous emoji, and bullet lists standing in for an argument prose should carry.
+
+Do:
+- Cold-open on a concrete thing — a number, a finding, an artifact — not a thesis or a definition.
+- Vary sentence rhythm: most sentences 12–25 words, around a third running 30+ words carrying the argument through commas, short sentences rare and load-bearing. Never a run of three short sentences.
+- Put specific numbers, names, versions, and dates inline. Specifics beat adjectives.
+- Close by pivoting outward — an open question, what to watch — not by summarizing what was just said.
+
 ## Procedure — do these in order
 
 1. **Confirm freshness.** Call `mirror_status`. If it reports `direct` mode, data is live.
@@ -35,13 +56,21 @@ orchestration, agent memory systems, information retrieval**. Off-topic items ge
    window, ship FEWER items and a shorter episode — never pad. Use `get_item` to read the
    full text of anything you'll quote or summarize in depth.
 
-4. **Write the newsletter** (markdown body, no frontmatter): a tight lead, then a short
-   section per item or theme — what it is, why it matters, the one takeaway. Link each item.
-   Weekly issues should be organized into 3–5 themed segments; daily issues are a flat list.
+4. **Write the newsletter** (markdown body, no frontmatter), following the **Writing voice**
+   rules above. Cold-open on the sharpest finding or number, then develop each item or theme
+   in prose — what it is, why it matters — with the source linked inline. Weekly issues group
+   into themed segments under declarative heads; daily issues read as connected prose, not a
+   bulleted list. Close by pointing at what to watch next.
 
-5. **Write the podcast transcript** (plain spoken prose, ~{{WORD_TARGET}} words): conversational,
-   no markdown, no stage directions, no "[music]". It should stand on its own as audio. Open
-   with a one-line cold open, walk the items as a narrative, close with a forward look.
+5. **Write the podcast transcript** (plain spoken prose, ~{{WORD_TARGET}} words), the same
+   Writing voice adapted for the ear: natural clauses, no markdown, no headings, no stage
+   directions or "[music]". Cold-open on a concrete moment, walk the items as a narrative a
+   sharp practitioner would speak, and close looking forward. It should sound like a person
+   thinking aloud, not ad copy.
+
+5b. **Revise both drafts against the slop-guard.** Reread every line of the newsletter and the
+   transcript and cut the tells — hype verbs, filler transitions, "it's not just X, it's Y",
+   meta-narration, staccato runs, stray em dashes. Read it; do not pattern-match.
 
 6. **Write three files into {{WORK}}/:**
    - `body.md` — the newsletter body from step 4
