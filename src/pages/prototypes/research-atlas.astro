@@ -60,7 +60,7 @@ function guideRationale(paper: AdsPaper, index: number, total: number): string {
     return `${era} (${paper.year})`;
   }
   const era =
-    index === 0 ? `Pivot to information science — first publication (${paper.year})` :
+    index === 0 ? `Pivot to information science: first publication (${paper.year})` :
     index === total - 1 ? `Current research frontier (${paper.year})` :
     `Information science expansion (${paper.year})`;
   return era;
@@ -101,8 +101,8 @@ for (const y of tickYears) {
 <PageLayout
   title="Research atlas"
   kicker="Prototype · connects to NASA ADS / SciX"
-  intro="A themed map of my scholarship and a proposed way into it — from Saturn's rings to LLM embeddings, tracing the arc of a career."
-  description="Research atlas — a literature map and guided reading path across Stephanie Jarmak's planetary science and information science publications."
+  intro="A themed map of my scholarship and a proposed way into it, from Saturn's rings to LLM embeddings, tracing the arc of a career."
+  description="A literature map and guided reading path across Stephanie Jarmak's planetary science and information science publications."
 >
   <div class="stack stack-l">
 

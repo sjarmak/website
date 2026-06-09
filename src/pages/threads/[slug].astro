@@ -119,7 +119,7 @@ const opportunityList: Opportunity[] =
         <section class="thread__section" aria-labelledby="reading-path-heading">
           <h2 class="section-heading" id="reading-path-heading">Reading path</h2>
           <p class="reading-path__note muted">
-            A generated path through {readingStopCount} paper{readingStopCount === 1 ? "" : "s"} — assembled using her SciX literature tools (semantic embeddings, citation graphs, and reading-order signals).
+            A generated path through {readingStopCount} paper{readingStopCount === 1 ? "" : "s"}, assembled using her SciX literature tools (semantic embeddings, citation graphs, and reading-order signals).
           </p>
           <ol role="list" class="path-list" aria-label="Reading path stops">
             {thread.readingOrder.map(({ node, why }, i) => (
