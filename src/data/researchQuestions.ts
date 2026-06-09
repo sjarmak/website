@@ -64,7 +64,7 @@ export const researchQuestions: ResearchQuestion[] = [
       { label: "mem — benchmark project", url: "/projects/mem" },
       {
         label: "Agentic Memory Systems — literature explorer",
-        url: "https://sjarmak.github.io/lit_explorers/agentic_memory_explorer.html",
+        url: "/library/explorers/agentic-memory",
       },
     ],
   },

@@ -16,6 +16,9 @@ import type {
   DigestItem,
   DigestIssue,
   Explorer,
+  ExplorerOpportunity,
+  ExplorerPaper,
+  ExplorerReadingGroup,
   KnowledgeGraph,
   KnowledgeNode,
   KnowledgeThread,
@@ -309,6 +312,58 @@ export function getLibrary(id: string): Library | undefined {
 
 export function getExplorers(): Explorer[] {
   return explorers;
+}
+
+export function getExplorer(id: string): Explorer | undefined {
+  return explorers.find((e) => e.id === id);
+}
+
+/** Resolve a paper's best external link: arXiv, then explicit url, then ADS. */
+function arxivOrAds(bibcode?: string, arxiv?: string | null, url?: string | null): string {
+  if (arxiv) return `https://arxiv.org/abs/${arxiv}`;
+  if (url) return url;
+  if (bibcode) return adsUrl(bibcode);
+  return "#";
+}
+
+export function explorerPaperUrl(p: ExplorerPaper): string {
+  return arxivOrAds(p.bibcode, p.arxiv, p.url);
+}
+
+/** Parse the raw `[bibcode, title, group]` reading tuples into ordered, numbered groups. */
+export function explorerReadingPath(e: Explorer): ExplorerReadingGroup[] {
+  const byBibcode = new Map(e.papers.map((p) => [p.bibcode, p] as const));
+  const groups: ExplorerReadingGroup[] = [];
+  const indexByGroup = new Map<string, number>();
+  let n = 0;
+  for (const row of e.reading ?? []) {
+    if (!Array.isArray(row)) continue;
+    const [bibcode, title, group] = row as [string, string, string?];
+    const g = group ?? "";
+    if (!indexByGroup.has(g)) {
+      indexByGroup.set(g, groups.length);
+      groups.push({ group: g, stops: [] });
+    }
+    const paper = bibcode ? byBibcode.get(bibcode) : undefined;
+    groups[indexByGroup.get(g)!].stops.push({
+      n: ++n,
+      bibcode: bibcode ?? "",
+      title: title ?? bibcode ?? "",
+      url: arxivOrAds(bibcode, paper?.arxiv ?? null, paper?.url ?? null),
+    });
+  }
+  return groups;
+}
+
+/** Parse the raw opportunity tuples (`[title, description]` or bare strings). */
+export function explorerOpportunities(e: Explorer): ExplorerOpportunity[] {
+  return (e.opportunities ?? [])
+    .map((o): ExplorerOpportunity =>
+      Array.isArray(o)
+        ? { title: String(o[0] ?? ""), description: String(o[1] ?? "") }
+        : { title: String(o), description: "" },
+    )
+    .filter((o) => o.title);
 }
 
 /** Deep-dive podcasts grouped by series, with inline-playable audio. */

@@ -74,6 +74,31 @@ export interface ExplorerSection {
   label: string;
   summary: string;
   count: number;
+  /** Key threads observed across the theme's papers. */
+  themes?: string[];
+  /** Open gaps / unresolved problems in the theme. */
+  gaps?: string[];
+  questions?: string[];
+}
+
+/** One stop on an explorer's suggested reading path. */
+export interface ExplorerReadingStop {
+  n: number;
+  bibcode: string;
+  title: string;
+  url: string;
+}
+
+/** Reading stops grouped by phase, in order. */
+export interface ExplorerReadingGroup {
+  group: string;
+  stops: ExplorerReadingStop[];
+}
+
+/** An open research opportunity surfaced by an explorer. */
+export interface ExplorerOpportunity {
+  title: string;
+  description: string;
 }
 
 export interface ExplorerPaper {

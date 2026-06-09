@@ -1,0 +1,489 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import {
+  getExplorers,
+  explorerPaperUrl,
+  explorerReadingPath,
+  explorerOpportunities,
+} from "@/lib/knowledge/build";
+import type { Explorer, ExplorerPaper, ExplorerSection } from "@/lib/knowledge/types";
+
+export function getStaticPaths() {
+  return getExplorers().map((ex: Explorer) => ({
+    params: { id: ex.id },
+    props: { explorer: ex },
+  }));
+}
+
+const { explorer } = Astro.props as { explorer: Explorer };
+
+// Group papers under the themes they belong to (a paper can appear in several).
+const papersByKey = new Map<string, ExplorerPaper[]>();
+for (const s of explorer.sections) papersByKey.set(s.key, []);
+for (const p of explorer.papers) {
+  for (const b of p.branches ?? []) {
+    if (papersByKey.has(b)) papersByKey.get(b)!.push(p);
+  }
+}
+
+const reading = explorerReadingPath(explorer);
+const opportunities = explorerOpportunities(explorer);
+const showFilter = explorer.sections.length > 1;
+
+function authorYear(p: ExplorerPaper): string {
+  return [p.firstAuthor, p.year].filter(Boolean).join(" · ");
+}
+---
+
+<PageLayout title={explorer.title} kicker="Thematic explorer" intro={explorer.blurb}>
+  <div class="stack stack-l">
+    <div class="ex-head">
+      <p class="ex-count">
+        <span class="ex-count__num">{explorer.paperCount}</span> papers
+        <span class="ex-count__sep">·</span>
+        <span class="ex-count__num">{explorer.themeCount}</span> themes
+      </p>
+      <a href="/library" class="back-link">← All collections</a>
+    </div>
+
+    {
+      showFilter && (
+        <nav class="theme-filter cluster" aria-label="Filter by theme" style="--cluster-gap: var(--space-2xs)">
+          <button class="filter-btn filter-btn--active" data-key="all" aria-pressed="true">
+            All themes
+          </button>
+          {explorer.sections.map((s: ExplorerSection) => (
+            <button class="filter-btn" data-key={s.key} aria-pressed="false">
+              {s.label}
+            </button>
+          ))}
+        </nav>
+      )
+    }
+
+    <div id="themes" class="stack stack-l">
+      {
+        explorer.sections.map((s: ExplorerSection) => {
+          const papers = papersByKey.get(s.key) ?? [];
+          return (
+            <section class="theme" data-key={s.key} id={`theme-${s.key}`}>
+              <h2 class="theme__label">{s.label}</h2>
+              {s.summary && <p class="theme__summary measure">{s.summary}</p>}
+
+              {((s.themes?.length ?? 0) > 0 || (s.gaps?.length ?? 0) > 0) && (
+                <div class="theme__notes">
+                  {(s.themes?.length ?? 0) > 0 && (
+                    <details class="note">
+                      <summary class="note__toggle">Key threads</summary>
+                      <ul role="list" class="note__list">
+                        {s.themes!.map((t) => (
+                          <li class="measure">{t}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  {(s.gaps?.length ?? 0) > 0 && (
+                    <details class="note">
+                      <summary class="note__toggle">Open gaps</summary>
+                      <ul role="list" class="note__list">
+                        {s.gaps!.map((g) => (
+                          <li class="measure">{g}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </div>
+              )}
+
+              {papers.length > 0 && (
+                <ol role="list" class="paper-list">
+                  {papers.map((p) => (
+                    <li class="paper">
+                      <a href={explorerPaperUrl(p)} rel="noopener noreferrer" class="paper__title">
+                        {p.title}
+                      </a>
+                      <p class="paper__meta muted">
+                        {authorYear(p)}
+                        {" · "}
+                        <span>{p.citationCount} cites</span>
+                        {p.arxiv && <span class="tag">arXiv</span>}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          );
+        })
+      }
+    </div>
+
+    {
+      reading.length > 0 && (
+        <section class="block">
+          <h2 class="section-head">A reading path</h2>
+          <p class="muted measure" style="margin-block-end: var(--space-m)">
+            Start here and read in order; the path moves from foundations toward the open edge.
+          </p>
+          <div class="stack stack-m">
+            {reading.map((grp) => (
+              <div class="reading-group">
+                {grp.group && <h3 class="reading-group__label">{grp.group}</h3>}
+                <ol role="list" class="reading-stops">
+                  {grp.stops.map((st) => (
+                    <li class="reading-stop">
+                      <span class="reading-stop__n" aria-hidden="true">
+                        {String(st.n).padStart(2, "0")}
+                      </span>
+                      <a href={st.url} rel="noopener noreferrer" class="reading-stop__title">
+                        {st.title}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      opportunities.length > 0 && (
+        <section class="block">
+          <h2 class="section-head">Open problems</h2>
+          <p class="muted measure" style="margin-block-end: var(--space-m)">
+            Where the literature is thin and the next contribution could land.
+          </p>
+          <ol role="list" class="opp-list">
+            {opportunities.map((o) => (
+              <li class="opp">
+                <h3 class="opp__title">{o.title}</h3>
+                {o.description && <p class="opp__desc measure muted">{o.description}</p>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    <p class="back-footer"><a href="/library">← All collections</a></p>
+  </div>
+</PageLayout>
+
+<script>
+  const filter = document.querySelector(".theme-filter");
+  if (filter) {
+    const buttons = filter.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const themes = document.querySelectorAll<HTMLElement>("#themes .theme");
+    filter.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(".filter-btn");
+      if (!btn) return;
+      const key = btn.dataset.key;
+      buttons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle("filter-btn--active", active);
+        b.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+      themes.forEach((t) => {
+        t.hidden = key !== "all" && t.dataset.key !== key;
+      });
+    });
+  }
+</script>
+
+<style>
+  .ex-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-m);
+  }
+
+  .ex-count {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .ex-count__num {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .ex-count__sep {
+    opacity: 0.5;
+  }
+
+  .back-link {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- theme filter ---- */
+  .theme-filter {
+    padding-block: var(--space-xs);
+    border-block: var(--border-hairline);
+  }
+
+  .filter-btn {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .filter-btn--active {
+    background: color-mix(in oklch, var(--color-accent) 14%, transparent);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  [data-theme="dark"] .filter-btn--active {
+    background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+  }
+
+  /* ---- theme sections ---- */
+  .theme {
+    scroll-margin-top: var(--space-l);
+  }
+
+  .theme__label {
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+    margin-block-end: var(--space-xs);
+  }
+
+  .theme__summary {
+    font-size: var(--step-0);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin: 0 0 var(--space-s);
+  }
+
+  .theme__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
+    margin-block-end: var(--space-s);
+  }
+
+  .note {
+    font-size: var(--step--1);
+  }
+
+  .note__toggle {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.12s ease;
+  }
+
+  .note__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .note__toggle::before {
+    content: "+ ";
+  }
+
+  details[open] .note__toggle::before {
+    content: "− ";
+  }
+
+  .note__toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .note__list {
+    margin-block-start: var(--space-xs);
+    padding-inline-start: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+
+  .note__list li {
+    list-style: disc;
+  }
+
+  /* ---- paper list (shared visual language with /library/[id]) ---- */
+  .paper-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .paper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+
+  .paper:first-child {
+    border-top: var(--border-hairline);
+  }
+
+  .paper__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .paper__title:hover {
+    color: var(--color-accent);
+  }
+
+  .paper__meta {
+    font-size: var(--step--1);
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  /* ---- standalone blocks (reading path, open problems) ---- */
+  .block {
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .section-head {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .reading-group__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .reading-stops {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reading-stop {
+    display: flex;
+    gap: var(--space-s);
+    align-items: baseline;
+    padding-block: var(--space-2xs);
+  }
+
+  .reading-stop__n {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-accent);
+    flex-shrink: 0;
+    width: 2ch;
+  }
+
+  .reading-stop__title {
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: var(--leading-snug);
+    transition: color 0.12s ease;
+  }
+
+  .reading-stop__title:hover {
+    color: var(--color-accent);
+  }
+
+  /* ---- open problems ---- */
+  .opp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: opp;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .opp {
+    counter-increment: opp;
+    padding-block: var(--space-m);
+    border-bottom: var(--border-hairline);
+  }
+
+  .opp:first-child {
+    border-top: var(--border-hairline);
+  }
+
+  .opp__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    margin: 0 0 var(--space-3xs);
+  }
+
+  .opp__title::before {
+    content: counter(opp, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-accent);
+    margin-inline-end: var(--space-xs);
+  }
+
+  .opp__desc {
+    font-size: var(--step-0);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  /* ---- footer ---- */
+  .back-footer {
+    padding-block-start: var(--space-m);
+    font-size: var(--step-0);
+  }
+
+  .back-footer a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .back-footer a:hover {
+    color: var(--color-accent);
+  }
+</style>

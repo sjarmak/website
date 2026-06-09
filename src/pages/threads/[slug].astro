@@ -242,10 +242,10 @@ const opportunityList: Opportunity[] =
               {explorer.paperCount} papers · {explorer.themeCount} themes
             </span>
             <div class="exp__links">
-              <a href={explorer.homepage} class="exp__link" rel="noopener noreferrer" target="_blank">
-                Open explorer ↗
+              <a href={`/library/explorers/${explorer.id}`} class="exp__link">
+                Open explorer →
               </a>
-              <a href="/library" class="exp__link">On the site</a>
+              <a href="/library" class="exp__link">All collections</a>
             </div>
           </div>
           {explorerSections.length > 0 && (
