@@ -97,19 +97,36 @@ function authorYear(p: ExplorerPaper): string {
 
               {papers.length > 0 && (
                 <ol role="list" class="paper-list">
-                  {papers.map((p) => (
-                    <li class="paper">
-                      <a href={explorerPaperUrl(p)} rel="noopener noreferrer" class="paper__title">
-                        {p.title}
-                      </a>
-                      <p class="paper__meta muted">
-                        {authorYear(p)}
-                        {" · "}
-                        <span>{p.citationCount} cites</span>
-                        {p.arxiv && <span class="tag">arXiv</span>}
-                      </p>
-                    </li>
-                  ))}
+                  {papers.map((p) => {
+                    const note = (p.notes ?? []).find((n) => n.branch === s.key) ?? (p.notes ?? [])[0];
+                    return (
+                      <li class="paper">
+                        <a href={explorerPaperUrl(p)} rel="noopener noreferrer" class="paper__title">
+                          {p.title}
+                        </a>
+                        <p class="paper__meta muted">
+                          {authorYear(p)}
+                          {" · "}
+                          <span>{p.citationCount} cites</span>
+                          {p.arxiv && <span class="tag">arXiv</span>}
+                        </p>
+                        {note && (note.takeaway || note.why) && (
+                          <details class="paper__note">
+                            <summary class="paper__note-toggle">Synthesis</summary>
+                            <div class="paper__note-body">
+                              {note.takeaway && <p class="paper__note-text measure">{note.takeaway}</p>}
+                              {note.why && (
+                                <p class="paper__note-text paper__note-why measure muted">
+                                  <span class="paper__note-label">Why it matters</span>
+                                  {note.why}
+                                </p>
+                              )}
+                            </div>
+                          </details>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ol>
               )}
             </section>
@@ -374,6 +391,59 @@ function authorYear(p: ExplorerPaper): string {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2xs);
+  }
+
+  /* ---- per-paper synthesis disclosure ---- */
+  .paper__note {
+    margin-block-start: var(--space-3xs);
+  }
+
+  .paper__note-toggle {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.12s ease;
+  }
+
+  .paper__note-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .paper__note-toggle::before {
+    content: "+ ";
+  }
+
+  details[open] .paper__note-toggle::before {
+    content: "− ";
+  }
+
+  .paper__note-toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .paper__note-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .paper__note-text {
+    font-size: var(--step-0);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .paper__note-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-block-end: var(--space-3xs);
   }
 
   /* ---- standalone blocks (reading path, open problems) ---- */

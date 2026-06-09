@@ -101,6 +101,16 @@ export interface ExplorerOpportunity {
   description: string;
 }
 
+/** SciX-generated per-paper synthesis, normalized across explorers. */
+export interface ExplorerPaperNote {
+  /** Theme this note was written for. */
+  branch: string;
+  /** Plain-language key takeaway. */
+  takeaway: string;
+  /** Why the paper matters / its relevance. */
+  why: string;
+}
+
 export interface ExplorerPaper {
   bibcode?: string;
   title: string;
@@ -109,6 +119,8 @@ export interface ExplorerPaper {
   citationCount: number;
   arxiv?: string | null;
   url?: string | null;
+  branches?: string[];
+  notes?: ExplorerPaperNote[];
 }
 
 export interface Explorer {

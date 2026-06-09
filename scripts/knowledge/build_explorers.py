@@ -14,13 +14,12 @@ import json
 import os
 import re
 
-LIT = "/home/ds/lit_explorers"
+LIT = "/home/ds/projects/lit_explorers"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "src", "data", "knowledge"))
 
-# NOTE: explorers.json also contains explorers maintained directly in the JSON
-# (e.g. multiagent-orchestration, code-retrieval-enterprise) that have no source
-# HTML here. Re-running this script would drop them — merge, don't overwrite.
+# All five explorers embed their data in a <script id="data"> blob in the
+# committed HTML, so this script regenerates explorers.json in full.
 SPECS = [
     {"file": "agentic_memory_explorer.html", "id": "agentic-memory",
      "title": "Agentic Memory Systems", "learningSlug": "agentic-memory-systems",
@@ -31,6 +30,12 @@ SPECS = [
     {"file": "enterprise_multiagent_reliability.html", "id": "enterprise-reliability",
      "title": "Enterprise Multi-Agent Reliability", "learningSlug": "enterprise-multiagent-reliability",
      "homepage": "https://sjarmak.github.io/lit_explorers/enterprise_multiagent_reliability.html"},
+    {"file": "multiagent_orchestration_explorer.html", "id": "multiagent-orchestration",
+     "title": "Multi-Agent Orchestration", "learningSlug": None,
+     "homepage": "https://sjarmak.github.io/lit_explorers/multiagent_orchestration_explorer.html"},
+    {"file": "code_retrieval_enterprise_explorer.html", "id": "code-retrieval-enterprise",
+     "title": "Code Retrieval & Enterprise Codebases", "learningSlug": None,
+     "homepage": "https://sjarmak.github.io/lit_explorers/code_retrieval_enterprise_explorer.html"},
 ]
 
 
@@ -55,6 +60,21 @@ def load_blob(path: str) -> dict:
     return json.loads(m.group(1))
 
 
+def norm_notes(p: dict) -> list:
+    """Normalize the SciX-generated per-paper notes into a common shape.
+
+    Most explorers use {branch, k, r} (key takeaway / why it matters); the
+    enterprise one uses {branch, signal, prod}. Map both onto takeaway/why.
+    """
+    out = []
+    for n in p.get("notes") or []:
+        takeaway = n.get("k") or n.get("signal") or ""
+        why = n.get("r") or n.get("prod") or ""
+        if takeaway or why:
+            out.append({"branch": n.get("branch") or "", "takeaway": takeaway, "why": why})
+    return out
+
+
 def norm_paper(p: dict) -> dict:
     # papers (agentic/enterprise) vs sources (memory-design) have different keys.
     title = p.get("title", "")
@@ -70,6 +90,7 @@ def norm_paper(p: dict) -> dict:
         "arxiv": p.get("arxiv"),
         "url": p.get("url"),
         "branches": p.get("branches"),
+        "notes": norm_notes(p),
     }
 
 
