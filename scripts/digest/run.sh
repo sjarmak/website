@@ -21,8 +21,16 @@ case "$MODE" in
 esac
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
+DIGEST_REPO="${DIGEST_REPO:-/home/ds/projects/code-intelligence-digest}"
 cd "$WEBSITE_DIR"
-: "${OPENAI_API_KEY:?OPENAI_API_KEY must be set (tts-render.mjs needs it)}"
+
+# Keep the OpenAI key out of crontab: source it from the digest app's env if unset.
+if [ -z "${OPENAI_API_KEY:-}" ] && [ -f "$DIGEST_REPO/.env.local" ]; then
+  OPENAI_API_KEY="$(grep -E '^OPENAI_API_KEY=' "$DIGEST_REPO/.env.local" | head -1 \
+    | sed -E 's/^OPENAI_API_KEY=//; s/^"//; s/"$//; s/^'\''//; s/'\''$//')"
+  export OPENAI_API_KEY
+fi
+: "${OPENAI_API_KEY:?OPENAI_API_KEY must be set, or present in \$DIGEST_REPO/.env.local}"
 
 DATE="$(date +%F)"
 WORK="$(mktemp -d)"
@@ -41,7 +49,7 @@ PROMPT="$(sed \
   -e "s|{{WEBSITE_DIR}}|${WEBSITE_DIR}|g" \
   scripts/digest/generate.md)"
 
-CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits}"
+CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,Write,Read,Edit,mcp__code-intel-copilot__search_items,mcp__code-intel-copilot__semantic_search_items,mcp__code-intel-copilot__aggregate_items,mcp__code-intel-copilot__get_item,mcp__code-intel-copilot__mirror_status}"
 
 echo "[digest] ${MODE} ${DATE} — generating (work=${WORK})" | tee "$LOG"
 # shellcheck disable=SC2086
