@@ -82,6 +82,8 @@ const projects = defineCollection({
       period: dateRange.optional(),
       repo: z.string().url().optional(),
       homepage: z.string().url().optional(),
+      // Playable in-browser build served from /public (e.g. /games/<slug>/).
+      play: z.string().optional(),
       tech: z.array(z.string()).default([]),
       cover: image().optional(),
       featured: z.boolean().default(false),

@@ -18,11 +18,11 @@ export const nav: readonly NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Library", href: "/library" },
   { label: "Digest", href: "/digest" },
-  { label: "Threads", href: "/threads" },
   { label: "Writing", href: "/writing" },
   { label: "Talks", href: "/talks" },
   { label: "CV", href: "/cv" },
   { label: "Art", href: "/art" },
+  { label: "Games", href: "/games" },
 ];
 
 export type SocialLink = { label: string; href: string; handle: string };

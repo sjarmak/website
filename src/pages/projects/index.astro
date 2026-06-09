@@ -34,6 +34,7 @@ const projects = await getProjects();
           )}
           <p class="cluster card__links" style="--cluster-gap: var(--space-m)">
             <a href={`/projects/${p.id}`}>Details</a>
+            {p.data.play && <a href={p.data.play}>Play ▸</a>}
             {p.data.repo && (
               <a href={p.data.repo} rel="noopener">
                 Code

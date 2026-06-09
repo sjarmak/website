@@ -1,0 +1,76 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getProjects } from "@/lib/collections";
+
+// Games are projects with an in-browser playable build (the `play` field).
+const games = (await getProjects()).filter((p) => p.data.play);
+---
+
+<PageLayout
+  title="Games"
+  kicker="Play"
+  intro="Side-project games that run right here in the browser. No install, no accounts — just press play."
+  description="In-browser games by Stephanie Jarmak."
+>
+  <ul role="list" class="auto-grid" style="--grid-min: 18rem; --grid-gap: var(--space-l)">
+    {
+      games.map((g) => (
+        <li class="card">
+          <div class="card__head">
+            <a href={g.data.play} class="card__title-link">
+              <h2 class="card__title">{g.data.title}</h2>
+            </a>
+          </div>
+          <p class="secondary">{g.data.summary}</p>
+          {g.data.tech.length > 0 && (
+            <p class="cluster" style="--cluster-gap: var(--space-2xs)">
+              {g.data.tech.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </p>
+          )}
+          <p class="cluster card__links" style="--cluster-gap: var(--space-m)">
+            <a href={g.data.play} class="play">
+              Play ▸
+            </a>
+            <a href={`/projects/${g.id}`}>About</a>
+            {g.data.repo && (
+              <a href={g.data.repo} rel="noopener">
+                Code ↗
+              </a>
+            )}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</PageLayout>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    transition: border-color 0.15s ease;
+  }
+  .card:hover {
+    border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+  .card__title {
+    font-size: var(--step-1);
+  }
+  .card__title-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .card__title-link:hover {
+    color: var(--color-accent);
+  }
+  .play {
+    font-weight: 600;
+  }
+</style>
