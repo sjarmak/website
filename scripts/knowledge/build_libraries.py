@@ -14,6 +14,7 @@ Endpoints:
 Output: src/data/knowledge/libraries.json
 """
 
+import html
 import json
 import os
 import re
@@ -21,6 +22,17 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+
+
+def unescape(value):
+    """Decode HTML entities in every string field so they render as text."""
+    if isinstance(value, str):
+        return html.unescape(value)
+    if isinstance(value, list):
+        return [unescape(v) for v in value]
+    if isinstance(value, dict):
+        return {k: unescape(v) for k, v in value.items()}
+    return value
 
 BIBLIB = "https://api.adsabs.harvard.edu/v1/biblib"
 SEARCH = "https://api.adsabs.harvard.edu/v1/search/query"
@@ -171,7 +183,7 @@ def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "libraries.json")
     with open(path, "w") as f:
-        json.dump({"source": "NASA ADS biblib", "count": len(curated), "libraries": curated}, f, ensure_ascii=False)
+        json.dump(unescape({"source": "NASA ADS biblib", "count": len(curated), "libraries": curated}), f, ensure_ascii=False)
     print(f"wrote libraries.json ({os.path.getsize(path)} bytes)")
 
 

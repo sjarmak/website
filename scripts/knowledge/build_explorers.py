@@ -9,6 +9,7 @@ open opportunities. These map to the /learning explorer entries on the site.
 Output: src/data/knowledge/explorers.json
 """
 
+import html
 import json
 import os
 import re
@@ -17,6 +18,9 @@ LIT = "/home/ds/lit_explorers"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "src", "data", "knowledge"))
 
+# NOTE: explorers.json also contains explorers maintained directly in the JSON
+# (e.g. multiagent-orchestration, code-retrieval-enterprise) that have no source
+# HTML here. Re-running this script would drop them — merge, don't overwrite.
 SPECS = [
     {"file": "agentic_memory_explorer.html", "id": "agentic-memory",
      "title": "Agentic Memory Systems", "learningSlug": "agentic-memory-systems",
@@ -30,9 +34,24 @@ SPECS = [
 ]
 
 
+def unescape(value):
+    """Decode HTML entities (&mdash;, &rarr;, &amp; ...) in every string field.
+
+    The source explorer HTML stores prose with HTML entities; the site renders
+    these strings as text, so they must be decoded or they show up literally.
+    """
+    if isinstance(value, str):
+        return html.unescape(value)
+    if isinstance(value, list):
+        return [unescape(v) for v in value]
+    if isinstance(value, dict):
+        return {k: unescape(v) for k, v in value.items()}
+    return value
+
+
 def load_blob(path: str) -> dict:
-    html = open(path, encoding="utf-8").read()
-    m = re.search(r'<script id="data" type="application/json">(.*?)</script>', html, re.S)
+    markup = open(path, encoding="utf-8").read()
+    m = re.search(r'<script id="data" type="application/json">(.*?)</script>', markup, re.S)
     return json.loads(m.group(1))
 
 
@@ -92,7 +111,7 @@ def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "explorers.json")
     with open(path, "w") as f:
-        json.dump({"source": "lit_explorers", "explorers": explorers}, f, ensure_ascii=False)
+        json.dump(unescape({"source": "lit_explorers", "explorers": explorers}), f, ensure_ascii=False)
     print(f"wrote explorers.json ({os.path.getsize(path)} bytes)")
 
 
