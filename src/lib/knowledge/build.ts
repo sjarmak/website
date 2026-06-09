@@ -11,6 +11,7 @@ import citationData from "@/data/knowledge/citation-edges.json";
 import embeddingsData from "@/data/knowledge/embeddings.json";
 import librariesData from "@/data/knowledge/libraries.json";
 import explorersData from "@/data/knowledge/explorers.json";
+import paperSynthesisData from "@/data/knowledge/paper-synthesis.json";
 import { buildBm25, bm25Query, dot, rrf, tokenize, type Scored } from "./retrieval";
 import type {
   DigestItem,
@@ -18,6 +19,7 @@ import type {
   Explorer,
   ExplorerOpportunity,
   ExplorerPaper,
+  ExplorerPaperSynthesis,
   ExplorerReadingGroup,
   KnowledgeGraph,
   KnowledgeNode,
@@ -61,7 +63,27 @@ interface RawThread {
 }
 
 const libraries = librariesData.libraries as unknown as Library[];
-const explorers = explorersData.explorers as unknown as Explorer[];
+
+// Full-text 4-part synthesis, keyed by bibcode, generated agentically via the
+// SciX MCP. Joined onto each explorer paper at module load so pages get it for
+// free; papers without an entry simply fall back to the 2-part notes.
+const synthesisByBibcode = paperSynthesisData.synthesis as Record<string, ExplorerPaperSynthesis>;
+
+function hasSynthesis(s: ExplorerPaperSynthesis | undefined): s is ExplorerPaperSynthesis {
+  return !!s && [s.plainAbstract, s.motivation, s.methodology, s.results].some((f) => f?.trim());
+}
+
+function joinSynthesis(explorer: Explorer): Explorer {
+  return {
+    ...explorer,
+    papers: explorer.papers.map((p) => {
+      const s = p.bibcode ? synthesisByBibcode[p.bibcode] : undefined;
+      return hasSynthesis(s) ? { ...p, synthesis: s } : p;
+    }),
+  };
+}
+
+const explorers = (explorersData.explorers as unknown as Explorer[]).map(joinSynthesis);
 const libraryByName = new Map(libraries.map((l) => [l.name, l]));
 const explorerById = new Map(explorers.map((e) => [e.id, e]));
 

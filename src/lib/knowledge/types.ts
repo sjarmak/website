@@ -111,6 +111,22 @@ export interface ExplorerPaperNote {
   why: string;
 }
 
+/**
+ * Full-text 4-part synthesis, generated agentically from the paper's body via
+ * the SciX MCP. Each field is grounded strictly in the retrieved text; a field
+ * the source does not support is left empty rather than invented.
+ */
+export interface ExplorerPaperSynthesis {
+  /** A jargon-free restatement of what the paper is and does. */
+  plainAbstract: string;
+  /** The problem and why it needed solving (the paper's motivation). */
+  motivation: string;
+  /** How the work was actually done (approach, system, experiments). */
+  methodology: string;
+  /** What the paper found or demonstrated (concrete outcomes). */
+  results: string;
+}
+
 export interface ExplorerPaper {
   bibcode?: string;
   title: string;
@@ -121,6 +137,8 @@ export interface ExplorerPaper {
   url?: string | null;
   branches?: string[];
   notes?: ExplorerPaperNote[];
+  /** Full-text 4-part synthesis (joined at build time from paper-synthesis.json). */
+  synthesis?: ExplorerPaperSynthesis;
 }
 
 export interface Explorer {

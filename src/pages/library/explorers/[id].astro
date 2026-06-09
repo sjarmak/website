@@ -99,6 +99,15 @@ function authorYear(p: ExplorerPaper): string {
                 <ol role="list" class="paper-list">
                   {papers.map((p) => {
                     const note = (p.notes ?? []).find((n) => n.branch === s.key) ?? (p.notes ?? [])[0];
+                    const synth = p.synthesis;
+                    const synthParts = synth
+                      ? ([
+                          ["Plain-language abstract", synth.plainAbstract],
+                          ["Motivation", synth.motivation],
+                          ["Methodology", synth.methodology],
+                          ["Results", synth.results],
+                        ] as const).filter(([, body]) => body?.trim())
+                      : [];
                     return (
                       <li class="paper">
                         <a href={explorerPaperUrl(p)} rel="noopener noreferrer" class="paper__title">
@@ -110,19 +119,34 @@ function authorYear(p: ExplorerPaper): string {
                           <span>{p.citationCount} cites</span>
                           {p.arxiv && <span class="tag">arXiv</span>}
                         </p>
-                        {note && (note.takeaway || note.why) && (
+                        {synthParts.length > 0 ? (
                           <details class="paper__note">
                             <summary class="paper__note-toggle">Synthesis</summary>
                             <div class="paper__note-body">
-                              {note.takeaway && <p class="paper__note-text measure">{note.takeaway}</p>}
-                              {note.why && (
-                                <p class="paper__note-text paper__note-why measure muted">
-                                  <span class="paper__note-label">Why it matters</span>
-                                  {note.why}
+                              {synthParts.map(([label, body]) => (
+                                <p class="paper__note-text measure">
+                                  <span class="paper__note-label">{label}</span>
+                                  {body}
                                 </p>
-                              )}
+                              ))}
                             </div>
                           </details>
+                        ) : (
+                          note &&
+                          (note.takeaway || note.why) && (
+                            <details class="paper__note">
+                              <summary class="paper__note-toggle">Synthesis</summary>
+                              <div class="paper__note-body">
+                                {note.takeaway && <p class="paper__note-text measure">{note.takeaway}</p>}
+                                {note.why && (
+                                  <p class="paper__note-text paper__note-why measure muted">
+                                    <span class="paper__note-label">Why it matters</span>
+                                    {note.why}
+                                  </p>
+                                )}
+                              </div>
+                            </details>
+                          )
                         )}
                       </li>
                     );
