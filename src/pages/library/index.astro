@@ -3,23 +3,27 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import {
   getLibraries,
   getExplorers,
-  getResourceLibraries,
+  getPodcasts,
   getDigestStream,
 } from "@/lib/knowledge/build";
-import type { Library, Explorer, ResourceLibrary, DigestItem } from "@/lib/knowledge/types";
+import type {
+  Library,
+  Explorer,
+  PodcastSeries,
+  PodcastEpisode,
+  DigestItem,
+} from "@/lib/knowledge/types";
 
 const libraries: Library[] = getLibraries();
 const explorers: Explorer[] = getExplorers();
-const resourceLibraries: ResourceLibrary[] = await getResourceLibraries();
+const { series: podcastSeries, standalone: podcastStandalone } = await getPodcasts();
 const digestItems: DigestItem[] = getDigestStream(30);
-
-const RESOURCE_CAP = 8;
 ---
 
 <PageLayout
   title="Library"
   kicker="Research"
-  intro="This is where I keep the collections. ADS libraries I curate on NASA ADS, five thematic literature explorers, a podcast library, essays, and a live feed of what's been added recently. It's the reading side of the research."
+  intro="This is where I keep the collections. ADS libraries I curate on NASA ADS, five thematic literature explorers, a podcast library, and a live feed of what's been added recently. It's the reading side of the research."
 >
   <div class="stack stack-l">
 
@@ -71,57 +75,71 @@ const RESOURCE_CAP = 8;
             <li class="lib-card">
               <h3 class="lib-card__title">{ex.title}</h3>
               <p class="lib-card__count">{ex.paperCount} papers · {ex.themeCount} themes</p>
+              {ex.blurb && <p class="lib-card__desc">{ex.blurb}</p>}
               <div class="cluster" style="--cluster-gap: var(--space-2xs)">
                 {ex.sections.map((s) => (
                   <span class="tag">{s.label}</span>
                 ))}
               </div>
-              <div class="lib-card__links">
+              <p class="lib-card__cta">
                 <a href={ex.homepage} rel="noopener noreferrer">Open explorer ↗</a>
-                <a href="/learning">On the site</a>
-              </div>
+              </p>
             </li>
           ))
         }
       </ul>
     </section>
 
-    <!-- 3. Resource libraries -->
+    <!-- 3. Podcasts -->
     <section>
-      <h2 class="sub">Resource libraries</h2>
+      <h2 class="sub">Podcasts</h2>
+      <p class="muted measure" style="margin-block-end: var(--space-m)">
+        Deep-dive episodes generated from the literature surveys. Listen inline, or download the audio.
+      </p>
       <div class="stack stack-l">
         {
-          resourceLibraries.map((rl: ResourceLibrary) => {
-            const shown = rl.items.slice(0, RESOURCE_CAP);
-            const overflow = rl.items.length - shown.length;
-            return (
-              <div class="resource-lib">
-                <div class="resource-lib__head">
-                  <h3 class="resource-lib__name">{rl.name}</h3>
-                  <span class="tag">{rl.kind}</span>
-                </div>
-                {rl.description && <p class="muted measure">{rl.description}</p>}
-                <ul role="list" class="resource-list">
-                  {shown.map((item) => (
-                    <li class="resource-row">
-                      <a href={item.url} rel="noopener noreferrer" class="resource-row__title">
-                        {item.title}
-                      </a>
-                      {item.meta && <span class="muted resource-row__meta">{item.meta}</span>}
-                    </li>
-                  ))}
-                </ul>
-                {overflow > 0 && (
-                  <a
-                    class="resource-lib__more"
-                    href={rl.kind === "essay" ? "/writing" : "/learning"}
-                  >
-                    +{overflow} more
-                  </a>
-                )}
-              </div>
-            );
-          })
+          podcastSeries.map((s: PodcastSeries) => (
+            <div>
+              <h3 class="pod-series">{s.name}</h3>
+              <ul role="list" class="stack">
+                {s.episodes.map((ep: PodcastEpisode) => (
+                  <li class="pod-ep">
+                    <span class="pod-ep__title">
+                      {ep.episode ? `${ep.episode}. ` : ""}
+                      {ep.title}
+                    </span>
+                    <p class="muted">{ep.description}</p>
+                    {ep.embedUrl ? (
+                      <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                    ) : (
+                      ep.audioUrl && (
+                        <audio controls preload="none">
+                          <source src={ep.audioUrl} type="audio/mpeg" />
+                        </audio>
+                      )
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+        {
+          podcastStandalone.map((ep: PodcastEpisode) => (
+            <div class="pod-ep">
+              <span class="pod-ep__title">{ep.title}</span>
+              <p class="muted">{ep.description}</p>
+              {ep.embedUrl ? (
+                <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+              ) : (
+                ep.audioUrl && (
+                  <audio controls preload="none">
+                    <source src={ep.audioUrl} type="audio/mpeg" />
+                  </audio>
+                )
+              )}
+            </div>
+          ))
         }
       </div>
     </section>
@@ -305,67 +323,33 @@ const RESOURCE_CAP = 8;
     color: var(--color-accent);
   }
 
-  /* ---- resource libraries ---- */
-  .resource-lib {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-s);
-  }
-
-  .resource-lib__head {
-    display: flex;
-    align-items: center;
-    gap: var(--space-s);
-  }
-
-  .resource-lib__name {
+  /* ---- podcasts ---- */
+  .pod-series {
     font-size: var(--step-1);
-    margin: 0;
+    margin-block-end: var(--space-s);
   }
 
-  .resource-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .resource-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-2xs) var(--space-m);
-    padding-block: var(--space-xs);
+  .pod-ep {
+    padding-block: var(--space-s);
     border-bottom: var(--border-hairline);
   }
 
-  .resource-row__title {
-    font-size: var(--step-0);
-    color: var(--color-text);
-    text-decoration: none;
-    transition: color 0.12s ease;
+  .pod-ep__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
   }
 
-  .resource-row__title:hover {
-    color: var(--color-accent);
+  .pod-ep__embed {
+    width: 100%;
+    height: 152px;
+    border: 0;
+    border-radius: var(--radius);
+    margin-block-start: var(--space-s);
   }
 
-  .resource-row__meta {
-    font-size: var(--step--1);
-    font-family: var(--font-mono);
-    white-space: nowrap;
-  }
-
-  .resource-lib__more {
-    display: inline-block;
-    font-size: var(--step--1);
-    color: var(--color-text-muted);
-    text-decoration: none;
-  }
-
-  .resource-lib__more:hover {
-    color: var(--color-accent);
+  .pod-ep audio {
+    width: 100%;
+    margin-block-start: var(--space-s);
   }
 
   /* ---- digest table ---- */

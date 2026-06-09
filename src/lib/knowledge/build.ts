@@ -21,9 +21,10 @@ import type {
   Lane,
   Library,
   NodeKind,
+  PodcastEpisode,
+  PodcastSeries,
   Related,
   RelatedItem,
-  ResourceLibrary,
 } from "./types";
 
 const TOP_K = 6;
@@ -135,7 +136,7 @@ async function loadOnSite(): Promise<Map<string, OnSiteResolved>> {
   for (const e of projects as CollectionEntry<"projects">[]) add("project", "projects", e, `/projects/${e.id}`);
   for (const e of writing as CollectionEntry<"writing">[]) add("writing", "writing", e, e.data.url ?? `/writing/${e.id}`);
   for (const e of talks as CollectionEntry<"talks">[]) add("talk", "talks", e, "/talks");
-  for (const e of learning as CollectionEntry<"learning">[]) add("learning", "learning", e, e.data.url ?? "/learning");
+  for (const e of learning as CollectionEntry<"learning">[]) add("learning", "learning", e, e.data.url ?? "/library");
   for (const e of publications as CollectionEntry<"publications">[])
     add("publication", "publications", e, e.data.url ?? "https://scixplorer.org/search?q=author:jarmak");
   return map;
@@ -309,46 +310,28 @@ export function getExplorers(): Explorer[] {
   return explorers;
 }
 
-/** Resource libraries assembled from on-site content: podcasts and essays. */
-export async function getResourceLibraries(): Promise<ResourceLibrary[]> {
-  const [learning, writing] = await Promise.all([
-    getCollection("learning"),
-    getCollection("writing"),
-  ]);
-
-  const podcasts = (learning as CollectionEntry<"learning">[])
+/** Deep-dive podcasts grouped by series, with inline-playable audio. */
+export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalone: PodcastEpisode[] }> {
+  const learning = await getCollection("learning");
+  const episodes = (learning as CollectionEntry<"learning">[])
     .filter((e) => e.data.kind === "podcast")
+    .sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999))
     .map((e) => ({
       title: e.data.title,
-      url: e.data.url ?? e.data.embedUrl ?? e.data.audioUrl ?? "/learning",
-      meta: e.data.series ?? "Podcast",
+      episode: e.data.episode,
+      description: e.data.description,
+      audioUrl: e.data.audioUrl,
+      embedUrl: e.data.embedUrl,
+      series: e.data.series,
     }));
 
-  const essays = (writing as CollectionEntry<"writing">[])
-    .filter((e) => !!e.data.date)
-    .sort((a, b) => +b.data.date! - +a.data.date!)
-    .map((e) => ({
-      title: e.data.title,
-      url: e.data.url ?? `/writing/${e.id}`,
-      meta: e.data.source,
-    }));
-
-  return [
-    {
-      id: "podcast-library",
-      name: "Podcast library",
-      kind: "podcast",
-      description: "Deep-dive episodes generated from the literature surveys.",
-      items: podcasts,
-    },
-    {
-      id: "essay-library",
-      name: "Essays & newsletters",
-      kind: "essay",
-      description: "Writing across Medium, Sourcegraph, and on-site essays.",
-      items: essays,
-    },
-  ];
+  const seriesNames = [...new Set(episodes.map((e) => e.series).filter(Boolean))] as string[];
+  const series: PodcastSeries[] = seriesNames.map((name) => ({
+    name,
+    episodes: episodes.filter((e) => e.series === name),
+  }));
+  const standalone: PodcastEpisode[] = episodes.filter((e) => !e.series);
+  return { series, standalone };
 }
 
 /** What's new: papers across all ADS libraries, newest first (deduped). */

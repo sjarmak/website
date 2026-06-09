@@ -63,7 +63,7 @@ async function loadCollection(name: CollectionName): Promise<EntryMap> {
   // learning
   const entries = await getCollection("learning");
   return new Map(
-    entries.map((e) => [e.id, { title: e.data.title, url: e.data.url ?? "/learning" }])
+    entries.map((e) => [e.id, { title: e.data.title, url: e.data.url ?? "/library" }])
   );
 }
 

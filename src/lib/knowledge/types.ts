@@ -89,6 +89,8 @@ export interface ExplorerPaper {
 export interface Explorer {
   id: string;
   title: string;
+  /** One-line description, for parity with research-library cards. */
+  blurb?: string;
   homepage: string;
   learningSlug: string;
   paperCount: number;
@@ -102,20 +104,19 @@ export interface Explorer {
   practices: unknown[];
 }
 
-// ---- resource libraries + digest ----
+// ---- podcasts + digest ----
 
-export interface ResourceItem {
+export interface PodcastEpisode {
   title: string;
-  url: string;
-  meta: string;
+  episode?: number;
+  description: string;
+  audioUrl?: string;
+  embedUrl?: string;
 }
 
-export interface ResourceLibrary {
-  id: string;
+export interface PodcastSeries {
   name: string;
-  kind: "podcast" | "essay";
-  description: string;
-  items: ResourceItem[];
+  episodes: PodcastEpisode[];
 }
 
 export interface DigestItem {

@@ -20,7 +20,6 @@ export const nav: readonly NavItem[] = [
   { label: "Threads", href: "/threads" },
   { label: "Writing", href: "/writing" },
   { label: "Talks", href: "/talks" },
-  { label: "Learning", href: "/learning" },
   { label: "CV", href: "/cv" },
   { label: "Astrophotography", href: "/astrophotography" },
   { label: "Art", href: "/art" },
