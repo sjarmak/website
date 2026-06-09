@@ -1,17 +1,29 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
-import { getDigests, getDigestTopics } from "@/lib/knowledge/build";
-import type { DigestIssue } from "@/lib/knowledge/types";
+import { getDigests, getDigestTopics, getPodcasts } from "@/lib/knowledge/build";
+import type { DigestIssue, PodcastSeries, PodcastEpisode } from "@/lib/knowledge/types";
 import { fullDate } from "@/lib/dates";
 
 const digests: DigestIssue[] = await getDigests();
 const topics: string[] = await getDigestTopics();
+const { series: podcastSeries, standalone: podcastStandalone } = await getPodcasts();
 
 const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
   daily: "Daily",
   weekly: "Weekly",
-  manual: "Curated",
+  manual: "Selected",
 };
+
+// Two axes the page filters on: who made it, and whether it has a podcast.
+function sourceOf(d: DigestIssue): "selected" | "automated" {
+  return d.origin === "manual" ? "selected" : "automated";
+}
+function hasAudio(d: DigestIssue): boolean {
+  return Boolean(d.audioUrl || d.embedUrl);
+}
+function formatOf(d: DigestIssue): "audio" | "newsletter" {
+  return hasAudio(d) ? "audio" : "newsletter";
+}
 
 function topicLabel(slug: string): string {
   return slug.replace(/-/g, " ");
@@ -26,18 +38,25 @@ function minutes(sec?: number): string | null {
 <PageLayout
   title="Digest"
   kicker="Research"
-  intro="A running library of digest issues: newsletters and podcasts on agentic coding, evals, multi-agent orchestration, agent memory, and information retrieval. Most come out of my code-intelligence-digest pipeline; a few I curate by hand. Filter by cadence, topic, or format."
+  intro="Issues published from my reading: a written newsletter, and for some, a podcast. Selected issues are ones I hand-pick and curate; automated ones come out of my code-intelligence-digest pipeline. Filter by format, source, or topic."
 >
   <div class="stack stack-l">
-    <!-- filter bar -->
+    <!-- filter bar — two axes: format (audio vs newsletter) and source (selected vs automated) -->
     <form class="digest-filters" id="digest-filters" aria-label="Filter digests">
       <label class="field">
-        <span class="field__label">Cadence</span>
-        <select id="f-cadence">
-          <option value="">All</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="manual">Curated</option>
+        <span class="field__label">Format</span>
+        <select id="f-format">
+          <option value="">All formats</option>
+          <option value="audio">Audio (podcast)</option>
+          <option value="newsletter">Newsletter only</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field__label">Source</span>
+        <select id="f-source">
+          <option value="">All sources</option>
+          <option value="selected">Selected (hand-picked)</option>
+          <option value="automated">Automated</option>
         </select>
       </label>
       <label class="field">
@@ -46,10 +65,6 @@ function minutes(sec?: number): string | null {
           <option value="">All topics</option>
           {topics.map((t) => <option value={t}>{topicLabel(t)}</option>)}
         </select>
-      </label>
-      <label class="field field--check">
-        <input type="checkbox" id="f-podcast" />
-        <span class="field__label">Has podcast</span>
       </label>
       <label class="field field--grow">
         <span class="field__label">Search</span>
@@ -64,18 +79,23 @@ function minutes(sec?: number): string | null {
         digests.map((d) => (
           <li
             class="lib-card digest-card"
-            data-cadence={d.cadence}
+            data-source={sourceOf(d)}
+            data-format={formatOf(d)}
             data-topics={d.topics.join(" ")}
-            data-podcast={d.audioUrl || d.embedUrl ? "true" : "false"}
             data-text={`${d.title} ${d.summary}`.toLowerCase()}
           >
             <div class="digest-card__meta">
+              <span class={`badge badge--source-${sourceOf(d)}`}>
+                {sourceOf(d) === "selected" ? "Selected" : "Automated"}
+              </span>
               <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
               <span class="muted">{fullDate(d.date)}</span>
-              {(d.audioUrl || d.embedUrl) && (
+              {hasAudio(d) ? (
                 <span class="digest-card__pod" title="Includes a podcast episode">
                   🎧 {minutes(d.durationSec) ?? "audio"}
                 </span>
+              ) : (
+                <span class="digest-card__fmt" title="Written newsletter">✉ Newsletter</span>
               )}
             </div>
             <h3 class="lib-card__title">
@@ -99,9 +119,61 @@ function minutes(sec?: number): string | null {
 
     <p class="digest-empty muted" id="digest-empty" hidden>No issues match those filters.</p>
 
+    {
+      (podcastSeries.length > 0 || podcastStandalone.length > 0) && (
+        <section class="deep-dives">
+          <h2 class="sub">Deep-dive series</h2>
+          <p class="muted measure" style="margin-block-end: var(--space-m)">
+            Longer, hand-made audio: literature-survey episodes that walk a whole theme from the explorers. Listen inline, or download the audio.
+          </p>
+          <div class="stack stack-l">
+            {podcastSeries.map((s: PodcastSeries) => (
+              <div>
+                <h3 class="pod-series">{s.name}</h3>
+                <ul role="list" class="stack">
+                  {s.episodes.map((ep: PodcastEpisode) => (
+                    <li class="pod-ep">
+                      <span class="pod-ep__title">
+                        {ep.episode ? `${ep.episode}. ` : ""}
+                        {ep.title}
+                      </span>
+                      <p class="muted">{ep.description}</p>
+                      {ep.embedUrl ? (
+                        <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                      ) : (
+                        ep.audioUrl && (
+                          <audio controls preload="none">
+                            <source src={ep.audioUrl} type="audio/mpeg" />
+                          </audio>
+                        )
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            {podcastStandalone.map((ep: PodcastEpisode) => (
+              <div class="pod-ep">
+                <span class="pod-ep__title">{ep.title}</span>
+                <p class="muted">{ep.description}</p>
+                {ep.embedUrl ? (
+                  <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                ) : (
+                  ep.audioUrl && (
+                    <audio controls preload="none">
+                      <source src={ep.audioUrl} type="audio/mpeg" />
+                    </audio>
+                  )
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
     <p class="crosslink muted">
-      These come from my{" "}
-      <a href="/library">research library</a> pipeline.{" "}
+      Issues and audio published from the <a href="/library">research library</a>.{" "}
       <a href="/digest/rss.xml">Subscribe via RSS →</a>
     </p>
   </div>
@@ -109,9 +181,9 @@ function minutes(sec?: number): string | null {
 
 <script>
   const grid = document.getElementById("digest-grid");
-  const cadence = document.getElementById("f-cadence") as HTMLSelectElement;
+  const format = document.getElementById("f-format") as HTMLSelectElement;
+  const source = document.getElementById("f-source") as HTMLSelectElement;
   const topic = document.getElementById("f-topic") as HTMLSelectElement;
-  const podcast = document.getElementById("f-podcast") as HTMLInputElement;
   const search = document.getElementById("f-search") as HTMLInputElement;
   const count = document.getElementById("digest-count");
   const empty = document.getElementById("digest-empty");
@@ -120,18 +192,18 @@ function minutes(sec?: number): string | null {
     const cards = Array.from(grid.querySelectorAll<HTMLElement>(".digest-card"));
 
     const apply = () => {
-      const c = cadence.value;
+      const fmt = format.value;
+      const src = source.value;
       const t = topic.value;
-      const wantPod = podcast.checked;
       const q = search.value.trim().toLowerCase();
       let shown = 0;
 
       for (const card of cards) {
         const topics = (card.dataset.topics ?? "").split(" ");
         const match =
-          (!c || card.dataset.cadence === c) &&
+          (!fmt || card.dataset.format === fmt) &&
+          (!src || card.dataset.source === src) &&
           (!t || topics.includes(t)) &&
-          (!wantPod || card.dataset.podcast === "true") &&
           (!q || (card.dataset.text ?? "").includes(q));
         card.hidden = !match;
         if (match) shown++;
@@ -141,7 +213,7 @@ function minutes(sec?: number): string | null {
       if (empty) empty.hidden = shown !== 0;
     };
 
-    for (const el of [cadence, topic, podcast, search]) {
+    for (const el of [format, source, topic, search]) {
       el.addEventListener("input", apply);
     }
   }
@@ -219,6 +291,10 @@ function minutes(sec?: number): string | null {
     color: var(--color-accent);
   }
 
+  .digest-card__fmt {
+    color: var(--color-text-muted);
+  }
+
   .digest-card .lib-card__title a {
     color: inherit;
     text-decoration: none;
@@ -249,6 +325,18 @@ function minutes(sec?: number): string | null {
     border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
   }
 
+  /* source badges — "selected" reads as the deliberate, hand-picked one */
+  .badge--source-selected {
+    border-color: color-mix(in oklch, var(--color-accent) 55%, var(--color-border));
+    color: var(--color-accent);
+    background: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  }
+
+  .badge--source-automated {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
   .crosslink {
     font-size: var(--step-0);
     padding-block-start: var(--space-l);
@@ -262,5 +350,44 @@ function minutes(sec?: number): string | null {
 
   .crosslink a:hover {
     text-decoration: underline;
+  }
+
+  /* ---- deep-dive series (literature-survey podcasts) ---- */
+  .deep-dives {
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .deep-dives .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .pod-series {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+
+  .pod-ep {
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+
+  .pod-ep__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .pod-ep__embed {
+    width: 100%;
+    height: 152px;
+    border: 0;
+    border-radius: var(--radius);
+    margin-block-start: var(--space-s);
+  }
+
+  .pod-ep audio {
+    width: 100%;
+    margin-block-start: var(--space-s);
   }
 </style>

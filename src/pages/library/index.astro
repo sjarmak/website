@@ -3,27 +3,23 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import {
   getLibraries,
   getExplorers,
-  getPodcasts,
   getDigestStream,
 } from "@/lib/knowledge/build";
 import type {
   Library,
   Explorer,
-  PodcastSeries,
-  PodcastEpisode,
   DigestItem,
 } from "@/lib/knowledge/types";
 
 const libraries: Library[] = getLibraries();
 const explorers: Explorer[] = getExplorers();
-const { series: podcastSeries, standalone: podcastStandalone } = await getPodcasts();
 const digestItems: DigestItem[] = getDigestStream(30);
 ---
 
 <PageLayout
   title="Library"
   kicker="Research"
-  intro="This is where I keep the collections. ADS libraries I curate on NASA ADS, five thematic literature explorers, a podcast library, and a live feed of what's been added recently. It's the reading side of the research."
+  intro="The collections I read from: ADS paper libraries I curate on NASA ADS, five thematic literature explorers that map recent work into themes, and a feed of what's been added lately. The sources; what I publish from them lives in the Digest."
 >
   <div class="stack stack-l">
 
@@ -90,65 +86,11 @@ const digestItems: DigestItem[] = getDigestStream(30);
       </ul>
     </section>
 
-    <!-- 3. Podcasts -->
+    <!-- 3. Recently added -->
     <section>
-      <h2 class="sub">Podcasts</h2>
+      <h2 class="sub">Recently added</h2>
       <p class="muted measure" style="margin-block-end: var(--space-m)">
-        Deep-dive episodes generated from the literature surveys. Listen inline, or download the audio.
-      </p>
-      <div class="stack stack-l">
-        {
-          podcastSeries.map((s: PodcastSeries) => (
-            <div>
-              <h3 class="pod-series">{s.name}</h3>
-              <ul role="list" class="stack">
-                {s.episodes.map((ep: PodcastEpisode) => (
-                  <li class="pod-ep">
-                    <span class="pod-ep__title">
-                      {ep.episode ? `${ep.episode}. ` : ""}
-                      {ep.title}
-                    </span>
-                    <p class="muted">{ep.description}</p>
-                    {ep.embedUrl ? (
-                      <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
-                    ) : (
-                      ep.audioUrl && (
-                        <audio controls preload="none">
-                          <source src={ep.audioUrl} type="audio/mpeg" />
-                        </audio>
-                      )
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-        {
-          podcastStandalone.map((ep: PodcastEpisode) => (
-            <div class="pod-ep">
-              <span class="pod-ep__title">{ep.title}</span>
-              <p class="muted">{ep.description}</p>
-              {ep.embedUrl ? (
-                <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
-              ) : (
-                ep.audioUrl && (
-                  <audio controls preload="none">
-                    <source src={ep.audioUrl} type="audio/mpeg" />
-                  </audio>
-                )
-              )}
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- 4. What's new -->
-    <section>
-      <h2 class="sub">What's new</h2>
-      <p class="muted measure" style="margin-block-end: var(--space-m)">
-        Recent papers across all libraries, ordered by publication date. This is the recency prior from the hybrid scorer in my code-intelligence-digest app.
+        Recent papers across all libraries, ordered by publication date — the recency view of the corpus, from the hybrid scorer in my code-intelligence-digest app. For the written + audio issues drawn from this reading, see the <a href="/digest">Digest</a>.
       </p>
       <div class="digest-table-wrap">
         <table class="digest-table">
@@ -188,10 +130,7 @@ const digestItems: DigestItem[] = getDigestStream(30);
 
     <!-- Cross-link -->
     <p class="crosslink muted">
-      These libraries anchor the open threads.{" "}
-      <a href="/threads">See the threads →</a>
-      {" · "}
-      Or read the <a href="/digest">daily &amp; weekly digests →</a>
+      Read the <a href="/digest">daily, weekly &amp; selected digests →</a> drawn from these collections.
     </p>
 
   </div>
@@ -323,35 +262,6 @@ const digestItems: DigestItem[] = getDigestStream(30);
 
   .lib-card__cta a:hover {
     color: var(--color-accent);
-  }
-
-  /* ---- podcasts ---- */
-  .pod-series {
-    font-size: var(--step-1);
-    margin-block-end: var(--space-s);
-  }
-
-  .pod-ep {
-    padding-block: var(--space-s);
-    border-bottom: var(--border-hairline);
-  }
-
-  .pod-ep__title {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-  }
-
-  .pod-ep__embed {
-    width: 100%;
-    height: 152px;
-    border: 0;
-    border-radius: var(--radius);
-    margin-block-start: var(--space-s);
-  }
-
-  .pod-ep audio {
-    width: 100%;
-    margin-block-start: var(--space-s);
   }
 
   /* ---- digest table ---- */
