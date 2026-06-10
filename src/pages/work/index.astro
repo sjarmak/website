@@ -4,7 +4,9 @@ import { getCollection } from "astro:content";
 import { getProjects } from "@/lib/collections";
 
 const topics = (await getCollection("topics")).sort((a, b) => b.data.weight - a.data.weight);
-const projects = (await getProjects()).slice(0, 6);
+const projects = (await getProjects())
+  .filter((p) => p.data.featured)
+  .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
 ---
 
 <PageLayout

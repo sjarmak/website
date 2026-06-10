@@ -11,4 +11,10 @@ topics: [agents, code-intelligence]
 tags: [agents, packs]
 ---
 
-A library of packs that extend Gas City orchestrations. I built the PR-pipeline pack and the Slack pack.
+Packs are reusable integrations for the Gas City orchestrator; I built the PR-pipeline pack and the Slack pack, and the Slack pack is where the interesting engineering lives. A Slack message reaches a Gas City agent and leaves again through three layers speaking HTTP: a Go adapter that terminates Slack's webhook, verifies HMAC-SHA256 signatures per workspace inside a five-minute replay window, and routes inbound messages to agent sessions; a Go CLI whose setup verbs write five JSON registries with atomic temp-and-rename and an all-or-nothing SIGHUP reload; and eleven Python one-shot commands behind `gc slack <verb>` wrappers. The split is deliberate: the concurrency-heavy state (single-flight session spawn, dedup cache, registry lifecycle) lives in a race-detector-clean compiled binary, while the code that changes weekly stays in Python.
+
+The adapter's go.mod has no dependencies, and that has been defended twice: once by duplicating a registry schema rather than importing orchestrator internals, and once by closing a symlink race with a hand-rolled path walk using stdlib openat and O_NOFOLLOW, the same kernel guarantee as openat2's RESOLVE_BENEATH with zero new imports.
+
+The posture is fail-closed wherever a wire shape is ambiguous, and the bug that taught it was instructive: the publish CLIs exited 0 on any HTTP 200 while ignoring the receipt's delivered field, so an auth failure or a renamed channel meant silent message loss with a success audit trail. The fix centralized receipt interpretation in one function that treats any unrecognized shape as a failure. Retries are made safe by idempotency keys with a two-minute delivered-receipt replay cache, so a delivered-but-timed-out POST can't double-post.
+
+The sharpest standing edge is load shedding. Slack demands an acknowledgment within three seconds, so on saturation the adapter returns 200 and drops the event rather than blocking. A 503 would invite Slack's retry, but sustained delivery failures get an app's event subscription disabled, so the drop stays and the mitigation is observability — a dropped-dispatch counter on the health endpoint that has, so far, never moved in production.
