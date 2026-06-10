@@ -1,20 +1,20 @@
 ---
 title: Two retrieval systems write this site
 date: 2026-06-10
-description: "How sjarmak.ai works: a deliberately plain static site fed by two retrieval systems exposed over MCP, a 32-million-paper literature engine and a feed pipeline in a 512 MB container, with headless agent runs writing the content and git as the review gate."
+description: "How sjarmak.ai works: the paper libraries, explorers, and digest podcasts are produced by two retrieval systems exposed over MCP, a 32-million-paper literature engine and a feed pipeline in a 512 MB container, with headless agent runs writing the content and git as the review gate."
 tags: [agents, retrieval, mcp, meta]
 draft: false
 ---
 
 The most recent content commit to this site's repo before this post was a machine's: a daily digest for June 10th, one markdown file with eleven items in its frontmatter and a 581-second MP3 beside it under `public/media/digests/`. A headless Claude session queried a Postgres database of scored feed items over MCP, wrote a newsletter and a podcast transcript, rendered the audio through OpenAI's TTS endpoint, and committed the result locally. My contribution was reading the diff and running `git push`.
 
-That split is the design of the whole site. sjarmak.ai is a static Astro build with no database and no server-side code, and almost nothing about it is interesting as web engineering. The interesting parts are the two systems upstream that produce its content: a literature engine over the full NASA ADS corpus that feeds the Library section, and a feed-triage pipeline running on a free-tier container that feeds the Digest. Both are exposed to agents as MCP servers, and the site is where their output lands after a human has looked at it.
+That split is the design of the whole site. The resources here, the curated paper libraries and thematic explorers, the daily and weekly digests with their podcast audio, are produced upstream by two systems: a literature engine over the full NASA ADS corpus that feeds the Library, and a feed-triage pipeline running on a free-tier container that feeds the Digest. Both are exposed to agents as MCP servers; the site itself is a static Astro build with no database and no server-side code, the place where their output lands after a human has looked at it.
 
-## The site is deliberately boring
+## Everything on the site publishes as a diff
 
 Everything here is markdown and JSON checked into git. Astro content collections with Zod schemas define what a digest issue, an essay, a talk, or a paper library is allowed to look like; `astro build` turns the lot into static HTML; there is nothing to operate. The Library's interactive explorers, the knowledge graph, the digest archive with its audio players: all of it is computed at build time from JSON files sitting in `src/data/`.
 
-Boring is load-bearing. When agents write content, the publication layer needs to double as a review gate, and a static site in git gets that for free, because every generated newsletter, every paper synthesis, every transcript arrives as a diff that can be read, amended, or thrown away before anything goes public. The pipelines commit; only a human pushes. There is no CMS to secure and no admin panel to forget about, which, as the next two sections show, is not a hypothetical class of problem.
+The simplicity is deliberate. When agents write content, the publication layer needs to double as a review gate, and a static site in git gets that for free, because every generated newsletter, every paper synthesis, every transcript arrives as a diff that can be read, amended, or thrown away before anything goes public. The pipelines commit; only a human pushes. There is no CMS to secure and no admin panel to forget about, which, as the next two sections show, is not a hypothetical class of problem.
 
 ## The Library sits on a 32-million-paper engine
 
