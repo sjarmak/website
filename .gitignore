@@ -39,3 +39,6 @@ node_modules/
 
 # transient SciX synthesis shards (merged into paper-synthesis.json)
 .synth-shards/
+
+# local digest pipeline run logs + handoff JSON (machine-local, transient)
+.digest-runs/
