@@ -1,5 +1,5 @@
 ---
-title: GEO — Generative Engine Optimization
+title: "GEO: Generative Engine Optimization"
 status: active
 domain: research
 summary: Measuring how LLM-powered tools discover, recommend, and describe products. GEO is the AI equivalent of SEO.
