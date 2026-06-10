@@ -443,6 +443,7 @@ export async function getDigests(): Promise<DigestIssue[]> {
       slug: e.id,
       title: e.data.title,
       cadence: e.data.cadence,
+      track: e.data.track,
       origin: e.data.origin,
       date: e.data.date,
       summary: e.data.summary,

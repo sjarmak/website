@@ -4,18 +4,22 @@ Generates a navigable, filterable library of digest **newsletters + podcasts** o
 site (`/digest`). Two producers, one library:
 
 - **Automated** — a local cron runs `claude -p` against the `code-intel-copilot` MCP,
-  selects the freshest on-topic items, writes a newsletter + podcast, renders audio, and
-  publishes. Daily (~12 min) and weekly (~45 min).
+  selects items, writes a newsletter + podcast, renders audio, and publishes. Daily
+  (~12 min) and weekly (~45 min), each in two tracks:
+  - **specialized** (`daily`, `weekly`) — deep on the site's core topics: agentic coding,
+    evals, multi-agent orchestration, agent memory, retrieval.
+  - **general** (`daily-general`, `weekly-general`) — field-wide roundup selected by
+    social signal (cross-source convergence) and utility; model launches and tooling
+    announcements lead rather than getting filtered as "announcements".
 - **Manual** — items you hand-pick in the code-intelligence-digest app publish through the
   same `publish-digest.mjs` spec, so they land in the same library. (See `sjai-vuh`.)
-
-Topics it favors: agentic coding, evals, multi-agent orchestration, agent memory, retrieval.
 
 ## Pieces
 
 | File | Role |
 |------|------|
-| `generate.md` | The prompt `claude -p` runs (runner fills `{{MODE}}` etc.). |
+| `generate.md` | Specialized-track prompt (runner fills `{{CADENCE}}`, `{{SLUG}}`, etc.). |
+| `generate-general.md` | General-track prompt: recency sweep + convergence ranking, no topic whitelist. |
 | `tts-render.mjs` | Transcript → chunked OpenAI TTS → single MP3 in `public/media/digests/`. |
 | `publish-digest.mjs` | Validate an issue spec → write the `digest` collection entry + stage. |
 | `run.sh` | Cron entry point: generate → commit → (optionally) push. |
@@ -52,11 +56,13 @@ run-scoped settings file). Do **not** use a blanket skip-permissions flag.
 
 ## Schedule (after step 0 passes)
 
-`crontab -e` — daily 06:00, weekly Mon 06:00:
+`crontab -e` — runs are staggered so two jobs never commit/push concurrently:
 
 ```cron
-0 6 * * *  OPENAI_API_KEY=sk-... DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh daily  >> /home/ds/.digest-cron.log 2>&1
-0 6 * * 1  OPENAI_API_KEY=sk-... DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh weekly >> /home/ds/.digest-cron.log 2>&1
+0  6 * * *  DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh daily          >> /home/ds/.digest-cron.log 2>&1
+45 6 * * *  DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh daily-general  >> /home/ds/.digest-cron.log 2>&1
+30 7 * * 1  DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh weekly         >> /home/ds/.digest-cron.log 2>&1
+0  9 * * 1  DIGEST_PUSH=1 /home/ds/projects/website/scripts/digest/run.sh weekly-general >> /home/ds/.digest-cron.log 2>&1
 ```
 
 Per-run logs land in `.digest-runs/`. Flip `DIGEST_PUSH=1` only when you're happy letting

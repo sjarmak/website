@@ -34,6 +34,7 @@ function topicLabel(slug: string): string {
     <header class="digest__head stack stack-s">
       <p class="kicker">
         {CADENCE_LABEL[data.cadence]}
+        {data.track === "general" ? " · field roundup" : ""}
         {data.origin === "manual" ? " · hand-curated" : ""}
       </p>
       <h1>{data.title}</h1>

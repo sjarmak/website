@@ -202,6 +202,8 @@ export interface DigestIssue {
   slug: string;
   title: string;
   cadence: "daily" | "weekly" | "monthly";
+  /** "specialized" = the site's core topics; "general" = field-wide roundup. */
+  track: "specialized" | "general";
   origin: "auto" | "manual";
   date: Date;
   summary: string;

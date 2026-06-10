@@ -225,6 +225,10 @@ const digest = defineCollection({
     // cadence is the time-range the issue covers (curated issues derive it from
     // the date spread of their hand-picked items)
     cadence: z.enum(["daily", "weekly", "monthly"]),
+    // track: "specialized" follows the site's core topics (agentic coding, evals,
+    // memory, retrieval); "general" is a field-wide roundup selected by social
+    // signal and utility across the whole intel corpus
+    track: z.enum(["specialized", "general"]).default("specialized"),
     // origin: produced by the cron agent, or hand-curated in code-intelligence-digest
     origin: z.enum(["auto", "manual"]).default("auto"),
     date: z.coerce.date(),

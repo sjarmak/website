@@ -40,6 +40,7 @@ const specSchema = z
     slug: z.string().regex(/^[a-z0-9-]+$/).optional(),
     title: z.string(),
     cadence: z.enum(["daily", "weekly", "monthly"]),
+    track: z.enum(["specialized", "general"]).default("specialized"),
     origin: z.enum(["auto", "manual"]).default("auto"),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     summary: z.string(),
@@ -89,6 +90,7 @@ async function publish(spec) {
   const fm = {
     title: spec.title,
     cadence: spec.cadence,
+    track: spec.track,
     origin: spec.origin,
     date: spec.date,
     summary: spec.summary,

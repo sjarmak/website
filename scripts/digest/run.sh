@@ -3,8 +3,10 @@
 # (which reaches the code-intel-copilot MCP from ~/.claude.json), then commits and
 # — only when DIGEST_PUSH=1 — pushes so the site rebuilds.
 #
-#   scripts/digest/run.sh daily
+#   scripts/digest/run.sh daily            # specialized: site's core topics
 #   scripts/digest/run.sh weekly
+#   scripts/digest/run.sh daily-general    # general: field-wide roundup by social signal
+#   scripts/digest/run.sh weekly-general
 #   scripts/digest/run.sh curated <items.json>   # hand-picked items from the digest app
 #
 # Env:
@@ -16,16 +18,25 @@ set -euo pipefail
 
 MODE="${1:-}"
 WINDOW=""; WORD_TARGET=""; MINUTES=""; ITEM_RANGE=""; ITEMS_FILE=""
+CADENCE=""; TRACK="specialized"; SINCE=""
 case "$MODE" in
-  daily)  WINDOW="the last ~36 hours"; WORD_TARGET=1800; MINUTES=12; ITEM_RANGE="5-7" ;;
-  weekly) WINDOW="the last 7 days";    WORD_TARGET=6750; MINUTES=45; ITEM_RANGE="12-15" ;;
+  daily)          CADENCE="daily";  WINDOW="the last ~36 hours"; WORD_TARGET=1800; MINUTES=12; ITEM_RANGE="5-7" ;;
+  weekly)         CADENCE="weekly"; WINDOW="the last 7 days";    WORD_TARGET=6750; MINUTES=45; ITEM_RANGE="12-15" ;;
+  daily-general)  CADENCE="daily";  TRACK="general"; WINDOW="the last ~36 hours"; WORD_TARGET=1800; MINUTES=12; ITEM_RANGE="6-9" ;;
+  weekly-general) CADENCE="weekly"; TRACK="general"; WINDOW="the last 7 days";    WORD_TARGET=6750; MINUTES=45; ITEM_RANGE="12-18" ;;
   curated)
     WORD_TARGET=5400; MINUTES=30
     ITEMS_FILE="${2:-}"
     [ -n "$ITEMS_FILE" ] && [ -f "$ITEMS_FILE" ] || { echo "usage: run.sh curated <items.json>" >&2; exit 2; }
     ITEMS_FILE="$(readlink -f "$ITEMS_FILE")"
     ;;
-  *) echo "usage: run.sh <daily|weekly|curated <items.json>>" >&2; exit 2 ;;
+  *) echo "usage: run.sh <daily|weekly|daily-general|weekly-general|curated <items.json>>" >&2; exit 2 ;;
+esac
+
+# Window start as an ISO date, for MCP `since` filters in the templates.
+case "$CADENCE" in
+  daily)  SINCE="$(date -d '2 days ago' +%F)" ;;
+  weekly) SINCE="$(date -d '7 days ago' +%F)" ;;
 esac
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
@@ -46,11 +57,20 @@ LOG_DIR="$WEBSITE_DIR/.digest-runs"
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/${MODE}-$(date +%Y%m%d-%H%M%S).log"
 
-# Curated runs read a fixed, hand-picked item set; daily/weekly select from the MCP.
-if [ "$MODE" = "curated" ]; then TEMPLATE="scripts/digest/generate-curated.md"; else TEMPLATE="scripts/digest/generate.md"; fi
+# Curated runs read a fixed, hand-picked item set; the other modes select from
+# the MCP — specialized via generate.md, general via generate-general.md.
+case "$MODE" in
+  curated)    TEMPLATE="scripts/digest/generate-curated.md" ;;
+  *-general)  TEMPLATE="scripts/digest/generate-general.md" ;;
+  *)          TEMPLATE="scripts/digest/generate.md" ;;
+esac
 
 PROMPT="$(sed \
   -e "s|{{MODE}}|${MODE}|g" \
+  -e "s|{{CADENCE}}|${CADENCE}|g" \
+  -e "s|{{TRACK}}|${TRACK}|g" \
+  -e "s|{{SLUG}}|${MODE}-${DATE}|g" \
+  -e "s|{{SINCE}}|${SINCE}|g" \
   -e "s|{{WINDOW}}|${WINDOW}|g" \
   -e "s|{{WORD_TARGET}}|${WORD_TARGET}|g" \
   -e "s|{{MINUTES}}|${MINUTES}|g" \

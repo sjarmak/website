@@ -14,6 +14,11 @@ const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
   monthly: "Monthly",
 };
 
+const TRACK_LABEL: Record<DigestIssue["track"], string> = {
+  specialized: "Specialized",
+  general: "General",
+};
+
 // Two axes the page filters on: who made it, and whether it has a podcast.
 function sourceOf(d: DigestIssue): "curated" | "automated" {
   return d.origin === "manual" ? "curated" : "automated";
@@ -38,7 +43,7 @@ function minutes(sec?: number): string | null {
 <PageLayout
   title="Digest"
   kicker="Research"
-  intro="Issues published from my reading: a written newsletter, and for some, a podcast. Curated issues are ones I hand-pick; automated ones come out of my code-intelligence-digest pipeline. Filter by format, source, or topic."
+  intro="Issues published from my reading: a written newsletter, and for some, a podcast. Curated issues are ones I hand-pick; automated ones come out of my code-intelligence-digest pipeline. Specialized issues go deep on this site's core topics; general issues round up the highest-signal news across the agentic field. Filter by format, source, track, or topic."
 >
   <div class="stack stack-l">
     <!-- filter bar — two axes: format (audio vs newsletter) and source (curated vs automated) -->
@@ -57,6 +62,14 @@ function minutes(sec?: number): string | null {
           <option value="">All sources</option>
           <option value="curated">Curated (hand-picked)</option>
           <option value="automated">Automated</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field__label">Track</span>
+        <select id="f-track">
+          <option value="">All tracks</option>
+          <option value="specialized">Specialized (core topics)</option>
+          <option value="general">General (field roundup)</option>
         </select>
       </label>
       <label class="field">
@@ -81,6 +94,7 @@ function minutes(sec?: number): string | null {
             class="lib-card digest-card"
             data-source={sourceOf(d)}
             data-format={formatOf(d)}
+            data-track={d.track}
             data-topics={d.topics.join(" ")}
             data-text={`${d.title} ${d.summary}`.toLowerCase()}
           >
@@ -89,6 +103,7 @@ function minutes(sec?: number): string | null {
                 {sourceOf(d) === "curated" ? "Curated" : "Automated"}
               </span>
               <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
+              <span class={`badge badge--track-${d.track}`}>{TRACK_LABEL[d.track]}</span>
               <span class="muted">{fullDate(d.date)}</span>
               {hasAudio(d) ? (
                 <span class="digest-card__pod" title="Includes a podcast episode">
@@ -183,6 +198,7 @@ function minutes(sec?: number): string | null {
   const grid = document.getElementById("digest-grid");
   const format = document.getElementById("f-format") as HTMLSelectElement;
   const source = document.getElementById("f-source") as HTMLSelectElement;
+  const track = document.getElementById("f-track") as HTMLSelectElement;
   const topic = document.getElementById("f-topic") as HTMLSelectElement;
   const search = document.getElementById("f-search") as HTMLInputElement;
   const count = document.getElementById("digest-count");
@@ -194,6 +210,7 @@ function minutes(sec?: number): string | null {
     const apply = () => {
       const fmt = format.value;
       const src = source.value;
+      const trk = track.value;
       const t = topic.value;
       const q = search.value.trim().toLowerCase();
       let shown = 0;
@@ -203,6 +220,7 @@ function minutes(sec?: number): string | null {
         const match =
           (!fmt || card.dataset.format === fmt) &&
           (!src || card.dataset.source === src) &&
+          (!trk || card.dataset.track === trk) &&
           (!t || topics.includes(t)) &&
           (!q || (card.dataset.text ?? "").includes(q));
         card.hidden = !match;
@@ -213,7 +231,7 @@ function minutes(sec?: number): string | null {
       if (empty) empty.hidden = shown !== 0;
     };
 
-    for (const el of [format, source, topic, search]) {
+    for (const el of [format, source, track, topic, search]) {
       el.addEventListener("input", apply);
     }
   }
@@ -327,6 +345,16 @@ function minutes(sec?: number): string | null {
 
   .badge--monthly {
     border-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-border));
+  }
+
+  /* track badges — "specialized" carries the accent, "general" stays neutral */
+  .badge--track-specialized {
+    border-color: color-mix(in oklch, var(--color-accent) 35%, var(--color-border));
+  }
+
+  .badge--track-general {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
   }
 
   /* source badges — "curated" reads as the deliberate, hand-picked one */

@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: `${site.name} — Digest`,
     description:
-      "Daily and weekly digests on agentic coding, evals, multi-agent orchestration, agent memory, and information retrieval.",
+      "Daily and weekly digests: a specialized track on agentic coding, evals, multi-agent orchestration, agent memory, and information retrieval, plus a general track rounding up the highest-signal news across the agentic field.",
     site: base,
     items: digests.map((d) => {
       const enclosure = d.audioUrl
