@@ -6,6 +6,8 @@ summary: "An orchestration-builder SDK for multi-agent coding workflows. I'm a m
 role: Maintainer
 repo: https://github.com/gastownhall/gascity
 tech: [Go, Agents, Orchestration]
+featured: true
+featuredOrder: 2
 order: 1
 topics: [agents, code-intelligence]
 tags: [agents, orchestration]

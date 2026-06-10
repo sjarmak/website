@@ -7,7 +7,7 @@ role: Creator
 repo: https://github.com/sjarmak/mem
 tech: [TypeScript, Evaluation, Agent memory]
 featured: true
-featuredOrder: 10
+featuredOrder: 6
 order: 21
 topics: [agent-memory, agents, evaluation]
 tags: [benchmark, memory, evals]

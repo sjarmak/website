@@ -7,7 +7,7 @@ role: Creator
 repo: https://github.com/sjarmak/scix-agent
 tech: [Python, Agents, MCP, Retrieval]
 featured: true
-featuredOrder: 3
+featuredOrder: 1
 order: 10
 topics: [agents, scientific-search, retrieval]
 tags: [scix, agents]

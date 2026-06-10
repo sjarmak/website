@@ -7,7 +7,7 @@ role: Creator
 repo: https://github.com/sjarmak/EnterpriseBench
 tech: [Python, Evaluation, Agents]
 featured: true
-featuredOrder: 2
+featuredOrder: 4
 order: 2
 topics: [evaluation, agents, code-intelligence]
 tags: [benchmark, evals]

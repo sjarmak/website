@@ -3,6 +3,10 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import { getProjects } from "@/lib/collections";
 
 const projects = await getProjects();
+const selectedProjects = projects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
+const allProjects = projects;
 ---
 
 <PageLayout
@@ -15,13 +19,51 @@ const projects = await getProjects();
     <a href="/projects/explorer">Open the knowledge graph →</a>
   </p>
 
+  <h2 class="section-heading">Selected Projects</h2>
   <ul role="list" class="auto-grid" style="--grid-min: 18rem; --grid-gap: var(--space-l)">
     {
-      projects.map((p) => (
+      selectedProjects.map((p) => (
+        <li class="card card--selected">
+          <div class="card__head">
+            <a href={`/projects/${p.id}`} class="card__title-link">
+              <h3 class="card__title">{p.data.title}</h3>
+            </a>
+          </div>
+          <p class="secondary">{p.data.summary}</p>
+          {p.data.tech.length > 0 && (
+            <p class="cluster" style="--cluster-gap: var(--space-2xs)">
+              {p.data.tech.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </p>
+          )}
+          <p class="cluster card__links" style="--cluster-gap: var(--space-m)">
+            <a href={`/projects/${p.id}`}>Details</a>
+            {p.data.play && <a href={p.data.play}>Play ▸</a>}
+            {p.data.repo && (
+              <a href={p.data.repo} rel="noopener">
+                Code
+              </a>
+            )}
+            {p.data.homepage && (
+              <a href={p.data.homepage} rel="noopener">
+                Live
+              </a>
+            )}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 class="section-heading section-heading--all">All Projects</h2>
+  <ul role="list" class="auto-grid" style="--grid-min: 18rem; --grid-gap: var(--space-l)">
+    {
+      allProjects.map((p) => (
         <li class="card">
           <div class="card__head">
             <a href={`/projects/${p.id}`} class="card__title-link">
-              <h2 class="card__title">{p.data.title}</h2>
+              <h3 class="card__title">{p.data.title}</h3>
             </a>
           </div>
           <p class="secondary">{p.data.summary}</p>
@@ -56,6 +98,13 @@ const projects = await getProjects();
   .explorer-link {
     margin-block-end: var(--space-l);
   }
+  .section-heading {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-m);
+  }
+  .section-heading--all {
+    margin-block-start: var(--space-2xl);
+  }
   .card {
     display: flex;
     flex-direction: column;
@@ -68,6 +117,10 @@ const projects = await getProjects();
   }
   .card:hover {
     border-color: color-mix(in oklch, var(--color-accent) 40%, var(--color-border));
+  }
+  .card--selected {
+    background: color-mix(in oklch, var(--color-accent) 5%, var(--color-bg-subtle));
+    border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
   }
   .card__head {
     display: flex;

@@ -6,8 +6,6 @@ summary: Aggregates feeds and presents curated weekly and monthly digests of cod
 role: Creator
 repo: https://github.com/sjarmak/code-intelligence-digest
 tech: [TypeScript, Retrieval, LLM]
-featured: true
-featuredOrder: 4
 order: 7
 topics: [code-intelligence, retrieval, agents]
 tags: [digest, retrieval]

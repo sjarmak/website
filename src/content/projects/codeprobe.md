@@ -7,7 +7,7 @@ role: Creator
 repo: https://github.com/sjarmak/codeprobe
 tech: [Python, Evaluation, Agents]
 featured: true
-featuredOrder: 9
+featuredOrder: 5
 order: 15
 topics: [evaluation, agents, code-intelligence]
 tags: [benchmark, evals]

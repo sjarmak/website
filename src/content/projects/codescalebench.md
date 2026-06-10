@@ -7,7 +7,7 @@ role: Creator
 repo: https://github.com/sjarmak/CodeScaleBench
 tech: [C++, Evaluation, Retrieval]
 featured: true
-featuredOrder: 1
+featuredOrder: 3
 order: 5
 topics: [evaluation, retrieval, code-intelligence, agents]
 tags: [benchmark, evals]
