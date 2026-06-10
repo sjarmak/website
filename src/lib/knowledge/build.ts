@@ -452,7 +452,7 @@ export async function getDigests(): Promise<DigestIssue[]> {
       durationSec: e.data.durationSec,
       items: e.data.items,
       highlights: e.data.highlights,
-      linkCount: e.data.items.length || countBodyLinks(e.body ?? ""),
+      linkCount: Math.max(e.data.items.length, countBodyLinks(e.body ?? "")),
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 }
