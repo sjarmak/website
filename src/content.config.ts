@@ -222,8 +222,9 @@ const digest = defineCollection({
   loader: base("digest"),
   schema: z.object({
     title: z.string(),
-    // cadence drives the primary filter facet
-    cadence: z.enum(["daily", "weekly", "manual"]),
+    // cadence is the time-range the issue covers (curated issues derive it from
+    // the date spread of their hand-picked items)
+    cadence: z.enum(["daily", "weekly", "monthly"]),
     // origin: produced by the cron agent, or hand-curated in code-intelligence-digest
     origin: z.enum(["auto", "manual"]).default("auto"),
     date: z.coerce.date(),

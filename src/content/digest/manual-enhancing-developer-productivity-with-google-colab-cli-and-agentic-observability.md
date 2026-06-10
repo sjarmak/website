@@ -1,7 +1,7 @@
 ---
 title: Enhancing Developer Productivity with Google Colab CLI and Agentic
   Observability
-cadence: manual
+cadence: weekly
 origin: manual
 date: 2026-06-09
 summary: "Four things worth your time: Google's Colab CLI, which requests a

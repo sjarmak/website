@@ -16,10 +16,10 @@ Your job is to turn exactly those items into a high-signal issue.
 - Working directory for intermediate files: **{{WORK}}**
 - Website repo (run scripts from here): **{{WEBSITE_DIR}}**
 
-Each item in `{{ITEMS_FILE}}` has: `title`, `url`, `source`, `category`, `summary`, and
-`fullText` (may be empty). Treat `fullText` as the ground truth; fall back to `summary` when
-`fullText` is empty. Never invent items, URLs, numbers, or quotes — everything traces to an
-item in this file.
+Each item in `{{ITEMS_FILE}}` has: `title`, `url`, `source`, `category`, `summary`,
+`publishedAt` (ISO date the item was published), and `fullText` (may be empty). Treat
+`fullText` as the ground truth; fall back to `summary` when `fullText` is empty. Never invent
+items, URLs, numbers, or quotes — everything traces to an item in this file.
 
 ## Writing voice (mandatory — newsletter, transcript, and anything published)
 
@@ -70,15 +70,27 @@ Do:
    transcript and cut the tells — hype verbs, filler transitions, "it's not just X, it's Y",
    meta-narration, staccato runs, stray em dashes. Read it; do not pattern-match.
 
-6. **Write `{{WORK}}/spec.json`** matching the publish-digest schema. Derive a slug from the
+6. **Derive the cadence** from the date spread of the curated items. Take the span between the
+   earliest and latest `publishedAt` across the set, and map it to the time-range the issue
+   covers:
+   - span ≤ 2 days (same day or the last couple of days) → `"daily"`
+   - span of roughly a week (3–10 days) → `"weekly"`
+   - longer than that → `"monthly"`
+
+   Frame the newsletter and transcript to match: a `"daily"` issue reads as the last day or
+   two, a `"weekly"` issue as the past week, a `"monthly"` issue as the past few weeks. Don't
+   call a daily issue "this week."
+
+7. **Write `{{WORK}}/spec.json`** matching the publish-digest schema. Derive a slug from the
    title: `manual-` + the title lowercased, non-alphanumerics to single hyphens, trimmed,
-   capped ~80 chars. Populate `items` from the curated set (this also drives the on-site link
-   count), and `topics` from the distinct categories plus any obvious theme tags.
+   capped ~80 chars. Set `cadence` to the value derived in step 6. Populate `items` from the
+   curated set (this also drives the on-site link count), and `topics` from the distinct
+   categories plus any obvious theme tags.
    ```json
    {
      "slug": "manual-<kebab-title>",
      "title": "<your title>",
-     "cadence": "manual",
+     "cadence": "<daily|weekly|monthly, derived in step 6>",
      "origin": "manual",
      "date": "{{DATE}}",
      "summary": "<2-3 sentence summary>",
@@ -89,14 +101,14 @@ Do:
    }
    ```
 
-7. **Render audio.** From {{WEBSITE_DIR}}, run (use the slug you chose as `--out`):
+8. **Render audio.** From {{WEBSITE_DIR}}, run (use the slug you chose as `--out`):
    ```
    node scripts/digest/tts-render.mjs --in {{WORK}}/transcript.txt --out <slug>
    ```
    It prints `{"audioUrl": "...", "durationSec": N}`. Add `audioFile`
    (`public/media/digests/<slug>.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
 
-8. **Publish.** From {{WEBSITE_DIR}}, run:
+9. **Publish.** From {{WEBSITE_DIR}}, run:
    ```
    node scripts/digest/publish-digest.mjs --spec {{WORK}}/spec.json
    ```

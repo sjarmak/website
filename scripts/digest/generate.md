@@ -38,6 +38,11 @@ Do:
 - Put specific numbers, names, versions, and dates inline. Specifics beat adjectives.
 - Close by pivoting outward — an open question, what to watch — not by summarizing what was just said.
 
+**Anchor temporal framing to {{MODE}} / {{WINDOW}}.** A `daily` issue covers {{WINDOW}} —
+write it as the last day or two ("today", "in the last day"), never "this week" or a weekly
+recap. A `weekly` issue covers the past week and can say "this week". Match every time
+reference (summary, title, body, transcript) to the window you actually pulled from.
+
 ## Procedure — do these in order
 
 1. **Confirm freshness.** Call `mirror_status`. If it reports `direct` mode, data is live.

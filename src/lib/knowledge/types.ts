@@ -201,7 +201,7 @@ export interface DigestResource {
 export interface DigestIssue {
   slug: string;
   title: string;
-  cadence: "daily" | "weekly" | "manual";
+  cadence: "daily" | "weekly" | "monthly";
   origin: "auto" | "manual";
   date: Date;
   summary: string;

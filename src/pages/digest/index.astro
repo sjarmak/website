@@ -11,12 +11,12 @@ const { series: podcastSeries, standalone: podcastStandalone } = await getPodcas
 const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
   daily: "Daily",
   weekly: "Weekly",
-  manual: "Selected",
+  monthly: "Monthly",
 };
 
 // Two axes the page filters on: who made it, and whether it has a podcast.
-function sourceOf(d: DigestIssue): "selected" | "automated" {
-  return d.origin === "manual" ? "selected" : "automated";
+function sourceOf(d: DigestIssue): "curated" | "automated" {
+  return d.origin === "manual" ? "curated" : "automated";
 }
 function hasAudio(d: DigestIssue): boolean {
   return Boolean(d.audioUrl || d.embedUrl);
@@ -38,10 +38,10 @@ function minutes(sec?: number): string | null {
 <PageLayout
   title="Digest"
   kicker="Research"
-  intro="Issues published from my reading: a written newsletter, and for some, a podcast. Selected issues are ones I hand-pick and curate; automated ones come out of my code-intelligence-digest pipeline. Filter by format, source, or topic."
+  intro="Issues published from my reading: a written newsletter, and for some, a podcast. Curated issues are ones I hand-pick; automated ones come out of my code-intelligence-digest pipeline. Filter by format, source, or topic."
 >
   <div class="stack stack-l">
-    <!-- filter bar — two axes: format (audio vs newsletter) and source (selected vs automated) -->
+    <!-- filter bar — two axes: format (audio vs newsletter) and source (curated vs automated) -->
     <form class="digest-filters" id="digest-filters" aria-label="Filter digests">
       <label class="field">
         <span class="field__label">Format</span>
@@ -55,7 +55,7 @@ function minutes(sec?: number): string | null {
         <span class="field__label">Source</span>
         <select id="f-source">
           <option value="">All sources</option>
-          <option value="selected">Selected (hand-picked)</option>
+          <option value="curated">Curated (hand-picked)</option>
           <option value="automated">Automated</option>
         </select>
       </label>
@@ -86,7 +86,7 @@ function minutes(sec?: number): string | null {
           >
             <div class="digest-card__meta">
               <span class={`badge badge--source-${sourceOf(d)}`}>
-                {sourceOf(d) === "selected" ? "Selected" : "Automated"}
+                {sourceOf(d) === "curated" ? "Curated" : "Automated"}
               </span>
               <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
               <span class="muted">{fullDate(d.date)}</span>
@@ -325,8 +325,12 @@ function minutes(sec?: number): string | null {
     border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
   }
 
-  /* source badges — "selected" reads as the deliberate, hand-picked one */
-  .badge--source-selected {
+  .badge--monthly {
+    border-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-border));
+  }
+
+  /* source badges — "curated" reads as the deliberate, hand-picked one */
+  .badge--source-curated {
     border-color: color-mix(in oklch, var(--color-accent) 55%, var(--color-border));
     color: var(--color-accent);
     background: color-mix(in oklch, var(--color-accent) 10%, transparent);

@@ -39,7 +39,7 @@ const specSchema = z
   .object({
     slug: z.string().regex(/^[a-z0-9-]+$/).optional(),
     title: z.string(),
-    cadence: z.enum(["daily", "weekly", "manual"]),
+    cadence: z.enum(["daily", "weekly", "monthly"]),
     origin: z.enum(["auto", "manual"]).default("auto"),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     summary: z.string(),
