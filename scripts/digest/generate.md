@@ -31,6 +31,7 @@ Cut every instance of:
 - Hype verbs (leverage, unlock, enable, empower, harness, supercharge, accelerate, transform, revolutionize, redefine, disrupt) — use plain verbs.
 - Vague impact claims ("significant gains", "dramatic improvement") — cite the number or drop the claim.
 - "Imagine if…" openings, future-of-work gestures ("a fundamental shift in how software is built"), forced triads, exclamation points, gratuitous emoji, and bullet lists standing in for an argument prose should carry.
+- Ironic-inversion or contrarian-pose titles ("X is the boring part", "the best Y is no Y", "X is actually the easy part") — the title is a declarative, specific claim about the subject, same rule as section heads.
 
 Do:
 - Cold-open on a concrete thing — a number, a finding, an artifact — not a thesis or a definition.
