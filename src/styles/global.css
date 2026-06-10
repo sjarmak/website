@@ -74,6 +74,13 @@ samp {
   font-size: 0.9em;
 }
 
+:not(pre) > code {
+  background: var(--color-surface);
+  border: var(--border-hairline);
+  border-radius: var(--radius-s);
+  padding: 0.1em 0.35em;
+}
+
 hr {
   border: none;
   border-top: var(--border-hairline);
