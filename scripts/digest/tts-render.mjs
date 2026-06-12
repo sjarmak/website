@@ -1,25 +1,28 @@
 #!/usr/bin/env node
-// Render a podcast transcript to a single MP3 via OpenAI TTS.
+// Render a podcast transcript to a single MP3 via local Kokoro TTS (offline).
 //
 // Usage:
 //   node scripts/digest/tts-render.mjs --in transcript.txt --out daily-2026-06-10 \
-//     [--voice alloy] [--model gpt-4o-mini-tts]
+//     [--voice am_onyx] [--speed 0.85]
 //
 // Prints a JSON line to stdout: { "audioUrl": "/media/digests/<out>.mp3", "durationSec": <n> }
 // so the publish step / generation agent can consume it directly.
 //
-// Requires OPENAI_API_KEY. Uses ffmpeg to concatenate chunks when available;
-// falls back to (loudly warned) binary concatenation otherwise.
+// Requires the Kokoro venv (scripts/digest/setup-kokoro.sh; override location with
+// $KOKORO_VENV) and ffmpeg for WAV→MP3 concat+encode. No API key, no network —
+// the model runs locally (first-ever render downloads weights into the HF cache).
 
 import { readFile, writeFile, mkdir, rm, stat } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
+import os from "node:os";
 import path from "node:path";
 
-const MAX_CHARS = 4000; // OpenAI TTS hard cap is 4096 chars/request; leave headroom
+const MAX_CHARS = 4000; // per-chunk cap keeps Kokoro inputs and memory bounded
 const OUT_DIR = "public/media/digests";
-const SPEECH_URL = "https://api.openai.com/v1/audio/speech";
-const WORDS_PER_MIN = 150; // fallback duration estimate when ffprobe is absent
+const RENDERER = path.join(path.dirname(new URL(import.meta.url).pathname), "kokoro-render.py");
+const WORDS_PER_MIN = 150; // fallback duration estimate when ffprobe is absent (~am_onyx at speed 0.85)
 
 /** Strip markdown so the TTS reads clean spoken prose. Pure. */
 export function stripForSpeech(md) {
@@ -87,23 +90,32 @@ function hasBin(name) {
   return spawnSync(name, ["-version"], { stdio: "ignore" }).status === 0;
 }
 
-async function renderChunk({ input, voice, model, apiKey }) {
-  const maxAttempts = 3;
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const res = await fetch(SPEECH_URL, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model, voice, input, response_format: "mp3" }),
-    });
-    if (res.ok) return Buffer.from(await res.arrayBuffer());
-    const retryable = res.status === 429 || res.status >= 500;
-    const detail = await res.text().catch(() => "");
-    if (!retryable || attempt === maxAttempts) {
-      throw new Error(`OpenAI TTS failed (${res.status}): ${detail.slice(0, 300)}`);
-    }
-    await new Promise((r) => setTimeout(r, 1000 * attempt));
+function kokoroPython() {
+  const venv = process.env.KOKORO_VENV ?? path.join(os.homedir(), ".venvs", "kokoro-tts");
+  const python = path.join(venv, "bin", "python");
+  if (!existsSync(python)) {
+    throw new Error(
+      `Kokoro venv not found at ${venv} — run scripts/digest/setup-kokoro.sh (or set $KOKORO_VENV)`,
+    );
   }
-  throw new Error("unreachable");
+  return python;
+}
+
+/** Render all chunks to part-NNN.wav in tmpDir via one kokoro-render.py process. */
+async function renderChunks({ chunks, tmpDir, voice, speed }) {
+  for (let i = 0; i < chunks.length; i++) {
+    await writeFile(path.join(tmpDir, `chunk-${String(i).padStart(3, "0")}.txt`), chunks[i], "utf8");
+  }
+  process.stderr.write(`[tts-render] rendering ${chunks.length} chunks via local Kokoro (${voice}, speed ${speed})\n`);
+  const r = spawnSync(
+    kokoroPython(),
+    [RENDERER, "--chunks-dir", tmpDir, "--voice", voice, "--speed", String(speed)],
+    { stdio: ["ignore", "ignore", "inherit"] },
+  );
+  if (r.status !== 0) throw new Error(`kokoro-render.py failed (exit ${r.status})`);
+  return Array.from({ length: chunks.length }, (_, i) =>
+    path.join(tmpDir, `part-${String(i).padStart(3, "0")}.wav`),
+  );
 }
 
 function ffprobeDuration(file) {
@@ -121,23 +133,19 @@ function ffprobeDuration(file) {
   return Number.isFinite(sec) ? Math.round(sec) : null;
 }
 
+/** Concatenate WAV parts and encode to MP3 (24 kHz mono, 160k). ffmpeg required. */
 async function concatChunks(partFiles, outFile, listPath) {
-  if (hasBin("ffmpeg")) {
-    const list = partFiles.map((f) => `file '${path.resolve(f)}'`).join("\n");
-    await writeFile(listPath, list, "utf8");
-    const r = spawnSync("ffmpeg", ["-y", "-f", "concat", "-safe", "0", "-i", listPath, "-c", "copy", outFile], {
-      stdio: "ignore",
-    });
-    if (r.status !== 0) throw new Error("ffmpeg concat failed");
-    return;
+  if (!hasBin("ffmpeg")) {
+    throw new Error("ffmpeg is required to encode WAV parts to MP3 — sudo apt install ffmpeg");
   }
-  console.warn(
-    "[tts-render] WARNING: ffmpeg not found — falling back to binary MP3 concatenation. " +
-      "This usually plays fine but can produce minor seam glitches and inaccurate seek/duration. " +
-      "Install ffmpeg for clean output.",
+  const list = partFiles.map((f) => `file '${path.resolve(f)}'`).join("\n");
+  await writeFile(listPath, list, "utf8");
+  const r = spawnSync(
+    "ffmpeg",
+    ["-y", "-f", "concat", "-safe", "0", "-i", listPath, "-ar", "24000", "-ac", "1", "-b:a", "160k", outFile],
+    { stdio: "ignore" },
   );
-  const buffers = await Promise.all(partFiles.map((f) => readFile(f)));
-  await writeFile(outFile, Buffer.concat(buffers));
+  if (r.status !== 0) throw new Error("ffmpeg concat/encode failed");
 }
 
 function parseArgs(argv) {
@@ -150,15 +158,13 @@ function parseArgs(argv) {
 }
 
 async function main() {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
-
   const args = parseArgs(process.argv.slice(2));
   if (!args.in || !args.out) {
-    throw new Error("usage: tts-render.mjs --in <transcript.txt> --out <basename> [--voice v] [--model m]");
+    throw new Error("usage: tts-render.mjs --in <transcript.txt> --out <basename> [--voice v] [--speed s]");
   }
-  const voice = args.voice ?? "alloy";
-  const model = args.model ?? "gpt-4o-mini-tts";
+  const voice = args.voice ?? "am_onyx";
+  const speed = Number.parseFloat(args.speed ?? "0.85");
+  if (!Number.isFinite(speed) || speed <= 0) throw new Error(`invalid --speed: ${args.speed}`);
   const base = path.basename(args.out, ".mp3");
 
   const raw = await readFile(args.in, "utf8");
@@ -170,14 +176,7 @@ async function main() {
   const tmpDir = path.join(OUT_DIR, `.tmp-${base}`);
   await mkdir(tmpDir, { recursive: true });
 
-  const partFiles = [];
-  for (let i = 0; i < chunks.length; i++) {
-    process.stderr.write(`[tts-render] chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)\n`);
-    const mp3 = await renderChunk({ input: chunks[i], voice, model, apiKey });
-    const part = path.join(tmpDir, `part-${String(i).padStart(3, "0")}.mp3`);
-    await writeFile(part, mp3);
-    partFiles.push(part);
-  }
+  const partFiles = await renderChunks({ chunks, tmpDir, voice, speed });
 
   const outFile = path.join(OUT_DIR, `${base}.mp3`);
   await concatChunks(partFiles, outFile, path.join(tmpDir, "concat.txt"));

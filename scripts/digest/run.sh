@@ -11,7 +11,8 @@
 #   scripts/digest/run.sh curated <items.json>   # hand-picked items from the digest app
 #
 # Env:
-#   OPENAI_API_KEY  (required — used by tts-render.mjs)
+#   KOKORO_VENV     (optional — Kokoro TTS venv used by tts-render.mjs; default
+#                    ~/.venvs/kokoro-tts, created once by scripts/digest/setup-kokoro.sh)
 #   DIGEST_PUSH=1   (optional — push after commit; default off so you can validate first)
 #   CLAUDE_FLAGS    (optional — override the claude -p permission flags; see README)
 #   CLAUDE_BIN      (optional — claude binary/router; default claude-auto)
@@ -42,16 +43,12 @@ case "$CADENCE" in
 esac
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
-DIGEST_REPO="${DIGEST_REPO:-/home/ds/projects/code-intelligence-digest}"
 cd "$WEBSITE_DIR"
 
-# Keep the OpenAI key out of crontab: source it from the digest app's env if unset.
-if [ -z "${OPENAI_API_KEY:-}" ] && [ -f "$DIGEST_REPO/.env.local" ]; then
-  OPENAI_API_KEY="$(grep -E '^OPENAI_API_KEY=' "$DIGEST_REPO/.env.local" | head -1 \
-    | sed -E 's/^OPENAI_API_KEY=//; s/^"//; s/"$//; s/^'\''//; s/'\''$//')"
-  export OPENAI_API_KEY
-fi
-: "${OPENAI_API_KEY:?OPENAI_API_KEY must be set, or present in \$DIGEST_REPO/.env.local}"
+# TTS is fully local (Kokoro, voice am_onyx) — fail early if the venv is missing
+# rather than after the agent has already written the issue.
+KOKORO_PYTHON="${KOKORO_VENV:-$HOME/.venvs/kokoro-tts}/bin/python"
+[ -x "$KOKORO_PYTHON" ] || { echo "Kokoro venv not found at ${KOKORO_VENV:-$HOME/.venvs/kokoro-tts} — run scripts/digest/setup-kokoro.sh" >&2; exit 2; }
 
 DATE="$(date +%F)"
 WORK="$(mktemp -d)"

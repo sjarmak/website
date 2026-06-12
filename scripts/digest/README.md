@@ -20,7 +20,9 @@ site (`/digest`). Two producers, one library:
 |------|------|
 | `generate.md` | Specialized-track prompt (runner fills `{{CADENCE}}`, `{{SLUG}}`, etc.). |
 | `generate-general.md` | General-track prompt: recency sweep + convergence ranking, no topic whitelist. |
-| `tts-render.mjs` | Transcript → chunked OpenAI TTS → single MP3 in `public/media/digests/`. |
+| `tts-render.mjs` | Transcript → chunked **local Kokoro TTS** (voice `am_onyx`, speed 0.85, fully offline) → single MP3 in `public/media/digests/`. |
+| `kokoro-render.py` | Python half of the renderer: runs inside the Kokoro venv, WAV per chunk. |
+| `setup-kokoro.sh` | One-time venv setup for the local TTS (`~/.venvs/kokoro-tts`). |
 | `publish-digest.mjs` | Validate an issue spec → write the `digest` collection entry + stage. |
 | `recent-coverage.mjs` | Repeat guard: list item URLs from recent same-cadence/track issues. |
 | `run.sh` | Cron entry point: generate → commit → (optionally) push. |
@@ -39,9 +41,12 @@ The website side (collection, `/digest` pages, RSS) is already in the repo.
 
 ## Prerequisites
 
-- **`OPENAI_API_KEY`** — required (TTS). The digest repo already uses OpenAI for embeddings.
-- **`ffmpeg`** — recommended. Without it `tts-render.mjs` falls back to binary MP3 concat
-  (works, but can have minor seam glitches). `sudo apt install ffmpeg`.
+- **Kokoro venv** — run `scripts/digest/setup-kokoro.sh` once (installs Kokoro-82M + CPU
+  torch into `~/.venvs/kokoro-tts`; override with `KOKORO_VENV`). TTS is fully local and
+  offline — no API key, no per-render cost. The first-ever render downloads the model
+  weights into the Hugging Face cache.
+- **`ffmpeg`** — required. `tts-render.mjs` uses it to concat the WAV chunks and encode
+  the MP3 (24 kHz mono, 160k). `sudo apt install ffmpeg`.
 - **`claude-auto`** (`~/.local/bin/claude-auto`) — picks the least-loaded Claude account
   from `~/.claude-usage/usage_cache.json` (kept fresh by the `claude-refresh-all` cron) and
   launches via `claude-account`, so one capped account doesn't kill the run. Every account
@@ -56,7 +61,7 @@ prompting. Validate manually, with push OFF:
 
 ```bash
 cd /home/ds/projects/website
-OPENAI_API_KEY=sk-... DIGEST_PUSH=0 scripts/digest/run.sh daily
+DIGEST_PUSH=0 scripts/digest/run.sh daily
 ```
 
 Then check:
