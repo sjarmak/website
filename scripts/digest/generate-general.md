@@ -44,6 +44,9 @@ Cut every instance of:
 - Meta-narration ("In this issue we'll explore", "As we've seen", "This shows that").
 - Hype verbs (leverage, unlock, enable, empower, harness, supercharge, accelerate, transform, revolutionize, redefine, disrupt) — use plain verbs.
 - Vague impact claims ("significant gains", "dramatic improvement") — cite the number or drop the claim.
+- "Quietly" as a drama adverb ("quietly changed/shipped X") — state the change plainly.
+- The demo-vs-production trope ("works in a demo, falls apart in production") and "toy" as a dismissal ("toy example") — name the actual gap instead.
+- Commands to dwell ("sit with that", "let that sink in", "hold these numbers", "read that again") — the fact stands on its own.
 - "Imagine if…" openings, future-of-work gestures ("a fundamental shift in how software is built"), forced triads, exclamation points, gratuitous emoji, and bullet lists standing in for an argument prose should carry.
 - Ironic-inversion or contrarian-pose titles ("X is the boring part", "the best Y is no Y", "X is actually the easy part") — the title is a declarative, specific claim about the subject, same rule as section heads.
 
