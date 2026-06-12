@@ -59,7 +59,12 @@ reference (summary, title, body, transcript) to the window you actually pulled f
      full-text relevance + recency, NOT by the hybrid quality score — so apply your own
      editorial judgment for quality, don't trust raw order.
 
-3. **Select.** Choose **{{ITEM_RANGE}}** items. Favor: on-topic, genuinely new, high-signal,
+3. **Select.** First read `{{WORK}}/recent-coverage.md` — every URL featured by this
+   track's recent issues. Coverage is one-shot: never feature a listed URL again. An
+   ongoing story may return only via a genuinely new development with a NEW source URL;
+   the publish step rejects any spec that repeats a listed URL.
+
+   Then choose **{{ITEM_RANGE}}** items. Favor: on-topic, genuinely new, high-signal,
    diverse sources (max ~2 per source). Prefer substance over announcements. If it's a quiet
    window, ship FEWER items and a shorter episode — never pad. Use `get_item` to read the
    full text of anything you'll quote or summarize in depth.
@@ -117,5 +122,6 @@ reference (summary, title, body, transcript) to the window you actually pulled f
 
 - Stay within ~25 tool calls; this is a routine job, not deep research.
 - Never invent items, URLs, or quotes — everything traces to an MCP item.
+- Never feature a URL listed in `{{WORK}}/recent-coverage.md` — publishing rejects repeats.
 - If the window is genuinely empty of on-topic material, write a 2-line "quiet day" issue
   with no podcast (skip steps 5 and 7) rather than fabricating content.

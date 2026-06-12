@@ -22,7 +22,18 @@ site (`/digest`). Two producers, one library:
 | `generate-general.md` | General-track prompt: recency sweep + convergence ranking, no topic whitelist. |
 | `tts-render.mjs` | Transcript → chunked OpenAI TTS → single MP3 in `public/media/digests/`. |
 | `publish-digest.mjs` | Validate an issue spec → write the `digest` collection entry + stage. |
+| `recent-coverage.mjs` | Repeat guard: list item URLs from recent same-cadence/track issues. |
 | `run.sh` | Cron entry point: generate → commit → (optionally) push. |
+
+### Repeat guard
+
+Auto runs are stateless, so a loud post used to re-qualify day after day. Now `run.sh`
+writes `recent-coverage.md` (item URLs from the last 7 days of dailies / 28 days of
+weeklies, same cadence + track) into the work dir; the generate prompts forbid featuring
+a listed URL, and `publish-digest.mjs` hard-rejects repeats when `DIGEST_REPEAT_GUARD_DAYS`
+is set (run.sh sets it for all non-curated modes). URL matching is exact after light
+normalization (fragment, `utm_*` params, trailing slash). Curated and manual publishes
+are exempt.
 
 The website side (collection, `/digest` pages, RSS) is already in the repo.
 

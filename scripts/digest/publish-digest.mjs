@@ -22,6 +22,7 @@ import { pathToFileURL } from "node:url";
 import path from "node:path";
 import { z } from "zod";
 import YAML from "yaml";
+import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
 
 const CONTENT_DIR = "src/content/digest";
 const AUDIO_DIR = "public/media/digests";
@@ -72,9 +73,39 @@ function git(...cmd) {
   return r.stdout?.trim();
 }
 
+// Repeat guard: with DIGEST_REPEAT_GUARD_DAYS set (the auto-run path), refuse
+// to publish an item URL already featured by this cadence+track within the
+// lookback window. The generator gets the same list up front; this is the
+// mechanical backstop.
+async function assertNoRepeatedItems(spec) {
+  const days = Number(process.env.DIGEST_REPEAT_GUARD_DAYS || 0);
+  if (!days || spec.items.length === 0) return;
+  const recent = await collectRecentCoverage({
+    contentDir: CONTENT_DIR,
+    cadence: spec.cadence,
+    track: spec.track,
+    days,
+    before: spec.date,
+  });
+  const seen = new Map(recent.map((r) => [r.normalized, r]));
+  const repeats = spec.items
+    .map((item) => ({ item, prior: seen.get(normalizeUrl(item.url)) }))
+    .filter((r) => r.prior);
+  if (repeats.length > 0) {
+    const detail = repeats
+      .map((r) => `  ${r.item.url} — already featured in ${r.prior.slug}`)
+      .join("\n");
+    throw new Error(
+      `repeat guard: ${repeats.length} item(s) were featured in the last ${days} days of ${spec.cadence}/${spec.track} issues:\n${detail}\nSwap these for sources not yet covered and re-run.`
+    );
+  }
+}
+
 async function publish(spec) {
   const slug = spec.slug ?? `${spec.cadence}-${spec.date}`;
   const written = [];
+
+  await assertNoRepeatedItems(spec);
 
   // 1. resolve audio (copy a rendered file in, or use a provided URL)
   let audioUrl = spec.audioUrl;

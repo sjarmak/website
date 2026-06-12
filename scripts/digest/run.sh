@@ -55,6 +55,20 @@ fi
 
 DATE="$(date +%F)"
 WORK="$(mktemp -d)"
+
+# Repeat guard: list every URL featured in this track's recent issues so the
+# generator avoids re-featuring them, and arm the matching publish-time check.
+# Curated runs are hand-picked and exempt.
+if [ "$MODE" != "curated" ]; then
+  case "$CADENCE" in
+    daily)  REPEAT_GUARD_DAYS=7 ;;
+    weekly) REPEAT_GUARD_DAYS=28 ;;
+  esac
+  node scripts/digest/recent-coverage.mjs --cadence "$CADENCE" --track "$TRACK" \
+    --days "$REPEAT_GUARD_DAYS" --before "$DATE" > "$WORK/recent-coverage.md"
+  export DIGEST_REPEAT_GUARD_DAYS="$REPEAT_GUARD_DAYS"
+fi
+
 LOG_DIR="$WEBSITE_DIR/.digest-runs"
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/${MODE}-$(date +%Y%m%d-%H%M%S).log"

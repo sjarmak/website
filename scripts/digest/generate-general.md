@@ -77,7 +77,14 @@ reference (summary, title, body, transcript) to the window you actually pulled f
    `semantic_search_items` for one or two conceptual angles ("what practitioners think
    about X"). Use `get_item` to read the full text of anything you'll quote or lean on.
 
-4. **Select.** Choose **{{ITEM_RANGE}}** items, ordered by social signal x utility, the
+4. **Select.** First read `{{WORK}}/recent-coverage.md` — every URL featured by this
+   track's recent issues. Coverage is one-shot: never feature a listed URL again, even if
+   it is still the loudest thing in the window. An ongoing story may return only when there
+   is a genuinely new development, featured through a NEW source URL, with the prior
+   coverage mentioned in a clause, not re-walked. The publish step rejects any spec that
+   repeats a listed URL.
+
+   Then choose **{{ITEM_RANGE}}** items, ordered by social signal x utility, the
    single biggest story first. Collapse multi-source stories into ONE item: feature the
    most substantive source (a lab post or in-depth review beats a retweet) and weave the
    convergence into the prose ("Devin, GitLab, and AWS shipped support the same day").
@@ -138,5 +145,6 @@ reference (summary, title, body, transcript) to the window you actually pulled f
 
 - Stay within ~30 tool calls; this is a routine job, not deep research.
 - Never invent items, URLs, or quotes — everything traces to an MCP item.
+- Never feature a URL listed in `{{WORK}}/recent-coverage.md` — publishing rejects repeats.
 - If the window is genuinely empty, write a 2-line "quiet day" issue with no podcast
   (skip steps 6 and 8) rather than fabricating content.
