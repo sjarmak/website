@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Local-cron runner for the digest pipeline. Generates one issue via `claude -p`
-# (which reaches the code-intel-copilot MCP from ~/.claude.json), then commits and
+# Local-cron runner for the digest pipeline. Generates one issue via `claude-auto -p`
+# (routes to the least-loaded Claude account so a capped account doesn't kill the
+# run; every account home carries the code-intel-copilot MCP), then commits and
 # — only when DIGEST_PUSH=1 — pushes so the site rebuilds.
 #
 #   scripts/digest/run.sh daily            # specialized: site's core topics
@@ -13,6 +14,7 @@
 #   OPENAI_API_KEY  (required — used by tts-render.mjs)
 #   DIGEST_PUSH=1   (optional — push after commit; default off so you can validate first)
 #   CLAUDE_FLAGS    (optional — override the claude -p permission flags; see README)
+#   CLAUDE_BIN      (optional — claude binary/router; default claude-auto)
 #   WEBSITE_DIR     (optional — defaults to this repo)
 set -euo pipefail
 
@@ -83,9 +85,11 @@ PROMPT="$(sed \
 
 CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,Write,Read,Edit,mcp__code-intel-copilot__search_items,mcp__code-intel-copilot__semantic_search_items,mcp__code-intel-copilot__aggregate_items,mcp__code-intel-copilot__get_item,mcp__code-intel-copilot__mirror_status}"
 
-echo "[digest] ${MODE} ${DATE} — generating (work=${WORK})" | tee "$LOG"
+CLAUDE_BIN="${CLAUDE_BIN:-claude-auto}"
+
+echo "[digest] ${MODE} ${DATE} — generating (work=${WORK}, via ${CLAUDE_BIN})" | tee "$LOG"
 # shellcheck disable=SC2086
-claude -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
+"$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
 git add src/content/digest public/media/digests 2>/dev/null || true
 if git diff --cached --quiet; then

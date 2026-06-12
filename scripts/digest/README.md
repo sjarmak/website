@@ -3,7 +3,7 @@
 Generates a navigable, filterable library of digest **newsletters + podcasts** on the
 site (`/digest`). Two producers, one library:
 
-- **Automated** — a local cron runs `claude -p` against the `code-intel-copilot` MCP,
+- **Automated** — a local cron runs `claude-auto -p` (multi-account router) against the `code-intel-copilot` MCP,
   selects items, writes a newsletter + podcast, renders audio, and publishes. Daily
   (~12 min) and weekly (~45 min), each in two tracks:
   - **specialized** (`daily`, `weekly`) — deep on the site's core topics: agentic coding,
@@ -31,8 +31,11 @@ The website side (collection, `/digest` pages, RSS) is already in the repo.
 - **`OPENAI_API_KEY`** — required (TTS). The digest repo already uses OpenAI for embeddings.
 - **`ffmpeg`** — recommended. Without it `tts-render.mjs` falls back to binary MP3 concat
   (works, but can have minor seam glitches). `sudo apt install ffmpeg`.
-- **`claude` CLI** (`~/.local/bin/claude`) with the `code-intel-copilot` MCP — already
-  configured in `~/.claude.json`, so `claude -p` reaches it from any cwd.
+- **`claude-auto`** (`~/.local/bin/claude-auto`) — picks the least-loaded Claude account
+  from `~/.claude-usage/usage_cache.json` (kept fresh by the `claude-refresh-all` cron) and
+  launches via `claude-account`, so one capped account doesn't kill the run. Every account
+  home in `~/.claude-homes/` carries the `code-intel-copilot` MCP. Override with
+  `CLAUDE_BIN=claude` to pin the default account.
 - **git push credentials** for this repo (only needed once you enable `DIGEST_PUSH=1`).
 
 ## Step 0 — validate before scheduling (do this first)
