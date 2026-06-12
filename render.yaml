@@ -5,6 +5,11 @@ services:
     runtime: static
     name: sjarmak-ai
     branch: main
+    # Deploy only after GitHub CI (astro check + build) passes — gates broken
+    # commits out of production while keeping direct pushes (digest cron) as
+    # the deploy trigger. Render skips commits with zero checks; ci.yml runs
+    # on every push to main, so digest pushes always carry a check.
+    autoDeployTrigger: checksPass
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     pullRequestPreviewsEnabled: true
@@ -13,6 +18,7 @@ services:
         - src/**
         - public/**
         - astro.config.mjs
+        - tsconfig.json
         - package.json
         - package-lock.json
     envVars:
