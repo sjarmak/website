@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-12",
-      "attempts": 4
+      "lastAttempt": "2026-06-15",
+      "attempts": 5
     },
     {
       "bibcode": "2026arXiv260612924D",
@@ -37,8 +37,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-12",
-      "attempts": 4
+      "lastAttempt": "2026-06-15",
+      "attempts": 5
     },
     {
       "bibcode": "2026arXiv260613174Z",
@@ -54,8 +54,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-12",
-      "attempts": 1
+      "lastAttempt": "2026-06-15",
+      "attempts": 2
     },
     {
       "bibcode": "2026arXiv260612945C",
@@ -78,8 +78,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-12",
-      "attempts": 1
+      "lastAttempt": "2026-06-15",
+      "attempts": 2
     },
     {
       "bibcode": "2026arXiv260613598T",
@@ -100,7 +100,55 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-12",
+      "lastAttempt": "2026-06-15",
+      "attempts": 2
+    },
+    {
+      "bibcode": "2026arXiv260614470S",
+      "arxiv": "2606.14470",
+      "title": "GitOfThoughts: Version-Controlled Reasoning and Agent Memory You Can Replay, Diff, and Merge",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "architectures",
+            "eval-methodology"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "substrate",
+            "evaluation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-15",
+      "lastAttempt": "2026-06-15",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260614571L",
+      "arxiv": "2606.14571",
+      "title": "StreamMemBench: Streaming Evaluation of Agent Memory for Future-Oriented Assistance",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "benchmarks-catalog",
+            "eval-methodology",
+            "applications-personalization"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "evaluation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-15",
+      "lastAttempt": "2026-06-15",
       "attempts": 1
     }
   ]
