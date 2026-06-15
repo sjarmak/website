@@ -1,0 +1,539 @@
+{
+  "id": "agentic-information-retrieval",
+  "title": "Agentic Information Retrieval",
+  "blurb": "How LLM agents find information — from dense retrieval and RAG to reasoning-intensive retrieval and test-time compute for ranking.",
+  "learningSlug": "agentic-information-retrieval",
+  "homepage": "/library/explorers/agentic-information-retrieval",
+  "paperCount": 19,
+  "themeCount": 4,
+  "papers": [
+    {
+      "bibcode": "2020arXiv200404906K",
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "firstAuthor": "Karpukhin",
+      "year": 2020,
+      "citationCount": 828,
+      "arxiv": "2004.04906",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Learns dense bi-encoder embeddings for questions and passages, beating BM25 on open-domain QA retrieval.",
+          "why": "Established the dense-retrieval paradigm every later neural retriever and RAG system builds on."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv200511401L",
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "firstAuthor": "Lewis",
+      "year": 2020,
+      "citationCount": 1002,
+      "arxiv": "2005.11401",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Couples a seq2seq generator with a non-parametric DPR index, retrieving passages to condition generation.",
+          "why": "Named and defined retrieval-augmented generation — the architecture the whole agentic-IR stack extends."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221210496G",
+      "title": "Precise Zero-Shot Dense Retrieval without Relevance Labels",
+      "firstAuthor": "Gao",
+      "year": 2022,
+      "citationCount": 128,
+      "arxiv": "2212.10496",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Has an LLM write a hypothetical answer document, embeds that, and retrieves real neighbors — with zero relevance labels.",
+          "why": "First clean proof that LLM generation at query time can replace supervised dense retrieval; a precursor to query-expansion-as-reasoning."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231210997G",
+      "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "firstAuthor": "Gao",
+      "year": 2023,
+      "citationCount": 1060,
+      "arxiv": "2312.10997",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Maps the RAG design space across naive, advanced, and modular paradigms with a retrieval/augmentation/generation taxonomy.",
+          "why": "The reference map for where any retrieval technique sits inside the RAG pipeline."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221003629Y",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "firstAuthor": "Yao",
+      "year": 2022,
+      "citationCount": 1216,
+      "arxiv": "2210.03629",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Interleaves chain-of-thought reasoning with tool actions like search, so the model plans, acts, and observes in a loop.",
+          "why": "The foundational pattern for agentic search: retrieval becomes an action the model decides to take, not a fixed preprocessing step."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221210509T",
+      "title": "Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions",
+      "firstAuthor": "Trivedi",
+      "year": 2022,
+      "citationCount": 134,
+      "arxiv": "2212.10509",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Interleaves retrieval with each chain-of-thought step for multi-hop questions, using partial reasoning to drive the next query.",
+          "why": "Showed multi-hop retrieval must be reasoning-guided and iterative, not single-shot — the seed of reasoning-intensive retrieval."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230506983J",
+      "title": "Active Retrieval Augmented Generation",
+      "firstAuthor": "Jiang",
+      "year": 2023,
+      "citationCount": 204,
+      "arxiv": "2305.06983",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Actively decides when to retrieve by watching for low-confidence tokens, then retrieves using the upcoming sentence as the query.",
+          "why": "Made retrieval timing itself a model decision, closing the gap between 'always retrieve' and 'never retrieve.'"
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231011511A",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "firstAuthor": "Asai",
+      "year": 2023,
+      "citationCount": 333,
+      "arxiv": "2310.11511",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Trains the model to emit reflection tokens that decide when to retrieve and critique whether passages are relevant and supported.",
+          "why": "Folded retrieval control and self-critique into the model's own decoding — an early test-time-compute-for-retrieval signal."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250309516J",
+      "title": "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning",
+      "firstAuthor": "Jin",
+      "year": 2025,
+      "citationCount": 11,
+      "arxiv": "2503.09516",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Uses reinforcement learning to train an LLM to interleave reasoning with live search-engine calls, learning when and what to query.",
+          "why": "Brings the o1/R1-style reasoning-RL recipe to agentic search, optimizing the retrieve-reason loop directly for the answer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250320757H",
+      "title": "MCTS-RAG: Enhancing Retrieval-Augmented Generation with Monte Carlo Tree Search",
+      "firstAuthor": "Hu",
+      "year": 2025,
+      "citationCount": 1,
+      "arxiv": "2503.20757",
+      "url": null,
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Runs Monte Carlo Tree Search over interleaved reasoning and retrieval steps, letting a small model scale inference-time compute.",
+          "why": "Shows search-over-reasoning-paths lets small models rival frontier LLMs on knowledge-intensive tasks — a deliberate test-time-compute lever."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240712883S",
+      "title": "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval",
+      "firstAuthor": "Su",
+      "year": 2024,
+      "citationCount": 27,
+      "arxiv": "2407.12883",
+      "url": null,
+      "branches": [
+        "reasoning-retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "reasoning-retrieval",
+          "takeaway": "A benchmark where relevance requires reasoning rather than keyword or semantic overlap; standard retrievers score poorly.",
+          "why": "Defined the yardstick for reasoning-intensive retrieval and exposed how far embeddings alone fall short."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250420595S",
+      "title": "ReasonIR: Training Retrievers for Reasoning Tasks",
+      "firstAuthor": "Shao",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.20595",
+      "url": null,
+      "branches": [
+        "reasoning-retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "reasoning-retrieval",
+          "takeaway": "First retriever trained specifically for reasoning tasks, via a synthetic pipeline of hard queries and hard negatives; SOTA on BRIGHT.",
+          "why": "Proves retrievers themselves — not just rerankers — can be trained to reason, and that they exploit test-time compute via richer rewritten queries."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240702485Y",
+      "title": "RankRAG: Unifying Context Ranking with Retrieval-Augmented Generation in LLMs",
+      "firstAuthor": "Yu",
+      "year": 2024,
+      "citationCount": 30,
+      "arxiv": "2407.02485",
+      "url": null,
+      "branches": [
+        "reasoning-retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "reasoning-retrieval",
+          "takeaway": "Instruction-tunes a single LLM to both rank contexts and generate the answer, unifying reranking and generation.",
+          "why": "Collapsed reranker and generator into one model — a step toward retrieval as a reasoning capability rather than a separate component."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260500063W",
+      "title": "A Survey of Reasoning-Intensive Retrieval: Progress and Challenges",
+      "firstAuthor": "Wei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.00063",
+      "url": null,
+      "branches": [
+        "reasoning-retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "reasoning-retrieval",
+          "takeaway": "Systematizes reasoning-intensive retrieval: benchmarks organized by domain, and a taxonomy of where and how reasoning enters the pipeline.",
+          "why": "The first roadmap of the exact subfield SID-1 sits in, organizing a fragmented, fast-moving area."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250218418W",
+      "title": "Rank1: Test-Time Compute for Reranking in Information Retrieval",
+      "firstAuthor": "Weller",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2502.18418",
+      "url": null,
+      "branches": [
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "test-time-compute",
+          "takeaway": "The first reranker trained to spend test-time compute: distills R1/o1 reasoning traces so a small model reasons before scoring relevance.",
+          "why": "The direct academic statement of SID-1's thesis — explainable, test-time-compute reranking that generalizes out of distribution."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250403947S",
+      "title": "Distillation and Refinement of Reasoning in Small Language Models for Document Re-ranking",
+      "firstAuthor": "Samarinas",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.03947",
+      "url": null,
+      "branches": [
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "test-time-compute",
+          "takeaway": "Distills then RL-refines reasoning into a 3B reranker that generates relevance explanations at inference; third on BRIGHT, beating 20x-larger models.",
+          "why": "Shows the test-time-compute reranking win survives heavy distillation — small, cheap, explainable rerankers that reason."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260501399P",
+      "title": "Verbal-R3: Verbal Reranker as the Missing Bridge between Retrieval and Reasoning",
+      "firstAuthor": "Park",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.01399",
+      "url": null,
+      "branches": [
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "test-time-compute",
+          "takeaway": "A verbal reranker that reasons in natural language to bridge retrieval and the generator, instead of injecting raw passages.",
+          "why": "Positions reasoning-at-rerank as the missing connective tissue of RAG."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260526352L",
+      "title": "RICE-PO: Turning Retrieval Interactions into Credit Signals for Reasoning Agents",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.26352",
+      "url": null,
+      "branches": [
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "test-time-compute",
+          "takeaway": "Critic-free policy optimization that turns retrieval interactions into localized credit signals for latent reasoning steps.",
+          "why": "Tackles the credit-assignment problem blocking the training of reasoning-based retrieval agents — the next training frontier."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260509100M",
+      "title": "GRC: Unifying Reasoning-Driven Generation, Retrieval and Compression",
+      "firstAuthor": "Miao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.09100",
+      "url": null,
+      "branches": [
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "test-time-compute",
+          "takeaway": "Unifies reasoning-driven generation, retrieval, and compression in one LLM, sharing training across embedding and generative tasks.",
+          "why": "Points toward a single model that retrieves, reasons, and writes — erasing the retriever/generator boundary."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Dense retrieval & RAG foundations",
+      "summary": "Before agents could search, retrieval had to go neural. This theme is the substrate: dense bi-encoders that beat keyword search, the RAG architecture that bolts a retriever onto a generator, and the first hint that LLM generation at query time can stand in for supervised retrieval.",
+      "themes": [
+        "Dense embeddings replace sparse term-matching for open-domain retrieval (DPR).",
+        "Retrieval-augmented generation names the pattern: a non-parametric index conditions a parametric generator (RAG).",
+        "LLM-generated hypothetical documents can drive retrieval with zero relevance labels (HyDE) — the first crack of reasoning into the query."
+      ]
+    },
+    {
+      "key": "agentic-loops",
+      "label": "Agentic search loops",
+      "summary": "Retrieval stops being a fixed preprocessing step and becomes an action the model chooses. The model reasons, decides when and what to retrieve, reads the result, and repeats — culminating in RL-trained agents that optimize the whole retrieve-reason loop for the final answer.",
+      "themes": [
+        "Interleave reasoning and acting so search is a decided action, not a fixed stage (ReAct, IRCoT).",
+        "Let the model control retrieval timing and self-critique what it gets back (FLARE, Self-RAG).",
+        "Train the loop directly with RL or tree search to scale inference-time compute (Search-R1, MCTS-RAG)."
+      ]
+    },
+    {
+      "key": "reasoning-retrieval",
+      "label": "Reasoning-intensive retrieval",
+      "summary": "Some queries are relevant only through a chain of inference, not surface similarity — and ordinary embeddings collapse on them. This theme defines that regime, builds retrievers and rankers trained to reason, and maps the fast-moving subfield as a whole.",
+      "themes": [
+        "A benchmark where relevance is mediated by reasoning, not keyword/semantic overlap (BRIGHT).",
+        "Retrievers and unified rank-and-generate models trained for reasoning, not just factoid lookup (ReasonIR, RankRAG).",
+        "A taxonomy of where and how reasoning enters the retrieval pipeline (RIR survey)."
+      ]
+    },
+    {
+      "key": "test-time-compute",
+      "label": "Test-time compute for ranking",
+      "summary": "The SID-1 thesis as a literature: spend inference-time reasoning to judge relevance, rather than leaning on a static embedding. Rerankers that think before they score, distilled small models that still reason, and the training frontier of crediting the reasoning steps inside a retrieve-reason agent.",
+      "themes": [
+        "A reranker trained to use test-time compute, distilling o1/R1 reasoning traces (Rank1).",
+        "The win survives heavy distillation: a 3B reranker that explains relevance beats 20x-larger models (InteRank).",
+        "Verbal reasoning as the bridge between retrieval and generation, and unifying retrieve-reason-write in one model (Verbal-R3, GRC)."
+      ],
+      "gaps": [
+        "No one routes test-time compute by how reasoning-intensive a query actually is — compute is spent uniformly.",
+        "Credit assignment for the latent reasoning steps of a retrieve-reason agent is barely solved (RICE-PO is an opening move).",
+        "Reasoning-intensive retrieval is still English, text-only — multimodal, code, and scientific regimes lack benchmarks and trained retrievers."
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "2020arXiv200404906K",
+      "Dense Passage Retrieval for Open-Domain QA",
+      "Foundations"
+    ],
+    [
+      "2020arXiv200511401L",
+      "Retrieval-Augmented Generation for Knowledge-Intensive NLP",
+      "Foundations"
+    ],
+    [
+      "2023arXiv231210997G",
+      "Retrieval-Augmented Generation for LLMs: A Survey",
+      "Foundations"
+    ],
+    [
+      "2022arXiv221210496G",
+      "HyDE: Precise Zero-Shot Dense Retrieval",
+      "Foundations"
+    ],
+    [
+      "2022arXiv221003629Y",
+      "ReAct: Synergizing Reasoning and Acting",
+      "Agentic loops"
+    ],
+    [
+      "2022arXiv221210509T",
+      "IRCoT: Interleaving Retrieval with Chain-of-Thought",
+      "Agentic loops"
+    ],
+    [
+      "2023arXiv230506983J",
+      "FLARE: Active Retrieval-Augmented Generation",
+      "Agentic loops"
+    ],
+    [
+      "2023arXiv231011511A",
+      "Self-RAG: Retrieve, Generate, and Critique",
+      "Agentic loops"
+    ],
+    [
+      "2025arXiv250320757H",
+      "MCTS-RAG: RAG with Monte Carlo Tree Search",
+      "Agentic loops"
+    ],
+    [
+      "2025arXiv250309516J",
+      "Search-R1: RL for Reasoning + Search",
+      "Agentic loops"
+    ],
+    [
+      "2024arXiv240712883S",
+      "BRIGHT: A Reasoning-Intensive Retrieval Benchmark",
+      "Reasoning-intensive retrieval"
+    ],
+    [
+      "2024arXiv240702485Y",
+      "RankRAG: Unifying Ranking and Generation",
+      "Reasoning-intensive retrieval"
+    ],
+    [
+      "2025arXiv250420595S",
+      "ReasonIR: Training Retrievers for Reasoning",
+      "Reasoning-intensive retrieval"
+    ],
+    [
+      "2026arXiv260500063W",
+      "A Survey of Reasoning-Intensive Retrieval",
+      "Reasoning-intensive retrieval"
+    ],
+    [
+      "2025arXiv250218418W",
+      "Rank1: Test-Time Compute for Reranking",
+      "Test-time compute"
+    ],
+    [
+      "2025arXiv250403947S",
+      "InteRank: Distilling Reasoning into a 3B Reranker",
+      "Test-time compute"
+    ],
+    [
+      "2026arXiv260501399P",
+      "Verbal-R3: Verbal Reranker as the Bridge",
+      "Test-time compute"
+    ],
+    [
+      "2026arXiv260526352L",
+      "RICE-PO: Credit Signals for Reasoning Agents",
+      "Test-time compute"
+    ],
+    [
+      "2026arXiv260509100M",
+      "GRC: Unifying Generation, Retrieval, Compression",
+      "Test-time compute"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Query-adaptive test-time-compute budgets",
+      "Rank1 and ReasonIR show reasoning lifts retrieval, but compute is spent uniformly. A controller that detects when relevance is inferential — and only then spends reasoning tokens — would make test-time-compute retrieval economical at scale."
+    ],
+    [
+      "Credit assignment for latent reasoning in retrieve-reason agents",
+      "RICE-PO opens this: in an agent that reasons, queries, reads, and re-queries, only the executable actions are directly rewardable. Training the latent reasoning steps that shape retrieval success is largely unsolved."
+    ],
+    [
+      "Reasoning-intensive retrieval beyond English text",
+      "BRIGHT and its successors are English and text-only. Multimodal, code, and scientific-literature retrieval — where relevance is deeply inferential — lack both benchmarks and retrievers trained to reason over them."
+    ],
+    [
+      "Collapsing the retriever/generator boundary",
+      "GRC and RankRAG hint at one model that retrieves, ranks, and writes. The latency, cost, and quality tradeoffs versus a separate dense index plus reranker are unmeasured — and decide whether the boundary should exist at all."
+    ],
+    [
+      "Reasoning chains as a first-class evidence surface",
+      "A test-time-compute reranker produces an explicit relevance rationale for every result. Almost no system exposes these to the user or feeds them to the downstream generator as grounded evidence rather than discarding them."
+    ]
+  ],
+  "practices": []
+}
