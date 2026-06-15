@@ -27,12 +27,57 @@ import sys
 import urllib.parse
 from datetime import date as date_cls
 
+import urllib.request
+
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 KN = os.path.join(ROOT, "src", "data", "knowledge")
 DIGEST_DIR = os.path.join(ROOT, "src", "content", "digest")
+ADS_SEARCH = "https://api.adsabs.harvard.edu/v1/search/query"
+ADS_FIELDS = "bibcode,title,author,year,citation_count,abstract"
+
+
+def ads_token() -> str | None:
+    """ADS personal token from .env, or None (enrichment then degrades to abstract-less)."""
+    env = os.path.join(ROOT, ".env")
+    if not os.path.exists(env):
+        return None
+    for line in open(env):
+        if line.startswith("ADS_API_TOKEN="):
+            return line.split("=", 1)[1].strip().strip("\"'")
+    return None
+
+
+def ads_lookup(arxiv: str | None, bibcode: str | None, tok: str) -> dict:
+    """Resolve a paper's bibcode + abstract via ADS search.
+
+    The ADS search index ingests arXiv eprints well ahead of the SciX MCP, so this
+    recovers bibcodes (and grounds library-relevance in the abstract) for same-day
+    digest papers the MCP cannot yet return. Returns {} on miss/error.
+    """
+    if bibcode:
+        q = f'bibcode:"{bibcode}"'
+    elif arxiv:
+        q = f"arXiv:{arxiv}"
+    else:
+        return {}
+    url = ADS_SEARCH + "?" + urllib.parse.urlencode({"q": q, "fl": ADS_FIELDS, "rows": 1})
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}"})
+    docs = json.load(urllib.request.urlopen(req, timeout=30)).get("response", {}).get("docs", [])
+    if not docs:
+        return {}
+    d = docs[0]
+    authors = d.get("author") or []
+    return {
+        "bibcode": d.get("bibcode"),
+        "title": (d.get("title") or [None])[0],
+        "firstAuthor": authors[0] if authors else "",
+        "year": str(d.get("year")) if d.get("year") else None,
+        "citationCount": d.get("citation_count", 0),
+        "abstract": d.get("abstract") or "",
+    }
 
 
 def parse_frontmatter(path: str) -> dict:
@@ -113,13 +158,27 @@ def main() -> int:
     fm = parse_frontmatter(digest_path)
     mem = load_membership()
     lib_index, exp_index = mem["lib_index"], mem["exp_index"]
+    tok = ads_token()
+    if not tok:
+        print("warning: ADS_API_TOKEN not found — candidates will lack resolved "
+              "bibcodes/abstracts", file=sys.stderr)
 
     candidates = []
     for item in fm.get("items") or []:
         if item.get("category") != "research":
             continue
         ids = ids_from_url(item.get("url", ""))
-        keys = [k for k in (ids["arxiv"], ids["bibcode"]) if k]
+        bibcode, abstract = ids["bibcode"], ""
+        # Resolve bibcode + abstract via ADS (ahead of the SciX MCP for fresh papers).
+        if tok and (ids["arxiv"] or ids["bibcode"]):
+            try:
+                meta = ads_lookup(ids["arxiv"], ids["bibcode"], tok)
+                bibcode = meta.get("bibcode") or bibcode
+                abstract = meta.get("abstract", "")
+            except Exception as exc:  # noqa: BLE001 — degrade per-paper, do not abort the batch
+                print(f"warning: ADS lookup failed for {ids['arxiv'] or ids['bibcode']}: {exc}",
+                      file=sys.stderr)
+        keys = [k for k in (ids["arxiv"], bibcode) if k]
         already_libs = sorted({t for k in keys for t in lib_index.get(k, ())})
         already_exps = sorted({t for k in keys for t in exp_index.get(k, ())})
         candidates.append({
@@ -127,7 +186,8 @@ def main() -> int:
             "url": item.get("url", ""),
             "source": item.get("source", ""),
             "arxiv": ids["arxiv"],
-            "bibcode": ids["bibcode"],
+            "bibcode": bibcode,
+            "abstract": abstract,
             "alreadyInLibraries": already_libs,
             "alreadyInExplorers": already_exps,
         })

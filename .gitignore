@@ -46,3 +46,6 @@ node_modules/
 # knowledge-sync run artifacts: candidates, library proposals, reports, logs
 # (transient — explorer edits + libraries.json are the committed outputs)
 .knowledge-sync/
+
+# python bytecode from the knowledge build scripts
+scripts/knowledge/__pycache__/

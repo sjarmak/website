@@ -61,7 +61,8 @@ echo "[knowledge-sync] ${MODE} ${DATE} — classifying (via ${CLAUDE_BIN})" | te
 
 # Explorer edits are the only committed output; library proposals stay in the
 # gitignored sync dir until the human approves and runs the apply step.
-git add src/data/knowledge/explorers src/data/knowledge/explorers.json src/data/knowledge/paper-synthesis.json 2>/dev/null || true
+git add src/data/knowledge/explorers src/data/knowledge/explorers.json \
+        src/data/knowledge/paper-synthesis.json src/data/knowledge/explorer-pending.json 2>/dev/null || true
 if git diff --cached --quiet; then
   echo "[knowledge-sync] no explorer changes to commit (see $SYNC_DIR/report.md)" | tee -a "$LOG"
 else

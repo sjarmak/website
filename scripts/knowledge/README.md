@@ -34,15 +34,22 @@ What it does:
    the `research` items, extracts each paper's arXiv id / bibcode, and precomputes
    which libraries/explorers already hold it. Writes `.knowledge-sync/<date>/`.
    Exits cleanly (no-op) when there is nothing to consider.
-2. The classifying agent (`sync-knowledge.md`, run via `claude-auto -p`) judges each
-   paper's fit (model decision, conservative) and:
+2. The classifying agent (`sync-knowledge.md`, run via `claude-auto -p`) resolves
+   each paper, judges its fit (model decision, conservative), and:
    - **Libraries → proposals only.** Writes `library-proposals.json`. **Nothing is
-     written to NASA ADS here.**
-   - **Explorers → applied directly.** Appends the paper to the matching
-     `explorers/<id>.json` with per-branch notes, adds a full-text-grounded 4-part
-     synthesis to `paper-synthesis.json`, and reruns `build_explorers.py`.
-3. The orchestrator commits the explorer changes **locally** (never pushes). Library
-   proposals stay in the gitignored `.knowledge-sync/` dir for review.
+     written to NASA ADS here.** Needs only the abstract, so it proceeds immediately.
+   - **Explorers → full-text-grounded, or deferred.** An explorer entry's 4-part
+     synthesis must be grounded in the paper's *body* via `mcp__scix__read_paper`.
+     SciX ingests fresh arXiv papers a few days behind ADS, so when full text is not
+     yet available the paper is **deferred** to `src/data/knowledge/explorer-pending.json`
+     (with its abstract-based explorer/branch classification) instead of being added
+     on weaker grounding. Each run first **backfills** the pending queue — retrying
+     `read_paper` and adding papers whose full text has since appeared — then
+     processes today's candidates. Entries older than 14 days are dropped.
+   - When a paper is added, the agent appends it to the matching `explorers/<id>.json`
+     with per-branch notes + synthesis and reruns `build_explorers.py`.
+3. The orchestrator commits the explorer + pending-queue changes **locally** (never
+   pushes). Library proposals stay in the gitignored `.knowledge-sync/` dir for review.
 
 ### Approving library additions
 
