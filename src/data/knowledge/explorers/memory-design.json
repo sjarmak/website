@@ -1020,6 +1020,93 @@
           "why": "Operational gotcha for anyone assuming a 'local' memory framework is self-contained — the LLM dependency leaks in via extraction/embeddings. Relevant to substrate/privacy and to the zero-LLM designs ([superlocalmemory], [yourmemory]) reacting to exactly this."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260609900W",
+      "title": "Engram: A Bi-Temporal Memory Engine Where a Lean Retrieved Context Beats the Full History",
+      "firstAuthor": "Wang, Liuyin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.09900",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260609900W/abstract",
+      "branches": [
+        "temporal",
+        "retrieval",
+        "representation",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "Facts carry two time axes (valid time vs transaction time); a contradicted fact is invalidated (invalid_at set, supersedes pointer kept), never deleted, so a point-in-time 'as-of' query resolves to whatever was believed true at time T.",
+          "why": "The temporal branch's core problem is keeping a fact's timeline straight under updates. Engram makes bi-temporality first-class rather than bolted-on, which is what its knowledge-update (87.5%) and temporal (81.1%) category scores rest on."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "The read path retrieves through four channels in parallel — dense semantic, BM25 lexical, graph n-hop from query entities, and recency/salience — fuses them with Reciprocal Rank Fusion, then applies an 'as-of' filter and an abstention gate; the assembled context is hybrid (conflict-resolved facts plus raw session chunks) because facts alone lose recall.",
+          "why": "Directly addresses the retrieval branch's move beyond single-channel cosine similarity toward multi-channel fusion, with evidence that the hybrid composition is load-bearing rather than optional."
+        },
+        {
+          "branch": "representation",
+          "takeaway": "Memory is typed: lossless episodes, atomic (subject,predicate,object) facts with embeddings, salience, confidence, and provenance, and a bi-temporal entity-relation graph — not a single flat store.",
+          "why": "A concrete point on the representation spectrum where atomic facts, a knowledge graph, and episodic records coexist, with provenance threaded through every fact."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "A lean ~9.6k-token retrieved slice scores 83.6% on the 500-question LongMemEval_S vs 73.2% for full-context (+10.4 points, McNemar p<10^-6) at ~8x fewer tokens, 0/500 errored; the paper ships a neutral in-repo harness with the official judge baked in, the full-context baseline in every table, and published per-question logs.",
+          "why": "The evaluation branch's exact concern: separating a real accuracy win from a cost story, with a reproducible harness anyone can re-run."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260610677J",
+      "title": "Infini Memory: Maintainable Topic Documents for Long-Term LLM Agent Memory",
+      "firstAuthor": "Ji, Suozhao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10677",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610677J/abstract",
+      "branches": [
+        "representation",
+        "consolidation",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Memory is a library of plain-text topic documents — each topic a maintenance scope grouping related entries — with entry-level metadata signatures <seq,time,source>, avoiding a mandatory vector or graph database.",
+          "why": "A distinct point on the representation spectrum: editable plaintext documents rather than vectors, atomic notes, or KGs, chosen for interpretability and infrastructure simplicity."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "Frequent writes are decoupled from infrequent structural consolidation: new candidates append to a buffer document, then are periodically rewritten, split, updated, and merged into topic documents; removing split-and-merge drops LongMemEval_S accuracy 76.0%->69.3%, hurting knowledge-update and multi-session questions most.",
+          "why": "The consolidation branch's question of when and how to turn raw turns into durable memory — here structural maintenance contributes more (6.7 pts) than the retrieval upgrade (3.3 pts), and neither is sufficient alone."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "At read time an agentic procedure lets the LLM iteratively call memory tools — inspect intermediate results, expand local context around matches, assemble evidence — rather than take a single top-k step; the agentic variant beats a hybrid summary+BM25 reader (79.3% vs 76.0% on LongMemEval_S).",
+          "why": "Addresses the retrieval branch's move beyond fixed top-k toward task-aware, multi-step evidence assembly that returns enough local context instead of isolated fragments."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260610662M",
+      "title": "Decentralized Multi-Agent Systems with Shared Context (DeLM)",
+      "firstAuthor": "Mao, Yuzhen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610662M/abstract",
+      "branches": [
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "multiagent",
+          "takeaway": "A team of agents shares one verified context instead of dumping full traces or routing everything through a main agent; agents read compact gists by default and unfold detail on demand, with admission-time verification gating what enters shared state.",
+          "why": "The multiagent branch's question of keeping long-running agent swarms coherent without dumping chat logs — DeLM's compact, verified, unfoldable shared context is a concrete answer."
+        }
+      ]
     }
   ],
   "sections": [

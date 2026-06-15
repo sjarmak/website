@@ -1924,6 +1924,37 @@
           "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260610662M",
+      "title": "Decentralized Multi-Agent Systems with Shared Context (DeLM)",
+      "firstAuthor": "Mao, Yuzhen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610662M/abstract",
+      "branches": [
+        "foundations",
+        "memory",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Replaces centralized scatter-gather orchestration — a main agent assigns subtasks, waits, and merges — with decentralized coordination: parallel agents asynchronously claim tasks from a shared queue and read/write a shared verified context, removing the central merge/broadcast bottleneck.",
+          "why": "The foundations branch's topology question: DeLM argues centralized MAS parallelize execution but not coordination, and that a shared-state topology scales better as subtask count grows."
+        },
+        {
+          "branch": "memory",
+          "takeaway": "The shared context is the communication substrate: agents write compact verified gists (coarse-to-fine 'unfoldable' — expand to detailed summaries or raw evidence only when needed), and each update is checked against its evidence at admission time so unsupported claims are rejected before becoming reusable problem state.",
+          "why": "The memory-in-MAS branch's exact concern — the shared substrate a team writes to and who governs it; DeLM's admission-time verification is the governance mechanism keeping shared memory trustworthy."
+        },
+        {
+          "branch": "production",
+          "takeaway": "On SWE-bench Verified DeLM reaches 77.4% pass@4 at ~$0.12/task (roughly half the baselines' cost); on LongBench-v2 Multi-Doc QA it leads four frontier model families by up to 5.7 points, with both admission-time verification and hierarchical summarization contributing.",
+          "why": "The production branch's reliability/cost axis — a decentralized topology that improves accuracy while cutting cost."
+        }
+      ]
     }
   ],
   "sections": [

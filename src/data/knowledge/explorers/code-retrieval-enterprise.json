@@ -1656,6 +1656,37 @@
           "why": "Models score higher on the seen subset of HumanEval/MBPP: the empirical case for contamination-proof eval"
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260607297Z",
+      "title": "SWE-Explore: Benchmarking How Coding Agents Explore Repositories",
+      "firstAuthor": "Zhang, Shaoqiu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.07297",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260607297Z/abstract",
+      "branches": [
+        "repo-scale",
+        "techniques",
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "Isolates repository exploration as a standalone task: given an issue and a repo snapshot, an explorer returns a ranked list of line-level code regions under a fixed line budget, scored without writing or validating a patch.",
+          "why": "The repo-scale branch's distinction between reading a file and navigating a repository — SWE-Explore makes line-level navigation a measurable target across retrievers, search agents, and long-context selectors."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "Across lexical/dense retrievers, general coding agents, and specialized localizers, agentic explorers form a clear tier above classical retrieval; file-level localization is already strong for modern methods, but line-level coverage and efficient ranking remain the axes separating state-of-the-art explorers.",
+          "why": "Direct evidence for the techniques ladder — where agentic navigation outperforms lexical/dense retrieval, and where the remaining headroom is (line-level precision, not file-level)."
+        },
+        {
+          "branch": "enterprise",
+          "takeaway": "848 issues across 10 programming languages and 203 repositories, with line-level ground truth distilled from independent successful agent trajectories (kept only when >=2 trajectories resolve the issue); a restricted-context downstream protocol confirms exploration metrics track repair success.",
+          "why": "The enterprise branch's polyglot-scale and evaluation-crisis concerns — trajectory-grounded supervision sidesteps contaminated or tautological ground truth, validated against actual repair."
+        }
+      ]
     }
   ],
   "sections": [

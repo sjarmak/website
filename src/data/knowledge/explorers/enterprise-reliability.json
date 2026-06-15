@@ -979,6 +979,31 @@
           "why": "The practical security checklist for agent systems. 'Excessive agency' and 'prompt injection' map directly to the topology and injection findings above."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260610662M",
+      "title": "Decentralized Multi-Agent Systems with Shared Context (DeLM)",
+      "firstAuthor": "Mao, Yuzhen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610662M/abstract",
+      "branches": [
+        "recovery",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Coordination is state-based, not prompt-routed: intermediate progress persists as compact verified gists in a shared context that later agents read directly, instead of being rewritten into successive prompts and rebroadcast by a controller.",
+          "why": "The recovery branch's thesis that durable state beats conversational handoff — DeLM makes progress survive as reusable problem state rather than living in transient prompt chains."
+        },
+        {
+          "branch": "topology",
+          "takeaway": "Built on two global structures — a shared context C and a task queue T; agents claim ready subtasks, and when the queue empties the last finisher decides whether to enqueue another round: a dynamic task graph rather than a fixed plan.",
+          "why": "The topology branch's preference for dynamic task graphs over static orchestration; DeLM shows the decentralized queue+context topology outperforms centralized scatter-gather on SWE-bench."
+        }
+      ]
     }
   ],
   "sections": [

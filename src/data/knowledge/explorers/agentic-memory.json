@@ -2404,6 +2404,50 @@
           "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260609900W",
+      "title": "Engram: A Bi-Temporal Memory Engine Where a Lean Retrieved Context Beats the Full History",
+      "firstAuthor": "Wang, Liuyin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.09900",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260609900W/abstract",
+      "branches": [
+        "architectures",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Dual-process design: a sub-50ms write path appends lossless episodes with no LLM, while an async consolidation path extracts atomic facts, builds a bi-temporal KG, resolves conflicts cheap-then-escalate (slot/embedding/subsumption checks first, LLM adjudication only for ambiguous cases), and applies salience decay.",
+          "why": "A concrete temporal-KG plus tiered architecture that keeps the LLM off the hot path and resolves contradictions without a per-fact LLM call — the architectures branch's interest in temporal-KG and consolidation/forgetting machinery."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Documents measurement-integrity pitfalls (truncation, home-grown judges, full-history leaks) that let one system report 58/66/92% across sources, and counters them with one in-repo pipeline, the official category judge, the full-context baseline in every table, and published raw logs; every number ships with a reproduce command.",
+          "why": "Squarely the eval-methodology branch — LLM-as-judge reliability and reproducibility — arguing that a re-runnable neutral harness is itself a contribution."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260610677J",
+      "title": "Infini Memory: Maintainable Topic Documents for Long-Term LLM Agent Memory",
+      "firstAuthor": "Ji, Suozhao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10677",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610677J/abstract",
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A text-document memory architecture targeting four failure modes — fragmentation, conflict, compression loss, insufficient retrieval — via topic-scoped documents, buffered writing, and periodic split/merge/update consolidation; 64.7% overall and 81.2% on Accurate Retrieval on MemoryAgentBench.",
+          "why": "An architecture that deliberately avoids vector and graph substrates in favor of inspectable, editable plaintext — a non-parametric alternative the architectures branch tracks."
+        }
+      ]
     }
   ],
   "sections": [
