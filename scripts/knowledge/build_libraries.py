@@ -61,6 +61,8 @@ DESCRIPTIONS = {
     "Benchmarks": "Evaluating coding agents and code models on real software work.",
     "Code Generation & Retrieval": "Code generation, context retrieval, and localization for coding agents.",
     "Agent Memory": "Long-horizon memory for LLM agents: storage, consolidation, and forgetting.",
+    "Multi-Agent Orchestration": "Coordinating multiple LLM agents: controllers, shared context, task decomposition, and communication topologies.",
+    "Code Retrieval & Enterprise Codebases": "Finding and navigating code at repository and enterprise scale for coding agents.",
 }
 ORDER = ["Coding Agents", "Benchmarks", "Code Generation & Retrieval", "Agent Memory", "Scientific Search & SciX"]
 
