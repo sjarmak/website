@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-11",
-      "attempts": 3
+      "lastAttempt": "2026-06-12",
+      "attempts": 4
     },
     {
       "bibcode": "2026arXiv260612924D",
@@ -37,8 +37,71 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-11",
-      "attempts": 3
+      "lastAttempt": "2026-06-12",
+      "attempts": 4
+    },
+    {
+      "bibcode": "2026arXiv260613174Z",
+      "arxiv": "2606.13174",
+      "title": "Getting Better at Working With You: Compiling User Corrections into Runtime Enforcement for Coding Agents (TRACE)",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "procedural-skills",
+            "applications-personalization"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-12",
+      "lastAttempt": "2026-06-12",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260612945C",
+      "arxiv": "2606.12945",
+      "title": "Learning What to Remember: A Cognitively Grounded Multi-Factor Value Model for Agentic Memory",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "forgetting",
+            "eval-methodology"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "forgetting",
+            "consolidation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-12",
+      "lastAttempt": "2026-06-12",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260613598T",
+      "arxiv": "2606.13598",
+      "title": "Reward Modeling for Multi-Agent Orchestration (OrchRM)",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-12",
+      "lastAttempt": "2026-06-12",
+      "attempts": 1
     }
   ]
 }

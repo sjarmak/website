@@ -1687,6 +1687,37 @@
           "why": "The enterprise branch's polyglot-scale and evaluation-crisis concerns — trajectory-grounded supervision sidesteps contaminated or tautological ground truth, validated against actual repair."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260611864Z",
+      "title": "CORE-Bench: A Comprehensive Benchmark for Code Retrieval in the Era of Agentic Coding",
+      "firstAuthor": "Zhang, Fuwei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.11864",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260611864Z/abstract",
+      "branches": [
+        "foundations",
+        "repo-scale",
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Reframes code retrieval for agentic coding as requirement-driven repository search rather than query-to-snippet matching: real development requests carry a large intent-to-implementation gap, and the evidence needed for a change is scattered across code, configuration, dependencies, and docs instead of sitting in one function.",
+          "why": "Direct support for the foundations claim that code retrieval breaks classical text-IR assumptions — the vocabulary/intent mismatch and structurally-spread meaning show up here as a measurable benchmark gap that docstring-to-function tasks miss."
+        },
+        {
+          "branch": "repo-scale",
+          "takeaway": "Each query is grounded in a concrete repository snapshot checked out to the commit immediately before its PR, and scoring rewards retrieving the multiple chunks an edit touches plus the broader context an agent browses — 632 repositories and 9.38M chunks at Level-2, with dense in-repository distractors.",
+          "why": "Operationalizes the repo-scale branch's 'a repository is a world you navigate': retrieval is measured over repository state with multi-target localization, the regime agent harnesses currently handle through iterative ls/grep/find rather than a single embedding lookup."
+        },
+        {
+          "branch": "enterprise",
+          "takeaway": "Embedding retrievers that score well on traditional code search collapse on the agentic levels — Qwen3-Embedding-8B falls from 71.7 NDCG@10 on Level-1 to 20.3 on Level-2 and 34.4 on Level-3 — and in-domain SFT on GitHub PR supervision helps across every difficulty regime but Recall@100 still drops as corpora grow denser and larger.",
+          "why": "Speaks to the enterprise branch's evaluation crisis: the benchmark builds temporally grounded, anti-leakage corpora (pre-PR checkout, LLM filtering of answer-leaking descriptions) and shows that standard code-search scores overstate a retriever's real usefulness to a coding agent."
+        }
+      ]
     }
   ],
   "sections": [
