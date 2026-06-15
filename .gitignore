@@ -42,3 +42,7 @@ node_modules/
 
 # local digest pipeline run logs + handoff JSON (machine-local, transient)
 .digest-runs/
+
+# knowledge-sync run artifacts: candidates, library proposals, reports, logs
+# (transient — explorer edits + libraries.json are the committed outputs)
+.knowledge-sync/

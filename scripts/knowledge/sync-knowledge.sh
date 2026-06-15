@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Daily knowledge-sync check. After the specialized daily digest publishes, decide
+# whether the papers it cited belong in the curated NASA ADS/SciX libraries and the
+# thematic explorers:
+#   - library additions  -> written as PROPOSALS for human review (nothing touches
+#     ADS here; apply later with apply_library_proposals.py)
+#   - explorer additions -> applied directly to the in-repo explorer source files +
+#     grounded synthesis, then committed LOCALLY (never pushed)
+#
+#   scripts/knowledge/sync-knowledge.sh                 # today's daily digest
+#   scripts/knowledge/sync-knowledge.sh --date 2026-06-14
+#   scripts/knowledge/sync-knowledge.sh --mode weekly --date 2026-06-15
+#
+# Env mirrors the digest runner:
+#   CLAUDE_BIN     (default claude-auto — least-loaded-account router)
+#   CLAUDE_FLAGS   (override the claude -p permission flags)
+#   WEBSITE_DIR    (default this repo)
+set -euo pipefail
+
+MODE="daily"
+DATE="$(date +%F)"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --mode) MODE="$2"; shift 2 ;;
+    --date) DATE="$2"; shift 2 ;;
+    *) echo "usage: sync-knowledge.sh [--mode daily] [--date YYYY-MM-DD]" >&2; exit 2 ;;
+  esac
+done
+
+WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
+cd "$WEBSITE_DIR"
+
+SYNC_DIR="$WEBSITE_DIR/.knowledge-sync/$DATE"
+mkdir -p "$SYNC_DIR"
+LOG="$SYNC_DIR/run-$(date +%Y%m%d-%H%M%S).log"
+
+# Deterministic prep: extract the digest's research items + targets/membership.
+# Exit 3 means "nothing to consider" — a clean no-op, not a failure.
+set +e
+python3 scripts/knowledge/sync_candidates.py --date "$DATE" --mode "$MODE" --out "$SYNC_DIR" 2>&1 | tee "$LOG"
+PREP=${PIPESTATUS[0]}
+set -e
+if [ "$PREP" = "3" ]; then
+  echo "[knowledge-sync] no research candidates for ${MODE}-${DATE} — nothing to do" | tee -a "$LOG"
+  exit 0
+fi
+[ "$PREP" = "0" ] || { echo "[knowledge-sync] candidate extraction failed (exit $PREP)" | tee -a "$LOG"; exit "$PREP"; }
+
+PROMPT="$(sed \
+  -e "s|{{DATE}}|${DATE}|g" \
+  -e "s|{{SYNC_DIR}}|${SYNC_DIR}|g" \
+  -e "s|{{WEBSITE_DIR}}|${WEBSITE_DIR}|g" \
+  "scripts/knowledge/sync-knowledge.md")"
+
+CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,Write,Read,Edit,mcp__scix__get_paper,mcp__scix__read_paper,mcp__scix__search}"
+CLAUDE_BIN="${CLAUDE_BIN:-claude-auto}"
+
+echo "[knowledge-sync] ${MODE} ${DATE} — classifying (via ${CLAUDE_BIN})" | tee -a "$LOG"
+# shellcheck disable=SC2086
+"$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
+
+# Explorer edits are the only committed output; library proposals stay in the
+# gitignored sync dir until the human approves and runs the apply step.
+git add src/data/knowledge/explorers src/data/knowledge/explorers.json src/data/knowledge/paper-synthesis.json 2>/dev/null || true
+if git diff --cached --quiet; then
+  echo "[knowledge-sync] no explorer changes to commit (see $SYNC_DIR/report.md)" | tee -a "$LOG"
+else
+  git commit -q -m "content(knowledge): explorer sync ${MODE} ${DATE}"
+  echo "[knowledge-sync] committed explorer updates locally (not pushed)" | tee -a "$LOG"
+fi
+
+if [ -f "$SYNC_DIR/library-proposals.json" ]; then
+  N=$(python3 -c "import json,sys;print(len(json.load(open('$SYNC_DIR/library-proposals.json')).get('proposals',[])))" 2>/dev/null || echo "?")
+  echo "[knowledge-sync] ${N} library proposal(s) await review: $SYNC_DIR/library-proposals.json" | tee -a "$LOG"
+  echo "[knowledge-sync] review, then: python3 scripts/knowledge/apply_library_proposals.py --date ${DATE} --apply" | tee -a "$LOG"
+fi
+echo "[knowledge-sync] report: $SYNC_DIR/report.md" | tee -a "$LOG"

@@ -76,18 +76,24 @@ def curate(libs: list[dict]) -> list[dict]:
 
     for disp, (sources, desc) in MERGE.items():
         papers, seen, public = [], set(), False
+        ads_ids: list[str] = []
         for s in sources:
             L = by_name.get(s)
             if not L:
                 continue
             merged_sources.add(s)
+            ads_ids.append(L["id"])
             public = public or L["public"]
             for p in L["papers"]:
                 if p["bibcode"] not in seen:
                     seen.add(p["bibcode"])
                     papers.append(p)
         papers.sort(key=lambda p: (p.get("pubdate") or ""), reverse=True)
+        # adsLibraryId is the write target for the knowledge-sync apply step; for a
+        # merged display library it is the first source library (the others stay in
+        # adsLibraryIds for reference).
         curated.append({"id": slug(disp), "name": disp, "description": desc,
+                        "adsLibraryId": ads_ids[0] if ads_ids else None, "adsLibraryIds": ads_ids,
                         "public": public, "numDocuments": len(papers), "papers": papers})
 
     for L in libs:
@@ -95,6 +101,7 @@ def curate(libs: list[dict]) -> list[dict]:
             continue
         name = RENAME.get(L["name"], L["name"])
         curated.append({**L, "id": slug(name), "name": name,
+                        "adsLibraryId": L["id"], "adsLibraryIds": [L["id"]],
                         "description": DESCRIPTIONS.get(name, L["description"])})
 
     rank = {n: i for i, n in enumerate(ORDER)}
