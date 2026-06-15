@@ -1,0 +1,2143 @@
+{
+  "id": "multiagent-orchestration",
+  "title": "Multi-Agent Orchestration",
+  "learningSlug": null,
+  "homepage": "/library/explorers/multiagent-orchestration",
+  "paperCount": 99,
+  "themeCount": 5,
+  "papers": [
+    {
+      "bibcode": "2024arXiv240201680G",
+      "title": "LLM-based Multi-Agents: A Survey of Progress and Challenges",
+      "firstAuthor": "Guo",
+      "year": 2024,
+      "citationCount": 238,
+      "arxiv": "2402.01680",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Canonical survey of LLM multi-agent systems with the field's reference taxonomy of architectures, coordination patterns, and challenges.",
+          "why": "The single best entry point; the map every other paper is read against."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230808155W",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "firstAuthor": "Wu",
+      "year": 2023,
+      "citationCount": 600,
+      "arxiv": "2308.08155",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Introduces the conversable-agent abstraction: agents that send and receive messages, with configurable human and tool participation, composed into flexible conversation patterns.",
+          "why": "The most-cited framework anchor; its primitives recur in every later vendor SDK (now absorbed into Microsoft Agent Framework)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230800352H",
+      "title": "MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework",
+      "firstAuthor": "Hong",
+      "year": 2023,
+      "citationCount": 470,
+      "arxiv": "2308.00352",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Encodes Standard Operating Procedures and a shared message pool so role agents publish structured artifacts (PRDs, designs, code) instead of free chat.",
+          "why": "Hardened role specialization into an org-chart program; its shared message pool is the lineage of the passive-blackboard team-memory pattern."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230514325D",
+      "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
+      "firstAuthor": "Du",
+      "year": 2023,
+      "citationCount": 406,
+      "arxiv": "2305.14325",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Multiple LLM instances propose, critique, and revise across rounds; factuality and reasoning improve over single-model answers.",
+          "why": "Origin of the debate-improves-reasoning lineage that later work both extends (sparse topologies) and rebuts (cost of consensus)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230707924Q",
+      "title": "ChatDev: Communicative Agents for Software Development",
+      "firstAuthor": "Qian",
+      "year": 2023,
+      "citationCount": 382,
+      "arxiv": "2307.07924",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Organizes a virtual software company as a chat-chain of phase-scoped two-agent dialogues (design, code, test, document).",
+          "why": "Society-of-mind made operational; a foundational role-specialization system for software tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230317760L",
+      "title": "CAMEL: Communicative Agents for Mind Exploration of LLM Society",
+      "firstAuthor": "Li",
+      "year": 2023,
+      "citationCount": 210,
+      "arxiv": "2303.17760",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Introduces inception/role-play prompting: an AI-user and an AI-assistant prompt each other into staying on task without human turn-by-turn steering.",
+          "why": "The oldest role-specialization pattern in the corpus; seeds the autonomous role-play paradigm."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230810848C",
+      "title": "AgentVerse: Facilitating Multi-Agent Collaboration and Exploring Emergent Behaviors",
+      "firstAuthor": "Chen",
+      "year": 2023,
+      "citationCount": 178,
+      "arxiv": "2308.10848",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A framework for assembling collaborating role agents that studies the emergent collaborative behaviors arising when agents work as a group.",
+          "why": "Early evidence that group dynamics, not just individual capability, shape multi-agent outcomes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230603314T",
+      "title": "Multi-Agent Collaboration: Harnessing the Power of Intelligent LLM Agents",
+      "firstAuthor": "Talebirad",
+      "year": 2023,
+      "citationCount": 130,
+      "arxiv": "2306.03314",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A blueprint for coordinating intelligent LLM agents, naming the building blocks of collaboration and control.",
+          "why": "An early coordination blueprint that frames the design space the topology zoo later fills in."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231002170L",
+      "title": "Dynamic LLM-Powered Agent Network for Task-Oriented Agent Collaboration (DyLAN)",
+      "firstAuthor": "Liu",
+      "year": 2023,
+      "citationCount": 95,
+      "arxiv": "2310.02170",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Activates and connects agents dynamically based on the task rather than a fixed wiring, with an inference-time agent-importance score for team selection.",
+          "why": "The corpus anchor for dynamic topology / routing — the precursor to adaptive, query-conditioned orchestration."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240611776L",
+      "title": "Improving Multi-Agent Debate with Sparse Communication Topology",
+      "firstAuthor": "Li",
+      "year": 2024,
+      "citationCount": 10,
+      "arxiv": "2406.11776",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Shows that all-to-all debate is wasteful: a sparse communication topology preserves most of the reasoning benefit at a fraction of the token cost.",
+          "why": "The standing rebuttal to dense-debate defaults; couples topology choice to cost directly."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241104468F",
+      "title": "Magentic-One: A Generalist Multi-Agent System for Solving Complex Tasks",
+      "firstAuthor": "Fourney",
+      "year": 2024,
+      "citationCount": 25,
+      "arxiv": "2411.04468",
+      "url": null,
+      "branches": [
+        "foundations",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Reference orchestrator-worker architecture: a lead Orchestrator maintains task and progress ledgers, dispatches to specialist workers (web surfer, coder, file navigator), and re-plans when stuck.",
+          "why": "The canonical production topology and the ledger pattern that defines shared working state in a team."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250313657C",
+      "title": "Why Do Multi-Agent LLM Systems Fail? (MAST)",
+      "firstAuthor": "Cemri",
+      "year": 2025,
+      "citationCount": 6,
+      "arxiv": "2503.13657",
+      "url": null,
+      "branches": [
+        "production",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "First systematic 14-category taxonomy of why multi-agent systems fail, built by hand-annotating real traces; failures span specification, inter-agent misalignment, and verification.",
+          "why": "Gives the field named failure modes and shows most production breakage is coordination, not base-model cognition."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241201928M",
+      "title": "MALT: Improving Reasoning with Multi-Agent LLM Training",
+      "firstAuthor": "Motwani",
+      "year": 2024,
+      "citationCount": 8,
+      "arxiv": "2412.01928",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Trains specialized generator, verifier, and refiner roles jointly rather than relying on prompted role-play.",
+          "why": "Pushes role specialization from prompting toward trained division of labor."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250116689C",
+      "title": "MACI: Multi-Agent Collaborative Intelligence for Adaptive Reasoning and Temporal Planning",
+      "firstAuthor": "Chang",
+      "year": 2025,
+      "citationCount": 3,
+      "arxiv": "2501.16689",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A meta-planner coordinates collaborative agents for adaptive reasoning and temporal planning over constraints.",
+          "why": "Treats planning itself as a coordinated meta-layer rather than a single agent's job."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240204578C",
+      "title": "S-Agents: Self-organizing Agents in Open-ended Environments",
+      "firstAuthor": "Chen",
+      "year": 2024,
+      "citationCount": 15,
+      "arxiv": "2402.04578",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Self-organizes agents into a tree-of-agents structure for open-ended environments without a fixed central controller.",
+          "why": "A swarm/decentralized point in the topology zoo; coordination emerges from local structure."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231215224L",
+      "title": "Hierarchical Language Agent for Real-time Human-AI Coordination",
+      "firstAuthor": "Liu",
+      "year": 2023,
+      "citationCount": 18,
+      "arxiv": "2312.15224",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A hierarchical agent architecture that meets real-time latency constraints in human-AI coordination.",
+          "why": "Shows hierarchy as a lever for latency and responsiveness, not just organizational tidiness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250307675Y",
+      "title": "DynTaskMAS: Dynamic Task-Graph LLM Multi-Agent System",
+      "firstAuthor": "Yu",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.07675",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Decomposes work into an asynchronous task-graph so independent sub-tasks run in parallel rather than in a serial chat.",
+          "why": "Moves orchestration from chat sequences toward true parallel dataflow."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250400587Y",
+      "title": "AgentNet: Decentralized Evolutionary Coordination for LLM-based Multi-Agent Systems",
+      "firstAuthor": "Yang",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2504.00587",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A decentralized scheme where agents evolve their connections over time, adapting the coordination graph without central control.",
+          "why": "An evolutionary take on decentralized topology — the network learns its own wiring."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260503310N",
+      "title": "Coordination as an Architectural Layer for LLM Multi-Agent Systems",
+      "firstAuthor": "Nechepurenko",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.03310",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Argues coordination should be a first-class architectural layer rather than an emergent side effect of prompting.",
+          "why": "Names the design move the whole field is converging on: make coordination explicit and inspectable."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260409703L",
+      "title": "Cayley Graph Optimization for Scalable MAS Communication Topologies",
+      "firstAuthor": "Luo",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.09703",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Uses Cayley-graph structure to design communication topologies that scale efficiently as agent count grows.",
+          "why": "A principled, mathematically-grounded approach to the topology-scalability problem."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260513850H",
+      "title": "A Two-Dimensional Framework for AI Agent Design Patterns",
+      "firstAuthor": "Huang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.13850",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Organizes the space of agent design patterns along two axes, producing a structured pattern taxonomy.",
+          "why": "The right citation for 'here is the map of all the patterns' — a modern pattern catalogue."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260507935X",
+      "title": "TraceFix: Repairing Agent Coordination Protocols with TLA+",
+      "firstAuthor": "Xia",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.07935",
+      "url": null,
+      "branches": [
+        "frontier",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Models an agent coordination protocol in TLA+ and automatically finds and repairs coordination bugs the way model checkers find deadlocks in distributed protocols.",
+          "why": "The most direct import of classical formal methods; partial answer to 'can we prove a handoff is safe.'"
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260409744Q",
+      "title": "MPAC: Multi-Principal Agent Coordination Protocol",
+      "firstAuthor": "Qian",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.09744",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A multi-principal coordination layer that sits above tool/messaging protocols like MCP and A2A to coordinate agents serving different principals.",
+          "why": "Addresses interoperability and trust when agents answer to multiple owners."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260502431W",
+      "title": "ARIADNE: Blackboard-Driven Monte-Carlo Tree Search for Multi-Agent Reasoning",
+      "firstAuthor": "Wei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.02431",
+      "url": null,
+      "branches": [
+        "foundations",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Drives a Monte-Carlo tree search over a shared blackboard that agents read and write rather than messaging each other directly.",
+          "why": "A modern instantiation of the classic blackboard/shared-workspace architecture; sits on the passive-substrate side of the team-memory debate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260522721H",
+      "title": "Self-Evolving Multi-Agent Systems via Decentralized Memory",
+      "firstAuthor": "Hao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.22721",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Fuses agent-memory and MAS: persistent decentralized team state lets a multi-agent system self-evolve, weighing shared versus per-agent memory.",
+          "why": "Directly bridges the agentic-memory and multi-agent series — team state as the substrate of self-improvement."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250406135H",
+      "title": "SHIMI: Semantic Hierarchical Memory Index for Collective Agent Memory",
+      "firstAuthor": "Helmi",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.06135",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "A semantic hierarchical memory index used as collective memory, synchronized across nodes via a Merkle-DAG + CRDT scheme so the shared store converges without a central coordinator.",
+          "why": "Shows collective memory can be both structured and decentralized-consistent at once."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240614928L",
+      "title": "iAgents: Collaborative Task Completion under Information Asymmetry",
+      "firstAuthor": "Liu",
+      "year": 2024,
+      "citationCount": 7,
+      "arxiv": "2406.14928",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Studies what each agent knows versus what it must communicate when information is asymmetrically distributed across a team.",
+          "why": "Reframes communication as the explicit transfer of privately-held knowledge — a core team-memory question."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241102820L",
+      "title": "DroidSpeak: KV Cache Sharing for Cross-LLM Communication",
+      "firstAuthor": "Liu",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2411.02820",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "When agents share a base model, KV caches can be shared across them to cut cross-LLM communication cost — shared memory at the attention-state level.",
+          "why": "The lowest, most literal tier of shared memory; trades text-passing for substrate-level state."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260522786A",
+      "title": "LCGuard: Safe KV Cache Sharing in Multi-Agent Systems",
+      "firstAuthor": "Asif",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.22786",
+      "url": null,
+      "branches": [
+        "memory",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Treats shared KV-cache representations as an attack surface and guards them, the safety counterweight to DroidSpeak-style sharing.",
+          "why": "Shows that the cheapest shared-memory tier is also a new security boundary."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241016237M",
+      "title": "IBGP: Imperfect Byzantine Generals Problem for Multi-Agent Robustness",
+      "firstAuthor": "Mao",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2410.16237",
+      "url": null,
+      "branches": [
+        "memory",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Frames error propagation in agent teams as an imperfect Byzantine-generals consensus problem.",
+          "why": "Imports classical fault-tolerance theory to reason about how bad outputs spread and can be contained."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407775A",
+      "title": "ACIArena: Evaluating Agent Cascading Injection",
+      "firstAuthor": "An",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07775",
+      "url": null,
+      "branches": [
+        "production",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A benchmark for agent cascading injection — how an injected instruction propagates through shared context from one agent to the next.",
+          "why": "Quantifies error/attack propagation via the shared substrate, the dark side of team memory."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408963L",
+      "title": "Aligned Agents, Biased Swarm: Bias Amplification in Multi-Agent Systems",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08963",
+      "url": null,
+      "branches": [
+        "frontier",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Shows individually aligned agents can produce a biased swarm: bias is amplified through memory-mediated interaction even when each agent is fine.",
+          "why": "Refutes any deployment story built on 'each agent is individually safe'; per-agent alignment does not compose."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260604197M",
+      "title": "Topology and Memory of Consensus among LLM Agents",
+      "firstAuthor": "Mehdizadeh",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.04197",
+      "url": null,
+      "branches": [
+        "memory",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Studies how communication topology and agent memory jointly shape whether a team reaches consensus.",
+          "why": "Makes explicit that memory and topology interact — neither can be tuned in isolation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241008948F",
+      "title": "The Dynamics of Social Conventions in LLM Populations",
+      "firstAuthor": "Flint Ashery",
+      "year": 2024,
+      "citationCount": 3,
+      "arxiv": "2410.08948",
+      "url": null,
+      "branches": [
+        "memory",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Documents how social conventions emerge from accumulated interaction memory in populations of LLM agents.",
+          "why": "Evidence that norms precipitate out of a shared memory substrate over time."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024Entrp..26.1092T",
+      "title": "Spontaneous Emergence of Agent Individuality through Social Interactions in LLM-Based Communities",
+      "firstAuthor": "Takata",
+      "year": 2024,
+      "citationCount": 2,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Distinct agent identities emerge spontaneously from accumulated interaction memory in LLM communities.",
+          "why": "Identity, like convention, is shown to be a downstream product of memory accumulation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240907429Z",
+      "title": "Agent Workflow Memory",
+      "firstAuthor": "Wang",
+      "year": 2024,
+      "citationCount": 35,
+      "arxiv": "2409.07429",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Distills reusable procedural routines (workflows) from past trajectories so agents stop re-deriving the same multi-step procedures.",
+          "why": "Seeds the procedural/workflow tier of team memory that later shared-repo systems scale across users."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230519118L",
+      "title": "Encouraging Divergent Thinking in LLMs through Multi-Agent Debate",
+      "firstAuthor": "Liang",
+      "year": 2023,
+      "citationCount": 248,
+      "arxiv": "2305.19118",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Uses multi-agent debate to counter the degeneration-of-thought problem and encourage divergent reasoning.",
+          "why": "A high-citation debate result showing communication itself is a coordination mechanism against premature convergence."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230913007C",
+      "title": "ReConcile: Round-Table Conference Improves Reasoning via Consensus among Diverse LLMs",
+      "firstAuthor": "Chen",
+      "year": 2023,
+      "citationCount": 55,
+      "arxiv": "2309.13007",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A round-table consensus protocol among diverse LLMs that share deliberation and revise toward agreement.",
+          "why": "An early structured-consensus method and shared-deliberation-memory pattern."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240815247D",
+      "title": "AutoGen Studio: A No-Code Developer Tool for Building and Debugging Multi-Agent Systems",
+      "firstAuthor": "Dibia",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2408.15247",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A no-code tool for building, debugging, and inspecting multi-agent message flow and state on top of AutoGen.",
+          "why": "Tooling for the message-flow/state layer — making coordination observable to builders."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250202533Z",
+      "title": "Multi-Agent Design: Optimizing Agents with Better Prompts and Topologies",
+      "firstAuthor": "Zhou",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.02533",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Jointly optimizes prompts and communication topologies, showing topology is a first-class lever on performance, not a deployment afterthought.",
+          "why": "Independent corroboration that the wiring, held model fixed, drives outcomes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250205453Y",
+      "title": "Decentralized Generative Agents with Adaptive Hierarchical Knowledge Graph",
+      "firstAuthor": "Yang",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.05453",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Maintains a shared, adaptive hierarchical knowledge graph as collective memory so structured facts persist and compose across agents.",
+          "why": "A structured-knowledge tier of team memory — collective memory as a queryable graph."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241100114A",
+      "title": "Project Sid: Many-Agent Simulations toward AI Civilization",
+      "firstAuthor": "Altera",
+      "year": 2024,
+      "citationCount": 14,
+      "arxiv": "2411.00114",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Scales generative agents to many-agent civilization simulations with institutional memory: laws, roles, and culture that persist beyond any one agent.",
+          "why": "The institutional-memory tier — conventions and identity at population scale."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230403442P",
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "firstAuthor": "Park",
+      "year": 2023,
+      "citationCount": 413,
+      "arxiv": "2304.03442",
+      "url": null,
+      "branches": [
+        "memory",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Establishes the memory-stream-plus-reflection architecture: agents record observations, retrieve by relevance/recency/importance, and synthesize higher-level reflections.",
+          "why": "The memory anchor of the whole field and the crossover point with the agentic-memory series; believable society from memory alone."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221208484J",
+      "title": "Emergent Communication in Multi-Agent Reinforcement Learning Enhances Foraging",
+      "firstAuthor": "Jimenez Romero",
+      "year": 2022,
+      "citationCount": 0,
+      "arxiv": "2212.08484",
+      "url": null,
+      "branches": [
+        "memory",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Pre-LLM result: emergent communication via stigmergy enhances collective foraging in multi-agent RL.",
+          "why": "Roots externalized, environment-mediated coordination (stigmergy) that LLM swarms re-instantiate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv220213456T",
+      "title": "PheroCom: Virtual Pheromone-based Communication for Swarm Coordination",
+      "firstAuthor": "Tinoco",
+      "year": 2022,
+      "citationCount": 0,
+      "arxiv": "2202.13456",
+      "url": null,
+      "branches": [
+        "memory",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Coordinates a swarm through virtual pheromones — externalized collective memory written into a shared field.",
+          "why": "A classic externalized-memory coordination mechanism; ancestor of blackboard/shared-field designs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260509076L",
+      "title": "Robust Multi-Agent LLMs under Byzantine Faults",
+      "firstAuthor": "Lee",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.09076",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Studies and improves reliability of multi-agent LLM systems when some agents are Byzantine-faulty (arbitrarily wrong or adversarial).",
+          "why": "Brings distributed-systems fault tolerance to agent teams as a reliability discipline."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407667F",
+      "title": "From Debate to Decision: Conformal Social Choice for Multi-Agent Consensus",
+      "firstAuthor": "Wang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07667",
+      "url": null,
+      "branches": [
+        "frontier",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Applies conformal prediction to multi-agent consensus, giving a principled abstention threshold so the system can decline rather than ratify confidently-wrong agreement.",
+          "why": "Separates agreement from correctness — a foundation for calibrated consensus and safe abstention."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260520874S",
+      "title": "Governance by Construction for Generalist Agents",
+      "firstAuthor": "Shlomov",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.20874",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Compiles policy-as-code with human-in-the-loop checkpoints so governance is built into the agent's execution path by construction.",
+          "why": "Operationalizes governance as a compile-time/runtime guarantee rather than a review afterthought."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250211448L",
+      "title": "AGrail: A Lifelong Agent Guardrail with Effective and Adaptive Safety Detection",
+      "firstAuthor": "Luo",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.11448",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A lifelong, adaptive runtime guardrail that updates its safety detection over the agent's operational lifetime.",
+          "why": "Moves guardrails from static filters to adaptive, continuously-learning runtime controls."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240612934A",
+      "title": "Current State of LLM Risks and AI Guardrails",
+      "firstAuthor": "Ayyamperumal",
+      "year": 2024,
+      "citationCount": 17,
+      "arxiv": "2406.12934",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Surveys LLM risks and the landscape of AI guardrail techniques.",
+          "why": "A reference map of the guardrail design space production teams draw from."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241007283L",
+      "title": "Prompt Infection: LLM-to-LLM Prompt Injection within Multi-Agent Systems",
+      "firstAuthor": "Lee",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2410.07283",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Demonstrates agent-to-agent prompt injection: a malicious instruction launders itself through one agent's output into another's input.",
+          "why": "Names the core multi-agent attack — the architecture itself becomes the attack surface."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241002644Z",
+      "title": "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-based Agents",
+      "firstAuthor": "Zhang",
+      "year": 2024,
+      "citationCount": 16,
+      "arxiv": "2410.02644",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A benchmark formalizing attacks and defenses across the LLM-agent attack surface (prompt injection, memory poisoning, tool misuse).",
+          "why": "Gives the field a shared yardstick for agent security claims."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260502964T",
+      "title": "A Reward Hacking Benchmark for Tool-Use Agents",
+      "firstAuthor": "Thaman",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.02964",
+      "url": null,
+      "branches": [
+        "production",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Benchmarks spec-gaming / reward hacking in tool-use agents — agents satisfying the letter of a goal while violating intent.",
+          "why": "Targets the silent failure where an agent's tool call is syntactically perfect but semantically wrong."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411641L",
+      "title": "CodeTracer: Traceable Agent States for Debugging",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11641",
+      "url": null,
+      "branches": [
+        "production",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Makes agent states traceable so multi-agent runs can be reconstructed and debugged step by step.",
+          "why": "The research counterpart to OpenTelemetry's operational standard for replayable agent traces."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260602755L",
+      "title": "Acceptance-Test-Driven Evaluation Protocols for Agents",
+      "firstAuthor": "Liang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.02755",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Proposes acceptance-test-driven evaluation protocols for enterprise agents, replacing ad hoc demos with pre-agreed pass/fail criteria.",
+          "why": "Brings software-engineering acceptance testing to agent evaluation — the basis for 'earned autonomy' thresholds."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412312Y",
+      "title": "CompliBench: LLM Judges for Compliance Violation Detection",
+      "firstAuthor": "Yang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12312",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A benchmark for using LLM judges to detect compliance violations in agent behavior.",
+          "why": "Targets the compliance-guardrail evaluation gap for regulated deployments."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250323278H",
+      "title": "Model Context Protocol (MCP): Landscape, Security Threats, and Future Directions",
+      "firstAuthor": "Hou",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.23278",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Surveys the MCP tool-integration protocol landscape and its security threats (tool poisoning, confused-deputy, supply-chain risk).",
+          "why": "The corpus anchor for the tool-integration substrate every agent stack now depends on."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412262C",
+      "title": "CascadeDebate: Cost-Aware LLM Cascades for Multi-Agent Debate",
+      "firstAuthor": "Chang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12262",
+      "url": null,
+      "branches": [
+        "frontier",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Cost-aware cascades that escalate to expensive models only when cheaper ones disagree, controlling debate's compute blow-up.",
+          "why": "A direct attack on the cost axis of orchestration via cognitive-tier routing."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260526178Z",
+      "title": "ATOM: Adaptive Nucleus-Electron Orchestration for Multi-Agent Systems",
+      "firstAuthor": "Zhao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.26178",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "An adaptive orchestrator with a stable offline-learned nucleus and query-conditioned worker electrons activated only when difficulty warrants; names the 'average-complexity trap' of static dense topologies.",
+          "why": "Shows topology should bend to task difficulty — up to 30% token savings by right-sizing the team per query."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260511453P",
+      "title": "Predictive Maps of Multi-Agent Reasoning: Spectral Diagnostics of Topology",
+      "firstAuthor": "Parks",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.11453",
+      "url": null,
+      "branches": [
+        "foundations",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Derives closed-form spectra of the communication operator that map to three failure modes, giving a pre-deployment diagnostic of a topology.",
+          "why": "Reframes 'pick a topology' from taste to engineering: condition number, spectral gap, and radius predict robustness, consensus, and drift."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240607155Q",
+      "title": "Scaling Large Language Model-based Multi-Agent Collaboration (MacNet)",
+      "firstAuthor": "Qian",
+      "year": 2024,
+      "citationCount": 45,
+      "arxiv": "2406.07155",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Organizes 1000+ agents as a directed acyclic graph and finds a collaborative scaling law: performance follows a logistic growth curve, with irregular topologies beating regular ones (chain, star, tree, complete).",
+          "why": "The optimist pole of the scaling debate; collaborative emergence appears earlier than neural-scaling emergence."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260600655L",
+      "title": "Scaling Behavior of Single LLM-Driven Multi-Agent Systems (SIMAS)",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.00655",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Isolates the effect of adding agents from model/knowledge heterogeneity and finds MAS performance does not scale monotonically — diminishing returns governed by a synergy-versus-coordination-overhead trade-off.",
+          "why": "The pessimist pole of the scaling debate; collective intelligence is contingent on interaction design, not agent count."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240312482G",
+      "title": "Embodied LLM Agents Learn to Cooperate in Organized Teams",
+      "firstAuthor": "Guo",
+      "year": 2024,
+      "citationCount": 28,
+      "arxiv": "2403.12482",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Flat LLM teams over-report and over-comply, creating redundancy and confusion; imposing prompt-based organizational structure with designated leadership improves efficiency and cuts communication cost.",
+          "why": "Empirical case that hierarchy is a lever to suppress chatter, not just an org-chart box."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412213S",
+      "title": "MMA2A: Multi-Modal Agent-to-Agent Routing and the Information Topology",
+      "firstAuthor": "Shen",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12213",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "On CrossModal-CS, modality-native routing reached 52% task completion vs 32% for a text-bottleneck baseline with the same backend — but only when an LLM (not keyword matching) consumed the richer context.",
+          "why": "The sharpest ablation in the corpus: the pattern, not the model, is the variable, and richer protocols buy nothing without a reasoning layer that can exploit them."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240909030W",
+      "title": "Agents in Software Engineering: Survey, Landscape, and Vision",
+      "firstAuthor": "Wang",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2409.09030",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Surveys SE agents with a clean perception / memory / action three-module mental model for what each role agent is.",
+          "why": "The cleanest abstraction for reasoning about a role agent before naming any framework."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240716741W",
+      "title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+      "firstAuthor": "Wang",
+      "year": 2024,
+      "citationCount": 92,
+      "arxiv": "2407.16741",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A generalist code-agent platform (formerly OpenDevin) with explicit multi-agent coordination and sandboxed execution.",
+          "why": "The bridge from coordination patterns to systems developers actually run."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240315852L",
+      "title": "SOEN-101 / FlowGen: Code Generation via Software-Process Models with Multi-Agent",
+      "firstAuthor": "Lin",
+      "year": 2024,
+      "citationCount": 0,
+      "arxiv": "2403.15852",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Instantiates Waterfall, TDD, and Scrum as multi-agent topologies with the same role agents re-wired into different communication patterns, yielding different code quality.",
+          "why": "The vivid demonstration that the org chart is literally the program."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514892Q",
+      "title": "Beyond Individual Intelligence: The LIFE Progression of Multi-Agent Capability",
+      "firstAuthor": "Qiu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.14892",
+      "url": null,
+      "branches": [
+        "frameworks",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A LIFE-progression taxonomy (Lay capability, Integrate, Find faults, Evolve) that unifies collaboration, failure-attribution, and self-evolution into one structural arc.",
+          "why": "Gives the maturity arc a vocabulary — from doing the task to evolving the team."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260422446Y",
+      "title": "OneManCompany: Dynamically Recruited Agent Workforces from a Talent Market",
+      "firstAuthor": "Yang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.22446",
+      "url": null,
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Packages skills, tools, and config into portable 'Talent' identities recruited on demand from a Talent Market, decoupling org structure from what an agent knows.",
+          "why": "Fixed crews give way to dynamically recruited workforces — org as a separate, governable concern."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408206S",
+      "title": "Theater of Mind for LLMs: From Blackboard to the Global Workspace",
+      "firstAuthor": "Shang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08206",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "A naive two-agent loop over a passive shared pool rapidly descends into cognitive stagnation; Global Workspace Agents replace polling with an active broadcast hub, an entropy-based diversity drive, and bifurcated short-term/long-term memory.",
+          "why": "The hinge result for team memory: passive sharing fails; memory must be actively broadcast, curated, and consolidated."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408377M",
+      "title": "SkillClaw: Shared Synchronized Workflow Memory across a Multi-User Agent Ecosystem",
+      "firstAuthor": "Ma",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08377",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Aggregates cross-user trajectories into a shared, synchronized workflow-memory repo; an autonomous evolver turns recurring patterns into skill refinements that propagate system-wide.",
+          "why": "Stops workflows and failure modes from being repeatedly rediscovered per user — procedural memory at ecosystem scale."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411811P",
+      "title": "M*: Every Task Deserves Its Own Memory Harness",
+      "firstAuthor": "Pan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11811",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Argues a memory system optimized for one purpose fails to transfer, and uses reflective code-evolution to auto-discover a task-specialized memory program (Schema + Logic + Instructions).",
+          "why": "The contrarian counterweight to one-shared-substrate: per-task specialization as a live, unsolved design axis."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411337R",
+      "title": "Governance by Design: A Parsonian Institutional Audit of an Agent Ecosystem",
+      "firstAuthor": "Ruan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11337",
+      "url": null,
+      "branches": [
+        "memory",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "A Parsonian governance audit of a large agent ecosystem (250k+ stars, 770k+ agents, 2M+ users) finds <=19% governance coverage and zero of twelve coordination pathways functional.",
+          "why": "Macro-scale rebuttal to 'conventions emerge automatically'; shared substrate is necessary but not sufficient without governance."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260520616Y",
+      "title": "Auto-Dreamer: CLS-based Fast Acquisition and Slow Consolidation of Agent Memory",
+      "firstAuthor": "Ye",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.20616",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Invokes Complementary Learning Systems theory to decouple fast per-session memory acquisition from slow cross-session consolidation; a learned offline consolidator synthesizes compact replacements that supersede bloated regions.",
+          "why": "Makes records-management-as-consolidation executable: +7 on ScienceWorld with a 12x smaller memory bank, transferring without retraining."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260602304Z",
+      "title": "Unified Context Evolution (UCE): A Typed Library of Evolvable Context Units",
+      "firstAuthor": "Zhu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.02304",
+      "url": null,
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "A gradient-free typed library of Evolvable Context Units (Memory, Strategy, Workflow, Skill), each generated from trajectories, quality-scored through use, and pruned when no longer valuable.",
+          "why": "Records-management governance for a team substrate: typing + quality tracking + retention carry the gains (ALFWorld 75.4%->96.3%)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423459H",
+      "title": "Architecture Matters: Security in Multi-Agent Systems",
+      "firstAuthor": "Hagag",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23459",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Across three environments and 13 configurations, multi-agent setups were more vulnerable than single agents in most configs, with attack-success rates varying up to 3.8x at equal-or-higher benign accuracy; no design was universally safer.",
+          "why": "Kills the intuition that decomposition is inherently a defense — the architecture itself is the security variable."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260421131A",
+      "title": "Cross-Session Threats: Memoryless Guardrails in Multi-Agent Systems",
+      "firstAuthor": "Azarafrooz",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.21131",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "An attacker who spreads a single attack across dozens of sessions evades every session-bound detector; session judges and full-log correlators lose ~half their recall, recovered by a bounded Coreset Memory Reader (K=50).",
+          "why": "Shows guardrails must be stateful across sessions, not just within one; releases CSTM-Bench."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260422879W",
+      "title": "Context-Fragmented Policy Violations in Multi-Agent Workflows",
+      "firstAuthor": "Wu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.22879",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Each agent's action is locally safe but the actions collectively violate policy because policy facts are siloed across departments; eight frontier LLMs showed 14-98% violation rates, and a Distributed Sentinel with Semantic Taint Tokens reached F1=0.95 at 106 ms.",
+          "why": "Formalizes the confused-deputy export incident; guardrails must be distributed and zero-trust, not a monolithic gate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260424477M",
+      "title": "GAMMAF: Graph-based Anomaly Monitoring of Multi-Agent Debates",
+      "firstAuthor": "Mateo-Torrejon",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.24477",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Models MAS debates as attributed graphs and benchmarks graph-based anomaly detectors that isolate flagged adversarial nodes live.",
+          "why": "Bridges security and observability — treats the interaction graph itself as the monitored signal."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260500914B",
+      "title": "The Cost of Consensus: When Multi-Agent Debate Underperforms Self-Correction",
+      "firstAuthor": "Bertalanic",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.00914",
+      "url": null,
+      "branches": [
+        "production",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Isolated self-correction beats unguided homogeneous multi-agent debate: debate fails via sycophantic conformity (up to 85.5%), contextual fragility (up to 70%), and consensus collapse (oracle gap up to 32.3 pp).",
+          "why": "The sharpest dissent against the multi-agent reflex; directly undercuts the debate-improves-reasoning lineage."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250403255G",
+      "title": "Liability and Accountability for AI Agents: A Principal-Agent Perspective",
+      "firstAuthor": "Gabison",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.03255",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Frames the accountability question — who is responsible when the agent is wrong — through a principal-agent lens.",
+          "why": "Motivates interpretability, behavior evals, and fail-safe mechanisms as governance instruments."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414723S",
+      "title": "Bounded Autonomy for Enterprise AI",
+      "firstAuthor": "Sohail",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14723",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Typed action contracts, consumer-side execution, validation-before-side-effects, and optional human approval in a deployed multi-tenant app: 23/25 trials with zero unsafe executions vs 17/25 unconstrained, both at 13-18x speedup.",
+          "why": "The standout production-deployment result; two wrong-entity mutations escaped every automated layer and were caught only by human confirmation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260409791A",
+      "title": "Pioneer Agent: Closed-Loop Continual Improvement of Small Models in Production",
+      "firstAuthor": "Anonymous",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.09791",
+      "url": null,
+      "branches": [
+        "production",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Closed-loop continual improvement of small models in production via automated data curation, failure diagnosis, and regression-constrained retraining (AdaptFT-Bench).",
+          "why": "Attacks the cost axis from the model side — supports SLM routing without regressions."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260604056K",
+      "title": "Token Budgets: An Empirical Catalog and Affine-Typed Mitigation of Orchestration Cost Overruns",
+      "firstAuthor": "Khan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.04056",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Catalogs 63 confirmed production budget-overrun incidents across 21 orchestration frameworks into an 8-cluster taxonomy, and ships a Rust crate using affine ownership so double-spending a budget becomes a compile error.",
+          "why": "Moves cost control from a code-review comment into the type system; non-bypassable under operator error in multi-agent delegation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260508715Z",
+      "title": "AgentForesight: Online Auditing for Early Failure Prediction in Agent Trajectories",
+      "firstAuthor": "Zhang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.08715",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Reframes failure attribution as online auditing: a 7B auditor sees only the current trajectory prefix and must let the run continue or raise an alarm at the earliest decisive error.",
+          "why": "Shifts attribution from diagnose-after-death to intervene-while-alive; beats GPT-4.1 by up to +19.9% with 3x lower step-localization error."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411978W",
+      "title": "HORIZON: A Cross-Domain Diagnostic Benchmark for Long-Horizon Agentic Tasks",
+      "firstAuthor": "Wang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11978",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "A diagnostic benchmark of 3,100+ trajectories from GPT-5 and Claude variants with a trajectory-grounded LLM-as-judge characterizing where and why long-horizon agentic tasks break.",
+          "why": "The empirical substrate for causal failure attribution at scale."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260420938S",
+      "title": "HARBOR: Harness Tuning as Constrained Bayesian Optimization",
+      "firstAuthor": "Sengupta",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.20938",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Argues the harness (compaction, tool caching, memory, trajectory reuse) is a first-class ML problem and formalizes harness tuning as constrained noisy Bayesian optimization over a mixed-variable config space.",
+          "why": "Automated search beats hand-tuned flag stacks once the configuration space exceeds a few bits."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260517480L",
+      "title": "The Capability Paradox: Stronger Workers, Less Secure Systems",
+      "firstAuthor": "Liu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.17480",
+      "url": null,
+      "branches": [
+        "frontier",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Across 42,000 adversarial trials, stronger Worker agents made the system less secure (ASR 18.4%->63.9%, peak 94.4%); linguistic certainty mediates 74% of the effect via 'semantic hijacking.'",
+          "why": "Refutes 'use a smarter model'; confidence is weaponized, and a heterogeneous-ensemble defense cuts ASR from 52.8% to 2.0%."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414799M",
+      "title": "Knowing When Not to Answer: Abstention in Multi-Agent VLM Systems (MM-AQA)",
+      "firstAuthor": "Madhusudhan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14799",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Benchmarks abstention (MM-AQA) and finds VLMs rarely abstain under standard prompting — even trivial confidence baselines beat them; multi-agent setups improve abstention but introduce new failure modes.",
+          "why": "Concrete evidence for the confidence-is-not-correctness thread in calibrated consensus."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423366K",
+      "title": "GSAR: Grounded Consensus via Typed Claim Grounding for Hallucination Detection",
+      "firstAuthor": "Kamelhar",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23366",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Operationalizes grounded consensus with a 4-way claim typology (grounded/ungrounded/contradicted/complementary), evidence-type-specific weights, and an asymmetric contradiction-penalized groundedness score driving a 3-tier replan decision.",
+          "why": "A concrete mechanism for separating confidence from correctness in team deliberation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260419752A",
+      "title": "SWARM: Soft-Label Population-Level Governance for Emergent Multi-Agent Risk",
+      "firstAuthor": "Aiersilan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.19752",
+      "url": null,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Replaces binary good/bad labels with soft probabilistic labels and adds governance levers (transaction taxes, circuit breakers, reputation decay, random audits) measured by expected-toxicity and quality-gap metrics over multi-seed scenarios.",
+          "why": "Evaluates the swarm, not the agent — targets risks no single agent produces in isolation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260523023H",
+      "title": "AMBIPOM: How to Steer Your Multi-Agent System (Human-LLM Co-Planning)",
+      "firstAuthor": "He",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.23023",
+      "url": null,
+      "branches": [
+        "frontier",
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Formalizes a human-LLM co-planning design space along three axes (mode, scope, level) and shifts supervision from outcome-level to process-level.",
+          "why": "A principled framework for optimal human-checkpoint placement in the loop."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407494M",
+      "title": "Triage: Routing Software Engineering Tasks to Cost-Effective LLM Tiers via Code Quality Signals",
+      "firstAuthor": "Madeyski, Lech",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07494",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Cost-tier routing for SWE tasks — closest single paper to the Gas City tiering problem.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241010347D",
+      "title": "A Unified Approach to Routing and Cascading for LLMs",
+      "firstAuthor": "Dekoninck, Jasper",
+      "year": 2024,
+      "citationCount": 2,
+      "arxiv": "2410.10347",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Unifies routing + cascading formally.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250410681S",
+      "title": "EMAFusion: A Self-Optimizing System for Seamless LLM Selection and Integration",
+      "firstAuthor": "Shah, Soham",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.10681",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Self-optimizing LLM selection.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240702348K",
+      "title": "Agreement-Based Cascading for Efficient Inference",
+      "firstAuthor": "Kolawole, Steven",
+      "year": 2024,
+      "citationCount": 2,
+      "arxiv": "2407.02348",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Cascade via inter-model agreement.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240600060W",
+      "title": "Cascade-Aware Training of Language Models",
+      "firstAuthor": "Wang, Congchao",
+      "year": 2024,
+      "citationCount": 4,
+      "arxiv": "2406.00060",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Trains models with the cascade in mind.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250219335R",
+      "title": "I Know What I Don't Know: Improving Model Cascades Through Confidence Tuning",
+      "firstAuthor": "Rabanser, Stephan",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.19335",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Confidence tuning for cascade deferral.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv220511747K",
+      "title": "BabyBear: Cheap inference triage for expensive language models",
+      "firstAuthor": "Khalili, Leila",
+      "year": 2022,
+      "citationCount": 5,
+      "arxiv": "2205.11747",
+      "url": null,
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Early inference-triage pattern.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Foundations & Topologies",
+      "summary": "What a multi-agent system is as a topology, and when collaborative synergy beats coordination overhead.",
+      "themes": [
+        "Orchestrator-worker, hierarchical, swarm, blackboard, and pipeline topologies",
+        "Coordination as a first-class architectural layer",
+        "Static vs adaptive, difficulty-conditioned topologies",
+        "The scaling debate: monotonic gains vs diminishing returns",
+        "Structure dictates failure mode"
+      ],
+      "gaps": [
+        "Reconciling the optimist (MacNet) and pessimist (SIMAS) scaling laws into one predictive model",
+        "Swarm/decentralized and blackboard literature thin in corpus (classic Hearsay-II/Nii predate arXiv)",
+        "Whether 2026 spectral/adaptive methods hold up as citations accrue"
+      ],
+      "questions": [],
+      "count": 25
+    },
+    {
+      "key": "frameworks",
+      "label": "Patterns & Frameworks",
+      "summary": "The small vocabulary of coordination patterns every framework re-encodes, and the interop protocols stitching them together.",
+      "themes": [
+        "Four primitives: planning/decomposition, routing/handoffs, debate/voting, role specialization",
+        "Role specialization and SOPs (CAMEL, MetaGPT, ChatDev)",
+        "Routing as the information topology of the network",
+        "Vendor consolidation (AutoGen, LangGraph, CrewAI, OpenAI Agents SDK, Microsoft Agent Framework)",
+        "Interop protocols: MCP, A2A, ACP, ANP, MPAC"
+      ],
+      "gaps": [
+        "Framework primary papers (LangGraph, CrewAI, OpenAI Swarm) absent from corpus — vendor docs only",
+        "Classical ACL/FIPA agent-communication lineage underrepresented",
+        "Whether dynamically-recruited 'Talent Market' orgs outperform hand-designed crews"
+      ],
+      "questions": [],
+      "count": 21
+    },
+    {
+      "key": "memory",
+      "label": "Memory in MAS",
+      "summary": "The shared substrate a team writes to, who governs it, and how conventions and identity precipitate out of it.",
+      "themes": [
+        "The spectrum of shared substrate: KV-cache, ledger/blackboard, knowledge graph, workflow, institutional",
+        "Passive blackboard vs active broadcast",
+        "Fast acquisition vs slow consolidation (Complementary Learning Systems)",
+        "Typing, quality-scoring, and pruning the substrate",
+        "Shared-for-all vs per-task specialized memory",
+        "Emergence of conventions and identity from accumulated memory"
+      ],
+      "gaps": [
+        "Shared team substrate vs per-task specialization is a live, unsolved design axis (M* dissent)",
+        "How to schedule consolidation reliably without losing fast working memory",
+        "Governing a substrate before it scales — conventions do not self-assemble from raw scale"
+      ],
+      "questions": [],
+      "count": 23
+    },
+    {
+      "key": "production",
+      "label": "Enterprise & Production",
+      "summary": "Reliability, security, cost, observability, and governance — the runtime properties that decide whether demo agents survive deployment.",
+      "themes": [
+        "Security: aggregation and architecture as the attack surface",
+        "Bounded autonomy, policy-as-code, and earned-autonomy thresholds",
+        "Observability via OpenTelemetry GenAI semantic conventions",
+        "Cost and multi-agent economics",
+        "Failure taxonomies and Byzantine-fault robustness",
+        "Distributed vs monolithic guardrail enforcement"
+      ],
+      "gaps": [
+        "Production engineering (observability, SRE-for-agents, incident postmortems) is web-only, near-absent from peer review",
+        "Where exactly the reliability-per-dollar optimum sits (verification vs cost)",
+        "Exact placement of human-in-the-loop checkpoints (too early loses speedup, too late the side effect fired)"
+      ],
+      "questions": [],
+      "count": 32
+    },
+    {
+      "key": "frontier",
+      "label": "Frontier & Open Problems",
+      "summary": "The 2026 reliability reckoning: causal attribution, verified protocols, cost bounds, calibrated consensus, and emergent-behavior eval — each now with a named system and real numbers.",
+      "themes": [
+        "Online causal failure attribution (intervene-while-alive)",
+        "Formally verified coordination protocols (TLA+)",
+        "Cost-bounded orchestration and cognitive-tier routing",
+        "Calibrated consensus and principled abstention",
+        "Information-flow control and the capability paradox",
+        "Emergent-behavior and population-level evaluation",
+        "Replayable trace observability standards"
+      ],
+      "gaps": [
+        "No settled answer on where the reliability-per-dollar optimum sits",
+        "Several results are single-paper, 2026-vintage, not yet independently replicated",
+        "Per-agent alignment does not compose into swarm safety — emergent risk is hard to bound"
+      ],
+      "questions": [],
+      "count": 19
+    }
+  ],
+  "reading": [
+    [
+      "2024arXiv240201680G",
+      "LLM-based Multi-Agents: A Survey of Progress and Challenges",
+      "Foundations"
+    ],
+    [
+      "2024arXiv240607155Q",
+      "Scaling LLM-based Multi-Agent Collaboration (MacNet)",
+      "Foundations"
+    ],
+    [
+      "2023arXiv230808155W",
+      "AutoGen: Multi-Agent Conversation",
+      "Patterns & Frameworks"
+    ],
+    [
+      "2023arXiv230800352H",
+      "MetaGPT: Meta Programming for a Multi-Agent Framework",
+      "Patterns & Frameworks"
+    ],
+    [
+      "2023arXiv230403442P",
+      "Generative Agents: Interactive Simulacra of Human Behavior",
+      "Memory in MAS"
+    ],
+    [
+      "2023arXiv230514325D",
+      "Improving Factuality & Reasoning through Multiagent Debate",
+      "Patterns & Frameworks"
+    ],
+    [
+      "2023arXiv230707924Q",
+      "ChatDev: Communicative Agents for Software Development",
+      "Patterns & Frameworks"
+    ],
+    [
+      "2024arXiv241104468F",
+      "Magentic-One: A Generalist Multi-Agent System",
+      "Foundations"
+    ],
+    [
+      "2025arXiv250313657C",
+      "Why Do Multi-Agent LLM Systems Fail? (MAST)",
+      "Enterprise & Production"
+    ],
+    [
+      "2026arXiv260526178Z",
+      "ATOM: Adaptive Nucleus-Electron Orchestration",
+      "Foundations"
+    ],
+    [
+      "2025arXiv250323278H",
+      "Model Context Protocol (MCP): Landscape & Security",
+      "Patterns & Frameworks"
+    ],
+    [
+      "2026arXiv260423459H",
+      "Architecture Matters: Security in Multi-Agent Systems",
+      "Enterprise & Production"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Causal failure attribution in agent chains",
+      "Pinpoint which agent and step is responsible when a distributed, silent multi-agent failure surfaces — and do it online, at the earliest decisive error, rather than as a post-mortem."
+    ],
+    [
+      "Formally verified coordination protocols",
+      "Model agent handoff and coordination protocols in a formal language (e.g. TLA+) and prove — or automatically repair — their safety, importing classical model checking into the agent world."
+    ],
+    [
+      "Token-budget-aware orchestration planner",
+      "Plan and execute orchestration under a hard cost ceiling, making budget overruns (double-spend, delegation fanout races) impossible by construction rather than catching them at runtime."
+    ],
+    [
+      "Durable shared team-memory substrate",
+      "Build a shared store a team can actively write to, consolidate, type, and prune — one that accumulates competence instead of slop and survives across sessions."
+    ],
+    [
+      "Emergent-behavior evaluation harness",
+      "Evaluate the swarm rather than the agent: soft-label, population-level harnesses that measure risks no single agent produces in isolation, since per-agent alignment does not compose."
+    ],
+    [
+      "Information-flow control between agents",
+      "Control what evidence and authority flow across agent boundaries so a locally-safe action cannot combine with others into a policy violation, and confidence cannot be weaponized into execution."
+    ],
+    [
+      "Confidence-calibrated consensus",
+      "Separate agreement from correctness: principled abstention thresholds and grounded claim typing so a manager never treats an assertive worker report as evidence of truth."
+    ],
+    [
+      "Learned dynamic topology per task",
+      "Learn the right communication graph per task and per query difficulty rather than fixing a static dense topology, escaping the average-complexity trap."
+    ],
+    [
+      "Optimal human-checkpoint placement",
+      "Place human-in-the-loop checkpoints at exactly the decisions automation provably fails (entity disambiguation, irreversible mutations) without losing the speedup of autonomy."
+    ],
+    [
+      "Replayable agent-trace observability standard",
+      "Standardize agent/workflow/tool/model spans and metrics so every reasoning chain is reconstructable — the substrate every other open problem (attribution, eval, cost) depends on."
+    ],
+    [
+      "Cognitive-tier model routing",
+      "Route routine decisions to cheap models and escalate to expensive ones only on disagreement or difficulty, controlling cost without sacrificing quality."
+    ],
+    [
+      "Cross-session organizational agent memory",
+      "Persist institutional memory — laws, roles, conventions, learned skills — across sessions and users so a team improves over time instead of rediscovering the same workflows and mistakes."
+    ]
+  ],
+  "practices": []
+}

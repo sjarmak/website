@@ -88,7 +88,7 @@ def paper_nodes() -> dict:
     if os.path.exists(libs_path):
         for lib in json.load(open(libs_path)).get("libraries", []):
             add_papers(nodes, lib.get("papers", []))
-    # lit_explorers papers
+    # thematic explorer papers
     exp_path = os.path.join(KN, "explorers.json")
     if os.path.exists(exp_path):
         for exp in json.load(open(exp_path)).get("explorers", []):

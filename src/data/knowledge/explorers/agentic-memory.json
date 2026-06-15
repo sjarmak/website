@@ -1,0 +1,2702 @@
+{
+  "id": "agentic-memory",
+  "title": "Agentic Memory Systems",
+  "learningSlug": "agentic-memory-systems",
+  "homepage": "/library/explorers/agentic-memory",
+  "paperCount": 119,
+  "themeCount": 9,
+  "papers": [
+    {
+      "bibcode": "2026arXiv260524117L",
+      "title": "SkillEvolBench: Benchmarking the Evolution from Episodic Experience to Procedural Skills",
+      "firstAuthor": "Lei, Yingtie",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.24117",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "A diagnostic benchmark of 180 tasks across six real-world agent environments, organized into role-conditioned task families with shared latent procedures, that separates procedural-skill formation from base capability by contrasting self-generated and curated skill evolution against no-skill and raw-trajectory controls on frozen deployment tasks (context shift, adversarial shortcuts, composition).",
+          "why": "This is the single most on-target paper for this work: it is purpose-built as a procedural-memory eval harness with an explicit acquisition-then-frozen-deployment split, ablation controls, and capacity/cost axes - exactly the central benchmark-task + methodology design problem. Its finding that raw-trajectory reuse often beats distilled skills is a direct methodological warning for synthetic skill-induction pipelines."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "180 tasks total = 6 real-world agent environments x 5 task families per environment x 6 role-conditioned tasks per family. The 6 environments cover: code modification, API orchestration, data processing, document transformation, research synthesis, and communication operations. A 'task family' denotes a recurring PROCEDURAL capability (shared latent procedure), not a topic label. Within each family there is a fixed 6-ROLE progression split into two phases: ACQUISITION (skill-formation, library updates allowed) = {canonical (presents base procedure), enriched (exposes a missing sub-capability), variant (changes surface form, same procedure)}; DEPLOYMENT (frozen library, no updates) = {context-shift (skill need embedded in a broader request -> tests implicit invocation), adversarial (introduces shortcut solutions that pass shallow checks -> tests shortcut resistance), composition (target skill must interact with other skills)}. Each task ships with: an instruction + fixture, a verification suite (public tests for basic contract, hidden tests for edge cases/distribution shift, and process verifiers that inspect traces/artifacts for brittle strategies: hard-coded constants, swallowed exceptions, skipped validation, incomplete repairs), and a scoring rubric. Skill conditions compared: No-Skill control, Raw-Trajectory control (reuse episodic traces directly), Zero-Shot (metadata-only skill written before execution, never revised), Self-Generated/Experience-based (start empty, induce skill only after canonical attempt + verifier feedback), and Curated-Start (gap-exposed curated seed). Curated/self variants have static vs Revision vs +Always(-update) update policies.",
+          "why": "Directly reusable scaffolding for a memory-eval harness: (1) the 6-role acquisition->deployment arc is a ready template for separating memory WRITE/consolidation from frozen READ/transfer; (2) the FREEZE-then-deploy protocol cleanly isolates whether memory was actually formed vs test-time repair; (3) the No-Skill / Raw-Trajectory / distilled-skill control set is a reusable ablation design to attribute gains to abstraction vs raw reuse vs base capability; (4) verification suite design (public + hidden + PROCESS verifiers flagging brittle strategies) maps onto white-box memory-quality checks; (5) SR/LSR/RSR/ESR decomposition (esp. CSSR/ARSR/CompSR) is a reusable metric taxonomy; (6) host-side Skill-Author call separated from the solving agent is a clean orchestration pattern for a memory-writer component."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230516291W",
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "firstAuthor": "Wang, Guanzhi",
+      "year": 2023,
+      "citationCount": 690,
+      "arxiv": "2305.16291",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Introduces the canonical ever-growing skill library of executable code stored/retrieved as compositional behaviors, combined with an automatic curriculum and iterative self-verification prompting, enabling skill transfer to a fresh Minecraft world.",
+          "why": "The foundational reference design for procedural memory as a code-skill library; any benchmark harness for skill reuse must instrument the store/retrieve/compose loop Voyager defined, and its cross-world skill-transfer test is a template for cross-environment procedural-generalization eval tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240907429Z",
+      "title": "Agent Workflow Memory",
+      "firstAuthor": "Zhiruo Wang, Zora",
+      "year": 2024,
+      "citationCount": 35,
+      "arxiv": "2409.07429",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "reflection-experience",
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Induces reusable, routine-level workflows from agent trajectories (offline from training examples or online from test queries) and injects them as procedural memory, with explicit cross-task / cross-website / cross-domain generalization evaluation on WebArena and Mind2Web.",
+          "why": "AWM is the reference methodology for workflow-induction procedural memory and, critically, ships a generalization-gap evaluation protocol (widening train-test distribution gaps) that is directly reusable as a benchmark design pattern for measuring whether induced procedures transfer rather than overfit."
+        },
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Induces reusable, transferable workflows (routines) from past agent trajectories and selectively injects them into memory to guide future generation, in both offline and online (test-time induction) settings.",
+          "why": "Canonical procedural-memory induction work; its offline/online split and web-navigation success-rate deltas (Mind2Web, WebArena) are a directly reusable protocol for benchmarking whether abstracted procedural memory transfers across trajectories."
+        },
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Introduces Agent Workflow Memory, inducing reusable workflows from past trajectories to improve long-horizon web-navigation agents, evaluated on agent-trajectory benchmarks (e.g. web tasks) rather than conversational QA.",
+          "why": "Anchors the procedural / agent-trajectory memory benchmark family (skill/workflow reuse on long-horizon task suites), distinct from conversational recall and central to the procedural-memory eval dimension."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408988J",
+      "title": "SEA-Eval: A Benchmark for Evaluating Self-Evolving Agents Beyond Episodic Assessment",
+      "firstAuthor": "Jiang, Sihang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08988",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "A benchmark explicitly targeting self-evolving agents that breaks from single-episode scoring to assess accumulation and reuse of tools/skills across tasks, addressing static-toolset and episodic-amnesia failure modes.",
+          "why": "Directly addresses the evaluation-methodology gap this work centers on: how to score procedural/skill accumulation across a trajectory rather than per-episode. A primary prior-art harness to study, extend, or differentiate against when building NVIDIA's memory eval suite."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Benchmark moving beyond episodic task scoring to evaluate self-evolving agents across time, targeting 'episodic amnesia' and static-toolset limits.",
+          "why": "One of the few protocols explicitly evaluating accumulation vs forgetting in self-evolving agents over multiple episodes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260530621L",
+      "title": "Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents",
+      "firstAuthor": "Lin, Minhua",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.30621",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Argues that the act of updating an editable harness (prompts, skills, memories, tools) is routinely conflated with genuine benefit, and provides a methodology to disentangle whether harness/skill evolution actually improves task outcomes versus merely changing them.",
+          "why": "A methodological keystone for this work: it names the exact confound a procedural-memory benchmark must control for (update activity != capability gain) and motivates controlled, attribution-style eval design - essential for credible skill-library benchmarks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260506130S",
+      "title": "Skill1: Unified Evolution of Skill-Augmented Agents via Reinforcement Learning",
+      "firstAuthor": "Shi, Yaorui",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.06130",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Trains a single RL policy to co-evolve the three coupled operations of a persistent skill library - skill selection, utilization, and distillation - toward a shared task-outcome objective, showing distillation controls library quality and growth rate while activating a broader high-frequency skill set.",
+          "why": "Operationalizes the library-maintenance loop (select/use/distill) that any procedural-memory harness must measure, and supplies concrete cost/library-size diagnostics (skill-cap saturation, growth-rate multipliers) that are reusable as benchmark instrumentation for library health."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408377M",
+      "title": "SkillClaw: Let Skills Evolve Collectively with Agentic Evolver",
+      "firstAuthor": "Ma, Ziyu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08377",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Replaces static post-deployment skills (as used by OpenClaw-style agents) with an agentic evolver that lets a population of reusable skills evolve collectively rather than independently.",
+          "why": "The named SkillClaw system the prompt flagged; its collective-evolution framing introduces inter-skill dependency and clutter dynamics that a benchmark must stress-test, motivating eval tasks for skill-library coherence and interference under continued evolution."
+        },
+        {
+          "branch": "reflection-experience",
+          "takeaway": "An agentic evolver lets a population of reusable skills evolve collectively after deployment, instead of leaving skills static once written.",
+          "why": "Procedural-memory-as-skill-library angle with a post-deployment continual-evolution loop; useful reference for harnesses that need to evaluate skill reuse and skill drift over time in a coding-agent (OpenClaw-style) setting."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514477X",
+      "title": "Test-Time Learning with an Evolving Library",
+      "firstAuthor": "Xu, Weijia",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.14477",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "EvoLib, a test-time-learning framework letting an LLM accumulate, reuse, and evolve knowledge across problem instances via an evolving library, without weight updates.",
+          "why": "A clean test-time procedural-memory baseline that isolates library-driven gains from parameter learning - a useful control condition and synthetic-pipeline target for benchmarks that need to attribute improvement to the memory store rather than the base model."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260527366L",
+      "title": "MUSE-Autoskill: Self-Evolving Agents via Skill Creation, Memory, Management, and Evaluation",
+      "firstAuthor": "Lin, Huawei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.27366",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Proposes an integrated lifecycle for skills - creation, memory storage, management, and self-evaluation - moving beyond treating skills as isolated artifacts.",
+          "why": "Its explicit skill-lifecycle decomposition maps almost one-to-one onto the stages a harness must probe (induce, store, retrieve/manage, score), making it a useful schema for structuring procedural-memory benchmark tasks and the synthetic data needed for each stage."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240516247C",
+      "title": "AutoManual: Constructing Instruction Manuals by LLM Agents via Interactive Environmental Learning",
+      "firstAuthor": "Chen, Minghao",
+      "year": 2024,
+      "citationCount": 4,
+      "arxiv": "2405.16247",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Agents distill interactive environment experience into human-readable instruction manuals (textual procedural memory) rather than code skills, evaluated across robotics/game/web-nav environments.",
+          "why": "Represents the natural-language procedural-memory branch (manuals/rules vs executable skills), giving this work a contrasting memory representation to benchmark; comparing manual-style vs code-skill procedural memory is a concrete eval-axis design."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414004K",
+      "title": "Memory Transfer Learning: How Memories are Transferred Across Domains in Coding Agents",
+      "firstAuthor": "Kim, Kangsan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14004",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Studies cross-domain transfer of accumulated agent memory in coding agents, challenging the in-domain-only restriction of prior memory-based self-evolution approaches.",
+          "why": "Cross-domain procedural-memory transfer is an under-measured generalization axis; this paper supplies the framing for transfer-eval tasks (train procedures in domain A, test in domain B) that a coding-agent memory benchmark should include."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Studies cross-domain transfer of accumulated memory in coding agents, showing memory-based self-evolution generalizes beyond the single domain where experience was collected.",
+          "why": "Directly targets coding-agent deployment and the cross-domain transfer question a benchmark must probe; motivates eval tasks that measure whether procedural memory helps OOD vs in-domain — a key methodology gap."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407791F",
+      "title": "SEARL: Joint Optimization of Policy and Tool Graph Memory for Self-Evolving Agents",
+      "firstAuthor": "Feng, Xinshun",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07791",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Jointly optimizes the agent policy and a tool-graph procedural memory under RLVR, extending verifiable-reward training from single-turn reasoning to self-evolving multi-turn tool use.",
+          "why": "Connects procedural/tool memory to verifiable-reward training signals, which is exactly the kind of ground-truth signal a synthetic eval pipeline can exploit; its tool-graph memory representation is a benchmarkable alternative to flat skill lists."
+        },
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Builds a structured experience memory integrating planning with execution and a tool graph, using inter-trajectory correlations to densify sparse outcome rewards while jointly optimizing policy and memory.",
+          "why": "Shows how to turn cross-trajectory abstraction into a reward-densification mechanism for resource-constrained self-evolving agents; relevant for harnesses that must evaluate memory under sparse-reward, RLVR-style settings on knowledge and math tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260507358Z",
+      "title": "A Comprehensive Survey on Agent Skills: Taxonomy, Techniques, and Applications",
+      "firstAuthor": "Zhou, Yingli",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.07358",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Provides a taxonomy and technique survey specifically scoped to agent skills (acquisition, storage, retrieval, use) across LLM-agent systems.",
+          "why": "A scoping reference that frames the procedural-skill subspace distinctly from generic agent-memory surveys; useful for taxonomy alignment when defining benchmark task categories and ensuring coverage across skill techniques."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414872C",
+      "title": "SkillDroid: Compile Once, Reuse Forever",
+      "firstAuthor": "Chen, Qijia",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14872",
+      "url": null,
+      "branches": [
+        "procedural-skills",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Compiles successful mobile-GUI agent task executions into reusable skills so later invocations avoid full per-step LLM inference, treating procedural memory as compiled, replayable routines.",
+          "why": "A GUI-agent procedural-memory system where reuse is measured by inference savings as well as success - introducing efficiency/cost as a first-class eval metric for skill reuse, an axis this work's harnesses should capture beyond accuracy."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Mobile GUI agents 'compile' a task into a reusable skill so subsequent invocations skip per-step LLM inference, turning episodic task traces into reusable procedural memory.",
+          "why": "Concrete GUI/computer-use deployment of procedural memory with a clear efficiency objective; benchmark tasks for GUI agents should measure both correctness AND inference-cost reduction from skill reuse."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230311366S",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "firstAuthor": "Shinn, Noah",
+      "year": 2023,
+      "citationCount": 531,
+      "arxiv": "2303.11366",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Introduces verbal reinforcement learning where an agent reflects on task feedback in natural language and stores reflective text in an episodic memory buffer, improving on subsequent attempts without weight updates.",
+          "why": "The foundational lineage anchor for the entire 'reflection -> experience' frontier; any memory eval harness that scores cross-attempt improvement is implicitly benchmarking against the Reflexion paradigm, and its sequential-trial protocol (HumanEval/ALFWorld/HotPotQA pass@k over reflection rounds) is a reusable evaluation template."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250308026T",
+      "title": "In Prospect and Retrospect: Reflective Memory Management for Long-term Personalized Dialogue Agents",
+      "firstAuthor": "Tan, Zhen",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2503.08026",
+      "url": null,
+      "branches": [
+        "reflection-experience",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Proposes Reflective Memory Management combining prospective reflection (deciding what to store) and retrospective reflection (retrieval refined by downstream signal) for long-term dialogue.",
+          "why": "Operationalizes 'reflective memory management' as two distinct, separately-evaluable subtasks (write-side and read-side reflection), which is exactly the kind of decomposition a memory eval harness needs to attribute gains; tested on long-term personalized dialogue benchmarks."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Introduces reflective memory management that both prospectively decides what to store and retrospectively revises memory, improving retrieval relevance for personalized dialogue.",
+          "why": "A directly comparable personalized-dialogue memory baseline with a write/revise policy; useful reference design and baseline for personalization memory harnesses."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407487L",
+      "title": "CLEAR: Context Augmentation from Contrastive Learning of Experience via Agentic Reflection",
+      "firstAuthor": "Liu, Linbo",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07487",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A reflection agent does contrastive analysis over past trajectories to produce per-task summaries, which then SFT+RL-train a context-augmentation model that generates (rather than retrieves) task-tailored experience.",
+          "why": "Directly addresses the gap between stored experience and reusable experience; its AppWorld and WebShop evaluation with an executable reward signal is a concrete template for an experience-reuse harness, and the code is open-sourced (awslabs/CLEAR)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411610Y",
+      "title": "Self-Evolving LLM Memory Extraction Across Heterogeneous Tasks",
+      "firstAuthor": "Yang, Yuqing",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11610",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Formalizes heterogeneous memory extraction and ships BEHEMOTH, a benchmark repurposing 18 datasets across personalization/problem-solving/agentic tasks with a downstream-utility metric, plus CluE, a cluster-based self-evolving extraction strategy.",
+          "why": "A ready-made multi-task memory benchmark with a utility-driven (not surface-match) metric, directly targeting the benchmark-construction part of the hiring role; demonstrates that no single static extraction prompt generalizes, motivating self-evolving eval design."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407894Z",
+      "title": "TSUBASA: Improving Long-Horizon Personalization via Evolving Memory and Self-Learning with Context Distillation",
+      "firstAuthor": "Zhang, Xinliang Frederick",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07894",
+      "url": null,
+      "branches": [
+        "reflection-experience",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Two-pronged approach: dynamic memory evolution on the write side plus self-learning via context distillation on the read side to internalize user experiences over long horizons.",
+          "why": "Explicitly benchmarks against Mem0 and Memory-R1 on long-horizon personalization across the Qwen-3 4B-32B family, giving model-scaling memory-eval datapoints and a Pareto quality-vs-token-budget framing useful for harness cost-axis design."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Combines an evolving per-user memory store with self-learning via context distillation so a personalized LLM accumulates and refines user preferences across long horizons rather than re-reading raw history each turn.",
+          "why": "A concrete personalization-deployment design pairing evolving memory with a synthetic self-learning loop; directly informs how a memory-eval harness should measure preference accumulation/drift across sessions, and is a candidate baseline for personalization benchmark tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408124H",
+      "title": "Beyond Stochastic Exploration: What Makes Training Data Valuable for Agentic Search",
+      "firstAuthor": "Hao, Chuzhan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08124",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "HiExp extracts hierarchical experience knowledge from raw reasoning trajectories via contrastive analysis and multi-level clustering, then uses experience-aligned training to regularize stochastic exploration.",
+          "why": "Cross-trajectory abstraction framed as a data-quality question for agentic search; its cross-task and cross-algorithm generalization evaluation is a useful methodology for testing whether abstracted experience memory transfers rather than overfits."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260410923C",
+      "title": "Mem2Evolve: Towards Self-Evolving Agents via Co-Evolutionary Capability Expansion and Experience Distillation",
+      "firstAuthor": "Cheng, Zihao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.10923",
+      "url": null,
+      "branches": [
+        "reflection-experience",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Couples experience distillation with dynamic asset creation (new tools/expert agents) so capability expansion and accumulated experience co-evolve.",
+          "why": "Captures the frontier where memory is not just retrieved text but drives the agent's evolving capability set; relevant for designing eval tasks that measure compounding improvement over a long multi-session trajectory rather than single-shot accuracy."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Co-evolves an agent's capabilities (tools/expert agents) alongside a distilled experience memory, so accumulated experience and new assets reinforce each other.",
+          "why": "Represents the procedural/experience-memory-as-deployment-capability line; a harness for self-evolving agents needs to disentangle gains from experience distillation vs capability expansion — a measurement design challenge."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260500702X",
+      "title": "Learning How and What to Memorize: Cognition-Inspired Two-Stage Optimization for Evolving Memory",
+      "firstAuthor": "Xu, Derong",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.00702",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Separates the 'how to memorize' and 'what to memorize' decisions into a two-stage optimization for an evolving long-term user memory under limited context windows.",
+          "why": "Decomposes write-side memory policy into independently-optimizable stages, giving an evaluation harness clean factors to ablate; directly targets evolving personalization, a core multi-session memory eval setting."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414475S",
+      "title": "Evo-MedAgent: Beyond One-Shot Diagnosis with Agents That Remember, Reflect, and Improve",
+      "firstAuthor": "Shen, Weixiang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14475",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A tool-augmented medical agent that remembers prior cases, reflects on outcomes, and improves over repeated diagnoses rather than treating each case as one-shot.",
+          "why": "A domain-grounded instantiation of remember-reflect-improve that demands longitudinal (cross-case) evaluation; a concrete template for building benchmark tasks where the metric is improvement trajectory, not single-case accuracy."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407269L",
+      "title": "Joint Optimization of Reasoning and Dual-Memory for Self-Learning Diagnostic Agent",
+      "firstAuthor": "Li, Bingxuan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07269",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Self-learning diagnostic agent that accumulates experience into reusable diagnostic patterns via a dual-memory design jointly optimized with reasoning.",
+          "why": "Another dual-memory (episodic + abstracted-pattern) self-learning design; its framing of expertise as accumulated reusable patterns is exactly the semantic/procedural memory split a memory benchmark must distinguish and score separately."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260524657D",
+      "title": "Beyond Inference-Only Deployment: Comparing Weight-Based Consolidation Against Cascading Compaction",
+      "firstAuthor": "Dennis, Simon",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.24657",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Directly compares per-user weight-based consolidation (parametric memory update) against cascading context compaction (non-parametric memory) for retaining experience under inference-only deployment.",
+          "why": "Rare head-to-head methodology comparing parametric vs non-parametric experience consolidation, which is precisely the kind of controlled comparison an eval harness should support; clarifies the design axis between memory-as-context and memory-as-weights."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240217753M",
+      "title": "Evaluating Very Long-Term Conversational Memory of LLM Agents",
+      "firstAuthor": "Maharana, Adyasha",
+      "year": 2024,
+      "citationCount": 38,
+      "arxiv": "2402.17753",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Introduces LoCoMo, the canonical long-term conversational-memory benchmark: very-long dyadic (person-person) dialogues spanning up to ~35 sessions / hundreds of turns, generated via a machine-human pipeline with personas and temporal event graphs, plus a QA test suite, event-summarization, and multimodal-dialogue-generation tasks.",
+          "why": "LoCoMo is the de-facto reference harness almost every memory system reports on; its 4-category QA taxonomy (single-hop, multi-hop, temporal, open-domain) is the template a benchmark-builder must reproduce and extend. The persona+event-graph synthetic pipeline is directly reusable for synthetic-data generation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411563G",
+      "title": "Synthius-Mem: Brain-Inspired Hallucination-Resistant Persona Memory Achieving 94.4% Memory Accuracy and 99.6% Adversarial Robustness on LoCoMo",
+      "firstAuthor": "Gadzhiev, Artem",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11563",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Pins down LoCoMo's exact composition (ACL 2024 version: 10 conversations, 1,813 questions) and argues every LoCoMo system treats memory as retrieval over dialogue segments while none reports adversarial robustness (refusing questions about facts never disclosed); proposes that abstention/hallucination-resistance metric as a missing axis.",
+          "why": "Explicitly names the abstention/adversarial-robustness task type that most memory benchmarks omit, and quantifies LoCoMo size, both essential when designing eval methodology and a refusal-aware test split."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Reports very high LoCoMo memory-accuracy and adversarial-robustness numbers, surfacing how headline single-benchmark metrics can saturate.",
+          "why": "A concrete case of metric saturation on LoCoMo that motivates harder benchmarks and adversarial/robustness-aware scoring rather than single-number accuracy claims."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241010813W",
+      "title": "LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory",
+      "firstAuthor": "Wu, Di",
+      "year": 2024,
+      "citationCount": 15,
+      "arxiv": "2410.10813",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Defines LongMemEval, a chat-assistant memory benchmark organized around five core abilities (information extraction, multi-session reasoning, temporal reasoning, knowledge updates, and abstention), with controllable interaction histories so memory load can be scaled independently of the target evidence.",
+          "why": "The most directly task-type-enumerated memory benchmark: its five-ability decomposition (notably knowledge-update and abstention as first-class tasks) is the closest existing template for the multi-task memory eval harness this work targets."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250213270L",
+      "title": "REALTALK: A 21-Day Real-World Dataset for Long-Term Conversation",
+      "firstAuthor": "Lee, Dong-Ho",
+      "year": 2025,
+      "citationCount": 1,
+      "arxiv": "2502.13270",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Releases REALTALK, 21 days of genuine human-human messaging conversations (not LLM-synthesized), used to study long-term memory probing and persona/emotional-intelligence simulation against the distribution gap between synthetic and real dialogue.",
+          "why": "Provides a real-world (non-synthetic) anchor benchmark, critical for validating that synthetic-data pipelines do not overfit; exposes the synthetic-vs-real distribution gap a benchmark designer must measure."
+        },
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A 21-day real-world long-term conversation dataset capturing genuine recall and emotional-intelligence dynamics across sessions.",
+          "why": "Serves as the real-data anchor against which synthetic multi-session memory datasets must be validated for distribution fidelity; pairs naturally with OmniBehavior as the 'ground truth' side of the synthetic-vs-real comparison."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411182Z",
+      "title": "Evaluating Memory Capability in Continuous Lifelog Scenario",
+      "firstAuthor": "Zheng, Jianjie",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11182",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Argues existing memory benchmarks cover only Person-AI and dyadic Person-Person dialogue and neglects 'continuous dialogue lifelogs' from always-on wearables; introduces lifelog memory evaluation resources (LifeMem / EgoMem first-person scenarios) for ambient continuously-recorded conversation.",
+          "why": "Defines the lifelog / always-on wearable task family the assignment asks for, and crisply maps the benchmark coverage gaps (Person-AI vs dyadic vs continuous lifelog) that frame where new benchmarks are needed."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Argues existing memory benchmarks assume clean discrete sessions and builds a benchmark over continuous ambient-conversation lifelogs, exposing how memory eval breaks under realistic streaming input.",
+          "why": "Defines a more realistic multi-session/streaming evaluation regime and the synthetic-data construction needed to test memory under continuous trajectories instead of curated turn boundaries."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514498Y",
+      "title": "GroupMemBench: Benchmarking LLM Agent Memory in Multi-Party Conversations",
+      "firstAuthor": "Yang, Jingbo",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.14498",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Introduces GroupMemBench, targeting memory in multi-party (group) conversations where the agent must attribute facts to specific speakers across many participants, a setting that dyadic benchmarks like LoCoMo/LongMemEval do not cover.",
+          "why": "Extends the multi-session memory benchmark space to multi-party speaker-attribution, a distinct task type (who-said-what tracking) absent from the base-review set and directly relevant to workplace-collaborator agent eval."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408064Q",
+      "title": "ImplicitMemBench: Measuring Unconscious Behavioral Adaptation in Large Language Models",
+      "firstAuthor": "Qin, Chonghan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08064",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Proposes ImplicitMemBench to measure implicit (procedural) memory, where past experience becomes automated behavior, rather than the explicit fact-recall that existing memory benchmarks test.",
+          "why": "Targets the procedural/implicit memory dimension of the semantic/episodic/procedural triad that almost no benchmark covers, filling a clear task-type gap for a memory eval harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260526667G",
+      "title": "MemFail: Stress-Testing Failure Modes of LLM Memory Systems",
+      "firstAuthor": "Garg, Ishir",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.26667",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Builds a stress-test benchmark that systematically enumerates and probes failure modes of external memory systems (consistency breaks over long-horizon interactions) rather than aggregate accuracy.",
+          "why": "Failure-mode / adversarial stress testing is a distinct evaluation methodology (diagnostic rather than score-based) that an eval-harness builder needs alongside accuracy benchmarks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260530087Y",
+      "title": "Selective QA over Conflicting Multi-Source Personal Memory: A Diagnostic Testbed and Method Comparison",
+      "firstAuthor": "Yang, Tiancheng",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.30087",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Constructs a diagnostic testbed for selective QA over conflicting multi-source personal memory, where the system must decide how to use contradictory stored facts, plus a comparison of methods on that testbed.",
+          "why": "Operationalizes knowledge-conflict / conflict-resolution as a measurable benchmark task (a hard gap in LoCoMo-family QA) directly relevant to building knowledge-update and abstention test splits."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412179M",
+      "title": "AgenticAI-DialogGen: Topic-Guided Conversation Generation for Fine-Tuning and Evaluating Short- and Long-Term Memories of LLMs",
+      "firstAuthor": "Madushanka Perera, Manoj",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12179",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Presents a topic-guided multi-agent conversation-generation pipeline that synthesizes dialogues specifically for fine-tuning and evaluating both short- and long-term memory.",
+          "why": "A concrete synthetic-data-generation pipeline for memory benchmarks, the exact artifact the hiring role builds; shows how to control topic/session structure to inject probeable memory targets."
+        },
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A modular agentic pipeline that turns unstructured dialogue into topic-structured, persona-grounded multi-session conversations plus QA pairs, via topic extraction, knowledge-graph generation, persona generation, and topic-guided conversation/QA synthesis, explicitly targeting short- AND long-term memory.",
+          "why": "This is a near-exact template for a synthetic-data pipeline for memory eval: it builds the controllable generator (persona + KG + topic continuity) and the matched QA harness in one system, and articulates why existing datasets (CoQA, QuAC, PersonaChat, MSC) fail to jointly encode memory grounding + topic continuity + QA."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514906R",
+      "title": "MemLens: Benchmarking Multimodal Long-Term Memory in Large Vision-Language Models",
+      "firstAuthor": "Ren, Xiyu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.14906",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Introduces MemLens to benchmark long-term memory in vision-language models across long multimodal interactions, evaluating whether memory methods preserve evidence needed for later recall.",
+          "why": "Extends multi-session memory benchmarks into the multimodal regime, a task type (visual evidence retention over sessions) the base review does not cover and increasingly relevant for assistant agents."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260515128G",
+      "title": "MemEye: A Visual-Centric Evaluation Framework for Multimodal Agent Memory",
+      "firstAuthor": "Guo, Minghao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.15128",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Proposes MemEye, a visual-centric evaluation framework that specifically tests whether agents preserve the visual evidence required for later recall in multimodal memory.",
+          "why": "A second, complementary multimodal-memory eval framework; together with MemLens it establishes visual-evidence-retention as an emerging benchmark axis for memory harness design."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250322458G",
+      "title": "Evaluating LLM-based Agents for Multi-Turn Conversations: A Survey",
+      "firstAuthor": "Guan, Shengyue",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.22458",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology",
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "PRISMA-based survey of evaluation methods for LLM agents in multi-turn conversational settings, cataloging benchmarks, metrics, and methodologies across the multi-turn evaluation landscape.",
+          "why": "A methodology map of multi-turn agent evaluation; useful as a coverage checklist when enumerating benchmark task types and metrics for a new harness."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "PRISMA-style survey organizing multi-turn agent evaluation along what-to-evaluate (capabilities incl. memory) and how-to-evaluate (metrics, judges, simulators) axes.",
+          "why": "Maps the methodology landscape for multi-turn/multi-session evaluation directly, useful for positioning a new memory eval harness and identifying metric gaps."
+        },
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A PRISMA-style survey of evaluation methods for LLM agents in multi-turn settings, organizing metrics, simulators, and protocols.",
+          "why": "Maps the evaluation-methodology landscape for the multi-turn trajectories that agentic memory eval lives in, useful scaffolding for choosing metrics and simulator-driven protocols in a harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240517974C",
+      "title": "Recent Trends in Personalized Dialogue Generation: A Review of Datasets, Methodologies, and Evaluations",
+      "firstAuthor": "Chen, Yi-Pei",
+      "year": 2024,
+      "citationCount": 5,
+      "arxiv": "2405.17974",
+      "url": null,
+      "branches": [
+        "benchmarks-catalog",
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "Surveys 22 personalized-dialogue datasets and 17 seminal works (2021-2023), cataloging persona/personalization datasets, problem types, and evaluation facets/metrics for personalized dialogue.",
+          "why": "A dataset-inventory of the persona/personalization benchmark lineage (PersonaChat-style and successors) that feeds the personalization task type; useful for sourcing existing datasets when assembling a memory harness."
+        },
+        {
+          "branch": "synthetic-data",
+          "takeaway": "Reviews datasets, generation methodologies, and evaluation practices for personalized dialogue generation.",
+          "why": "Inventories the dataset and evaluation prior art for persona-grounded dialogue, helping locate gaps (e.g., lack of long-horizon memory grounding) that a new synthetic pipeline should fill."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260528732D",
+      "title": "MemTrace: Tracing and Attributing Errors in Large Language Model Memory Systems",
+      "firstAuthor": "Deng, Xinle",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.28732",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Introduces a white-box framework that traces a memory system's failures back to the specific pipeline stage (write/store, retrieve, or generation) responsible, rather than scoring only the final answer.",
+          "why": "Directly the failure-attribution methodology a memory-eval harness needs: it converts opaque answer-level errors into per-stage diagnostics, the core of building white-box memory benchmarks at NVIDIA."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260426243W",
+      "title": "StratMem-Bench: Evaluating Strategic Memory Use in Virtual Character Conversation Beyond Factual Recall",
+      "firstAuthor": "Wu, Yerong",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.26243",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Proposes a benchmark separating shallow factual recall from strategic memory use (when/how to deploy a remembered fact), with a task taxonomy that goes beyond single answer-correctness.",
+          "why": "Demonstrates scoring-target sensitivity: same recall, different downstream use; a template for designing memory benchmark tasks that probe procedural/strategic memory rather than QA accuracy alone."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260525382W",
+      "title": "AuthTrace: Diagnosing Evidence Construction in Thematically Dense Single-Author Corpora",
+      "firstAuthor": "Wu, Xiaoqing",
+      "year": 2026,
+      "citationCount": 1,
+      "arxiv": "2605.25382",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Targets the evidence-construction stage (which passages reach the model before generation) as a separately diagnosable step, arguing it is evaluated inconsistently paradigm-by-paradigm.",
+          "why": "Reinforces retrieval-aware (not just answer-level) evaluation: isolates the retrieve/evidence stage as a measurable target, a key white-box diagnostic axis for memory harnesses."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408082S",
+      "title": "From Binary Groundedness to Support Relations: Towards a Reader-Centred Taxonomy for Comprehension of AI Output",
+      "firstAuthor": "Sarkar, Advait",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08082",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Critiques binary groundedness/hallucination metrics and proposes a graded support-relation taxonomy describing how generated claims relate to source evidence.",
+          "why": "Directly addresses scoring-target sensitivity and metric design for grounded generation; relevant to defining richer-than-binary correctness labels for memory-QA scoring."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240302839H",
+      "title": "An Empirical Study of LLM-as-a-Judge for LLM Evaluation: Fine-tuned Judge Model is not a General Substitute for GPT-4",
+      "firstAuthor": "Huang, Hui",
+      "year": 2024,
+      "citationCount": 58,
+      "arxiv": "2403.02839",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Empirically shows fine-tuned judge models generalize poorly across tasks compared to strong proprietary judges, quantifying judge reliability and transfer limits.",
+          "why": "Foundational for LLM-as-judge reliability in memory QA scoring: warns against assuming a cheap fine-tuned judge is a drop-in, informing judge calibration in eval harnesses."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241115594G",
+      "title": "A Survey on LLM-as-a-Judge",
+      "firstAuthor": "Gu, Jiawei",
+      "year": 2024,
+      "citationCount": 106,
+      "arxiv": "2411.15594",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Systematizes LLM-as-judge methods, biases (position, verbosity, self-preference), reliability concerns, and mitigation/calibration strategies.",
+          "why": "Reference catalogue of judge biases and calibration techniques to bake into any memory-QA scoring pipeline that relies on LLM judges."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241205579L",
+      "title": "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods",
+      "firstAuthor": "Li, Haitao",
+      "year": 2024,
+      "citationCount": 41,
+      "arxiv": "2412.05579",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Comprehensive taxonomy of LLM-based evaluation methods, agreement-with-human protocols, and reliability/robustness assessment frameworks.",
+          "why": "Provides methodology scaffolding (agreement metrics, robustness checks) for validating judge-based scoring of memory benchmarks against human labels."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250316416Y",
+      "title": "Survey on Evaluation of LLM-based Agents",
+      "firstAuthor": "Yehudai, Asaf",
+      "year": 2025,
+      "citationCount": 1,
+      "arxiv": "2503.16416",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Surveys agent evaluation across planning, tool use, and memory, noting evaluation of persistent memory is comparatively underdeveloped and benchmark-fragmented.",
+          "why": "Establishes the gap that memory evaluation lags other agent capabilities, framing the need for dedicated memory benchmarks and harnesses."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412162L",
+      "title": "AlphaEval: Evaluating Agents in Production",
+      "firstAuthor": "Lu, Pengrui",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12162",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Argues academic agent benchmarks diverge from production realities and proposes an evaluation methodology grounded in deployed-agent conditions.",
+          "why": "Speaks to reproducibility and ecological validity of memory-system comparisons, an applied-research concern for benchmarks meant to predict deployed behavior."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260410988Y",
+      "title": "WebForge: Breaking the Realism-Reproducibility-Scalability Trilemma in Browser Agent Benchmark",
+      "firstAuthor": "Yuan, Peng",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.10988",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Names a realism/reproducibility/scalability trilemma in agent benchmarks caused by content drift and synthetic-environment artifacts, and proposes a construction method to balance them.",
+          "why": "Transfers directly to memory-benchmark design: the same trilemma governs multi-session memory eval, informing synthetic-trajectory pipeline tradeoffs and reproducibility."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260530393K",
+      "title": "NumLeak: Public Numeric Benchmarks as Latent Labels in Foundation Models",
+      "firstAuthor": "Kotawala, Anany",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.30393",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Shows public numeric benchmarks leak into pretraining so date-conditioned evaluation may measure memorized recall rather than out-of-sample generalization.",
+          "why": "Contamination is a reproducibility/validity threat for memory benchmarks built from public corpora; argues for synthetic, leak-controlled memory eval data."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408362C",
+      "title": "Towards Real-world Human Behavior Simulation: Benchmarking Large Language Models on Long-horizon, Cross-scenario, Heterogeneous Behavior Traces",
+      "firstAuthor": "Chen, Jiawei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08362",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "Introduces OmniBehavior, the first user-simulation benchmark built entirely from real-world traces, and uses it to show LLM simulators converge to a 'positive average person' (hyper-activity, persona homogenization, Utopian bias), losing individual differences and long-tail behaviors.",
+          "why": "Directly quantifies the synthetic-vs-real distribution gap that undermines LLM user simulators — the central failure mode anyone building synthetic memory-eval data must measure and control for. Provides a concrete real-data yardstick and named bias categories for diagnosing generator fidelity."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260424977N",
+      "title": "A Survey on LLM-based Conversational User Simulation",
+      "firstAuthor": "Ni, Bo",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.24977",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A dedicated survey organizing the design space of LLM-based conversational user simulators (persona conditioning, goal/intent modeling, behavioral realism, evaluation of simulators themselves).",
+          "why": "The canonical entry point for the user-simulator half of the subtopic — maps techniques and open problems for building the LLM 'user' that drives multi-session memory eval trajectories, and how to evaluate the simulator's own fidelity."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241202980H",
+      "title": "Surveying the Effects of Quality, Diversity, and Complexity in Synthetic Data From Large Language Models",
+      "firstAuthor": "Havrilla, Alex",
+      "year": 2024,
+      "citationCount": 7,
+      "arxiv": "2412.02980",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "Proposes evaluating synthetic-data generators by the Quality–Diversity–Complexity (QDC) makeup of their output, finding quality drives in-distribution generalization, diversity drives OOD generalization, and complexity helps both — with explicit quality–diversity trade-offs.",
+          "why": "Supplies a principled, generator-agnostic measurement framework (QDC) for auditing synthetic memory-eval datasets, exactly the data-quality/diversity axis this work calls for; lets you compare generation strategies by their data composition rather than ad-hoc downstream scores."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260421229A",
+      "title": "EngramaBench: Evaluating Long-Term Conversational Memory with Structured Graph Retrieval",
+      "firstAuthor": "Acuna, Julian",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.21229",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A synthetic long-term memory benchmark of 5 personas, 100 multi-session conversations, and 150 queries spanning factual recall, cross-space integration, temporal reasoning, adversarial abstention, and emergent synthesis, holding the answering model fixed (GPT-4o) to isolate memory architecture.",
+          "why": "A compact, fully synthetic, persona-driven memory benchmark whose query taxonomy (esp. adversarial abstention and cross-space integration) is a ready blueprint for task design; its fixed-answerer protocol is the clean controlled-comparison methodology you'd want in an eval harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411557L",
+      "title": "UniToolCall: Unifying Tool-Use Representation, Data, and Evaluation for LLM Agents",
+      "firstAuthor": "Liang, Yijuan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11557",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A unified tool-learning pipeline that builds a 22k+ tool pool and 390k+ instances by combining 10 public datasets with structurally controlled synthetic trajectories (single/multi-hop, single/multi-turn, serial/parallel), adds an Anchor Linkage mechanism for cross-turn dependencies, and a QAOA evaluation representation.",
+          "why": "A best-in-class example of CONTROLLABLE synthetic trajectory generation with explicit structural distractor settings (e.g. Hybrid-20) — the procedural-memory / tool-use analogue of conversational memory data, and a model for cross-turn dependency injection and fine-grained (call/turn/conversation) eval."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260420382M",
+      "title": "Graph2Counsel: Clinically Grounded Synthetic Counseling Dialogue Generation from Client Psychological Graphs",
+      "firstAuthor": "Mandal, Aishik",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.20382",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "Generates clinically grounded synthetic multi-turn counseling dialogues from structured client psychological graphs, encoding the underlying clinical reasoning rather than just masking real utterances, to sidestep confidentiality constraints on real data.",
+          "why": "Demonstrates graph-structured profile conditioning as a controllable lever for synthetic dialogue in a privacy-constrained, enterprise-relevant vertical — directly transferable to persona/profile-driven memory-eval generation where real data is scarce or sensitive."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260440441M",
+      "title": "VeriSim: A Configurable Framework for Evaluating Medical AI Under Realistic Patient Noise",
+      "firstAuthor": "Mansouri, Sina",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.40441",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A configurable simulation framework that injects realistic patient 'noise' (incomplete, inconsistent, distracting user behavior) into evaluation, exposing that strong static-benchmark scores collapse under realistic interaction.",
+          "why": "A concrete instance of controllable distractor/noise injection in a user simulator for agent eval, plus evidence of the static-benchmark-vs-realistic-interaction gap — the methodological pattern needed for stress-testing memory systems with adversarial/noisy synthetic users."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240601171T",
+      "title": "Two Tales of Persona in LLMs: A Survey of Role-Playing and Personalization",
+      "firstAuthor": "Tseng, Yu-Min",
+      "year": 2024,
+      "citationCount": 44,
+      "arxiv": "2406.01171",
+      "url": null,
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "Surveys the persona concept across role-playing and personalization, distinguishing how personas are constructed, conditioned, and evaluated in LLMs.",
+          "why": "Foundational reference for persona generation/conditioning — the controllable variable underpinning profile-driven dialogue simulation and persona diversity in synthetic memory-eval data."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250113956R",
+      "title": "Zep: A Temporal Knowledge Graph Architecture for Agent Memory",
+      "firstAuthor": "Rasmussen, Preston",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2501.13956",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Zep introduces Graphiti, a temporally-aware knowledge-graph engine that fuses unstructured conversation and structured business data while preserving historical edge validity, beating MemGPT on the DMR benchmark (94.8% vs 93.4%) and improving LongMemEval accuracy by up to 18.5% with 90% lower latency.",
+          "why": "The canonical temporal-KG memory architecture and a de facto baseline for any new memory eval harness; its DMR/LongMemEval numbers are the standard comparison point benchmark builders must reproduce."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408256Y",
+      "title": "HyperMem: Hypergraph Memory for Long-Term Conversations",
+      "firstAuthor": "Yue, Juwei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08256",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Models long-term conversational memory as a hypergraph where n-ary hyperedges capture multi-participant, multi-fact events that pairwise graphs fragment, enabling higher-order recall across extended dialogues.",
+          "why": "The clearest hypergraph-memory data point; a benchmark harness needs n-ary/multi-entity recall tasks that pairwise-graph systems cannot express, which this paper motivates directly."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241014052R",
+      "title": "From Isolated Conversations to Hierarchical Schemas: Dynamic Tree Memory Representation for LLMs",
+      "firstAuthor": "Rezazadeh, Alireza",
+      "year": 2024,
+      "citationCount": 2,
+      "arxiv": "2410.14052",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Proposes MemTree, a dynamic tree memory that aggregates conversations into hierarchical schema nodes at increasing abstraction levels, refreshed online as new turns arrive.",
+          "why": "Foundational hierarchical/tree-memory reference; supplies the multi-resolution abstraction structure that synthetic multi-session pipelines should stress (does recall degrade at coarse vs fine tree levels?)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260426197X",
+      "title": "Hierarchical Long-Term Semantic Memory for LinkedIn's Hiring Agent",
+      "firstAuthor": "Xu, Zhentao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.26197",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A production hierarchical semantic-memory design for LinkedIn's hiring agent that organizes per-user long-term memory into abstraction tiers for personalized, context-aware retrieval.",
+          "why": "Rare industrial deployment of tiered semantic memory; grounds eval methodology in real product constraints (personalization, latency, scale) the NVIDIA role targets."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412285W",
+      "title": "GAM: Hierarchical Graph-based Agentic Memory for LLM Agents",
+      "firstAuthor": "Wu, Zhaofen",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12285",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Frames long-term agent memory as a tension between acquiring new information and retaining old, addressed with a hierarchical graph memory that balances consolidation against forgetting.",
+          "why": "Directly operationalizes the stability-plasticity / consolidation-forgetting axis, which is an underspecified evaluation dimension; gives a system to benchmark on retention-vs-acquisition trade-offs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260420943S",
+      "title": "SCM: Sleep-Consolidated Memory with Algorithmic Forgetting for Large Language Models",
+      "firstAuthor": "Sachin Shinde, Saish",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.20943",
+      "url": null,
+      "branches": [
+        "architectures",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A neuroscience-inspired memory architecture using offline sleep-style consolidation phases plus explicit algorithmic forgetting to compress and prune stored memories.",
+          "why": "One of the few papers with an explicit forgetting mechanism; essential for designing benchmark tasks that reward correct forgetting/obsolescence handling rather than pure accumulation."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Memory architecture drawing on neuroscientific sleep-consolidation principles, pairing offline consolidation with an explicit algorithmic-forgetting operator to bound store growth.",
+          "why": "Known anchor; the canonical 'sleep-consolidation + algorithmic forgetting' reference for this subtopic."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412376L",
+      "title": "Cooperative Memory Paging with Keyword Bookmarks for Long-Horizon LLM Conversations",
+      "firstAuthor": "Liu, Ziyang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12376",
+      "url": null,
+      "branches": [
+        "architectures",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "An OS-paging-style memory where evicted context is bookmarked by keywords so the model can cooperatively page old content back in on demand when conversations exceed the window.",
+          "why": "A concrete tiered/OS-style (MemGPT-lineage) mechanism with an explicit eviction-and-recall protocol; suggests eval tasks that probe page-fault recovery and recall-after-eviction."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Evicts old content past the context window but indexes it with keyword bookmarks so the model can recover evicted memory on demand.",
+          "why": "Eviction-with-recall design directly addressing the forgetting cost of context-window eviction; measurable via recovery success."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260422085M",
+      "title": "Memanto: Typed Semantic Memory with Information-Theoretic Retrieval for Long-Horizon Agents",
+      "firstAuthor": "Moein Abtahi, Seyed",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.22085",
+      "url": null,
+      "branches": [
+        "architectures",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Introduces typed semantic memory entries retrieved via an information-theoretic relevance criterion rather than raw embedding similarity, targeting persistent multi-session agents.",
+          "why": "A specialized retrieval mechanism purpose-built for memory (not generic RAG); provides an alternative scoring objective a harness should ablate against cosine-similarity baselines."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Typed semantic memory using information-theoretic retrieval scoring to govern what is retained/surfaced across sessions for long-horizon agents.",
+          "why": "Information-theoretic basis for eviction/retention scoring — a measurable, principled alternative to recency heuristics. NOTE: bibcode is 2026arXiv260422085M."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411364R",
+      "title": "The Missing Knowledge Layer in Cognitive Architectures for AI Agents",
+      "firstAuthor": "Roynard, Michael",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11364",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Argues that CoALA and JEPA cognitive architectures lack an explicit, separately-typed Knowledge layer with its own lifecycle, and proposes adding one distinct from working/episodic memory.",
+          "why": "Sharpens the semantic/episodic/procedural taxonomy that this work's benchmark must instrument; motivates per-memory-type eval rather than a single recall metric."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423878B",
+      "title": "ZenBrain: A Neuroscience-Inspired 7-Layer Memory Architecture for Autonomous AI Systems",
+      "firstAuthor": "Bering, Alexander",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23878",
+      "url": null,
+      "branches": [
+        "architectures",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Replaces system-engineering memory metaphors (virtual-memory paging, flat LLM context) with a 7-layer architecture grounded in a century of empirical human memory research.",
+          "why": "Provides a richly-layered memory taxonomy (beyond episodic/semantic/procedural) that a comprehensive benchmark could decompose into per-layer probes."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Replaces system-engineering memory metaphors (paging/flat stores) with a 7-layer neuroscience-grounded architecture incorporating consolidation and forgetting layers.",
+          "why": "Adjacent architectural framing of consolidation/forgetting as first-class layers; contrasts with engineering-metaphor memory designs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260501688S",
+      "title": "GRAVITY: Architecture-Agnostic Structured Anchoring for Long-Horizon Conversational Memory",
+      "firstAuthor": "Sun, Yushi",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.01688",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A plug-and-play module that extracts entity profiles, temporal event tuples, and cross-session topic summaries and injects them at generation time, improving LLM-judge accuracy by 7.5-10.1% across five memory systems on LongMemEval and LoCoMo.",
+          "why": "Evaluated as an architecture-agnostic augmentation across five host memory systems and two benchmarks - exactly the cross-system comparative methodology an eval harness should adopt; gains-inversely-correlated-with-baseline-strength is a useful harness insight."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260528046L",
+      "title": "MemCog: From Memory-as-Tool to Memory-as-Cognition in Conversational Agents",
+      "firstAuthor": "Li, Zihan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.28046",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Critiques the prevailing 'memory-as-tool' one-shot flat-passage retrieval paradigm and reframes memory as an iterative cognitive process interleaved with reasoning.",
+          "why": "Reframes memory retrieval as multi-step cognition rather than single-query lookup, implying benchmark tasks must measure iterative/agentic retrieval trajectories, not just top-k recall."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260414362B",
+      "title": "APEX-MEM: Agentic Semi-Structured Memory with Temporal Reasoning for Long-Term Conversational AI",
+      "firstAuthor": "Banerjee, Pratyay",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.14362",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A semi-structured memory (between flat text and full KG) with explicit temporal-reasoning support, arguing naive retrieval and larger context windows both fail on long-term conversational memory.",
+          "why": "Occupies the middle of the structured-vs-unstructured design space and foregrounds temporal reasoning, a frequently under-tested benchmark dimension for multi-session trajectories."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412231F",
+      "title": "Thought-Retriever: Don't Just Retrieve Raw Data, Retrieve Thoughts for Memory-Augmented Agentic Systems",
+      "firstAuthor": "Feng, Tao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12231",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Stores and retrieves the agent's own intermediate reasoning ('thoughts') as memory units rather than raw documents or facts, for memory-augmented agentic systems.",
+          "why": "Targets procedural/reasoning-trace memory specifically; a benchmark covering procedural memory needs tasks that reward reuse of past reasoning, which this paper instantiates."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260409666F",
+      "title": "Do We Still Need GraphRAG? Benchmarking RAG and GraphRAG for Agentic Search Systems",
+      "firstAuthor": "Fan, Dongzhe",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.09666",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "A systematic head-to-head benchmark of flat RAG versus graph-based GraphRAG within agentic search systems, questioning when graph structure actually pays off.",
+          "why": "A direct methodological template: when does structured (graph) memory beat flat retrieval? Provides the comparative-evaluation design and the skeptical framing an eval scientist should carry into memory-architecture benchmarking."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240712784C",
+      "title": "AgentPoison: Red-teaming LLM Agents via Poisoning Memory or Knowledge Bases",
+      "firstAuthor": "Chen, Zhaorun",
+      "year": 2024,
+      "citationCount": 33,
+      "arxiv": "2407.12784",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Introduces a backdoor red-teaming attack that poisons an LLM agent's long-term memory or RAG knowledge base by optimizing a trigger so that any query containing it retrieves the malicious demonstration, without fine-tuning the agent or retriever.",
+          "why": "The canonical, most-cited memory/KB poisoning attack; its threat model (poison the store, optimize a retrieval trigger, measure attack-vs-benign success) is the template most subsequent memory-poisoning benchmarks and harnesses adopt."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260529960W",
+      "title": "Hijacking Agent Memory: Stealthy Trojan Attacks Through Conversational Interaction",
+      "firstAuthor": "Wang, Hongtao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.29960",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Defines a Trojan attack where an attacker poisons a shared agent's persistent memory purely through normal conversation, using an iteratively optimized trigger that survives the memory-extraction pipeline and binds trigger-to-payload via a semantic relational bridge; evaluated with RSR@k, end-to-end ASR, and Benign Accuracy.",
+          "why": "Provides a clean, reusable multi-metric evaluation protocol (Retrieval Success Rate @k, Attack Success Rate, Benign Accuracy) for memory-poisoning over multi-session conversational interaction — directly applicable to building a memory-security eval harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260506731X",
+      "title": "When Routine Chats Turn Toxic: Unintended Long-Term State Poisoning in Personalized Agents",
+      "firstAuthor": "Xu, Xiaoyu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.06731",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Studies unintended (non-adversarial) long-term state poisoning in personalized agents that maintain cross-session memory, contributing a Harm Score metric, a synthetic + real-seed benchmark of routine interaction patterns, and a StateGuard writeback-auditing defense.",
+          "why": "Rare benchmark that targets organic cross-session memory corruption rather than explicit attacks, with a synthetic-data construction pipeline and a writeback-auditing defense — exactly the multi-session trajectory + synthetic-data + harness combination this work targets."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260509033L",
+      "title": "ShadowMerge: A Novel Poisoning Attack on Graph-Based Agent Memory via Relation-Channel Conflicts",
+      "firstAuthor": "Luo, Yang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.09033",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Presents the first poisoning attack tailored to graph-structured agent memory: an unprivileged user message is materialized as a relation, survives relation canonicalization/entity-resolution merge, and is later retrieved as graph-native poisoned evidence for a different user.",
+          "why": "Extends memory-poisoning beyond flat vector stores to graph/knowledge-graph memory and exposes cross-user contamination through the merge path — a distinct attack surface that any memory eval suite covering structured/semantic memory must include."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514421O",
+      "title": "MemLineage: Lineage-Guided Enforcement for LLM Agent Memory",
+      "firstAuthor": "Ouyang, Ciyan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.14421",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "A defense that attaches cryptographic provenance plus LLM-mediated derivation lineage to every memory entry and enforces lineage-based access/derivation policies at read/write time.",
+          "why": "Concrete provenance + governance mechanism for agent memory; gives a defense baseline and a lineage-metadata schema that an eval harness can score attacks against and that informs access-control task design."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260506812L",
+      "title": "Towards Security-Auditable LLM Agents: A Unified Graph Representation",
+      "firstAuthor": "Li, Chaofan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.06812",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Proposes Agent-BOM, a unified provenance/attack-graph representation of agent execution (tool calls, stateful memory, multi-agent propagation) for post-hoc security auditing and risk-path adjudication.",
+          "why": "Operationalizes memory governance/auditing for deployed agents and explicitly references Agent Security Bench (ASB); the schema and adjudication rules are reusable as the auditing/telemetry layer of a memory eval harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423338C",
+      "title": "From Stateless Queries to Autonomous Actions: A Layered Security Framework for Agentic AI Systems",
+      "firstAuthor": "Chu, Kexin",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23338",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Articulates how persistent memory and long-horizon planning create security challenges absent in stateless LLMs, and proposes a layered defense framework spanning perception, memory, planning, and action.",
+          "why": "Provides a layered taxonomy that maps memory-specific threats (persistence, cross-session state) to defense layers — useful scaffolding for organizing benchmark task categories across the agent stack."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240520485C",
+      "title": "Phantom: General Trigger Attacks on Retrieval Augmented Language Generation",
+      "firstAuthor": "Chaudhari, Harsh",
+      "year": 2024,
+      "citationCount": 24,
+      "arxiv": "2405.20485",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Crafts single poisoned documents that are retrieved only on adversarial trigger queries and then drive denial-of-service, biased opinion, harmful-output, or tool-misuse behaviors in RAG pipelines.",
+          "why": "Defines a general trigger-attack family on the retrieval substrate underlying most agent memory; its multi-objective payload taxonomy (DoS, bias, harmful, tool-misuse) is a ready-made set of outcome labels for poisoning benchmarks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240900138S",
+      "title": "PrivacyLens: Evaluating Privacy Norm Awareness of Language Models in Action",
+      "firstAuthor": "Shao, Yijia",
+      "year": 2024,
+      "citationCount": 11,
+      "arxiv": "2409.00138",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Builds a contextual-integrity-grounded benchmark that expands privacy-sensitive seeds into agent action trajectories (emails, posts) and measures whether models leak confidential information when taking actions, not just when answering.",
+          "why": "A leading template for privacy-preserving-memory evaluation: it ties contextual integrity to agent actions over realistic trajectories and demonstrates the seed-to-trajectory synthetic-data pipeline pattern directly applicable to memory privacy tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230212173G",
+      "title": "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
+      "firstAuthor": "Greshake, Kai",
+      "year": 2023,
+      "citationCount": 134,
+      "arxiv": "2302.12173",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Establishes indirect prompt injection as a class — adversaries plant instructions in data likely to be retrieved — and gives a security taxonomy covering data theft, worming, and information-ecosystem contamination, demonstrated on real systems.",
+          "why": "Foundational threat model for injection into persistent stores; the data-vs-instruction-blurring and contamination/worming categories define the adversary capabilities that memory-security benchmarks must instantiate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240302817C",
+      "title": "Here Comes The AI Worm: Unleashing Zero-click Worms that Target GenAI-Powered Applications",
+      "firstAuthor": "Cohen, Stav",
+      "year": 2024,
+      "citationCount": 11,
+      "arxiv": "2403.02817",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Demonstrates Morris-II, a self-replicating adversarial prompt that propagates through RAG-based inter-agent communication, stealing data and spreading without user interaction.",
+          "why": "Captures the propagation/worming dimension of memory contamination across agents and stores — a multi-agent, cross-session attack pattern that benchmark harnesses for shared/networked memory need to model."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240605870S",
+      "title": "Machine Against the RAG: Jamming Retrieval-Augmented Generation with Blocker Documents",
+      "firstAuthor": "Shafran, Avital",
+      "year": 2024,
+      "citationCount": 23,
+      "arxiv": "2406.05870",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Introduces a denial-of-service 'jamming' attack: a single blocker document inserted into the retrieval corpus causes the system to refuse to answer a target query, with crafting methods that need no model internals.",
+          "why": "Availability/refusal-robustness attack on the memory retrieval substrate — complements integrity attacks and gives a distinct failure mode (induced over-refusal) that a comprehensive memory eval should measure."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240719354H",
+      "title": "The Emerged Security and Privacy of LLM Agent: A Survey with Case Studies",
+      "firstAuthor": "He, Feng",
+      "year": 2024,
+      "citationCount": 20,
+      "arxiv": "2407.19354",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Surveys LLM-agent security and privacy threats with case studies, organizing knowledge/memory poisoning, privacy leakage, and tool/action risks across the agent lifecycle.",
+          "why": "Useful map of the threat landscape and existing case studies to scope benchmark coverage and avoid gaps; situates memory poisoning within the broader agent security/privacy taxonomy."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260413074N",
+      "title": "PersonaVLM: Long-Term Personalized Multimodal LLMs",
+      "firstAuthor": "Nie, Chang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.13074",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Extends long-term personalization into the multimodal regime, giving an MLLM persistent memory of an individual user's preferences to align image+text responses over time.",
+          "why": "One of the few works tackling MULTIMODAL personalized memory; essential for building multimodal memory benchmark tasks and synthetic data pipelines that go beyond text-only conversation logs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260513527Z",
+      "title": "MMSkills: Towards Multimodal Skills for General Visual Agents",
+      "firstAuthor": "Zhang, Kangning",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.13527",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Defines multimodal (not text-only) reusable skill packages for general visual agents, encoding reusable behavior that spans perception and action.",
+          "why": "Bridges procedural memory and multimodal/visual agents; useful for designing skill-library eval harnesses where the reusable unit is multimodal rather than a text snippet."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412019G",
+      "title": "A longitudinal health agent framework",
+      "firstAuthor": "Lin, Georgianna (Blue)",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12019",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Proposes a four-layer framework (coherence, continuity, adaptation, agency) framing longitudinal health support as an active design challenge, and lays out an evaluation research agenda with metrics for tracking user trajectories over time.",
+          "why": "Healthcare deployment lens that explicitly argues memory/personalization alone is insufficient and proposes longitudinal evaluation dimensions — directly relevant to designing multi-session, domain-specific memory eval methodology."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408226S",
+      "title": "Grounding Clinical AI Competency in Human Cognition Through the Clinical World Model and Skill-Mix Framework",
+      "firstAuthor": "Safavi-Naini, Seyed Amir Ahmad",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08226",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Argues clinical AI lacks a formal world model and proposes a Clinical World Model plus Skill-Mix framework to bound and evaluate clinical-agent competency against human cognition.",
+          "why": "Frames domain-grounded competency/skill evaluation for a high-stakes deployment; informs how memory-augmented clinical agents should be benchmarked beyond single-encounter QA."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408000X",
+      "title": "PASK: Toward Intent-Aware Proactive Agents with Long-Term Memory",
+      "firstAuthor": "Xie, Zhifei",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08000",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Couples long-term memory with intent inference to drive PROACTIVE assistant behavior in real-world (not lab) settings, closing the gap between stored memory and unsolicited helpful action.",
+          "why": "Moves personalization eval from reactive recall to proactive use of memory — a distinct benchmark axis (does the agent act on remembered intent unprompted?) that current recall-only benchmarks miss."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260408567Y",
+      "title": "Multi-User Large Language Model Agents",
+      "firstAuthor": "Yang, Shu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.08567",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Tackles the multi-user setting where one agent must maintain and isolate per-user memory/state, contrasting with the standard single-user assumption.",
+          "why": "Surfaces a memory-isolation/personalization scaling axis (per-user memory partitioning, cross-user leakage) that benchmark tasks and synthetic data pipelines rarely cover but production deployments require."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411548Z",
+      "title": "SemaClaw: A Step Towards General-Purpose Personal AI Agents through Harness Engineering",
+      "firstAuthor": "Zhu, Ningyan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11548",
+      "url": null,
+      "branches": [
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Studies harness engineering for mass-deployed personal AI agents, focusing on the scaffolding (including memory) needed to delegate everyday user tasks reliably.",
+          "why": "Deployment-team perspective on the agent HARNESS (the exact artifact the hiring role builds); informs what eval-harness instrumentation real personal-assistant deployments need."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260506527C",
+      "title": "STALE: Can LLM Agents Know When Their Memories Are No Longer Valid?",
+      "firstAuthor": "Chao, Hanxiang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.06527",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Benchmark of 400 expert-validated conflict scenarios / 1,200 queries (contexts to 150K tokens) probing belief revision over time via three dimensions: State Resolution, Premise Resistance, Implicit Policy Adaptation; introduces 'Implicit Conflict' failure mode and CUPMem write-time-revision baseline.",
+          "why": "The single most on-target MEASUREMENT paper for stale-memory/obsolescence and belief-revision; best model only 55.2% accuracy."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260413085K",
+      "title": "Adaptive Memory Crystallization for Autonomous AI Agent Learning in Dynamic Environments",
+      "firstAuthor": "Khanda, Rajat",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.13085",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Liquid-Glass-Crystal three-phase consolidation governed by an Itô SDE / Fokker-Planck (closed-form Beta stationary dist.); proves convergence + memory-capacity bounds and empirically reports forward transfer and forgetting reductions.",
+          "why": "Rare quantitatively-measured consolidation work: catastrophic-forgetting reduction 67-80%, forward-transfer +34-43%, memory footprint -62% on Meta-World MT50 / Atari / MuJoCo."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411306B",
+      "title": "Learning to Forget -- Hierarchical Episodic Memory for Lifelong Robot Deployment",
+      "firstAuthor": "Bärmann, Leonard",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11306",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "H2-EMV: LM-based relevance estimation drives selective forgetting under learned natural-language rules updated by user feedback; measures QA accuracy retention against memory-size and query-compute savings.",
+          "why": "Directly measures the forgetting/retention trade-off: maintains QA accuracy while cutting memory 45% and query compute 35%; +70% second-round accuracy from adaptive forgetting."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423424H",
+      "title": "Evolve: A Persistent Knowledge Lifecycle for Small Language Models",
+      "firstAuthor": "Hovagimian, Dikran",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23424",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Teacher-compiled persistent knowledge store refined through sleep consolidation and usage-driven retention/decay for small local LMs.",
+          "why": "Second sleep-consolidation lifecycle system (adjacent to SCM); frames usage-driven retention as a knowledge lifecycle rather than static store."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411544W",
+      "title": "Time is Not a Label: Continuous Phase Rotation for Temporal Knowledge Graphs and Agentic Memory",
+      "firstAuthor": "Waylon Li, Weixian",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11544",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Encodes time as continuous phase rotation (not a discrete label) in temporal KG / agentic memory so validity intervals and obsolescence are representable.",
+          "why": "Mechanism for representing knowledge obsolescence/temporal validity in structured agent memory — substrate for belief-revision over time."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250212110X",
+      "title": "A-MEM: Agentic Memory for LLM Agents",
+      "firstAuthor": "Xu, Wujiang",
+      "year": 2025,
+      "citationCount": 5,
+      "arxiv": "2502.12110",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Zettelkasten-style self-organizing agent memory with dynamic linking and note evolution as new memories arrive.",
+          "why": "Widely-cited agentic-memory base system; its 'memory evolution' is consolidation-by-rewriting but reports no forgetting/retention metric — illustrates the measurement gap."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260513941L",
+      "title": "EvolveMem: Self-Evolving Memory Architecture via AutoResearch for LLM Agents",
+      "firstAuthor": "Liu, Jiaqi",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.13941",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Self-evolving memory that treats retrieval infrastructure as mutable, auto-researching its own organization across multi-session operation.",
+          "why": "Self-evolving store directly relevant to negative-transfer/forgetting risk during self-modification; tests whether self-evolution degrades earlier capability."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250107278Z",
+      "title": "Lifelong Learning of Large Language Model based Agents: A Roadmap",
+      "firstAuthor": "Zheng, Junhao",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2501.07278",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Roadmap framing continual/incremental learning for LLM agents, organizing memory, forgetting, and knowledge-accumulation challenges.",
+          "why": "Survey-level scaffold that names catastrophic forgetting and stability-plasticity as open agent-memory problems; useful for taxonomy and gap-mapping."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250408000L",
+      "title": "Neuron-level Balance between Stability and Plasticity in Deep Reinforcement Learning",
+      "firstAuthor": "Lan, Jiahua",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.08000",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Per-neuron stability/plasticity balancing to address the stability-plasticity dilemma in deep RL agents.",
+          "why": "Direct, quantitative treatment of the stability-plasticity trade-off at the mechanism level — adjacent foundation for agent-memory consolidation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260517596S",
+      "title": "NeuSymMS: A Hybrid Neuro-Symbolic Memory System for Persistent, Self-Curating LLM Agents",
+      "firstAuthor": "Sultan, Mujahid",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.17596",
+      "url": null,
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Neuro-symbolic, self-curating memory where symbolic structure governs update/curation of persistent cross-session user knowledge.",
+          "why": "Self-curation = active pruning/revision; symbolic layer makes obsolescence and conflict resolution inspectable and potentially measurable."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260524060P",
+      "title": "Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks (TIAP)",
+      "firstAuthor": "",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.24060",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Not a task benchmark — a FIXED-OUTPUT AUDIT (TIAP) over already-saved ranked retrieval traces. The audited object is the 'scoring target': the set of stored memory IDs eligible to receive retrieval credit for a query when one source turn has spawned multiple derived memories in the same index. Three targets are defined formally for a fixed source anchor s(q) and store S: Raw T_raw(q,S) = {m in I(S): l_S(m)=s(q) AND raw_S(m)} (only the exact raw source turn); Source T_src(q,S) = {m: l_S(m)=s(q)} (any descendant linked to the same source evidence); Canonical T_can(q,S) = {m: l_S(m)=s(q) AND can_S(m)} (transformed non-raw serving memories). By construction T_raw and T_can are subsets of T_src and are typically DISJOINT from each other. The rules a store uses to assign lineage (l_S, raw_S, can_S) are its 'lineage contract'. Three-stage method: Stage I construct Raw/Source/Canonical targets per query+store; Stage II FIXED-OUTPUT RESCORING — rescore the SAME saved top-k ranked traces under each target without rerunning retrieval; Stage III target-sensitivity analysis + semantic audit. Outputs tracked in Stage III: score shifts, query-level hit-status changes, WINNER FLIPS (sign of Delta_t(A,B)=M_t(A)-M_t(B) changes as target t varies), and DESIGN-RECOMMENDATION changes (which store config looks best). Includes a SHARED-QUERY-SUBSET control: a query is included only when all compared targets have >=1 eligible stored ID, so score changes reflect the credited target set, not query difficulty.",
+          "why": "Critical methodological guardrail for a memory-eval harness: (1) ALWAYS define and report the scoring target (Raw vs Source vs Canonical) explicitly — credit assignment when one source spawns derived memories is a benchmark-design choice that silently flips rankings; (2) the fixed-output RESCORING pattern lets you re-grade saved traces under multiple credit policies without re-running retrieval — cheap and reproducible; (3) the SHARED-QUERY-SUBSET control prevents confounding target choice with query difficulty; (4) keep gold/evidence labels OUT of the memory-writer to prevent leakage; (5) k=60 with documented recall-plateau justification is a reusable retrieval-depth default; (6) the winner-flip / Delta_t(A,B) sign-change test is a reusable robustness check; (7) the 5-model-majority semantic audit (validated against a human-labeled stratified subset, Fleiss kappa reported) is a reusable LLM-judge calibration recipe; (8) ship a reproducibility layer (target mappings + fixtures + rescoring utils) like MTEL-Mem."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260520926T",
+      "title": "MemConflict: Evaluating Long-Term Memory Systems Under Memory Conflicts",
+      "firstAuthor": "",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.20926",
+      "url": null,
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Diagnostic framework treating memory validity as a query-conditioned FITNESS-FOR-USE problem along 3 dimensions: temporal validity, factual correctness, contextual applicability. These map to 3 CONFLICT TYPES: (1) DYNAMIC conflict — earlier and later states coexist; a later TRUE update should supersede the earlier state (tests temporal validity, over dynamic state attributes). (2) STATIC conflict — a later FALSE contradictory mention should NOT overwrite a stable invariant fact (tests factual correctness, over invariant attributes). (3) CONDITIONAL conflict — multiple values are each valid under different conditions; only the condition matching the query applies (tests contextual applicability, over conditional-preference attributes). Formalized as validity determination: given query q_t issued right after session s_t and history prefix H_t, return v*(alpha,q_t|H_t) = argmax over candidates of F(v|alpha,H_t,q_t); construction guarantees a unique maximizer. Each query is anchored to the history PREFIX at query time (not the full history). Query forms per type: static query issued after the contradictory mention asks for the true invariant value; dynamic query issued after a true update asks for the temporally valid value at query time; conditional query gives a preference VALUE and asks for the CONDITION under which it applies (gold = the condition c_l). Two-level evaluation protocol: BLACK-BOX (final answer) + WHITE-BOX (whether the gold supporting memory item is retrieved and how it is ranked). Evaluated on 6 memory systems: A-Mem, LangMem, Letta, MemOS, Mem0, Memobase, all wired into a common query/answer-normalization/white-box retrieval pipeline. Controlled factors swept: retrieval depth K in {2,3,5} (main K=3), dialogue length (medium/long), distractor on/off, query formulation (direct vs implicit), conflict distance (number of intervening sessions).",
+          "why": "Highly reusable as the conflict-aware core of a memory-eval harness: (1) the dynamic/static/conditional conflict taxonomy (true-update-supersedes vs false-contradiction-must-not-overwrite vs condition-specific-applicability) is a directly portable test-case generator spec; (2) persona-seed -> structured-profile -> timeline-simulation -> conflict-injection -> distractor-injection -> two-stage dialogue (synopsis then realization) -> evaluable-query pipeline is a complete reusable synthesis recipe, with explicit constraint machinery (feasibility/cooldown/persona-consistency, validation rule V_d, isolation by not-re-mentioning between conflict endpoints); (3) the unique-maximizer query-conditioned gold (argmax F over candidates at the history prefix) is a clean labeling formalism; (4) the black-box + white-box split with metric set AA / SEH@K / SRS / UOCS / CRS and macro-averaging across types is a ready metric suite; (5) the SEH@K-vs-SRS gap and CRS-vs-AA divergence are reusable failure-localization diagnostics (missing memory vs low-ranked memory vs ineffective use); (6) controlled-factor sweep design (retrieval depth, dialogue length, distractor on/off, direct vs implicit query, conflict distance) is a reusable stress-test matrix; (7) related-entity distractor injection that leaves the answer unchanged is a reusable hard-negative design."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260506716L",
+      "title": "From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms",
+      "firstAuthor": "Luo, Jinghao",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.06716",
+      "url": null,
+      "branches": [
+        "applications-personalization",
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Surveys the shift from passive storage to experience-centric memory across LLM-agent applications, organizing mechanisms by how memory is written, reused, and evolved.",
+          "why": "Application-taxonomy anchor that maps which memory mechanisms are used in which deployment domains; useful scaffolding for organizing benchmark coverage across application areas."
+        },
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Formalizes memory evolution into three stages — Storage (trajectory preservation) → Reflection (trajectory refinement) → Experience (trajectory abstraction) — and names the field's split between OS-engineering and cognitive-science framings.",
+          "why": "The maturity axis a benchmark task can be mapped onto; the single best orientation document for what capability a given task probes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230902427S",
+      "title": "Cognitive Architectures for Language Agents (CoALA)",
+      "firstAuthor": "Sumers, Theodore R.",
+      "year": 2023,
+      "citationCount": 154,
+      "arxiv": "2309.02427",
+      "url": null,
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Imports the cognitive-science memory taxonomy (working / episodic / semantic / procedural) into LLM agents: modular memory components, a structured action space over internal memory + external environment, and a generalized decision loop.",
+          "why": "The reference vocabulary a memory benchmark tests against; its taxonomy is the basis for per-memory-type probes rather than one aggregate recall score."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250419413C",
+      "title": "Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory",
+      "firstAuthor": "Chhikara, Prateek",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2504.19413",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Production fact-extraction + consolidation memory layer that beats the fixed context window; reports on LoCoMo a 26% relative LLM-judge improvement over OpenAI memory, 91% lower p95 latency, >90% token savings vs full-context.",
+          "why": "The de facto production baseline nearly every 2026 memory system reports against; a mandatory comparison point for any harness."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250206975P",
+      "title": "Position: Episodic Memory is the Missing Piece for Long-Term LLM Agents",
+      "firstAuthor": "Pink, Mathis",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2502.06975",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Position paper directly on the review's thesis.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240704363A",
+      "title": "AriGraph: Learning Knowledge Graph World Models with Episodic Memory for LLM Agents",
+      "firstAuthor": "Anokhin, Petr",
+      "year": 2024,
+      "citationCount": 12,
+      "arxiv": "2407.04363",
+      "url": null,
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "KG world model + episodic memory architecture.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250303704D",
+      "title": "A Practical Memory Injection Attack against LLM Agents",
+      "firstAuthor": "Dong, Shen",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.03704",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Concrete memory-injection attack.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250213172W",
+      "title": "Unveiling Privacy Risks in LLM Agent Memory",
+      "firstAuthor": "Wang, Bo",
+      "year": 2025,
+      "citationCount": 3,
+      "arxiv": "2502.13172",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Privacy leakage from agent memory stores.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250111739D",
+      "title": "Episodic memory in AI agents poses risks that should be studied and mitigated",
+      "firstAuthor": "DeChant, Chad",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2501.11739",
+      "url": null,
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "Risk framing for episodic agent memory.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210707567X",
+      "title": "Beyond Goldfish Memory: Long-Term Open-Domain Conversation",
+      "firstAuthor": "Xu, Jing",
+      "year": 2021,
+      "citationCount": 67,
+      "arxiv": "2107.07567",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Foundational long-term dialogue benchmark (pre-wave).",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221008750B",
+      "title": "Keep Me Updated! Memory Management in Long-term Conversations",
+      "firstAuthor": "Bae, Sanghwan",
+      "year": 2022,
+      "citationCount": 9,
+      "arxiv": "2210.08750",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Early memory-management benchmark for long conversations.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016Sci...352..305S",
+      "title": "A pathway for forgetting",
+      "firstAuthor": "Stern, Peter",
+      "year": 2016,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Neuroscience anchor: active forgetting pathway.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019Sci...365R1260S",
+      "title": "A brain pathway for active forgetting",
+      "firstAuthor": "Stern, Peter",
+      "year": 2019,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Neuroscience anchor: active forgetting.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020Sci...370S1428S",
+      "title": "Memory consolidation in the neocortex",
+      "firstAuthor": "Stern, Peter",
+      "year": 2020,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Neuroscience anchor: consolidation.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv200207111U",
+      "title": "Targeted Forgetting and False Memory Formation in Continual Learners through Adversarial Backdoor Attacks",
+      "firstAuthor": "Umer, Muhammad",
+      "year": 2020,
+      "citationCount": 4,
+      "arxiv": "2002.07111",
+      "url": null,
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Adversarial false-memory formation in continual learning.",
+          "why": "Surfaced by the 2026-06-11 dense-lane rerun (missed in the lexical-only window)."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "procedural-skills",
+      "label": "Procedural & Skills",
+      "summary": "Procedural Memory & Skill Libraries for LLM Agents (Voyager-style skill libraries, agent workflow memory, skill induction/evolution, case-based procedural reuse for coding/tool-use/GUI agents)",
+      "themes": [
+        "Two representations of procedural memory compete: executable code-skill libraries (Voyager, SkillClaw, Skill1, SkillDroid) versus natural-language workflows/manuals/rules (Agent Workflow Memory, AutoManual). Benchmarks must evaluate both, and they differ in how they fail (compilation/composition errors vs ambiguous-instruction drift).",
+        "The field is shifting from episodic, single-task scoring toward longitudinal evaluation of accumulation and reuse across trajectories (SEA-Eval, SkillEvolBench, AWM's widening train-test-gap protocol). The acquisition-then-frozen-deployment split is emerging as the standard methodological pattern.",
+        "Library maintenance is itself the hard problem: selection, utilization, and distillation must be co-managed or the library accrues episode-specific drift, clutter, and cap saturation (Skill1, SkillEvolBench, MUSE-Autoskill). Library health (size, growth rate, high-frequency-skill coverage) is becoming a measured quantity, not just a side effect.",
+        "A credibility crisis around attribution: updating a skill/harness is routinely conflated with benefiting from it (Harness Updating Is Not Harness Benefit), and raw-trajectory reuse frequently beats distilled skills (SkillEvolBench). Controlled, ablated eval design is required to attribute gains to procedural memory rather than to base capability or mere activity.",
+        "Generalization axes are proliferating beyond in-distribution reuse: cross-task, cross-website/domain (AWM), cross-domain transfer in coding agents (Memory Transfer Learning), and adversarial/compositional deployment shifts (SkillEvolBench). Procedural-memory benchmarks increasingly define explicit distribution-shift conditions.",
+        "Reuse value is multi-objective: success rate plus inference/compute cost (SkillDroid's compile-once reuse, Skill1's wall-clock and library-size analyses, ClawTrace's per-step cost tracing). Efficiency is becoming a co-equal eval metric alongside task success."
+      ],
+      "gaps": [
+        "No standardized, shared procedural-memory benchmark with frozen held-out deployment splits is established - SkillEvolBench and SEA-Eval are brand-new (2026, ~0 citations) and not yet consolidated; this work could define the canonical harness rather than adopt one.",
+        "Attribution methodology is immature: most systems report only end-task success and conflate harness/skill updates with capability gains (per Harness Updating Is Not Harness Benefit). There is no widely adopted control protocol (no-skill, raw-trajectory, curated-prior baselines) for isolating procedural-memory contribution.",
+        "Synthetic-data pipelines for procedural memory are nearly absent: role-conditioned task families with known shared latent procedures (SkillEvolBench builds 180 by hand) are not generated at scale, leaving no programmatic way to control procedure overlap, distractor skills, or compositional depth in eval sets.",
+        "Library-health and anti-erosion metrics are ad hoc: drift, clutter, interference, and cap saturation are observed but not standardized into reusable diagnostics, so cross-system comparison of library quality is not possible.",
+        "Procedural memory is benchmarked in silos (web nav, GUI, coding, embodied) with little cross-domain transfer evaluation; how a skill library acquired in one domain helps or harms in another (Memory Transfer Learning) lacks a multi-domain harness.",
+        "The semantic/episodic/procedural memory split this work targets is rarely co-evaluated: procedural-skill benchmarks seldom test interaction with episodic recall or semantic facts within the same trajectory, so integrated multi-memory-type eval tasks are an open design space."
+      ],
+      "questions": [],
+      "count": 14
+    },
+    {
+      "key": "reflection-experience",
+      "label": "Reflection & Experience",
+      "summary": "Reflection & Experience-Stage Memory: self-evolving / reflective memory that improves an LLM agent's policy across trajectories (the Reflection -> Experience frontier)",
+      "themes": [
+        "Write-read decomposition of reflective memory: nearly every recent system splits memory into a prospective/write-side policy (what + how to store, via reflection or contrastive distillation) and a retrospective/read-side policy (retrieval refined by downstream utility), and the field is converging on evaluating these two stages independently (Reflective Memory Management, Learning How and What to Memorize, TSUBASA).",
+        "From retrieved experience to generated/abstracted experience: the frontier is moving past raw trajectory retrieval toward cross-trajectory abstraction — clustering, contrastive analysis, hierarchical experience, workflow induction, and skill evolution — because retrieved raw episodes force the base LLM to re-adapt them (CLEAR, HiExp, Agent Workflow Memory, SkillClaw).",
+        "Self-evolution couples memory with capability: the newest work jointly optimizes memory and policy/tool-graph/skill-library so accumulated experience compounds into expanded capability rather than just a growing text store (SEARL, Mem2Evolve, SkillClaw, Self-Learning Diagnostic Agent).",
+        "Utility-driven, longitudinal metrics over surface-match: benchmarks are shifting to downstream-utility scoring and improvement-trajectory metrics across many sessions/cases instead of single-shot retrieval accuracy (BEHEMOTH's downstream-utility metric, Evo-MedAgent's beyond-one-shot framing).",
+        "Parametric vs non-parametric consolidation as an explicit design axis: experience can be consolidated into per-user weights or into compacted context, and recent work treats this as a controlled comparison rather than an architectural assumption (Dennis consolidation-vs-compaction, TSUBASA context distillation, CLEAR's SFT+RL CAM)."
+      ],
+      "gaps": [
+        "No standardized harness isolates the *reflection-induced* gain from base-model improvement: papers report end-task deltas (e.g. CLEAR's AppWorld 72.62 -> 81.15) but there is no shared protocol that ablates write-side vs read-side reflection on the SAME multi-session trajectory, so cross-paper comparison of 'does memory improve the policy' is apples-to-oranges.",
+        "Catastrophic forgetting and memory drift in self-evolving stores are under-measured: systems like SkillClaw and Mem2Evolve let skills/experience evolve continually, but almost none report whether earlier-acquired competence degrades as memory evolves — there is no negative-transfer or forgetting metric in the agentic-memory eval canon.",
+        "Synthetic multi-session trajectory pipelines are bespoke per paper: BEHEMOTH repurposes 18 existing datasets and others hand-build dialogue/diagnosis streams, but there is no reusable generator for controllable, ground-truth-labeled multi-session experience streams with injected conflicts, distractors, and known-reusable sub-skills.",
+        "Parametric vs non-parametric experience consolidation is compared only in isolated studies (Dennis) on small settings; the field lacks a benchmark that scores both consolidation modes under matched compute/token budgets across episodic, semantic, and procedural memory types.",
+        "Most reported numbers come from zero-citation 2026 preprints with single-domain evaluations (medical, web, search); external validity and reproducibility of the experience-reuse gains across domains remain unestablished, and open-source harnesses (CLEAR is a notable exception) are rare."
+      ],
+      "questions": [],
+      "count": 14
+    },
+    {
+      "key": "benchmarks-catalog",
+      "label": "Benchmarks",
+      "summary": "Benchmarks and datasets for long-term / multi-session / multi-turn agent memory (task types, dataset sizes, composition)",
+      "themes": [
+        "Task-type taxonomy is converging but uneven: single-hop / multi-hop recall, temporal reasoning, knowledge-update, and multi-session aggregation are well-covered (LoCoMo, LongMemEval), while abstention/adversarial-refusal, conflict-resolution, multi-party speaker attribution, and procedural/implicit memory are only just being added by 2026 benchmarks.",
+        "Synthetic vs real-world data split: the dominant benchmarks (LoCoMo, LongMemEval) are LLM-synthesized via persona + event-graph pipelines, prompting a counter-movement toward genuinely human data (REALTALK 21-day) and topic-guided generation pipelines (AgenticAI-DialogGen) to control the synthetic distribution gap.",
+        "Scenario expansion beyond dyadic Person-AI chat: 2026 benchmarks push into continuous lifelog/always-on wearable capture (LifeMem/EgoMem), multi-party group conversations (GroupMemBench), and multimodal interactions (MemLens, MemEye).",
+        "Diagnostic and failure-mode evaluation is emerging as a complement to single-number accuracy: stress-testing failure modes (MemFail) and conflicting-memory diagnostic testbeds (Selective QA) measure where and how memory breaks rather than aggregate score.",
+        "Procedural/agent-trajectory memory is a separate benchmark lineage from conversational recall: workflow induction over long-horizon web/task trajectories (Agent Workflow Memory) and implicit behavioral adaptation (ImplicitMemBench) target the procedural leg of the semantic/episodic/procedural triad."
+      ],
+      "gaps": [
+        "No unified harness spans the full task taxonomy: recall, temporal, knowledge-update, abstention, conflict-resolution, multi-party, procedural, and personalization each live in separate benchmarks with incompatible formats and metrics, so cross-system comparison is impossible.",
+        "Abstention / hallucination-resistance (refusing questions about never-disclosed facts) is almost never reported despite being a first-class LongMemEval ability; most LoCoMo leaderboards omit it entirely, so adversarial 'unanswerable' splits are under-resourced.",
+        "Procedural and implicit memory are barely benchmarked relative to semantic/episodic recall; ImplicitMemBench and Agent Workflow Memory are early and isolated, with no standard task suite for skill/workflow reuse across sessions.",
+        "Dataset scale is small and possibly contaminated: LoCoMo has only 10 conversations / 1,813 questions, raising statistical-power and train-test-leakage concerns for systems now scoring >94%, yet scalable synthetic-generation pipelines that preserve answerability ground truth are immature.",
+        "Real-world, multi-party, and multimodal/lifelog memory benchmarks are nascent (REALTALK, GroupMemBench, MemLens, MemEye, LifeMem) with no shared evaluation protocol, leaving open how to score speaker-attribution, visual-evidence retention, and ambient-capture recall consistently."
+      ],
+      "questions": [],
+      "count": 17
+    },
+    {
+      "key": "eval-methodology",
+      "label": "Eval Methodology",
+      "summary": "Evaluation methodology and metrics for agentic memory systems: retrieval-aware vs answer-level scoring, white-box diagnostics, failure attribution, LLM-as-judge reliability, scoring-target sensitivity, statistical rigor, and reproducibility",
+      "themes": [
+        "Stage-decomposed / white-box diagnostics: a clear shift from answer-only scoring toward attributing memory failures to write, retrieve, evidence-construction, or generation stages (MemTrace, AuthTrace), enabling failure-attribution rather than a single pass/fail.",
+        "Beyond factual recall as the scoring target: benchmarks increasingly distinguish shallow recall from strategic/procedural memory use and from temporal update-tracking (StratMem-Bench, Continuous Lifelog), making the choice of scoring target a first-class methodological variable.",
+        "LLM-as-judge reliability and calibration for memory QA: judges carry position/verbosity/self-preference biases and fine-tuned judges fail to transfer, so memory-eval pipelines must validate judge-human agreement before trusting judge-based correctness (Gu, Li, Huang).",
+        "Reproducibility and ecological validity: benchmark contamination/leakage, content drift, and the realism-reproducibility-scalability trilemma threaten the validity of memory-system comparisons and push toward leak-controlled synthetic trajectories (NumLeak, WebForge, AlphaEval).",
+        "Richer-than-binary correctness metrics: graded support relations and groundedness taxonomies replace binary hallucination flags, changing how grounded memory answers are scored (Sarkar).",
+        "Metric saturation on incumbent benchmarks: high reported LoCoMo numbers indicate single-benchmark accuracy is approaching ceiling, motivating harder, adversarial, and multi-axis memory evaluation (Synthius-Mem)."
+      ],
+      "gaps": [
+        "No standardized failure-attribution taxonomy or shared harness: MemTrace and AuthTrace each invent their own stage decomposition, with no common schema or open tooling to make per-stage memory diagnostics comparable across systems.",
+        "Judge reliability is studied generically but almost never validated specifically for memory QA (temporal grounding, multi-session attribution, contradiction handling); calibration of LLM judges against human labels on memory-specific question types is largely unmeasured.",
+        "Scant statistical rigor: memory-system comparisons report point accuracies (e.g. single LoCoMo numbers) without confidence intervals, seed/variance reporting, or significance testing across systems, so ranking stability is unknown.",
+        "Contamination control for memory benchmarks is unaddressed: NumLeak-style leakage is documented for numeric benchmarks but no memory benchmark reports leak-controlled construction, conflating memorized recall with genuine retrieval-and-use.",
+        "Evaluation conflates retrieval quality with answer quality: few harnesses jointly report retrieval-aware metrics (did the right memory get retrieved) and answer-level metrics, leaving the retrieve-vs-reason attribution to ad hoc analysis."
+      ],
+      "questions": [],
+      "count": 14
+    },
+    {
+      "key": "synthetic-data",
+      "label": "Synthetic Data",
+      "summary": "Synthetic data generation for agent/memory evaluation: profile-driven dialogue simulation, LLM user simulators, controllable conflict/distractor injection, persona generation, synthetic-vs-real distribution gaps, and data quality/diversity for agentic memory eval",
+      "themes": [
+        "Profile/graph-conditioned generation: synthetic dialogue is increasingly driven by structured persona or knowledge-graph inputs (AgenticAI-DialogGen, Graph2Counsel) so that memory facts, topic continuity, and clinical/behavioral reasoning are controllable rather than emergent.",
+        "Controllable distractor, conflict, and noise injection: benchmarks deliberately inject distractors (UniToolCall Hybrid-20), realistic user noise (VeriSim), and adversarial-abstention queries (EngramaBench) to stress retrieval and memory under non-ideal conditions.",
+        "Synthetic-vs-real distribution gap as a first-class measurement: OmniBehavior and REALTALK frame the central risk that LLM user simulators homogenize personas and lose long-tail behavior; data realism must be measured against real traces, not assumed.",
+        "Generator auditing by data composition: rather than judging generators only by downstream scores, the Quality–Diversity–Complexity framework (Havrilla) measures the synthetic data itself, surfacing quality–diversity trade-offs relevant to eval-set construction.",
+        "Controlled, model-isolating eval protocols: memory benchmarks hold the answering model fixed and vary only the memory architecture (EngramaBench), and decompose scoring to fine-grained levels (UniToolCall call/turn/conversation) to attribute performance cleanly.",
+        "User simulators as the trajectory engine: surveys of conversational user simulation and multi-turn agent evaluation (Ni; Guan) treat the LLM user as the driver of multi-session test trajectories, with the simulator's own fidelity being a separate evaluation problem."
+      ],
+      "gaps": [
+        "No standard quantitative fidelity metric ties synthetic memory-eval data back to real distributions; OmniBehavior names biases (persona homogenization, Utopian bias) but there is no agreed score for whether a synthetic multi-session memory set is realistic.",
+        "Controllable conflict/contradiction injection for memory (the base review's MemConflict territory) is largely absent from the generation pipelines surveyed — distractor injection is well developed (UniToolCall, VeriSim) but principled generation of temporally-evolving contradictory facts to test belief updating is not.",
+        "Benchmarks are tiny and persona-thin (EngramaBench: 5 personas / 100 conversations / 150 queries), leaving the scaling question — how to generate thousands of diverse, enterprise-relevant personas without collapsing to the 'average person' — unanswered.",
+        "Procedural and semantic memory are under-covered relative to episodic/conversational recall; tool-use trajectory generation (UniToolCall) and conversational memory (EngramaBench, AgenticAI-DialogGen) are siloed, with no unified synthetic generator spanning semantic/episodic/procedural memory types.",
+        "Contamination/leakage controls for synthetic memory benchmarks are barely addressed; none of the generation pipelines surveyed specify how to guarantee the eval data was not (or cannot be) memorized, despite this being a known agent-eval failure mode."
+      ],
+      "questions": [],
+      "count": 12
+    },
+    {
+      "key": "architectures",
+      "label": "Architectures",
+      "summary": "Memory architectures beyond the basics: temporal-KG, hierarchical/tree, hypergraph, tiered/OS-style, routing, parametric vs non-parametric, specialized retrieval, and consolidation/forgetting for LLM-agent memory",
+      "themes": [
+        "Structured memory substrates are proliferating along a spectrum - flat text -> typed/semi-structured entries -> pairwise knowledge graphs (Zep/Graphiti) -> hypergraphs (HyperMem) -> hierarchical trees (MemTree, LinkedIn) - and each structure implies different recall failure modes a benchmark must isolate.",
+        "Temporal validity is becoming a first-class memory primitive: edge time-stamping, event tuples, and change-tracking (Zep, APEX-MEM, GRAVITY, dual-trace) shift evaluation from static fact recall toward time-aware reasoning and obsolescence handling.",
+        "Consolidation-vs-forgetting (stability-plasticity) is emerging as an explicit architectural axis (GAM, SCM sleep-consolidation, ZenBrain) yet remains weakly benchmarked - most metrics still reward pure accumulation rather than correct pruning.",
+        "Retrieval for memory is being specialized away from generic embedding RAG toward information-theoretic scoring (Memanto), iterative memory-as-cognition (MemCog), thought retrieval (Thought-Retriever), and OS-style paging (cooperative paging) - implying recall@k is an insufficient harness metric.",
+        "Architecture-agnostic, cross-system comparative evaluation (GRAVITY across 5 systems; GraphRAG-vs-RAG benchmarking) is becoming the credible methodology, replacing single-system self-reports - directly relevant to building an open eval harness.",
+        "Memory-type taxonomy (semantic/episodic/procedural and proposed extra layers like an explicit Knowledge layer or 7-layer schemes) is contested, meaning benchmarks should instrument per-type probes rather than one aggregate recall score."
+      ],
+      "gaps": [
+        "Forgetting and obsolescence are rarely scored: SCM and GAM implement forgetting mechanisms but no shared benchmark rewards correct removal of stale/superseded memories - existing metrics (DMR, LongMemEval, LoCoMo) measure accumulation/recall, not principled deletion.",
+        "Hypergraph and n-ary memory (HyperMem) lack standardized multi-entity/multi-participant recall tasks; current benchmarks are built around pairwise or flat facts, so higher-order structure cannot be credited.",
+        "Procedural-memory evaluation is thin: Thought-Retriever and reasoning-reuse systems have no widely adopted task suite measuring reuse of past reasoning/skills across sessions, unlike the relatively mature semantic-recall benchmarks.",
+        "Retrieval-mechanism ablations are under-reported: papers swap in information-theoretic, iterative, or paging retrieval but seldom isolate the retrieval objective from the storage structure, leaving unclear what drives gains - a harness gap an open eval could fill.",
+        "Temporal-reasoning evaluation is fragmented across system-specific reports (Zep, APEX-MEM, GRAVITY) with no shared multi-session temporal/change-tracking benchmark, so cross-architecture temporal claims are not comparable.",
+        "Almost all reported systems show zero citations and self-defined eval splits, indicating no consolidated leaderboard or reproducible harness for memory-architecture comparison - the core opportunity for this work."
+      ],
+      "questions": [],
+      "count": 17
+    },
+    {
+      "key": "security-governance",
+      "label": "Security & Governance",
+      "summary": "Memory Security, Privacy & Governance for LLM Agents (memory poisoning, indirect prompt injection into persistent stores, adversarial robustness, privacy-preserving memory, access control, auditing/provenance)",
+      "themes": [
+        "Trigger-optimized poisoning of the retrieval substrate (memory or RAG KB) is the dominant attack pattern — measured with a shared RSR@k / ASR / Benign-Accuracy triad — and is migrating from flat vector stores to graph-structured and cross-session shared memory.",
+        "Persistence is the new attack surface: cross-session state and shared/multi-user memory enable contamination, worming, and unintended drift that stateless-LLM threat models do not capture, demanding multi-session-trajectory evaluation.",
+        "Defenses are consolidating around provenance/lineage tagging and post-hoc audit graphs (MemLineage, Agent-BOM, StateGuard write-back auditing) rather than input filtering alone, giving harnesses a memory-metadata schema to attack and score against.",
+        "Privacy evaluation is shifting from data-leakage-at-answer to contextual-integrity-in-action — measuring whether agents disclose confidential memory while taking actions over realistic trajectories (PrivacyLens pattern).",
+        "Synthetic seed-to-trajectory data generation (PrivacyLens, When Routine Chats Turn Toxic) is becoming the standard pipeline for producing privacy/poisoning benchmark cases at scale, often paired with a small real-seed validation set.",
+        "Availability/refusal attacks (RAG jamming, blocker documents) are a recognized but under-evaluated failure mode distinct from integrity poisoning, requiring over-refusal as a measured outcome."
+      ],
+      "gaps": [
+        "No standardized, open memory-security harness with shared metrics across attack families: poisoning ASR, induced over-refusal/jamming rate, cross-user leakage, and provenance-violation detection are each measured in bespoke per-paper setups.",
+        "Defenses (MemLineage lineage enforcement, Agent-BOM auditing, StateGuard) are reported on their own attacks; there is little head-to-head benchmarking of detection/enforcement defenses against a common, adaptive poisoning suite.",
+        "Episodic/procedural memory security is largely unaddressed — almost all attacks target semantic/retrieval memory; poisoning of stored procedures, skills, or episodic trajectories (cf. BadSkill) lacks dedicated benchmarks.",
+        "Privacy and poisoning are evaluated separately; few benchmarks jointly test access-control/contextual-integrity violations and integrity poisoning within the same multi-session deployed-agent trajectory.",
+        "Edge-cloud / federated memory governance is essentially untouched in this corpus — no benchmark models access control, leakage, or poisoning across a split on-device/cloud memory boundary despite on-device-LLM momentum."
+      ],
+      "questions": [],
+      "count": 16
+    },
+    {
+      "key": "applications-personalization",
+      "label": "Applications & Personalization",
+      "summary": "Applications & Personalization of Agentic Memory: long-horizon user modeling, personalized assistants, multimodal memory, and domain deployments (coding, healthcare, GUI/computer-use, embodied)",
+      "themes": [
+        "Personalization is moving from static profiles to EVOLVING per-user memory with self-learning/context-distillation loops (TSUBASA, Reflective Memory Management, situational/persona steering), shifting eval from one-shot recall toward measuring preference accumulation, revision, and drift over many sessions.",
+        "Procedural/experience memory is the dominant memory type in deployment domains: coding agents transfer memory across domains (Memory Transfer Learning), self-evolving agents distill experience into reusable capabilities (Mem2Evolve), and GUI/visual agents compile traces into reusable skills (SkillDroid, MMSkills). Eval must score reuse quality AND efficiency, not just task success.",
+        "Multimodal memory is emerging as a distinct frontier (PersonaVLM, MMSkills) — memory keyed on images/perception+action, not just text logs — yet benchmarks and synthetic pipelines remain overwhelmingly text-conversation-based.",
+        "Domain deployments demand domain-grounded evaluation frameworks rather than generic recall QA: healthcare proposes longitudinal coherence/continuity/adaptation/agency layers (longitudinal health agent) and clinical world models (Clinical World Model + Skill-Mix), which generic memory benchmarks do not capture.",
+        "Memory enables a shift from reactive recall to PROACTIVE, intent-aware action (PASK) and to multi-user isolation (Multi-User LLM Agents) — production axes (proactivity, per-user partitioning, cross-user leakage) that current single-user recall benchmarks largely ignore.",
+        "The 'harness' itself is becoming the unit of engineering and study for personal/deployed agents (SemaClaw harness engineering, M*'s per-task memory harness), aligning the application literature with the open-source eval-harness focus of this work."
+      ],
+      "gaps": [
+        "Almost no standardized, multi-session benchmark targets MULTIMODAL personalized memory; PersonaVLM and MMSkills introduce methods but the field lacks a shared multimodal long-horizon eval set with synthetic-data generation recipes.",
+        "Domain deployments (healthcare, coding, GUI) propose bespoke evaluation frameworks (continuity/adaptation layers, clinical world models, skill-reuse efficiency) but there is no cross-domain harness that lets the same memory system be scored under each domain's specific longitudinal criteria.",
+        "Multi-user / per-user memory isolation and cross-user leakage (Multi-User LLM Agents) is essentially unbenchmarked — no synthetic adversarial test set probes whether one user's memory contaminates another's responses.",
+        "Procedural-memory transfer and reuse are claimed to generalize across domains (Memory Transfer Learning, Mem2Evolve) but evaluations rarely separate in-domain reuse from genuine out-of-distribution transfer, leaving the transfer claim under-measured.",
+        "Proactive use of memory (acting on remembered intent unprompted, PASK) lacks evaluation methodology — recall-style benchmarks score retrieval accuracy but not whether/when an agent should surface remembered information without being asked, including false-proactivity costs."
+      ],
+      "questions": [],
+      "count": 13
+    },
+    {
+      "key": "forgetting",
+      "label": "Forgetting & Consolidation",
+      "summary": "Forgetting & consolidation metrics in agentic memory systems (catastrophic forgetting, negative transfer, memory consolidation incl. sleep-consolidation, algorithmic forgetting/pruning/eviction, stale-memory obsolescence, knowledge-update/belief-revision, stability-plasticity) — and how, or whether, any of it is measured.",
+      "themes": [
+        "Neuroscience-grounded consolidation (sleep-consolidation, synaptic-tagging-and-capture, hippocampal-cortical metaphors) is the dominant framing for 2026 forgetting work: SCM, Evolve, ZenBrain, Adaptive Memory Crystallization.",
+        "Obsolescence / stale-memory and belief-revision over time is emerging as its own evaluable problem (STALE benchmark, Time-is-Not-a-Label temporal KGs, NeuSymMS self-curation), distinct from static fact retrieval.",
+        "Eviction/pruning is increasingly designed as forget-with-recall or utility-driven retention (Cooperative Memory Paging, Learning to Forget/H2-EMV, Memanto information-theoretic scoring) rather than hard deletion.",
+        "Self-evolving stores raise the negative-transfer/forgetting risk explicitly, and a small set of multi-episode benchmarks (SEA-Eval) now try to measure accumulation-vs-amnesia beyond single-episode scoring.",
+        "Continual-RL forgetting machinery (forward transfer, forgetting%, stability-plasticity at neuron level) is being imported into agent memory (Adaptive Memory Crystallization, Neuron-level Balance, Lifelong-Learning roadmap)."
+      ],
+      "gaps": [
+        "No shared/standardized forgetting metric for textual agent memory: continual-RL borrows forward-transfer and forgetting% (AMC), STALE uses bespoke 3-dimensional accuracy, but there is no common retention-curve or forgetting-rate protocol across LLM-agent memory papers.",
+        "Most self-evolving / consolidating stores (A-MEM, EvolveMem, NeuSymMS, ZenBrain) report only downstream task quality and never quantify negative transfer or capability lost during self-modification — consolidation is asserted, not measured.",
+        "Stability-plasticity is invoked rhetorically in LLM-agent memory but quantified only in RL/neuromorphic settings (Neuron-level Balance, probabilistic metaplasticity); no agent-memory paper reports a stability-plasticity operating point.",
+        "Obsolescence detection is benchmarked almost solely by STALE; there is little work measuring whether deletion/pruning policies remove the RIGHT stale items (precision/recall of obsolescence decisions) rather than just shrinking the store.",
+        "Sleep-consolidation systems (SCM, Evolve) describe consolidation mechanisms but the searches surfaced no ablation isolating the consolidation step's effect on long-horizon retention vs a no-consolidation control."
+      ],
+      "questions": [],
+      "count": 19
+    }
+  ],
+  "reading": [
+    [
+      "2023arXiv230902427S",
+      "CoALA — the taxonomy",
+      "Foundations"
+    ],
+    [
+      "2026arXiv260506716L",
+      "From Storage to Experience (survey)",
+      "Foundations"
+    ],
+    [
+      "2025arXiv250316416Y",
+      "Survey on Evaluation of LLM-based Agents",
+      "Foundations"
+    ],
+    [
+      "2025arXiv250113956R",
+      "Zep / Graphiti (temporal-KG)",
+      "Systems"
+    ],
+    [
+      "2025arXiv250212110X",
+      "A-MEM (agentic memory)",
+      "Systems"
+    ],
+    [
+      "2025arXiv250419413C",
+      "Mem0 (production)",
+      "Systems"
+    ],
+    [
+      "2023arXiv230516291W",
+      "Voyager (skill library)",
+      "Procedural"
+    ],
+    [
+      "2024arXiv240907429Z",
+      "Agent Workflow Memory",
+      "Procedural"
+    ],
+    [
+      "2026arXiv260524117L",
+      "SkillEvolBench",
+      "Procedural"
+    ],
+    [
+      "2026arXiv260524060P",
+      "TIAP / Same Ranking, Different Winner",
+      "Methodology"
+    ],
+    [
+      "2026arXiv260520926T",
+      "MemConflict",
+      "Methodology"
+    ],
+    [
+      "2026arXiv260530621L",
+      "Harness Updating ≠ Harness Benefit",
+      "Methodology"
+    ],
+    [
+      "2026arXiv260506527C",
+      "STALE (bonus: forgetting)",
+      "Forgetting"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Unified multi-type white-box harness",
+      "Nothing spans semantic+episodic+procedural with stage-attributed diagnostics, explicit scoring targets (TIAP), fixed-answerer controls (EngramaBench), cross-system eval (GRAVITY) and CIs. Flagship open-source contribution."
+    ],
+    [
+      "Canonical procedural-memory benchmark",
+      "SkillEvolBench/SEA-Eval are days-old & unconsolidated; adopt the freeze-then-deploy arc + No-Skill / Raw-Trajectory attribution controls ('Harness Updating ≠ Benefit')."
+    ],
+    [
+      "Forgetting / obsolescence metric suite",
+      "Thinnest area: STALE (55.2% ceiling) + AMC continual-RL metrics are the only hard numbers; standardize a retention-curve + obsolescence-precision/recall protocol for textual memory."
+    ],
+    [
+      "Synthetic-data realism metric",
+      "OmniBehavior/REALTALK prove the gap; build a fidelity score + controllable conflict/distractor injection (MemConflict recipe) + QDC auditing."
+    ],
+    [
+      "Shared memory-security harness",
+      "RSR@k / ASR / Benign + over-refusal + cross-user leakage + provenance-violation, covering episodic/procedural stores (today's attacks only hit semantic)."
+    ],
+    [
+      "Unbenchmarked production axes",
+      "Multi-user isolation, proactive memory use, multimodal long-horizon recall."
+    ]
+  ],
+  "practices": []
+}

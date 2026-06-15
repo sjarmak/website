@@ -67,7 +67,7 @@ export interface Library {
   papers: LibraryPaper[];
 }
 
-// ---- lit_explorers ----
+// ---- thematic explorers (self-contained in src/data/knowledge/explorers/) ----
 
 export interface ExplorerSection {
   key: string;

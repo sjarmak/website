@@ -1,0 +1,1186 @@
+{
+  "id": "memory-design",
+  "title": "Memory Design Considerations",
+  "learningSlug": "memory-design-considerations",
+  "homepage": "/library/explorers/memory-design",
+  "paperCount": 51,
+  "themeCount": 11,
+  "papers": [
+    {
+      "bibcode": null,
+      "title": "Agents that remember: introducing Agent Memory",
+      "firstAuthor": "Tyson Trautmann",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://blog.cloudflare.com/introducing-agent-memory/",
+      "branches": [
+        "foundations",
+        "retrieval",
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Cloudflare's managed memory service: extracts structured memories from agent conversations and serves them on demand, with shared memory profiles so teams of agents read common knowledge. Framed around getting the right info into context even as windows pass 1M tokens.",
+          "why": "The most complete public blueprint for the shape of service described in many internal designs (sessions → turns → consolidated docs → multi-channel search). Build-vs-buy anchor for the whole map."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "Retrieval is five-channel parallel + Reciprocal Rank Fusion (RRF) — not a single vector lookup.",
+          "why": "Concrete, shipped instance of the multi-channel+fusion pattern; copy the channel decomposition. Connects directly to [precision-belief-state] on why channel fusion still needs retrieval-quality measurement."
+        },
+        {
+          "branch": "multiagent",
+          "takeaway": "Shared memory profiles let multiple agents access common knowledge.",
+          "why": "Productizes team/shared memory; pair with Slack's distilled-truth lesson for the coherence side."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Cloudflare Announces Agent Memory, a Managed Persistent Memory Service",
+      "firstAuthor": "Steef-Jan Wiggers",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.infoq.com/news/2026/04/cloudflare-agent-memory-beta/",
+      "branches": [
+        "foundations",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Third-party writeup of Cloudflare Agent Memory (private beta). Names the competitive set explicitly: Mem0, Zep, LangMem, Letta.",
+          "why": "Use this to scope the managed-memory market in one line. Takeaway: the named incumbents are exactly the frameworks the wire-format work [memorywire] says can't interoperate."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "Confirms five-channel parallel retrieval with RRF and structured-memory extraction.",
+          "why": "Independent confirmation of the architecture in [cf-agent-memory-blog]."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Memory in the Age of AI Agents (survey)",
+      "firstAuthor": "Hu et al. (50 authors)",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2025arXiv251213564H",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Large multi-institution survey formalizing agent memory as a core capability. Unifies a fragmented field into a taxonomy of memory forms (token-level logs vs parametric weights vs latent vectors) × functions (factual knowledge vs experiential learning vs working scratchpad).",
+          "why": "The canonical framing doc — read first to make the rest of the map legible. Its forms×functions grid is a good axis for any design review. Connects to every other category as the orienting vocabulary."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "AI Agents of the Week: Memory as a First-Class Citizen",
+      "firstAuthor": "Pascal Biese",
+      "year": "2025",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.llmwatch.com/p/ai-agents-of-the-week-papers-you-afa",
+      "branches": [
+        "foundations",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Newsletter roundup that flagged the agent-memory survey wave and frameworks like MemVerse (fast parametric recall + hierarchical retrieval) and WorldMM (multimodal experience consolidation).",
+          "why": "Good lay-of-the-land pulse on what the research community foregrounded as memory went mainstream. Lighter signal than the survey itself."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "What Is Twilio Conversation Memory?",
+      "firstAuthor": "Sean Spediacci",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.twilio.com/en-us/blog/products/launches/conversation-memory",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Productized 'memory across conversations' for Twilio's agent/CX stack.",
+          "why": "Data point that conversation memory is now table-stakes in vertical comms platforms, not just AI-infra vendors. Lower technical depth; useful as market evidence."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "AdaMem: Adaptive User-Centric Memory for Long-Horizon Dialogue Agents",
+      "firstAuthor": "Yan et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260316496Y",
+      "branches": [
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "Argues memory systems lean too hard on semantic similarity (misses user-centric evidence) and store related experiences as isolated fragments. Proposes adaptive, user-centric retrieval.",
+          "why": "Direct critique of cosine-similarity-as-relevance — the case for ranking on user state/goals, not just embedding distance. Connects to AdaMem's fragmentation point and [cast-episodic]'s coherence argument."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "To Retrieve or To Think? An Agentic Approach for Context Evolution",
+      "firstAuthor": "Chen et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2601.08747",
+      "branches": [
+        "retrieval",
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "RAG-at-every-step is a rigid brute-force strategy that wastes compute and can degrade performance. Proposes an agent that decides when to retrieve vs reason from current context.",
+          "why": "Reframes retrieval as a policy decision, not a reflex — the cost/quality lever most retrieval designs ignore. Bridges Retrieval and Working-Memory categories."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "HiNS: Hierarchical Negative Sampling for Memory Retrieval Embedding Models",
+      "firstAuthor": "Tian et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2601.14857",
+      "branches": [
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "Memory retrieval depends on the embedding model; existing training ignores the hierarchical difficulty of negatives (close distractors vs easy negatives) in human–agent interaction. HiNS trains on that hierarchy.",
+          "why": "The under-discussed layer beneath retrieval design: the embedding model itself decides what 'similar' means. Improving it is orthogonal to channel/fusion choices."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Structured Belief State and the First Precision-Aware Benchmark for LLM Memory Retrieval",
+      "firstAuthor": "Jeffrey Flynt",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2605.11325",
+      "branches": [
+        "retrieval",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "Observes that returning the entire belief store yields recall 1.0 and passes answer-quality evals — so answer-correctness can't validate a retrieval system. Introduces a precision-aware retrieval benchmark over a structured belief state.",
+          "why": "The cleanest statement of the retrieval-vs-answer-correctness gap (the 'unit test vs integration test' framing). A north star for evaluating any multi-channel retriever. Bridges Retrieval and Evaluation."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "How Slack Manages Context in Long-running Multi-agent Systems",
+      "firstAuthor": "Sergio De Simone",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.infoq.com/news/2026/04/slack-agent-context-management/",
+      "branches": [
+        "consolidation",
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Slack engineering moved away from accumulating chat logs toward structured memory, validation, and 'distilled truth' to keep long-running agents coherent and accurate.",
+          "why": "Production validation of the consolidation thesis — and crucially, they *validate* the distilled memory rather than trusting LLM rewrites. Read alongside [useful-memories-faulty], which explains why that validation step is necessary."
+        },
+        {
+          "branch": "multiagent",
+          "takeaway": "Targets coherence across long-running multi-agent systems specifically.",
+          "why": "Pairs with Cloudflare shared profiles as the two main public takes on multi-agent memory."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
+      "firstAuthor": "Zhang et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2605.12978",
+      "branches": [
+        "consolidation",
+        "temporal"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Distinguishes episodic traces (raw trajectories) from consolidated abstractions (schema-like lessons). Shows that when an LLM repeatedly rewrites a textual memory bank, the consolidated memory degrades over time.",
+          "why": "The strongest research caution against LLM-driven consolidation as your primary store. Direct argument to keep raw traces (see Substrate) as ground truth and treat distillation as lossy. Pairs with Slack's validation step."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "RecMem: Recurrence-based Memory Consolidation for Long-Running LLM Agents",
+      "firstAuthor": "Dai et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2605.16045",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Critiques 'eager' consolidation (invoke an LLM on every incoming interaction to extract memory) as a major token-cost driver. Proposes recurrence-based consolidation that batches/defers the work.",
+          "why": "The cost knob for consolidation. Connects to [memfly] and [simplemem] as the efficiency cluster; the tradeoff is staleness vs token spend."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "SimpleMem: Efficient Lifelong Memory for LLM Agents",
+      "firstAuthor": "Liu et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260102553L",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Frames the dilemma: retain full history (redundancy) vs iterative reasoning to filter noise (token cost). Proposes an efficient middle path for lifelong memory.",
+          "why": "Clean statement of the consolidation cost/coverage tradeoff that recurs across the category. Sits with [recmem]/[memfly] on efficiency."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "MemFly: On-the-Fly Memory Optimization via Information Bottleneck",
+      "firstAuthor": "Zhang et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260207885Z",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Uses an information-bottleneck objective to balance compressing redundant info against keeping retrieval precise, optimizing memory on the fly.",
+          "why": "Gives the consolidation tradeoff a principled objective rather than a heuristic. Theoretical companion to [recmem]/[simplemem]."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Amory: Coherent Narrative-Driven Agent Memory through Agentic Reasoning",
+      "firstAuthor": "Zhou et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2601.06282",
+      "branches": [
+        "consolidation",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Argues current frameworks fragment conversations into isolated embeddings or graph nodes; proposes building a coherent narrative via agentic reasoning instead.",
+          "why": "Bridges consolidation and representation: the unit of memory should preserve narrative coherence, not just be a retrievable shard. Connects to [cast-episodic]'s who/when/where stance."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Compiled Memory / Atlas: More Precise Instructions, Not More Information",
+      "firstAuthor": "Rhodes & Kang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2603.15666",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Shifts the question from memory *management* (retrieve/page within a budget) to memory *utility*: what experience is worth keeping, and how it should change agent behavior. 'Atlas' compiles accumulated experience into precise instructions.",
+          "why": "Reframes the goal of consolidation around behavior change, not storage. Strong complement to the cost cluster — efficiency is moot if you keep the wrong things."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "EverMemOS: A Self-Organizing Memory Operating System",
+      "firstAuthor": "Hu et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260102163H",
+      "branches": [
+        "consolidation",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Notes most memory systems store isolated records and retrieve fragments, limiting consolidation of evolving user state and conflict resolution. Proposes a self-organizing memory OS for structured long-horizon reasoning.",
+          "why": "'Memory OS' framing that ties consolidation to conflict resolution (Temporality) and structure (Representation). Conceptual cousin of Letta/MemGPT-style OS metaphors."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "D-Mem: A Dual-Process Memory System for LLM Agents",
+      "firstAuthor": "You et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2603.18631",
+      "branches": [
+        "consolidation",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Critiques incremental per-turn extraction/update; proposes a dual-process design (fast + slow paths) for high-fidelity memory access over long horizons.",
+          "why": "Dual-process (System-1/System-2) is a recurring shape; here applied to when to consolidate cheaply vs reason deeply. Connects to [retrieve-or-think]'s retrieve-vs-think policy."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Graph-based Agent Memory: Taxonomy, Techniques, and Applications",
+      "firstAuthor": "Yang et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260205665Y",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "The survey of graph-structured agent memory: why graphs (relational modeling, knowledge accumulation, self-evolution), the technique landscape, and applications across multi-turn dialogue, games, and scientific discovery.",
+          "why": "The map of the KG-memory design space — read before committing to or rejecting a graph. Read against [kg-wrong-abstraction] for the dissent."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Hot take: knowledge graphs are the wrong abstraction for agent memory",
+      "firstAuthor": "u/Expert-Address-2918",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1so9rvk/",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Argues the field over-converged on entity–relationship graphs (Mem0, Zep, supermemory). Costs flagged: an extra entity-extraction LLM step (latency) and hallucinated edges that fabricate connections — when the real job is fast retrieval of the right past context.",
+          "why": "The sharpest practitioner counter-argument to KGs. Worth weighing before adopting a graph layer; [gaama] partially answers it (mega-hub fix), [graph-memory-survey] is the steelman."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "GAAMA: Graph Augmented Associative Memory for Agents",
+      "firstAuthor": "Paul et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2603.27910",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Flat RAG loses structural relationships; entity-centric KGs suffer 'mega-hub' effects (a few nodes accrue too many edges). GAAMA proposes graph-augmented associative memory to keep structure without the hub blowup.",
+          "why": "A concrete fix for one of the KG failure modes [kg-wrong-abstraction] complains about. Useful if you want graph structure but fear scaling pathologies."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "PersonalAI: Systematic Comparison of KG Storage and Retrieval for Personalized LLM Agents",
+      "firstAuthor": "Menschikov et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2506.17001",
+      "branches": [
+        "representation",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Systematically compares knowledge-graph storage/retrieval approaches for personalized agents, against the backdrop that RAG improves factual accuracy but lacks structured memory and doesn't scale in complex long-term settings.",
+          "why": "The closest thing to an apples-to-apples KG-design comparison; pairs with [mem0-vs-graphiti] (vector-vs-graph in distributed setting) for store-selection decisions."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Rethinking How to Remember: Beyond Atomic Facts in Lifelong LLM Agent Memory",
+      "firstAuthor": "Sun et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2605.19952",
+      "branches": [
+        "representation",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Critiques the dominant extracted-fact paradigm: handcrafted static prompts compress raw dialogue into atomic facts that are stored, matched, and injected — losing the ability to reason deeply over history. Proposes going beyond atomic facts.",
+          "why": "The most on-the-nose challenge to atomic-facts-as-primitive. Read before committing to a fact-extraction pipeline; connects to [amory] (narrative) and [cast-episodic] (events) as richer alternatives."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "CAST: Character-and-Scene Episodic Memory for Agents",
+      "firstAuthor": "Ma et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2602.06051",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Most agent memory emphasizes semantic recall and stores experience as key-value/vector/graph, which struggles to represent coherent events. CAST models episodic memory grounded in who/when/where (characters and scenes).",
+          "why": "The episodic-coherence counterpoint to fact/vector stores; aligns with [amory] (narrative) and [adamem] (fragmentation). Connects to Temporality via the 'when' grounding."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "How I implemented 3-layer memory for LLM agents (semantic + episodic + procedural)",
+      "firstAuthor": "u/No_Advertising2536",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1s8njqy/",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Practitioner build motivated by agents repeating mistakes (deploy → forget migrations → DB crash). Implements the cognitive-science triad — semantic (what you know), episodic (what happened), procedural (how to do things) — and open-sources it.",
+          "why": "Grassroots evidence that the semantic/episodic/procedural layering from research is being adopted by builders. Pairs with [cast-episodic] (episodic) and the procedural-skills theme of the academic explorer."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Temporal Knowledge-Graph Memory in a Partially Observable Environment",
+      "firstAuthor": "Kim, François-Lavet, Cochez",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2408.05861",
+      "branches": [
+        "temporal",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "Agents in partially observable environments need persistent memory to integrate observations over time; KGs naturally represent evolving state. Introduces a benchmark where both world dynamics and the agent's memory are explicitly graph-shaped.",
+          "why": "Grounds temporal-KG memory in a controllable evaluation setting — rare for this topic. Connects temporality to representation: time is modeled as graph evolution."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Aurra's bi-temporal memory vs Mem0 — is Mem0 behind?",
+      "firstAuthor": "u/Jst_Qrius",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1t3pj9e/",
+      "branches": [
+        "temporal"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "A Mem0 user hits the classic wall: agents 'forget' the timeline of facts (amnesia when a user updates info). Tries Aurra's bi-temporal memory (tracks event time vs ingestion time) and reports it handles fact updates better.",
+          "why": "Field evidence that fact-update/timeline handling is the concrete weakness pushing people off vector-only stores — and that bi-temporal modeling is the differentiator. Connects to [useful-memories-faulty] (why naive updates fail)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Show HN: YourMemory — persistent memory layer with temporal reasoning",
+      "firstAuthor": "SachitRafa",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://news.ycombinator.com/item?id=48270325",
+      "branches": [
+        "temporal",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "Biologically-inspired decay plus temporal reasoning; a CLI to infer knowledge from stored memory with zero token/LLM cost, plus a dashboard that can double as an audit trail.",
+          "why": "Combines temporality with forgetting (decay) and nods at governance (audit trail). Representative of the 'zero-LLM, local, dashboarded' indie memory wave alongside [superlocalmemory]."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Human-Inspired Memory Architecture for LLM Agents",
+      "firstAuthor": "Kerestecioglu et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2605.08538",
+      "branches": [
+        "forgetting",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Six cognitive mechanisms: sleep-phase consolidation, interference-based forgetting, engram maturation, reconsolidation upon retrieval, and entity knowledge graphs — a principled lifecycle rather than heuristic decay.",
+          "why": "The most complete bio-grounded lifecycle proposal; turns 'forgetting' from a TTL into a set of mechanisms. Unvalidated at scale, like most of this cluster — weigh against eval scarcity ([persistbench])."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "SuperLocalMemory V3.3: 'The Living Brain' — bio-inspired forgetting, multi-channel retrieval, zero-LLM",
+      "firstAuthor": "Bhardwaj",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2604.04514",
+      "branches": [
+        "forgetting",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Opens on the paradox: coding agents have vast parametric knowledge yet can't remember an hour ago. Critiques single-channel vector retrieval that needs cloud LLMs and implements no cognitive processes. Adds biologically-inspired forgetting, cognitive quantization, and multi-channel retrieval — all local/zero-LLM.",
+          "why": "Bundles forgetting + multi-channel retrieval + local-first into one system; the indie counterpart to Cloudflare's managed multi-channel approach. Connects to [yourmemory] (zero-LLM, local) and [git-s3-memory] (local-first ethos)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "PersistBench: When Should Long-Term Memories Be Forgotten by LLMs?",
+      "firstAuthor": "Pulipaka et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260201146P",
+      "branches": [
+        "forgetting",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Persisting facts (e.g. 'user is vegetarian') aids personalization but also introduces safety risks that are largely overlooked. PersistBench measures when persistence becomes a liability and when memories *should* be forgotten.",
+          "why": "Reframes forgetting as a safety requirement, not just hygiene — and is one of the only benchmarks targeting forgetting at all. Bridges Forgetting and Evaluation; pairs with the 'forgetting is unmeasured' gap."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Git and S3 as the memory layer for agents",
+      "firstAuthor": "VijitDhingra1",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://news.ycombinator.com/item?id=48389370",
+      "branches": [
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Proposes plain Git + S3 as the durable memory substrate for agents — versioned, cheap, auditable object storage rather than a bespoke memory service.",
+          "why": "The freshest signal in the 'deliberately boring substrate' movement: keep full history cheaply, derive memory downstream. Counterpoint to managed services; pairs with [chatdb] and [what-i-learned-coding-agent]. (Low vote count — early/thin.)"
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Amazon Bedrock AgentCore Runtime: managed session storage for persistent filesystem state",
+      "firstAuthor": "AWS",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/bedrock-agentcore-runtime-session-storage/",
+      "branches": [
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Managed session storage (preview) persists an agent's filesystem state — code, installed packages, generated artifacts — across stop/resume cycles, which was previously lost.",
+          "why": "A different memory layer than semantic memory: durable working state, not distilled knowledge. Important to keep distinct in a design — the runtime can own session durability while your store owns knowledge."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Self-hosted archive for all AI conversations (hybrid keyword + semantic search)",
+      "firstAuthor": "u/Sufficient_Guard9850",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/vibecoding/comments/1rhjlzs/",
+      "branches": [
+        "substrate",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "'ChatDB' — a self-hosted conversation archive across multiple AI apps, with a proper hybrid keyword + semantic search interface, deployable free on Cloudflare.",
+          "why": "Demonstrates the storage+search split: keep transcripts, layer hybrid retrieval on top. The hybrid (lexical+semantic) retrieval choice connects to the Retrieval category."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "What I Learned Building a Memory System for My Coding Agent (SQLite, FTS5)",
+      "firstAuthor": "u/Medium_Island_2795",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/ClaudeCode/comments/1r1w397/",
+      "branches": [
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Argues many agents don't need a vector DB: SQLite + FTS5 full-text search covers a lot, with far less operational weight.",
+          "why": "The pragmatic floor of the substrate spectrum — strong reminder to not reach for pgvector/graph DBs by default. Echoes [kg-wrong-abstraction]'s 'simpler is fine' instinct."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "OpenAI rolls out ChatGPT Library to store your personal files",
+      "firstAuthor": "TLDR AI",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://links.tldrnewsletter.com/jI4fQv",
+      "branches": [
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Consumer-facing personal file/content store inside ChatGPT.",
+          "why": "Market signal that 'remember my stuff' is becoming a default consumer expectation, shaping what agents are assumed to retain. Low technical depth."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Show HN: MemoryBank — unify memory across agents, improve context rot (Rust)",
+      "firstAuthor": "feelingsonice",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://github.com/feelingsonice/MemoryBank",
+      "branches": [
+        "substrate",
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Local memory layer (Rust) motivated by memory being tool-locked (re-explaining things when switching tools/sessions) and by markdown-append memories that dump everything into context and rot.",
+          "why": "Cross-tool, local substrate aimed squarely at context rot and portability — connects to Interop ([memorywire], [unified-memory-stack]) and Working-Memory/context-rot."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Cost and Accuracy of Long-Term Memory in Distributed Multi-Agent Systems",
+      "firstAuthor": "Wolff & Bennati",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2601.07978",
+      "branches": [
+        "multiagent",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "multiagent",
+          "takeaway": "A testbed for long-term memory in distributed multi-agent systems (cloud+edge), directly comparing Mem0 (vector-based) vs Graphiti/Zep (graph-based) on system-level cost and accuracy — not just the tokens/latency that framework-published evals report.",
+          "why": "The single most decision-useful head-to-head for splitting work between a vector store and a graph store in a multi-agent setting. Bridges Multi-Agent and Evaluation; complements [personalai] (KG-internal comparison)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "What fills the context window (the 7 competing components)",
+      "firstAuthor": "u/Vuducdung28",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1rfh6p4/",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Production-grounded (LangGraph) deep dive on the seven things competing for the window — system prompts, user messages, conversation state, long-term memory, RAG, tool definitions, output schemas — with token ranges for each.",
+          "why": "Sets the budget frame: long-term memory is just one of seven consumers, so memory design is inseparable from context engineering. The practical entry point to this category."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "ContextWeaver: Selective and Dependency-Structured Memory Construction",
+      "firstAuthor": "Wu et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2604.23069",
+      "branches": [
+        "context",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Sliding-window and prompt-compression context management omit earlier structured info later steps rely on; retrieval-based memory surfaces relevant content but overlooks dependencies. Builds memory selectively with explicit dependency structure.",
+          "why": "Targets the failure where compression drops the one earlier fact a later step needs — a dependency-aware answer to context rot. Connects consolidation (what to keep) with context (what to show)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "ARC: Active and Reflection-driven Context Management for Long-Horizon Agents",
+      "firstAuthor": "Yao et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2601.12030",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Names 'context rot' — performance degradation as interaction histories grow — as a failure to maintain coherent, task-relevant internal state. Proposes active + reflection-driven context management for deep-search/long-horizon agents.",
+          "why": "Canonical reference for the context-rot problem this category orbits. Pairs with [contextweaver] (structural fix) and [retrieve-or-think] (retrieve-vs-reason policy)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Agentic Context Engineering: Evolving Contexts for Self-Improving Models",
+      "firstAuthor": "Zhang et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2025arXiv251004618Z",
+      "branches": [
+        "context",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Context adaptation (modifying inputs vs updating weights) suffers two failure modes: brevity bias (concise summaries drop domain insight) and context collapse (iterative rewriting erodes detail).",
+          "why": "Names the exact degradation mode behind LLM-rewritten memory — the context-side mirror of [useful-memories-faulty]. Strong argument against over-summarizing either context or stored memory."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "LoCoMo-Plus: Beyond-Factual Cognitive Memory Evaluation",
+      "firstAuthor": "Li et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2602.10715",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Existing benchmarks (LoCoMo foremost) focus on surface factual recall, but good responses often hinge on implicit constraints — user state, goals, values — never explicitly queried later. LoCoMo-Plus evaluates that 'beyond-factual' setting.",
+          "why": "Marks the benchmark frontier shifting from 'did it recall the fact' to 'did it honor implicit user context'. Pairs with [adamem] (user-centric retrieval) and [precision-belief-state] (retrieval precision)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "EngramaBench: Long-Term Conversational Memory with Structured Graph Retrieval",
+      "firstAuthor": "Julian Acuna",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2604.21229",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Benchmark for multi-session memory: five personas, 100 multi-session conversations, 150 queries spanning factual recall, cross-space integration, and more.",
+          "why": "A concrete harness for evaluating cross-session retrieval quality. Use alongside [precision-belief-state] (precision) and [locomo-plus] (beyond-factual) to triangulate."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "What are people actually using for agent memory in production?",
+      "firstAuthor": "u/MeasurementSelect251",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1qiueyd/",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Field thread: chat-history-only, vector-DB RAG, and summary+embedding hybrids all 'work for demos' but break once the agent runs a while — preferences drift, the same mistakes recur, stale context gets pulled purely on semantic closeness.",
+          "why": "The blunt production reality check that motivates half this map (temporal updating, forgetting, beyond-similarity retrieval). The 'stale context on semantic closeness' complaint is exactly [adamem]'s thesis."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Building memory systems at production scale (100k+ users): lessons from 10+ implementations",
+      "firstAuthor": "u/singh_taranjeet",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1sn3dnx/",
+      "branches": [
+        "evaluation",
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Lessons from ~10 production deployments (healthcare, fintech, consumer SaaS, dev tooling) on what actually matters vs the 'just add a vector DB' tutorials.",
+          "why": "The hard-won operational counterweight to research/product claims. Read with [what-using-production] as the practitioner reality layer of the Evaluation category."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "What Happens Inside Agent Memory? Circuit Analysis from Emergence to Diagnosis",
+      "firstAuthor": "Mao et al.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260503354M",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Agent memory failures are silent — a fluent answer can hide a failure to extract, retain, or retrieve. Traces feature circuits across Qwen-3 (0.6B–14B) to map the write–manage–read loop to internal computations.",
+          "why": "A mechanistic-interpretability angle on *why* memory fails, complementing black-box benchmarks. Connects the write/manage/read framing used across consolidation, substrate, and retrieval."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "memorywire: A Vendor-Neutral Wire Format for Agent Memory Operations",
+      "firstAuthor": "Munirathinam",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://arxiv.org/abs/2606.01138",
+      "branches": [
+        "interop"
+      ],
+      "notes": [
+        {
+          "branch": "interop",
+          "takeaway": "Mem0, Letta/MemGPT, Cognee, Zep/Graphiti, MemoryOS, MemTensor each ship their own SDK, storage layout, and vocabulary — no shared wire format. Every integration is bespoke, every migration rebuilds from scratch, and none ships a governance surface to review writes. Proposes a neutral wire format.",
+          "why": "The interoperability + governance gap stated plainly — directly relevant if a service spans multiple stores (vector + graph + object storage). Pairs with [schema-quality] (schema discipline) and [unified-memory-stack] (DIY unification)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Agent Memory Is Only as Good as Its Schema",
+      "firstAuthor": "Daily Dose of DS",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.dailydoseofds.com/",
+      "branches": [
+        "interop"
+      ],
+      "notes": [
+        {
+          "branch": "interop",
+          "takeaway": "Deep dive on production-grade agent memory arguing memory quality is bounded by schema quality — get the schema wrong and retrieval/consolidation can't recover.",
+          "why": "Elevates schema design to a first-class concern; the human-readable companion to [memorywire]'s machine wire-format. Connects to Representation (the schema encodes the representation choice)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Built a unified LLM memory system combining Memori + Mem0 + Supermemory",
+      "firstAuthor": "u/0sparsh2",
+      "year": "2025",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1p2szij/",
+      "branches": [
+        "interop",
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "interop",
+          "takeaway": "DIY unification: Memori's interceptor architecture (zero code changes), Mem0's research-validated retrieval/consolidation, and Supermemory's structure — composed into one stack.",
+          "why": "Exactly the multi-store composition pattern that motivates a wire format. Real-world evidence builders are already gluing frameworks together by hand. Connects to [memorybank-rust] (cross-tool) and [memorywire] (the standard that would obviate the glue)."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "OpenMemory by Mem0: 'local' but still needs an OpenAI key?",
+      "firstAuthor": "u/Perplexed_86400",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.reddit.com/r/LLMDevs/comments/1rdv0jz/",
+      "branches": [
+        "interop",
+        "substrate"
+      ],
+      "notes": [
+        {
+          "branch": "interop",
+          "takeaway": "Notes that Mem0's OpenMemory MCP advertises local/private operation but still requires an OpenAI key (embeddings + gpt-4.1-nano) for extraction in the default Docker setup.",
+          "why": "Operational gotcha for anyone assuming a 'local' memory framework is self-contained — the LLM dependency leaks in via extraction/embeddings. Relevant to substrate/privacy and to the zero-LLM designs ([superlocalmemory], [yourmemory]) reacting to exactly this."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "retrieval",
+      "label": "Retrieval & Ranking",
+      "summary": "How memories are surfaced into context at inference time: single- vs multi-channel retrieval, fusion across channels (e.g. Reciprocal Rank Fusion), keyword + semantic hybrids, and moving beyond raw cosine similarity toward user- and task-aware ranking.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "One vector index, or parallel channels (recency, semantic, entity, summary, raw) fused with RRF?",
+        "Is cosine similarity the right relevance signal, or does it surface the semantically-near-but-useless?",
+        "When should the agent retrieve at all versus reason from what it already holds?"
+      ],
+      "count": 8
+    },
+    {
+      "key": "consolidation",
+      "label": "Consolidation & Distillation",
+      "summary": "Turning raw turns into durable memory: when (and whether) to run an LLM to extract/summarize, episodic traces vs consolidated abstractions, and the failure modes of letting an LLM continuously rewrite its own memory.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Eager (consolidate every turn) or lazy/recurrent (batch, on idle, on retrieval)?",
+        "Keep raw episodic traces alongside distilled facts, or replace one with the other?",
+        "What experience is even worth keeping — and how should it change behavior, not just fill storage?"
+      ],
+      "count": 13
+    },
+    {
+      "key": "representation",
+      "label": "Knowledge Representation",
+      "summary": "The data structure memory lives in: flat vector RAG, entity–relationship knowledge graphs, atomic facts, event-grounded episodic records, or layered semantic/episodic/procedural stores.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Graph, vector, atomic facts, or events — and is the choice load-bearing or incidental?",
+        "Do you model who/when/where (episodic coherence) or only what (semantic recall)?",
+        "Is the atomic-fact paradigm (handcrafted prompts → compressed facts) actually the right primitive?"
+      ],
+      "count": 12
+    },
+    {
+      "key": "temporal",
+      "label": "Temporality & Updating",
+      "summary": "Reasoning about time: validity intervals, bi-temporal modeling (event time vs ingestion time), contradiction/conflict resolution when facts update, and keeping a fact's timeline straight.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "When a user's fact changes, does the system supersede, version, or silently overwrite?",
+        "Do you track both when something was true and when you learned it (bi-temporal)?",
+        "How are contradictions detected — formally, or left to retrieval to disambiguate?"
+      ],
+      "count": 4
+    },
+    {
+      "key": "forgetting",
+      "label": "Forgetting & Lifecycle",
+      "summary": "Lifecycle management: decay and salience, interference-based forgetting, consolidation/'sleep' phases, and the under-appreciated question of when memories *should* be forgotten (including for safety).",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Does memory have an explicit lifecycle, or does it only grow until it rots?",
+        "Is forgetting heuristic decay, or principled (interference, reconsolidation, salience)?",
+        "When is forgetting a safety requirement, not just a cost optimization?"
+      ],
+      "count": 4
+    },
+    {
+      "key": "substrate",
+      "label": "Storage Substrate",
+      "summary": "Where bytes actually live: object storage for full transcripts (S3-style), managed session/filesystem state, self-hosted archives, and lightweight embedded stores (SQLite/FTS5) — the persistence layer beneath the semantic layer.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Keep full transcripts forever (cheap object storage) and derive memory, or only keep derived memory?",
+        "Who owns durability across stop/resume — the runtime, or your store?",
+        "Does this need a vector DB at all, or does SQLite + full-text search cover it?"
+      ],
+      "count": 8
+    },
+    {
+      "key": "multiagent",
+      "label": "Multi-Agent & Shared Memory",
+      "summary": "Memory shared across agents and sessions: shared/team memory profiles, distributed multi-agent memory, and keeping long-running agent swarms coherent without dumping chat logs.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Is memory per-agent, per-user, or a shared team profile multiple agents read/write?",
+        "How do you keep N long-running agents coherent without re-feeding raw history?",
+        "What's the cost/accuracy curve of long-term memory across cloud+edge agents?"
+      ],
+      "count": 5
+    },
+    {
+      "key": "context",
+      "label": "Working Memory & Context",
+      "summary": "The working-memory boundary: what competes for the context window, context rot over long horizons, and selective/dependency-aware construction of what the model actually sees each step.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "What are the components competing for the window, and what's each one's token budget?",
+        "How do you fight context rot as histories grow — compress, retrieve, or restructure?",
+        "Should context be rebuilt selectively per step rather than appended/slid?"
+      ],
+      "count": 5
+    },
+    {
+      "key": "evaluation",
+      "label": "Evaluation & Cost",
+      "summary": "How we know any of this works: benchmarks beyond factual recall, separating retrieval-correctness from answer-correctness, cost/latency accounting, and production reality checks.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Does the benchmark test retrieval quality, or just whether the final answer was right?",
+        "Are you measuring beyond surface factual recall (implicit user state, goals, values)?",
+        "What does this actually cost at 100k+ users, not in a demo?"
+      ],
+      "count": 9
+    },
+    {
+      "key": "interop",
+      "label": "Interop, Schema & Governance",
+      "summary": "Portability and control: shared wire formats across memory frameworks, schema discipline, and governance/audit surfaces for what gets written and read.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "Can you migrate memory between frameworks, or does switching mean rebuilding from scratch?",
+        "Is the memory schema explicit and reviewable, or implicit and emergent?",
+        "Is there a human-auditable surface over memory writes/reads?"
+      ],
+      "count": 4
+    },
+    {
+      "key": "foundations",
+      "label": "Foundations & Landscape",
+      "summary": "Orienting maps: surveys that taxonomize the field, and the managed-service landscape (Cloudflare, Mem0, Zep, LangMem, Letta) that frames the build-vs-buy decision.",
+      "themes": [],
+      "gaps": [],
+      "questions": [
+        "What's the shared vocabulary — memory forms (logs/weights/vectors) × functions (factual/experiential/working)?",
+        "Build a memory layer, or adopt a managed service?",
+        "Which incumbent assumptions are already being challenged?"
+      ],
+      "count": 5
+    }
+  ],
+  "reading": [],
+  "opportunities": [
+    "One vector index, or parallel channels (recency, semantic, entity, summary, raw) fused with RRF?",
+    "Is cosine similarity the right relevance signal, or does it surface the semantically-near-but-useless?",
+    "When should the agent retrieve at all versus reason from what it already holds?",
+    "Eager (consolidate every turn) or lazy/recurrent (batch, on idle, on retrieval)?",
+    "Keep raw episodic traces alongside distilled facts, or replace one with the other?",
+    "What experience is even worth keeping — and how should it change behavior, not just fill storage?",
+    "Graph, vector, atomic facts, or events — and is the choice load-bearing or incidental?",
+    "Do you model who/when/where (episodic coherence) or only what (semantic recall)?",
+    "Is the atomic-fact paradigm (handcrafted prompts → compressed facts) actually the right primitive?",
+    "When a user's fact changes, does the system supersede, version, or silently overwrite?",
+    "Do you track both when something was true and when you learned it (bi-temporal)?",
+    "How are contradictions detected — formally, or left to retrieval to disambiguate?"
+  ],
+  "practices": []
+}

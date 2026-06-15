@@ -1,0 +1,1399 @@
+{
+  "id": "enterprise-reliability",
+  "title": "Enterprise Multi-Agent Reliability",
+  "learningSlug": "enterprise-multiagent-reliability",
+  "homepage": "/library/explorers/enterprise-reliability",
+  "paperCount": 50,
+  "themeCount": 8,
+  "papers": [
+    {
+      "bibcode": "2022arXiv221003629Y",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "firstAuthor": "Yao, Shunyu",
+      "year": 2022,
+      "citationCount": 1216,
+      "arxiv": "2210.03629",
+      "url": null,
+      "branches": [
+        "reliability",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Interleaves chain-of-thought reasoning with tool actions so a model can plan, query external sources, and self-correct — reducing hallucination on decision tasks.",
+          "why": "The base pattern under most single agents. Reliability work below is largely about what happens when you compose many ReAct-style agents and the failure modes that emerge."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230808155W",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "firstAuthor": "Wu, Qingyun",
+      "year": 2023,
+      "citationCount": 600,
+      "arxiv": "2308.08155",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Framework for composing customizable agents that converse, integrating tools and humans to solve tasks collaboratively.",
+          "why": "A representative conversation-topology framework. Treat the topology it lets you express as a design + security decision, not a default — see the topology and security pillars."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250312029C",
+      "title": "Is Multi-Agent Debate (MAD) the Silver Bullet? Empirical Analysis in Code Summarization & Translation",
+      "firstAuthor": "Chun, ...",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.12029",
+      "url": null,
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Structured multi-agent debate yields minimal-to-inconsistent gains over a strong single-agent baseline on software-engineering tasks.",
+          "why": "The headline reliability finding: fan-out is not free quality. Adopt multi-agent only where it beats a measured single-agent baseline on YOUR tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250313657C",
+      "title": "Why Do Multi-Agent LLM Systems Fail? (MAST failure taxonomy)",
+      "firstAuthor": "Cemri, ...",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.13657",
+      "url": null,
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "14 failure modes in 3 categories — specification issues, inter-agent misalignment, task verification — built with an LLM-as-judge pipeline at Cohen's κ=0.88.",
+          "why": "A ready-made vocabulary for incident review. Label your own failures against it — but treat the taxonomy as a living checklist, not a frozen schema (models change, failure modes shift)."
+        }
+      ]
+    },
+    {
+      "bibcode": "BeyondStrongest",
+      "title": "Beyond the Strongest LLM: Multi-Turn Multi-Agent Orchestration vs Single LLMs",
+      "firstAuthor": "Tian, Aaron Xuxiang",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2509.23537",
+      "url": null,
+      "branches": [
+        "reliability",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Consensus-topology ablations: visible authorship raises self-voting and ties; visible live vote tallies raise herding and premature consensus.",
+          "why": "If you run review/debate quorums, blind the lanes and hide interim tallies by default — visibility measurably biases the consensus toward the wrong answer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260411767L",
+      "title": "λ_A: A Typed Lambda Calculus for LLM Agent Composition",
+      "firstAuthor": "L..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.11767",
+      "url": null,
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Well-formedness / termination guarantees for agent composition via a typed calculus.",
+          "why": "Formal guarantees are appealing, but the realistic enterprise failures are config typos (nonexistent agent refs, empty templates). A cheap install-time validator usually beats a type system here."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260507935X",
+      "title": "TraceFix: Repairing Agent Coordination Protocols with TLA+ Counterexamples",
+      "firstAuthor": "X..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.07935",
+      "url": null,
+      "branches": [
+        "reliability",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Uses TLA+ counterexamples to repair coordination protocols.",
+          "why": "The formal-verification angle on coordination. Worth knowing exists; for most teams a configuration linter + good traces catch the protocol bugs that actually occur."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260503409P",
+      "title": "Robust Agent Compensation (RAC): Teaching AI Agents to Compensate",
+      "firstAuthor": "Perera, Srinath",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.03409",
+      "url": null,
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "A log-based recovery layer intercepts each tool call, records a transaction log (pending/completed/failed/compensated), retries transient errors, and rolls back completed dependents by reverse-topological compensation — no agent-code rewrite. Materially cheaper than replanning.",
+          "why": "Recover from logs, not by re-reasoning the whole plan. Keep a per-run transaction log and a compensator per side-effecting tool; recovery cost then scales with failures, not plan size."
+        }
+      ]
+    },
+    {
+      "bibcode": "ACRFence",
+      "title": "ACRFence: Preventing Semantic Rollback Attacks in Agent Checkpoint-Restore",
+      "firstAuthor": "Zheng, Yusheng",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2603.20625",
+      "url": null,
+      "branches": [
+        "recovery",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Checkpoint/restore duplicates irreversible effects (double commits, double payments, token reuse) unless the tool boundary enforces replay-or-fork: replay a recorded response when equivalent, require an explicit fork for a new irreversible op, block consumed-credential reuse. LLMs regenerate subtly different requests even at temperature 0.",
+          "why": "The single most under-appreciated agent reliability bug: a retry after a side effect lands repeats the side effect. Idempotency keys + replay-or-fork on every external write are table stakes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250311951C",
+      "title": "SagaLLM: Context Management, Validation & Transaction Guarantees for Multi-Agent LLM Planning",
+      "firstAuthor": "Chang, Edward Y.",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.11951",
+      "url": null,
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Brings database-style transactional safeguards — checkpoints, compensable execution, compensation pairs, global validation, rollback — to multi-agent planning.",
+          "why": "Names the right mental model: treat a multi-step agent workflow like a saga. Compensation + validation are the load-bearing parts; the planning DAG is optional."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260413018C",
+      "title": "Toward Autonomous Long-Horizon Engineering for ML Research (AiScientist)",
+      "firstAuthor": "Chen, Guoxin",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.13018",
+      "url": null,
+      "branches": [
+        "recovery",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "'Thin control over thick state': a durable shared workspace holds artifacts, plans, experiment records, failures, and diagnoses while a lightweight orchestrator invokes specialists as tools. Ablating the durable workspace or the hierarchy hurts.",
+          "why": "Pass durable references between agents, not chat summaries. A shared task/artifact store survives context loss and crashes; conversational handoff does not."
+        }
+      ]
+    },
+    {
+      "bibcode": "DeepRare",
+      "title": "An Agentic System for Rare Disease Diagnosis with Traceable Reasoning (DeepRare)",
+      "firstAuthor": "Zhao, Weike",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "observability",
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "Nature paper: a host decomposes the case, invokes specialized servers, self-reflects, and emits ranked outputs with evidence-linked rationale. Validated on 6,401 cases with blinded expert review of the reasoning chain, not just final answers.",
+          "why": "In regulated/high-stakes settings, capture evidence references and a validation summary so a human can review the reasoning chain — auditability is a first-class output, not an afterthought."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260510913Y",
+      "title": "Shepherd: A Runtime Substrate Empowering Meta-Agents with a Formalized Execution Trace",
+      "firstAuthor": "Yu, Simon",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.10913",
+      "url": null,
+      "branches": [
+        "observability",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Makes agent execution a first-class object — a structured effect stream (model calls, tool calls, fs/env changes, commits, branches, fork points) that can be inspected, forked copy-on-write, replayed from a changed point. CooperBench joint pass 28.8%→54.7% with a meta-agent; suffix replay reuses the shared prefix + prompt cache.",
+          "why": "Transcripts are not observability. A structured, replayable execution trace is the substrate under debugging, evaluation golden sets, and any supervisory/optimizer layer. Build it first; almost everything reads off it."
+        }
+      ]
+    },
+    {
+      "bibcode": "AgentSight",
+      "title": "AgentSight: System-Level Observability for AI Agents Using eBPF",
+      "firstAuthor": "Zheng, Yusheng",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2508.02736",
+      "url": null,
+      "branches": [
+        "observability",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Defines useful agent observability as correlation between high-level intent (LLM traffic) and low-level action (syscalls, file/process events), joined by time + process lineage. <3% overhead; exposes multi-agent coordination bottlenecks invisible to either stream alone.",
+          "why": "Correlate intent with action, not just log prompts. The join catches reasoning loops, prompt-injection exfiltration, and hidden coordination bottlenecks. Prefer standards-based telemetry over a bespoke tracer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260413120K",
+      "title": "AgentForge: Execution-Grounded Multi-Agent LLM Framework for Autonomous Software Engineering",
+      "firstAuthor": "Kumar, Rajesh",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.13120",
+      "url": null,
+      "branches": [
+        "eval",
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Validates correctness by actual program execution in a resource-bounded, network-isolated sandbox — plan → minimal patch → synthesize tests → run → debug → validate before propagation. SWE-Bench Lite 40.0% (+26–28 over single-agent/ReAct); both execution feedback AND decomposition ablate as load-bearing.",
+          "why": "Ground evaluation in execution, not model likelihood or simulated feedback. Run candidate work in a sandbox and gate propagation on the result."
+        }
+      ]
+    },
+    {
+      "bibcode": "CloudMAS",
+      "title": "A Multi-Agent Coding Assistant for Cloud-Native Development (CloudMAS)",
+      "firstAuthor": "Guan, Tian",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Reports compile-success / test-pass / deploy-success / API-consistency, stratified by task complexity, with token + cost + time accounting. (Preprint; single underlying model is a validity threat.)",
+          "why": "For software workflows, measure the things that actually fail in production — compile, test, deploy — with cost per task, stratified by difficulty. One headline accuracy number hides the reliability story."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260523459B",
+      "title": "AI Assurance: A Comprehensive Testing Strategy for Enterprise AI Systems",
+      "firstAuthor": "Badagi, Chitra",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.23459",
+      "url": null,
+      "branches": [
+        "eval",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "An enterprise testing strategy: failure taxonomy, assurance pyramid, eval lifecycle, model/RAG/agent governance. Probabilistic systems can't be proven correct; product readiness ≠ benchmark score.",
+          "why": "Frame eval as risk reduction, not proof. Tie controls to a recognized governance framework and keep a sample under human review."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240612045Y",
+      "title": "τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "firstAuthor": "Yao, Shunyu",
+      "year": 2024,
+      "citationCount": 39,
+      "arxiv": "2406.12045",
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Benchmarks agents on multi-turn tool use plus a dynamic simulated user in retail/airline domains, scoring reliability over repeated trials (pass^k).",
+          "why": "Closer to enterprise reality than single-turn QA: it measures consistency across trials, not a lucky single run. Reliability is a distribution, not a point."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231006770J",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "firstAuthor": "Jimenez, Carlos E.",
+      "year": 2023,
+      "citationCount": 243,
+      "arxiv": "2310.06770",
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Tests whether models can resolve real GitHub issues by generating patches validated against the repository's own test suite.",
+          "why": "The canonical execution-grounded benchmark. Its design lesson: let the existing test suite be the oracle, so the eval can't be gamed by plausible-looking output."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230605685Z",
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "firstAuthor": "Zheng, Lianmin",
+      "year": 2023,
+      "citationCount": 1051,
+      "arxiv": "2306.05685",
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Establishes LLM-as-a-judge, validated against MT-Bench multi-turn questions and crowdsourced human-preference rankings — and documents the judge's biases (position, verbosity, self-preference).",
+          "why": "LLM judges scale eval but are biased. Calibrate against human labels, report agreement, and never treat a judge score as ground truth."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240618665O",
+      "title": "RouteLLM: Learning to Route LLMs with Preference Data",
+      "firstAuthor": "Ong, Isaac",
+      "year": 2024,
+      "citationCount": 64,
+      "arxiv": "2406.18665",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Trains routers on human-preference data to dispatch between strong and weak models, cutting cost while preserving quality.",
+          "why": "Routing can be learned from data — but it needs real cost/quality signals. You can't route on cost you don't measure; instrument first."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412262C",
+      "title": "CascadeDebate: Multi-Agent Deliberation for Cost-Aware LLM Cascades",
+      "firstAuthor": "Chang, Raeyoung",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.12262",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Escalates from cheap to expensive models only when deliberation signals uncertainty — a cost-aware cascade rather than always-on fan-out.",
+          "why": "Recent confirmation that a cascade is the cheaper shape than parallel fan-out for deliberation. Gate escalation on uncertainty signals you can compute."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250215964N",
+      "title": "Minions: Cost-Efficient On-Device ↔ Cloud Language-Model Collaboration",
+      "firstAuthor": "Narayan, ...",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.15964",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Splits work between a cheap local model and an expensive cloud model to cut cost while holding quality.",
+          "why": "Tiering across a local/cloud boundary is a concrete cost lever — useful where data residency or latency also matter."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250213965L",
+      "title": "Autellix: A Serving Engine for LLM Agents as General Programs",
+      "firstAuthor": "Luo, ...",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.13965",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Treats agent programs as first-class scheduling units, improving throughput/latency for agentic workloads.",
+          "why": "Scheduling is its own reliability surface: bound per-step time so one slow check can't stall a whole batch, and schedule at the program level, not the request level."
+        }
+      ]
+    },
+    {
+      "bibcode": "NodeSampling",
+      "title": "Node-Sampling: Adaptive Multi-Agent Optimization in Medical Education",
+      "firstAuthor": "Düsterbeck, Lilly Marie",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "routing",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Learns a policy over agent-call sequences with a length-regularization penalty and a STOP node; a regularized 3-agent sequence uses ~1/3 of the fixed-baseline calls.",
+          "why": "Adaptive selection works but is domain-specific. Record route/outcome/cost facts first; optimize selection from data, don't hand-author a routing table."
+        }
+      ]
+    },
+    {
+      "bibcode": "ManagerAgent",
+      "title": "Orchestrating Human-AI Teams: The Manager Agent as a Unifying Research Challenge",
+      "firstAuthor": "Masters, Charlie",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2510.02557",
+      "url": null,
+      "branches": [
+        "topology",
+        "human",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Formalizes workflow management over a task-dependency graph with workers (capabilities, availability, cost rates), hard/soft constraints, and graph-modifying actions. Reactive managers that over-assign and under-inspect fail.",
+          "why": "Expose the task graph + resource facts to operators. Good orchestration inspects and decomposes; it doesn't just dump work onto workers."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250307675Y",
+      "title": "DynTaskMAS: Dynamic Task-Graph Asynchronous/Parallel Multi-Agent Systems",
+      "firstAuthor": "Yin, ...",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.07675",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Builds dynamic task graphs executed async/in parallel instead of a static schedule.",
+          "why": "Prefer dynamic DAGs for heterogeneous, data-dependent work — model dependencies explicitly and let independent branches run concurrently."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260515132R",
+      "title": "APWA: A Distributed Architecture for Parallelizable Agentic Workflows",
+      "firstAuthor": "R..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.15132",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "A distributed architecture for fanning out independent agentic workflow steps.",
+          "why": "When work is genuinely parallel, a distributed fan-out architecture pays off — but only after you've confirmed the steps are independent (a barrier kills the benefit)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260422446Y",
+      "title": "From Skills to Talent: Heterogeneous Agents Organized as a Company (Dynamic vs Fixed Roles)",
+      "firstAuthor": "Y..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.22446",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Heterogeneous agents form dynamic rather than fixed roles, organized like a company.",
+          "why": "Keep roles in config/prompts so they can form dynamically. A hardcoded class hierarchy of agent types ossifies and resists the next model upgrade."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260513850H",
+      "title": "A 2-D Framework for AI Agent Design Patterns (Cognitive Function × Execution Topology)",
+      "firstAuthor": "H..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.13850",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Classifies agent design patterns along cognitive-function and execution-topology axes.",
+          "why": "A useful vocabulary for design reviews — name your pattern on both axes before building it, so you choose topology deliberately rather than by default."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260409744Q",
+      "title": "MPAC: A Multi-Principal Agent Coordination Protocol (extends MCP + A2A)",
+      "firstAuthor": "Q..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.09744",
+      "url": null,
+      "branches": [
+        "topology",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "A coordination protocol for multiple principals, extending tool (MCP) and agent-to-agent messaging.",
+          "why": "When multiple owners/principals share an agent fabric, the coordination protocol is also a trust boundary — design who can address whom explicitly."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260421794Y",
+      "title": "Learning to Communicate: End-to-End Optimization of Multi-Agent Language Systems",
+      "firstAuthor": "Y..., ...",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.21794",
+      "url": null,
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Treats inter-agent communication as something to optimize end-to-end rather than fix by hand.",
+          "why": "Frontier/research: the content agents exchange can itself be tuned. Today, keep communication in prompts and optimize from eval data, not a learned protocol baked into infrastructure."
+        }
+      ]
+    },
+    {
+      "bibcode": "LLMSkill",
+      "title": "LLM-Skill Orchestration: Rule-Augmented Multi-Model Collaboration",
+      "firstAuthor": "Tao, Rui",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "topology",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Low-confidence preprint: decomposes tasks into skill graphs executed by heterogeneous models with rule-augmented orchestration; same-model parallelism alone underperforms heterogeneous execution.",
+          "why": "Provider heterogeneity is worth evaluating as config/eval metadata. Resist turning 'skills' into a rigid registry — keep model choice in configuration."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230212173G",
+      "title": "Not What You've Signed Up For: Compromising LLM-Integrated Apps with Indirect Prompt Injection",
+      "firstAuthor": "Greshake, Kai",
+      "year": 2023,
+      "citationCount": 134,
+      "arxiv": "2302.12173",
+      "url": null,
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Attackers compromise LLM-integrated apps by planting instructions in content the model later retrieves (web pages, documents) — no direct access needed.",
+          "why": "The defining agent threat: any retrieved content is potential attacker-controlled instructions. Treat tool/RAG output as untrusted input, always."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240613352D",
+      "title": "AgentDojo: A Dynamic Environment to Evaluate Attacks and Defenses for LLM Agents",
+      "firstAuthor": "Debenedetti, Edoardo",
+      "year": 2024,
+      "citationCount": 23,
+      "arxiv": "2406.13352",
+      "url": null,
+      "branches": [
+        "security",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "A dynamic benchmark of realistic tool-using tasks for measuring prompt-injection attacks and defenses — and showing current defenses are far from complete.",
+          "why": "Put injection benchmarks in CI. You can't claim a defense works without an adversarial eval that tries to break it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250214847H",
+      "title": "Red-Teaming LLM Multi-Agent Systems via Communication Attacks",
+      "firstAuthor": "He, Pengfei",
+      "year": 2025,
+      "citationCount": 2,
+      "arxiv": "2502.14847",
+      "url": null,
+      "branches": [
+        "security",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Injects malicious messages that propagate through inter-agent communication channels, compromising a multi-agent system from the inside.",
+          "why": "Injection doesn't stop at one agent — it propagates. One agent's output must not silently become another agent's command. Validate and least-privilege every inter-agent message."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423459H",
+      "title": "Architecture Matters for Multi-Agent Security",
+      "firstAuthor": "Hagag, Ben",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23459",
+      "url": null,
+      "branches": [
+        "security",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "The same task under different multi-agent architectures has different security properties.",
+          "why": "Topology is a security decision. Choose who can dispatch to whom, and who reads whose output, for the attack surface — not just for performance."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250301935Z",
+      "title": "MultiAgentBench: Evaluating the Collaboration and Competition of LLM Agents",
+      "firstAuthor": "Zhu, Kunlun",
+      "year": 2025,
+      "citationCount": 3,
+      "arxiv": "2503.01935",
+      "url": null,
+      "branches": [
+        "eval",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Benchmarks LLM multi-agent collaboration and competition across coordination topologies with milestone-based KPIs, not just final-answer accuracy.",
+          "why": "If you run multi-agent, evaluate the collaboration itself — coordination quality and topology effects — not only whether the final answer was right."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250201534L",
+      "title": "Preference Leakage: A Contamination Problem in LLM-as-a-Judge",
+      "firstAuthor": "Li, Dawei",
+      "year": 2025,
+      "citationCount": 10,
+      "arxiv": "2502.01534",
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Shows LLM judges systematically favor outputs from related/sibling models — a contamination bias that silently inflates evaluation scores.",
+          "why": "If your judge model is related to the model under test, your eval is contaminated. Use independent judges, human-anchored samples, and report the risk."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250322458G",
+      "title": "Evaluating LLM-based Agents for Multi-Turn Conversations: A Survey",
+      "firstAuthor": "Guan, Shengyue",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2503.22458",
+      "url": null,
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A structured (PRISMA) survey of evaluation methods and benchmarks for multi-turn LLM agents.",
+          "why": "A map of the agent-eval landscape — useful when choosing or assembling an evaluation suite rather than reinventing one."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250323278H",
+      "title": "Model Context Protocol (MCP): Landscape, Security Threats, and Future Research Directions",
+      "firstAuthor": "Hou, Xinyi",
+      "year": 2025,
+      "citationCount": 3,
+      "arxiv": "2503.23278",
+      "url": null,
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Surveys the security threat landscape of MCP — the tool-connection standard now powering most agentic systems — and its expanding attack surface.",
+          "why": "Every MCP tool you connect widens the attack surface. Inventory and least-privilege your tool/MCP connections; treat the protocol layer as a trust boundary."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260511026R",
+      "title": "AgentShield: Deception-based Compromise Detection for Tool-using LLM Agents",
+      "firstAuthor": "Rassul, Yassin H.",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2605.11026",
+      "url": null,
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Plants deception traps (fake tools/credentials) that detect indirect-prompt-injection compromises which slip past prevention — cross-lingual, near-zero false positives.",
+          "why": "Detection complements prevention: rails will miss some injections, so add tripwires that fire when an agent does something it shouldn't."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250211127W",
+      "title": "G-Safeguard: A Topology-Guided Security Lens and Treatment on LLM-based Multi-Agent Systems",
+      "firstAuthor": "Wang, Shilong",
+      "year": 2025,
+      "citationCount": 4,
+      "arxiv": "2502.11127",
+      "url": null,
+      "branches": [
+        "security",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Detects anomalies over the agent communication graph and intervenes to defend a multi-agent system against attacks that propagate between agents.",
+          "why": "Monitor the inter-agent communication graph itself for anomalies — the topology that carries work also carries compromise."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250203261S",
+      "title": "CARROT: A Cost-Aware Rate-Optimal Router",
+      "firstAuthor": "Somerstep, Seamus",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": "2502.03261",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Routes each query to the cheapest model that still meets a quality bar, with rate-optimality guarantees.",
+          "why": "The modern cost-router: set a quality floor and let routing minimize cost beneath it — but it needs real per-model cost/quality measurements to work."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250218036C",
+      "title": "Harnessing Multiple Large Language Models: A Survey on LLM Ensemble",
+      "firstAuthor": "Chen, Zhijun",
+      "year": 2025,
+      "citationCount": 3,
+      "arxiv": "2502.18036",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Taxonomizes LLM ensemble and routing strategies — before, during, and after inference — for combining multiple models per query.",
+          "why": "A reference taxonomy for deciding how (and whether) to combine models: route, cascade, or ensemble, each with different cost/latency/quality trade-offs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260423577G",
+      "title": "RouteNLP: Closed-Loop LLM Routing with Conformal Cascading and Distillation Co-Optimization",
+      "firstAuthor": "Guo, Dongxin",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.23577",
+      "url": null,
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "An enterprise closed-loop router using conformal cascading + distillation co-optimization, reporting six-figure monthly inference-cost reduction.",
+          "why": "A concrete enterprise routing case study: closed-loop routing with statistical (conformal) guarantees can cut inference spend materially at scale."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260407877K",
+      "title": "MemReader: From Passive to Active Extraction for Long-Term Agent Memory",
+      "firstAuthor": "Kang, Jingyi",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.07877",
+      "url": null,
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Actively extracts and populates long-term agent memory rather than passively logging, improving the reliability of personalized long-horizon agents.",
+          "why": "Long-horizon reliability needs deliberate memory, not just a growing transcript. Treat what an agent remembers as a managed, durable store."
+        }
+      ]
+    },
+    {
+      "bibcode": "OTelGenAI",
+      "title": "OpenTelemetry — Semantic Conventions for Generative AI & Agents",
+      "firstAuthor": "OpenTelemetry / CNCF",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "An open, vendor-neutral standard for telemetry from LLM and agent systems — spans/metrics/events for model calls, tool calls, token usage, and agent operations.",
+          "why": "Adopt this as your trace schema so observability is portable across vendors and tools. It is the closest thing to a common substrate for the execution traces the research above argues for."
+        }
+      ]
+    },
+    {
+      "bibcode": "NISTRMF",
+      "title": "NIST AI Risk Management Framework (AI RMF 1.0)",
+      "firstAuthor": "NIST",
+      "year": 2023,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "branches": [
+        "eval",
+        "security",
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A voluntary, widely-referenced framework organizing AI risk management into Govern / Map / Measure / Manage functions.",
+          "why": "Map your agent controls to a recognized framework so 'reliability' becomes auditable. Pairs naturally with the assurance + governance research above."
+        }
+      ]
+    },
+    {
+      "bibcode": "OWASPLLM",
+      "title": "OWASP Top 10 for LLM Applications",
+      "firstAuthor": "OWASP GenAI Security Project",
+      "year": 2025,
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "A community-maintained catalogue of the top LLM-application security risks — prompt injection, insecure output handling, excessive agency, supply chain, and more.",
+          "why": "The practical security checklist for agent systems. 'Excessive agency' and 'prompt injection' map directly to the topology and injection findings above."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "reliability",
+      "label": "Reliability & failure modes",
+      "summary": "Does fan-out actually help? Mostly only when measured. Know the failure taxonomy before you scale.",
+      "themes": [
+        "Multi-agent debate gives minimal/inconsistent gains over a strong single agent on SE tasks (MAD).",
+        "Multi-agent failure has structure — 14 modes in 3 categories: specification, inter-agent misalignment, verification (MAST).",
+        "Consensus topology biases outcomes; more agents is not automatically more reliable (Beyond Strongest)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 6
+    },
+    {
+      "key": "recovery",
+      "label": "Recovery & durable state",
+      "summary": "Retries around side effects are transactions, not control-flow. Durable state beats conversational handoff.",
+      "themes": [
+        "Log-based compensation recovers only from actual failures and is cheaper than replanning (RAC).",
+        "Checkpoint/restore double-commits irreversible effects without replay-or-fork (ACRFence).",
+        "Durable inspectable state — 'thin control over thick state' — is why long-horizon systems recover (AiScientist, SagaLLM)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 6
+    },
+    {
+      "key": "observability",
+      "label": "Observability & tracing",
+      "summary": "Transcripts are not observability. Capture a structured, replayable trace and correlate intent with action.",
+      "themes": [
+        "Agent execution can be a first-class object — inspect, fork, replay (Shepherd).",
+        "Useful observability correlates high-level intent with low-level system action (AgentSight).",
+        "Evidence-linked traces enable review of the reasoning chain, not just the answer (DeepRare)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 4
+    },
+    {
+      "key": "eval",
+      "label": "Evaluation & assurance",
+      "summary": "Ground evaluation in execution and an honest baseline. Calibrate LLM judges. Treat eval as risk reduction, not proof.",
+      "themes": [
+        "Execution-grounded verification beats model-likelihood / simulated feedback (AgentForge, SWE-bench).",
+        "Interactive, multi-turn, tool-use benchmarks measure reliability as a distribution (τ-bench, SWE-bench); evaluate the collaboration itself for multi-agent (MultiAgentBench).",
+        "LLM-as-judge scales eval but carries measurable bias and contamination (MT-Bench, Preference Leakage)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 10
+    },
+    {
+      "key": "routing",
+      "label": "Cost, routing & scheduling",
+      "summary": "Cascades beat always-on fan-out. Record cost facts before optimizing routing; never treat unknown cost as zero.",
+      "themes": [
+        "Confidence-gated cascades and cost-aware routers cut cost while preserving a quality bar (CascadeDebate, CARROT).",
+        "Routing can be learned from preference/outcome data (RouteLLM), and tiered across local/cloud (Minions).",
+        "Adaptive selection works but is domain-specific and needs measured cost (Node-Sampling)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 8
+    },
+    {
+      "key": "topology",
+      "label": "Topology & coordination",
+      "summary": "Choose topology deliberately. Prefer dynamic task graphs; keep roles in config, not code.",
+      "themes": [
+        "Dynamic task graphs + async parallelism suit heterogeneous work (DynTaskMAS, APWA).",
+        "Dynamic role formation adapts better than fixed role hierarchies (Skills-to-Talent, AutoGen).",
+        "Workflow management needs the task graph + resource facts exposed (Manager Agent)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 9
+    },
+    {
+      "key": "security",
+      "label": "Security & governance",
+      "summary": "Treat tool/RAG output as untrusted. Topology is an attack surface. Injection propagates across agents.",
+      "themes": [
+        "Indirect prompt injection via retrieved content is the defining agent threat (Greshake).",
+        "Injection propagates through inter-agent communication (MAS red-teaming).",
+        "The same task under different architectures has different security properties (Architecture Matters)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 10
+    },
+    {
+      "key": "human",
+      "label": "Human oversight & collaboration",
+      "summary": "Keep humans on the reasoning chain. Design escalation routes that consume decisions, not idle alerts.",
+      "themes": [
+        "Review the evidence-linked rationale, not just the final answer (DeepRare).",
+        "Human-AI team management is a first-class challenge — managers must inspect and decompose (Manager Agent).",
+        "Governance frameworks make oversight auditable (NIST AI RMF)."
+      ],
+      "gaps": [],
+      "questions": [],
+      "count": 4
+    }
+  ],
+  "reading": [
+    [
+      "2022arXiv221003629Y",
+      "ReAct: reasoning + acting (the base pattern)",
+      "foundations"
+    ],
+    [
+      "2023arXiv230808155W",
+      "AutoGen: multi-agent conversation framework",
+      "foundations"
+    ],
+    [
+      "2023arXiv231006770J",
+      "SWE-bench: execution-grounded evaluation",
+      "evaluation"
+    ],
+    [
+      "2024arXiv240612045Y",
+      "τ-bench: tool-agent-user reliability",
+      "evaluation"
+    ],
+    [
+      "2025arXiv250301935Z",
+      "MultiAgentBench: evaluating collaboration",
+      "evaluation"
+    ],
+    [
+      "2023arXiv230605685Z",
+      "MT-Bench + Preference Leakage: LLM-as-judge & its biases",
+      "evaluation"
+    ],
+    [
+      "2025arXiv250312029C",
+      "MAD: is multi-agent debate worth it?",
+      "reliability"
+    ],
+    [
+      "2025arXiv250313657C",
+      "MAST: why multi-agent systems fail",
+      "reliability"
+    ],
+    [
+      "BeyondStrongest",
+      "Beyond the Strongest: consensus topology",
+      "reliability"
+    ],
+    [
+      "2023arXiv230212173G",
+      "Indirect prompt injection (the defining threat)",
+      "security"
+    ],
+    [
+      "2025arXiv250323278H",
+      "MCP: the agent tool-surface threat landscape",
+      "security"
+    ],
+    [
+      "2025arXiv250214847H",
+      "Injection propagation across agents",
+      "security"
+    ],
+    [
+      "2026arXiv260503409P",
+      "RAC: transactional recovery",
+      "recovery"
+    ],
+    [
+      "ACRFence",
+      "ACRFence: replay-or-fork for side effects",
+      "recovery"
+    ],
+    [
+      "2026arXiv260510913Y",
+      "Shepherd: the execution-trace substrate",
+      "observability"
+    ],
+    [
+      "AgentSight",
+      "AgentSight: intent↔action observability",
+      "observability"
+    ],
+    [
+      "2025arXiv250203261S",
+      "CARROT: cost-aware routing",
+      "cost & routing"
+    ]
+  ],
+  "opportunities": [],
+  "practices": [
+    {
+      "title": "Measure a single-agent baseline before you fan out",
+      "pillar": "reliability",
+      "maturity": "table-stakes",
+      "why": "Multi-agent adds cost and new failure modes. Adopt it only where it beats a measured single-agent baseline on your own tasks.",
+      "how": "Keep a 1-agent version of each workflow; promote the multi-agent variant only when it wins on success rate AND cost on your golden set.",
+      "papers": [
+        "2025arXiv250312029C",
+        "BeyondStrongest",
+        "2026arXiv260413120K"
+      ]
+    },
+    {
+      "title": "Ground evaluation in execution, not model likelihood",
+      "pillar": "eval",
+      "maturity": "table-stakes",
+      "why": "Plausible-looking output is not correct output. Validate by running it — tests, compile, deploy checks — in a sandbox before propagation.",
+      "how": "Run candidate work in a resource-bounded, network-isolated sandbox; gate propagation on the execution result, not a confidence score.",
+      "papers": [
+        "2026arXiv260413120K",
+        "2023arXiv231006770J",
+        "CloudMAS"
+      ]
+    },
+    {
+      "title": "Build a small golden set of your real tasks and replay it every release",
+      "pillar": "eval",
+      "maturity": "table-stakes",
+      "why": "Generic accuracy ≠ agent reliability. Interactive, multi-turn, tool-use tasks expose the failures that matter, and reliability is a distribution across trials.",
+      "how": "Curate domain tasks with unambiguous oracles (à la τ-bench / SWE-bench); measure pass^k across repeated runs, not a single lucky run.",
+      "papers": [
+        "2024arXiv240612045Y",
+        "2023arXiv231006770J",
+        "2025arXiv250301935Z"
+      ]
+    },
+    {
+      "title": "Calibrate LLM-as-judge; never treat eval as proof",
+      "pillar": "eval",
+      "maturity": "advancing",
+      "why": "LLM judges scale evaluation but carry position/verbosity/self-preference bias. Probabilistic systems are evaluated for risk reduction, not proven correct.",
+      "how": "Report inter-rater agreement against human labels; keep a human-reviewed sample; map controls to a governance framework.",
+      "papers": [
+        "2023arXiv230605685Z",
+        "2025arXiv250201534L",
+        "2025arXiv250313657C",
+        "2026arXiv260523459B"
+      ]
+    },
+    {
+      "title": "Make every run a structured, replayable execution trace",
+      "pillar": "observability",
+      "maturity": "advancing",
+      "why": "Transcripts lose causal structure. A typed event stream of model/tool/env effects is the substrate under debugging, golden sets, and any supervisory layer.",
+      "how": "Persist a per-task state-transition log; adopt the OpenTelemetry GenAI conventions so it's portable; enable replay from a changed step.",
+      "papers": [
+        "2026arXiv260510913Y",
+        "AgentSight",
+        "OTelGenAI"
+      ]
+    },
+    {
+      "title": "Correlate high-level intent with low-level action in telemetry",
+      "pillar": "observability",
+      "maturity": "advancing",
+      "why": "Joining reasoning to system actions is what catches reasoning loops, exfiltration, and hidden coordination bottlenecks.",
+      "how": "Tag every tool call with the deciding step + session id; alert on intent/action mismatch; prefer a standard schema over a bespoke tracer.",
+      "papers": [
+        "AgentSight",
+        "OTelGenAI"
+      ]
+    },
+    {
+      "title": "Treat retries around side effects as transactions (receipts + replay-or-fork)",
+      "pillar": "recovery",
+      "maturity": "advancing",
+      "why": "A retry after a side effect already landed repeats the side effect — duplicate commits, payments, token spend.",
+      "how": "Idempotency keys on every external write; record an effect receipt; on retry replay the recorded result, or fork explicitly for a genuinely new effect.",
+      "papers": [
+        "ACRFence",
+        "2026arXiv260503409P",
+        "2025arXiv250311951C"
+      ]
+    },
+    {
+      "title": "Recover from logs, not by replanning",
+      "pillar": "recovery",
+      "maturity": "advancing",
+      "why": "Re-reasoning the whole plan on every failure is expensive and can hallucinate new errors. Log-based compensation recovers only from what actually failed.",
+      "how": "Keep a per-run transaction log + a compensator per side-effecting tool; roll back completed dependents in reverse-topological order.",
+      "papers": [
+        "2026arXiv260503409P",
+        "2025arXiv250311951C",
+        "ACRFence"
+      ]
+    },
+    {
+      "title": "Pass durable references between agents, not chat summaries",
+      "pillar": "recovery",
+      "maturity": "advancing",
+      "why": "Conversational handoff is lossy and dies with the context window. Durable state survives crashes and context loss.",
+      "how": "Use a shared task/artifact store ('thin control over thick state'); downstream steps read artifact + evidence references, not transcripts.",
+      "papers": [
+        "2026arXiv260413018C",
+        "DeepRare",
+        "2026arXiv260407877K"
+      ]
+    },
+    {
+      "title": "Route by cost with cascades; escalate only on uncertainty",
+      "pillar": "routing",
+      "maturity": "advancing",
+      "why": "Always-on fan-out across strong models is expensive. A cheap first pass with confidence-gated escalation often wins on both cost and quality.",
+      "how": "Cheap model first; escalate to a stronger model/quorum only when an uncertainty signal fires; measure $/task continuously.",
+      "papers": [
+        "2026arXiv260412262C",
+        "2025arXiv250203261S",
+        "2024arXiv240618665O",
+        "2025arXiv250215964N"
+      ]
+    },
+    {
+      "title": "Record cost/latency facts before optimizing routing",
+      "pillar": "routing",
+      "maturity": "table-stakes",
+      "why": "You can't route on cost you don't measure, and treating unknown cost as zero routes hard tasks to weak models.",
+      "how": "Emit per-step token/cost/latency; render 'unknown' (never $0) in dashboards; learn routing from this data rather than a hand-authored table.",
+      "papers": [
+        "2024arXiv240618665O",
+        "NodeSampling",
+        "2026arXiv260423577G"
+      ]
+    },
+    {
+      "title": "Prefer dynamic task graphs over static schedules",
+      "pillar": "topology",
+      "maturity": "advancing",
+      "why": "Heterogeneous, data-dependent work parallelizes badly under a fixed schedule and serializes independent branches.",
+      "how": "Model dependencies explicitly; let the scheduler fan out independent branches async; bound per-step time so one slow step can't stall the batch.",
+      "papers": [
+        "2025arXiv250307675Y",
+        "2026arXiv260515132R",
+        "2025arXiv250213965L",
+        "ManagerAgent"
+      ]
+    },
+    {
+      "title": "Keep roles in config and prompts, not in code",
+      "pillar": "topology",
+      "maturity": "advancing",
+      "why": "A hardcoded hierarchy of agent classes ossifies and resists model upgrades. Dynamic, config-driven roles adapt.",
+      "how": "Express specialization as prompt/config; avoid a growing registry of agent types; let roles form from the task, not a static map.",
+      "papers": [
+        "2026arXiv260422446Y",
+        "2026arXiv260513850H",
+        "2023arXiv230808155W"
+      ]
+    },
+    {
+      "title": "Blind review/debate lanes and hide interim tallies",
+      "pillar": "reliability",
+      "maturity": "frontier",
+      "why": "Visible authorship drives self-voting and ties; visible live tallies drive herding and premature consensus.",
+      "how": "Anonymize lanes; reveal votes only at synthesis; and first check whether debate beats a single strong pass at all before paying for it.",
+      "papers": [
+        "BeyondStrongest",
+        "2025arXiv250312029C"
+      ]
+    },
+    {
+      "title": "Treat orchestration topology as a security decision",
+      "pillar": "security",
+      "maturity": "table-stakes",
+      "why": "The same task under different topologies has different attack surfaces, and untrusted input propagates across agents.",
+      "how": "Isolate agents that touch untrusted content; least-privilege every tool; never let one agent's output silently become another's command.",
+      "papers": [
+        "2026arXiv260423459H",
+        "2025arXiv250214847H",
+        "2025arXiv250211127W",
+        "2026arXiv260409744Q"
+      ]
+    },
+    {
+      "title": "Defense-in-depth against prompt injection",
+      "pillar": "security",
+      "maturity": "table-stakes",
+      "why": "Indirect injection via retrieved content is the primary agent threat, and rails/alignment alone don't stop transferable adversarial attacks.",
+      "how": "Input/output rails + allowlists; injection benchmarks in CI; human approval on high-blast-radius actions; map to OWASP LLM Top 10.",
+      "papers": [
+        "2023arXiv230212173G",
+        "2024arXiv240613352D",
+        "2026arXiv260511026R",
+        "OWASPLLM"
+      ]
+    },
+    {
+      "title": "Keep humans on the reasoning chain with a real escalation route",
+      "pillar": "human",
+      "maturity": "advancing",
+      "why": "Reviewing only the final answer misses reasoning/evidence errors, and an alert with no consuming route is just noise.",
+      "how": "Emit evidence-linked rationale + a validation summary; design escalations that route work to a human and consume the decision.",
+      "papers": [
+        "DeepRare",
+        "ManagerAgent",
+        "NISTRMF"
+      ]
+    },
+    {
+      "title": "Govern with a risk framework, not a benchmark score",
+      "pillar": "human",
+      "maturity": "table-stakes",
+      "why": "Product readiness ≠ benchmark score. Reliability becomes defensible only when controls map to a recognized framework.",
+      "how": "Adopt NIST AI RMF (Govern/Map/Measure/Manage) and OWASP LLM Top 10; tie each control to a concrete test.",
+      "papers": [
+        "NISTRMF",
+        "OWASPLLM",
+        "2026arXiv260523459B"
+      ]
+    }
+  ]
+}
