@@ -67,7 +67,14 @@ if git diff --cached --quiet; then
   echo "[knowledge-sync] no explorer changes to commit (see $SYNC_DIR/report.md)" | tee -a "$LOG"
 else
   git commit -q -m "content(knowledge): explorer sync ${MODE} ${DATE}"
-  echo "[knowledge-sync] committed explorer updates locally (not pushed)" | tee -a "$LOG"
+  # Mirrors the digest runner's DIGEST_PUSH: default off so a manual run stays
+  # local for review; the cron sets KNOWLEDGE_SYNC_PUSH=1 to publish.
+  if [ "${KNOWLEDGE_SYNC_PUSH:-0}" = "1" ]; then
+    git pull --rebase --autostash && git push
+    echo "[knowledge-sync] committed and pushed explorer updates — site will rebuild" | tee -a "$LOG"
+  else
+    echo "[knowledge-sync] committed explorer updates locally (KNOWLEDGE_SYNC_PUSH!=1, not pushing)" | tee -a "$LOG"
+  fi
 fi
 
 if [ -f "$SYNC_DIR/library-proposals.json" ]; then

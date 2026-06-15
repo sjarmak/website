@@ -65,13 +65,14 @@ target libraries and refreshes `libraries.json`; commit that to publish.
 
 ### Scheduling (optional)
 
-Run after the 06:00 specialized daily digest. Add to crontab once validated:
+Runs at 07:15, after the 06:00 daily and 06:45 daily-general digests publish and
+before the Monday 07:30 weekly. `KNOWLEDGE_SYNC_PUSH=1` makes it push its explorer
+commits (mirrors the digest runner's `DIGEST_PUSH`); omit it to keep runs local for
+review. Library proposals are never auto-applied — the ADS write always stays manual.
 
 ```cron
-15 7 * * *  cd /home/ds/projects/website && scripts/knowledge/sync-knowledge.sh >> .knowledge-sync/cron.log 2>&1
+15 7 * * * PATH=/home/ds/.local/bin:/home/ds/.nvm/versions/node/v22.22.2/bin:/usr/local/bin:/usr/bin:/bin KNOWLEDGE_SYNC_PUSH=1 /home/ds/projects/website/scripts/knowledge/sync-knowledge.sh >> /home/ds/.knowledge-sync-cron.log 2>&1
 ```
 
-The explorer commit is local-only by design — review the diff and push yourself,
-same as the digest pipeline. After many explorer additions, regenerate embeddings
-with `build_embeddings.py` (needs the brainstorm venv) so new papers get semantic
-neighbors.
+After many explorer additions, regenerate embeddings with `build_embeddings.py`
+(needs the brainstorm venv) so new papers get semantic neighbors.
