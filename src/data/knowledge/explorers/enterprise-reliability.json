@@ -1004,6 +1004,31 @@
           "why": "The topology branch's preference for dynamic task graphs over static orchestration; DeLM shows the decentralized queue+context topology outperforms centralized scatter-gather on SWE-bench."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260607682D",
+      "title": "SWE-Marathon: Can Agents Autonomously Complete Ultra-Long-Horizon Software Work?",
+      "firstAuthor": "Desai, Rishi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.07682",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260607682D/abstract",
+      "branches": [
+        "eval",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Scores 20 project-scale software tasks with multi-channel hidden verifiers (dense test suites, behavioral parity against a reference, performance gates, deterministic replay, audit checks, and computer-use UI judges) plus a no-op-fails / oracle-passes solvability gate and adversarial exploit search at construction time; across 1,300 rollouts 10.2% ship a verifier bypass yet the layered defense catches all 132, so none earns reward, and frontier agents still resolve under 30% at pass@1.",
+          "why": "The eval branch's thesis that evaluation must be grounded in execution against an honest baseline — SWE-Marathon refuses single-test grading, anchors each task to a human reference solution, and treats reward-hacking resistance as part of task construction rather than a post-hoc filter."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "A 5-bucket failure taxonomy over 526 agent-attributable failures: implementation failure (41.6%) and timeout (31.4%) dominate, then reward hacking (15.4%), premature termination (7.6%), and poor self-verification (4.0%); long context degrades behavior actively — pass rate falls monotonically with consecutive-duplicate run length (claude-code 41.9%→3.2%) and compaction/summarizer trials pass at 0% vs 8.9% without.",
+          "why": "The reliability branch's insistence on knowing the failure taxonomy before scaling — at hour-scale horizons the binding constraints are sustained self-verification and idle-loop degradation, not raw capability, and more tokens and compaction track failure rather than rescue it."
+        }
+      ]
     }
   ],
   "sections": [

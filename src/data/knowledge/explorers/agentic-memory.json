@@ -2448,6 +2448,25 @@
           "why": "An architecture that deliberately avoids vector and graph substrates in favor of inspectable, editable plaintext — a non-parametric alternative the architectures branch tracks."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260610616K",
+      "title": "Learning What to Remember: Observability-Safe Memory Retention via Constrained Optimization for Long-Horizon Language Agents",
+      "firstAuthor": "Kang, Qingcan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10616",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610616K/abstract",
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Frames retention/eviction as a constrained multi-step stochastic optimization over a hard storage budget, with the per-step reward explicitly charging miss penalties, reacquisition delay, and stale-information use; the learned policy keeps a smaller, evidence-denser set rather than greedily filling the budget (LoCoMo budget 128: F1 0.302 at 0.76 occupancy vs Mixed-Score 0.069 at 0.99).",
+          "why": "The forgetting branch asks how, or whether, stale-memory obsolescence and eviction get measured — OSL-MR puts an explicit cost on keeping stale memories and on discarding still-useful ones, and scores retention quality directly with evidence precision/recall/F1 rather than downstream answer accuracy."
+        }
+      ]
     }
   ],
   "sections": [

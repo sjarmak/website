@@ -1107,6 +1107,25 @@
           "why": "The multiagent branch's question of keeping long-running agent swarms coherent without dumping chat logs — DeLM's compact, verified, unfoldable shared context is a concrete answer."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260610616K",
+      "title": "Learning What to Remember: Observability-Safe Memory Retention via Constrained Optimization for Long-Horizon Language Agents",
+      "firstAuthor": "Kang, Qingcan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10616",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610616K/abstract",
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Treats what-to-forget as the primary decision rather than a side effect of retrieval: an evidence learner trained offline from gold-evidence membership labels (not LLM importance scores) decides what to retain, deliberately running below full occupancy and stopping early when no remaining candidate looks useful.",
+          "why": "The forgetting branch's question of when memories should be forgotten — OSL-MR shows learning query-conditioned evidence value beats recency and Generative-Agents salience scoring, which capture general noteworthiness rather than whether a memory is evidence for the current query."
+        }
+      ]
     }
   ],
   "sections": [
