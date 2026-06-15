@@ -1,3 +1,36 @@
 {
-  "pending": []
+  "pending": [
+    {
+      "bibcode": "2026arXiv260613115C",
+      "arxiv": "2606.13115",
+      "title": "G-Long: Graph-Enhanced Memory Management for Efficient Long-Term Dialogue Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": ["architectures"]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": ["representation", "retrieval"]
+        }
+      ],
+      "firstSeen": "2026-06-14",
+      "lastAttempt": "2026-06-14",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260612924D",
+      "arxiv": "2606.12924",
+      "title": "Iterating Toward Better Search: A Two-Agent Simulation Framework for Evaluating Agentic Search Architectures in E-Commerce",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": ["synthetic-data", "eval-methodology"]
+        }
+      ],
+      "firstSeen": "2026-06-14",
+      "lastAttempt": "2026-06-14",
+      "attempts": 1
+    }
+  ]
 }
