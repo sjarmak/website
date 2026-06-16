@@ -104,5 +104,9 @@
   margin-block-start: var(--space-l);
 }
 .prose img {
+  height: auto;
+  width: auto;
+  max-height: 40rem;
+  margin-inline: auto;
   border-radius: var(--radius);
 }
