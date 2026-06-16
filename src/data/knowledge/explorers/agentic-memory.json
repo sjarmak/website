@@ -2467,6 +2467,62 @@
           "why": "The forgetting branch asks how, or whether, stale-memory obsolescence and eviction get measured — OSL-MR puts an explicit cost on keeping stale memories and on discarding still-useful ones, and scores retention quality directly with evidence precision/recall/F1 rather than downstream answer accuracy."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260614470S",
+      "title": "GitOfThoughts: Version-Controlled Reasoning and Agent Memory You Can Replay, Diff, and Merge",
+      "firstAuthor": "Shekar, Pavan C",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14470",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614470S/abstract",
+      "branches": [
+        "architectures",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Proposes git itself as the memory substrate: the reasoning DAG is a content-addressed git repository where each scored thought is a commit, scores are git notes, validation outcomes are tags (success_/failed_), and a master vs. long-lived memory branch separates session from cross-session memory; retrieval is stock git log (--grep, -S pickaxe, tag filters), and two agents' memories are combined with git fetch + git merge, which surfaces contradictory lessons as merge conflicts instead of silently concatenating them.",
+          "why": "The architectures branch covers memory designs beyond the basics — graph/tree stores, routing, and consolidation/forgetting; git-as-substrate is a distinct architecture whose three-way merge, signed authorship, and SHA-deterministic replay are operations bespoke vector/graph stores do not provide."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "A pre-registered, controlled comparison that holds the agent fixed and swaps only the substrate across five backends (none, markdown, vector, graph, git) on GPQA-Diamond and MATH-500 with paired-bootstrap CIs and two model scales; its headline is a robust null — no substrate reliably improves accuracy on novel problems — and a promising +15 pp git trend at n=40 did not survive its own pre-registered replication, which the authors document alongside a retracted result.",
+          "why": "The eval-methodology branch is about statistical rigor, failure attribution, and reproducibility; this paper models pre-registration, paired-bootstrap CIs, and a same-substrate ablation that isolates the memory effect from agent and compute confounds."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260614571L",
+      "title": "StreamMemBench: Streaming Evaluation of Agent Memory for Future-Oriented Assistance",
+      "firstAuthor": "Liu, Guanming",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14571",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614571L/abstract",
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology",
+        "applications-personalization"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "A streaming benchmark sourced from real EgoLife egocentric lifelogs rather than scripted or synthesized dialogue: each five-minute segment is mined for a hidden 'evidence anchor' (a user-specific preference, plan, or capability) that spawns a two-step task sequence — an initial task that needs the evidence and a follow-up task grounded in the same anchor; eight memory systems are evaluated across two backbones (DeepSeek-V4-Flash, Gemini-3-Flash).",
+          "why": "The benchmarks-catalog branch tracks datasets for long-term and multi-session agent memory by task type and composition; StreamMemBench adds a stream-sourced, evidence-anchored, two-stage design that is distinct from the dialogue-recall framing of LoCoMo, LongMemEval, and PersonaMem."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Four metrics separate retention from use — Fidelity (the anchored evidence is retained on a direct probe), Feedback Incorporation (corrective feedback is used within the same interaction), Initial Evidence Use, and Follow-up Reuse — and the Fidelity−IEU and Fidelity−FUR gaps attribute a failure to retained-but-unused evidence versus non-retention rather than collapsing everything into one answer-accuracy number; a review agent enforces that queries do not leak the evidence (Leak=0), genuinely need it (Need=1), and read naturally (Natural=1).",
+          "why": "The eval-methodology branch is about retrieval-aware versus answer-level scoring and failure attribution; StreamMemBench's gap metrics are exactly retrieval-aware diagnostics that localize where a memory pipeline breaks instead of only reporting whether the final answer was right."
+        },
+        {
+          "branch": "applications-personalization",
+          "takeaway": "Targets personal agents that must turn what they observe and how users interact with them into future-oriented assistance over a continuous egocentric stream — identifying user-specific evidence from wearable-device lifelogs, consolidating the user's confirming or correcting feedback, and carrying both forward to a later related request without being re-prompted.",
+          "why": "The applications-personalization branch covers long-horizon user modeling and personalized assistants including multimodal and embodied settings; StreamMemBench is a personalization benchmark grounded in real egocentric lifelog streams rather than abstract dialogue history."
+        }
+      ]
     }
   ],
   "sections": [

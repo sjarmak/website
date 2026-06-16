@@ -1126,6 +1126,50 @@
           "why": "The forgetting branch's question of when memories should be forgotten — OSL-MR shows learning query-conditioned evidence value beats recency and Generative-Agents salience scoring, which capture general noteworthiness rather than whether a memory is evidence for the current query."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260614470S",
+      "title": "GitOfThoughts: Version-Controlled Reasoning and Agent Memory You Can Replay, Diff, and Merge",
+      "firstAuthor": "Shekar, Pavan C",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14470",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614470S/abstract",
+      "branches": [
+        "substrate",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "Treats git as the persistence layer beneath the semantic memory: each session is its own repo, cross-problem insights live on a memory branch, and the strongest strawman (an append-only JSONL log plus ripgrep and SHA-256) is taken seriously — the residual git uniquely supplies is the operational layer (tested three-way merge with conflict surfacing, signed commits, bit-identical git bundle reproduction, free pack-file dedup). Measured cost is ~15 ms/write and ~48 ms/read, the same order as the embedding index's read (~20 ms).",
+          "why": "The substrate branch is about where bytes actually live — object stores, embedded stores, archives — and git is exactly such a substrate choice, here with measured write/read latency and storage footprint per backend."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "Separates the value of a substrate from raw accuracy: per-backend cost is measured, and a similarity sweep shows memory pays only above a 'copyability threshold' — when the retrieved case is a near-duplicate (cosine ≳ 0.8) accuracy jumps +12 to +13.5 pp, while below it nothing helps; the gain is answer retrieval, not method transfer, and a 4.5× larger backbone steepens the near-duplicate step (+22.5 to +28.5 pp) yet still cannot extract a transferable method from a worked example.",
+          "why": "The evaluation branch wants benchmarks beyond factual recall, retrieval-vs-answer separation, and cost/latency accounting; this paper supplies all three and reframes 'does memory help' as a question about when, not whether."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260614571L",
+      "title": "StreamMemBench: Streaming Evaluation of Agent Memory for Future-Oriented Assistance",
+      "firstAuthor": "Liu, Guanming",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14571",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614571L/abstract",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Operationalizes the retrieval-correctness vs. answer-correctness split for personal-agent memory: Fidelity measures whether the evidence is retained (and flags systems whose Fidelity is inflated by raw-text retention), while Initial Evidence Use and Follow-up Reuse measure whether it is actually used; the paper also compares storage and computational cost across eight systems, showing failures are not explained by storage alone.",
+          "why": "The evaluation branch wants benchmarks beyond factual recall that separate retrieval from answer correctness and add cost accounting — StreamMemBench's four-metric design and cost comparison are a direct instance of that bar."
+        }
+      ]
     }
   ],
   "sections": [

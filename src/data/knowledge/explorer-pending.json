@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-15",
-      "attempts": 5
+      "lastAttempt": "2026-06-16",
+      "attempts": 6
     },
     {
       "bibcode": "2026arXiv260612924D",
@@ -37,8 +37,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-15",
-      "attempts": 5
+      "lastAttempt": "2026-06-16",
+      "attempts": 6
     },
     {
       "bibcode": "2026arXiv260613174Z",
@@ -54,8 +54,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-15",
-      "attempts": 2
+      "lastAttempt": "2026-06-16",
+      "attempts": 3
     },
     {
       "bibcode": "2026arXiv260612945C",
@@ -78,8 +78,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-15",
-      "attempts": 2
+      "lastAttempt": "2026-06-16",
+      "attempts": 3
     },
     {
       "bibcode": "2026arXiv260613598T",
@@ -100,55 +100,100 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-15",
-      "attempts": 2
+      "lastAttempt": "2026-06-16",
+      "attempts": 3
     },
     {
-      "bibcode": "2026arXiv260614470S",
-      "arxiv": "2606.14470",
-      "title": "GitOfThoughts: Version-Controlled Reasoning and Agent Memory You Can Replay, Diff, and Merge",
+      "bibcode": "2026arXiv260617016X",
+      "arxiv": "2606.17016",
+      "title": "TokenPilot: Cache-Efficient Context Management for LLM Agents",
+      "targets": [
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "context"
+          ]
+        },
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "forgetting"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-16",
+      "lastAttempt": "2026-06-16",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260319595L",
+      "arxiv": "2603.19595",
+      "title": "All-Mem: Agentic Lifelong Memory via Dynamic Topology Evolution",
       "targets": [
         {
           "explorerId": "agentic-memory",
           "branches": [
             "architectures",
-            "eval-methodology"
+            "forgetting"
           ]
         },
         {
           "explorerId": "memory-design",
           "branches": [
-            "substrate",
-            "evaluation"
+            "representation",
+            "consolidation"
           ]
         }
       ],
-      "firstSeen": "2026-06-15",
-      "lastAttempt": "2026-06-15",
+      "firstSeen": "2026-06-16",
+      "lastAttempt": "2026-06-16",
       "attempts": 1
     },
     {
-      "bibcode": "2026arXiv260614571L",
-      "arxiv": "2606.14571",
-      "title": "StreamMemBench: Streaming Evaluation of Agent Memory for Future-Oriented Assistance",
+      "bibcode": "2026arXiv260614790L",
+      "arxiv": "2606.14790",
+      "title": "XFlow: An Executable Protocol Programming System for Reliable Multi-Agent Workflows",
       "targets": [
         {
-          "explorerId": "agentic-memory",
+          "explorerId": "multiagent-orchestration",
           "branches": [
-            "benchmarks-catalog",
-            "eval-methodology",
-            "applications-personalization"
+            "frameworks",
+            "frontier"
           ]
         },
         {
-          "explorerId": "memory-design",
+          "explorerId": "enterprise-reliability",
           "branches": [
-            "evaluation"
+            "recovery",
+            "reliability"
           ]
         }
       ],
-      "firstSeen": "2026-06-15",
-      "lastAttempt": "2026-06-15",
+      "firstSeen": "2026-06-16",
+      "lastAttempt": "2026-06-16",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260614805K",
+      "arxiv": "2606.14805",
+      "title": "Knowledge-Based Zero-Replay Debugging of Multi-Agent LLM Traces",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "observability",
+            "eval"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-16",
+      "lastAttempt": "2026-06-16",
       "attempts": 1
     }
   ]
