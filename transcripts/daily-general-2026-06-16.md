@@ -2,7 +2,7 @@
 title: "The Fable 5 \"jailbreak\" was \"fix this code"
 audioUrl: /media/digests/daily-general-2026-06-16.mp3
 durationMin: 7.5
-words: 1344
+words: 1329
 ---
 
 S. export control turned out to be the prompt fix this code. That's it, that's the demonstration. Here's what actually happened, confirmed today by Kate Mousweris of Luda Security, who Simon Willison quoted after going straight to the source.
@@ -21,7 +21,7 @@ What worries me about this isn't one model, it's the precedent. Non-technical de
 
 is a policy that bans any model capable of helping you secure your own software. That's not a guardrail. S. cyber defense, which is exactly what Luda Security titled their post.
 
-And there's a research finding from the same window that rhymes with this in an uncomfortable way. A team from Princeton and Berkeley published work they call Rapid Poison, attacking the rapid response framework that sits behind Anthropix ASL-3 safeguards. Rapid response is a self-improving system. It watches for new jailbreaks that slip past its classifiers, generates synthetic variants of those attacks, and retrains the detection model on them so it generalizes and adapts quickly.
+And there's a research finding from the same window that rhymes with this in an uncomfortable way. A team from Princeton and Berkeley published work they call Rapid Poison, attacking the rapid response framework that sits behind Anthropic ASL-3 safeguards. Rapid response is a self-improving system. It watches for new jailbreaks that slip past its classifiers, generates synthetic variants of those attacks, and retrains the detection model on them so it generalizes and adapts quickly.
 
 Sounds great, except the researchers showed that the adaptation loop is itself the attack surface. Using nothing but prompt injection and only modifying jailbreak samples, never touching the benign data or the labels, they can slip poisoned examples of the attack. And that's what they're doing. into that training set.
 
@@ -29,7 +29,7 @@ Two outcomes. One, they can create false positives, making the classifier flag p
 
 When you train the classifier on unsafe samples that are missing a concept, it learns to associate the presence of that concept with the safe label. At a 1% poisoning rate they hit up to 100% false positives and 96% false negatives. The system that's supposed to get safer over time can be steered to get blind instead. Put those two stories next to each other and you get the texture of where AI safety actually is right now.
 
-The defensive capability gets a model export banned, and the defensive safety pipeline can be poisoned through its own learning loop. The instruments we're using to govern this stuff are not keeping pace with the thing they're trying to govern. Which conveniently is the headline of the other big release this week. Stanford HAI dropped the ninth edition of the AI Index Report, the annual reference dataset for the whole field, authored by a deep bench that includes Jack Clark, Eric Brynjolfsson, James Maniaca, and Jov Shoham.
+The defensive capability gets a model export banned, and the defensive safety pipeline can be poisoned through its own learning loop. The instruments we're using to govern this stuff are not keeping pace with the thing they're trying to govern. Which conveniently is the headline of the other big release this week. Stanford HAI dropped the ninth edition of the AI Index Report, the annual reference dataset for the whole field, authored by a deep bench that includes Jack Clark, Erik Brynjolfsson, James Manyika, and Yoav Shoham.
 
 The framing this year is exactly that gap between what AI can do and how prepared we are to manage it. Governance frameworks, evaluation methods, the data infrastructure to even track AI's impact, all of it lagging the capability curve. New this edition, standalone chapters on AI in science and AI in medicine, fresh estimates of generative AI's economic value and its labor market effects, and a running thread that the benchmarks the field leans on are getting harder to trust. If you're going to cite one number about the state of AI this quarter, pull it from there.
 
@@ -41,7 +41,7 @@ The interesting read from developers is what the reversal signals, that Anthropi
 
 There's a compute story sitting under all of this too. Microsoft turns to AWS as GitHub faces AI capacity crunch, hit the hacker news front page with 136 points. The reporting is that GitHub Copilot's demand is heavy enough that Microsoft is leaning on a rival hyperscaler for capacity. Think about that.
 
-The company that owns the largest code host and runs its own major cloud is renting from Oz to keep its coding agent fed. The capacity crunch everyone talks about in the abstract, just showed up in the alliances. And two reads on how the work itself is changing. There's an essay making the rounds called Reviews have become expensive, rewrites have become cheap, and the argument is sharp.
+The company that owns the largest code host and runs its own major cloud is renting from AWS to keep its coding agent fed. The capacity crunch everyone talks about in the abstract, just showed up in the alliances. And two reads on how the work itself is changing. There's an essay making the rounds called Reviews have become expensive, rewrites have become cheap, and the argument is sharp.
 
 When an agent can regenerate a whole module in a couple of minutes, the cost of producing code collapses and the bottleneck moves to understanding it well enough to approve it. Reading someone else's diff carefully is now the expensive operation, not writing your own. That inverts a lot of received wisdom about code review. And Swix's AI News ran a Satya Nadella interview they're calling Satya on Loopcraft, about building frontier ecosystems rather than chasing single-model launches, which is a useful counterweight from someone steering one of the biggest platforms in the space.
 

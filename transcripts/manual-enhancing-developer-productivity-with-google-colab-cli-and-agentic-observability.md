@@ -2,7 +2,7 @@
 title: "Enhancing Developer Productivity with Google Colab CLI and Agentic"
 audioUrl: /media/digests/manual-enhancing-developer-productivity-with-google-colab-cli-and-agentic-observability.mp3
 durationMin: 28.8
-words: 5349
+words: 5321
 ---
 
 20 tasks, 27 million tokens each, on average. That's the size of the haystack a coding agent has to hold in its head to clear a single problem on SWE Marathon, a new benchmark that showed up this week, and it reframes most of what we argue about when we argue about coding agents. We spend a lot of breath on whether a model can land one clean edit. SWE Marathon is asking a different question.
@@ -59,7 +59,7 @@ Each depending on the last staying correct, and your odds of a clean run fall of
 
 The agent doesn't know it's wrong, so it keeps going, confidently, building more on a cracked foundation. And this is the failure mode anyone who's actually run an agent on a big task has watched happen. It starts strong, the first few steps look great, and then somewhere in the middle, it quietly loses the plot, forgets a constraint it established an hour ago, reintroduces a bug it already fixed, and by the end, you're staring at a confident, coherent looking, wrong result. The short benchmarks never catch that, because they end before the drift sets in.
 
-The short benchmarks never catch that, because they end before the drift sets in, That's the whole indictment, and it's why a benchmark built to run long is measuring something the leaderboards we've trusted simply can't see. What SW Marathon is really probing is whether an agent can keep a complex change consistent with itself, from the first file it touches, to the last test it runs. That's a memory problem, a planning problem, and a context management problem stacked together. It's much closer to what shipping a feature actually feels like than the tidy single function benchmarks we've been grading on.
+The short benchmarks never catch that, because they end before the drift sets in, That's the whole indictment, and it's why a benchmark built to run long is measuring something the leaderboards we've trusted simply can't see. What SWE Marathon is really probing is whether an agent can keep a complex change consistent with itself, from the first file it touches, to the last test it runs. That's a memory problem, a planning problem, and a context management problem stacked together. It's much closer to what shipping a feature actually feels like than the tidy single function benchmarks we've been grading on.
 
 And I suspect the rankings on it will look different from the rankings we're used to, because the skills it rewards are different. Stamina and self-consistency, not cleverness in the small. Which sets up the fourth headline item, MN's Agent, because it goes after the thing that makes long-horizon evaluation trustworthy in the first place, a verifiable environment. The dirty secret of software engineering benchmarks is that they're starved for environments you can actually check against.
 
@@ -125,11 +125,11 @@ That's worth holding next to everything else in this issue, because all the tool
 
 The tool, NerfGuard, deliberately constrains how agents use models to save cost, and the author argues improved productivity. It's the inverse of the usual pitch. Everyone's selling you a bigger model, more context, more capability. This is someone arguing that capping the agent, giving it less, produced better and cheaper outcomes, because an unconstrained agent burns tokens exploring when it should be deciding, wanders when it should commit.
 
-That matches something a lot of people have felt, and few have shipped a tool around. More capability handed to an agent, without guardrails, often produces more flailing, not more progress. Constraint as a feature, it runs against the grain, and the grain has been wrong about this often enough that I take the contrarian seriously. In the same spirit, SWIX reshared a talk on getting coding agents to actually use a tool, in this case LangFuse, and the framing was that it turned out to be a quote, skill issue, literally.
+That matches something a lot of people have felt, and few have shipped a tool around. More capability handed to an agent, without guardrails, often produces more flailing, not more progress. Constraint as a feature, it runs against the grain, and the grain has been wrong about this often enough that I take the contrarian seriously. In the same spirit, swyx reshared a talk on getting coding agents to actually use a tool, in this case Langfuse, and the framing was that it turned out to be a quote, skill issue, literally.
 
-Mark Klingin from ClickHouse talks through teaching agents to use new tools, and why it's harder than you'd expect. The lesson generalizes well beyond LangFuse. Handing an agent a tool isn't the same as the agent knowing when and how to reach for it. You can put a tool in the agent's hands and watch it never pick it up, or pick it up at the wrong moment, or use it clumsily.
+Mark Klingin from ClickHouse talks through teaching agents to use new tools, and why it's harder than you'd expect. The lesson generalizes well beyond Langfuse. Handing an agent a tool isn't the same as the agent knowing when and how to reach for it. You can put a tool in the agent's hands and watch it never pick it up, or pick it up at the wrong moment, or use it clumsily.
 
-Closing that gap is a training and design problem, not a documentation problem, and it's one of the underrated frictions in actually deploying these systems. The integration is the easy part. Teaching the judgment of when to use what is the work. Amjad Massad introduced VyBench, the first benchmark for app creation based on real-world tasks, and the finding had teeth.
+Closing that gap is a training and design problem, not a documentation problem, and it's one of the underrated frictions in actually deploying these systems. The integration is the easy part. Teaching the judgment of when to use what is the work. Amjad Masad introduced VyBench, the first benchmark for app creation based on real-world tasks, and the finding had teeth.
 
 8 stayed ahead on both price and performance. That split is the entire argument for application-level benchmarks. The model that tops a code benchmark isn't automatically the model that ships the best app, because shipping an app is a long-horizon, multi-step, judgment-heavy task, and a benchmark of isolated coding problems doesn't capture it. And look where that lands us.
 
@@ -159,7 +159,7 @@ A terminal interface to cloud GPUs that an agent can drive. An observability arg
 
 And underneath, a research and community current all pointing the same way. The hard part was never the clever one shot. It was holding a complex piece of work together over a long horizon, in an environment you can verify, at a cost you can afford to run twice. The question I'd carry into next week is which of these compounds, because they're not independent.
 
-Cheaper verifiable environments make long horizon benchmarks practical to run. Long horizon benchmarks expose which agents actually hold context, instead of just demoing well. Better context handling is what makes an agent worth pointing at a real repository instead of a toy. And scriptable infrastructure, the CoLab CLIs of the world, is what lets an agent act on all of it without a human in the loop relaying results.
+Cheaper verifiable environments make long horizon benchmarks practical to run. Long horizon benchmarks expose which agents actually hold context, instead of just demoing well. Better context handling is what makes an agent worth pointing at a real repository instead of a toy. And scriptable infrastructure, the Colab CLIs of the world, is what lets an agent act on all of it without a human in the loop relaying results.
 
 Each piece makes the next one cheaper to attempt. Watch whether that loop tightens over the next few months, because the day it does, is the day these tools stop being assistants you supervise line by line, and start being colleagues you delegate a whole task to, and check on later. Because that's where you'll see it first. Compute getting scriptable, so agents reach hardware on their own.
 

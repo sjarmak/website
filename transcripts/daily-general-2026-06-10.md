@@ -2,7 +2,7 @@
 title: "Claude Fable 5 arrives at twice Opus pricing, and Cognition's day-old"
 audioUrl: /media/digests/daily-general-2026-06-10.mp3
 durationMin: 10.9
-words: 1722
+words: 1624
 ---
 
 42 worth of tokens in a single afternoon yesterday, and he sounded delighted about it. That number is as good a place as any to start. Because yesterday, Anthropic shipped Claude Fable 5, and the field has spent the last day figuring out what it is, what it costs, and what it quietly declines to do. Start with the facts.
@@ -25,7 +25,7 @@ Thank you for watching, and I'll see you in the next video. Thank you for watchi
 
 Thank you for watching, and I'll see you in the next video. They're finding, Fable is genuinely better when the prompt is incomplete, and the agent has to discover the environment before it can build, learning the files, the tools, and the constraints before writing anything. 8 and their current baseline safer choices. That split, exploration versus judgment, is worth remembering when you decide where to spend the tokens.
 
-And the community texture backs it up. Thank you for watching, and I'll see you in the next video. Jay Karpathy and Swix were both passing around charts, showing benchmark curves breaking. Swix re-ran his historical difficulty class charts on Frontier Code Diamond, and said none of the official tables capture the degree of takeoff.
+And the community texture backs it up. Thank you for watching, and I'll see you in the next video. Andrej Karpathy and Swix were both passing around charts, showing benchmark curves breaking. Swix re-ran his historical difficulty class charts on Frontier Code Diamond, and said none of the official tables capture the degree of takeoff.
 
 That Fable is a different class of model, with, in his words, big model smell. Simon Willison made the same observation, from a different angle. 8 managed. Anthropic has said nothing about parameter counts, but the speed, the price, and the depth of knowledge all point the same direction.
 
@@ -43,9 +43,9 @@ And most coding work will never brush against it. But the principle is what both
 
 Whatever you think of the trade-off, this is the first time a frontier lab has shipped capability suppression that deliberately doesn't announce itself. And that precedent will outlive this particular model. The benchmark fable now sits on top of is itself brand new. And it deserves its own minute.
 
-On Monday, Cognition released FrontierCode, a coding benchmark built in partnership with the maintainers of 36 flagship open-source repositories, projects like Celery and BuddyBase. The maintainers put more than 40 hours into each task across multiple rounds of iteration, defining what they call the best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, would actually have to look like to get merged. Every task gets manually reviewed by a cognition researcher and they claim 81% fewer misclassification errors than SWE Bench Pro. 4 out of a hundred on the Diamond task set.
+On Monday, Cognition released FrontierCode, a coding benchmark built in partnership with the maintainers of 36 flagship open-source repositories, projects like Celery and Budibase. The maintainers put more than 40 hours into each task across multiple rounds of iteration, defining what they call the best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, best-in-the-box, would actually have to look like to get merged. Every task gets manually reviewed by a cognition researcher and they claim 81% fewer misclassification errors than SWE-bench Pro. 4 out of a hundred on the Diamond task set.
 
-4. After years of models saturating SWE Bench variants, here is a benchmark grounded in real maintainer standards, where state of the art, barely gets off the floor, and then one day later, Fable 5 took the number one spot. The timing worked out perfectly for Cognition, and honestly for the rest of us too, because a fresh benchmark with real headroom is exactly the instrument you want, on the day a new model class shows up. 5 barely improve with more thinking effort on Diamond, while Fable scales, is the most interesting technical claim of the launch.
+4. After years of models saturating SWE-bench variants, here is a benchmark grounded in real maintainer standards, where state of the art, barely gets off the floor, and then one day later, Fable 5 took the number one spot. The timing worked out perfectly for Cognition, and honestly for the rest of us too, because a fresh benchmark with real headroom is exactly the instrument you want, on the day a new model class shows up. 5 barely improve with more thinking effort on Diamond, while Fable scales, is the most interesting technical claim of the launch.
 
 If it holds, the post-training has learned to convert test-time compute into progress on problems measured in dozens of human hours, which is precisely where the previous generation stalled. A few more things from the last day, briefly. Cohere launched North MiniCode, an agentic coding model and their clearest entry yet into the coding agent market. It won't headline against Fable on a day like this, but a fifth lab planting a flag in agent coding tells you where everyone thinks the revenue is.
 
@@ -55,4 +55,4 @@ GitHub shipped a dedicated security review slash command in Copilot CLI, an expe
 
 Capability went up a tier, and so did the question of who controls it. Fable is included free on subscriptions until June 22nd, which means the next day will be the day when it's going to be available. The next two weeks are effectively a field-wide free trial of mythos-class capability. Watch what people build with overnight runs during that window, because that's the real eval.
 
-Watch whether Frontier Code Diamond becomes the number everyone quotes, the way SWE Bench was for the last two years. And watch whether the other labs follow Anthropic's lead on silent capability suppression, because if invisible degradation becomes the industry's preferred safety mechanism, the debate about it will not stay at three-hundredths of a percent of traffic. org community
+Watch whether Frontier Code Diamond becomes the number everyone quotes, the way SWE-bench was for the last two years. And watch whether the other labs follow Anthropic's lead on silent capability suppression, because if invisible degradation becomes the industry's preferred safety mechanism, the debate about it will not stay at three-hundredths of a percent of traffic. org community

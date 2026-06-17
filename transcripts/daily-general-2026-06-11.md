@@ -2,10 +2,10 @@
 title: "Fable 5 scores 91, real code scores 13"
 audioUrl: /media/digests/daily-general-2026-06-11.mp3
 durationMin: 8.8
-words: 1651
+words: 1572
 ---
 
-91 out of 100. That's the score Claude Fable 5 put up on Evry's internal senior engineer benchmark, a test the team had been running privately for about a week before they published the result on launch morning. 5 sits at 62. So we're not talking about a few points of improvement.
+91 out of 100. That's the score Claude Fable 5 put up on Every's internal senior engineer benchmark, a test the team had been running privately for about a week before they published the result on launch morning. 5 sits at 62. So we're not talking about a few points of improvement.
 
 We're talking about a model that scored nearly 30 points above anything that came before it, on a benchmark meant to approximate the work of a human senior engineer. Anthropic shipped Fable 5 on June 9th, and the field has spent the last day and a half doing three things at once, staring at the capability, doing the math on what it costs to actually run, and pulling a buried safeguard out of the system card that Anthropic has since apologized for and reversed. Let me walk through all three, because together they can help us understand the importance of the system card. They tell you where this technology actually is right now, not where the launch tweets say it is.
 
@@ -59,8 +59,8 @@ Where does durable value live? The second is a piece by Arvind Narayanan and Say
 
 The value is migrating away from writing code and toward two things. Deciding what to build and verifying that what got built is actually correct. And Fable's own split, 91 on feel and 13 on mergeability, is the sharpest evidence yet for exactly where that line is being drawn. So what am I watching from here?
 
-Two things. First, whether Anthropix's promise to make the safeguards visible actually ships as documented, testable behavior, or whether it stays a statement to a reporter. Because make it visible is easy to say, and hard to verify. And second, whether anyone runs frontier code against Fable 5 itself.
+Two things. First, whether Anthropic's promise to make the safeguards visible actually ships as documented, testable behavior, or whether it stays a statement to a reporter. Because make it visible is easy to say, and hard to verify. And second, whether anyone runs frontier code against Fable 5 itself.
 
-We have the senior engineer number that Anthropix friends published. We don't yet have the woulda maintain or merge it number for the new model. When that lands, we'll know whether Fable closed the gap between feeling like a great engineer and writing code a human would actually accept. That's the number I want to see.
+We have the senior engineer number that Anthropic friends published. We don't yet have the woulda maintain or merge it number for the new model. When that lands, we'll know whether Fable closed the gap between feeling like a great engineer and writing code a human would actually accept. That's the number I want to see.
 
 Until then, the warp drive is real. It's just very expensive and it still needs someone at the helm who knows where the ship is supposed to go.

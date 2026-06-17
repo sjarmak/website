@@ -2,7 +2,7 @@
 title: "The model layer becomes a regulated surface"
 audioUrl: /media/digests/daily-general-2026-06-14.mp3
 durationMin: 9.9
-words: 1740
+words: 1737
 ---
 
 Anthropic took Fable 5 and Mythos 5, its two newest frontier models, completely offline this week. Not throttled, not gated behind a waitlist, off. And not just for foreign nationals, which is who the US government order actually named, but for every single user, including paying customers inside the United States. The reason that happened is worth slowing down on, because the day before, the directive that started all this was about export control.
@@ -15,9 +15,9 @@ And if you build products on top of these models that should change. How you thi
 
 That's a new category of risk, and most teams have nothing in their planning for it. And this is where it stops looking like a one-off. The regulatory pressure isn't landing only on Anthropic. The New York Times reported that a group of state attorneys general has opened an investigation into.
 
-Open AI different mechanism, different angle, but the same direction of travel. When you put those two stories side by side, the fable shut down in the open AI probe, the shape of 2026 gets clear. The frontier is no longer governed just by what the models can do. It's increasingly governed by who's allowed to run them and under what terms.
+OpenAI different mechanism, different angle, but the same direction of travel. When you put those two stories side by side, the fable shut down in the OpenAI probe, the shape of 2026 gets clear. The frontier is no longer governed just by what the models can do. It's increasingly governed by who's allowed to run them and under what terms.
 
-For anyone doing real diligence on which model to build on the question, will this model still be available in six months has gone from paranoid to mandatory. And the market is already responding to that risk, maybe faster than the labs themselves. The same week One Frontier model proved switch-off-able, Open Router announced its Fusion API. The pitch is a compound model.
+For anyone doing real diligence on which model to build on the question, will this model still be available in six months has gone from paranoid to mandatory. And the market is already responding to that risk, maybe faster than the labs themselves. The same week One Frontier model proved switch-off-able, OpenRouter announced its Fusion API. The pitch is a compound model.
 
 Instead of routing your request to one underlying model, it fans the request across a panel of models and combines the results. They're claiming fable-level performance on deep research tasks at half the cost, and what they call better-than-state-of-the-art results using these panels. Now, those are vendors. All those are vendor numbers and they need independent benchmarking before anyone takes them at face value, but the architecture is what's interesting.
 
@@ -53,11 +53,11 @@ Whether or not either of these specific tools wins the market, the premise under
 
 It's the practitioner's pushback against the million token marketing. The argument is that stuffing the context window full degrades the model's retrieval and reasoning well before you actually hit the advertised limit. The number on the box and the number where quality holds up are not the same number. So curation beats raw capacity.
 
-You're better off being deliberate about what goes into the window than dumping everything in and trusting the model to sort it out. The second write-up is a survey of agent memory systems, walking through Letta, Mem0, Graffiti, and Cogni, and it maps the tooling that's emerging in response to exactly this problem, a lot of it leaning on knowledge graphs rather than flat vector stores. And when you read them together, the throughline is obvious. The field is converging on the same answer for long horizon agents.
+You're better off being deliberate about what goes into the window than dumping everything in and trusting the model to sort it out. The second write-up is a survey of agent memory systems, walking through Letta, Mem0, Graphiti, and Cogni, and it maps the tooling that's emerging in response to exactly this problem, a lot of it leaning on knowledge graphs rather than flat vector stores. And when you read them together, the throughline is obvious. The field is converging on the same answer for long horizon agents.
 
 Don't try to hold everything in context. Hold a structured external memory and retrieve from it into a small, clean window, only what you need right now. Two more I want to flag before I wrap. Simon.
 
-Simon Willison wrote up something that's been a long time coming. You can now publish web assembly wheels to PyPy for use with Pyodide. This is thanks to the Pyodide 314 release and a Python packaging standard, PEP783, that finally lets maintainers ship Emscripten-built wheels through the normal channels, instead of the Pyodide team having to hand-maintain 300 packages themselves. To celebrate, Simon compiled a C++ Luau interpreter down to a 276-kilobyte wheel you can install right now.
+Simon Willison wrote up something that's been a long time coming. You can now publish web assembly wheels to PyPI for use with Pyodide. This is thanks to the Pyodide 314 release and a Python packaging standard, PEP783, that finally lets maintainers ship Emscripten-built wheels through the normal channels, instead of the Pyodide team having to hand-maintain 300 packages themselves. To celebrate, Simon compiled a C++ Luau interpreter down to a 276-kilobyte wheel you can install right now.
 
 And that's it. Thank you for watching. And last, Anthropic published a research note titled, Making Claude a Chemist, about pushing the model toward genuine chemistry reasoning. I bring it up partly as a counterweight to everything else I do, but it's a real shift in what can run client-side entirely in the browser with no server access.
 

@@ -2,12 +2,12 @@
 title: "Anthropic shipped the best coding model measured, then the government pulled it"
 audioUrl: /media/digests/weekly-general-2026-06-15.mp3
 durationMin: 30.3
-words: 5793
+words: 5718
 ---
 
-Let me start with a number because it's the one that organized my whole week, 91 out of 100. That's the score Claude Fable 5 put up on the team at Every's internal senior engineer benchmark, the test they use to gauge whether a model can actually do the work of a human senior engineer. 8 at 63. GPT-55 sat at 62.
+Let me start with a number because it's the one that organized my whole week, 91 out of 100. That's the score Claude Fable 5 put up on the team at Every's internal senior engineer benchmark, the test they use to gauge whether a model can actually do the work of a human senior engineer. 8 at 63. GPT-5.5 sat at 62.
 
-So this wasn't an incremental bump, it was a model clearing a bar that the entire previous generation of frontier systems had been bouncing off of. And here's the part that makes it the story of the week instead of just a good launch. Four days after Anthropic shipped it, the US government took it off the market. By June 12, Claude Fable 5 was gone from Devon, gone from Augment Code, restricted inside Microsoft, pulled under an export directive.
+So this wasn't an incremental bump, it was a model clearing a bar that the entire previous generation of frontier systems had been bouncing off of. And here's the part that makes it the story of the week instead of just a good launch. Four days after Anthropic shipped it, the US government took it off the market. By June 12, Claude Fable 5 was gone from Devin, gone from Augment Code, restricted inside Microsoft, pulled under an export directive.
 
 Frontier capability to regulatory suspension, inside a single week. That arc is what I want to walk through, because it reframes it. It reframes basically everything else happening in the field right now. So let's start with what Fable actually is because the naming is doing some work here.
 
@@ -29,7 +29,7 @@ He was a member of the AWS team in begun micro startups, and one of the marketin
 
 Not big as in slow, though it is slow, and not big as in expensive, though it's that too. Big as in how much it knows, he ran a test I really liked for it's simplicity. He asked the model with no search access to list all of his own open source projects, most recent first, each with a rough release date. Speaking of his reliable starts 되ents.
 
-each with a rough release date. 8's answer was honest but hedged, it basically said, I don't have a reliable date verified list, here's what I'm reasonably confident about, and gave 4 or 5 projects. Fable came back with a structured list going back 2 decades, files to prompt in 2024, Simbex in 2023, ShotScraper in 2022, Esculite Utils in 2018, data set in November 2017, all the way back to Django being open sourced in July 2005. Accurate dates, pulled from the weights, no lookups.
+each with a rough release date. 8's answer was honest but hedged, it basically said, I don't have a reliable date verified list, here's what I'm reasonably confident about, and gave 4 or 5 projects. Fable came back with a structured list going back 2 decades, files to prompt in 2024, Simbex in 2023, shot-scraper in 2022, sqlite-utils in 2018, data set in November 2017, all the way back to Django being open sourced in July 2005. Accurate dates, pulled from the weights, no lookups.
 
 And Simon's been on record for a while saying he doesn't actually care how much a model knows, he wants models that manipulate text and code well and look up what they need through tools, not bake the whole world into their parameters. But he made an interesting concession here, which is that world knowledge density is a decent proxy for raw model size, you can only cram that many accurate details about reality into a large number of parameters. And a coding model with deep, current knowledge of libraries and patterns plausibly crunches through real coding tasks more effectively because it's not constantly stopping to look things up. He thinks Fable might be the largest model any vendor has shipped to date.
 
@@ -69,7 +69,7 @@ government export directive. There were manhandling of the Fable 5 and the Fable
 
 Then the directive came down. Cognition removed Fable from Devin. 8 at Opus pricing. Augment Code did the same thing in its Cosmos product, pulled it from the model picker, fell back to Opus.
 
-AUS had made it generally available on Bedrock on June 9th, and for most users it was simply switched off a few days later. I want to sit on the mechanism here, not because it's dramatic, but because it's new. We have seen models get deprecated. We have seen models get rate limited, get price changed, get quietly rolled back because of a quality regression.
+AWS had made it generally available on Bedrock on June 9th, and for most users it was simply switched off a few days later. I want to sit on the mechanism here, not because it's dramatic, but because it's new. We have seen models get deprecated. We have seen models get rate limited, get price changed, get quietly rolled back because of a quality regression.
 
 What we have not seen before is a frontier model's distribution getting gated by export control policy in the middle of its rollout. This is the first time the government has reached into the deployment of a specific commercial model, and said, this one comes off the shelf. And it landed on exactly the teams who were most excited, the ones who'd looked at Fable's million token window and its overnight autonomous profile and started architecting around it. If you'd spent the back half of that week building a pipeline that assumed Fable's long horizon capability, you woke up on the 13th with your backend falling back to a model two tiers down.
 
@@ -81,7 +81,7 @@ On one hand, yes, the whole Fable vs. Mythos design, ship the classified version
 
 You build the most controllable frontier model on the market, and controllability turns out to mean someone other than you can decide to control it. I don't think that invalidates Thompson's... argument, but it adds a clause to it. Safety as a moat is real, and safety as a moat also means you've built the lever that can be pulled against you.
 
-Before I move off Fable, I want to name the thing that actually made this the story of the week, which is the convergence. It's rare that I see a single launch saturate every channel at once the way this one did, and the breadth of coverage is itself the signal. Latent Space's AI News ran it as the lead. Nathan Lambert covered it at Interconnex, framing it around the new AI safety fables.
+Before I move off Fable, I want to name the thing that actually made this the story of the week, which is the convergence. It's rare that I see a single launch saturate every channel at once the way this one did, and the breadth of coverage is itself the signal. Latent Space's AI News ran it as the lead. Nathan Lambert covered it at Interconnects, framing it around the new AI safety fables.
 
 I don't know if you've heard of Fable's angle, that Fable vs. Mythos safety split as a deliberate research and policy posture. Elvis Saravia's NLP newsletter folded it into AI Agents Weekly alongside the other releases of the week. Lenny's newsletter ran a full review titled What the New Mythos Model Gets Right and Very Wrong, which is a useful tell on its own, because Lenny's audience is product people, not just ML engineers, and the model crossed over into the product management conversation immediately.
 
@@ -95,7 +95,7 @@ The one I'd say is, I'd send people to is from normal tech, titled Why AI Hasn't
 
 Here's a model that scores 91 on a senior engineer benchmark, and the single most impressive, thing it did in Simon Willison's hands only happened because Simon told it that changes to the underlying library were in scope. Left to its own framing, it produced working hacks. Given the right specification of the problem boundary, it produced excellent library design. The judgment about what the problem actually was still came from the human.
 
-The model's a phenomenal executor once the problem is framed, and the framing is still the hard part. Gabriel Weinberg, the founder of DuckDuck, made an adjacent point in a piece called No, Everyone is Not Using AI for Everything. His argument is basically a reality check on the adoption curve. The discourse makes it sound like AI usage is universal and total, and the actual consumption data is far more concentrated and far spottier than the narrative implies.
+The model's a phenomenal executor once the problem is framed, and the framing is still the hard part. Gabriel Weinberg, the founder of DuckDuckGo, made an adjacent point in a piece called No, Everyone is Not Using AI for Everything. His argument is basically a reality check on the adoption curve. The discourse makes it sound like AI usage is universal and total, and the actual consumption data is far more concentrated and far spottier than the narrative implies.
 
 People are consuming AI the way they consume a lot of new technology, in bursts, in specific niches, not as the ambient everything layer the hype describes. It's a useful corrective to read in the same week a model breaks a benchmark, because it separates what's possible at the frontier from what's actually happening in the median workplace, and those two things are much further apart than the headlines suggest. So if the model can now run unattended overnight, the real question shifts. It's not can the model do the task, it's how do you wrap the model so it does the right task the right way.
 
@@ -147,9 +147,9 @@ The gap between code that runs and code you've verified is exactly the gap that 
 
 You install a package, it runs code you never looked at. GitHub pulling the pin on that default closes a long-standing arbitrary execution hole. And it matters more now specifically, because agents are starting to run NPM install unattended. When a human runs install, there's at least a person who might notice something weird.
 
-When an autonomous agent is churning through a build overnight, running installs as it goes, that auto-execution vector is exactly the kind of thing you want closed by default, because there's nobody watching the specific moment it fires. Two more quickly for the builders thinking about resilience. Andrew NG's ASUT resurfaced this week. It's a unified interface across LLM providers, one API surface, swap the backend underneath.
+When an autonomous agent is churning through a build overnight, running installs as it goes, that auto-execution vector is exactly the kind of thing you want closed by default, because there's nobody watching the specific moment it fires. Two more quickly for the builders thinking about resilience. Andrew Ng's aisuite resurfaced this week. It's a unified interface across LLM providers, one API surface, swap the backend underneath.
 
-And it looks a lot more relevant in a week when a model you depend on can vanish under a government directive with three days' notice. The lesson of the fable suspension, if you're building on top of these models, is don't hardwire yourself to one. The teams that had abstracted their provider layer could swap to Opus, or GPT-55 when Fable disappeared. The teams that had built directly against Fable's specific behavior had a worse week.
+And it looks a lot more relevant in a week when a model you depend on can vanish under a government directive with three days' notice. The lesson of the fable suspension, if you're building on top of these models, is don't hardwire yourself to one. The teams that had abstracted their provider layer could swap to Opus, or GPT-5.5 when Fable disappeared. The teams that had built directly against Fable's specific behavior had a worse week.
 
 A provider abstraction layer used to be a nice-to-have. After this week, it reads as basic operational hygiene. So where does that leave us? The capability ceiling jumped this week hard.
 
