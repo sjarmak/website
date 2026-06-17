@@ -5,6 +5,7 @@ domain: tooling
 summary: A booth game for the AI World's Fair. Guess how much code AI agents are writing on GitHub, and a wave of agent-written code crashes in.
 role: Creator
 repo: https://github.com/sjarmak/agent-tidal-wave
+architecture: https://sjarmak.github.io/agent-tidal-wave/
 tech: [Node, Express, Postgres]
 order: 19
 topics: [agents]

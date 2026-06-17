@@ -5,6 +5,7 @@ domain: research
 summary: Build and benchmark agentic memory using a multi-agent orchestrator's own work traces as the evaluation corpus, where every unit of work has a verifiable outcome.
 role: Creator
 repo: https://github.com/sjarmak/mem
+architecture: https://sjarmak.github.io/mem/
 tech: [TypeScript, Evaluation, Agent memory]
 featured: true
 featuredOrder: 6

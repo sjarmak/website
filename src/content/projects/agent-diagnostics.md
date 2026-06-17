@@ -5,6 +5,7 @@ domain: research
 summary: A behavioral taxonomy, annotation framework, and shareable dataset backend for analyzing why coding agents succeed or fail on benchmark tasks.
 role: Creator
 repo: https://github.com/sjarmak/agent-diagnostics
+architecture: https://sjarmak.github.io/agent-diagnostics/
 tech: [Python, Evaluation, Agents]
 order: 9
 topics: [evaluation, agents]

@@ -10,6 +10,7 @@ featuredOrder: 7
 order: 22
 topics: [agents]
 tags: [bot, automation]
+architecture: https://sjarmak.github.io/accountbot-architecture/
 ---
 
 AccountBot puts an account-intelligence agent in a Slack DM. Sales and marketing users ask questions in natural language ("what's in my book this quarter," "show me the financial-services cohort," "pull the one-pager for account X") and a Claude-driven tool loop resolves them against a curated target-account list and a set of live data and asset backends, relaying only the synthesized answer. It runs as a private service, which is why there's no code link.

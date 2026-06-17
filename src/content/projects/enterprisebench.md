@@ -5,6 +5,7 @@ domain: research
 summary: A benchmark for evaluating how well coding agents understand and navigate code across large, distributed enterprise codebases.
 role: Creator
 repo: https://github.com/sjarmak/EnterpriseBench
+architecture: https://sjarmak.github.io/EnterpriseBench/
 tech: [Python, Evaluation, Agents]
 featured: true
 featuredOrder: 4

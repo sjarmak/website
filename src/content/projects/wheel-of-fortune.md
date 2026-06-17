@@ -5,6 +5,7 @@ domain: tooling
 summary: A Wheel of Fortune practice app built with React Native and Expo, three game modes, real puzzle packs, seeded for repeatable practice.
 role: Creator
 repo: https://github.com/sjarmak/WheelOfFortune
+architecture: https://sjarmak.github.io/WheelOfFortune/
 play: /games/wheel-of-fortune/index.html
 tech: [React Native, Expo, TypeScript]
 order: 20

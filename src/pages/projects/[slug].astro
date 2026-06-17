@@ -28,6 +28,7 @@ const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
         {data.period && <span class="muted">{rangeLabel(data.period.start, data.period.end)}</span>}
         {data.play && <a href={data.play}>Play ▸</a>}
         {data.repo && <a href={data.repo} rel="noopener">Code ↗</a>}
+        {data.architecture && <a href={data.architecture} rel="noopener">Architecture ↗</a>}
         {data.homepage && <a href={data.homepage} rel="noopener">Live ↗</a>}
       </div>
       {

@@ -5,6 +5,7 @@ domain: tooling
 summary: Keep docs in sync with code. Livedocs extracts structural claims from source into per-repo SQLite databases that AI agents query over MCP, no expensive grep-and-read cycles.
 role: Creator
 repo: https://github.com/sjarmak/livedocs
+architecture: https://sjarmak.github.io/livedocs/
 tech: [Go, MCP, tree-sitter]
 order: 4
 topics: [code-intelligence, agents, retrieval]

@@ -5,6 +5,7 @@ domain: tooling
 summary: Benchmarks AI coding agents against your own codebase by mining evaluation tasks from its git history, so the suite can't be contaminated by training data.
 role: Creator
 repo: https://github.com/sjarmak/codeprobe
+architecture: https://sjarmak.github.io/codeprobe/
 tech: [Python, Evaluation, Agents]
 featured: true
 featuredOrder: 5

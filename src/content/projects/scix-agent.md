@@ -5,6 +5,7 @@ domain: ai-agents
 summary: An agentic research assistant over the NASA SciX / ADS corpus, bridging AI agents with scholarly search infrastructure.
 role: Creator
 repo: https://github.com/sjarmak/scix-agent
+architecture: https://sjarmak.github.io/scix-agent/
 tech: [Python, Agents, MCP, Retrieval]
 featured: true
 featuredOrder: 1

@@ -5,6 +5,7 @@ domain: research
 summary: An MCP tool agentic-experience evaluation framework, measuring how usable MCP tools actually are for agents.
 role: Creator
 repo: https://github.com/sjarmak/mg-ax
+architecture: https://sjarmak.github.io/mg-ax/
 tech: [Python, Evaluation, MCP]
 order: 13
 topics: [evaluation, agents]

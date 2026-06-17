@@ -5,6 +5,7 @@ domain: tooling
 summary: A dashboard for Gas City multi-agent orchestrations.
 role: Contributor
 repo: https://github.com/gastownhall/gascity-dashboard
+architecture: https://sjarmak.github.io/gascity-dashboard/
 tech: [TypeScript, React]
 order: 18
 topics: [agents, code-intelligence]

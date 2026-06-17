@@ -5,6 +5,7 @@ domain: tooling
 summary: Aggregates feeds and presents curated weekly and monthly digests of code intelligence, tools, and AI agents using hybrid LLM + BM25 + recency scoring.
 role: Creator
 repo: https://github.com/sjarmak/code-intelligence-digest
+architecture: https://sjarmak.github.io/code-intelligence-digest/
 tech: [TypeScript, Retrieval, LLM]
 order: 7
 topics: [code-intelligence, retrieval, agents]

@@ -40,6 +40,11 @@ const allProjects = await getProjects();
                 Code
               </a>
             )}
+            {p.data.architecture && (
+              <a href={p.data.architecture} rel="noopener">
+                Architecture
+              </a>
+            )}
             {p.data.homepage && (
               <a href={p.data.homepage} rel="noopener">
                 Live

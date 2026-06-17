@@ -5,6 +5,7 @@ domain: research
 summary: Measuring how LLM-powered tools discover, recommend, and describe products. GEO is the AI equivalent of SEO.
 role: Creator
 repo: https://github.com/sjarmak/geo
+architecture: https://sjarmak.github.io/geo-architecture/
 tech: [Evaluation, Retrieval, LLM]
 order: 14
 topics: [evaluation, retrieval]

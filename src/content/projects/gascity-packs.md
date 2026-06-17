@@ -5,6 +5,7 @@ domain: tooling
 summary: Reusable packs for Gas City. The PR-pipeline and Slack packs are mine.
 role: Contributor
 repo: https://github.com/gastownhall/gascity-packs
+architecture: https://sjarmak.github.io/gascity-packs/
 tech: [Go, Agents]
 order: 17
 topics: [agents, code-intelligence]

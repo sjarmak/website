@@ -5,6 +5,7 @@ domain: ai-agents
 summary: "An orchestration-builder SDK for multi-agent coding workflows. I'm a maintainer."
 role: Maintainer
 repo: https://github.com/gastownhall/gascity
+architecture: https://sjarmak.github.io/gascity/
 tech: [Go, Agents, Orchestration]
 featured: true
 featuredOrder: 2

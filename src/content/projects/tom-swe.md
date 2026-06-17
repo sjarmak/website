@@ -5,6 +5,7 @@ domain: ai-agents
 summary: A theory-of-mind agent for Claude Code that learns your coding preferences, interaction style, and project patterns across sessions.
 role: Creator
 repo: https://github.com/sjarmak/tom-swe
+architecture: https://sjarmak.github.io/tom-swe/
 tech: [TypeScript, Agents, Memory]
 order: 6
 topics: [agents, agent-memory]
