@@ -2523,6 +2523,49 @@
           "why": "The applications-personalization branch covers long-horizon user modeling and personalized assistants including multimodal and embodied settings; StreamMemBench is a personalization benchmark grounded in real egocentric lifelog streams rather than abstract dialogue history."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260617016X",
+      "title": "TokenPilot: Cache-Efficient Context Management for LLM Agents",
+      "firstAuthor": "Xu, Buqiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17016",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617016X/abstract",
+      "branches": [
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Lifecycle-Aware Eviction tracks each context segment through three states active -> completed -> evictable, gated on evidence that a sub-task achieved its objective and on residual utility. A completed segment is not immediately purged; it retains its physical cache slots as long as residual relevance to ongoing interactions is non-zero, and only an evictable segment (utility decayed to zero) is removed in a single-pass structural purge. State estimation runs via a lightweight zero-shot validator over a compressed historical view in conservative batches of B turns rather than every step.",
+          "why": "This is an explicit algorithmic-forgetting / eviction mechanism keyed to stale-utility obsolescence: segments are pruned only once their task relevance expires, a deliberate deferred-forgetting policy rather than a fixed window."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Forgetting is measured by its effect on cache continuity and cost, not by a retention/recall metric. A hyperactive schedule (B=1) triggers premature truncation that disrupts prompt layout and inflates cache misses, while larger batches preserve prefix continuity and raise cache hit rate; B=3 is chosen as the empirical balance. Disabling eviction (B=infinity) peaks both context size and cost. Disabling the full-payload recovery tool drops capability from 80.9 to 77.1 and inflates cost because the agent issues compensatory retries.",
+          "why": "This frames a stability-plasticity tradeoff in operational terms: too-aggressive forgetting destroys the cached prefix, too-little bloats memory, and over-eager pruning without a recovery path causes the agent to re-fetch and re-bloat. No semantic catastrophic-forgetting metric is reported."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260615405G",
+      "title": "T-Mem: Memory That Anticipates, Not Archives",
+      "firstAuthor": "Guo, Weidong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.15405",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260615405G/abstract",
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "T-Mem frames the memory architecture as a typed graph organised by retrieval capability rather than storage form, defined over a 2x2 design space: granularity (item vs scene) x orientation (descriptive vs associative). It argues prior families (flat RAG; graph/hypergraph/temporal-KG like GraphRAG, Zep, HyperMem; agentic hierarchical stacks like Mem0, A-MEM; OS-style kernels like MemGPT, MemOS, MIRIX) all share one similarity-based recipe and occupy only the descriptive quadrants, leaving associative recall a structural blind spot. T-Mem fills all four with one trigger family per quadrant plus a per-speaker Persona injected as ambient context. It reaches SOTA (LoCoMo 80.26%, LoCoMo-Plus 74.81%) and shrinks the LoCoMo-to-LoCoMo-Plus gap to 5.45 pp vs 28-50 pp for prior systems; the scene-level Horizon trigger carries the bulk of the associative gain.",
+          "why": "Gives a clean taxonomy of existing memory architectures (temporal-KG, hypergraph, hierarchical, OS-style), locates them all in a single retrieval design space, then proposes a specialized-retrieval architecture (write-time triggers indexing into a non-similarity associative channel) as the missing axis, with measured per-component impact."
+        }
+      ]
     }
   ],
   "sections": [

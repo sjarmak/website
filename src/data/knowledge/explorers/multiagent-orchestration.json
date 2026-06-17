@@ -1955,6 +1955,50 @@
           "why": "The production branch's reliability/cost axis — a decentralized topology that improves accuracy while cutting cost."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260614790L",
+      "title": "XFlow: An Executable Protocol Programming System for Reliable Multi-Agent Workflows",
+      "firstAuthor": "Li, Hanqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14790",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614790L/abstract",
+      "branches": [
+        "frameworks",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "XFlow positions existing frameworks on a Chomsky-hierarchy spectrum: markup/config frameworks (LangGraph as graphs) describe workflow shape but leave the prompt-harness boundary undefined; conversation-centric (AutoGen) and role/task frameworks (CrewAI's teams/tasks/crews/flows) push coordination into agent dialogue. XPF instead re-encodes the recurring coordination primitives explicitly as compilable structures: symbols (typed state cells), actor interfaces with read/write sets, control flow (guarded goto/call for loops, retries, escalation), and responsibility transfer (handoff blocks guarded by predicates).",
+          "why": "Names the small shared vocabulary every framework re-encodes (state, actor I/O contracts, guarded transitions, handoffs) and shows a concrete proposal for lifting it out of prompts into a checkable, compiled interop layer rather than free-form text."
+        },
+        {
+          "branch": "frontier",
+          "takeaway": "On tau3-bench, XFlow raises constraint-compliance to 100% in Retail/Airline (from 96.5%/91.8%) with Qwen3.5-9B and to 100% across all three DeepSeek-V4-Flash domains (Telecom +36.3pp) while holding task pass1, decoupling correctness from compliance. CorpusQA accuracy +2.4 (Qwen) to 61.7 and +0.9 to 75.7 (DeepSeek); SWE-bench Verified pass rate 77.4 to 79.8 (+2.4) over mini-SWE-agent. Reliability is enforced by a verified compile step (static checks on symbols, stage targets, schema/call bindings) plus runtime lifecycle gating of state commits.",
+          "why": "Adds a named system (XFlow/XPF) to the reliability reckoning with concrete deltas on three benchmark classes, and grounds the gain in verified protocol structure rather than a better prompt."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260614805K",
+      "title": "Knowledge-Based Zero-Replay Debugging of Multi-Agent LLM Traces",
+      "firstAuthor": "Kang, Dong Ho",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14805",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614805K/abstract",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Named system BranchPoint-Latent reframes causal attribution in multi-agent traces as zero-replay counterfactual-effect prediction: predict which events a counterfactual-replay oracle would mark high-effect before any replay is run. A gradient-boosted learning-to-rank predictor over 13 knowledge-graph features lifts Branch Recall@5 from 0.73 to 0.95 in-distribution and 0.93 on held-out families, per-trace rho from 0.47 to 0.80/0.77, all at zero oracle-replay cost (CPU milliseconds per trace vs seconds-to-minutes per GPU replay call, an explicit O(T*|F|*N) baseline). No single selector dominates: the learned predictor wins tool/latent-dominant traces (MBPP 1.00 vs centrality 0.00) while centrality matches or beats it on graph-dominant chains, and a structural router does not beat the always-learned default.",
+          "why": "A 2026 reliability-reckoning paper with a named system hitting exactly the frontier axes: causal attribution (replay oracle ground truth), explicit cost bounds, and regime-dependent behavior, while refusing to over-claim about where cheap structural signals already suffice."
+        }
+      ]
     }
   ],
   "sections": [

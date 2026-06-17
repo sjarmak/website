@@ -1170,6 +1170,55 @@
           "why": "The evaluation branch wants benchmarks beyond factual recall that separate retrieval from answer correctness and add cost accounting — StreamMemBench's four-metric design and cost comparison are a direct instance of that bar."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260617016X",
+      "title": "TokenPilot: Cache-Efficient Context Management for LLM Agents",
+      "firstAuthor": "Xu, Buqiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17016",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617016X/abstract",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "TokenPilot constructs each step's context at two gates: an Ingestion-Aware Compaction harness partitions incoming messages into internal intentional messages (prompts, thinking, tool calls, responses; utility density 1) versus open-world environmental feedback from unmanaged tools (assigned a lower density unless a content-hash access frequency exceeds a threshold, restoring full content). Environmental messages are reduced to a compacted structural preview at ingestion, with the full payload offloaded to a content-hash-indexed external artifact registry and recallable on demand via a recovery tool. Dual reduction passes stripped up to 115k chars of HTML noise and 883k chars of terminal logs in single tasks while holding accuracy at ~80.9.",
+          "why": "This is concrete selective, dependency-aware construction of what the model sees each step: utility is scored per message class, low-utility open-world observations are demoted to previews while staying retrievable, so the working-memory boundary is enforced at the ingestion gate rather than after context has already bloated."
+        },
+        {
+          "branch": "context",
+          "takeaway": "Across a continuous 25+ task stream the Vanilla baseline's per-call context climbs rapidly and stays persistently high; on Claw-Eval continuous mode unrestricted history growth inflates Vanilla cost to $81.52, which TokenPilot reduces to $10.58. The framework's defense is to never let eliminated tokens enter the multi-turn window in the first place plus conservative offloading, capping the active memory footprint (cache-read tokens cut 65% from 26.7M to 8.55M when eviction is layered on).",
+          "why": "This quantifies context rot over long horizons: cost and token volume grow monotonically with session length absent management, and the paper shows the boundary must be actively held to prevent the working set from degrading."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260615405G",
+      "title": "T-Mem: Memory That Anticipates, Not Archives",
+      "firstAuthor": "Guo, Weidong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.15405",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260615405G/abstract",
+      "branches": [
+        "retrieval",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "T-Mem retrieves through a top-down topic -> scene -> item cascade, scoring each layer with reciprocal rank fusion over both a shared BM25 lexical index and a per-type dense index (bge-m3). On top of these node indices, four write-time 'trigger' families surface host nodes on the query's behalf: items expose three independently-encoded views (concept-only, bridge-only, joint) and the trigger score is the nan-aware max across views, attributed back to the host item. Scenes/items reached through associative triggers bypass the topic prefilter, because gating them by surviving topics would re-impose the similarity-only neighbourhood the system is built to escape.",
+          "why": "Concrete evidence for retrieval that goes beyond raw cosine top-K toward task/situation-aware ranking: a hybrid keyword+dense base fused by RRF, plus a multi-view, max-pooled associative channel that deliberately is not gated by similarity prefiltering. Fusion happens at two levels (lexical+dense per layer, node+trigger views per item)."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "Consolidation is a four-stage offline write-time pipeline whose ordering is load-bearing: (1) a boundary-detector LLM segments 'scenes' by event closure over a sliding turn buffer rather than by data-collection session boundaries; (2) a lightweight topic module incrementally admits each new scene to grown-from-data multi-label topics; (3) an extractor LLM emits two item granularities per topic in one call (atomic items linked to a single scene, connected items linked to every source scene they draw from); (4) trigger instantiation generates descriptive (Entity, Scene) and associative (Bridge, Horizon) cues. Each scene stores three distinct read-paths (title/summary for indices, raw turns as QA evidence, third-person narrative for trigger extractors), keeping triggers off the evidence path.",
+          "why": "A detailed write-time consolidation design: it commits to episodic scenes plus consolidated abstractions, uses LLMs at write time to extract/summarize/rehearse, and explicitly separates retrieval cues from QA evidence to avoid the LLM's own rewritten memory contaminating the answer channel."
+        }
+      ]
     }
   ],
   "sections": [

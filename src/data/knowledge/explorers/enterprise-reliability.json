@@ -1029,6 +1029,56 @@
           "why": "The reliability branch's insistence on knowing the failure taxonomy before scaling — at hour-scale horizons the binding constraints are sustained self-verification and idle-loop degradation, not raw capability, and more tokens and compaction track failure rather than rescue it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260614790L",
+      "title": "XFlow: An Executable Protocol Programming System for Reliable Multi-Agent Workflows",
+      "firstAuthor": "Li, Hanqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14790",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614790L/abstract",
+      "branches": [
+        "recovery",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "XFlow treats actor outputs as proposed values that become shared state only after schema validation, provenance recording, and commit-policy checks; updates are atomic transactions that roll back the symbol store on failure, and committed changes mark derived values stale for recomputation. Sessions persist as scoped frames (visible symbols, pending outputs, event-log positions, blocked human gates) plus the symbol store and event log, so execution resumes from durable state, not from replaying an informal transcript, and operators can audit who proposed a value and why execution is blocked.",
+          "why": "This is the recovery branch's thesis made executable: durable, queryable, transactional state with rollback beats conversational handoff, and side-effecting steps sit behind commit gates rather than control-flow retries over free text."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "The paper makes the failure taxonomy explicit before scaling fan-out: a single agent's hallucinated/malformed/misinterpreted output becomes shared state and corrupts downstream decisions. Concrete failure modes observed: tau3-bench baseline reaches the right end state via an invalid path (treats a parameter clarification as authorization to mutate); CorpusQA fails on the interpretation rule not the retrieved value; SWE-bench baseline submits a patch after local validation already failed. The cloud-edge fan-out is gated: edge workers see only assigned chunks, write only declared outputs, and must pass schema + coverage checks before entering global state.",
+          "why": "Directly answers 'does fan-out help?' (only when each parallel branch's output is schema/coverage-validated before merge) and supplies a named failure taxonomy (invalid-path success, rule-misapplication, premature submission) to know before scaling."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260614805K",
+      "title": "Knowledge-Based Zero-Replay Debugging of Multi-Agent LLM Traces",
+      "firstAuthor": "Kang, Dong Ho",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.14805",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260614805K/abstract",
+      "branches": [
+        "observability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "The system compiles each raw multi-agent trace (messages, routes, memory writes, tool calls, decision events) into a typed event knowledge graph: nodes are events, edges encode routing and causal adjacency, and the attribute map assigns each node route-graph position, memory/retrieval persistence, tool-call metadata, uncertainty proxies, and optional latent payloads. Every downstream component operates on this graph rather than raw text, so the evidence behind each debugging decision is explicit and auditable. Cheap CPU features extract in milliseconds per trace; the predictor adds no LLM call.",
+          "why": "This is the concrete instantiation of 'transcripts are not observability': flat logs only become debuggable once recompiled into a structured, replayable representation that correlates intent (routing/decision events) with action (tool calls, memory writes) and exposes which events are causally adjacent."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Evaluation is grounded in a deterministic counterfactual-replay oracle (leave-one-out remove-event ablation scoring outcome-distribution shift plus state and trajectory divergence), locked across all 37 trace families (163,815 events) as reference truth. The authors explicitly call it intervention-relative, not absolute causal ground truth, and calibrate with Spearman rho, AUPRC, NDCG, reliability bins and ECE (linear scorer ECE=0.13) so low-confidence recommendations can escalate to active replay. The predictor recovers ~80% of the active-replay oracle's recall at zero replay cost; on Who&When the LLM-free CPU model matches an RL-fine-tuned 8B LLM while the benchmark's own zero-shot LLM judges reach only <=0.14.",
+          "why": "This is eval as risk reduction, not proof: an honest execution-grounded replay oracle rather than an LLM judge, a refusal to claim universal dominance (centrality wins 15 families, learned predictor 18, 4 ties), and a direct calibration check on whether LLM judges can be trusted for failure attribution."
+        }
+      ]
     }
   ],
   "sections": [
