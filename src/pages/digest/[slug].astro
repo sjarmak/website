@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Transcript from "@/components/knowledge/Transcript.astro";
 import { fullDate } from "@/lib/dates";
 
 export async function getStaticPaths() {
@@ -15,6 +16,11 @@ interface Props {
 const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
+
+// Transcript of this issue's audio, if one has been published (joined by audioUrl).
+const transcript = data.audioUrl
+  ? (await getCollection("transcripts")).find((t) => t.data.audioUrl === data.audioUrl)
+  : undefined;
 
 const CADENCE_LABEL: Record<typeof data.cadence, string> = {
   daily: "Daily digest",
@@ -87,6 +93,15 @@ function topicLabel(slug: string): string {
     </div>
 
     {
+      transcript && (
+        <section class="digest__transcript">
+          <h2 class="sub">Transcript</h2>
+          <Transcript entry={transcript} />
+        </section>
+      )
+    }
+
+    {
       data.items.length > 0 && (
         <section class="digest__sources">
           <h2 class="sub">In this issue</h2>
@@ -137,6 +152,7 @@ function topicLabel(slug: string): string {
   }
 
   .digest__highlights,
+  .digest__transcript,
   .digest__sources {
     margin-block: var(--space-xl);
     padding-block-start: var(--space-l);

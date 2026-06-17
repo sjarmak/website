@@ -1,3 +1,10 @@
+---
+title: "Test-Time Compute for Retrieval"
+audioUrl: /media/podcasts/podcast-agentic-information-retrieval-ep1-deep-dive.mp3
+durationMin: 15.1
+words: 2267
+---
+
 Welcome to a deep dive on agentic information retrieval. This is the reading path behind a collection I've been building: nineteen papers that trace a single idea from its roots to its frontier. The idea is this. For most of the last decade, retrieval meant similarity. You turned a query into a vector, you turned every document into a vector, and you found the documents that sat closest in space. Fast, cheap, and for a huge class of questions, good enough. But there's a different bet being made right now, and it's the reason this collection exists. The bet is that the best way to find the right document is not to embed harder. It's to think. To spend real computation at the moment of the search, reasoning about what the query actually means and whether a candidate truly answers it. That's the thesis behind SID's recent technical report, which they title, plainly, test-time compute for retrieval. And what's striking is that this isn't one company's pitch. It's the convergence point of a whole line of research. So let's walk that line, from the foundations to the open edge.
 
 Start with the foundations, because you can't appreciate where this is going without seeing what it's replacing. In 2020, a paper called Dense Passage Retrieval did something that sounds obvious now and was contested then. It trained two neural encoders, one for questions and one for passages, so that a question and its answer would land near each other in vector space. And it beat BM25, the venerable keyword-matching baseline, on open-domain question answering by a wide margin. That's the moment dense retrieval stopped being a research curiosity and became the default. Every retriever we'll talk about descends from it.

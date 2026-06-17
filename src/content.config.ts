@@ -253,6 +253,19 @@ const digest = defineCollection({
   }),
 });
 
+// ---- transcripts (audio transcripts, joined to any audio entry by audioUrl) ----
+const transcripts = defineCollection({
+  // raw transcripts live at repo root /transcripts (pipeline output); INDEX.md has no
+  // frontmatter, so it's excluded from the collection
+  loader: glob({ pattern: ["**/*.md", "!INDEX.md"], base: "./transcripts" }),
+  schema: z.object({
+    title: z.string(),
+    audioUrl: z.string(), // the audio file this transcribes — the join key
+    durationMin: z.number().optional(),
+    words: z.number().int().optional(),
+  }),
+});
+
 export const collections = {
   cv,
   publications,
@@ -266,4 +279,5 @@ export const collections = {
   art,
   learning,
   digest,
+  transcripts,
 };

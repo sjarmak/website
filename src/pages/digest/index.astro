@@ -1,5 +1,7 @@
 ---
+import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/PageLayout.astro";
+import Transcript from "@/components/knowledge/Transcript.astro";
 import { getDigests, getDigestTopics, getPodcasts } from "@/lib/knowledge/build";
 import type { DigestIssue, PodcastSeries, PodcastEpisode } from "@/lib/knowledge/types";
 import { fullDate } from "@/lib/dates";
@@ -7,6 +9,9 @@ import { fullDate } from "@/lib/dates";
 const digests: DigestIssue[] = await getDigests();
 const topics: string[] = await getDigestTopics();
 const { series: podcastSeries, standalone: podcastStandalone } = await getPodcasts();
+
+// Transcripts joined to episodes by audioUrl, so each deep-dive can be read as well as heard.
+const transcriptByAudio = new Map((await getCollection("transcripts")).map((t) => [t.data.audioUrl, t] as const));
 
 const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
   daily: "Daily",
@@ -146,42 +151,50 @@ function minutes(sec?: number): string | null {
               <div>
                 <h3 class="pod-series">{s.name}</h3>
                 <ul role="list" class="stack">
-                  {s.episodes.map((ep: PodcastEpisode) => (
-                    <li class="pod-ep">
-                      <span class="pod-ep__title">
-                        {ep.episode ? `${ep.episode}. ` : ""}
-                        {ep.title}
-                      </span>
-                      <p class="muted">{ep.description}</p>
-                      {ep.embedUrl ? (
-                        <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
-                      ) : (
-                        ep.audioUrl && (
-                          <audio controls preload="none">
-                            <source src={ep.audioUrl} type="audio/mpeg" />
-                          </audio>
-                        )
-                      )}
-                    </li>
-                  ))}
+                  {s.episodes.map((ep: PodcastEpisode) => {
+                    const transcript = ep.audioUrl ? transcriptByAudio.get(ep.audioUrl) : undefined;
+                    return (
+                      <li class="pod-ep">
+                        <span class="pod-ep__title">
+                          {ep.episode ? `${ep.episode}. ` : ""}
+                          {ep.title}
+                        </span>
+                        <p class="muted">{ep.description}</p>
+                        {ep.embedUrl ? (
+                          <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                        ) : (
+                          ep.audioUrl && (
+                            <audio controls preload="none">
+                              <source src={ep.audioUrl} type="audio/mpeg" />
+                            </audio>
+                          )
+                        )}
+                        {transcript && <Transcript entry={transcript} />}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
-            {podcastStandalone.map((ep: PodcastEpisode) => (
-              <div class="pod-ep">
-                <span class="pod-ep__title">{ep.title}</span>
-                <p class="muted">{ep.description}</p>
-                {ep.embedUrl ? (
-                  <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
-                ) : (
-                  ep.audioUrl && (
-                    <audio controls preload="none">
-                      <source src={ep.audioUrl} type="audio/mpeg" />
-                    </audio>
-                  )
-                )}
-              </div>
-            ))}
+            {podcastStandalone.map((ep: PodcastEpisode) => {
+              const transcript = ep.audioUrl ? transcriptByAudio.get(ep.audioUrl) : undefined;
+              return (
+                <div class="pod-ep">
+                  <span class="pod-ep__title">{ep.title}</span>
+                  <p class="muted">{ep.description}</p>
+                  {ep.embedUrl ? (
+                    <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                  ) : (
+                    ep.audioUrl && (
+                      <audio controls preload="none">
+                        <source src={ep.audioUrl} type="audio/mpeg" />
+                      </audio>
+                    )
+                  )}
+                  {transcript && <Transcript entry={transcript} />}
+                </div>
+              );
+            })}
           </div>
         </section>
       )
