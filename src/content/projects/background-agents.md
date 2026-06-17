@@ -5,6 +5,7 @@ domain: ai-agents
 summary: A background agent that checks organization-wide code invariants across every repository indexed by Sourcegraph, triggered by PR events and a weekly cron.
 role: Creator
 repo: https://github.com/sjarmak/background-agents
+architecture: https://sjarmak.github.io/background-agents/
 tech: [TypeScript, Agents, MCP]
 order: 8
 topics: [agents, code-intelligence]

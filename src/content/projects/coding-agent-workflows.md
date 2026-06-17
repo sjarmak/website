@@ -5,6 +5,7 @@ domain: ai-agents
 summary: Coding standards, agent roles, skills, and multi-step workflows that read the same whether you drive Claude Code, Codex, Amp, or anything that reads an AGENTS.md.
 role: Creator
 repo: https://github.com/sjarmak/coding-agent-workflows
+architecture: https://sjarmak.github.io/coding-agent-workflows/
 tech: [JavaScript, Agents]
 order: 11
 topics: [agents, code-intelligence]
