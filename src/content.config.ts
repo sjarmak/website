@@ -177,6 +177,7 @@ const talks = defineCollection({
       scheduleUrl: z.string().url().optional(), // session/schedule page (for upcoming talks)
       photo: image().optional(),
       photoAlt: z.string().optional(),
+      photoCard: z.boolean().default(false), // promo/speaker card: render small, not full-bleed
       description: z.string().optional(),
       featured: z.boolean().default(false),
     }),
