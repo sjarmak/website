@@ -1,0 +1,86 @@
+// Deployment model — where each piece runs.
+//
+// The site itself ships nothing dynamic: `astro build` turns the content + code
+// into static HTML in ./dist, which Render serves from its edge. The only
+// "running" processes are at build time (Render's build container, GitHub
+// Actions) and the two offline agent pipelines on a local cron host. This is the
+// "what runs where / what's the trust boundary" view a review asks for.
+
+deployment {
+
+  renderEdge = host 'Render (static edge)' {
+    description 'Serves ./dist as static HTML/CSS/JS + media; security headers + immutable asset caching (render.yaml)'
+
+    builder = proc 'Render build container' {
+      description 'npm ci && npm run build on push to main, gated on GitHub checksPass'
+      instanceOf website.site
+      instanceOf website.schema
+      instanceOf website.graph
+      instanceOf website.knowledge
+    }
+    dist = proc 'Static bundle (./dist)' {
+      description 'Pre-rendered pages, embedded graph/knowledge data, RSS, media (incl. digest MP3s)'
+      instanceOf website.content
+    }
+  }
+
+  githubNode = host 'GitHub' {
+    description 'Repo + Actions CI (astro check + build) + Pages (this architecture model)'
+    instanceOf github
+
+    pagesProc = proc 'Actions: LikeC4 → Pages' {
+      description 'likec4-pages.yml exports figures + interactive explorer to sjarmak.github.io/website/'
+    }
+  }
+
+  cronHost = host 'Local cron host' {
+    description 'Runs the two offline agent pipelines, then pushes to main (the deploy trigger)'
+
+    digestProc = proc 'Digest cron (claude-auto + Kokoro)' {
+      description 'run.sh: claude-auto -p authors an issue; Kokoro TTS renders audio fully offline'
+      instanceOf website.digest
+    }
+    knowledgeProc = proc 'Knowledge build (Python)' {
+      description 'Pulls NASA ADS biblib + SciX, assembles committed libraries/explorers JSON'
+      instanceOf website.knowledgeBuild
+    }
+  }
+
+  inferenceNode = host 'Claude API' {
+    description 'claude-auto multi-account router the digest cron drives headless'
+    instanceOf claudeBackend
+  }
+
+  mcpNode = host 'code-intel-copilot MCP' {
+    description 'Item feed for digest selection'
+    instanceOf codeIntelMcp
+  }
+
+  adsNode = host 'NASA ADS / SciX' {
+    description 'biblib + full text for the knowledge libraries'
+    instanceOf nasaAds
+  }
+
+  visitorNode = host 'Visitor browser' {
+    description 'Loads static pages; hydrates the Cytoscape graph explorer client-side'
+    instanceOf visitor
+  }
+
+  // Runtime / build data flow between hosts.
+  builder -> dist 'astro build → static bundle'
+  githubNode -> builder 'push to main (checksPass) triggers deploy'
+  digestProc -> inferenceNode 'claude-auto -p authoring'
+  inferenceNode -> mcpNode 'select recent items'
+  digestProc -> githubNode 'commit + push issue'
+  knowledgeProc -> adsNode 'pull biblib + full text'
+  knowledgeProc -> githubNode 'commit libraries/explorers JSON'
+  visitorNode -> renderEdge 'GET sjarmak.ai'
+}
+
+views {
+
+  deployment view deployment {
+    title 'Deployment — where each piece runs'
+    include *
+  }
+}

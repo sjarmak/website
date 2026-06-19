@@ -1,0 +1,240 @@
+// `website` — sjarmak.ai, a personal site that is also a typed knowledge graph.
+//
+// An Astro static site. Content lives as Markdown under src/content/ as the
+// single source of truth; a Zod schema (content.config.ts) pins every
+// collection's shape and carries reference() edges between projects, topics, and
+// outputs. Those edges are the knowledge graph the site renders with Cytoscape.
+// Everything is computed at build time and emitted as static HTML to ./dist,
+// which Render serves. Two offline agent pipelines feed the content layer: a
+// digest cron and a knowledge (libraries/explorers) builder.
+//
+// Elements carry `link`s to their source so a reviewer can jump from any box to
+// the code. Delivery state is tagged (see spec.c4 for the legend) so prototype
+// and evolving work renders distinctly from what is shipped and live.
+
+model {
+
+  visitor = actor 'Visitor' {
+    description 'Reads sjarmak.ai — projects, writing, research, talks, the knowledge graph, the digest'
+  }
+
+  author = actor 'Author / agent' {
+    description 'Stephanie or an agent editing Markdown under src/content/ and pushing to main'
+  }
+
+  digestCron = actor 'Digest cron' {
+    description 'Local scheduled job that runs claude-auto -p to produce a digest issue, then pushes'
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // External systems — what the site is built on, deployed to, and fed by.
+  // ─────────────────────────────────────────────────────────────────────────
+
+  render = externalSystem 'Render' {
+    description 'Static host. Auto-rebuilds on push to main once GitHub CI checks pass (render.yaml)'
+  }
+
+  github = externalSystem 'GitHub' {
+    description 'sjarmak/website repo — source of truth, Actions CI (astro check + build), and Pages for the architecture model'
+
+    repo = datastore 'main branch' {
+      description 'Code + Markdown content; push to main is the deploy trigger'
+    }
+  }
+
+  claudeBackend = externalSystem 'Claude API (claude-auto)' {
+    description 'Multi-account router the digest cron drives headless to write each issue'
+  }
+
+  codeIntelMcp = externalSystem 'code-intel-copilot MCP' {
+    description 'Item feed the digest agent queries for recent code-intelligence sources'
+  }
+
+  nasaAds = externalSystem 'NASA ADS / SciX' {
+    description 'biblib + full text the knowledge pipeline pulls to build research libraries and explorers'
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // The website system.
+  // ─────────────────────────────────────────────────────────────────────────
+
+  website = system 'sjarmak.ai' {
+    description 'Astro static site whose Markdown content collections form a typed knowledge graph, rendered to static HTML'
+    link ../README.md 'README'
+    link ../AGENTS.md 'AGENTS.md — workflow & conventions'
+    link ../astro.config.mjs 'astro.config.mjs'
+
+    // ── Content: the single source of truth ────────────────────────────────
+    content = datastore 'Content collections' {
+      #built
+      description 'src/content/ — 13 Markdown collections (projects, topics, outputs, cv, publications, posts, writing, talks, press, art, learning, digest, transcripts)'
+      technology 'Markdown / MDX'
+      link ../src/content 'src/content/'
+    }
+
+    // ── Schema: the contract over the content ───────────────────────────────
+    schema = container 'Content schema' {
+      #built
+      description 'content.config.ts — Zod schema per collection; reference() edges (projects→topics/outputs/related) make a dangling link a build error'
+      technology 'Astro Content Layer / Zod'
+      link ../src/content.config.ts 'content.config.ts'
+    }
+
+    // ── Build: Astro SSG — pages, layouts, components ───────────────────────
+    site = container 'Astro site (SSG)' {
+      description 'src/pages + layouts + components — route pages rendered to static HTML at build'
+      technology 'Astro 5'
+      link ../src/pages 'src/pages/'
+
+      pages = component 'route pages' {
+        #built
+        description 'Project, writing, research, cv, talks, art, digest, library routes incl. dynamic [slug]/[id] and RSS endpoints'
+        link ../src/pages/projects/index.astro 'projects/index.astro'
+        link ../src/pages/projects/[slug].astro 'projects/[slug].astro'
+        link ../src/pages/rss.xml.ts 'rss.xml.ts'
+      }
+      layouts = component 'layouts + head' {
+        #built
+        description 'BaseLayout / PageLayout + BaseHead (canonical, sitemap, OG)'
+        link ../src/layouts/BaseLayout.astro 'BaseLayout.astro'
+        link ../src/components/head/BaseHead.astro 'head/BaseHead.astro'
+      }
+      components = component 'components + nav + theme' {
+        #built
+        description 'Header/Footer, ThemeToggle (no-flash ThemeScript), receipts, embedded video, primitives'
+        link ../src/components/nav/Header.astro 'nav/Header.astro'
+        link ../src/components/nav/ThemeScript.astro 'nav/ThemeScript.astro'
+      }
+      collections = component 'collection helpers' {
+        #built
+        description 'getProjects / CV grouping / date helpers — typed reads over the content layer for pages'
+        link ../src/lib/collections.ts 'lib/collections.ts'
+        link ../src/lib/dates.ts 'lib/dates.ts'
+      }
+      prototypes = component 'prototypes (/prototypes)' {
+        #research
+        description 'Opt-in experiments not in the primary nav: graph-time, starmap, research-atlas, questions, receipts, reading paths'
+        link ../src/pages/prototypes 'pages/prototypes/'
+      }
+    }
+
+    // ── Graph: the knowledge graph derived from reference() edges ───────────
+    graph = container 'Knowledge graph' {
+      #built
+      description 'src/lib/graph + src/scripts — build the project/topic/output node-edge set at build time; Cytoscape + fcose renders it in the browser'
+      technology 'TypeScript / Cytoscape'
+      link ../src/lib/graph/buildGraph.ts 'graph/buildGraph.ts'
+
+      buildGraph = component 'buildGraph + buildTimeline' {
+        #built
+        description 'Resolves projects↔topics↔outputs references into a deduped node/edge graph (and a timeline projection)'
+        link ../src/lib/graph/buildGraph.ts 'buildGraph.ts'
+        link ../src/lib/graph/buildTimeline.ts 'buildTimeline.ts'
+      }
+      explorer = component 'client graph explorer' {
+        #built
+        description 'Cytoscape/fcose pan-zoom-filter explorer + mini-graph, hydrated client-side from the build-time graph data'
+        link ../src/scripts/graph-explorer.ts 'graph-explorer.ts'
+        link ../src/scripts/graph-style.ts 'graph-style.ts'
+      }
+      starmap = component 'starmap projection' {
+        #research
+        description 'Alternate star-map layout of the same graph data (prototype surface)'
+        link ../src/lib/starmap/buildStarmap.ts 'starmap/buildStarmap.ts'
+      }
+    }
+
+    // ── Knowledge hub: curated research threads + retrieval lanes ───────────
+    knowledge = container 'Knowledge hub' {
+      #evolving
+      description 'src/lib/knowledge — resolves curated threads against committed JSON, then computes 3 retrieval lanes (semantic / lexical / graph) + RRF fusion, all at build time'
+      technology 'TypeScript'
+      link ../src/lib/knowledge/build.ts 'knowledge/build.ts'
+
+      knowledgeBuild = component 'hub assembler' {
+        #evolving
+        description 'Joins threads/papers/libraries/explorers JSON to content; emits node + related lists the pages embed'
+        link ../src/lib/knowledge/build.ts 'build.ts'
+      }
+      retrieval = component 'retrieval lanes (BM25 + embeddings + RRF)' {
+        #evolving
+        description 'Lexical BM25, embedding dot-product, and graph lanes fused with reciprocal-rank fusion over the curated node set'
+        link ../src/lib/knowledge/retrieval.ts 'retrieval.ts'
+      }
+    }
+
+    // ── Digest pipeline: the autonomous content producer ────────────────────
+    digest = container 'Digest pipeline' {
+      #evolving
+      description 'scripts/digest — cron generates a newsletter+podcast issue via claude-auto, renders audio with local Kokoro TTS, validates, and publishes into the digest collection'
+      technology 'Bash / Node / Python (Kokoro TTS)'
+      link ../scripts/digest 'scripts/digest/'
+
+      runner = component 'run.sh (cron entry)' {
+        #evolving
+        description 'generate → commit → (DIGEST_PUSH=1) push; daily/weekly × specialized/general tracks + curated'
+        link ../scripts/digest/run.sh 'run.sh'
+      }
+      publish = component 'publish + repeat guard' {
+        #built
+        description 'Validate an issue spec → write the digest collection entry; recent-coverage.mjs dedupes item URLs across recent same-cadence issues'
+        link ../scripts/digest/publish-digest.mjs 'publish-digest.mjs'
+        link ../scripts/digest/recent-coverage.mjs 'recent-coverage.mjs'
+      }
+      tts = component 'Kokoro TTS render' {
+        #evolving
+        description 'Transcript → chunked local Kokoro TTS (fully offline) → single MP3 under public/media/digests/'
+        link ../scripts/digest/tts-render.mjs 'tts-render.mjs'
+        link ../scripts/digest/kokoro-render.py 'kokoro-render.py'
+      }
+    }
+
+    // ── Knowledge build pipeline: libraries + explorers from ADS ────────────
+    knowledgeBuild = container 'Knowledge build (libraries/explorers)' {
+      #evolving
+      description 'scripts/knowledge — Python that pulls NASA ADS biblib + SciX, validates in-repo explorers, and folds new digest papers into the libraries (daily sync check)'
+      technology 'Python'
+      link ../scripts/knowledge 'scripts/knowledge/'
+
+      buildLibraries = component 'build_libraries + explorers' {
+        #evolving
+        description 'Pull biblib (live), validate explorer JSON, recompute counts, assemble the committed libraries.json / explorers.json'
+        link ../scripts/knowledge/build_libraries.py 'build_libraries.py'
+        link ../scripts/knowledge/build_explorers.py 'build_explorers.py'
+      }
+      embeddings = component 'build_embeddings' {
+        #research
+        description 'Compute embeddings for the knowledge hub retrieval lane (needs the brainstorm venv); snapshot-at-author-time JSON'
+        link ../scripts/knowledge/build_embeddings.py 'build_embeddings.py'
+      }
+    }
+  }
+
+  // ── Relationships ─────────────────────────────────────────────────────────
+  visitor -> website.site 'browses sjarmak.ai (static HTML)'
+  visitor -> website.graph.explorer 'pans / filters the knowledge graph'
+  author -> website.content 'edits Markdown, pushes to main'
+
+  website.schema -> website.content 'validates frontmatter + reference() edges (build error on drift)'
+  website.site -> website.schema 'typed collection reads'
+  website.graph.buildGraph -> website.content 'reads projects↔topics↔outputs references'
+  website.site -> website.graph 'embeds build-time graph data'
+  website.knowledge.knowledgeBuild -> website.content 'joins curated threads to content'
+  website.site -> website.knowledge 'embeds node + related lists'
+
+  // Digest pipeline writes content, then pushes through GitHub → Render.
+  digestCron -> website.digest.runner 'scheduled invoke'
+  website.digest.runner -> claudeBackend 'claude-auto -p (headless authoring)'
+  claudeBackend -> codeIntelMcp 'select recent items'
+  website.digest.publish -> website.content 'write digest collection entry'
+  website.digest.tts -> render 'MP3 under public/media (served static)'
+
+  // Knowledge build pipeline writes committed data the hub reads.
+  website.knowledgeBuild.buildLibraries -> nasaAds 'pull biblib + full text'
+  website.knowledgeBuild.buildLibraries -> website.knowledge 'commits libraries.json / explorers.json'
+
+  // Ship path.
+  website.content -> github.repo 'committed + pushed to main'
+  website.site -> github.repo 'npm run build → ./dist'
+  github.repo -> render 'autoDeploy on checksPass → serve ./dist'
+}

@@ -1,0 +1,164 @@
+// Views over the website model. Evolving (#evolving) renders amber; research
+// (#research) and planned (#planned) elements/relationships are dimmed + dashed
+// so "what is shipped and live vs what is a moving / opt-in prototype" reads at
+// a glance.
+
+views {
+
+  // Landscape — the whole system in context.
+  view index {
+    title 'sjarmak.ai — system landscape'
+    include *
+
+    style * {
+      opacity 25%
+    }
+    style element.tag == #built, element.tag == #evolving {
+      opacity 100%
+    }
+    style element.tag == #planned {
+      color muted
+      border dashed
+    }
+    style element.tag == #research {
+      color indigo
+      border dashed
+    }
+  }
+
+  // The website system, decomposed into its containers.
+  view websiteSystem of website {
+    title 'sjarmak.ai — containers (content → schema → build → graph/knowledge, with two offline pipelines)'
+    include *
+
+    style element.tag == #research {
+      color indigo
+      border dashed
+    }
+    style element.tag == #evolving {
+      color amber
+    }
+    style element.tag == #planned {
+      color muted
+      border dashed
+    }
+  }
+
+  // ── Per-container component views ─────────────────────────────────────────
+
+  view siteContainer of website.site {
+    title 'Astro site — pages, layouts, components'
+    include *
+
+    style element.tag == #research {
+      color indigo
+      border dashed
+    }
+  }
+
+  view graphContainer of website.graph {
+    title 'Knowledge graph — build-time edges → client Cytoscape'
+    include *
+
+    style element.tag == #research {
+      color indigo
+      border dashed
+    }
+  }
+
+  view knowledgeContainer of website.knowledge {
+    title 'Knowledge hub — curated threads + retrieval lanes'
+    include *
+
+    style element.tag == #evolving {
+      color amber
+    }
+  }
+
+  view digestContainer of website.digest {
+    title 'Digest pipeline — autonomous newsletter + podcast producer'
+    include *
+
+    style element.tag == #evolving {
+      color amber
+    }
+  }
+
+  view knowledgeBuildContainer of website.knowledgeBuild {
+    title 'Knowledge build — libraries & explorers from ADS'
+    include *
+
+    style element.tag == #evolving {
+      color amber
+    }
+    style element.tag == #research {
+      color indigo
+      border dashed
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Walkthrough flows (dynamic views) — the narrative spine of a review.
+  // ───────────────────────────────────────────────────────────────────────
+
+  // Flow 1 — a content edit becomes a deployed page.
+  dynamic view publishFlow {
+    title 'Walkthrough — content edit → live page'
+    description 'Markdown is the single source of truth. The Zod schema validates frontmatter and reference() edges at build, so a dangling project→topic link is a CI failure (astro check), not a broken page in production. Render only deploys after checks pass.'
+
+    author -> website.content 'edit src/content/*.md'
+    website.content -> github.repo 'git push main'
+    github.repo -> website.schema 'CI: astro check (Zod + references)'
+    website.schema -> website.site 'astro build → ./dist'
+    github.repo -> render 'autoDeploy on checksPass'
+    render -> visitor 'serves static HTML'
+  }
+
+  // Flow 2 — the knowledge graph is derived, not authored.
+  dynamic view graphFlow {
+    title 'Walkthrough — rendering the knowledge graph'
+    description 'The graph is a projection of the typed content, not a parallel data file. buildGraph resolves the reference() edges already validated by the schema; the client explorer only hydrates the result.'
+
+    website.graph.buildGraph -> website.content 'read projects↔topics↔outputs references'
+    website.graph.buildGraph -> website.site 'embed deduped node/edge data'
+    visitor -> website.graph.explorer 'open /projects/explorer'
+    website.graph.explorer -> visitor 'Cytoscape/fcose pan · zoom · filter'
+  }
+
+  // Flow 3 — the digest cron produces an issue autonomously.
+  dynamic view digestFlow {
+    title 'Walkthrough — autonomous digest issue'
+    description 'A local cron drives claude-auto headless against the code-intel MCP, writes a newsletter + podcast, renders audio with a fully offline Kokoro TTS, dedupes items against recent issues, and (DIGEST_PUSH=1) pushes — the push is itself the deploy trigger.'
+
+    digestCron -> website.digest.runner 'run.sh daily|weekly'
+    website.digest.runner -> claudeBackend 'claude-auto -p'
+    claudeBackend -> codeIntelMcp 'select recent items'
+    website.digest.runner -> website.digest.tts 'transcript → Kokoro MP3'
+    website.digest.runner -> website.digest.publish 'validate issue spec'
+    website.digest.publish -> website.content 'write digest entry'
+    website.content -> github.repo 'commit + push → Render rebuild'
+  }
+
+  // Prototype / opt-in lens: the experiments not in the primary nav.
+  view prototypes {
+    title 'Prototypes & opt-in surfaces'
+    include
+      website,
+      website.site,
+      website.graph,
+      website.knowledgeBuild
+
+    style * {
+      opacity 30%
+    }
+    style element.tag == #research {
+      opacity 100%
+      color indigo
+      border dashed
+    }
+    style element.tag == #evolving {
+      opacity 100%
+      color amber
+    }
+  }
+}
