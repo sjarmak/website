@@ -75,39 +75,49 @@ const talks = await getTalks();
             )}
           </div>
 
-          {t.data.photo && (
-            <figure class:list={["talk__photo", t.data.photoCard && "talk__photo--card"]}>
-              <button
-                type="button"
-                class="talk__photo-trigger"
-                popovertarget={`photo-${t.id}`}
-                aria-label={`Expand image — ${t.data.photoAlt ?? t.data.title}`}
-              >
-                <Image
-                  src={t.data.photo}
-                  alt={t.data.photoAlt ?? `${t.data.title} — ${t.data.event}`}
-                  widths={[480, 800, 1200]}
-                  sizes={t.data.photoCard ? "(max-width: 50rem) 50vw, 16rem" : "(max-width: 50rem) 100vw, 50rem"}
-                />
-              </button>
-              <div id={`photo-${t.id}`} popover="auto" class="talk__photo-popover">
+          {t.data.photo &&
+            (t.data.photoCard ? (
+              <figure class="talk__photo talk__photo--card">
                 <button
                   type="button"
-                  class="talk__photo-popover-close"
+                  class="talk__photo-trigger"
                   popovertarget={`photo-${t.id}`}
-                  popovertargetaction="hide"
-                  aria-label="Close expanded image"
+                  aria-label={`Expand image — ${t.data.photoAlt ?? t.data.title}`}
                 >
                   <Image
                     src={t.data.photo}
                     alt={t.data.photoAlt ?? `${t.data.title} — ${t.data.event}`}
-                    widths={[800, 1200]}
-                    sizes="(max-width: 50rem) 92vw, 50rem"
+                    widths={[480, 800, 1200]}
+                    sizes="(max-width: 50rem) 50vw, 16rem"
                   />
                 </button>
-              </div>
-            </figure>
-          )}
+                <div id={`photo-${t.id}`} popover="auto" class="talk__photo-popover">
+                  <button
+                    type="button"
+                    class="talk__photo-popover-close"
+                    popovertarget={`photo-${t.id}`}
+                    popovertargetaction="hide"
+                    aria-label="Close expanded image"
+                  >
+                    <Image
+                      src={t.data.photo}
+                      alt={t.data.photoAlt ?? `${t.data.title} — ${t.data.event}`}
+                      widths={[800, 1200]}
+                      sizes="(max-width: 50rem) 92vw, 50rem"
+                    />
+                  </button>
+                </div>
+              </figure>
+            ) : (
+              <figure class="talk__photo">
+                <Image
+                  src={t.data.photo}
+                  alt={t.data.photoAlt ?? `${t.data.title} — ${t.data.event}`}
+                  widths={[480, 800, 1200]}
+                  sizes="(max-width: 50rem) 100vw, 50rem"
+                />
+              </figure>
+            ))}
         </article>
       ))
     }
