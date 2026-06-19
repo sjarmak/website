@@ -163,6 +163,7 @@ const talks = defineCollection({
     z.object({
       title: z.string(),
       event: z.string(),
+      eventUrl: z.string().url().optional(), // event homepage; links the event name
       location: z.string().optional(),
       date: z.coerce.date(),
       kind: z.enum(["webinar", "conference", "panel", "invited", "podcast"]),
@@ -173,6 +174,7 @@ const talks = defineCollection({
       videoPoster: z.string().optional(), // poster image path under /public
       videoCaption: z.string().optional(), // e.g. "Live demo from the talk"
       slidesUrl: z.string().url().optional(),
+      scheduleUrl: z.string().url().optional(), // session/schedule page (for upcoming talks)
       photo: image().optional(),
       photoAlt: z.string().optional(),
       description: z.string().optional(),
