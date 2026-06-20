@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-17",
-      "attempts": 7
+      "lastAttempt": "2026-06-20",
+      "attempts": 8
     },
     {
       "bibcode": "2026arXiv260612924D",
@@ -37,8 +37,8 @@
         }
       ],
       "firstSeen": "2026-06-14",
-      "lastAttempt": "2026-06-17",
-      "attempts": 7
+      "lastAttempt": "2026-06-20",
+      "attempts": 8
     },
     {
       "bibcode": "2026arXiv260613174Z",
@@ -54,8 +54,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-17",
-      "attempts": 4
+      "lastAttempt": "2026-06-20",
+      "attempts": 5
     },
     {
       "bibcode": "2026arXiv260612945C",
@@ -78,8 +78,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-17",
-      "attempts": 4
+      "lastAttempt": "2026-06-20",
+      "attempts": 5
     },
     {
       "bibcode": "2026arXiv260613598T",
@@ -100,8 +100,8 @@
         }
       ],
       "firstSeen": "2026-06-12",
-      "lastAttempt": "2026-06-17",
-      "attempts": 4
+      "lastAttempt": "2026-06-20",
+      "attempts": 5
     },
     {
       "bibcode": "2026arXiv260319595L",
@@ -124,8 +124,8 @@
         }
       ],
       "firstSeen": "2026-06-16",
-      "lastAttempt": "2026-06-17",
-      "attempts": 2
+      "lastAttempt": "2026-06-20",
+      "attempts": 3
     },
     {
       "bibcode": "2026arXiv260617328L",
@@ -147,8 +147,8 @@
         }
       ],
       "firstSeen": "2026-06-17",
-      "lastAttempt": "2026-06-17",
-      "attempts": 1
+      "lastAttempt": "2026-06-20",
+      "attempts": 2
     },
     {
       "bibcode": "2026arXiv260617546Z",
@@ -170,8 +170,8 @@
         }
       ],
       "firstSeen": "2026-06-17",
-      "lastAttempt": "2026-06-17",
-      "attempts": 1
+      "lastAttempt": "2026-06-20",
+      "attempts": 2
     },
     {
       "bibcode": "2026arXiv260119697J",
@@ -187,7 +187,120 @@
         }
       ],
       "firstSeen": "2026-06-17",
-      "lastAttempt": "2026-06-17",
+      "lastAttempt": "2026-06-20",
+      "attempts": 2
+    },
+    {
+      "bibcode": "2026arXiv260620158R",
+      "arxiv": "2606.20158",
+      "title": "N-Version Programming with Coding Agents",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-20",
+      "lastAttempt": "2026-06-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260619380G",
+      "arxiv": "2606.19380",
+      "title": "AgentArmor: A Framework, Evaluation, & Mitigation of Coding Agent Failures",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "security"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-20",
+      "lastAttempt": "2026-06-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260619847Y",
+      "arxiv": "2606.19847",
+      "title": "AtomMem: Building Simple and Effective Memory System for LLM Agents via Atomic Facts",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "architectures",
+            "applications-personalization"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "representation",
+            "consolidation",
+            "temporal",
+            "retrieval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-20",
+      "lastAttempt": "2026-06-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260619911K",
+      "arxiv": "2606.19911",
+      "title": "Multi-Agent Transactive Memory",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "procedural-skills"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "multiagent"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "memory"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-20",
+      "lastAttempt": "2026-06-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260620058R",
+      "arxiv": "2606.20058",
+      "title": "Autonomous Event-Driven Multi-Agent Orchestration for Enterprise AI at Scale",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "topology",
+            "routing"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "production",
+            "foundations"
+          ]
+        }
+      ],
+      "firstSeen": "2026-06-20",
+      "lastAttempt": "2026-06-20",
       "attempts": 1
     }
   ]
