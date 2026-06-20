@@ -5,6 +5,7 @@ domain: art
 summary: A browser co-op deck-builder in the Slay-the-Spire / Ascension lineage, rendered entirely in hand-authored stained-glass art and tuned to be readable by a six-year-old.
 role: Creator
 repo: https://github.com/sjarmak/embertide
+architecture: https://sjarmak.github.io/embertide/
 play: /games/embertide/index.html
 tech: [React, Zustand, Vite, TypeScript]
 order: 15
