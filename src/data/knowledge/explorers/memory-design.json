@@ -1219,6 +1219,25 @@
           "why": "A detailed write-time consolidation design: it commits to episodic scenes plus consolidated abstractions, uses LLMs at write time to extract/summarize/rehearse, and explicitly separates retrieval cues from QA evidence to avoid the LLM's own rewritten memory contaminating the answer channel."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260617328L",
+      "title": "MemTrace: Probing What Final Accuracy Misses in Long-Term Memory",
+      "firstAuthor": "Long, Xianxuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17328",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617328L/abstract",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Across the 13 systems evaluated, the dominant remaining gap is evidence use rather than retrieval: when a system answers wrong, the needed evidence was already retrievable about 10× more often than it was actually missing. Systems with similar pooled accuracy are shown to fail in different places once retrieval-correctness is separated from answer-correctness.",
+          "why": "It is direct evidence for the branch's core claim—that you must separate whether the right memory was surfaced from whether the final answer was right. Reporting one pooled accuracy number conflates the two and points optimization at storage and retrieval when the real bottleneck is using evidence that is already in hand."
+        }
+      ]
     }
   ],
   "sections": [

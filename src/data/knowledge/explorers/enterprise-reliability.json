@@ -1079,6 +1079,25 @@
           "why": "This is eval as risk reduction, not proof: an honest execution-grounded replay oracle rather than an LLM judge, a refusal to claim universal dominance (centrality wins 15 families, learned predictor 18, 4 ties), and a direct calibration check on whether LLM judges can be trusted for failure attribution."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260617546Z",
+      "title": "SEAGym: An Evaluation Environment for Self-Evolving LLM Agents",
+      "firstAuthor": "Zheng, Congjie",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17546",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617546Z/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Evaluation is grounded in execution: SEAGym builds on Harbor (containerized task execution, verifiers, parallel jobs) and separates task rollout from method update, so diverse self-evolving agents connect through thin wrappers while keeping their native update rules. Instantiated on Terminal-Bench 2.0 and HLE comparing ACE, TF-GRPO, and AHE under a shared epoch/batch protocol, it shows frequent updates may fail to improve held-out performance and that useful intermediate snapshots can collapse later.",
+          "why": "It models the branch's stance that evaluation must be grounded in execution against an honest baseline and treated as risk reduction rather than proof: verifier-checked task outcomes plus held-out and replay views surface regression and non-transfer that an aggregate success score would hide."
+        }
+      ]
     }
   ],
   "sections": [

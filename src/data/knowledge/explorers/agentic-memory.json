@@ -2566,6 +2566,56 @@
           "why": "Gives a clean taxonomy of existing memory architectures (temporal-KG, hypergraph, hierarchical, OS-style), locates them all in a single retrieval design space, then proposes a specialized-retrieval architecture (write-time triggers indexing into a non-similarity associative channel) as the missing axis, with measured per-component impact."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260617328L",
+      "title": "MemTrace: Probing What Final Accuracy Misses in Long-Term Memory",
+      "firstAuthor": "Long, Xianxuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17328",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617328L/abstract",
+      "branches": [
+        "eval-methodology",
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "The unit of measurement is the knowledge point—a single typed fact about the user—not the question row, so each fact is probed repeatedly along three controlled dimensions: memory age (sessions since it appeared), question type (current state, earlier state, or trajectory of change), and evidence condition (present, missing, or contradicted by a false premise). A diagnostic step then separates failures caused by unreachable evidence from failures where retrievable evidence went unused.",
+          "why": "Pooled, per-question accuracy treats questions about one fact as independent items, so it cannot hold a fact fixed and show which behavior breaks as conditions change. Fixing the fact and varying the conditions around it is what lets the benchmark attribute failures rather than just count them, and the unreachable-vs-unused split turns a single accuracy number into an actionable diagnosis."
+        },
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "MemTrace contains 835 typed knowledge points drawn from 20 users, expanded into 15,422 question rows and over 200,000 scored answers, and is used to evaluate 13 memory-system configurations spanning four paradigms: long-context models, retrieval-augmented systems, external-memory stores, and agentic-memory architectures.",
+          "why": "It is a multi-session, long-term memory benchmark whose composition is organized around a fact-centric unit and three probing axes rather than flat QA rows, which is the kind of task-type and dataset-size detail this catalog tracks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260617546Z",
+      "title": "SEAGym: An Evaluation Environment for Self-Evolving LLM Agents",
+      "firstAuthor": "Zheng, Congjie",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.17546",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260617546Z/abstract",
+      "branches": [
+        "reflection-experience",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A self-evolving agent is defined as one that uses task experience to update persistent harness state—prompts, reflections, experience libraries, memories, skills, tools, middleware, or runtime config—and reuses that updated state on later tasks. SEAGym expresses text-centered, memory/skill-based, and harness-level evolution methods through one interaction loop (act in an episode, observe trajectories and verifier feedback, update harness state, act again) and an RL-style environment where the agent supplies the task policy and the harness-update rule while the environment owns task sampling, feedback, schedules, and snapshot assessment.",
+          "why": "This is the Reflection→Experience frontier made measurable: the question is no longer whether a reflective update helps once, but whether experience-driven updates to persistent state produce improvement that is reusable across later tasks. Putting text, memory, skill, and harness methods under a common loop lets that frontier be compared rather than asserted."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "SEAGym scores the update process itself, not just a final agent. It converts static benchmarks into train batches plus frozen evaluation views—update-validation, held-out in-domain transfer, out-of-domain transfer, replay, and cost—and records agent snapshots and metrics so that local update-validation gain, cumulative gain, final ID and OOD gain, replay forgetting/regression, and evolution overhead are tracked separately. Explicit schedule parameters (state reset, task reuse, batch size, update timing) let single-task adaptation, online transfer, and epoch-based batch learning be studied in one environment.",
+          "why": "Reporting whether a final evolved agent scores higher hides whether an update was reusable, overfit the recent tasks, raised cost, or harmed older behavior. Separating these views is the methodological move that makes self-evolution evaluable instead of summarized by a single curve."
+        }
+      ]
     }
   ],
   "sections": [
