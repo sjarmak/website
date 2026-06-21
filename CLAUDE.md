@@ -53,13 +53,67 @@ bd close <id>         # Complete work
 
 ## Build & Test
 
-_Add your build and test commands here_
+Astro static site. Mirror CI locally before pushing:
 
 ```bash
-# Example:
-# npm install
-# npm test
+npm ci
+npm run check   # astro check (type/diagnostics) — CI gate
+npm run build   # astro build → ./dist — CI gate
 ```
+
+## Deployment
+
+Prod is **Render static site `sjarmak-ai` → https://www.sjarmak.ai**, built from
+this repo's `main` branch (config: `render.yaml`).
+
+- **Trigger:** any push to `main` auto-deploys, but **only after the GitHub CI
+  check passes** (`autoDeployTrigger: checksPass`; CI = `.github/workflows/ci.yml`
+  = `npm run check` + `npm run build`). A red check silently blocks the deploy —
+  if a change isn't live, check `gh run list` first.
+- **Build:** `npm ci && npm run build` → publishes `./dist`. Astro compiles
+  `src/` and copies `public/` in verbatim.
+- **buildFilter:** Render only rebuilds when a push touches `src/**`, `public/**`,
+  `astro.config.mjs`, `tsconfig.json`, or `package*.json`.
+
+### Ordinary site changes (pages, content, styles)
+
+Edit under `src/` (`pages/`, `components/`, `layouts/`, `styles/`, `content/`) or
+static files under `public/`, then:
+
+```bash
+npm run check && npm run build      # mirror CI locally
+git add -A && git commit -m "..."
+git push                            # → CI passes → Render deploys (~2 min)
+```
+
+(A digest cron also auto-pushes daily content commits here — that's expected;
+each carries a CI check and deploys.)
+
+### Sub-games (`public/games/<game>/`)
+
+Games like `embertide` and `wheel-of-fortune` are **pre-built copies committed
+under `public/games/<game>/`** — the site does NOT build them. To update one,
+rebuild it in its own repo and sync the build in, then commit + push here.
+
+For embertide (from the `projects/embertide` repo):
+
+```bash
+npm run deploy:site                 # build:web + rsync into website/public/games/embertide
+```
+
+then in this repo:
+
+```bash
+git add public/games/embertide
+git commit -m "games/embertide: update build"
+git push                            # → Render deploys
+```
+
+**Cache gotcha:** `_astro/*` and `fonts/*` are served `immutable, max-age=1yr`.
+Astro bundles are content-hashed so they bust automatically, but game assets at
+**stable, unhashed paths** (e.g. `/games/embertide/illustrations/*.webp`) do NOT
+bust on content change. When changing such an asset in place, **bump its
+filename** (e.g. `craghorn_001 → craghorn_003`) or browsers/CDN keep the old one.
 
 ## Architecture Overview
 
