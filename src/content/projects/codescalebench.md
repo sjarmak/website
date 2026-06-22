@@ -7,6 +7,10 @@ role: Creator
 repo: https://github.com/sjarmak/CodeScaleBench
 architecture: https://sjarmak.github.io/CodeScaleBench-Public/
 links:
+  - label: Sourcegraph Blog
+    url: https://sourcegraph.com/blog/codescalebench-testing-coding-agents-on-large-codebases-and-multi-repo-software-engineering-tasks
+  - label: Enterprise Report
+    url: https://sourcegraph.com/resources/ebooks/code-scale-bench-report
   - label: Tessl Blog
     url: https://tessl.io/blog/coding-agent-failure-patterns-large-codebases/
 tech: [C++, Evaluation, Retrieval]
