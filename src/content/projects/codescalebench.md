@@ -6,6 +6,9 @@ summary: A benchmark suite for evaluating how AI coding agents use external cont
 role: Creator
 repo: https://github.com/sjarmak/CodeScaleBench
 architecture: https://sjarmak.github.io/CodeScaleBench-Public/
+links:
+  - label: Tessl Blog
+    url: https://tessl.io/blog/coding-agent-failure-patterns-large-codebases/
 tech: [C++, Evaluation, Retrieval]
 featured: true
 featuredOrder: 3

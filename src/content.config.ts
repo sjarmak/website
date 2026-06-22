@@ -86,6 +86,8 @@ const projects = defineCollection({
       architecture: z.string().url().optional(),
       // Playable in-browser build served from /public (e.g. /games/<slug>/).
       play: z.string().optional(),
+      // Extra labeled link-outs (blog posts, coverage, etc.).
+      links: z.array(link).default([]),
       tech: z.array(z.string()).default([]),
       cover: image().optional(),
       featured: z.boolean().default(false),

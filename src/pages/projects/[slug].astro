@@ -30,6 +30,9 @@ const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
         {data.repo && <a href={data.repo} rel="noopener">Code ↗</a>}
         {data.architecture && <a href={data.architecture} rel="noopener">Architecture ↗</a>}
         {data.homepage && <a href={data.homepage} rel="noopener">Live ↗</a>}
+        {data.links.map((l) => (
+          <a href={l.url} rel="noopener">{l.label} ↗</a>
+        ))}
       </div>
       {
         data.tech.length > 0 && (
