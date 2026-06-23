@@ -7,6 +7,8 @@ role: Creator
 repo: https://github.com/sjarmak/CodeScaleBench
 architecture: https://sjarmak.github.io/CodeScaleBench-Public/
 links:
+  - label: Draft Paper
+    url: https://www.sjarmak.ai/papers/codescalebench-draft.pdf
   - label: Sourcegraph Blog
     url: https://sourcegraph.com/blog/codescalebench-testing-coding-agents-on-large-codebases-and-multi-repo-software-engineering-tasks
   - label: Enterprise Report
