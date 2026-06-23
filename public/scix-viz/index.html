@@ -76,7 +76,7 @@
     <main>
       <h1>SciX Visualization Demos</h1>
       <p class="subtitle">
-        Five lenses on the 32.4-million-paper corpus.
+        Seven lenses on the 32.4-million-paper corpus.
       </p>
       <div class="card-grid">
         <a class="card" href="./sankey.html">
@@ -96,6 +96,15 @@
             isolate a community.
           </p>
         </a>
+        <a class="card" href="./agent_trace.html">
+          <span class="tag">V4</span>
+          <h2>Agent Trace Replay</h2>
+          <p>
+            A recorded replay of two real MCP runs — a single hybrid search and
+            a 10-step lit-review pipeline. Each tool call narrates in order with
+            its params, latency, and the papers it touched.
+          </p>
+        </a>
         <a class="card" href="./heatmap.html">
           <span class="tag">V5</span>
           <h2>Research Topology</h2>
@@ -103,6 +112,15 @@
             20×20 citation heatmap derived from 297.9M citation edges. Reveals
             which communities cite which — three modes: raw counts,
             row-normalized, and citation lift.
+          </p>
+        </a>
+        <a class="card" href="./ego.html">
+          <span class="tag">V6</span>
+          <h2>Citation Ego Network</h2>
+          <p>
+            Force-directed citation neighborhoods of a few high-PageRank hub
+            papers — refs, cites, and 2-hop nodes, coloured by community. Drag
+            to rearrange; pick a featured paper to re-center.
           </p>
         </a>
         <a class="card" href="./section_coverage.html">
@@ -129,11 +147,11 @@
         100K UMAP points · 20 coarse communities · decades 1800–2020.
       </div>
       <div class="stats">
-        Two further views — a <strong>Live Agent-Trace Overlay</strong> (real
-        hybrid search streamed over SSE) and an interactive
-        <strong>Citation Ego Network</strong> — run against the live SciX
-        backend and aren't part of this static snapshot. The lenses above are
-        rendered from exported data and need no server.
+        Every view here is rendered from exported data and needs no server. The
+        <strong>Agent-Trace Overlay</strong> and <strong>Citation Ego
+        Network</strong> are snapshots of the live, interactive tools — a
+        recorded run and a handful of featured papers respectively; the live
+        SciX backend builds either for any query or any paper on demand.
       </div>
     </main>
   </body>
