@@ -1098,6 +1098,50 @@
           "why": "It models the branch's stance that evaluation must be grounded in execution against an honest baseline and treated as risk reduction rather than proof: verifier-checked task outcomes plus held-out and replay views surface regression and non-transfer that an aggregate success score would hide."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260619380G",
+      "title": "AgentArmor: A Framework, Evaluation, & Mitigation of Coding Agent Failures",
+      "firstAuthor": "Ge, Kenneth",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.19380",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260619380G/abstract",
+      "branches": [
+        "reliability",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Decomposes non-adversarial coding-agent failure into three sequential points — forming the correct target (underspecification), pursuing it (capability error), and executing it through the harness (stochastic sampling, context decay) — with a chain-rule risk P(unsafe)=1-(1-f1)(1-f2)(1-f3) and scenarios that isolate each stage, cross-cut by four active modes (greenfield, editing, deployment, monitoring) over 8 scenarios, 20 environments, and 59 transcript templates at n>=500 across three frontier models.",
+          "why": "The reliability branch is about knowing the failure taxonomy before you scale. This gives a deployment-grounded taxonomy of where a single coding agent goes wrong and measures each stage's failure rate separately, instead of reporting one aggregate success number."
+        },
+        {
+          "branch": "security",
+          "takeaway": "AgentArmor is a harness modification, not a better base model: deterministic guardrails (force ls -la before deletes, read scripts before executing), a LoRA-trained command classifier with a '3 strikes' policy and persuasion-blindness to resist goal drift, and self-harness tools (user-overridable immutable files, transcript pruning) that cut unsafe and irreversible actions by a statistically significant margin.",
+          "why": "Security here is governance over the agent's action surface. AgentArmor shows that runtime guardrails and an intent-aligned command classifier, rather than model scale alone, are what actually block destructive commands like rm -rf and DROP DATABASE."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260622504S",
+      "title": "Lingering Authority: Revocable Resource-and-Effect Capabilities for Coding Agents",
+      "firstAuthor": "Santos-Grueiro, Igor",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.22504",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260622504S/abstract",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "PORTICO is a reference monitor that gives coding-agent tools a bounded capability lifetime: an explicit task contract compiles into an initial envelope plus grant, trusted-closure, and global-deny rules, and a request-grant-invoke protocol mints opaque, epoch-bound handles that are revoked when the subgoal closes, so authority cannot linger or be replayed once its justifying episode ends.",
+          "why": "The security branch treats the agent's exposed action surface as the attack surface. PORTICO argues that least privilege over time matters as much as sandbox reachability: in their audit it rejected 10/10 post-closure capability reuses and executed 0/6 stale forbidden writes where a non-revoking comparator with the same grants allowed all of them."
+        }
+      ]
     }
   ],
   "sections": [
