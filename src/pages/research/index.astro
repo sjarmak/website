@@ -1,36 +1,22 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
-import {
-  getPublications,
-  getFeaturedProjects,
-  getTalks,
-  getServiceEntries,
-} from "@/lib/collections";
+import { getPublications } from "@/lib/collections";
 import { getCollection } from "astro:content";
-import { monthYear, rangeLabel } from "@/lib/dates";
 
 const publications = await getPublications();
-const projects = await getFeaturedProjects();
-const talks = await getTalks();
-const service = await getServiceEntries();
-
 const pressYear = (p: { data: { date?: Date; year?: number } }) =>
   p.data.year ?? p.data.date?.getUTCFullYear();
 const press = (await getCollection("press")).sort(
   (a, b) => (pressYear(b) ?? 0) - (pressYear(a) ?? 0),
 );
-
-// Best external link for a talk: recording, then schedule page, then event homepage.
-const talkUrl = (t: (typeof talks)[number]) =>
-  t.data.videoUrl ?? t.data.scheduleUrl ?? t.data.eventUrl;
 ---
 
 <PageLayout
   title="Research & press"
-  kicker="Scholarship & systems"
-  intro="Peer-reviewed work, the systems and benchmarks I build, talks, service, and selected press — across planetary science and AI for software and research."
-  description="Publications, projects, talks, service, and press for Stephanie Jarmak."
+  kicker="Scholarship"
+  intro="Peer-reviewed work, preprints, and selected press across planetary science and information science."
+  description="Publications and press for Stephanie Jarmak."
 >
   <div class="stack stack-l">
     <section>
@@ -86,71 +72,16 @@ const talkUrl = (t: (typeof talks)[number]) =>
       }
     </section>
 
-    {
-      projects.length > 0 && (
-        <section>
-          <div class="sub-head">
-            <h2 class="sub">Projects & systems</h2>
-            <a class="sub-head__more" href="/projects">
-              All projects ↗
-            </a>
-          </div>
-          <ul role="list" class="cards">
-            {projects.map((p) => (
-              <li class="card">
-                <a class="card__title" href={`/projects/${p.id}`}>
-                  {p.data.title}
-                </a>
-                <p class="secondary measure">{p.data.summary}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      talks.length > 0 && (
-        <section>
-          <div class="sub-head">
-            <h2 class="sub">Talks & speaking</h2>
-            <a class="sub-head__more" href="/talks">
-              All talks ↗
-            </a>
-          </div>
-          <ul role="list" class="stack">
-            {talks.map((t) => {
-              const href = talkUrl(t);
-              return (
-                <li class="row">
-                  {href ? (
-                    <a href={href} rel="noopener" class="row__title">
-                      {t.data.title}
-                    </a>
-                  ) : (
-                    <span class="row__title">{t.data.title}</span>
-                  )}
-                  <span class="muted">
-                    {t.data.event} · {monthYear(t.data.date)}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )
-    }
-
     <section>
-      <h2 class="sub">Press & media</h2>
+      <h2 class="sub">Press</h2>
       {
         press.length === 0 ? (
           <EmptyState title="Press mentions coming soon" />
         ) : (
           <ul role="list" class="stack">
             {press.map((p) => (
-              <li class="row">
-                <a href={p.data.url} rel="noopener" class="row__title">
+              <li class="press-row">
+                <a href={p.data.url} rel="noopener" class="press-row__title">
                   {p.data.title}
                 </a>
                 <span class="muted">
@@ -163,38 +94,6 @@ const talkUrl = (t: (typeof talks)[number]) =>
         )
       }
     </section>
-
-    {
-      service.length > 0 && (
-        <section>
-          <div class="sub-head">
-            <h2 class="sub">Appointments & service</h2>
-            <a class="sub-head__more" href="/cv">
-              Full CV ↗
-            </a>
-          </div>
-          <ul role="list" class="stack">
-            {service.map((e) => {
-              const link = e.data.links[0];
-              return (
-                <li class="row">
-                  {link ? (
-                    <a href={link.url} rel="noopener" class="row__title">
-                      {e.data.title}
-                    </a>
-                  ) : (
-                    <span class="row__title">{e.data.title}</span>
-                  )}
-                  <span class="muted">
-                    {e.data.org} · {rangeLabel(e.data.range.start, e.data.range.end)}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )
-    }
   </div>
 </PageLayout>
 
@@ -227,29 +126,7 @@ const talkUrl = (t: (typeof talks)[number]) =>
     font-family: var(--font-display);
     font-size: var(--step-1);
   }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-    gap: var(--space-m);
-  }
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2xs);
-    padding: var(--space-s) var(--space-m);
-    border: var(--border-hairline);
-    border-radius: var(--radius-m, 0.5rem);
-  }
-  .card__title {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    text-decoration: none;
-    color: var(--color-text);
-  }
-  .card__title:hover {
-    color: var(--color-accent);
-  }
-  .row {
+  .press-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs) var(--space-m);
@@ -257,13 +134,13 @@ const talkUrl = (t: (typeof talks)[number]) =>
     padding-block: var(--space-s);
     border-bottom: var(--border-hairline);
   }
-  .row__title {
+  .press-row__title {
     font-family: var(--font-display);
     font-size: var(--step-1);
     text-decoration: none;
     color: var(--color-text);
   }
-  .row__title:hover {
+  .press-row__title:hover {
     color: var(--color-accent);
   }
 </style>

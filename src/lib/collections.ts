@@ -63,19 +63,3 @@ export async function getPublications() {
   const pubs = await getCollection("publications");
   return pubs.sort((a, b) => b.data.year - a.data.year);
 }
-
-/** Featured projects (systems worth surfacing on the research page), by featuredOrder. */
-export async function getFeaturedProjects(): Promise<CollectionEntry<"projects">[]> {
-  const projects = await getCollection("projects");
-  return projects
-    .filter((p) => p.data.featured)
-    .sort((a, b) => (a.data.featuredOrder ?? 999) - (b.data.featuredOrder ?? 999));
-}
-
-/** Service and appointment CV entries (committees, editorial, elected roles), newest-first. */
-export async function getServiceEntries(): Promise<CollectionEntry<"cv">[]> {
-  const cv = await getCollection("cv");
-  return cv
-    .filter((e) => e.data.category === "service" || e.data.category === "award")
-    .sort((a, b) => +b.data.range.start - +a.data.range.start);
-}
