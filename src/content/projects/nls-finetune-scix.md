@@ -6,6 +6,11 @@ summary: Fine-tuning infrastructure for converting natural language into ADS / S
 role: Creator
 repo: https://github.com/sjarmak/nls-finetune-scix
 architecture: https://sjarmak.github.io/nls-finetune-scix/
+links:
+  - label: Model — scix-nls-translator (HuggingFace)
+    url: https://huggingface.co/adsabs/scix-nls-translator
+  - label: Dataset — nls-query-training-data (HuggingFace)
+    url: https://huggingface.co/datasets/adsabs/nls-query-training-data
 tech: [Python, NLP, SciX]
 order: 16
 topics: [scientific-search, retrieval]
