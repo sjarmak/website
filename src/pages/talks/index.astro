@@ -36,7 +36,12 @@ const talks = await getTalks();
           ) : (
             t.data.videoId &&
             t.data.videoProvider && (
-              <EmbeddedVideo provider={t.data.videoProvider} id={t.data.videoId} title={t.data.title} />
+              <EmbeddedVideo
+                provider={t.data.videoProvider}
+                id={t.data.videoId}
+                title={t.data.title}
+                start={t.data.videoStart}
+              />
             )
           )}
 

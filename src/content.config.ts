@@ -168,9 +168,10 @@ const talks = defineCollection({
       eventUrl: z.string().url().optional(), // event homepage; links the event name
       location: z.string().optional(),
       date: z.coerce.date(),
-      kind: z.enum(["webinar", "conference", "panel", "invited", "podcast"]),
+      kind: z.enum(["webinar", "conference", "panel", "invited", "podcast", "demo"]),
       videoProvider: z.enum(["youtube", "vimeo", "other"]).optional(),
       videoId: z.string().optional(),
+      videoStart: z.number().int().optional(), // start offset in seconds (deep-linked segment)
       videoUrl: z.string().url().optional(),
       videoFile: z.string().optional(), // self-hosted mp4, path under /public
       videoPoster: z.string().optional(), // poster image path under /public

@@ -4,14 +4,15 @@ interface Props {
   provider: "youtube" | "vimeo" | "other";
   id: string;
   title: string;
+  start?: number; // start offset in seconds (deep-linked segment of a longer recording)
 }
-const { provider, id, title } = Astro.props;
+const { provider, id, title, start } = Astro.props;
 
 const embedSrc =
   provider === "youtube"
-    ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`
+    ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1${start ? `&start=${start}` : ""}`
     : provider === "vimeo"
-      ? `https://player.vimeo.com/video/${id}?autoplay=1`
+      ? `https://player.vimeo.com/video/${id}?autoplay=1${start ? `#t=${start}s` : ""}`
       : id;
 
 const poster =
