@@ -20,6 +20,8 @@ The motivation for revamping my site was searching my name and realizing my old 
 
 The Library section publishes curated [SciX](https://scixplorer.org) paper libraries and thematic explorers: reading paths through a topic, with a per-paper synthesis. The machinery behind them is a retrieval platform I derived from the [SciX](https://scixplorer.org) corpus and all of its metadata that I run on a single workstation (an RTX 5090 box with 1.9 TB of NVMe): the full [SciX](https://scixplorer.org) corpus, 32.4 million papers spanning 1800 to 2026, in one PostgreSQL 16 instance with pgvector, alongside 299.3 million citation edges and full-text bodies for 14.9 million of the papers. Dense embeddings (INDUS, 768 dimensions, stored as fp16 halfvec) cover the entire corpus. Retrieval is hybrid: a sparse BM25 lane over the text, and a dense HNSW lane, fused with reciprocal rank fusion.
 
+_Editor's note (2026-06-26): the dense-store details here are point-in-time. The dense lane has since migrated to Qdrant (SQ-INT8 quantization) per ADR-013 — the `paper_embeddings` fp16 halfvec column was dropped, dense vectors no longer serve from a pgvector HNSW lane, and the pgvectorscale DiskANN build mentioned further down was abandoned. The hybrid BM25 + dense + RRF retrieval shape is unchanged._
+
 Each explorer paper gets a four-part write-up, plain-language abstract, motivation, methodology, and results, generated from the paper's actual full text fetched section by section through the MCP `read_paper` tool that accesses the full text.
 
 ## The Digest sits on a pipeline that fits in 512 MB
