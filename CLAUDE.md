@@ -115,9 +115,11 @@ Astro bundles are content-hashed so they bust automatically, but game assets at
 bust on content change. When changing such an asset in place, **bump its
 filename** (e.g. `craghorn_001 → craghorn_003`) or browsers/CDN keep the old one.
 
-## Architecture Overview
+## Architecture orientation (LikeC4-derived)
 
-_Add a brief overview of your project architecture_
+@architecture/exports/orient.md
+
+_A mechanically-derived high-altitude map of this rig's subsystems (from the LikeC4 model). Orient off it — names every container/component, its purpose, delivery state, and exact source path — then targeted-read the files it points at instead of grep-walking. Regenerated daily by the city `likec4-orient-refresh` order; for symbol-level depth hand a source link to an Explore/CodeGraph agent._
 
 ## Conventions & Patterns
 
