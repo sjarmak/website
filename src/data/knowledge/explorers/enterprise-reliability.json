@@ -1142,6 +1142,69 @@
           "why": "The security branch treats the agent's exposed action surface as the attack surface. PORTICO argues that least privilege over time matters as much as sandbox reachability: in their audit it rejected 10/10 post-closure capability reuses and executed 0/6 stale forbidden writes where a non-revoking comparator with the same grants allowed all of them."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260622678B",
+      "title": "RigorBench: Benchmarking Engineering Process Discipline in Autonomous AI Coding Agents",
+      "firstAuthor": "Bhaskar Madiraju, Meher",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.22678",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260622678B/abstract",
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Names a failure taxonomy for the lab-to-production gap — fragile fixes (patches pass tests but leave latent bugs), token waste (trial-and-error instead of a planned approach), false confidence (never abstaining on impossible/ambiguous tasks), and broken intermediates (codebase left broken between steps). Baseline ReAct agents fail badly against it: no baseline abstained on any of the 6 impossible tasks, and even disciplined agents abstained correctly only 62% of the time. Recovery is the hardest mode and the one scaffolding does NOT fix — smallest gain of all five pillars, token-waste cut only 34%, doom loops persist when root cause isn't in the error message; the authors conclude recovery may need architectural changes beyond configuration-level frameworks.",
+          "why": "The 'know the failure taxonomy before you scale' point made concrete: the paper names how agent systems fail silently in production and shows the hardest failure mode — error recovery — is exactly the one a harness does not buy you, so scaffolding is not a substitute for the underlying capability."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Scores execution traces, not final artifacts: it logs every plan, diff, command, per-action token count, and timestamp, then scores five pillars (Planning Fidelity, Verification Coverage, Recovery Efficiency, Abstention Quality, Atomic Transition Integrity) into a weighted RigorScore. The design uses an honest control — four harnesses (Agent-Rigor, Agent-Skills, Superpowers, Baseline ReAct) on the same model and same 30 tasks, 120 executions — isolating the harness effect rather than asserting it. RigorScore correlates with outcome quality at r=0.87 (p<0.001), and qualitative sub-metrics use a 3-judge majority panel calibrated at Fleiss' kappa 0.74. Process discipline raised process scores 41% and outcomes 17%.",
+          "why": "This branch's thesis — execution-grounded eval, an honest baseline, calibrated judges, eval as risk reduction — is the paper's entire method: it replaces outcome-only pass@k with trajectory scoring, attributes gains against a real control, and measures judge agreement instead of trusting one judge."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260624453P",
+      "title": "Bayesian control for coding agents",
+      "firstAuthor": "Papamarkou, Theodore",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.24453",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260624453P/abstract",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Makes tool-use scheduling a cost-sensitive decision instead of a fixed rule: a controller holds a belief b=P(correct) over the current candidate and, per step, chooses a cheap critic, a regeneration, or the expensive oracle verifier by comparing Q-values that subtract each action's measured cost. Costs are logged from deployment (latency, tokens, API cost), giving a slow-oracle regime (Cver=90) and a fast-oracle regime (Cver=5). Pooling 7,020 sweep points over the (prior, Cver/R) plane yields three regimes: Bayesian control wins when Cver/R is at least ~1 (verification as costly as the reward), a single public-test gate wins at moderate cost when that critic is near-oracle, and always-verify wins when verification is cheap or the prior pass rate is already high. On SWE-Bench Lite both Bayesian controllers beat always-verify while best-of-3, Self-Refine, and Reflexion underperform it.",
+          "why": "The routing/cost thesis made rigorous: never treat an unknown action cost as zero, record cost facts first, and let the cost-to-reward ratio pick the schedule. Fan-out and always-on verification lose precisely where verification is expensive; a cost-aware cascade that gates on cheap critics and verifies only past a posterior threshold wins there — and the always-verify pocket shows orchestration is itself a cost that can exceed its benefit."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260622673L",
+      "title": "AgentLens: Interpretable Safety Steering via Mechanistic Subspaces for Multi-Turn Coding Agent",
+      "firstAuthor": "Luo, Weidi",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.22673",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260622673L/abstract",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "A white-box runtime defense for multi-turn coding agents that drive a shell in Docker. At each step it reads the last-token hidden state at one layer and runs a single linear probe to flag a harmful execution state; on a flag it steers the representation inside a sparse 10-dimensional subspace, adapting only the steering strength via an LLM judge scoring safety (0.6) and utility (0.4). It detects current-step risk at 97.32% average accuracy, predicts the next harmful command at up to 96.77% lookahead, and cuts average attack success from 85.99% to 13.36% (72.63 pp), beating RepE and self-reminder. Negative steering of the same subspace flips genuine refusals into malicious commands (100% ASR on LLaMA), confirming the direction is causal not lexical; under prompt injection the probe misfires but applying the steering direction still drops ASR 86.7%->6.7%.",
+          "why": "Coding agents that run a shell are an OS-level attack surface where harm accumulates across turns and injection enters through tool output, not the user instruction. This shows governance can move inside the model — step-level detection plus representation-level mitigation — but the bidirectional causal result is also a warning: the same subspace that enforces refusal can be reversed to strip alignment, and the 18.54% generation-collapse rate marks the deployment limit."
+        }
+      ]
     }
   ],
   "sections": [

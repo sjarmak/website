@@ -2616,6 +2616,31 @@
           "why": "Reporting whether a final evolved agent scores higher hides whether an update was reusable, overfit the recent tasks, raised cost, or harmed older behavior. Separating these views is the methodological move that makes self-evolution evaluable instead of summarized by a single curve."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626806H",
+      "title": "Memory Depth, Not Memory Access: Selective Parametric Consolidation for Long-Running Language Agents",
+      "firstAuthor": "Han, Haoliang",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.26806",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626806H/abstract",
+      "branches": [
+        "architectures",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "Splits agent memory into two architectures with distinct jobs: non-parametric retrieval (a durable embedding index, top-3 cosine) answers 'what can be fetched', and a small parametric store (a LoRA adapter) answers 'what should keep shaping behavior after working context is unloaded'. The parametric path is EVAF: a surprise-times-valence gate admits only behavior-relevant events to a fixed-size buffer, and on fill the LoRA adapter is updated with replay plus an L2 anchor as drift guards. The paper decomposes consolidation into two separable, independently controllable dimensions — selection (which events admit) and actuation (inner-loop write strength) — and shows they are separable factors but not independent online dynamics: selection drives actuation, and actuation feeds back into future selection through model-state-dependent surprise scores. A routed EVAF+RAG variant sends factual probes to retrieval and goal probes to EVAF, testing the two as complementary rather than competing.",
+          "why": "A concrete parametric-vs-non-parametric architecture with an explicit consolidation mechanism and a specialized retrieval split — the 'beyond the basics' design space. The selection/actuation factorization is a reusable design vocabulary: a memory architecture must get both 'admit the right events' and 'write them at the right strength' correct, and the two are tunable controls, not one knob."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Frames consolidation on the complementary-learning-systems analogy (fast episodic plus slow consolidating stores) but states it is motivation only, not a biological model. Consolidation is measured by write economy and bounded drift, not task accuracy: EVAF reaches goal persistence and post-unload recovery of 0.812–0.904 with only 2–3 parametric writes per 200 events (L2 drift ~21–29), while Naive-LoRA writes every event (200 writes, L2 drift ~67 on TinyLlama, ~119 on GPT-2) and still fails the goal layer — so writing everything is not enough. Stability-plasticity is handled with replay plus an L2/EWC-style anchor. The unresolved boundary is stale-memory obsolescence: on public Memora event streams EVAF improves forgetting-absence only 91/222 to 95/222 (McNemar p=0.57, not significant), and negative-gradient/anti-training forgetting variants were unstable — append-only selective consolidation does not solve delete/update validity.",
+          "why": "Directly answers how (or whether) consolidation and forgetting get measured: this paper measures consolidation by write economy and drift rather than recall, and bounds the negative result honestly — catastrophic-forgetting tools (replay, EWC, anti-training) help durable goals but fail at obsolescence. A clean datapoint that durable retention and stale-memory invalidation are different problems, and anti-training is the wrong object for the latter."
+        }
+      ]
     }
   ],
   "sections": [

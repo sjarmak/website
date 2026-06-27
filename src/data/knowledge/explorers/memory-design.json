@@ -1238,6 +1238,31 @@
           "why": "It is direct evidence for the branch's core claim—that you must separate whether the right memory was surfaced from whether the final answer was right. Reporting one pooled accuracy number conflates the two and points optimization at storage and retrieval when the real bottleneck is using evidence that is already in hand."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626806H",
+      "title": "Memory Depth, Not Memory Access: Selective Parametric Consolidation for Long-Running Language Agents",
+      "firstAuthor": "Han, Haoliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26806",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626806H/abstract",
+      "branches": [
+        "consolidation",
+        "forgetting"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Consolidation here is not LLM summarization — it is gradient writes into a LoRA adapter, gated by a surprise-times-valence score and triggered only when a fixed-size buffer fills. Turning turns into durable memory is two separable decisions, and getting either wrong fails: (1) selection — a matched-random gate with the same write count and online write dynamics but randomly admitted events loses to EVAF on GPT-2 (mean goal/post 0.790/0.763 vs 0.590/0.619 across four seeds), so selection is not reducible to writing fewer events; (2) actuation — fixed-inner controls show write strength is a distinct, model-dependent factor, and over-actuation degrades both persistence and selectivity. A durable RAG index keeps raw episodic traces (and wins shallow factual recall, 0.956–0.973) while the parametric store holds the consolidated goal abstraction that survives context unload. The failure mode of letting the model rewrite its own memory: at 7B, indiscriminate Naive-LoRA writing is actively harmful — goal persistence collapses to 0.333±0.047, below the 0.500 chance baseline.",
+          "why": "Addresses when (and whether) to run a write and the failure modes of self-rewriting memory: the gate decides when an event earns a durable write (2–3 per 200 events), and the model controls quantify that more writing is worse, not better. The selection/actuation split is a transferable design contract — admit-decision and write-strength are independent knobs with asymmetric feedback, so a system that only tunes sparsity is under-specified."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Decay/salience is the admission gate plus drift guards: surprise (token NLL) and valence (similarity to the user's durable goal) decide salience, and an L2 anchor plus replay bound interference-style drift so distractor, transient-opposite, conflict, and sibling-user-contamination events do not overwrite goals (EVAF keeps lowest sibling contamination among parametric methods, 0.787±0.041). Consolidation is the slow CLS-style store, used as motivation only. The lifecycle finding is that forgetting is explicitly NOT solved: on Memora (which adds memory mutation and stale evidence), append-only consolidation does not invalidate stale memory — directionally positive but non-significant (91/222 to 95/222, p=0.57). Negative-CE/anti-training variants were unstable, so the paper argues the right object for stale-memory invalidation is validity-gated reactivation or reconsolidation, not anti-training; high-actuation regimes also raise contamination (Fixed-1 saturates at 1.000 on Mistral).",
+          "why": "Targets the lifecycle question — salience, interference-based forgetting, consolidation phases, and when a memory should be dropped. The paper demarcates two stages: durable retention (solved, via gating plus drift guards) versus obsolescence/invalidation (open). The design takeaway is that decay-by-anti-training is the wrong mechanism, and obsolescence needs an explicit validity/reconsolidation step separate from the consolidation write path."
+        }
+      ]
     }
   ],
   "sections": [
