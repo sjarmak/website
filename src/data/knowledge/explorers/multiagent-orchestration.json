@@ -1999,6 +1999,25 @@
           "why": "A 2026 reliability-reckoning paper with a named system hitting exactly the frontier axes: causal attribution (replay oracle ground truth), explicit cost bounds, and regime-dependent behavior, while refusing to over-claim about where cheap structural signals already suffice."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260623752B",
+      "title": "ESAA-Conversational: An Event-Sourced Memory Layer for Continuity, Handoff, and Curation Across Heterogeneous LLM Coding Agents",
+      "firstAuthor": "Brito dos Santos Filho, Elzo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.23752",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260623752B/abstract",
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "The shared substrate is a single append-only event log written by all agents, with workspace_root as a mandatory isolation boundary and agent_id tagging each turn. Conventions (handoff.md, decisions.md) and identity precipitate out as deterministic projections; a cold agent enters through handoff.md plus a paginated context window rather than the full log.",
+          "why": "A worked example of the shared-memory substrate for an agent team — governance (workspace isolation, a single-writer lockfile, the append-only contract) and identity are built into the event schema itself."
+        }
+      ]
     }
   ],
   "sections": [

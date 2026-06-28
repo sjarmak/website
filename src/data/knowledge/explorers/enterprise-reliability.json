@@ -1205,6 +1205,50 @@
           "why": "Coding agents that run a shell are an OS-level attack surface where harm accumulates across turns and injection enters through tool output, not the user instruction. This shows governance can move inside the model — step-level detection plus representation-level mitigation — but the bidirectional causal result is also a warning: the same subspace that enforces refusal can be reversed to strip alignment, and the 18.54% generation-collapse rate marks the deployment limit."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260623752B",
+      "title": "ESAA-Conversational: An Event-Sourced Memory Layer for Continuity, Handoff, and Curation Across Heterogeneous LLM Coding Agents",
+      "firstAuthor": "Brito dos Santos Filho, Elzo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.23752",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260623752B/abstract",
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Replaces lossy manual context copy-paste between agents with durable event-sourced state: visible turns are captured into an append-only log and projected into a handoff.md entry contract the next agent reads first. Motivated by long-context attention degradation, the cold agent reads compact read models plus a selective window, not the whole transcript.",
+          "why": "A direct instance of 'durable state beats conversational handoff' — continuity across agent sessions is reframed as an event-sourcing problem rather than a conversational one."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260626978L",
+      "title": "To Run or Not to Run: Analyzing the Cost-Effectiveness of Code Execution in LLM-Based Program Repair",
+      "firstAuthor": "Lin, Zhihao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26978",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626978L/abstract",
+      "branches": [
+        "routing",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "A controlled study holding the agent scaffold fixed (Claude Code, Codex, OpenCode) and varying only execution access across four paradigms: prohibiting test execution costs only a 1.25pp resolve-rate drop on commercial agents (not significant, p>0.05; ≈0pp for OpenCode) while saving 56–62% tokens and 48–54% wall-clock on Claude Code and removing per-repository test-environment upkeep. Agents average 8.8 runs/task (range 2–19) and apply execution indiscriminately.",
+          "why": "Quantifies the cost facts of a capability agents treat as free — execution carries a real, mostly-unjustified token, latency, and infrastructure bill, and should be scheduled by cost-benefit rather than run by default."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Execution benefit is concentrated, not uniform: 54–66% of commercial-agent cases resolve in a single edit, and 81–100% of *failed* cases pass the agent's own executed validation yet fail the official SWE-bench evaluation; OpenCode/Qwen2.5-Coder-32B instead over-retries with only 11% of failed cases passing self-validation.",
+          "why": "The agent's execution-based self-check is a miscalibrated success signal — passing self-validation is not ground truth — which is exactly the honest-baseline, calibrated-evaluation problem this branch is about."
+        }
+      ]
     }
   ],
   "sections": [

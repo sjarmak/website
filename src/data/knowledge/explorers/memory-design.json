@@ -1263,6 +1263,37 @@
           "why": "Targets the lifecycle question — salience, interference-based forgetting, consolidation phases, and when a memory should be dropped. The paper demarcates two stages: durable retention (solved, via gating plus drift guards) versus obsolescence/invalidation (open). The design takeaway is that decay-by-anti-training is the wrong mechanism, and obsolescence needs an explicit validity/reconsolidation step separate from the consolidation write path."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260623752B",
+      "title": "ESAA-Conversational: An Event-Sourced Memory Layer for Continuity, Handoff, and Curation Across Heterogeneous LLM Coding Agents",
+      "firstAuthor": "Brito dos Santos Filho, Elzo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.23752",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260623752B/abstract",
+      "branches": [
+        "multiagent",
+        "consolidation",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "multiagent",
+          "takeaway": "Heterogeneous agents (Codex, Claude Code, Grok) share one append-only activity.jsonl; no direct agent-to-agent channel exists — an agent gets a focused view of another's recent work via `context --agent grok --last 20`. In the 570-event case study three agents co-designed the tool through the shared log alone.",
+          "why": "A concrete shared-substrate design for keeping a multi-agent team coherent without dumping full chat logs — each agent reads a projected, filtered window of the common store rather than the whole transcript."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "A hard boundary separates mechanical capture from curation: turns are captured deterministically with no LLM inference, while durable knowledge enters only through explicit `decide`/`task` commands (decision.recorded, task.created/updated/closed). Read models are projected, never an LLM rewriting its own store.",
+          "why": "Stakes out the 'whether to run an LLM to consolidate' question on the deterministic side, and sidesteps the failure mode of a model continuously rewriting its own memory."
+        },
+        {
+          "branch": "representation",
+          "takeaway": "Memory is an event-sourced append-only log (activity.jsonl) as the single source of truth; state.md, handoff.md, decisions.md, and tasks.json are reconstructible CQRS-style projections, not editable surfaces. Topic retrieval is purely textual; embeddings are explicitly deferred to derived projections that must not become the truth.",
+          "why": "An event-grounded episodic representation positioned against vector-RAG memory — the architectural claim is that semantic indexes belong downstream of an immutable event store, never as its source of truth."
+        }
+      ]
     }
   ],
   "sections": [
