@@ -1249,6 +1249,31 @@
           "why": "The agent's execution-based self-check is a miscalibrated success signal — passing self-validation is not ground truth — which is exactly the honest-baseline, calibrated-evaluation problem this branch is about."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260622902Z",
+      "title": "Agent-as-a-Router: Agentic Model Routing for Coding Tasks",
+      "firstAuthor": "Zhou, Pengfei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.22902",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260622902Z/abstract",
+      "branches": [
+        "routing",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Frames per-task model selection as a Context→Action→Feedback loop (a contextual bandit): the router picks a model, runs its output in a sandbox to get a verified score and the token-derived monetary cost, then memorizes that outcome for the next decision. ACRouter reaches the lowest cumulative regret (205.5) and highest AvgPerf (49.98%) on the in-distribution stream — beating DimensionBest, which holds a full dimension-level prior, by 2.48% AvgPerf — while keeping Perf/$ above always-using-the-strongest model (3.79 vs 1.29 ID; 1.18 vs 0.64 OOD).",
+          "why": "A concrete adaptive router that records cost facts per decision (never treating unknown cost as zero) and conditions on accumulated outcomes beats always-on use of the strongest model — the cost-and-routing pillar made measurable."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "An ablation isolates the router's bottleneck as information deficit, not reasoning: handing a zero-shot LLM router per-dimension performance statistics lifts AvgPerf 15.3% (41.41→47.74) and beats the heuristic encoding the same priors. CodeRouterBench grounds every score in sandbox execution across ~10K tasks and 8 frontier LLMs and scores routers by cumulative regret against a per-task oracle rather than by self-report.",
+          "why": "Models the evaluation pillar: anchor on an honest baseline (the per-task oracle / cumulative regret) and verify each decision by execution instead of trusting model self-assessment."
+        }
+      ]
     }
   ],
   "sections": [
