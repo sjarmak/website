@@ -1718,6 +1718,31 @@
           "why": "Speaks to the enterprise branch's evaluation crisis: the benchmark builds temporally grounded, anti-leakage corpora (pre-PR checkout, LLM filtering of answer-leaking descriptions) and shows that standard code-search scores overstate a retriever's real usefulness to a coding agent."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626979L",
+      "title": "How Much Static Structure Do Code Agents Need? A Study of Deterministic Anchoring",
+      "firstAuthor": "Lin, Zhihao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26979",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626979L/abstract",
+      "branches": [
+        "repo-scale",
+        "techniques"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "Injecting offline-computed structural facts (call/inheritance/data-flow/config edges from PyCG plus AST extractors) as inline plain-text tags makes grep-first repository navigation deterministic: link-following rate rises from 0.15-0.18 to 0.21-0.24, run-to-run variance roughly halves, and trajectories shorten by 1.6 rounds. The right configuration is scale-dependent: medium repos (~35k LOC) favor bidirectional links, while large hub-heavy repos do better with inverse-only 'who-calls-me' edges that suppress high-degree helper noise.",
+          "why": "Concrete evidence for the repo-scale fork: instead of choosing retrieve-better-snippets versus query-a-code-graph, CodeAnchor folds a lightweight structured model back into the text view the agent already searches, and measures the navigation-versus-scale tradeoff that defines treating a repository as a world to traverse rather than a file to read."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "Keeps lexical grep as the retrieval substrate and layers structure on top rather than replacing it: static call/inheritance topology yields +2.2pp Func@5 and +3.4pp Pass@1 on medium repos, while denser data-/config-flow tags saturate (+4.9 interaction rounds of overhead on Lite) and only pay off on the few implicit-dependency cases (3/274 Lite, 15/500 Verified), at roughly 10% more input tokens.",
+          "why": "Empirically instantiates the additive-ladder claim: lexical retrieval is retained for what it does well, structural/graph edges are added where behavior matters, and the diminishing returns of dense semantics show why each rung must be cost-justified rather than always-on."
+        }
+      ]
     }
   ],
   "sections": [
