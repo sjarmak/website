@@ -367,6 +367,25 @@
           "why": "Points toward a single model that retrieves, reasons, and writes — erasing the retriever/generator boundary."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260629648Y",
+      "title": "Hybrid Retriever Evolution for Multimodal Document Reasoning Agents",
+      "firstAuthor": "Yao, Bohan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.29648",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260629648Y/abstract",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Makes retrieval orchestration itself the thing that is learned: a task agent chooses per step among BM25, ColBERT, ColPali, and a VLM page-retrieval tool, while an offline meta-agent inspects failed trajectories, probes the same tool environment with executable analysis code, and rewrites the task agent's instructions. The evolved agent gains up to +19.6 points (42.4% to 62.0% on MMLongBench-Doc with Gemini 3.1 Flash) without changing retrievers, tools, or backbone.",
+          "why": "Pushes this branch's retrieve-as-action idea one level up: not just when to retrieve but which retriever to invoke and how to compose cross-modal evidence, discovered through failure-driven evolution rather than a hardcoded pipeline."
+        }
+      ]
     }
   ],
   "sections": [

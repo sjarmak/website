@@ -2018,6 +2018,25 @@
           "why": "A worked example of the shared-memory substrate for an agent team — governance (workspace isolation, a single-writer lockfile, the append-only contract) and identity are built into the event schema itself."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626294I",
+      "title": "The Red Queen Gödel Machine: Co-Evolving Agents and Their Evaluators",
+      "firstAuthor": "Iacob, Alex",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26294",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626294I/abstract",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Extends Gödel-machine-style recursive self-improvement to non-stationary utilities: each archive node is a multi-agent workspace holding task agents and learned evaluators that co-evolve, with Thompson sampling over clade metaproductivity steering the search. Co-evolved writers reach 1.78–1.86× higher paper-acceptance rates under a diverse judge panel and a co-evolved grader reaches 9% higher ground-truth accuracy than static baselines.",
+          "why": "A named system with real numbers for the co-evolution frontier: evaluation itself becomes an evolving component of the agent system, with convergence guarantees held per epoch rather than abandoned."
+        }
+      ]
     }
   ],
   "sections": [

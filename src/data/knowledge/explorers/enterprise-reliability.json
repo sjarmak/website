@@ -1274,6 +1274,101 @@
           "why": "Models the evaluation pillar: anchor on an honest baseline (the per-task oracle / cumulative regret) and verify each decision by execution instead of trusting model self-assessment."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626300W",
+      "title": "The Verification Horizon: No Silver Bullet for Coding Agent Rewards",
+      "firstAuthor": "Wang, Binghai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26300",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626300W/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Characterizes verification signals along three axes (scalability, faithfulness, robustness) and shows no verifier achieves all three: unit tests are scalable and robust but cover a thin layer of intent, LLM judges are scalable and faithful but gameable, human review is faithful and robust but cannot scale. Adding an agentic quality judge plus trajectory-level behavior monitoring to test-driven rewards cut the hacked resolved rate across three SWE-Bench variants from 28.57% to 0.56% while raising the clean resolved rate from 40.22% to 60.53%.",
+          "why": "Direct evidence for this branch's stance that eval is risk reduction, not proof: no fixed reward function survives a strengthening policy, so verification has to co-evolve with the generator rather than be built once."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260626294I",
+      "title": "The Red Queen Gödel Machine: Co-Evolving Agents and Their Evaluators",
+      "firstAuthor": "Iacob, Alex",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26294",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626294I/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Makes the evaluator part of the self-improvement search: epochs run with a frozen evaluator, a challenger is promoted at an epoch boundary only if it statistically beats the incumbent on held-out ground truth, and utility records scored by the displaced evaluator are selectively erased. A co-evolved agent-as-a-judge code reviewer lifts held-out Polyglot pass rate to 71.7% against the prior SOTA's 69.9% with 1.35–1.72× fewer search tokens.",
+          "why": "Concrete machinery for judge calibration under optimization pressure: static verifiers saturate or get hacked, and the paper answers with per-epoch stationarity plus evaluator replacement, including an adversarial epoch that debiased a reviewer over-accepting AI-generated papers at up to 1.91× the human rate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260628436Z",
+      "title": "Dockerless: Environment-Free Program Verifier for Coding Agents",
+      "firstAuthor": "Zeng, Wenhao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.28436",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260628436Z/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Verifies patches without executing them: the verifier derives verification questions from the issue and reference patch, dispatches parallel read-only sub-agents (find, grep, rg) to gather repository evidence, and turns a binary verdict token's logits into a continuous score. Trained by rejection sampling on 3.7K execution-labeled issues, it beats the strongest open-source verifier by 14.3 AUC points and powers a fully environment-free SFT+RL pipeline that matches environment-based post-training (62.0/50.0/35.2 on SWE-bench Verified/Multilingual/Pro).",
+          "why": "Grounds this branch's execution-first maxim from the other side: where per-repository Docker environments are infeasible (private, legacy, enterprise codebases), repository-grounded agentic judgment rather than surface patch matching is what keeps the reward signal honest."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701211C",
+      "title": "Are Performance-Optimization Benchmarks Reliably Measuring Coding Agents?",
+      "firstAuthor": "Chen, Zhi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01211",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701211C/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Cross-machine replay of 740 official reference patches on four Google Cloud machine types shows the reference signal of performance benchmarks is far less stable than assumed: only 39/102 GSO, 11/140 SWE-Perf, and 411/498 SWE-fficiency tasks stay valid under their own rules in every replay, and scoring rules alone flip 9 of 28 pairwise submission comparisons, with SWE-fficiency's ten worst tasks carrying 58.5–82.8% of a submission's score weight.",
+          "why": "A worked example of this branch's honest-baseline demand: leaderboard aggregates conflate runtime noise, scoring-rule leverage, and task saturation. At least one public submission already beats the base code on 99.8% of replay-valid tasks, so aggregate rankings hide where the real capability gaps remain."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701087D",
+      "title": "Cheap Code, Costly Judgment: A Case Study on Governable Agentic Software Engineering",
+      "firstAuthor": "Davis, James C.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01087",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701087D/abstract",
+      "branches": [
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "From a 12-week first-person case (88 contemporaneous field notes, 420 KLOC production code, 1.16 MLOC tests, lints, docs, and agent tooling) it derives 'governance conversion': agentic velocity surfaces recurring structural failure classes, and the scarce human work is not implementation-level review but recognizing which failures reveal missing governance and converting them into durable architecture and controls.",
+          "why": "Reframes this branch's oversight question: keeping a human near the implementation loop makes attention the throughput bottleneck, so the sustainable role is ex-post, converting observed failures into the engineering environment that constrains subsequent agent work."
+        }
+      ]
     }
   ],
   "sections": [
