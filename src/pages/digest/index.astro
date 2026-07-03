@@ -13,9 +13,9 @@ const { series: podcastSeries, standalone: podcastStandalone } = await getPodcas
 // Transcripts joined to episodes by audioUrl, so each deep-dive can be read as well as heard.
 const transcriptByAudio = new Map((await getCollection("transcripts")).map((t) => [t.data.audioUrl, t] as const));
 
-// Only the last week of issues renders here; the full archive lives at /digest/archive.
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-const cutoff = Date.now() - WEEK_MS;
+// Only the last two days of issues render here; the full archive lives at /digest/archive.
+const WINDOW_MS = 2 * 24 * 60 * 60 * 1000;
+const cutoff = Date.now() - WINDOW_MS;
 const recentIssues = digests.filter((d) => d.date.getTime() >= cutoff);
 
 // Conference field notes: essays tagged "field-notes" plus their companion podcast
@@ -31,6 +31,10 @@ const standaloneEpisodes = podcastStandalone.filter((ep) => ep.hub !== "field-no
 function topicLabel(slug: string): string {
   return slug.replace(/-/g, " ");
 }
+
+function anchorOf(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 ---
 
 <PageLayout
@@ -39,8 +43,21 @@ function topicLabel(slug: string): string {
   intro="Issues published from my reading: a written newsletter, and for some, a podcast. Curated issues are ones I hand-pick; automated ones come out of my code-intelligence-digest pipeline. Specialized issues go deep on this site's core topics; general issues round up the highest-signal news across the agentic field. Filter by format, source, track, or topic."
 >
   <div class="stack stack-l">
+    <!-- section nav — everything this page holds, one jump away -->
+    <nav class="section-nav" aria-label="Digest sections">
+      <a href="#issues">Latest issues</a>
+      {fieldNotePosts.length > 0 && <a href="#field-notes">Field notes</a>}
+      {(podcastSeries.length > 0 || standaloneEpisodes.length > 0) && <a href="#deep-dives">Literature deep dives</a>}
+      {podcastSeries.map((s: PodcastSeries) => (
+        <a class="section-nav__series" href={`#${anchorOf(s.name)}`}>
+          {s.name}
+        </a>
+      ))}
+      <a href="/digest/archive">Archive →</a>
+    </nav>
+
     <!-- filter bar — two axes: format (audio vs newsletter) and source (curated vs automated) -->
-    <form class="digest-filters" id="digest-filters" aria-label="Filter digests">
+    <form class="digest-filters" id="issues" aria-label="Filter digests">
       <label class="field">
         <span class="field__label">Format</span>
         <select id="f-format">
@@ -79,7 +96,7 @@ function topicLabel(slug: string): string {
     </form>
 
     <p class="digest-count muted">
-      <span id="digest-count">{recentIssues.length} issues from the last week</span>
+      <span id="digest-count">{recentIssues.length} issues from the last two days</span>
       {" · "}
       <a href="/digest/archive">browse all {digests.length} in the archive →</a>
     </p>
@@ -92,7 +109,7 @@ function topicLabel(slug: string): string {
 
     {
       (fieldNotePosts.length > 0 || fieldNoteEpisodes.length > 0) && (
-        <section class="field-notes">
+        <section class="field-notes" id="field-notes">
           <h2 class="sub">Field notes</h2>
           <p class="muted measure" style="margin-block-end: var(--space-m)">
             Automated conference notes: essays agent-distilled from talk recordings, with a companion podcast episode.
@@ -129,14 +146,14 @@ function topicLabel(slug: string): string {
 
     {
       (podcastSeries.length > 0 || standaloneEpisodes.length > 0) && (
-        <section class="deep-dives">
+        <section class="deep-dives" id="deep-dives">
           <h2 class="sub">Deep-dive series</h2>
           <p class="muted measure" style="margin-block-end: var(--space-m)">
             Literature-survey episodes that walk a whole theme from the explorers. Listen inline, or download the audio.
           </p>
           <div class="stack stack-l">
             {podcastSeries.map((s: PodcastSeries) => (
-              <div>
+              <div class="pod-series-block" id={anchorOf(s.name)}>
                 <h3 class="pod-series">{s.name}</h3>
                 <ul role="list" class="stack">
                   {s.episodes.map((ep: PodcastEpisode) => {
@@ -239,6 +256,44 @@ function topicLabel(slug: string): string {
 </script>
 
 <style>
+  /* ---- section nav (top-of-page discovery) ---- */
+  .section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .section-nav a {
+    display: inline-block;
+    padding: 0.25em 0.8em;
+    border: var(--border-hairline);
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition:
+      color 0.12s ease,
+      border-color 0.12s ease;
+  }
+
+  .section-nav a:hover {
+    color: var(--color-accent);
+    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
+  }
+
+  .section-nav__series {
+    font-size: var(--step--2);
+  }
+
+  #issues,
+  #field-notes,
+  #deep-dives,
+  .pod-series-block {
+    scroll-margin-block-start: var(--space-l);
+  }
+
   .digest-filters {
     display: flex;
     flex-wrap: wrap;
