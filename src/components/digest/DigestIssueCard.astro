@@ -1,0 +1,152 @@
+---
+import type { DigestIssue } from "@/lib/knowledge/types";
+import { fullDate } from "@/lib/dates";
+
+interface Props {
+  issue: DigestIssue;
+}
+
+const { issue: d } = Astro.props;
+
+const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  monthly: "Monthly",
+};
+
+const TRACK_LABEL: Record<DigestIssue["track"], string> = {
+  specialized: "Specialized",
+  general: "General",
+};
+
+const source = d.origin === "manual" ? "curated" : "automated";
+const hasAudio = Boolean(d.audioUrl || d.embedUrl);
+const format = hasAudio ? "audio" : "newsletter";
+const mins = d.durationSec ? `${Math.round(d.durationSec / 60)} min` : null;
+
+function topicLabel(slug: string): string {
+  return slug.replace(/-/g, " ");
+}
+---
+
+<li
+  class="lib-card digest-card"
+  data-source={source}
+  data-format={format}
+  data-track={d.track}
+  data-topics={d.topics.join(" ")}
+  data-text={`${d.title} ${d.summary}`.toLowerCase()}
+>
+  <div class="digest-card__meta">
+    <span class={`badge badge--source-${source}`}>{source === "curated" ? "Curated" : "Automated"}</span>
+    <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
+    <span class={`badge badge--track-${d.track}`}>{TRACK_LABEL[d.track]}</span>
+    <span class="muted">{fullDate(d.date)}</span>
+    {
+      hasAudio ? (
+        <span class="digest-card__pod" title="Includes a podcast episode">
+          🎧 {mins ?? "audio"}
+        </span>
+      ) : (
+        <span class="digest-card__fmt" title="Written newsletter">
+          ✉ Newsletter
+        </span>
+      )
+    }
+  </div>
+  <h3 class="lib-card__title">
+    <a href={`/digest/${d.slug}`}>{d.title}</a>
+  </h3>
+  <p class="lib-card__desc">{d.summary}</p>
+  {
+    d.topics.length > 0 && (
+      <div class="cluster" style="--cluster-gap: var(--space-2xs)">
+        {d.topics.map((t) => (
+          <span class="tag">{topicLabel(t)}</span>
+        ))}
+      </div>
+    )
+  }
+  <p class="lib-card__count">
+    {d.linkCount} {d.linkCount === 1 ? "link" : "links"}
+  </p>
+</li>
+
+<style>
+  .digest-card {
+    gap: var(--space-xs);
+  }
+
+  .digest-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .digest-card__pod {
+    color: var(--color-accent);
+  }
+
+  .digest-card__fmt {
+    color: var(--color-text-muted);
+  }
+
+  .digest-card .lib-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .digest-card .lib-card__title a:hover {
+    color: var(--color-accent);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.1em 0.6em;
+    border-radius: var(--radius);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+  }
+
+  .badge--daily {
+    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
+    color: var(--color-accent);
+  }
+
+  .badge--weekly {
+    border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
+  }
+
+  .badge--monthly {
+    border-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-border));
+  }
+
+  /* track badges — "specialized" carries the accent, "general" stays neutral */
+  .badge--track-specialized {
+    border-color: color-mix(in oklch, var(--color-accent) 35%, var(--color-border));
+  }
+
+  .badge--track-general {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  /* source badges — "curated" reads as the deliberate, hand-picked one */
+  .badge--source-curated {
+    border-color: color-mix(in oklch, var(--color-accent) 55%, var(--color-border));
+    color: var(--color-accent);
+    background: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  }
+
+  .badge--source-automated {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+</style>

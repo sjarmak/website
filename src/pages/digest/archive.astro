@@ -1,0 +1,112 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import DigestIssueCard from "@/components/digest/DigestIssueCard.astro";
+import { getDigests } from "@/lib/knowledge/build";
+import type { DigestIssue } from "@/lib/knowledge/types";
+
+const digests: DigestIssue[] = await getDigests();
+
+// Issues grouped by month, newest first (getDigests is already date-descending).
+interface MonthGroup {
+  label: string;
+  anchor: string;
+  issues: DigestIssue[];
+}
+
+const groups: MonthGroup[] = [];
+for (const d of digests) {
+  const label = d.date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const anchor = label.toLowerCase().replace(/\s+/g, "-");
+  const last = groups.at(-1);
+  if (last && last.anchor === anchor) {
+    last.issues.push(d);
+  } else {
+    groups.push({ label, anchor, issues: [d] });
+  }
+}
+---
+
+<PageLayout
+  title="Digest archive"
+  kicker="Research"
+  intro="Every digest issue, grouped by month. The current week's issues live on the main digest page."
+>
+  <div class="stack stack-l">
+    <nav class="month-nav" aria-label="Jump to month">
+      {groups.map((g) => (
+        <a href={`#${g.anchor}`}>{g.label}</a>
+      ))}
+    </nav>
+
+    {
+      groups.map((g) => (
+        <section id={g.anchor} class="month-group">
+          <h2 class="sub">
+            {g.label} <span class="muted month-count">· {g.issues.length} issues</span>
+          </h2>
+          <ul role="list" class="auto-grid" style="--grid-min: 20rem; --grid-gap: var(--space-m)">
+            {g.issues.map((d) => (
+              <DigestIssueCard issue={d} />
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <p class="crosslink muted">
+      <a href="/digest">← Back to the digest</a> · <a href="/digest/rss.xml">Subscribe via RSS →</a>
+    </p>
+  </div>
+</PageLayout>
+
+<style>
+  .month-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    padding: var(--space-s) var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+  }
+
+  .month-nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .month-nav a:hover {
+    color: var(--color-accent);
+  }
+
+  .month-group {
+    scroll-margin-block-start: var(--space-l);
+  }
+
+  .month-group .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-s);
+  }
+
+  .month-count {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .crosslink {
+    font-size: var(--step-0);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .crosslink a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .crosslink a:hover {
+    text-decoration: underline;
+  }
+</style>

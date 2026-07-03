@@ -167,6 +167,8 @@ export interface PodcastEpisode {
   description: string;
   audioUrl?: string;
   embedUrl?: string;
+  /** Page section this episode belongs to (e.g. "field-notes") instead of the deep-dive list. */
+  hub?: string;
 }
 
 export interface PodcastSeries {

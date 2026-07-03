@@ -219,6 +219,7 @@ const learning = defineCollection({
     embedUrl: z.string().url().optional(), // Spotify/YouTube/etc embed
     series: z.string().optional(), // podcast series grouping
     episode: z.number().optional(),
+    hub: z.string().optional(), // page section this episode belongs to (e.g. "field-notes")
     meta: z.string().optional(), // e.g. "108 papers · 9 themes"
     date: z.coerce.date().optional(),
     order: z.number().optional(),

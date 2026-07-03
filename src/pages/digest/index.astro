@@ -2,9 +2,9 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/PageLayout.astro";
 import Transcript from "@/components/knowledge/Transcript.astro";
+import DigestIssueCard from "@/components/digest/DigestIssueCard.astro";
 import { getDigests, getDigestTopics, getPodcasts } from "@/lib/knowledge/build";
 import type { DigestIssue, PodcastSeries, PodcastEpisode } from "@/lib/knowledge/types";
-import { fullDate } from "@/lib/dates";
 
 const digests: DigestIssue[] = await getDigests();
 const topics: string[] = await getDigestTopics();
@@ -13,35 +13,23 @@ const { series: podcastSeries, standalone: podcastStandalone } = await getPodcas
 // Transcripts joined to episodes by audioUrl, so each deep-dive can be read as well as heard.
 const transcriptByAudio = new Map((await getCollection("transcripts")).map((t) => [t.data.audioUrl, t] as const));
 
-const CADENCE_LABEL: Record<DigestIssue["cadence"], string> = {
-  daily: "Daily",
-  weekly: "Weekly",
-  monthly: "Monthly",
-};
+// Only the last week of issues renders here; the full archive lives at /digest/archive.
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const cutoff = Date.now() - WEEK_MS;
+const recentIssues = digests.filter((d) => d.date.getTime() >= cutoff);
 
-const TRACK_LABEL: Record<DigestIssue["track"], string> = {
-  specialized: "Specialized",
-  general: "General",
-};
-
-// Two axes the page filters on: who made it, and whether it has a podcast.
-function sourceOf(d: DigestIssue): "curated" | "automated" {
-  return d.origin === "manual" ? "curated" : "automated";
-}
-function hasAudio(d: DigestIssue): boolean {
-  return Boolean(d.audioUrl || d.embedUrl);
-}
-function formatOf(d: DigestIssue): "audio" | "newsletter" {
-  return hasAudio(d) ? "audio" : "newsletter";
-}
+// Conference field notes: essays tagged "field-notes" plus their companion podcast
+// episodes (learning entries with hub: field-notes). The hub overview pins first.
+const fieldNotePosts = (await getCollection("posts", (p) => !p.data.draft && p.data.tags.includes("field-notes"))).sort(
+  (a, b) =>
+    (b.id === "wf2026-field-notes" ? 1 : 0) - (a.id === "wf2026-field-notes" ? 1 : 0) ||
+    a.data.title.localeCompare(b.data.title),
+);
+const fieldNoteEpisodes = podcastStandalone.filter((ep) => ep.hub === "field-notes");
+const standaloneEpisodes = podcastStandalone.filter((ep) => ep.hub !== "field-notes");
 
 function topicLabel(slug: string): string {
   return slug.replace(/-/g, " ");
-}
-
-function minutes(sec?: number): string | null {
-  if (!sec) return null;
-  return `${Math.round(sec / 60)} min`;
 }
 ---
 
@@ -90,57 +78,57 @@ function minutes(sec?: number): string | null {
       </label>
     </form>
 
-    <p class="digest-count muted" id="digest-count">{digests.length} issues</p>
+    <p class="digest-count muted">
+      <span id="digest-count">{recentIssues.length} issues from the last week</span>
+      {" · "}
+      <a href="/digest/archive">browse all {digests.length} in the archive →</a>
+    </p>
 
     <ul role="list" class="auto-grid digest-grid" id="digest-grid" style="--grid-min: 20rem; --grid-gap: var(--space-m)">
-      {
-        digests.map((d) => (
-          <li
-            class="lib-card digest-card"
-            data-source={sourceOf(d)}
-            data-format={formatOf(d)}
-            data-track={d.track}
-            data-topics={d.topics.join(" ")}
-            data-text={`${d.title} ${d.summary}`.toLowerCase()}
-          >
-            <div class="digest-card__meta">
-              <span class={`badge badge--source-${sourceOf(d)}`}>
-                {sourceOf(d) === "curated" ? "Curated" : "Automated"}
-              </span>
-              <span class={`badge badge--${d.cadence}`}>{CADENCE_LABEL[d.cadence]}</span>
-              <span class={`badge badge--track-${d.track}`}>{TRACK_LABEL[d.track]}</span>
-              <span class="muted">{fullDate(d.date)}</span>
-              {hasAudio(d) ? (
-                <span class="digest-card__pod" title="Includes a podcast episode">
-                  🎧 {minutes(d.durationSec) ?? "audio"}
-                </span>
-              ) : (
-                <span class="digest-card__fmt" title="Written newsletter">✉ Newsletter</span>
-              )}
-            </div>
-            <h3 class="lib-card__title">
-              <a href={`/digest/${d.slug}`}>{d.title}</a>
-            </h3>
-            <p class="lib-card__desc">{d.summary}</p>
-            {d.topics.length > 0 && (
-              <div class="cluster" style="--cluster-gap: var(--space-2xs)">
-                {d.topics.map((t) => (
-                  <span class="tag">{topicLabel(t)}</span>
-                ))}
-              </div>
-            )}
-            <p class="lib-card__count">
-              {d.linkCount} {d.linkCount === 1 ? "link" : "links"}
-            </p>
-          </li>
-        ))
-      }
+      {recentIssues.map((d) => <DigestIssueCard issue={d} />)}
     </ul>
 
     <p class="digest-empty muted" id="digest-empty" hidden>No issues match those filters.</p>
 
     {
-      (podcastSeries.length > 0 || podcastStandalone.length > 0) && (
+      (fieldNotePosts.length > 0 || fieldNoteEpisodes.length > 0) && (
+        <section class="field-notes">
+          <h2 class="sub">Field notes</h2>
+          <p class="muted measure" style="margin-block-end: var(--space-m)">
+            Automated conference notes: essays agent-distilled from talk recordings, with a companion podcast episode.
+            Names and quotes are approximate where auto-captions garbled them.
+          </p>
+          <ul role="list" class="stack fn-list">
+            {fieldNotePosts.map((p) => (
+              <li class="fn-item">
+                <a class="fn-item__title" href={`/writing/${p.id}`}>
+                  {p.data.title}
+                </a>
+                <p class="muted">{p.data.description}</p>
+              </li>
+            ))}
+          </ul>
+          {fieldNoteEpisodes.map((ep) => {
+            const transcript = ep.audioUrl ? transcriptByAudio.get(ep.audioUrl) : undefined;
+            return (
+              <div class="pod-ep">
+                <span class="pod-ep__title">{ep.title}</span>
+                <p class="muted">{ep.description}</p>
+                {ep.audioUrl && (
+                  <audio controls preload="none">
+                    <source src={ep.audioUrl} type="audio/mpeg" />
+                  </audio>
+                )}
+                {transcript && <Transcript entry={transcript} />}
+              </div>
+            );
+          })}
+        </section>
+      )
+    }
+
+    {
+      (podcastSeries.length > 0 || standaloneEpisodes.length > 0) && (
         <section class="deep-dives">
           <h2 class="sub">Deep-dive series</h2>
           <p class="muted measure" style="margin-block-end: var(--space-m)">
@@ -176,7 +164,7 @@ function minutes(sec?: number): string | null {
                 </ul>
               </div>
             ))}
-            {podcastStandalone.map((ep: PodcastEpisode) => {
+            {standaloneEpisodes.map((ep: PodcastEpisode) => {
               const transcript = ep.audioUrl ? transcriptByAudio.get(ep.audioUrl) : undefined;
               return (
                 <div class="pod-ep">
@@ -305,81 +293,45 @@ function minutes(sec?: number): string | null {
     font-size: var(--step--1);
   }
 
-  .digest-card {
-    gap: var(--space-xs);
-  }
-
-  .digest-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-xs);
-    font-family: var(--font-mono);
-    font-size: var(--step--2);
-  }
-
-  .digest-card__pod {
+  .digest-count a {
     color: var(--color-accent);
+    text-decoration: none;
   }
 
-  .digest-card__fmt {
-    color: var(--color-text-muted);
+  .digest-count a:hover {
+    text-decoration: underline;
   }
 
-  .digest-card .lib-card__title a {
+  /* ---- field notes (conference-notes hub) ---- */
+  .field-notes {
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .field-notes .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .fn-item {
+    padding-block: var(--space-xs);
+    border-bottom: var(--border-hairline);
+  }
+
+  .fn-item__title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
     color: inherit;
     text-decoration: none;
     transition: color 0.12s ease;
   }
 
-  .digest-card .lib-card__title a:hover {
+  .fn-item__title:hover {
     color: var(--color-accent);
   }
 
-  .badge {
-    display: inline-block;
-    padding: 0.1em 0.6em;
-    border-radius: var(--radius);
-    font-size: var(--step--2);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    border: var(--border-hairline);
-    color: var(--color-text-secondary);
-  }
-
-  .badge--daily {
-    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
-    color: var(--color-accent);
-  }
-
-  .badge--weekly {
-    border-color: color-mix(in oklch, var(--color-accent) 25%, var(--color-border));
-  }
-
-  .badge--monthly {
-    border-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-border));
-  }
-
-  /* track badges — "specialized" carries the accent, "general" stays neutral */
-  .badge--track-specialized {
-    border-color: color-mix(in oklch, var(--color-accent) 35%, var(--color-border));
-  }
-
-  .badge--track-general {
-    border-color: var(--color-border);
-    color: var(--color-text-muted);
-  }
-
-  /* source badges — "curated" reads as the deliberate, hand-picked one */
-  .badge--source-curated {
-    border-color: color-mix(in oklch, var(--color-accent) 55%, var(--color-border));
-    color: var(--color-accent);
-    background: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  }
-
-  .badge--source-automated {
-    border-color: var(--color-border);
-    color: var(--color-text-muted);
+  .field-notes .pod-ep {
+    border-bottom: 0;
   }
 
   .crosslink {

@@ -401,6 +401,7 @@ export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalo
       audioUrl: e.data.audioUrl,
       embedUrl: e.data.embedUrl,
       series: e.data.series,
+      hub: e.data.hub,
     }));
 
   const seriesNames = [...new Set(episodes.map((e) => e.series).filter(Boolean))] as string[];
