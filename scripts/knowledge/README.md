@@ -11,6 +11,35 @@ Builds the committed data behind the site's research **libraries** and thematic
 | `src/data/knowledge/explorers.json` | `build_explorers.py` | `src/data/knowledge/explorers/<id>.json` (in-repo) |
 | `src/data/knowledge/paper-synthesis.json` | hand/agent-edited | SciX MCP full text |
 | `src/data/knowledge/embeddings.json` | `build_embeddings.py` | the above (needs the brainstorm venv) |
+| `src/data/knowledge/threads.json` | `build_data.py` | editorial (`LIT_GLOSS` + `THREADS` in that file) |
+| `src/data/knowledge/lit-papers.json`, `citation-edges.json` | `refresh_scix_data.py` | live scix corpus via the scix CLI |
+
+## Research threads
+
+`build_data.py` holds the editorial layer for the research **threads** — which
+papers belong to each thread, the reading order, the framing prose, and a
+one-line gloss per external paper (`LIT_GLOSS`). Edit it in place and re-run to
+regenerate `threads.json`.
+
+The per-paper mechanical metadata (title, author, year, citation count) and the
+co-citation graph edges are **not** hand-maintained — `refresh_scix_data.py`
+fetches them from the live scix corpus via the scix CLI (`get_paper` +
+`citation_similarity`, both DB-only, no embedding model). The `abstract` field in
+`lit-papers.json` is the editorial gloss, preserved verbatim; only mechanical
+fields refresh. Run on the host where scix is installed and the prod DB is
+reachable:
+
+```bash
+# `scix` on PATH, or point SCIX_CLI at the scix interpreter:
+SCIX_CLI='/home/ds/projects/scix_experiments/.venv/bin/python -m scix.cli' \
+  python3 scripts/knowledge/refresh_scix_data.py
+```
+
+It is idempotent, retains a curated paper's prior snapshot metadata if that
+bibcode is briefly absent from the local mirror (with a warning), and aborts
+non-zero **without touching the committed JSON** if scix is unreachable — so the
+site always builds from the last good snapshot. Commit the regenerated JSON.
+DB-free unit tests: `python -m pytest scripts/knowledge/test_refresh_scix_data.py`.
 
 Explorers are **self-contained in this repo**: each explorer's canonical source is
 `src/data/knowledge/explorers/<id>.json` (ordered by `explorers/_order.json`).

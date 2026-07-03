@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""Emit the curated knowledge-hub data files.
+"""Emit the curated knowledge-hub thread data, and hold the editorial layer.
 
-Provenance: literature seeds were retrieved from Stephanie's live scix MCP
-(hybrid BM25 + body-lexical + RRF fusion over the 32M-paper ADS/SciX corpus);
-citation edges came from citation_similarity (co_citation). Her own papers live
-in papers.json (fetched from NASA ADS). The curation below — which papers belong
-to which thread, the reading order, and the framing prose — is editorial and
-meant to be edited in place; re-run this script after editing to regenerate JSON.
+This module owns the *editorial* curation: which papers belong to which thread,
+the reading order, the framing prose, and the one-line gloss for each external
+paper (``LIT_GLOSS``). It emits ``threads.json`` directly. The *mechanical*
+snapshots — ``lit-papers.json`` (per-paper title/author/year/citation count) and
+``citation-edges.json`` (co-citation graph lane) — are regenerated from the live
+scix corpus by the sibling ``refresh_scix_data.py``, which imports ``LIT_GLOSS``
+and ``HER_EMBEDDINGS_PAPER`` from here. Her own papers live in papers.json.
+
+The curation below is editorial and meant to be edited in place; re-run this
+script after editing to regenerate threads.json, then run refresh_scix_data.py
+to refresh the mechanical snapshots.
 
 Outputs (src/data/knowledge/):
-  lit-papers.json     external literature papers referenced by threads
-  citation-edges.json paper<->paper edges (graph lane)
   threads.json        the four threads with curation + reading order
 """
 
@@ -20,44 +23,44 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "src", "data", "knowledge"))
 
-# ---- external literature papers (curated from scix hybrid search) ----
-# Fields mirror the scix `search` result shape. abstract = abstract_snippet.
-LIT_PAPERS = {
+# ---- editorial gloss for each external literature paper ----
+# bibcode -> a one-line editorial take tying the paper to the thread narrative.
+# This is NOT the paper's real abstract; it is curation, edited in place. The
+# mechanical fields (title, author, year, citation count) are fetched fresh by
+# refresh_scix_data.py, which uses these keys as the external-paper set. Order
+# is preserved into lit-papers.json, so keep it grouped by thread.
+LIT_GLOSS = {
     # navigable-science
-    "2020arXiv200407180C": dict(title="SPECTER: Document-level Representation Learning using Citation-informed Transformers", first_author="Cohan, Arman", year=2020, citation_count=125, abstract="Citation-informed transformer embeddings for scientific documents; the lineage behind SPECTER2, one of the embedding models used in SciX."),
-    "2020arXiv200302320H": dict(title="Knowledge Graphs", first_author="Hogan, Aidan", year=2020, citation_count=118, abstract="A comprehensive introduction to knowledge graphs; the structural backbone for representing scientific knowledge beyond ranked lists."),
-    "2020arXiv200410964G": dict(title="Don't Stop Pretraining: Adapt Language Models to Domains and Tasks", first_author="Gururangan, Suchin", year=2020, citation_count=463, abstract="Domain-adaptive pretraining; the argument for domain-specific scientific models like INDUS over generic embeddings."),
-    "2024ASPC..535..119G": dict(title="Building astroBERT, a Language Model for Astronomy & Astrophysics", first_author="Grezes, F.", year=2024, citation_count=17, abstract="A domain language model for the NASA ADS corpus; co-cited with the SciX embeddings work."),
-    "2022arXiv221200744G": dict(title="Improving astroBERT using Semantic Textual Similarity", first_author="Grezes, Felix", year=2022, citation_count=5, abstract="STS fine-tuning of astroBERT over the ADS literature."),
-    "2023arXiv230213971T": dict(title="LLaMA: Open and Efficient Foundation Language Models", first_author="Touvron, Hugo", year=2023, citation_count=9291, abstract="Open foundation models; co-cited with the SciX embeddings work as the general-model backdrop."),
-    "2023arXiv230308774O": dict(title="GPT-4 Technical Report", first_author="OpenAI", year=2023, citation_count=13534, abstract="Frontier general model; co-cited with the SciX embeddings work."),
+    "2020arXiv200407180C": "Citation-informed transformer embeddings for scientific documents; the lineage behind SPECTER2, one of the embedding models used in SciX.",
+    "2020arXiv200302320H": "A comprehensive introduction to knowledge graphs; the structural backbone for representing scientific knowledge beyond ranked lists.",
+    "2020arXiv200410964G": "Domain-adaptive pretraining; the argument for domain-specific scientific models like INDUS over generic embeddings.",
+    "2024ASPC..535..119G": "A domain language model for the NASA ADS corpus; co-cited with the SciX embeddings work.",
+    "2022arXiv221200744G": "STS fine-tuning of astroBERT over the ADS literature.",
+    "2023arXiv230213971T": "Open foundation models; co-cited with the SciX embeddings work as the general-model backdrop.",
+    "2023arXiv230308774O": "Frontier general model; co-cited with the SciX embeddings work.",
     # reliable-agents
-    "2024arXiv240716741W": dict(title="OpenHands: An Open Platform for AI Software Developers as Generalist Agents", first_author="Wang, Xingyao", year=2024, citation_count=92, abstract="An open platform for AI software-developer agents; a reference architecture for agents that act on real codebases."),
-    "2024arXiv240510467L": dict(title="Agent Design Pattern Catalogue: Architectural Patterns for Foundation Model based Agents", first_author="Liu, Yue", year=2024, citation_count=9, abstract="A catalogue of architectural patterns for foundation-model agents; vocabulary for reasoning about reliability."),
-    "2026arXiv260408906Z": dict(title="Dissecting Bug Triggers and Failure Modes in Modern Agentic Frameworks: An Empirical Study", first_author="Zhang, Xiaowen", year=2026, citation_count=0, abstract="Empirical study of where agentic frameworks (CrewAI, AutoGen) break; directly about reliability failure modes."),
-    "2025arXiv250108243P": dict(title="Engineering an LLM-Powered Multi-agent Framework for Autonomous CloudOps", first_author="Parthasarathy, Kannan", year=2025, citation_count=0, abstract="Engineering a production multi-agent system for autonomous operations; a real deployment case study."),
-    "2024arXiv240902977L": dict(title="Large Language Model-Based Agents for Software Engineering: A Survey", first_author="Liu, Junwei", year=2024, citation_count=40, abstract="A survey of LLM agents across the software-engineering lifecycle."),
+    "2024arXiv240716741W": "An open platform for AI software-developer agents; a reference architecture for agents that act on real codebases.",
+    "2024arXiv240510467L": "A catalogue of architectural patterns for foundation-model agents; vocabulary for reasoning about reliability.",
+    "2026arXiv260408906Z": "Empirical study of where agentic frameworks (CrewAI, AutoGen) break; directly about reliability failure modes.",
+    "2025arXiv250108243P": "Engineering a production multi-agent system for autonomous operations; a real deployment case study.",
+    "2024arXiv240902977L": "A survey of LLM agents across the software-engineering lifecycle.",
     # agent-memory
-    "2026arXiv260407487L": dict(title="CLEAR: Context Augmentation from Contrastive Learning of Experience via Agentic Reflection", first_author="Liu, Linbo", year=2026, citation_count=0, abstract="Building task-relevant context from an agent's own experience via contrastive reflection; a memory/context-engineering approach."),
-    "2026arXiv260407791F": dict(title="SEARL: Joint Optimization of Policy and Tool Graph Memory for Self-Evolving Agents", first_author="Feng, Xinshun", year=2026, citation_count=0, abstract="A graph-structured tool memory jointly optimized with policy for self-evolving agents."),
+    "2026arXiv260407487L": "Building task-relevant context from an agent's own experience via contrastive reflection; a memory/context-engineering approach.",
+    "2026arXiv260407791F": "A graph-structured tool memory jointly optimized with policy for self-evolving agents.",
     # evaluating-agents
-    "2024arXiv240202047S": dict(title="Calibration and Correctness of Language Models for Code", first_author="Spiess, Claudio", year=2024, citation_count=28, abstract="Whether code models know when they are right; calibration as an honest-evaluation signal."),
-    "2024arXiv240600515J": dict(title="A Survey on Large Language Models for Code Generation", first_author="Jiang, Juyong", year=2024, citation_count=155, abstract="A broad survey of code-generation LLMs and how they are measured."),
-    "2023arXiv231114904J": dict(title="LLM-Assisted Code Cleaning For Training Accurate Code Generators", first_author="Jain, Naman", year=2023, citation_count=18, abstract="Data quality for code generators; what goes in shapes what the benchmark sees come out."),
-    "2024arXiv241220367W": dict(title="Enhancing Code LLMs with Reinforcement Learning in Code Generation: A Survey", first_author="Wang, Junqiao", year=2024, citation_count=7, abstract="RL for code generation; moving evaluation from static benchmarks toward outcome signals."),
+    "2024arXiv240202047S": "Whether code models know when they are right; calibration as an honest-evaluation signal.",
+    "2024arXiv240600515J": "A broad survey of code-generation LLMs and how they are measured.",
+    "2023arXiv231114904J": "Data quality for code generators; what goes in shapes what the benchmark sees come out.",
+    "2024arXiv241220367W": "RL for code generation; moving evaluation from static benchmarks toward outcome signals.",
 }
 
-# ---- citation edges (graph lane): co-citation of the SciX embeddings paper ----
-# Her ADS bibcode for "Experimenting with LLMs and vector embeddings in NASA SciX".
+# Her ADS bibcode for "Experimenting with LLMs and vector embeddings in NASA SciX";
+# the source node for the co-citation graph lane (edges built in refresh_scix_data.py).
 HER_EMBEDDINGS_PAPER = "2023arXiv231214211B"
-CITATION_EDGES = [
-    dict(source=HER_EMBEDDINGS_PAPER, target=t, kind="co_citation", overlap=2)
-    for t in ["2024ASPC..535..119G", "2022arXiv221200744G", "2023arXiv230213971T", "2023arXiv230308774O"]
-]
 
 # ---- threads ----
 # onSite items reference real content: {collection, slug}. paper items reference
-# bibcodes (her own papers in papers.json, or LIT_PAPERS). reading_order lists
+# bibcodes (her own papers in papers.json, or LIT_GLOSS). reading_order lists
 # bibcodes with a one-line rationale. `take` prose is a draft in first person.
 THREADS = [
     dict(
@@ -194,19 +197,6 @@ def write(name, obj):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    lit = [
-        dict(
-            bibcode=b,
-            title=v["title"],
-            firstAuthor=v["first_author"],
-            year=v["year"],
-            citationCount=v["citation_count"],
-            abstract=v["abstract"],
-        )
-        for b, v in LIT_PAPERS.items()
-    ]
-    write("lit-papers.json", {"source": "scix MCP (hybrid search)", "count": len(lit), "papers": lit})
-    write("citation-edges.json", {"source": "scix citation_similarity (co_citation)", "edges": CITATION_EDGES})
     write("threads.json", {"count": len(THREADS), "threads": THREADS})
 
 
