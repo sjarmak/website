@@ -1,12 +1,6 @@
 {
-  "source": "scix citation_similarity (co_citation)",
+  "source": "scix CLI citation_similarity (co_citation)",
   "edges": [
-    {
-      "source": "2023arXiv231214211B",
-      "target": "2024ASPC..535..119G",
-      "kind": "co_citation",
-      "overlap": 2
-    },
     {
       "source": "2023arXiv231214211B",
       "target": "2022arXiv221200744G",
@@ -22,6 +16,12 @@
     {
       "source": "2023arXiv231214211B",
       "target": "2023arXiv230308774O",
+      "kind": "co_citation",
+      "overlap": 2
+    },
+    {
+      "source": "2023arXiv231214211B",
+      "target": "2024ASPC..535..119G",
       "kind": "co_citation",
       "overlap": 2
     }
