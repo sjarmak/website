@@ -21,7 +21,14 @@ export interface GraphEdge {
   id: string;
   source: string;
   target: string;
-  kind: "project-topic" | "project-output" | "topic-topic" | "output-topic";
+  kind:
+    | "project-topic"
+    | "project-output"
+    | "topic-topic"
+    | "output-topic"
+    | "concept-concept"
+    | "concept-topic"
+    | "concept-note";
 }
 
 export interface GraphData {
