@@ -48,10 +48,10 @@ test("homepage declares register=authored", () => {
   assert.equal(registerOf(page(".")), "authored");
 });
 
-test("edge case: an origin:manual digest issue renders register=hybrid AND keeps its hand-curated kicker", () => {
+test("edge case: an origin:manual digest issue renders register=hybrid AND keeps its hand-curated wording (R1 badge)", () => {
   const html = page(path.join("digest", MANUAL_ISSUE));
   assert.equal(registerOf(html), "hybrid");
-  assert.match(html, /hand-curated/);
+  assert.match(html, /hand-curated/i);
 });
 
 test("an origin:auto digest issue renders register=generated", () => {

@@ -1,0 +1,41 @@
+---
+// Typed provenance badge (PRD R1). Every visitor-facing word comes from the
+// canonical register→copy map (src/lib/registerCopy.ts) — this component
+// carries no register phrasing of its own. The badge text is a link to the
+// colophon, which explains how each register is produced. Reusable by any
+// surface that declares a register (digest issues, explorers, concept pages).
+import type { Register } from "@/lib/register";
+import { REGISTER_COPY } from "@/lib/registerCopy";
+
+interface Props {
+  register: Register;
+  /** Provenance explainer target; override for surfaces with a closer one. */
+  href?: string;
+}
+
+const { register, href = "/colophon" } = Astro.props;
+const copy = REGISTER_COPY[register];
+---
+
+<p class="provenance-badge" data-register={register}>
+  <a href={href}>{copy.badgeCopy}</a>
+</p>
+
+<style>
+  .provenance-badge {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    max-width: var(--measure);
+  }
+
+  .provenance-badge a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color 0.12s ease;
+  }
+
+  .provenance-badge a:hover {
+    color: var(--color-accent);
+  }
+</style>
