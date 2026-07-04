@@ -45,6 +45,11 @@ esac
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
 cd "$WEBSITE_DIR"
 
+# Headless/cron marker: publish-digest's concept gate warns-and-publishes under
+# DIGEST_CRON=1 (filing inbox proposals for unresolved facets) instead of the
+# interactive hard-fail. Every run.sh invocation is the headless path.
+export DIGEST_CRON=1
+
 # TTS is fully local (Kokoro, voice am_onyx) — fail early if the venv is missing
 # rather than after the agent has already written the issue.
 KOKORO_PYTHON="${KOKORO_VENV:-$HOME/.venvs/kokoro-tts}/bin/python"
