@@ -4,6 +4,7 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   NODE_TYPE_STYLES,
@@ -12,7 +13,16 @@ import {
   buildStylesheet,
 } from "../src/scripts/graph-style.ts";
 
-const ALL_NODE_TYPES = ["project", "topic", "output", "concept", "vaultNote"];
+const ALL_NODE_TYPES = [
+  "project",
+  "topic",
+  "output",
+  "concept",
+  "vaultNote",
+  "paper",
+  "digest",
+  "section",
+];
 
 function graphDataWith(types) {
   return {
@@ -39,6 +49,22 @@ test("NODE_TYPE_STYLES covers every NodeType with a cssToken and shape", () => {
   }
   assert.equal(NODE_TYPE_STYLES.concept.cssToken, "--graph-node-concept");
   assert.equal(NODE_TYPE_STYLES.vaultNote.cssToken, "--graph-node-note");
+  assert.equal(NODE_TYPE_STYLES.paper.cssToken, "--graph-node-paper");
+  assert.equal(NODE_TYPE_STYLES.digest.cssToken, "--graph-node-digest");
+  assert.equal(NODE_TYPE_STYLES.section.cssToken, "--graph-node-section");
+});
+
+test("every node-type token is defined in BOTH the light and dark theme blocks", () => {
+  const css = readFileSync(new URL("../src/styles/tokens.css", import.meta.url), "utf8");
+  const darkMatch = css.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\}/);
+  assert.ok(darkMatch, "tokens.css has a [data-theme=\"dark\"] block");
+  const dark = darkMatch[1];
+  const light = css.slice(0, darkMatch.index);
+  for (const type of ALL_NODE_TYPES) {
+    const token = NODE_TYPE_STYLES[type].cssToken;
+    assert.match(light, new RegExp(`${token}:`), `${token} defined in the light block`);
+    assert.match(dark, new RegExp(`${token}:`), `${token} defined in the dark block`);
+  }
 });
 
 test("deriveFilterChips: data with 2 types yields exactly 2 chips", () => {

@@ -52,6 +52,25 @@ test("detail panel evidence container ships in the page markup", () => {
   assert.match(html, /data-detail-evidence/);
 });
 
+test("evidence toggle ships in the concepts toolbar, default ON", () => {
+  assert.match(html, /data-evidence-toggle aria-pressed="true"/);
+});
+
+// Hard PRD constraint (edge-density budget): the unexpanded global view never
+// contains evidence nodes — satellites exist only client-side, on selection.
+test("global concepts payload contains no evidence-type or ev:-namespaced nodes", () => {
+  assert.deepEqual(
+    payload.nodes.filter((n) => ["paper", "digest", "section"].includes(n.type)),
+    [],
+    "no paper/digest/section nodes in the build-time payload",
+  );
+  assert.deepEqual(
+    payload.nodes.filter((n) => n.id.startsWith("ev:")),
+    [],
+    "no ev:-namespaced nodes in the build-time payload",
+  );
+});
+
 // ------------------------------------------------------------- heartbeat
 
 test("heartbeat fields are visible in the built HTML", () => {
@@ -166,11 +185,14 @@ test("/projects/explorer payload has no concepts additions", () => {
   const data = JSON.parse(match[1]);
   assert.equal(data.freshness, undefined, "no freshness map on the projects explorer");
   assert.deepEqual(
-    data.nodes.filter((n) => n.type === "concept" || n.type === "vaultNote"),
+    data.nodes.filter((n) =>
+      ["concept", "vaultNote", "paper", "digest", "section"].includes(n.type),
+    ),
     [],
-    "no concept/vaultNote nodes on the projects explorer",
+    "no concept/vaultNote/evidence nodes on the projects explorer",
   );
   assert.ok(!explorerHtml.includes("data-detail-evidence"), "no evidence container on the projects explorer");
+  assert.ok(!explorerHtml.includes("data-evidence-toggle"), "no evidence toggle on the projects explorer");
 });
 
 test("/projects/explorer node/edge sets match the recorded base-branch baseline (when present)", (t) => {

@@ -26,6 +26,11 @@ export const NODE_TYPE_STYLES: Record<NodeType, NodeTypeStyle> = {
   output: { cssToken: "--graph-node-output", shape: "diamond", label: "Outputs" },
   concept: { cssToken: "--graph-node-concept", shape: "hexagon", label: "Concepts" },
   vaultNote: { cssToken: "--graph-node-note", shape: "tag", label: "Notes" },
+  // Evidence satellite types (local evidence view). Chips derive from the
+  // types PRESENT in initial data, so these never become filter chips.
+  paper: { cssToken: "--graph-node-paper", shape: "round-diamond", label: "Papers" },
+  digest: { cssToken: "--graph-node-digest", shape: "barrel", label: "Digests" },
+  section: { cssToken: "--graph-node-section", shape: "round-triangle", label: "Sections" },
 };
 
 const NODE_TYPES = Object.keys(NODE_TYPE_STYLES) as NodeType[];
@@ -102,6 +107,7 @@ export function buildStylesheet(t: Tokens): StylesheetJson {
     },
     { selector: 'edge[kind="project-output"]', style: { "line-style": "dashed" } },
     { selector: 'edge[kind="topic-topic"]', style: { width: 1.6 } },
+    { selector: 'edge[kind="concept-evidence"]', style: { "line-style": "dotted" } },
     {
       selector: "node:selected",
       style: { "border-width": 3, "border-color": t["--graph-node-topic"] },

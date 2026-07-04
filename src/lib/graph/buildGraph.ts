@@ -1,6 +1,16 @@
 import { getCollection } from "astro:content";
 
-export type NodeType = "project" | "topic" | "output" | "concept" | "vaultNote";
+export type NodeType =
+  | "project"
+  | "topic"
+  | "output"
+  | "concept"
+  | "vaultNote"
+  // Evidence satellite types: spawned client-side around a selected concept
+  // (local evidence view); never present in build-time graph payloads.
+  | "paper"
+  | "digest"
+  | "section";
 
 export interface GraphNode {
   id: string;
