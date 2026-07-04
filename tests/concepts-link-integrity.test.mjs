@@ -72,9 +72,17 @@ test("script passes over the real built site AND sweeps every /concepts page (PR
     pages.filter((p) => /^concepts\/[^/]+\/index\.html$/.test(p.split(path.sep).join("/"))).length >= 36,
     `default coverage includes every concept page, got: ${pages.length} page(s)`,
   );
+  // R5 related-link surfaces are swept too.
+  assert.ok(pages.includes(path.join("talks", "index.html")));
+  for (const section of ["writing", "projects", "digest"]) {
+    assert.ok(
+      pages.some((p) => p.startsWith(`${section}${path.sep}`)),
+      `default coverage includes ${section}/* pages`,
+    );
+  }
 
   const result = await runCheck([]);
   assert.equal(result.code, 0, `link check failed:\n${result.stderr}`);
   assert.match(result.stdout, /\[links\] OK/);
-  assert.match(result.stdout, /across 38 page\(s\)/);
+  assert.match(result.stdout, new RegExp(`across ${pages.length} page\\(s\\)`));
 });
