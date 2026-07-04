@@ -13,9 +13,11 @@ interface Props {
   noindex?: boolean;
   /** REQUIRED register declaration (PRD R3) — threaded to BaseHead's meta tag. */
   register: Register;
+  /** Optional last-updated date for the R16 type stamp. */
+  updated?: Date;
 }
 
-const { title, description, kicker, intro, image, noindex, register } = Astro.props;
+const { title, description, kicker, intro, image, noindex, register, updated } = Astro.props;
 ---
 
 <BaseLayout
@@ -24,6 +26,7 @@ const { title, description, kicker, intro, image, noindex, register } = Astro.pr
   image={image}
   noindex={noindex}
   register={register}
+  updated={updated}
 >
   <div class="container">
     <header class="page-head stack stack-s">
