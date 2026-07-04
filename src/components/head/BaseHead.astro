@@ -1,6 +1,6 @@
 ---
 import { site } from "@/data/site";
-import { isRegister, type Register } from "@/lib/register";
+import { isDigestNoindexPath, isRegister, type Register } from "@/lib/register";
 import "@/styles/global.css";
 
 interface Props {
@@ -37,6 +37,12 @@ if (!isRegister(register)) {
   );
 }
 
+// R19b digest reversal lever: when DIGEST_NOINDEX is flipped in
+// src/lib/register.ts, every digest page emits `noindex, follow` (links keep
+// flowing; the pages leave the index). The explicit `noindex` prop wins so a
+// page never carries two robots metas.
+const digestNoindex = !noindex && isDigestNoindexPath(Astro.url.pathname);
+
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
@@ -51,6 +57,7 @@ const ogImage = new URL(image, site.url).href;
 <link rel="canonical" href={canonical} />
 <meta name="site-register" content={register} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
+{digestNoindex && <meta name="robots" content="noindex, follow" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />

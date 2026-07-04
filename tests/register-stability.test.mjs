@@ -18,6 +18,7 @@ import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import { STABILITY_FIXTURE_FILES } from "./fixtures/stability-fixture-paths.mjs";
+import { withBuildLock } from "./fixtures/build-lock.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -72,11 +73,15 @@ const VARIANT_B = fixtureIssue({
 });
 
 async function buildTo(outDir) {
-  await execFileP("npx", ["astro", "build", "--config", STABILITY_CONFIG], {
-    cwd: REPO_ROOT,
-    env: { ...process.env, STABILITY_OUT_DIR: outDir },
-    maxBuffer: 64 * 1024 * 1024,
-  });
+  // Serialized against other full-build tests (digest-noindex-lever): parallel
+  // astro builds collide on the shared ./.astro staging dir.
+  await withBuildLock(REPO_ROOT, () =>
+    execFileP("npx", ["astro", "build", "--config", STABILITY_CONFIG], {
+      cwd: REPO_ROOT,
+      env: { ...process.env, STABILITY_OUT_DIR: outDir },
+      maxBuffer: 64 * 1024 * 1024,
+    }),
+  );
 }
 
 async function listHtml(dir, base = dir) {

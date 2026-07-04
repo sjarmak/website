@@ -58,3 +58,6 @@ src/content/digest/daily-2098-*.md
 
 # isolated outDirs from the stability build wrapper
 dist-stability-*/
+
+# cross-process build mutex taken by full-build tests (tests/fixtures/build-lock.mjs)
+.astro-build-lock/
