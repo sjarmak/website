@@ -51,10 +51,13 @@ run_concepts_rider() {
   else
     echo "[knowledge-sync] concepts rider done" | tee -a "$LOG"
   fi
-  # Commit the heartbeat refresh (same idiom as the explorer commit below).
-  git add src/data/knowledge/concept-sync-status.json 2>/dev/null || true
-  if ! git diff --cached --quiet 2>/dev/null; then
-    git commit -q -m "chore(concepts): rider heartbeat ${MODE} ${DATE}" || true
+  # Commit the heartbeat refresh, pathspec-scoped: if an earlier commit step
+  # failed and left unrelated content staged (e.g. explorers.json), a bare
+  # `git commit` would sweep it in under this message. `git commit -- <path>`
+  # commits ONLY the heartbeat and leaves other staged content staged.
+  local hb_file="src/data/knowledge/concept-sync-status.json"
+  if ! git diff --quiet HEAD -- "$hb_file" 2>/dev/null; then
+    git commit -q -m "chore(concepts): rider heartbeat ${MODE} ${DATE}" -- "$hb_file" || true
     if [ "${KNOWLEDGE_SYNC_PUSH:-0}" = "1" ]; then
       { git pull --rebase --autostash && git push; } \
         || echo "[knowledge-sync] heartbeat push failed (commit stays local)" | tee -a "$LOG"
