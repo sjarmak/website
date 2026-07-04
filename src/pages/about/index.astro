@@ -1,17 +1,7 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
-import { site, socials, affiliations } from "@/data/site";
-
-const personLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: site.name,
-  url: site.url,
-  email: `mailto:${site.email}`,
-  jobTitle: "Applied Research Scientist & AI Agent Advocate",
-  worksFor: affiliations.map((a) => ({ "@type": "Organization", name: a.name })),
-  sameAs: socials.filter((s) => s.label !== "Email").map((s) => s.href),
-};
+import { socials } from "@/data/site";
+import { profilePageLd } from "@/lib/jsonld";
 ---
 
 <PageLayout register="authored"
@@ -20,6 +10,9 @@ const personLd = {
   intro="Information scientist, AI agent advocate, illustrator, and mom."
   description="About Stephanie Jarmak."
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageLd("/about/"))} />
+  </Fragment>
   <div class="prose">
     <p>
       I'm an applied research scientist focused on how people and machines find knowledge.
@@ -53,5 +46,3 @@ const personLd = {
     </ul>
   </div>
 </PageLayout>
-
-<script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />
