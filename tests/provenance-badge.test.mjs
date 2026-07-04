@@ -99,6 +99,10 @@ test("neither the page nor the component hardcodes badge wording beyond map look
 
 // --------------------------------------------- layout otherwise unchanged
 
+// A rendered type-stamp element (markup-anchored: matches the class attribute,
+// never the class name inside inlined CSS).
+const STAMP_EL = /<div[^>]*class="[^"]*type-stamp[^"]*"/;
+
 test("digest layout survives around the badge (kicker, title, sections, single badge)", () => {
   for (const [issue, register] of [
     [AUTO_ISSUE, "generated"],
@@ -113,5 +117,29 @@ test("digest layout survives around the badge (kicker, title, sections, single b
     const count = html.match(/data-register="/g)?.length ?? 0;
     assert.equal(count, 1, `${issue}: exactly one badge, got ${count}`);
     assert.match(html, new RegExp(`data-register="${register}"`));
+  }
+});
+
+// -------------------------------------- single provenance surface per page
+
+test("issue pages carry exactly one provenance surface (badge, no layout stamp); stamps survive elsewhere", () => {
+  // Digest issues: the badge IS the provenance surface — the generic layout
+  // stamp is suppressed (BaseLayout stamp={false}) so the page never renders
+  // two provenance surfaces.
+  for (const [issue, register] of [
+    [AUTO_ISSUE, "generated"],
+    [MANUAL_ISSUE, "hybrid"],
+  ]) {
+    const html = page(path.join("digest", issue));
+    assert.ok(badgeOf(html, register), `${issue}: badge must render`);
+    assert.doesNotMatch(html, STAMP_EL, `${issue}: layout type stamp must be suppressed`);
+  }
+  // Pages with no badge keep their normal stamps: the digest index/archive and
+  // a non-digest generated page.
+  for (const rel of ["digest", path.join("digest", "archive"), path.join("library", "explorers", "agentic-information-retrieval")]) {
+    const html = page(rel);
+    assert.match(html, STAMP_EL, `${rel}: layout type stamp must still render`);
+    assert.match(html, /data-register="generated"/, `${rel}: stamp must carry its register`);
+    assert.doesNotMatch(html, /provenance-badge/, `${rel}: no badge renders here`);
   }
 });

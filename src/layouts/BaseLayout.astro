@@ -18,9 +18,15 @@ interface Props {
   register: Register;
   /** Optional last-updated date for the R16 type stamp. */
   updated?: Date;
+  /**
+   * Render the sitewide R16 type stamp (default true). Pages that carry their
+   * own provenance surface (e.g. digest issues' ProvenanceBadge) opt out so a
+   * page never renders two provenance surfaces.
+   */
+  stamp?: boolean;
 }
 
-const { title, description, image, noindex, type, register, updated } = Astro.props;
+const { title, description, image, noindex, type, register, updated, stamp = true } = Astro.props;
 
 // R16 type stamp placement comes from the canonical copy map: authored pages
 // stamp footer-quiet; machine registers stamp visibly at the top of <main>.
@@ -45,10 +51,10 @@ const stampPlacement = REGISTER_COPY[register].stampPlacement;
     <a href="#main" class="skip-link">Skip to content</a>
     <Header />
     <main id="main">
-      {stampPlacement === "header" && <TypeStamp register={register} updated={updated} />}
+      {stamp && stampPlacement === "header" && <TypeStamp register={register} updated={updated} />}
       <slot />
     </main>
     <Footer />
-    {stampPlacement === "footer-quiet" && <TypeStamp register={register} updated={updated} />}
+    {stamp && stampPlacement === "footer-quiet" && <TypeStamp register={register} updated={updated} />}
   </body>
 </html>

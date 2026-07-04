@@ -15,9 +15,11 @@ interface Props {
   register: Register;
   /** Optional last-updated date for the R16 type stamp. */
   updated?: Date;
+  /** Render the sitewide R16 type stamp (default true) — see BaseLayout. */
+  stamp?: boolean;
 }
 
-const { title, description, kicker, intro, image, noindex, register, updated } = Astro.props;
+const { title, description, kicker, intro, image, noindex, register, updated, stamp } = Astro.props;
 ---
 
 <BaseLayout
@@ -27,6 +29,7 @@ const { title, description, kicker, intro, image, noindex, register, updated } =
   noindex={noindex}
   register={register}
   updated={updated}
+  stamp={stamp}
 >
   <slot name="head" slot="head" />
   <div class="container">
