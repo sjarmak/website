@@ -111,6 +111,20 @@ const topics = defineCollection({
   }),
 });
 
+// ---- concepts (canonical vocabulary; aliases absorb facet drift) ----
+const concepts = defineCollection({
+  loader: base("concepts"),
+  schema: z.object({
+    label: z.string(),
+    // alternate facet spellings that resolve to this concept (cross-entry
+    // uniqueness is enforced by scripts/knowledge/validate-concepts.mjs)
+    aliases: z.array(z.string()).default([]),
+    definition: z.string(),
+    topic: reference("topics").optional(), // anchor into the topics graph
+    related: z.array(reference("concepts")).default([]),
+  }),
+});
+
 // ---- outputs (papers, posts, talks — graph leaves) ----
 const outputs = defineCollection({
   loader: base("outputs"),
@@ -243,6 +257,9 @@ const digest = defineCollection({
     date: z.coerce.date(),
     summary: z.string(),
     topics: z.array(z.string()).default([]), // filter facets, e.g. "agentic-coding", "evals"
+    // facets the publish-time concept gate could not resolve against
+    // src/content/concepts (cron runs publish anyway and record them here)
+    unresolvedFacets: z.array(z.string()).optional(),
     audioUrl: z.string().optional(), // podcast file: site-relative path or absolute URL
     embedUrl: z.string().url().optional(), // Spotify/YouTube embed fallback
     durationSec: z.number().int().optional(),
@@ -279,6 +296,7 @@ export const collections = {
   press,
   projects,
   topics,
+  concepts,
   outputs,
   writing,
   posts,

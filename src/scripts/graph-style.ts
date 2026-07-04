@@ -2,20 +2,41 @@
 // Cytoscape. Used by both the full explorer island and the compact home-page
 // mini graph so styling/theming stay in one place.
 
-import type { ElementDefinition, StylesheetJson } from "cytoscape";
-import type { GraphData, GraphNode } from "@/lib/graph/buildGraph";
+import type { Css, ElementDefinition, StylesheetJson } from "cytoscape";
+import type { GraphData, GraphNode, NodeType } from "@/lib/graph/buildGraph";
 
 export type Tokens = Record<string, string>;
 
-const TOKEN_NAMES = [
+export interface NodeTypeStyle {
+  /** CSS custom property holding the node fill color (per theme). */
+  cssToken: string;
+  /** Cytoscape node shape. */
+  shape: Css.NodeShape;
+  /** Human label for filter chips / legends. */
+  label: string;
+}
+
+/**
+ * Single source of truth for per-type node styling. Key order defines the
+ * canonical display order for filter chips and legends.
+ */
+export const NODE_TYPE_STYLES: Record<NodeType, NodeTypeStyle> = {
+  project: { cssToken: "--graph-node-project", shape: "ellipse", label: "Projects" },
+  topic: { cssToken: "--graph-node-topic", shape: "round-rectangle", label: "Topics" },
+  output: { cssToken: "--graph-node-output", shape: "diamond", label: "Outputs" },
+  concept: { cssToken: "--graph-node-concept", shape: "hexagon", label: "Concepts" },
+  vaultNote: { cssToken: "--graph-node-note", shape: "tag", label: "Notes" },
+};
+
+const NODE_TYPES = Object.keys(NODE_TYPE_STYLES) as NodeType[];
+
+const TOKEN_NAMES: string[] = [
   "--graph-bg",
-  "--graph-node-topic",
-  "--graph-node-project",
-  "--graph-node-output",
+  ...NODE_TYPES.map((type) => NODE_TYPE_STYLES[type].cssToken),
   "--graph-edge",
   "--graph-label",
   "--graph-fade",
-] as const;
+];
 
 export function readTokens(): Tokens {
   const cs = getComputedStyle(document.documentElement);
@@ -25,9 +46,20 @@ export function readTokens(): Tokens {
 }
 
 export function colorFor(type: GraphNode["type"], t: Tokens): string {
-  if (type === "topic") return t["--graph-node-topic"];
-  if (type === "project") return t["--graph-node-project"];
-  return t["--graph-node-output"];
+  const style = NODE_TYPE_STYLES[type] ?? NODE_TYPE_STYLES.output;
+  return t[style.cssToken];
+}
+
+/**
+ * Filter chips for the node types actually present in the supplied graph
+ * data, in canonical table order.
+ */
+export function deriveFilterChips(data: GraphData): { type: NodeType; label: string }[] {
+  const present = new Set(data.nodes.map((n) => n.type));
+  return NODE_TYPES.filter((type) => present.has(type)).map((type) => ({
+    type,
+    label: NODE_TYPE_STYLES[type].label,
+  }));
 }
 
 export function buildStylesheet(t: Tokens): StylesheetJson {
@@ -52,9 +84,11 @@ export function buildStylesheet(t: Tokens): StylesheetJson {
         "transition-duration": 180,
       },
     },
-    { selector: 'node[type="topic"]', style: { shape: "round-rectangle", "font-size": 13 } },
-    { selector: 'node[type="project"]', style: { shape: "ellipse" } },
-    { selector: 'node[type="output"]', style: { shape: "diamond" } },
+    ...NODE_TYPES.map((type) => ({
+      selector: `node[type="${type}"]`,
+      style: { shape: NODE_TYPE_STYLES[type].shape },
+    })),
+    { selector: 'node[type="topic"]', style: { "font-size": 13 } },
     {
       selector: "edge",
       style: {

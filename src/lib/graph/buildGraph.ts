@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 
-export type NodeType = "project" | "topic" | "output";
+export type NodeType = "project" | "topic" | "output" | "concept" | "vaultNote";
 
 export interface GraphNode {
   id: string;
@@ -21,7 +21,14 @@ export interface GraphEdge {
   id: string;
   source: string;
   target: string;
-  kind: "project-topic" | "project-output" | "topic-topic" | "output-topic";
+  kind:
+    | "project-topic"
+    | "project-output"
+    | "topic-topic"
+    | "output-topic"
+    | "concept-concept"
+    | "concept-topic"
+    | "concept-note";
 }
 
 export interface GraphData {
