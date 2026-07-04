@@ -131,6 +131,52 @@ test("empty evidence yields zero groups; freshness line still renders", () => {
   assert.equal(panel.freshnessLine, "tagged in 0 of 12 digest issues");
 });
 
+test("paper-lane concept with zero digest tags leads with the richer lanes", () => {
+  const panel = buildConceptPanel(
+    {
+      evidence: evidence({
+        papers: [
+          { bibcode: "2024arXiv1", title: "Paper one" },
+          { bibcode: "2024arXiv2", title: "Paper two" },
+        ],
+        sections: [
+          { explorerId: "memory-design", explorerTitle: "Memory design", sectionKey: "evaluation", sectionLabel: "Evaluation" },
+        ],
+      }),
+    },
+    { tagged: 0, total: 60, mostRecent: null },
+  );
+  assert.equal(
+    panel.freshnessLine,
+    "2 papers · 1 explorer section · tagged in 0 of 60 digest issues",
+  );
+});
+
+test("digest-tagged concept keeps the freshness fragment first, lanes appended", () => {
+  const panel = buildConceptPanel(
+    {
+      evidence: evidence({
+        digests: [{ slug: "daily-2026-07-04", title: "Issue", date: "2026-07-04" }],
+        papers: [{ bibcode: "2024arXiv1", title: "Paper one" }],
+      }),
+    },
+    { tagged: 1, total: 60, mostRecent: "2026-07-04" },
+  );
+  assert.equal(
+    panel.freshnessLine,
+    "tagged in 1 of 60 digest issues, most recently 2026-07-04 · 1 paper",
+  );
+});
+
+test("no freshness data: line is the lane summary alone, or null when empty", () => {
+  const withLanes = buildConceptPanel({
+    evidence: evidence({ vaultNotes: [{ id: "vault:abc", takeaway: "t" }] }),
+  });
+  assert.equal(withLanes.freshnessLine, "1 vault note");
+  const bare = buildConceptPanel({ evidence: evidence({}) });
+  assert.equal(bare.freshnessLine, null);
+});
+
 test("freshness computes tagged count + most recent date and formats the line", () => {
   const f = computeConceptFreshness(
     [{ date: "2026-06-10" }, { date: "2026-07-01" }, { date: undefined }],

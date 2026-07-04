@@ -26,9 +26,43 @@ export interface PanelGroup {
 }
 
 export interface ConceptPanel {
-  /** "tagged in N of M digest issues, most recently YYYY-MM-DD" (null without freshness data). */
+  /**
+   * All-lane evidence summary, e.g. "tagged in 15 of 60 digest issues, most
+   * recently 2026-07-04 · 18 papers · 1 explorer section". Digest freshness
+   * leads when the concept is digest-tagged; for paper/explorer-lane concepts
+   * with zero digest tags the richer lanes lead so the concept doesn't read
+   * as dead. Null when there is neither freshness data nor evidence.
+   */
   freshnessLine: string | null;
   groups: PanelGroup[];
+}
+
+function laneCount(n: number, singular: string, plural: string): string | null {
+  if (n === 0) return null;
+  return `${n} ${n === 1 ? singular : plural}`;
+}
+
+/** Non-digest lane counts ("18 papers", "1 explorer section", ...), zeros omitted. */
+function laneParts(ev: ConceptGraphNode["evidence"]): string[] {
+  if (ev === undefined) return [];
+  return [
+    laneCount(ev.papers.length, "paper", "papers"),
+    laneCount(ev.sections.length, "explorer section", "explorer sections"),
+    laneCount(ev.vaultNotes.length, "vault note", "vault notes"),
+    laneCount(ev.threads.length, "thread", "threads"),
+  ].filter((p): p is string => p !== null);
+}
+
+/** Compose the summary line: digest fragment first when tagged, last when zero. */
+function evidenceSummaryLine(
+  ev: ConceptGraphNode["evidence"],
+  freshness?: ConceptFreshness,
+): string | null {
+  const lanes = laneParts(ev);
+  if (freshness === undefined) return lanes.length > 0 ? lanes.join(" · ") : null;
+  const digest = formatFreshnessLine(freshness);
+  const parts = freshness.tagged > 0 ? [digest, ...lanes] : [...lanes, digest];
+  return parts.join(" · ");
 }
 
 export const DIGEST_ROUTE_PREFIX = "/digest/";
@@ -106,7 +140,7 @@ export function buildConceptPanel(
   }
 
   return {
-    freshnessLine: freshness !== undefined ? formatFreshnessLine(freshness) : null,
+    freshnessLine: evidenceSummaryLine(ev, freshness),
     groups,
   };
 }
