@@ -257,6 +257,9 @@ const digest = defineCollection({
     date: z.coerce.date(),
     summary: z.string(),
     topics: z.array(z.string()).default([]), // filter facets, e.g. "agentic-coding", "evals"
+    // facets the publish-time concept gate could not resolve against
+    // src/content/concepts (cron runs publish anyway and record them here)
+    unresolvedFacets: z.array(z.string()).optional(),
     audioUrl: z.string().optional(), // podcast file: site-relative path or absolute URL
     embedUrl: z.string().url().optional(), // Spotify/YouTube embed fallback
     durationSec: z.number().int().optional(),

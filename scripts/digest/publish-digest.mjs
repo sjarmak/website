@@ -23,6 +23,7 @@ import path from "node:path";
 import { z } from "zod";
 import YAML from "yaml";
 import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
+import { evaluateConceptGate, isCronMode, runPostPublishSideEffects } from "./concept-gate.mjs";
 
 const CONTENT_DIR = "src/content/digest";
 const AUDIO_DIR = "public/media/digests";
@@ -105,6 +106,11 @@ async function publish(spec) {
   const slug = spec.slug ?? `${spec.cadence}-${spec.date}`;
   const written = [];
 
+  // Concept gate: interactive mode throws here (nothing written) when the
+  // facets resolve to zero concepts; cron mode warns and publishes.
+  const cron = isCronMode();
+  const gate = evaluateConceptGate(spec.topics, { cron });
+
   await assertNoRepeatedItems(spec);
 
   // 1. resolve audio (copy a rendered file in, or use a provided URL)
@@ -126,6 +132,7 @@ async function publish(spec) {
     date: spec.date,
     summary: spec.summary,
     topics: spec.topics,
+    ...(gate.unresolvedFacets.length > 0 ? { unresolvedFacets: gate.unresolvedFacets } : {}),
     ...(audioUrl ? { audioUrl } : {}),
     ...(spec.embedUrl ? { embedUrl: spec.embedUrl } : {}),
     ...(spec.durationSec ? { durationSec: spec.durationSec } : {}),
@@ -140,6 +147,21 @@ async function publish(spec) {
   const mdPath = path.join(CONTENT_DIR, `${slug}.md`);
   await writeFile(mdPath, md, "utf8");
   written.push(mdPath);
+
+  // 3b. concept-gate side effects: cron files alias/new-concept proposals to
+  // the shared inbox; both modes re-measure the facet-resolution rate and
+  // stage the heartbeat update alongside the entry. The entry is already on
+  // disk, so a failure in here degrades to a loud warning (in both modes) and
+  // the publish completes exactly as it would have pre-gate.
+  written.push(
+    ...(await runPostPublishSideEffects({
+      cron,
+      unresolvedFacets: gate.unresolvedFacets,
+      issueSlug: slug,
+      date: spec.date,
+      contentDir: CONTENT_DIR,
+    }))
+  );
 
   // 4. stage (always) and commit (opt-in). Never push.
   git("add", ...written);
