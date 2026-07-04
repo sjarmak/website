@@ -6,13 +6,14 @@ export type NodeKind =
   | "talk"
   | "learning"
   | "publication"
-  | "paper";
+  | "paper"
+  | "concept";
 
 /** The four retrieval lenses, plus their fused combination. */
 export type Lane = "semantic" | "lexical" | "graph" | "recency" | "fused";
 
 export interface KnowledgeNode {
-  /** `${collection}:${slug}` for on-site content, `paper:${bibcode}` for papers. */
+  /** `${collection}:${slug}` on-site, `paper:${bibcode}` papers, `concept:${slug}` registry concepts. */
   id: string;
   kind: NodeKind;
   title: string;
