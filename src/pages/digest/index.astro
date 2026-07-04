@@ -43,6 +43,10 @@ function anchorOf(name: string): string {
   intro="Issues published from my reading: a written newsletter, and for some, a podcast. Curated issues are ones I hand-pick; automated ones come out of my code-intelligence-digest pipeline. Specialized issues go deep on this site's core topics; general issues round up the highest-signal news across the agentic field. Filter by format, source, track, or topic."
 >
   <div class="stack stack-l">
+    <p class="colophon-note muted">
+      The pipeline behind the automated issues is documented in the <a href="/colophon">colophon</a>.
+    </p>
+
     <!-- section nav — everything this page holds, one jump away -->
     <nav class="section-nav" aria-label="Digest sections">
       <a href="#issues">Latest issues</a>
@@ -256,6 +260,20 @@ function anchorOf(name: string): string {
 </script>
 
 <style>
+  .colophon-note {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .colophon-note a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .colophon-note a:hover {
+    text-decoration: underline;
+  }
+
   /* ---- section nav (top-of-page discovery) ---- */
   .section-nav {
     display: flex;
