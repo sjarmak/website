@@ -41,9 +41,34 @@ LOG="$SYNC_DIR/run-$(date +%Y%m%d-%H%M%S).log"
 # itself: disabled runs still stamp the heartbeat with the disabled state.
 # A rider failure is reported in the summary but NEVER changes the sync's own
 # exit status ($sync_rc is captured on entry and restored via exit).
+# Concepts vault mirror (scripts/concepts/mirror/run-mirror.mjs). Default OFF:
+# only runs when CONCEPTS_MIRROR=1. Runs in journaled write mode (the runner
+# itself still requires CONCEPTS_VAULT_ROOT + CONCEPTS_MIRROR_CONFIRM=1 from
+# the environment — no vault path is ever baked in here). A mirror failure —
+# including an unreachable vault — is reported but NEVER changes the sync's
+# own exit status.
+run_concepts_mirror() {
+  if [ "${CONCEPTS_MIRROR:-0}" != "1" ]; then
+    echo "[knowledge-sync] concepts mirror disabled (CONCEPTS_MIRROR!=1)" | tee -a "$LOG"
+    return 0
+  fi
+  # timeout guards the trap against a hung vault filesystem (Syncthing mount):
+  # a stuck mirror must not block the sync's own EXIT cleanup. On firing it
+  # propagates a real non-zero exit (124), reported below like any failure.
+  timeout "${CONCEPTS_MIRROR_TIMEOUT:-300}" \
+    node scripts/concepts/mirror/run-mirror.mjs --write 2>&1 | tee -a "$LOG"
+  local mirror_rc=${PIPESTATUS[0]}
+  if [ "$mirror_rc" -ne 0 ]; then
+    echo "[knowledge-sync] concepts mirror FAILED (exit $mirror_rc) — sync steps unaffected" | tee -a "$LOG"
+  else
+    echo "[knowledge-sync] concepts mirror done" | tee -a "$LOG"
+  fi
+}
+
 run_concepts_rider() {
   local sync_rc=$?
   set +e
+  run_concepts_mirror
   node scripts/knowledge/concepts_rider.mjs 2>&1 | tee -a "$LOG"
   local rider_rc=${PIPESTATUS[0]}
   if [ "$rider_rc" -ne 0 ]; then
