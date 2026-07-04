@@ -127,4 +127,11 @@ else
   fi
 fi
 
+# R14 audit reminder (additive): at most one bead per calendar month reminding
+# Stephanie to run the MANUAL LLM-bio audit. This files a REMINDER only — it
+# never runs the audit (the audit stays manual-run, never CI/cron; see
+# scripts/audit/README.md). Guarded so a reminder failure can never affect
+# the digest run.
+node scripts/audit/audit-reminder.mjs 2>&1 | tee -a "$LOG" || true
+
 rm -rf "$WORK"
