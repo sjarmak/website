@@ -11,11 +11,14 @@ exposes an embedding or LLM endpoint. Swap MODEL below for another general model
 Node id scheme (MUST match src/lib/knowledge):
   on-site content : "<collection>:<slug>"   (slug = markdown filename stem)
   papers          : "paper:<bibcode>"        (her ADS papers AND lit papers)
+  concepts        : "concept:<slug>"         (registry: src/content/concepts)
 
 Output: src/data/knowledge/embeddings.json
-  { model, dim, normalized: true, vectors: { id: [float, ...] } }
+  { model, dim, normalized: true, toolchain, vectors: { id: [float, ...] } }
 Vectors are L2-normalized so the TS side can use a plain dot product.
+`toolchain` pins the model name and key library versions used for the bake.
 
+Recompute rides the backfill/registry-apply step, NOT any cron/sync path.
 Run with the brainstorm venv (has sentence-transformers):
   <brainstorm>/.venv/bin/python3 scripts/knowledge/build_embeddings.py
 """
@@ -23,13 +26,20 @@ Run with the brainstorm venv (has sentence-transformers):
 import glob
 import json
 import os
+import platform
 import re
 import sys
+from importlib import metadata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", ".."))
 KN = os.path.join(ROOT, "src", "data", "knowledge")
 CONTENT = os.path.join(ROOT, "src", "content")
+
+MODEL = "sentence-transformers/all-mpnet-base-v2"
+
+# Libraries whose versions pin the bake (recorded in embeddings.json metadata).
+TOOLCHAIN_LIBRARIES = ("sentence-transformers", "torch", "transformers", "numpy")
 
 # Collections whose items can appear as hub nodes.
 COLLECTIONS = ["projects", "writing", "talks", "learning", "topics", "publications"]
@@ -67,6 +77,31 @@ def content_nodes() -> dict:
     return nodes
 
 
+def concept_nodes(concepts_dir: str = os.path.join(CONTENT, "concepts")) -> dict:
+    """One `concept:<slug>` node per registry entry, embedded from label + definition.
+
+    Unlike the best-effort content collections, `label` and `definition` are
+    required registry fields (conceptAliases.ts enforces the same), so a missing
+    one is a hard error — every concept MUST get a vector.
+    """
+    nodes = {}
+    for path in sorted(
+        glob.glob(os.path.join(concepts_dir, "*.md"))
+        + glob.glob(os.path.join(concepts_dir, "*.mdx"))
+    ):
+        slug = os.path.splitext(os.path.basename(path))[0]
+        with open(path) as f:
+            text = f.read()
+        m = FM_RE.search(text)
+        block = m.group(1) if m else ""
+        label = fm_value(block, "label")
+        definition = fm_value(block, "definition")
+        if not label or not definition:
+            raise ValueError(f"concept:{slug}: label and definition are required frontmatter fields")
+        nodes[f"concept:{slug}"] = f"{label}. {definition}"
+    return nodes
+
+
 def add_papers(nodes: dict, papers: list) -> None:
     for p in papers:
         bib = p.get("bibcode")
@@ -96,29 +131,61 @@ def paper_nodes() -> dict:
     return nodes
 
 
-def main():
-    nodes = {**content_nodes(), **paper_nodes()}
+def collect_nodes() -> dict:
+    """Every node to embed: on-site content, papers, and registry concepts."""
+    return {**content_nodes(), **paper_nodes(), **concept_nodes()}
+
+
+def toolchain_versions() -> dict:
+    """Pin the bake: python plus installed versions of the model libraries."""
+    versions = {"python": platform.python_version()}
+    for lib in TOOLCHAIN_LIBRARIES:
+        try:
+            versions[lib.replace("-", "_")] = metadata.version(lib)
+        except metadata.PackageNotFoundError:
+            continue  # not installed => not part of this bake
+    return versions
+
+
+def bake(nodes: dict, encode, model_name: str, toolchain: dict) -> dict:
+    """Pure bake core: encode blurbs, validate shape, return the output dict.
+
+    ``encode`` is injected (texts -> rows of floats) so tests never load a model.
+    """
+    if not nodes:
+        raise ValueError("no nodes to embed")
     ids = sorted(nodes)
-    texts = [nodes[i] for i in ids]
-    print(f"embedding {len(ids)} nodes...")
+    vecs = [[float(x) for x in row] for row in encode([nodes[i] for i in ids])]
+    if len(vecs) != len(ids):
+        raise ValueError(f"encoder returned {len(vecs)} rows for {len(ids)} texts")
+    dim = len(vecs[0])
+    if dim == 0 or any(len(v) != dim for v in vecs):
+        raise ValueError("encoder returned empty or ragged rows (inconsistent dim)")
+    return {
+        "model": model_name.split("/")[-1],
+        "dim": dim,
+        "normalized": True,
+        "toolchain": toolchain,
+        "note": "General-purpose sentence model, baked at build time. No runtime embedding/LLM endpoint.",
+        "vectors": {i: [round(x, 5) for x in v] for i, v in zip(ids, vecs)},
+    }
+
+
+def main():
+    nodes = collect_nodes()
+    print(f"embedding {len(nodes)} nodes...")
 
     try:
         from sentence_transformers import SentenceTransformer
     except ImportError:
         sys.exit("sentence-transformers not available — run with the brainstorm venv python")
 
-    MODEL = "sentence-transformers/all-mpnet-base-v2"
     model = SentenceTransformer(MODEL)
-    vecs = model.encode(texts, normalize_embeddings=True, batch_size=32, show_progress_bar=False)
 
-    vectors = {i: [round(float(x), 5) for x in vecs[n]] for n, i in enumerate(ids)}
-    out = {
-        "model": MODEL.split("/")[-1],
-        "dim": int(vecs.shape[1]),
-        "normalized": True,
-        "note": "General-purpose sentence model, baked at build time. No runtime embedding/LLM endpoint.",
-        "vectors": vectors,
-    }
+    def encode(texts):
+        return model.encode(texts, normalize_embeddings=True, batch_size=32, show_progress_bar=False)
+
+    out = bake(nodes, encode, model_name=MODEL, toolchain=toolchain_versions())
     path = os.path.join(KN, "embeddings.json")
     with open(path, "w") as f:
         json.dump(out, f)

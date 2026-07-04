@@ -12,7 +12,7 @@ import embeddingsData from "@/data/knowledge/embeddings.json";
 import librariesData from "@/data/knowledge/libraries.json";
 import explorersData from "@/data/knowledge/explorers.json";
 import paperSynthesisData from "@/data/knowledge/paper-synthesis.json";
-import { buildBm25, bm25Query, dot, rrf, tokenize, type Scored } from "./retrieval";
+import { buildBm25, bm25Query, rrf, semanticQuery, tokenize, type Scored } from "./retrieval";
 import type {
   DigestItem,
   DigestIssue,
@@ -107,6 +107,7 @@ const KIND_LABEL: Record<Exclude<NodeKind, "paper">, string> = {
   talk: "Talk",
   learning: "Learning",
   publication: "Paper (mine)",
+  concept: "Concept",
 };
 
 function adsUrl(bibcode: string): string {
@@ -263,16 +264,17 @@ async function assemble(): Promise<KnowledgeGraph> {
   const degree = new Map<string, number>();
   for (const [id, nbrs] of adj) degree.set(id, nbrs.size);
 
+  // Baked vectors restricted to the curated node set. semanticQuery itself is
+  // id-agnostic, so any node kind in the set (including concept:<slug>) flows
+  // through; vectors without a curated node stay dark until one joins the set.
+  const nodeVectors: Record<string, number[]> = {};
+  for (const n of nodes) if (vectors[n.id]) nodeVectors[n.id] = vectors[n.id];
+
   const related: Record<string, Related> = {};
   for (const node of nodes) {
     // semantic
     const qv = vectors[node.id];
-    const semScored: Scored[] = qv
-      ? nodes
-          .filter((m) => m.id !== node.id && vectors[m.id])
-          .map((m) => ({ id: m.id, score: dot(qv, vectors[m.id]) }))
-          .sort((a, b) => b.score - a.score)
-      : [];
+    const semScored: Scored[] = qv ? semanticQuery(nodeVectors, qv, node.id) : [];
 
     // lexical
     const lexScored = bm25Query(bm25, tokenize(node.text), node.id);

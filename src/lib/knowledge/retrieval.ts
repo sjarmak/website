@@ -80,6 +80,25 @@ export function dot(a: number[], b: number[]): number {
 }
 
 /**
+ * Semantic lane: rank every vectored id against a query vector (excluding
+ * `excludeId`), best first. Id-agnostic like the other lanes — any id scheme
+ * present in the baked vectors (`<collection>:<slug>`, `paper:<bibcode>`,
+ * `concept:<slug>`) flows through and can be returned as a result.
+ */
+export function semanticQuery(
+  vectors: Record<string, number[]>,
+  queryVec: number[],
+  excludeId: string,
+): Scored[] {
+  const results: Scored[] = [];
+  for (const [id, vec] of Object.entries(vectors)) {
+    if (id === excludeId) continue;
+    results.push({ id, score: dot(queryVec, vec) });
+  }
+  return results.sort((a, b) => b.score - a.score);
+}
+
+/**
  * Reciprocal Rank Fusion over several already-sorted rankings.
  * score(id) = sum over lanes of 1 / (k + rank), rank 0-based.
  */
