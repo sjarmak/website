@@ -1,0 +1,170 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { site } from "@/data/site";
+
+// R2 — the whole-machine-layer colophon. Documentation register: factual,
+// third-person, complete. Dates are fixed constants (never build time) so the
+// page's metadata is byte-stable across daily cron builds.
+const DATE_PUBLISHED = "2026-07-04";
+const DATE_MODIFIED = "2026-07-04";
+
+const description =
+  "How the machine layer of sjarmak.ai works: the daily digest pipeline, local text-to-speech, the knowledge sync, the concepts registry and graph, retrieval lanes, and the sync heartbeat.";
+
+const techArticleLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: "Colophon: how the machine layer of sjarmak.ai works",
+  description,
+  author: {
+    "@type": "Person",
+    name: site.name,
+    url: site.url,
+  },
+  datePublished: DATE_PUBLISHED,
+  dateModified: DATE_MODIFIED,
+  url: new URL("/colophon/", site.url).href,
+};
+---
+
+<PageLayout
+  register="reference"
+  title="Colophon"
+  kicker="Reference"
+  intro="How the machine layer of this site works."
+  description={description}
+>
+  <div class="prose">
+    <p>
+      Most of this site is written by hand. A measurable slice of it is not: the daily digest, the
+      audio that accompanies it, parts of the research library, and the freshness data behind the
+      concepts graph are produced by pipelines that run on a schedule, commit their output to the
+      site's git repository, and deploy through the same build as every hand-written page. This
+      page documents those pipelines: what runs, what it reads, what gates its output, and where
+      the results surface. Every page a pipeline produces carries a register stamp identifying it
+      as machine output; the selection criteria and all of the code are by Stephanie Jarmak.
+    </p>
+
+    <h2 id="digest">Daily digest generation</h2>
+    <p>
+      The digest is written by a scheduled job, not a person. A local cron entry
+      (<code>scripts/digest/run.sh</code>) runs on two cadences and three tracks: daily issues
+      cover roughly the last 36 hours in five to seven items, weekly issues cover seven days in
+      twelve to fifteen, and the track sets the scope (specialized issues go deep on this site's
+      core topics, general issues round up the wider agentic field, curated issues assemble items
+      picked by hand).
+    </p>
+    <p>
+      Each run builds a prompt from a per-track template and hands it to a headless Claude session
+      through <code>claude-auto</code>, a router that picks the least-loaded of several accounts so
+      a rate-capped one does not kill the run. The session selects source items through the
+      code-intel-copilot MCP server, a feed of recent code-intelligence material it can search
+      lexically and semantically, aggregate, and pull individual items from, and then writes the
+      issue.
+    </p>
+    <p>
+      Before an issue reaches the content collection it passes a publish gate
+      (<code>scripts/digest/publish-digest.mjs</code>). The gate validates the issue against a
+      schema mirroring the site's digest collection and derives the issue's provenance register
+      from its origin: automated issues publish as <em>generated</em>, hand-curated ones as
+      <em>hybrid</em>, and an issue claiming a register its origin contradicts is refused before
+      anything is written. A concept gate then resolves each topic facet against the concepts
+      alias table described below: an interactive publish refuses to write anything when none of
+      an issue's facets resolve, a cron publish warns and proceeds, and in either mode any facets
+      left unresolved are recorded in the issue's frontmatter, with cron runs additionally filing
+      alias proposals for later review.
+    </p>
+    <p>
+      A repeat-coverage guard (<code>scripts/digest/recent-coverage.mjs</code>) keeps consecutive
+      issues from re-covering the same material. It compares normalized item URLs (fragments
+      dropped, tracking parameters stripped) against recent issues of the same cadence and track,
+      seven days back for daily issues and twenty-eight for weekly. The generator receives the
+      do-not-repeat list up front, and the publish gate independently refuses any repeated URL, so
+      the guard holds even when the model ignores its instructions. Published issues appear on
+      <a href="/digest">the digest</a> and accumulate in <a href="/digest/archive">the archive</a>.
+    </p>
+
+    <h2 id="tts">Text-to-speech</h2>
+    <p>
+      Issues that ship with audio are narrated by Kokoro-82M, a small open-weight TTS model that
+      runs entirely on local hardware; no text leaves the machine and no external API is involved.
+      A Node script (<code>scripts/digest/tts-render.mjs</code>) strips the issue's markdown down
+      to speakable text and splits it into chunks of at most 4,000 characters on paragraph and
+      sentence boundaries; a Python worker loads the model once and renders each chunk to WAV
+      (voice <code>am_onyx</code>, at 0.85 speed), and ffmpeg concatenates the parts into a single
+      24&nbsp;kHz mono MP3 committed under <code>/media/digests/</code> and served statically from
+      the <a href="/digest">issue pages</a>.
+    </p>
+
+    <h2 id="knowledge-sync">Knowledge sync</h2>
+    <p>
+      A daily post-digest job (<code>scripts/knowledge/sync-knowledge.sh</code>) decides whether
+      papers cited by that day's specialized digest belong in the site's research libraries or
+      thematic explorers. The two destinations get different treatment: library additions are
+      written as proposals for human review and never touch NASA ADS directly, while explorer
+      additions are applied to the in-repo explorer files together with a grounded synthesis of
+      each paper, read through the SciX MCP tools against the NASA ADS corpus.
+    </p>
+    <p>
+      The library data itself is pulled by <code>scripts/knowledge/build_libraries.py</code> from
+      curated NASA ADS biblib libraries, enriched with metadata from the ADS search API, and
+      committed as a JSON snapshot; the site builds from the committed file, so what visitors see
+      in <a href="/library">the library</a> is the state of the libraries at the last sync, not a
+      live query. A companion script validates the explorer files (self-contained thematic
+      literature maps) and assembles them into the combined dataset behind the same page. At the
+      end of every sync cycle, whether it did work, found nothing to do, or failed, a rider step
+      updates the sync heartbeat described below.
+    </p>
+
+    <h2 id="concepts">Concepts registry and graph</h2>
+    <p>
+      The registry is 36 curated concepts, each a Markdown entry under
+      <code>src/content/concepts/</code> with a label, a set of aliases, and a definition. An
+      alias table maps every normalized label and alias to its canonical slug, and the build fails
+      if two entries claim the same name; this same table is what the digest's concept gate
+      resolves topic facets against, so the digest and the graph share one vocabulary.
+    </p>
+    <p>
+      A concept's evidence is never stored, only derived at build time: digest topic facets,
+      explorer section themes, per-paper theme branches, and a committed assignments file join
+      into per-concept evidence lanes covering digest issues, explorer sections, papers, notes,
+      and threads. The <a href="/prototypes/concepts">concepts prototype</a> renders the result as
+      an interactive graph with a detail panel showing each concept's evidence and a freshness
+      line summarizing how recently it was tagged.
+    </p>
+
+    <h2 id="retrieval">Embeddings and retrieval lanes</h2>
+    <p>
+      The repository also carries build-time retrieval machinery over the site's knowledge
+      corpus: a semantic lane (embedding dot product), a lexical lane (BM25), a graph-adjacency
+      lane, and a recency lane, fused with reciprocal-rank fusion into a single ranking. The
+      embeddings behind the semantic lane are baked once by
+      <code>scripts/knowledge/build_embeddings.py</code> using
+      <code>sentence-transformers/all-mpnet-base-v2</code> (768 dimensions, L2-normalized) and
+      committed to the repository, so retrieval reflects the corpus as it stood at authoring
+      time; nothing runs in the browser and the deployed site calls no model endpoint. The lanes
+      are implemented and exercised by the site's test suite, but no page currently renders their
+      fused output as a related-items list.
+    </p>
+
+    <h2 id="heartbeat">Sync heartbeat</h2>
+    <p>
+      Because several of these pipelines run unattended, the repository carries a committed
+      heartbeat file (<code>src/data/knowledge/concept-sync-status.json</code>) recording when
+      each pipeline step last ran, which flags were set, how many concept proposals are waiting in
+      the backlog and how old the oldest is, and what fraction of digest topic facets currently
+      resolve to registered concepts. It stores counts and timestamps only, never proposal
+      contents. Both the digest publish gate and the knowledge-sync rider write it, and the
+      <a href="/prototypes/concepts">concepts prototype</a> renders it as a sync-heartbeat panel,
+      so pipeline drift is visible on the page the pipelines feed.
+    </p>
+
+    <p>
+      Everything above runs from code committed to this site's repository and deploys through the
+      same continuous-integration checks as the hand-written pages; where a description here and
+      the code disagree, the code is current.
+    </p>
+  </div>
+</PageLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(techArticleLd)} />
