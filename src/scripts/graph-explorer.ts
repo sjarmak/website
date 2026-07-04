@@ -10,6 +10,7 @@ import type { ConceptFreshness } from "@/lib/knowledge/conceptFreshness";
 import { readTokens, colorFor, buildStylesheet, toElements } from "./graph-style";
 import { resolveNodeParam } from "./graph-deeplink";
 import { buildConceptPanel } from "./concept-panel";
+import { buildEvidenceSpecs, evidenceElements, EVIDENCE_ID_PREFIX } from "./graph-evidence";
 
 /** GraphData plus the optional concept-page extras (ignored elsewhere). */
 type ExplorerData = GraphData & {
@@ -21,11 +22,12 @@ function setup(root: HTMLElement, data: ExplorerData) {
   if (root.dataset.wired === "true") return;
   root.dataset.wired = "true";
 
-  const byId = new Map(data.nodes.map((n) => [n.id, n]));
+  const byId = new Map<string, ConceptGraphNode>(data.nodes.map((n) => [n.id, n]));
   const search = root.querySelector<HTMLInputElement>("[data-graph-search]");
   const fallback = root.querySelector<HTMLElement>("[data-graph-fallback]");
   const filterBtns = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-filter]"));
   const viewToggle = root.querySelector<HTMLButtonElement>("[data-view-toggle]");
+  const evidenceToggle = root.querySelector<HTMLButtonElement>("[data-evidence-toggle]");
 
   // --- fallback search (works with or without the canvas) ---
   function filterFallback(q: string) {
@@ -39,6 +41,8 @@ function setup(root: HTMLElement, data: ExplorerData) {
 
   let cy: Core | null = null;
   let canvasActive = false;
+  let evidenceOn = true;
+  let selectedId: string | null = null;
 
   // --- canvas loader (lazy, gated) ---
   const stage = root.querySelector<HTMLElement>("[data-graph-stage]");
@@ -100,14 +104,22 @@ function setup(root: HTMLElement, data: ExplorerData) {
     if (!cy) return;
     cy.on("tap", "node", (evt) => {
       const node = evt.target as NodeSingular;
+      if (node.id().startsWith(EVIDENCE_ID_PREFIX)) {
+        // Satellite: navigate when it has a target, otherwise inert.
+        const href = node.data("href") as string | undefined;
+        if (href !== undefined) location.assign(href);
+        return;
+      }
       highlight(node);
       openDetail(node.id());
+      showEvidence(node.id());
       history.replaceState(null, "", `?node=${node.id()}`);
     });
     cy.on("tap", (evt) => {
       if (evt.target === cy) {
         clearHighlight();
         closeDetail();
+        clearEvidence();
         history.replaceState(null, "", location.pathname);
       }
     });
@@ -135,7 +147,36 @@ function setup(root: HTMLElement, data: ExplorerData) {
     highlight(node as unknown as NodeSingular);
     cy.animate({ center: { eles: node }, zoom: 1.2 }, { duration: prefersReduced ? 0 : 400 });
     openDetail(id);
+    showEvidence(id);
   }
+
+  // --- local evidence view (Obsidian-style satellites) ---
+  // Structurally gated: only nodes that carry an `evidence` payload (the
+  // concepts page) can spawn satellites; on /projects/explorer every call is
+  // a no-op. The unexpanded global view never contains evidence nodes.
+  function clearEvidence() {
+    selectedId = null;
+    cy?.remove(cy.elements(`[id ^= "${EVIDENCE_ID_PREFIX}"]`));
+  }
+
+  function showEvidence(id: string) {
+    if (!cy) return;
+    clearEvidence();
+    selectedId = id;
+    if (!evidenceOn) return;
+    const n = byId.get(id);
+    if (n?.evidence === undefined) return;
+    const specs = buildEvidenceSpecs(n);
+    if (specs.nodes.length === 0) return;
+    const center = cy.getElementById(id).position();
+    cy.add(evidenceElements(specs, center, readTokens()));
+  }
+
+  evidenceToggle?.addEventListener("click", () => {
+    evidenceOn = !evidenceOn;
+    evidenceToggle.setAttribute("aria-pressed", String(evidenceOn));
+    if (selectedId !== null) showEvidence(selectedId);
+  });
 
   // --- detail panel ---
   // The [data-detail-evidence] container exists only where a page opts in
@@ -210,6 +251,7 @@ function setup(root: HTMLElement, data: ExplorerData) {
   root.querySelector("[data-detail-close]")?.addEventListener("click", () => {
     closeDetail();
     clearHighlight();
+    clearEvidence();
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeDetail();
