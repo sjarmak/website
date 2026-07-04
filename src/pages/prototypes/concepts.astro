@@ -1,0 +1,321 @@
+---
+import { readFileSync } from "node:fs";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ConceptFallback from "@/components/graph/ConceptFallback.astro";
+import { buildConceptGraph } from "@/lib/graph/buildConceptGraph";
+import { loadDigestDocs } from "@/lib/knowledge/conceptMembership";
+import {
+  computeConceptFreshness,
+  type ConceptFreshness,
+} from "@/lib/knowledge/conceptFreshness";
+import { deriveFilterChips } from "@/scripts/graph-style";
+
+const data = buildConceptGraph();
+const chips = deriveFilterChips(data);
+
+const totalDigests = loadDigestDocs().length;
+const freshness: Record<string, ConceptFreshness> = {};
+for (const node of data.nodes) {
+  if (node.type === "concept" && node.evidence !== undefined) {
+    freshness[node.id] = computeConceptFreshness(node.evidence.digests, totalDigests);
+  }
+}
+
+// The island payload: ConceptGraphData plus the freshness map. Extra fields
+// are inert on pages that embed plain GraphData.
+const payload = { ...data, freshness };
+
+// ---- sync heartbeat (committed by the concept pipeline) ----
+interface SyncStatus {
+  version: number;
+  updatedAt: string;
+  steps: Record<string, string | { lastRun?: string }>;
+  flags: Record<string, boolean | string>;
+  backlog: { count: number; oldestAgeSeconds: number | null };
+  facetResolution: { resolved: number; total: number; rate: number | null };
+}
+const sync = JSON.parse(
+  readFileSync("src/data/knowledge/concept-sync-status.json", "utf8"),
+) as SyncStatus;
+
+function stepLastRun(value: string | { lastRun?: string }): string {
+  if (typeof value === "string") return value;
+  return value.lastRun ?? "unknown";
+}
+
+function formatAge(seconds: number | null): string {
+  if (seconds === null) return "—";
+  if (seconds < 3600) return `${Math.round(seconds / 60)} min`;
+  if (seconds < 86400) return `${Math.round(seconds / 3600)} h`;
+  return `${Math.round(seconds / 86400)} d`;
+}
+
+const steps = Object.entries(sync.steps);
+const flags = Object.entries(sync.flags);
+const rateLabel =
+  sync.facetResolution.rate !== null
+    ? `${Math.round(sync.facetResolution.rate * 100)}%`
+    : "n/a";
+---
+
+<BaseLayout
+  title="Concepts explorer"
+  description="An interactive graph of the concept vocabulary, its topic anchors, and the evidence behind each concept."
+  noindex={true}
+>
+  <div class="container">
+    <header class="explorer-head stack stack-s">
+      <p class="kicker">Prototype · concepts</p>
+      <h1>The concept map</h1>
+      <p class="lead measure">
+        The canonical concept vocabulary drawn as a graph: concepts, the topics they anchor to,
+        and co-occurrence edges derived from digest issues and explorer papers. Click a concept
+        for its evidence — digest issues, explorer sections, papers — or read the structured
+        list below.
+      </p>
+    </header>
+
+    <div class="graph-explorer" data-graph-explorer>
+      <div class="graph-toolbar">
+        <div class="filters" role="group" aria-label="Filter by node type">
+          {
+            chips.map((chip) => (
+              <button type="button" class="chip" data-filter={chip.type} aria-pressed="true">
+                {chip.label}
+              </button>
+            ))
+          }
+        </div>
+        <input
+          type="search"
+          class="graph-search"
+          data-graph-search
+          placeholder="Search the map…"
+          aria-label="Search nodes"
+        />
+        <button type="button" class="chip chip--toggle" data-view-toggle aria-pressed="false">
+          Graph view
+        </button>
+      </div>
+
+      <div class="graph-stage" data-graph-stage>
+        <div
+          class="graph-canvas"
+          data-graph-canvas
+          role="img"
+          aria-label="Interactive concept graph. An accessible list of the same content is below."
+        >
+        </div>
+        <aside class="graph-detail" data-graph-detail hidden role="dialog" aria-label="Node detail">
+          <button type="button" class="graph-detail__close" data-detail-close aria-label="Close detail"
+            >×</button
+          >
+          <p class="graph-detail__type" data-detail-type></p>
+          <h2 class="graph-detail__title" data-detail-title></h2>
+          <p class="graph-detail__summary secondary" data-detail-summary></p>
+          <p class="graph-detail__links cluster" data-detail-links></p>
+          <div class="graph-detail__evidence" data-detail-evidence></div>
+        </aside>
+      </div>
+
+      <div class="graph-fallback-wrap" data-graph-fallback>
+        <ConceptFallback data={data} freshness={freshness} />
+      </div>
+    </div>
+
+    <section class="heartbeat" data-concept-heartbeat aria-label="Concept sync heartbeat">
+      <h2 class="heartbeat__head">Sync heartbeat</h2>
+      <dl class="heartbeat__grid">
+        <dt>Status updated</dt>
+        <dd>{sync.updatedAt.slice(0, 10)}</dd>
+
+        <dt>Last runs</dt>
+        <dd>
+          {
+            steps.length > 0 ? (
+              <ul role="list">
+                {steps.map(([name, value]) => (
+                  <li>
+                    {name}: {stepLastRun(value)}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              "no steps recorded yet"
+            )
+          }
+        </dd>
+
+        <dt>Flags</dt>
+        <dd>
+          {
+            flags.length > 0
+              ? flags.map(([name, value]) => `${name}: ${String(value)}`).join(", ")
+              : "none set"
+          }
+        </dd>
+
+        <dt>Proposal backlog</dt>
+        <dd>
+          {sync.backlog.count} pending
+          {sync.backlog.count > 0 ? ` · oldest ${formatAge(sync.backlog.oldestAgeSeconds)}` : ""}
+        </dd>
+
+        <dt>Facet resolution</dt>
+        <dd>
+          {sync.facetResolution.resolved} of {sync.facetResolution.total} resolved ({rateLabel})
+        </dd>
+      </dl>
+    </section>
+  </div>
+
+  <script type="application/json" data-graph-data set:html={JSON.stringify(payload)} is:inline
+  ></script>
+
+  <script>
+    import "@/scripts/graph-explorer";
+  </script>
+</BaseLayout>
+
+<style>
+  .explorer-head {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl)) var(--space-l);
+  }
+  .graph-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    align-items: center;
+    margin-block-end: var(--space-m);
+  }
+  .filters {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+  .chip {
+    font-size: var(--step--1);
+    padding: 0.4em 0.9em;
+    border-radius: 999px;
+    border: var(--border-hairline);
+    color: var(--color-text-secondary);
+    transition: all 0.15s ease;
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--paper-50);
+  }
+  .chip--toggle {
+    margin-inline-start: auto;
+  }
+  .graph-search {
+    flex: 1 1 12rem;
+    min-width: 8rem;
+    padding: 0.45em 0.8em;
+    border-radius: var(--radius);
+    border: var(--border-hairline);
+    background: var(--color-bg);
+  }
+  .graph-stage {
+    position: relative;
+  }
+  .graph-canvas {
+    width: 100%;
+    height: min(70vh, 640px);
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: var(--graph-bg);
+    /* hidden until JS activates the canvas; no-JS falls back to the list */
+    display: none;
+  }
+  .graph-explorer[data-canvas-active="true"] .graph-canvas {
+    display: block;
+  }
+  .graph-detail {
+    position: absolute;
+    top: var(--space-s);
+    right: var(--space-s);
+    width: min(22rem, calc(100% - 2 * var(--space-s)));
+    max-height: calc(100% - 2 * var(--space-s));
+    overflow-y: auto;
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: color-mix(in oklch, var(--color-surface) 96%, transparent);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px oklch(0% 0 0 / 0.12);
+  }
+  .graph-detail__close {
+    position: absolute;
+    top: var(--space-2xs);
+    right: var(--space-xs);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+  .graph-detail__type {
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
+  }
+  .graph-detail__title {
+    font-size: var(--step-2);
+    margin-block: var(--space-3xs) var(--space-xs);
+  }
+  .graph-detail__links {
+    margin-block-start: var(--space-s);
+    --cluster-gap: var(--space-m);
+  }
+  .graph-detail__evidence {
+    font-size: var(--step--1);
+  }
+  .graph-detail__evidence :global(.graph-detail__group-head) {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-muted);
+    margin-block: var(--space-s) var(--space-2xs);
+  }
+  .graph-detail__evidence :global(ul) {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3xs);
+  }
+  .graph-detail__evidence :global([data-node-type="vaultNote"]) {
+    border-inline-start: 3px solid var(--graph-node-note);
+    padding-inline-start: var(--space-2xs);
+  }
+  .graph-fallback-wrap {
+    margin-block-start: var(--space-l);
+  }
+  /* Graph is the default view; the list is shown only when canvas is inactive. */
+  .graph-explorer[data-canvas-active="true"] .graph-fallback-wrap {
+    display: none;
+  }
+  .heartbeat {
+    margin-block: var(--space-xl);
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg-subtle);
+    font-size: var(--step--1);
+  }
+  .heartbeat__head {
+    font-size: var(--step-0);
+    margin-block-end: var(--space-s);
+  }
+  .heartbeat__grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2xs) var(--space-m);
+  }
+  .heartbeat__grid dt {
+    color: var(--color-text-muted);
+  }
+  .heartbeat__grid dd {
+    margin: 0;
+  }
+</style>
