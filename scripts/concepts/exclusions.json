@@ -1,0 +1,10 @@
+{
+  "$comment": "Hard-excluded vault path patterns for the concepts pipeline. This is data, not code — extend the list without a code change. Loaded by scripts/concepts/lib/exclusions.mjs.",
+  "patterns": [
+    ".claude/",
+    ".claudian/",
+    ".stfolder",
+    ".stignore",
+    "*.sync-conflict-*"
+  ]
+}
