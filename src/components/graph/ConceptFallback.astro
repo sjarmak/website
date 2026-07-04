@@ -1,0 +1,76 @@
+---
+import type { ConceptGraphData } from "@/lib/graph/buildConceptGraph";
+import type { ConceptFreshness } from "@/lib/knowledge/conceptFreshness";
+import { buildConceptPanel } from "@/scripts/concept-panel";
+
+interface Props {
+  data: ConceptGraphData;
+  freshness: Record<string, ConceptFreshness>;
+}
+
+const { data, freshness } = Astro.props;
+
+const concepts = data.nodes
+  .filter((n) => n.type === "concept")
+  .sort((a, b) => a.label.localeCompare(b.label))
+  .map((node) => ({ node, panel: buildConceptPanel(node, freshness[node.id]) }));
+---
+
+<section class="fallback" aria-label="Concept map (list view)" data-concept-fallback>
+  <div class="stack stack-l">
+    {
+      concepts.map(({ node, panel }) => (
+        <article class="concept" id={`concept-${node.id}`}>
+          <h3 class="concept__title">{node.label}</h3>
+          <p class="muted measure">{node.summary}</p>
+          {panel.freshnessLine && <p class="concept__freshness muted">{panel.freshnessLine}</p>}
+          {panel.groups.map((group) => (
+            <div class="concept__sub">
+              <h4>{group.heading}</h4>
+              <ul role="list" class="stack stack-s">
+                {group.items.map((item) => (
+                  <li>
+                    {item.href ? (
+                      <a href={item.href} rel={item.href.startsWith("http") ? "noopener" : undefined}>
+                        {item.label}
+                      </a>
+                    ) : (
+                      <span data-node-type={item.type}>{item.label}</span>
+                    )}
+                    {item.meta && <span class="muted"> — {item.meta}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .concept__title {
+    font-size: var(--step-2);
+    color: var(--color-accent);
+  }
+  .concept__freshness {
+    font-size: var(--step--1);
+  }
+  .concept__sub {
+    margin-block-start: var(--space-s);
+  }
+  .concept__sub h4 {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-text-muted);
+    margin-block-end: var(--space-2xs);
+  }
+  [data-node-type="vaultNote"] {
+    /* Vault notes are fixture-only plain entries; tint with the note token. */
+    border-inline-start: 3px solid var(--graph-node-note);
+    padding-inline-start: var(--space-2xs);
+  }
+</style>

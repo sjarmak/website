@@ -5,9 +5,19 @@
 
 import type { Core, NodeSingular } from "cytoscape";
 import type { GraphData } from "@/lib/graph/buildGraph";
+import type { ConceptGraphNode } from "@/lib/graph/buildConceptGraph";
+import type { ConceptFreshness } from "@/lib/knowledge/conceptFreshness";
 import { readTokens, colorFor, buildStylesheet, toElements } from "./graph-style";
+import { resolveNodeParam } from "./graph-deeplink";
+import { buildConceptPanel } from "./concept-panel";
 
-function setup(root: HTMLElement, data: GraphData) {
+/** GraphData plus the optional concept-page extras (ignored elsewhere). */
+type ExplorerData = GraphData & {
+  nodes: ConceptGraphNode[];
+  freshness?: Record<string, ConceptFreshness>;
+};
+
+function setup(root: HTMLElement, data: ExplorerData) {
   if (root.dataset.wired === "true") return;
   root.dataset.wired = "true";
 
@@ -82,7 +92,8 @@ function setup(root: HTMLElement, data: GraphData) {
     setCanvasActive(true);
 
     const initial = new URLSearchParams(location.search).get("node");
-    if (initial && byId.has(initial)) focusNode(initial);
+    const resolved = initial !== null ? resolveNodeParam(initial, byId) : null;
+    if (resolved !== null) focusNode(resolved);
   }
 
   function wireCanvasEvents() {
@@ -127,6 +138,11 @@ function setup(root: HTMLElement, data: GraphData) {
   }
 
   // --- detail panel ---
+  // The [data-detail-evidence] container exists only where a page opts in
+  // (e.g. /prototypes/concepts); on /projects/explorer evidence rendering is
+  // a no-op.
+  const evidenceEl = detail?.querySelector<HTMLElement>("[data-detail-evidence]") ?? null;
+
   function openDetail(id: string) {
     const n = byId.get(id);
     if (!n || !detail) return;
@@ -142,7 +158,51 @@ function setup(root: HTMLElement, data: GraphData) {
       if (l.url.startsWith("http")) a.rel = "noopener";
       links.appendChild(a);
     }
+    renderEvidence(n);
     detail.hidden = false;
+  }
+
+  function renderEvidence(n: ConceptGraphNode) {
+    if (evidenceEl === null) return;
+    evidenceEl.innerHTML = "";
+    const panel = buildConceptPanel(n, data.freshness?.[n.id]);
+    if (n.evidence !== undefined && panel.freshnessLine !== null) {
+      const p = document.createElement("p");
+      p.className = "graph-detail__freshness muted";
+      p.textContent = panel.freshnessLine;
+      evidenceEl.appendChild(p);
+    }
+    for (const group of panel.groups) {
+      const h = document.createElement("h3");
+      h.className = "graph-detail__group-head";
+      h.textContent = group.heading;
+      evidenceEl.appendChild(h);
+      const ul = document.createElement("ul");
+      ul.className = "graph-detail__group";
+      for (const item of group.items) {
+        const li = document.createElement("li");
+        if (item.href !== undefined) {
+          const a = document.createElement("a");
+          a.href = item.href;
+          a.textContent = item.label;
+          if (item.href.startsWith("http")) a.rel = "noopener";
+          li.appendChild(a);
+        } else {
+          const span = document.createElement("span");
+          span.textContent = item.label;
+          if (item.type !== undefined) span.dataset.nodeType = item.type;
+          li.appendChild(span);
+        }
+        if (item.meta !== undefined) {
+          const meta = document.createElement("span");
+          meta.className = "muted";
+          meta.textContent = ` — ${item.meta}`;
+          li.appendChild(meta);
+        }
+        ul.appendChild(li);
+      }
+      evidenceEl.appendChild(ul);
+    }
   }
   function closeDetail() {
     if (detail) detail.hidden = true;
@@ -228,7 +288,7 @@ function run() {
     const dataEl = document.querySelector<HTMLScriptElement>("[data-graph-data]");
     if (!dataEl?.textContent) return;
     try {
-      const data = JSON.parse(dataEl.textContent) as GraphData;
+      const data = JSON.parse(dataEl.textContent) as ExplorerData;
       setup(root, data);
     } catch {
       /* leave the accessible fallback in place */
