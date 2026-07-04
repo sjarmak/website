@@ -36,12 +36,14 @@ function topicLabel(slug: string): string {
 }
 ---
 
+{/* stamp={false}: the ProvenanceBadge below is this page's single provenance surface. */}
 <BaseLayout
   register={data.register}
   updated={data.date}
   title={data.title}
   description={data.summary}
   type="article"
+  stamp={false}
 >
   <article class="container container-narrow digest">
     <header class="digest__head stack stack-s">

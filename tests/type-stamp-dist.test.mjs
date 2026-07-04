@@ -23,13 +23,25 @@ const MANUAL_ISSUE =
 const AUTO_ISSUE = "daily-2026-06-09";
 const EXPLORER_PAGE = path.join("library", "explorers", "agentic-information-retrieval");
 
-const EXEMPLARS = {
+// Digest ISSUE pages suppress the layout stamp (BaseLayout stamp={false}):
+// their single provenance surface is the ProvenanceBadge, asserted in
+// tests/provenance-badge.test.mjs. hybrid therefore has no stamped exemplar —
+// manual digest issues are the only hybrid pages on the site.
+const STAMP_EXEMPLARS = {
   authored: ".",
-  generated: path.join("digest", AUTO_ISSUE),
-  hybrid: path.join("digest", MANUAL_ISSUE),
+  generated: "digest",
   reference: "library",
   lab: path.join("prototypes", "starmap"),
 };
+
+const BADGE_EXEMPLARS = {
+  generated: path.join("digest", AUTO_ISSUE),
+  hybrid: path.join("digest", MANUAL_ISSUE),
+};
+
+// A rendered type-stamp element (markup-anchored: matches the class attribute,
+// never the class name inside inlined CSS).
+const STAMP_EL = /<div[^>]*class="[^"]*type-stamp[^"]*"/;
 
 function page(rel) {
   return readFileSync(path.join(DIST, rel, "index.html"), "utf8");
@@ -66,9 +78,14 @@ before(async () => {
 
 // ------------------------------------------------- mapped copy per register
 
-test("every register's exemplar page renders the mapped stamp copy", () => {
-  assert.deepEqual(Object.keys(EXEMPLARS).sort(), [...REGISTERS].sort());
-  for (const [register, rel] of Object.entries(EXEMPLARS)) {
+test("every register's exemplar page renders the mapped provenance copy", () => {
+  // Every register is covered by one surface or the other: four registers by
+  // the layout stamp, generated+hybrid digest issues by the badge alone.
+  assert.deepEqual(
+    [...new Set([...Object.keys(STAMP_EXEMPLARS), ...Object.keys(BADGE_EXEMPLARS)])].sort(),
+    [...REGISTERS].sort(),
+  );
+  for (const [register, rel] of Object.entries(STAMP_EXEMPLARS)) {
     const html = decode(page(rel));
     const { label, badgeCopy } = REGISTER_COPY[register];
     assert.ok(
@@ -78,10 +95,22 @@ test("every register's exemplar page renders the mapped stamp copy", () => {
     assert.ok(html.includes(label), `${rel}: stamp must render label "${label}"`);
     assert.ok(html.includes(badgeCopy), `${rel}: stamp must render badge copy "${badgeCopy}"`);
   }
+  for (const [register, rel] of Object.entries(BADGE_EXEMPLARS)) {
+    const html = decode(page(rel));
+    assert.ok(
+      html.includes(`data-register="${register}"`),
+      `${rel}: badge must carry data-register="${register}"`,
+    );
+    assert.ok(
+      html.includes(REGISTER_COPY[register].badgeCopy),
+      `${rel}: badge must render the map's badge copy`,
+    );
+    assert.doesNotMatch(html, STAMP_EL, `${rel}: issue pages render no layout stamp`);
+  }
 });
 
-test("edge case: a manual digest issue stamps hybrid, not generated or authored", () => {
-  const html = decode(page(EXEMPLARS.hybrid));
+test("edge case: a manual digest issue is badged hybrid, not generated or authored", () => {
+  const html = decode(page(BADGE_EXEMPLARS.hybrid));
   assert.ok(html.includes(`data-register="hybrid"`));
   assert.ok(html.includes(REGISTER_COPY.hybrid.badgeCopy));
   assert.equal(html.includes(REGISTER_COPY.generated.badgeCopy), false);
@@ -96,15 +125,19 @@ test("edge case: a machine-built learning (explorer) page is stamped generated, 
   assert.equal(html.includes(REGISTER_COPY.authored.badgeCopy), false);
 });
 
-test("digest exemplar renders the optional updated date", () => {
-  const html = page(EXEMPLARS.generated);
-  assert.match(html, /updated <time datetime="2026-06-09"[^>]*>2026-06-09<\/time>/);
+test("digest issues render no stamp updated line — the badge is the single provenance surface", () => {
+  // The stamp's "· updated <date>" line went with the suppressed stamp; the
+  // issue's own dated byline (fullDate) remains the visible date.
+  const html = page(BADGE_EXEMPLARS.generated);
+  assert.doesNotMatch(html, /updated <time/);
+  assert.doesNotMatch(html, STAMP_EL);
+  assert.match(html, /Jun 9, 2026/);
 });
 
 // ------------------------------------------------- placement
 
 test("authored stamp is footer-quiet: after </main> and after the site footer", () => {
-  const html = page(EXEMPLARS.authored);
+  const html = page(STAMP_EXEMPLARS.authored);
   const stampAt = html.indexOf(QUIET_STAMP);
   assert.ok(stampAt >= 0, "homepage must carry a footer-quiet stamp");
   assert.equal(html.includes(HEADER_STAMP), false, "no visible header stamp on authored pages");
@@ -113,7 +146,7 @@ test("authored stamp is footer-quiet: after </main> and after the site footer", 
 });
 
 test("homepage hero contains no stamp and is byte-identical to the base branch", () => {
-  const html = page(EXEMPLARS.authored);
+  const html = page(STAMP_EXEMPLARS.authored);
   const start = html.indexOf('<section class="hero container"');
   assert.ok(start >= 0, "hero section must exist");
   const hero = html.slice(start, html.indexOf("</section>", start) + "</section>".length);
@@ -123,8 +156,10 @@ test("homepage hero contains no stamp and is byte-identical to the base branch",
 });
 
 test("machine registers stamp visibly at the top of <main>, before the h1", () => {
-  for (const register of ["generated", "hybrid", "reference", "lab"]) {
-    const html = page(EXEMPLARS[register]);
+  // hybrid is absent: its only pages (manual digest issues) suppress the
+  // stamp in favor of the badge, so no page renders a hybrid header stamp.
+  for (const register of ["generated", "reference", "lab"]) {
+    const html = page(STAMP_EXEMPLARS[register]);
     const stampAt = html.indexOf(HEADER_STAMP);
     assert.ok(stampAt >= 0, `${register}: must carry a header stamp`);
     assert.equal(html.includes(QUIET_STAMP), false, `${register}: no quiet stamp`);
