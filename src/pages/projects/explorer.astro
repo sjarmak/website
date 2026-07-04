@@ -2,8 +2,10 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import GraphFallback from "@/components/graph/GraphFallback.astro";
 import { buildGraph } from "@/lib/graph/buildGraph";
+import { deriveFilterChips } from "@/scripts/graph-style";
 
 const data = await buildGraph();
+const chips = deriveFilterChips(data);
 ---
 
 <BaseLayout
@@ -24,9 +26,13 @@ const data = await buildGraph();
     <div class="graph-explorer" data-graph-explorer>
       <div class="graph-toolbar">
         <div class="filters" role="group" aria-label="Filter by node type">
-          <button type="button" class="chip" data-filter="project" aria-pressed="true">Projects</button>
-          <button type="button" class="chip" data-filter="topic" aria-pressed="true">Topics</button>
-          <button type="button" class="chip" data-filter="output" aria-pressed="true">Outputs</button>
+          {
+            chips.map((chip) => (
+              <button type="button" class="chip" data-filter={chip.type} aria-pressed="true">
+                {chip.label}
+              </button>
+            ))
+          }
         </div>
         <input
           type="search"
