@@ -24,6 +24,7 @@ import { z } from "zod";
 import YAML from "yaml";
 import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
 import { evaluateConceptGate, isCronMode, runPostPublishSideEffects } from "./concept-gate.mjs";
+import { REGISTERS, registerFromDigestOrigin } from "../../src/lib/register.ts";
 
 const CONTENT_DIR = "src/content/digest";
 const AUDIO_DIR = "public/media/digests";
@@ -55,8 +56,19 @@ const specSchema = z
     highlights: z.array(z.string()).default([]),
     body: z.string().optional(),
     bodyFile: z.string().optional(),
+    // Register gate (PRD R3): register always DERIVES from origin
+    // (auto→generated, manual→hybrid). A spec may state it explicitly, but a
+    // stated value that contradicts the derivation is refused outright — in
+    // BOTH cron and interactive modes, before anything is written. Unlike the
+    // concept gate (an alias-resolution judgment, mode-split), this validates
+    // the producer's OWN output, so there is no warn-and-publish path.
+    register: z.enum(REGISTERS).optional(),
   })
-  .refine((s) => s.body || s.bodyFile, { message: "provide `body` or `bodyFile`" });
+  .refine((s) => s.body || s.bodyFile, { message: "provide `body` or `bodyFile`" })
+  .refine((s) => !s.register || s.register === registerFromDigestOrigin(s.origin), {
+    path: ["register"],
+    message: "register must derive from origin (auto→generated, manual→hybrid) — refusing to publish a register/origin mismatch",
+  });
 
 function parseArgs(argv) {
   const args = { commit: false };
@@ -129,6 +141,9 @@ async function publish(spec) {
     cadence: spec.cadence,
     track: spec.track,
     origin: spec.origin,
+    // register is always the origin derivation (validated against any explicit
+    // spec value above) — the published entry states its provenance outright.
+    register: registerFromDigestOrigin(spec.origin),
     date: spec.date,
     summary: spec.summary,
     topics: spec.topics,

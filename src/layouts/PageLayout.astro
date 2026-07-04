@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import type { Register } from "@/lib/register";
 
 interface Props {
   title: string;
@@ -10,12 +11,20 @@ interface Props {
   intro?: string;
   image?: string;
   noindex?: boolean;
+  /** REQUIRED register declaration (PRD R3) — threaded to BaseHead's meta tag. */
+  register: Register;
 }
 
-const { title, description, kicker, intro, image, noindex } = Astro.props;
+const { title, description, kicker, intro, image, noindex, register } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description ?? intro} image={image} noindex={noindex}>
+<BaseLayout
+  title={title}
+  description={description ?? intro}
+  image={image}
+  noindex={noindex}
+  register={register}
+>
   <div class="container">
     <header class="page-head stack stack-s">
       {kicker && <p class="kicker">{kicker}</p>}

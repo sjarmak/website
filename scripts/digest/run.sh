@@ -107,6 +107,12 @@ echo "[digest] ${MODE} ${DATE} — generating (work=${WORK}, via ${CLAUDE_BIN})"
 # shellcheck disable=SC2086
 "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
+# Register hygiene (PRD R3), local failure channel: refuse to commit an issue
+# whose register/origin frontmatter violates the schema — the drift is caught
+# here on the cron host, never as a red site-CI run at 3 a.m. (`set -e` aborts
+# the run before anything is committed or pushed.)
+node scripts/checks/validate-digest-registers.mjs 2>&1 | tee -a "$LOG"
+
 git add src/content/digest public/media/digests 2>/dev/null || true
 if git diff --cached --quiet; then
   echo "[digest] nothing new to commit — agent may have written a 'quiet day' issue or failed; see $LOG" | tee -a "$LOG"
