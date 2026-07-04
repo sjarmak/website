@@ -34,6 +34,36 @@ SYNC_DIR="$WEBSITE_DIR/.knowledge-sync/$DATE"
 mkdir -p "$SYNC_DIR"
 LOG="$SYNC_DIR/run-$(date +%Y%m%d-%H%M%S).log"
 
+# Concepts rider (deterministic, no LLM; scripts/knowledge/concepts_rider.mjs).
+# Installed as an EXIT trap so it runs at the end of EVERY sync cycle — full
+# run, no-candidates no-op, or failure — keeping the committed heartbeat fresh
+# each cycle. The CONCEPTS_RIDER flag (default off) is read by the rider
+# itself: disabled runs still stamp the heartbeat with the disabled state.
+# A rider failure is reported in the summary but NEVER changes the sync's own
+# exit status ($sync_rc is captured on entry and restored via exit).
+run_concepts_rider() {
+  local sync_rc=$?
+  set +e
+  node scripts/knowledge/concepts_rider.mjs 2>&1 | tee -a "$LOG"
+  local rider_rc=${PIPESTATUS[0]}
+  if [ "$rider_rc" -ne 0 ]; then
+    echo "[knowledge-sync] concepts rider FAILED (exit $rider_rc) — sync steps unaffected" | tee -a "$LOG"
+  else
+    echo "[knowledge-sync] concepts rider done" | tee -a "$LOG"
+  fi
+  # Commit the heartbeat refresh (same idiom as the explorer commit below).
+  git add src/data/knowledge/concept-sync-status.json 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit -q -m "chore(concepts): rider heartbeat ${MODE} ${DATE}" || true
+    if [ "${KNOWLEDGE_SYNC_PUSH:-0}" = "1" ]; then
+      { git pull --rebase --autostash && git push; } \
+        || echo "[knowledge-sync] heartbeat push failed (commit stays local)" | tee -a "$LOG"
+    fi
+  fi
+  exit "$sync_rc"
+}
+trap run_concepts_rider EXIT
+
 # Deterministic prep: extract the digest's research items + targets/membership.
 # Exit 3 means "nothing to consider" — a clean no-op, not a failure.
 set +e
