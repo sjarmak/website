@@ -49,3 +49,12 @@ node_modules/
 
 # python bytecode from the knowledge build scripts
 scripts/knowledge/__pycache__/
+
+# register-stability test fixture (tests/register-stability.test.mjs): a
+# far-future digest entry written transiently during the double-build test.
+# Ignored so concurrent tests asserting a clean tree never see it and a
+# crashed run can never commit it.
+src/content/digest/daily-2098-*.md
+
+# isolated outDirs from the stability build wrapper
+dist-stability-*/

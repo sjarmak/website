@@ -16,7 +16,7 @@ const { Content } = await render(post);
 const isFieldNotes = data.tags.includes("field-notes");
 ---
 
-<BaseLayout title={data.title} description={data.description} type="article">
+<BaseLayout register={data.register} title={data.title} description={data.description} type="article">
   <article class="container container-narrow post">
     <header class="post__head stack stack-s">
       <p class="kicker">{isFieldNotes ? "Field notes" : "Essay"}</p>

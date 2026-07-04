@@ -17,7 +17,7 @@ const topics = await Promise.all(data.topics.map((ref) => getEntry(ref)));
 const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
 ---
 
-<BaseLayout title={data.title} description={data.summary} type="article">
+<BaseLayout register="authored" title={data.title} description={data.summary} type="article">
   <article class="container container-narrow project">
     <header class="project__head stack stack-s">
       <p class="kicker">Project</p>
