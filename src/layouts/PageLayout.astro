@@ -25,6 +25,7 @@ const { title, description, kicker, intro, image, noindex, register } = Astro.pr
   noindex={noindex}
   register={register}
 >
+  <slot name="head" slot="head" />
   <div class="container">
     <header class="page-head stack stack-s">
       {kicker && <p class="kicker">{kicker}</p>}

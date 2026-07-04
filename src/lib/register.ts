@@ -8,6 +8,8 @@
 // BaseHead, scripts/digest/publish-digest.mjs, and the check scripts — there is
 // deliberately no parallel URL-pattern side-map anywhere else.
 
+import { isConceptPath, isNoindexConceptPath } from "./concepts/indexState.ts";
+
 export const REGISTERS = ["authored", "generated", "hybrid", "reference", "lab"] as const;
 
 export type Register = (typeof REGISTERS)[number];
@@ -45,8 +47,16 @@ export const NOINDEX_ROUTE_PREFIXES = [
 // True when a pathname falls under a noindexed route prefix (exact match or a
 // nested path — "/prototypes/paths/science-to-agents/" matches
 // "/prototypes/paths"; "/prototypes/" does not match anything).
+//
+// /concepts/* splits PER SLUG (PRD R4′), so it is handled by a function over
+// the committed allowlist/manifest (src/lib/concepts/indexState.ts), not a
+// route prefix: the /concepts index is always indexable, each concept page
+// follows the committed index state, unknown paths fail closed. Both the
+// sitemap filter and the register-drift check call THIS function, so the
+// per-slug split can never drift between them.
 export function isNoindexPath(pathname: string): boolean {
   const normalized = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  if (isConceptPath(normalized)) return isNoindexConceptPath(normalized);
   return NOINDEX_ROUTE_PREFIXES.some(
     (prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`),
   );

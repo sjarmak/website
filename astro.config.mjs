@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { isNoindexPath } from "./src/lib/register.ts";
+import { conceptLastmodForPath } from "./src/lib/concepts/lastmod.ts";
 
 // Deterministic lastmod for digest URLs: the date embedded in the issue slug
 // (e.g. /digest/daily-2026-06-09/). NEVER build time — the register drift
@@ -36,6 +37,14 @@ export default defineConfig({
             ...(lastmod ? { lastmod: lastmod.toISOString() } : {}),
             priority: 0.3,
           };
+        }
+        // Concept pages (PRD R4′): lastmod quantized to the week floor of the
+        // newest dated evidence, so the daily digest cron never moves concept
+        // lastmods en masse. Only allowlisted concept URLs reach here — the
+        // filter above already dropped the noindexed ones.
+        if (pathname.startsWith("/concepts/")) {
+          const lastmod = conceptLastmodForPath(pathname);
+          return { ...item, ...(lastmod ? { lastmod } : {}) };
         }
         return item;
       },
