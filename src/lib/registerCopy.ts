@@ -22,7 +22,7 @@ export interface RegisterCopy {
 
 export const REGISTER_COPY: Record<Register, RegisterCopy> = {
   authored: {
-    label: "Written by Stephanie",
+    label: "Authored",
     badgeCopy: "Written by Stephanie Jarmak.",
     stampPlacement: "footer-quiet",
   },
@@ -40,7 +40,7 @@ export const REGISTER_COPY: Record<Register, RegisterCopy> = {
   reference: {
     label: "Reference",
     badgeCopy: "Curated reference material — structured records, kept current by hand.",
-    stampPlacement: "footer-quiet",
+    stampPlacement: "header",
   },
   lab: {
     label: "Lab prototype",
@@ -48,6 +48,11 @@ export const REGISTER_COPY: Record<Register, RegisterCopy> = {
     stampPlacement: "header",
   },
 };
+
+// Wording of the stamp's optional last-updated line ("… · updated 2026-07-04").
+// Lives here so the TypeStamp component carries zero visitor-facing strings of
+// its own — this module stays the single source of stamp wording.
+export const STAMP_UPDATED_PREFIX = "updated";
 
 // Defensive completeness assertion for plain-JS consumers (the TS Record type
 // already guarantees this for typed callers).

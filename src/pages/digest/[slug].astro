@@ -36,7 +36,13 @@ function topicLabel(slug: string): string {
 }
 ---
 
-<BaseLayout register={data.register} title={data.title} description={data.summary} type="article">
+<BaseLayout
+  register={data.register}
+  updated={data.date}
+  title={data.title}
+  description={data.summary}
+  type="article"
+>
   <article class="container container-narrow digest">
     <header class="digest__head stack stack-s">
       <p class="kicker">
