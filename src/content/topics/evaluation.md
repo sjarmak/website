@@ -1,6 +1,6 @@
 ---
 title: Evaluation & benchmarks
-summary: Measuring whether AI systems work. Benchmarks, evals, and honest comparison of search engines and agents.
+summary: Measuring whether AI systems work. Evals and benchmarks of agents and agentic retrieval.
 related: [agents, retrieval, code-intelligence]
 weight: 2
 ---
