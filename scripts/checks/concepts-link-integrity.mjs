@@ -5,7 +5,9 @@
 //
 // Default coverage: dist/prototypes/concepts/index.html PLUS the static
 // concept pages (dist/concepts/index.html and every dist/concepts/*/index.html
-// — PRD R4′). Pass --page REL_HTML_PATH to check a single page instead.
+// — PRD R4′) PLUS every surface carrying R5 related links / concept chips:
+// dist/talks/index.html and all dist/{writing,projects,digest}/*/index.html.
+// Pass --page REL_HTML_PATH to check a single page instead.
 //
 // For each page, extracts every href and asserts:
 //   - internal links (starting with "/") map to a file in dist/
@@ -80,20 +82,36 @@ export function checkLinks(html, distDir) {
   return { failures, checked: seen.size };
 }
 
-/** Default page set: the explorer prototype + every built /concepts page. */
+/** Every <section>/<slug>/index.html under dist, sorted. */
+function sectionPages(distDir, section) {
+  const dir = path.join(distDir, section);
+  if (!existsSync(dir)) return [];
+  const pages = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  )) {
+    const page = path.join(section, entry.name, "index.html");
+    if (entry.isDirectory() && existsSync(path.join(distDir, page))) pages.push(page);
+  }
+  return pages;
+}
+
+/**
+ * Default page set: the explorer prototype, every built /concepts page, and
+ * every R5 related-link surface (talks index; writing, projects, and digest
+ * detail pages).
+ */
 export function defaultPages(distDir) {
   const pages = [path.join("prototypes", "concepts", "index.html")];
-  const conceptsDir = path.join(distDir, "concepts");
-  if (existsSync(path.join(conceptsDir, "index.html"))) {
+  if (existsSync(path.join(distDir, "concepts", "index.html"))) {
     pages.push(path.join("concepts", "index.html"));
   }
-  if (existsSync(conceptsDir)) {
-    for (const entry of readdirSync(conceptsDir, { withFileTypes: true }).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )) {
-      const page = path.join("concepts", entry.name, "index.html");
-      if (entry.isDirectory() && existsSync(path.join(distDir, page))) pages.push(page);
-    }
+  pages.push(...sectionPages(distDir, "concepts"));
+  if (existsSync(path.join(distDir, "talks", "index.html"))) {
+    pages.push(path.join("talks", "index.html"));
+  }
+  for (const section of ["writing", "projects", "digest"]) {
+    pages.push(...sectionPages(distDir, section));
   }
   return pages;
 }

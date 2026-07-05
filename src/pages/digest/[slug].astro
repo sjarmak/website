@@ -4,6 +4,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import ProvenanceBadge from "@/components/ProvenanceBadge.astro";
 import Transcript from "@/components/knowledge/Transcript.astro";
 import { fullDate } from "@/lib/dates";
+import { canonicalConceptSlug } from "@/lib/knowledge/conceptAliases";
 
 export async function getStaticPaths() {
   const digests = await getCollection("digest");
@@ -60,9 +61,18 @@ function topicLabel(slug: string): string {
       {
         data.topics.length > 0 && (
           <div class="cluster" style="--cluster-gap: var(--space-2xs)">
-            {data.topics.map((t) => (
-              <span class="tag">{topicLabel(t)}</span>
-            ))}
+            {data.topics.map((t) => {
+              // R5: facet chips that alias-resolve link to their concept page;
+              // unresolvable facets stay plain text.
+              const concept = canonicalConceptSlug(t);
+              return concept !== null ? (
+                <a class="tag digest__topic-link" href={`/concepts/${concept}/`}>
+                  {topicLabel(t)}
+                </a>
+              ) : (
+                <span class="tag">{topicLabel(t)}</span>
+              );
+            })}
           </div>
         )
       }
@@ -142,6 +152,14 @@ function topicLabel(slug: string): string {
 
   .digest__player {
     margin-block: var(--space-l);
+  }
+
+  a.digest__topic-link {
+    text-decoration: none;
+  }
+
+  a.digest__topic-link:hover {
+    color: var(--color-accent);
   }
 
   .digest__player audio {

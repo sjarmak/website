@@ -3,10 +3,15 @@ import { Image } from "astro:assets";
 import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
 import EmbeddedVideo from "@/components/talks/EmbeddedVideo.astro";
+import RelatedBlock from "@/components/RelatedBlock.astro";
 import { getTalks } from "@/lib/collections";
 import { monthYear } from "@/lib/dates";
+import { loadTalkDocs } from "@/lib/knowledge/relatedContent";
 
 const talks = await getTalks();
+
+// R5: per-talk related-concepts line, derived from the same-slug outputs entry.
+const talkConcepts = new Map(loadTalkDocs().map((doc) => [doc.id, doc.concepts]));
 ---
 
 <PageLayout register="authored"
@@ -25,7 +30,7 @@ const talks = await getTalks();
   <div class="talks">
     {
       talks.map((t) => (
-        <article class="talk">
+        <article class="talk" id={t.id}>
           {t.data.videoFile ? (
             <figure class="talk__media">
               <video class="talk__video" controls preload="metadata" poster={t.data.videoPoster}>
@@ -59,6 +64,7 @@ const talks = await getTalks();
               {t.data.location && ` · ${t.data.location}`}
             </p>
             {t.data.description && <p class="secondary measure">{t.data.description}</p>}
+            <RelatedBlock compact concepts={talkConcepts.get(t.id) ?? []} />
             {(t.data.videoUrl || t.data.slidesUrl || t.data.scheduleUrl) && (
               <p class="cluster" style="--cluster-gap: var(--space-m)">
                 {t.data.videoUrl && (
