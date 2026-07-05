@@ -13,7 +13,7 @@ links:
     url: https://huggingface.co/datasets/adsabs/nls-query-training-data
 tech: [Python, NLP, SciX]
 order: 16
-topics: [scientific-search, retrieval]
+topics: [retrieval]
 tags: [scix, nlp]
 ---
 

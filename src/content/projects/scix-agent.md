@@ -13,7 +13,7 @@ tech: [Python, Agents, MCP, Retrieval]
 featured: true
 featuredOrder: 1
 order: 10
-topics: [agents, scientific-search, retrieval]
+topics: [agents, retrieval]
 tags: [scix, agents]
 ---
 

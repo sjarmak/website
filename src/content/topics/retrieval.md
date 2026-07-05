@@ -1,7 +1,7 @@
 ---
 title: Retrieval
 summary: Finding the right information at the right time. Embeddings, ranking, hybrid search, and retrieval-augmented systems over scientific and code corpora.
-related: [scientific-search, agents]
+related: [agents]
 weight: 3
 ---
 
