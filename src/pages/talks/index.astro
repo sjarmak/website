@@ -25,7 +25,7 @@ const talks = await getTalks();
   <div class="talks">
     {
       talks.map((t) => (
-        <article class="talk">
+        <article class="talk" id={t.id}>
           {t.data.videoFile ? (
             <figure class="talk__media">
               <video class="talk__video" controls preload="metadata" poster={t.data.videoPoster}>

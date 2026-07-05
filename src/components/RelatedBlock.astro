@@ -1,0 +1,69 @@
+---
+/**
+ * "Related" block: plain-text concept labels plus links to essays/talks/
+ * projects that share ≥1 derived concept. All inputs are build-time derived
+ * by src/lib/knowledge/relatedContent — this component only renders.
+ *
+ * Concept chips are deliberately NOT links: there are no /concepts/ pages on
+ * this site, so any href would 404.
+ *
+ * Renders NOTHING when there is no real edge (empty concepts AND items), so
+ * callers can pass derived data unconditionally without producing empty blocks.
+ */
+import { conceptLabel, type RelatedDoc } from "@/lib/knowledge/relatedContent";
+
+interface Props {
+  /** Resolved concept slugs (rendered as plain-text labels). */
+  concepts: string[];
+  /** Related content docs sharing concepts with this page. */
+  items?: RelatedDoc[];
+}
+
+const { concepts, items = [] } = Astro.props;
+---
+
+{
+  (concepts.length > 0 || items.length > 0) && (
+    <aside class="related-block" aria-label="Related content">
+      <h2 class="related-block__heading">Related</h2>
+      {concepts.length > 0 && (
+        <ul role="list" class="cluster" style="--cluster-gap: var(--space-2xs)">
+          {concepts.map((slug) => (
+            <li>
+              <span class="tag related-block__concept">{conceptLabel(slug)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {items.length > 0 && (
+        <ul role="list" class="related-block__items stack stack-s">
+          {items.map((item) => (
+            <li>
+              <a href={item.url}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </aside>
+  )
+}
+
+<style>
+  aside.related-block {
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+    display: grid;
+    gap: var(--space-s);
+  }
+  .related-block__heading {
+    font-size: var(--step-1);
+  }
+  .related-block__items a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .related-block__items a:hover {
+    color: var(--color-accent);
+  }
+</style>

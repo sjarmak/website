@@ -1,7 +1,9 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import RelatedBlock from "@/components/RelatedBlock.astro";
 import { rangeLabel } from "@/lib/dates";
+import { loadRelatedDocs, relatedItems, resolveConcepts } from "@/lib/knowledge/relatedContent";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -15,6 +17,14 @@ const { Content } = await render(project);
 // Resolve referenced topics for the "connected topics" list.
 const topics = await Promise.all(data.topics.map((ref) => getEntry(ref)));
 const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
+
+// Derived related block: topic/tag -> concept alias resolution, then
+// shared-concept overlap against posts/talks/projects.
+const concepts = resolveConcepts([...data.topics.map((ref) => ref.id), ...data.tags]);
+const relatedContent = relatedItems(concepts, loadRelatedDocs(), {
+  kind: "project",
+  id: project.id,
+});
 ---
 
 <BaseLayout title={data.title} description={data.summary} type="article">
@@ -80,6 +90,8 @@ const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
         </section>
       )
     }
+
+    <RelatedBlock concepts={concepts} items={relatedContent} />
 
     <p class="project__back"><a href="/projects">← All projects</a></p>
   </article>
