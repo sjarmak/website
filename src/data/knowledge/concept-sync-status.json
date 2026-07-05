@@ -1,12 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-05T10:52:15.994Z",
+  "updatedAt": "2026-07-05T11:17:03.625Z",
   "steps": {
     "digest-publish": {
       "lastRunAt": "2026-07-05T10:52:15.994Z"
+    },
+    "knowledge-sync-rider": {
+      "lastRunAt": "2026-07-05T11:17:03.625Z"
     }
   },
-  "flags": {},
+  "flags": {
+    "riderEnabled": false
+  },
   "backlog": {
     "count": 0,
     "oldestAgeSeconds": null
