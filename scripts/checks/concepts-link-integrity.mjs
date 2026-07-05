@@ -3,7 +3,7 @@
 //
 //   npm run build && node scripts/checks/concepts-link-integrity.mjs
 //
-// Parses the BUILT page (default dist/prototypes/concepts/index.html),
+// Parses the BUILT page (default dist/concepts/index.html),
 // extracts every href, and asserts:
 //   - internal links (starting with "/") map to a file in dist/
 //     (route -> dist path: trailing slash or extensionless routes resolve to
@@ -81,7 +81,7 @@ function main() {
   const { values } = parseArgs({
     options: {
       dist: { type: "string", default: path.join(REPO_ROOT, "dist") },
-      page: { type: "string", default: path.join("prototypes", "concepts", "index.html") },
+      page: { type: "string", default: path.join("concepts", "index.html") },
     },
   });
 

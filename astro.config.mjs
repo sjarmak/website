@@ -8,6 +8,9 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://sjarmak.ai",
   integrations: [mdx(), sitemap()],
+  redirects: {
+    "/prototypes/concepts": "/concepts",
+  },
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",

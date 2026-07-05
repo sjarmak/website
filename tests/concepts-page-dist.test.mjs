@@ -1,4 +1,4 @@
-// Assertions over the BUILT concepts page (dist/prototypes/concepts/) plus a
+// Assertions over the BUILT concepts page (dist/concepts/) plus a
 // guard that the /projects/explorer output is untouched by the concepts work.
 // If dist/ is absent the suite builds it (npm run build) — in the ordered CI
 // pipeline the build has already run, so this normally reuses the output.
@@ -15,7 +15,7 @@ import { parse as parseYaml } from "yaml";
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
-const PAGE = path.join(DIST, "prototypes", "concepts", "index.html");
+const PAGE = path.join(DIST, "concepts", "index.html");
 
 const GRAPH_DATA_RE = /<script type="application\/json" data-graph-data[^>]*>([\s\S]*?)<\/script>/;
 
