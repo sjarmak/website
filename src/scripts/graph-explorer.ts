@@ -180,7 +180,7 @@ function setup(root: HTMLElement, data: ExplorerData) {
 
   // --- detail panel ---
   // The [data-detail-evidence] container exists only where a page opts in
-  // (e.g. /prototypes/concepts); on /projects/explorer evidence rendering is
+  // (e.g. /concepts); on /projects/explorer evidence rendering is
   // a no-op.
   const evidenceEl = detail?.querySelector<HTMLElement>("[data-detail-evidence]") ?? null;
 
