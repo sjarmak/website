@@ -10,7 +10,12 @@ import type { ConceptFreshness } from "@/lib/knowledge/conceptFreshness";
 import { readTokens, colorFor, buildStylesheet, toElements } from "./graph-style";
 import { resolveNodeParam } from "./graph-deeplink";
 import { buildConceptPanel } from "./concept-panel";
-import { buildEvidenceSpecs, evidenceElements, EVIDENCE_ID_PREFIX } from "./graph-evidence";
+import {
+  buildEvidenceSpecs,
+  evidenceElements,
+  panToReveal,
+  EVIDENCE_ID_PREFIX,
+} from "./graph-evidence";
 
 /** GraphData plus the optional concept-page extras (ignored elsewhere). */
 type ExplorerData = GraphData & {
@@ -50,6 +55,8 @@ function setup(root: HTMLElement, data: ExplorerData) {
   const detail = root.querySelector<HTMLElement>("[data-graph-detail]");
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Matches the breakpoint where .graph-detail becomes a bottom sheet.
+  const smallViewport = window.matchMedia("(max-width: 40rem)");
   const canUseCanvas = !!stage && !!canvasEl;
 
   async function initCanvas() {
@@ -113,6 +120,7 @@ function setup(root: HTMLElement, data: ExplorerData) {
       highlight(node);
       openDetail(node.id());
       showEvidence(node.id());
+      revealAboveSheet(node);
       history.replaceState(null, "", `?node=${node.id()}`);
     });
     cy.on("tap", (evt) => {
@@ -145,9 +153,30 @@ function setup(root: HTMLElement, data: ExplorerData) {
     if (!node.length) return;
     node.select();
     highlight(node as unknown as NodeSingular);
-    cy.animate({ center: { eles: node }, zoom: 1.2 }, { duration: prefersReduced ? 0 : 400 });
+    const zoom = 1.2;
+    if (smallViewport.matches) {
+      // Land the node above the bottom-sheet panel, not under it.
+      const pan = panToReveal(node.position(), zoom, { width: cy.width(), height: cy.height() });
+      cy.animate({ zoom, pan }, { duration: prefersReduced ? 0 : 400 });
+    } else {
+      cy.animate({ center: { eles: node }, zoom }, { duration: prefersReduced ? 0 : 400 });
+    }
     openDetail(id);
     showEvidence(id);
+  }
+
+  /**
+   * On small viewports the detail panel is a bottom sheet covering the lower
+   * part of the stage; pan the tapped node into the upper third so the node
+   * and its evidence ring stay visible. No-op on wide viewports.
+   */
+  function revealAboveSheet(node: NodeSingular) {
+    if (!cy || !smallViewport.matches) return;
+    const pan = panToReveal(node.position(), cy.zoom(), {
+      width: cy.width(),
+      height: cy.height(),
+    });
+    cy.animate({ pan }, { duration: prefersReduced ? 0 : 300 });
   }
 
   // --- local evidence view (Obsidian-style satellites) ---

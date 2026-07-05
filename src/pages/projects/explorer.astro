@@ -147,6 +147,18 @@ const chips = deriveFilterChips(data);
     backdrop-filter: blur(6px);
     box-shadow: 0 8px 30px oklch(0% 0 0 / 0.12);
   }
+  /* Bottom sheet on small screens so the graph stays visible above the
+     panel. Breakpoint must match the smallViewport query in graph-explorer.ts. */
+  @media (max-width: 40rem) {
+    .graph-detail {
+      top: auto;
+      bottom: var(--space-s);
+      left: var(--space-s);
+      right: var(--space-s);
+      width: auto;
+      max-height: 45%;
+    }
+  }
   .graph-detail__close {
     position: absolute;
     top: var(--space-2xs);

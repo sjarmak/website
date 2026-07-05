@@ -7,7 +7,9 @@ import assert from "node:assert/strict";
 import {
   buildEvidenceSpecs,
   evidenceElements,
+  panToReveal,
   ringPlacement,
+  REVEAL_FRACTION,
   truncateLabel,
   EVIDENCE_ID_PREFIX,
   EVIDENCE_SATELLITE_CAP,
@@ -202,4 +204,23 @@ test("evidenceElements: positions ring around the center, sizes below concept si
     assert.equal(el.data.color, "#123456");
     assert.equal(el.selectable, false);
   });
+});
+
+// -------------------------------------------------------- small-screen reveal
+
+test("panToReveal: inverts renderedPosition so the node lands at the target fraction", () => {
+  const pos = { x: 200, y: 400 };
+  const zoom = 1.5;
+  const viewport = { width: 390, height: 700 };
+  const pan = panToReveal(pos, zoom, viewport, { x: 0.5, y: 0.3 });
+  // renderedPosition = pos * zoom + pan
+  assert.equal(zoom * pos.x + pan.x, viewport.width * 0.5);
+  assert.equal(zoom * pos.y + pan.y, viewport.height * 0.3);
+});
+
+test("panToReveal: defaults to REVEAL_FRACTION (upper third, centered)", () => {
+  const pan = panToReveal({ x: 0, y: 0 }, 1, { width: 400, height: 600 });
+  assert.deepEqual(pan, { x: 400 * REVEAL_FRACTION.x, y: 600 * REVEAL_FRACTION.y });
+  assert.equal(REVEAL_FRACTION.x, 0.5);
+  assert.ok(REVEAL_FRACTION.y < 0.5, "reveal target sits above the bottom sheet");
 });

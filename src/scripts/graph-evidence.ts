@@ -154,6 +154,29 @@ export function ringPlacement(index: number, total: number): { dx: number; dy: n
 }
 
 /**
+ * Fraction of the viewport where a revealed node should land on small
+ * screens: horizontally centered, in the upper third — above the
+ * bottom-sheet detail panel, leaving room for the satellite ring.
+ */
+export const REVEAL_FRACTION = { x: 0.5, y: 0.3 };
+
+/**
+ * Cytoscape pan that puts a node (model `pos` at `zoom`) at the viewport
+ * fraction `frac`. Inverts renderedPosition = pos * zoom + pan.
+ */
+export function panToReveal(
+  pos: { x: number; y: number },
+  zoom: number,
+  viewport: { width: number; height: number },
+  frac: { x: number; y: number } = REVEAL_FRACTION,
+): { x: number; y: number } {
+  return {
+    x: viewport.width * frac.x - zoom * pos.x,
+    y: viewport.height * frac.y - zoom * pos.y,
+  };
+}
+
+/**
  * Cytoscape elements for the specs, ring-placed around `center`. Satellites
  * are unselectable: a tap either navigates (href present) or is inert.
  */
