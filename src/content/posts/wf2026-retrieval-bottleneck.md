@@ -2,7 +2,7 @@
 title: "Retrieval is the bottleneck, not reasoning"
 date: 2026-07-03
 description: "WF2026 field notes on retrieval: Mixedbread's oracle-gap measurements, Jina's search-as-test-time-compute, outcome-weighted memory, markdown-first ingestion, and the knowledge-substrate argument."
-tags: [ai-engineering, retrieval, knowledge-graphs, agents, field-notes, wf2026]
+tags: [ai-engineering, retrieval, agents, field-notes, wf2026]
 draft: false
 ---
 

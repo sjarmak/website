@@ -9,7 +9,7 @@ homepage: https://sjarmak.ai
 architecture: https://sjarmak.github.io/website/
 tech: [Astro, TypeScript, Zod, Cytoscape, MDX]
 order: 23
-topics: [knowledge-graphs, agents]
+topics: [retrieval, agents]
 tags: [astro, knowledge-graph, content]
 ---
 

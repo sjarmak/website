@@ -75,7 +75,7 @@ THREADS = [
             "controlled vocabularies to keep the grounding honest. What sits below is the current state of that, "
             "and the papers I read to push on it."
         ),
-        concepts=["retrieval", "embeddings", "knowledge-graphs", "scientific-search"],
+        concepts=["retrieval", "embeddings", "scientific-search"],
         ads_libraries=["Scientific Search & SciX"],
         explorer=None,
         on_site=[
