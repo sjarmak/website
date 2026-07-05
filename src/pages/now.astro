@@ -1,0 +1,115 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { affiliations } from "@/data/site";
+
+// Last-reviewed stamp (PRD R17 honesty mechanism). Bump this date whenever the
+// page content is reviewed — quarterly refresh accepted.
+const LAST_REVIEWED = "2026-07-04";
+
+// Same curated selection the homepage calls "Selected work": active + featured,
+// homepage sort order. Sourced from the projects collection, not duplicated.
+const currentProjects = (
+  await getCollection("projects", (p) => p.data.status === "active" && p.data.featured)
+).sort(
+  (a, b) => (a.data.featuredOrder ?? a.data.order ?? 99) - (b.data.featuredOrder ?? b.data.order ?? 99),
+);
+---
+
+<PageLayout
+  register="authored"
+  title="Now"
+  kicker="Currently"
+  intro="What I'm focused on at the moment."
+  description="What Stephanie Jarmak is working on now: current roles and active projects."
+>
+  <div class="now-page stack">
+    <section>
+      <h2>Roles</h2>
+      <ul role="list" class="now__list stack stack-s">
+        {
+          affiliations.map((a) => (
+            <li class="now__item">
+              <span class="now__role">{a.role}</span>
+              <span class="now__org">{a.name}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      currentProjects.length > 0 && (
+        <section>
+          <h2>Current projects</h2>
+          <ul role="list" class="stack stack-s">
+            {currentProjects.map((p) => (
+              <li class="now-project">
+                <a href={`/projects/${p.id}`} class="now-project__title">
+                  {p.data.title}
+                </a>
+                <p class="muted">{p.data.summary}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <p class="now-stamp muted">
+      This is a <a href="https://nownownow.com/about" rel="noopener">now page</a>. Last reviewed:
+      <time datetime={LAST_REVIEWED}>{LAST_REVIEWED}</time>.
+    </p>
+  </div>
+</PageLayout>
+
+<style>
+  .now-page {
+    padding-block-end: var(--space-2xl);
+  }
+  .now-page h2 {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+
+  .now__list {
+    border-top: var(--border-hairline);
+  }
+  .now__item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    justify-content: space-between;
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .now__role {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+  .now__org {
+    color: var(--color-text-muted);
+    align-self: center;
+  }
+
+  .now-project {
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+  .now-project__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .now-project__title:hover {
+    color: var(--color-accent);
+  }
+  .now-project .muted {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .now-stamp {
+    font-size: var(--step--1);
+  }
+</style>

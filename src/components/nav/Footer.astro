@@ -3,6 +3,13 @@ import { socials } from "@/data/site";
 ---
 
 <footer class="site-footer">
+  <nav class="container" aria-label="Site">
+    <ul role="list" class="cluster" style="--cluster-gap: var(--space-l)">
+      <li>
+        <a href="/digest">Digest</a>
+      </li>
+    </ul>
+  </nav>
   <nav class="container" aria-label="Elsewhere">
     <ul role="list" class="cluster" style="--cluster-gap: var(--space-l)">
       {
@@ -24,5 +31,8 @@ import { socials } from "@/data/site";
     border-top: var(--border-hairline);
     padding-block: var(--space-l);
     font-size: var(--step--1);
+  }
+  .site-footer nav + nav {
+    margin-block-start: var(--space-s);
   }
 </style>

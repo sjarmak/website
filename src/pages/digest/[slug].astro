@@ -1,8 +1,10 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProvenanceBadge from "@/components/ProvenanceBadge.astro";
 import Transcript from "@/components/knowledge/Transcript.astro";
 import { fullDate } from "@/lib/dates";
+import { canonicalConceptSlug } from "@/lib/knowledge/conceptAliases";
 
 export async function getStaticPaths() {
   const digests = await getCollection("digest");
@@ -35,25 +37,42 @@ function topicLabel(slug: string): string {
 }
 ---
 
-<BaseLayout title={data.title} description={data.summary} type="article">
+{/* stamp={false}: the ProvenanceBadge below is this page's single provenance surface. */}
+<BaseLayout
+  register={data.register}
+  updated={data.date}
+  title={data.title}
+  description={data.summary}
+  type="article"
+  stamp={false}
+>
   <article class="container container-narrow digest">
     <header class="digest__head stack stack-s">
       <p class="kicker">
         {CADENCE_LABEL[data.cadence]}
         {data.track === "general" ? " · field roundup" : ""}
-        {data.origin === "manual" ? " · hand-curated" : ""}
       </p>
       <h1>{data.title}</h1>
       <p class="muted">
         {fullDate(data.date)}
         {durationLabel ? ` · 🎧 ${durationLabel}` : ""}
       </p>
+      <ProvenanceBadge register={data.register} />
       {
         data.topics.length > 0 && (
           <div class="cluster" style="--cluster-gap: var(--space-2xs)">
-            {data.topics.map((t) => (
-              <span class="tag">{topicLabel(t)}</span>
-            ))}
+            {data.topics.map((t) => {
+              // R5: facet chips that alias-resolve link to their concept page;
+              // unresolvable facets stay plain text.
+              const concept = canonicalConceptSlug(t);
+              return concept !== null ? (
+                <a class="tag digest__topic-link" href={`/concepts/${concept}/`}>
+                  {topicLabel(t)}
+                </a>
+              ) : (
+                <span class="tag">{topicLabel(t)}</span>
+              );
+            })}
           </div>
         )
       }
@@ -133,6 +152,14 @@ function topicLabel(slug: string): string {
 
   .digest__player {
     margin-block: var(--space-l);
+  }
+
+  a.digest__topic-link {
+    text-decoration: none;
+  }
+
+  a.digest__topic-link:hover {
+    color: var(--color-accent);
   }
 
   .digest__player audio {

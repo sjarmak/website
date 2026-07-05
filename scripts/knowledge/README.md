@@ -47,6 +47,32 @@ Explorers are **self-contained in this repo**: each explorer's canonical source 
 assembles the combined `explorers.json` the site imports. There is no external
 `lit_explorers` dependency.
 
+## Concept-page index state (PRD R4′)
+
+`/concepts/<slug>` pages exist for every concept, but only a committed
+allowlist decides which are indexable (robots-indexable, in the sitemap,
+DefinedTerm + BreadcrumbList JSON-LD). Two committed files under `src/data/`
+are the ONLY inputs — a build never flips index state, only a commit does:
+
+- `src/data/concepts-allowlist.json` — the approved slugs (19 seeded at the
+  2026-07-04 R18 sitting, bead sjai-oha).
+- `src/data/concepts-authored-manifest.json` — human approvals for authored
+  concept bodies. A non-empty Markdown body flips a page indexable ONLY with a
+  manifest entry; an agent-committed body without one does nothing (tested).
+  Agents never edit the manifest.
+
+To review candidates against the ≥5-dated-evidence floor:
+
+```bash
+node scripts/knowledge/propose_concept_allowlist.mjs
+```
+
+It prints the recomputed candidate list and the proposed diff against the
+committed allowlist, and **never writes** — apply by editing the allowlist in
+a commit. The per-slug noindex/sitemap split is enforced mechanically through
+`src/lib/register.ts` → `src/lib/concepts/indexState.ts` (the same function
+drives the sitemap filter and the register-drift check).
+
 ## Daily knowledge-sync check
 
 After the specialized daily digest publishes, decide whether the papers it cited
