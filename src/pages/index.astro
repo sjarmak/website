@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { affiliations } from "@/data/site";
+import { profilePageLd } from "@/lib/jsonld";
 import MiniGraph from "@/components/graph/MiniGraph.astro";
 
 const featuredProjects = (await getCollection("projects", (p) => p.data.featured)).sort(
@@ -25,6 +26,9 @@ const fmtYear = (d: Date) => d.getFullYear();
 ---
 
 <BaseLayout register="authored" type="profile">
+  <Fragment slot="head">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageLd("/"))} />
+  </Fragment>
   <section class="hero container">
     <p class="kicker">Information scientist · AI agent advocate</p>
     <h1 class="visually-hidden">
