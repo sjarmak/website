@@ -8,7 +8,7 @@ repo: https://github.com/sjarmak/tom-swe
 architecture: https://sjarmak.github.io/tom-swe/
 tech: [TypeScript, Agents, Memory]
 order: 6
-topics: [agents, agent-memory]
+topics: [agents]
 tags: [agents, memory]
 ---
 

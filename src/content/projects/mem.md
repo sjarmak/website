@@ -10,7 +10,7 @@ tech: [TypeScript, Python, Evaluation, Agent memory]
 featured: true
 featuredOrder: 6
 order: 21
-topics: [agent-memory, agents, evaluation]
+topics: [agents, evaluation]
 tags: [benchmark, memory, evals]
 ---
 
