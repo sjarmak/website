@@ -23,9 +23,6 @@ const concepts = data.nodes
         <article class="concept" id={`concept-${node.id}`}>
           <h3 class="concept__title">{node.label}</h3>
           <p class="muted measure">{node.summary}</p>
-          <p class="concept__page-link">
-            <a href={`/concepts/${node.id}/`}>Concept page →</a>
-          </p>
           {panel.freshnessLine && <p class="concept__freshness muted">{panel.freshnessLine}</p>}
           {panel.groups.map((group) => (
             <div class="concept__sub">
@@ -58,9 +55,6 @@ const concepts = data.nodes
     color: var(--color-accent);
   }
   .concept__freshness {
-    font-size: var(--step--1);
-  }
-  .concept__page-link {
     font-size: var(--step--1);
   }
   .concept__sub {

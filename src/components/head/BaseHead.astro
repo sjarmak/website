@@ -1,6 +1,5 @@
 ---
 import { site } from "@/data/site";
-import { isDigestNoindexPath, isRegister, type Register } from "@/lib/register";
 import "@/styles/global.css";
 
 interface Props {
@@ -11,13 +10,6 @@ interface Props {
   /** Set true on non-canonical/utility pages to discourage indexing. */
   noindex?: boolean;
   type?: "website" | "article" | "profile";
-  /**
-   * REQUIRED page-level register declaration (PRD R3). Every rendered page
-   * states its provenance register; it is emitted as
-   * `<meta name="site-register">` so the post-build drift check
-   * (scripts/checks/register-drift.mjs) can assert it from dist/.
-   */
-  register: Register;
 }
 
 const {
@@ -26,22 +18,7 @@ const {
   image = "/og/default.png",
   noindex = false,
   type = "website",
-  register,
 } = Astro.props;
-
-// Closed-enum membership assertion at build time — a value outside the enum
-// (e.g. from an untyped caller) fails the build here, not just in the drift check.
-if (!isRegister(register)) {
-  throw new Error(
-    `BaseHead: page ${Astro.url.pathname} declares invalid register "${register}"`,
-  );
-}
-
-// R19b digest reversal lever: when DIGEST_NOINDEX is flipped in
-// src/lib/register.ts, every digest page emits `noindex, follow` (links keep
-// flowing; the pages leave the index). The explicit `noindex` prop wins so a
-// page never carries two robots metas.
-const digestNoindex = !noindex && isDigestNoindexPath(Astro.url.pathname);
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
@@ -55,9 +32,7 @@ const ogImage = new URL(image, site.url).href;
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-<meta name="site-register" content={register} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
-{digestNoindex && <meta name="robots" content="noindex, follow" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />

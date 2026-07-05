@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { affiliations } from "@/data/site";
-import { profilePageLd } from "@/lib/jsonld";
 import MiniGraph from "@/components/graph/MiniGraph.astro";
 
 const featuredProjects = (await getCollection("projects", (p) => p.data.featured)).sort(
@@ -25,10 +24,7 @@ const featuredTalk =
 const fmtYear = (d: Date) => d.getFullYear();
 ---
 
-<BaseLayout register="authored" type="profile">
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(profilePageLd("/"))} />
-  </Fragment>
+<BaseLayout type="profile">
   <section class="hero container">
     <p class="kicker">Information scientist · AI agent advocate</p>
     <h1 class="visually-hidden">
@@ -138,13 +134,6 @@ const fmtYear = (d: Date) => d.getFullYear();
       </section>
     )
   }
-
-  <section class="section container" data-lab-teaser>
-    <p class="lab-teaser measure">
-      From the lab: <a href="/prototypes">seven working experiments</a> in retrieval and
-      agent systems, and <a href="/colophon">how the machine layer works</a>.
-    </p>
-  </section>
 </BaseLayout>
 
 <style>
@@ -300,11 +289,5 @@ const fmtYear = (d: Date) => d.getFullYear();
   .writing-row__meta {
     font-size: var(--step--1);
     white-space: nowrap;
-  }
-
-  .lab-teaser {
-    border-top: var(--border-hairline);
-    padding-block-start: var(--space-s);
-    color: var(--color-text-muted);
   }
 </style>

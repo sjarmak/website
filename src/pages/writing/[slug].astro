@@ -1,10 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import RelatedBlock from "@/components/RelatedBlock.astro";
 import { monthYear } from "@/lib/dates";
-import { loadRelatedDocs, relatedItems, resolveConcepts } from "@/lib/knowledge/relatedContent";
-import { blogPostingLd } from "@/lib/jsonld";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", (p) => !p.data.draft);
@@ -17,24 +14,9 @@ const { Content } = await render(post);
 
 // Field-notes posts live on the digest page, not the writing index.
 const isFieldNotes = data.tags.includes("field-notes");
-
-// R5: related block derived from tag->concept alias resolution.
-const concepts = resolveConcepts(data.tags);
-const related = relatedItems(concepts, loadRelatedDocs(), { kind: "essay", id: post.id });
-
-const postingLd = blogPostingLd({
-  title: data.title,
-  description: data.description,
-  path: `/writing/${post.id}/`,
-  datePublished: data.date,
-  dateModified: data.updated,
-});
 ---
 
-<BaseLayout register={data.register} title={data.title} description={data.description} type="article">
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(postingLd)} />
-  </Fragment>
+<BaseLayout title={data.title} description={data.description} type="article">
   <article class="container container-narrow post">
     <header class="post__head stack stack-s">
       <p class="kicker">{isFieldNotes ? "Field notes" : "Essay"}</p>
@@ -47,7 +29,6 @@ const postingLd = blogPostingLd({
     <div class="prose post__body">
       <Content />
     </div>
-    <RelatedBlock concepts={concepts} items={related} />
     <p class="post__back">
       {isFieldNotes ? <a href="/digest#field-notes">← Field notes on the digest</a> : <a href="/writing">← All writing</a>}
     </p>

@@ -9,7 +9,7 @@ const projects = (await getProjects())
   .sort((a, b) => (a.data.featuredOrder ?? 99) - (b.data.featuredOrder ?? 99));
 ---
 
-<PageLayout register="authored"
+<PageLayout
   title="Work & research"
   kicker="Work"
   intro="I work on how people and agents find knowledge: retrieval, knowledge graphs, agents, and the evaluation of the systems we build."

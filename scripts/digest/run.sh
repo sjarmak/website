@@ -19,20 +19,6 @@
 #   WEBSITE_DIR     (optional — defaults to this repo)
 set -euo pipefail
 
-# R19a red-CI alarm (additive): any unguarded failure below (a `set -e` abort —
-# claude-auto, the register publish gate, git push, ...) fires a notification
-# via scripts/checks/notify-red-ci.mjs before the shell exits, so a red streak
-# is a loud message, never a silent freeze. `|| true` inside the handler keeps
-# the alarm from ever masking the original failure. Guarded `exit 2` usage
-# paths above/below do NOT trigger ERR — only real pipeline failures do.
-on_digest_error() {
-  local rc=$? failed_line="$1"
-  node "${WEBSITE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/checks/notify-red-ci.mjs" \
-    --context "digest run.sh${MODE:+ ${MODE}} FAILED (exit ${rc} at line ${failed_line})${LOG:+; log: ${LOG}}" \
-    >&2 || true
-}
-trap 'on_digest_error "$LINENO"' ERR
-
 MODE="${1:-}"
 WINDOW=""; WORD_TARGET=""; MINUTES=""; ITEM_RANGE=""; ITEMS_FILE=""
 CADENCE=""; TRACK="specialized"; SINCE=""
@@ -89,25 +75,6 @@ LOG_DIR="$WEBSITE_DIR/.digest-runs"
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/${MODE}-$(date +%Y%m%d-%H%M%S).log"
 
-# R19a deploy-staleness gate (additive, BEFORE generating): if the live site's
-# newest deployed digest lags local digest content beyond the threshold, the
-# deploy pipeline is frozen (typically red CI under autoDeployTrigger:
-# checksPass) — refuse to generate MORE never-deployed issues, loudly.
-# DIGEST_FORCE=1 is handled inside the script (stale downgrades to a warning,
-# rc 0). A network failure or any other script error warns and proceeds — the
-# check itself never hard-blocks a run.
-DEPLOY_STALENESS_RC=0
-node scripts/checks/deploy-staleness.mjs 2>&1 | tee -a "$LOG" || DEPLOY_STALENESS_RC=$?
-if [ "$DEPLOY_STALENESS_RC" -eq 2 ]; then
-  node scripts/checks/notify-red-ci.mjs \
-    --context "stale deploy — digest ${MODE} ${DATE} generation REFUSED (override: DIGEST_FORCE=1); log: $LOG" \
-    2>&1 | tee -a "$LOG" || true
-  echo "[digest] REFUSING generation: the live deploy is stale (see above). Fix the deploy (gh run list), or override once with DIGEST_FORCE=1." | tee -a "$LOG"
-  exit 3
-elif [ "$DEPLOY_STALENESS_RC" -ne 0 ]; then
-  echo "[digest] WARNING: deploy-staleness check errored (rc=$DEPLOY_STALENESS_RC) — proceeding" | tee -a "$LOG"
-fi
-
 # Curated runs read a fixed, hand-picked item set; the other modes select from
 # the MCP — specialized via generate.md, general via generate-general.md.
 case "$MODE" in
@@ -140,12 +107,6 @@ echo "[digest] ${MODE} ${DATE} — generating (work=${WORK}, via ${CLAUDE_BIN})"
 # shellcheck disable=SC2086
 "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
-# Register hygiene (PRD R3), local failure channel: refuse to commit an issue
-# whose register/origin frontmatter violates the schema — the drift is caught
-# here on the cron host, never as a red site-CI run at 3 a.m. (`set -e` aborts
-# the run before anything is committed or pushed.)
-node scripts/checks/validate-digest-registers.mjs 2>&1 | tee -a "$LOG"
-
 git add src/content/digest public/media/digests 2>/dev/null || true
 if git diff --cached --quiet; then
   echo "[digest] nothing new to commit — agent may have written a 'quiet day' issue or failed; see $LOG" | tee -a "$LOG"
@@ -159,18 +120,5 @@ else
     echo "[digest] DIGEST_PUSH!=1, not pushing (validate, then enable)" | tee -a "$LOG"
   fi
 fi
-
-# R14 audit reminder (additive): at most one bead per calendar month reminding
-# Stephanie to run the MANUAL LLM-bio audit. This files a REMINDER only — it
-# never runs the audit (the audit stays manual-run, never CI/cron; see
-# scripts/audit/README.md). Guarded so a reminder failure can never affect
-# the digest run.
-node scripts/audit/audit-reminder.mjs 2>&1 | tee -a "$LOG" || true
-
-# R19b quarterly policy tripwire (additive): at most one bead per calendar
-# quarter reminding Stephanie to re-check scaled-content guidance against the
-# digest cadence (the bead names the one-commit DIGEST_NOINDEX_LEVER reversal).
-# Guarded so a tripwire failure can never affect the digest run.
-node scripts/checks/policy-tripwire-reminder.mjs 2>&1 | tee -a "$LOG" || true
 
 rm -rf "$WORK"

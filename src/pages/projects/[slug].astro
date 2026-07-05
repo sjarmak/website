@@ -1,9 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import RelatedBlock from "@/components/RelatedBlock.astro";
 import { rangeLabel } from "@/lib/dates";
-import { loadRelatedDocs, relatedItems, resolveConcepts } from "@/lib/knowledge/relatedContent";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -17,13 +15,9 @@ const { Content } = await render(project);
 // Resolve referenced topics for the "connected topics" list.
 const topics = await Promise.all(data.topics.map((ref) => getEntry(ref)));
 const related = await Promise.all(data.related.map((ref) => getEntry(ref)));
-
-// R5: related block derived from topic/tag->concept alias resolution.
-const concepts = resolveConcepts([...data.topics.map((ref) => ref.id), ...data.tags]);
-const relatedContent = relatedItems(concepts, loadRelatedDocs(), { kind: "project", id: project.id });
 ---
 
-<BaseLayout register="authored" title={data.title} description={data.summary} type="article">
+<BaseLayout title={data.title} description={data.summary} type="article">
   <article class="container container-narrow project">
     <header class="project__head stack stack-s">
       <p class="kicker">Project</p>
@@ -86,8 +80,6 @@ const relatedContent = relatedItems(concepts, loadRelatedDocs(), { kind: "projec
         </section>
       )
     }
-
-    <RelatedBlock concepts={concepts} items={relatedContent} />
 
     <p class="project__back"><a href="/projects">← All projects</a></p>
   </article>

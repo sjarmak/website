@@ -6,7 +6,7 @@ import { getProjects } from "@/lib/collections";
 const games = (await getProjects()).filter((p) => p.data.play);
 ---
 
-<PageLayout register="authored"
+<PageLayout
   title="Games"
   kicker="Play"
   intro="Side-project games that run right here in the browser. No install, no accounts — just press play."

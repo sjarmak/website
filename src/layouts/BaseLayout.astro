@@ -1,12 +1,9 @@
 ---
 import { site } from "@/data/site";
-import type { Register } from "@/lib/register";
-import { REGISTER_COPY } from "@/lib/registerCopy";
 import BaseHead from "@/components/head/BaseHead.astro";
 import ThemeScript from "@/components/nav/ThemeScript.astro";
 import Header from "@/components/nav/Header.astro";
 import Footer from "@/components/nav/Footer.astro";
-import TypeStamp from "@/components/TypeStamp.astro";
 
 interface Props {
   title?: string;
@@ -14,23 +11,9 @@ interface Props {
   image?: string;
   noindex?: boolean;
   type?: "website" | "article" | "profile";
-  /** REQUIRED register declaration (PRD R3) — threaded to BaseHead's meta tag. */
-  register: Register;
-  /** Optional last-updated date for the R16 type stamp. */
-  updated?: Date;
-  /**
-   * Render the sitewide R16 type stamp (default true). Pages that carry their
-   * own provenance surface (e.g. digest issues' ProvenanceBadge) opt out so a
-   * page never renders two provenance surfaces.
-   */
-  stamp?: boolean;
 }
 
-const { title, description, image, noindex, type, register, updated, stamp = true } = Astro.props;
-
-// R16 type stamp placement comes from the canonical copy map: authored pages
-// stamp footer-quiet; machine registers stamp visibly at the top of <main>.
-const stampPlacement = REGISTER_COPY[register].stampPlacement;
+const { title, description, image, noindex, type } = Astro.props;
 ---
 
 <!doctype html>
@@ -43,7 +26,6 @@ const stampPlacement = REGISTER_COPY[register].stampPlacement;
       image={image}
       noindex={noindex}
       type={type}
-      register={register}
     />
     <slot name="head" />
   </head>
@@ -51,10 +33,8 @@ const stampPlacement = REGISTER_COPY[register].stampPlacement;
     <a href="#main" class="skip-link">Skip to content</a>
     <Header />
     <main id="main">
-      {stamp && stampPlacement === "header" && <TypeStamp register={register} updated={updated} />}
       <slot />
     </main>
     <Footer />
-    {stamp && stampPlacement === "footer-quiet" && <TypeStamp register={register} updated={updated} />}
   </body>
 </html>

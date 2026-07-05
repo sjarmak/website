@@ -17,7 +17,7 @@ interface Props {
 const { library } = Astro.props;
 ---
 
-<PageLayout register="reference"
+<PageLayout
   title={library.name}
   kicker="Research library"
   intro={library.description || undefined}

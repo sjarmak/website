@@ -11,7 +11,6 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
-import { STABILITY_FIXTURE_FILES } from "./fixtures/stability-fixture-paths.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -105,10 +104,6 @@ const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---/;
 function frontmatterDocs(dir) {
   return readdirSync(dir)
     .filter((f) => f.endsWith(".md") || f.endsWith(".mdx"))
-    // The double-build stability tests transiently write fixture issues into
-    // src/content/digest from a PARALLEL test process; dist was built without
-    // them, so the independent count must exclude them too.
-    .filter((f) => !STABILITY_FIXTURE_FILES.includes(f))
     .sort()
     .map((file) => {
       const slug = file.replace(/\.(md|mdx)$/, "");

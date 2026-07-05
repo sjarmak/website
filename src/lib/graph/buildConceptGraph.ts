@@ -226,9 +226,7 @@ export function buildConceptGraph(inputs: ConceptGraphInputs = {}): ConceptGraph
       type: "concept",
       label: concept.label,
       summary: concept.definition,
-      // R15 deep link: the explorer's detail panel renders node links, so
-      // every concept node points at its static /concepts/<slug>/ page.
-      links: [{ label: "Concept page", url: `/concepts/${concept.slug}/` }],
+      links: [],
       weight: 1 + Math.min(count, 12) / 6,
       evidence: ev,
     });

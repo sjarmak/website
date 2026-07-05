@@ -10,7 +10,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { checkLinks, defaultPages, routeToDistCandidates } from "../scripts/checks/concepts-link-integrity.mjs";
+import { checkLinks, routeToDistCandidates } from "../scripts/checks/concepts-link-integrity.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,34 +55,17 @@ test("checkLinks flags dead internal links, dead fragments, and malformed extern
 test("script fails (exit 1) on the fixture page with a dead link", async () => {
   const result = await runCheck(["--dist", DEAD_FIXTURE_DIST]);
   assert.equal(result.code, 1, `expected failure, got: ${result.stdout} ${result.stderr}`);
-  assert.match(result.stderr, /BROKEN in .*: internal \/digest\/does-not-exist-xyz\//);
-  assert.match(result.stderr, /BROKEN in .*: fragment #missing-anchor/);
+  assert.match(result.stderr, /BROKEN: internal \/digest\/does-not-exist-xyz\//);
+  assert.match(result.stderr, /BROKEN: fragment #missing-anchor/);
   // the good links do not produce failures
   assert.doesNotMatch(result.stderr, /real-issue/);
 });
 
-test("script passes over the real built site AND sweeps every /concepts page (PRD R4′)", async () => {
+test("script passes over the real built site", async () => {
   if (!existsSync(path.join(REPO_ROOT, "dist", "index.html"))) {
     await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
   }
-  const pages = defaultPages(path.join(REPO_ROOT, "dist"));
-  assert.ok(pages.includes(path.join("prototypes", "concepts", "index.html")));
-  assert.ok(pages.includes(path.join("concepts", "index.html")));
-  assert.ok(
-    pages.filter((p) => /^concepts\/[^/]+\/index\.html$/.test(p.split(path.sep).join("/"))).length >= 36,
-    `default coverage includes every concept page, got: ${pages.length} page(s)`,
-  );
-  // R5 related-link surfaces are swept too.
-  assert.ok(pages.includes(path.join("talks", "index.html")));
-  for (const section of ["writing", "projects", "digest"]) {
-    assert.ok(
-      pages.some((p) => p.startsWith(`${section}${path.sep}`)),
-      `default coverage includes ${section}/* pages`,
-    );
-  }
-
   const result = await runCheck([]);
   assert.equal(result.code, 0, `link check failed:\n${result.stderr}`);
   assert.match(result.stdout, /\[links\] OK/);
-  assert.match(result.stdout, new RegExp(`across ${pages.length} page\\(s\\)`));
 });

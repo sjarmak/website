@@ -3,7 +3,6 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { parse } from "yaml";
-import { STABILITY_FIXTURE_FILES } from "./fixtures/stability-fixture-paths.mjs";
 import {
   buildConceptIndex,
   canonicalConceptSlug,
@@ -67,12 +66,7 @@ test(">=90% of digest topic-facet occurrences resolve to a canonical concept", (
   let total = 0;
   let resolved = 0;
   const unresolved = new Map<string, number>();
-  // Stability-test fixtures may transiently exist in a parallel test process;
-  // their deliberately-unresolvable facets must not skew the live rate.
-  const fixtureFiles = new Set(STABILITY_FIXTURE_FILES);
-  for (const file of readdirSync(DIGEST_DIR).filter(
-    (f) => f.endsWith(".md") && !fixtureFiles.has(f),
-  )) {
+  for (const file of readdirSync(DIGEST_DIR).filter((f) => f.endsWith(".md"))) {
     const raw = readFileSync(join(DIGEST_DIR, file), "utf8");
     const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     assert.ok(match, `${file}: missing frontmatter`);

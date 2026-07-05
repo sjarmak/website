@@ -18,7 +18,6 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { vaultNoteId } from "../scripts/concepts/pull/vault-scan.mjs";
-import { STABILITY_FIXTURE_FILES } from "./fixtures/stability-fixture-paths.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -155,18 +154,10 @@ test("prep + mocked LLM stage never touch committed paths", async (t) => {
   assert.equal(edges[0].vaultId, markedId);
 
   // Repo integrity: nothing under committed data/content paths changed.
-  // The double-build stability tests transiently write known fixture issues
-  // into src/content/digest from a PARALLEL test process — those exact
-  // untracked files are not this pipeline's doing and are tolerated.
   const status = await execFileP("git", ["status", "--porcelain", "--", "src/data/knowledge", "src/content"], {
     cwd: REPO_ROOT,
   });
-  const statusLines = status.stdout
-    .trim()
-    .split("\n")
-    .filter((line) => line !== "")
-    .filter((line) => !STABILITY_FIXTURE_FILES.some((f) => line.endsWith(`src/content/digest/${f}`)));
-  assert.deepEqual(statusLines, []);
+  assert.equal(status.stdout.trim(), "");
   const diff = await execFileP("git", ["diff", "--stat", "--", "src/data/knowledge", "src/content"], {
     cwd: REPO_ROOT,
   });

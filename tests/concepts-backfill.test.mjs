@@ -17,7 +17,6 @@ import { fileURLToPath } from "node:url";
 import { readProposals } from "../scripts/concepts/lib/inbox.mjs";
 import { EXIT_NOOP } from "../scripts/knowledge/concepts_common.mjs";
 import { checkAssignments, mergeAssignments } from "../scripts/knowledge/concepts_validate.mjs";
-import { STABILITY_FIXTURE_FILES } from "./fixtures/stability-fixture-paths.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -230,21 +229,9 @@ test("a kill mid-LLM-pass leaves the repo and the pipeline home clean", async (t
   await execFileP("git", ["diff", "--exit-code", "src/data/knowledge/", "src/content/concepts/"], { cwd: REPO_ROOT });
 });
 
-// Stability-test digest fixtures may transiently appear/disappear in a
-// parallel test process; strip them so before/after comparisons only see
-// changes this pipeline could have made.
-function withoutStabilityFixtures(porcelain) {
-  return porcelain
-    .split("\n")
-    .filter((line) => !STABILITY_FIXTURE_FILES.some((f) => line.endsWith(`src/content/digest/${f}`)))
-    .join("\n");
-}
-
 test("prep + assign against the real repo leaves the repo tree unchanged", async (t) => {
   const home = await tempDir(t, "realrepo");
-  const before = withoutStabilityFixtures(
-    (await execFileP("git", ["status", "--porcelain"], { cwd: REPO_ROOT })).stdout,
-  );
+  const before = (await execFileP("git", ["status", "--porcelain"], { cwd: REPO_ROOT })).stdout;
 
   // Prep reads the real digests/threads/explorers/concepts read-only.
   const prep = await runScript("concepts_prep.mjs", [], home);
@@ -292,9 +279,7 @@ test("prep + assign against the real repo leaves the repo tree unchanged", async
   const proposals = await readProposals(path.join(home, "inbox.jsonl"));
   assert.equal(proposals.length, candidates.length);
 
-  const after = withoutStabilityFixtures(
-    (await execFileP("git", ["status", "--porcelain"], { cwd: REPO_ROOT })).stdout,
-  );
+  const after = (await execFileP("git", ["status", "--porcelain"], { cwd: REPO_ROOT })).stdout;
   assert.equal(after, before, "repo tree must be unchanged after prep+assign");
   await execFileP("git", ["diff", "--exit-code", "src/data/knowledge/", "src/content/concepts/"], { cwd: REPO_ROOT });
 });

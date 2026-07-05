@@ -1,13 +1,5 @@
 import { defineCollection, reference, z } from "astro:content";
 import { glob } from "astro/loaders";
-import { REGISTERS, registerFromDigestOrigin } from "./lib/register";
-
-// ---- register (PRD R3) ----
-// Closed provenance enum; every collection below makes an EXPLICIT choice
-// (default, or a derivation for machine-produced collections — never a bare
-// enum with no stance). Page-level register is a required BaseHead prop; this
-// field is what collection routes pass through.
-const registerEnum = z.enum(REGISTERS);
 
 // ---- shared sub-schemas ----
 const link = z.object({
@@ -37,8 +29,6 @@ const cv = defineCollection({
     links: z.array(link).default([]),
     tags: z.array(z.string()).default([]),
     order: z.number().optional(),
-    // register: career timeline entries are written by Stephanie by hand.
-    register: registerEnum.default("authored"),
   }),
 });
 
@@ -61,9 +51,6 @@ const publications = defineCollection({
     abstract: z.string().optional(),
     featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
-    // register: bibliographic records of published work — structured metadata,
-    // not site prose.
-    register: registerEnum.default("reference"),
   }),
 });
 
@@ -79,8 +66,6 @@ const press = defineCollection({
     kind: z.enum(["article", "interview", "feature", "mention", "podcast"]).default("article"),
     excerpt: z.string().optional(),
     featured: z.boolean().default(false),
-    // register: records of third-party coverage — reference data, not authored prose.
-    register: registerEnum.default("reference"),
   }),
 });
 
@@ -112,8 +97,6 @@ const projects = defineCollection({
       related: z.array(reference("projects")).default([]),
       tags: z.array(z.string()).default([]),
       order: z.number().optional(),
-      // register: project summaries and framing are Stephanie's own writing.
-      register: registerEnum.default("authored"),
     }),
 });
 
@@ -125,8 +108,6 @@ const topics = defineCollection({
     summary: z.string(),
     related: z.array(reference("topics")).default([]),
     weight: z.number().default(1),
-    // register: curated graph vocabulary — reference structure, not prose.
-    register: registerEnum.default("reference"),
   }),
 });
 
@@ -141,9 +122,6 @@ const concepts = defineCollection({
     definition: z.string(),
     topic: reference("topics").optional(), // anchor into the topics graph
     related: z.array(reference("concepts")).default([]),
-    // register: the concept registry is canonical reference vocabulary (PRD R3
-    // names this collection explicitly).
-    register: registerEnum.default("reference"),
   }),
 });
 
@@ -157,9 +135,6 @@ const outputs = defineCollection({
     date: z.coerce.date().optional(),
     url: z.string().url(),
     topics: z.array(reference("topics")).default([]),
-    // register: link records pointing at work published elsewhere — graph
-    // leaves, not on-site prose.
-    register: registerEnum.default("reference"),
   }),
 });
 
@@ -176,8 +151,6 @@ const writing = defineCollection({
       description: z.string(),
       tags: z.array(z.string()).default([]),
       featured: z.boolean().default(false),
-      // register: the writing index catalogs Stephanie's own writing.
-      register: registerEnum.default("authored"),
     })
     .refine((d) => (d.source === "on-site" ? !!d.post : !!d.url), {
       message: "External writing needs `url`; on-site writing needs a `post` reference.",
@@ -196,9 +169,6 @@ const posts = defineCollection({
       cover: image().optional(),
       draft: z.boolean().default(false),
       tags: z.array(z.string()).default([]),
-      // register: on-site long-form essays are Stephanie's genuine writing
-      // (PRD: agent prose never lands in this collection).
-      register: registerEnum.default("authored"),
     }),
 });
 
@@ -227,10 +197,6 @@ const talks = defineCollection({
       photoCard: z.boolean().default(false), // promo/speaker card: render small, not full-bleed
       description: z.string().optional(),
       featured: z.boolean().default(false),
-      // register: talks she delivered, with hand-written descriptions. The
-      // machine-transcribed text of a talk lives in the `transcripts`
-      // collection, which carries its own (hybrid, never authored) register.
-      register: registerEnum.default("authored"),
     }),
 });
 
@@ -252,8 +218,6 @@ const art = defineCollection({
       links: z.array(link).default([]),
       featured: z.boolean().default(false),
       order: z.number().optional(),
-      // register: illustration, music, and books are Stephanie's own work.
-      register: registerEnum.default("authored"),
     }),
 });
 
@@ -273,24 +237,12 @@ const learning = defineCollection({
     meta: z.string().optional(), // e.g. "108 papers · 9 themes"
     date: z.coerce.date().optional(),
     order: z.number().optional(),
-  }).transform((data) => ({
-    ...data,
-    // register: machine-built literature explorers and pipeline-generated
-    // podcasts. Sensitive collection — DERIVED, not defaulted, so a frontmatter
-    // edit can never relabel machine learning-content as authored.
-    register: "generated" as const,
-  })),
+  }),
 });
 
 // ---- digest (generated + manually curated newsletter/podcast issues) ----
 const digest = defineCollection({
   loader: base("digest"),
-  // register: sensitive collection — NO bare default. Register DERIVES from the
-  // existing `origin` field (manual→hybrid, auto→generated; see
-  // registerFromDigestOrigin), so the 60+ existing entries need no frontmatter
-  // rewrite. An entry MAY declare `register` explicitly (the publish gate
-  // writes it), but a declared value that contradicts the origin derivation is
-  // a build error, never silently accepted.
   schema: z.object({
     title: z.string(),
     // cadence is the time-range the issue covers (curated issues derive it from
@@ -322,19 +274,7 @@ const digest = defineCollection({
       )
       .default([]), // linked resources surfaced in the issue
     highlights: z.array(z.string()).default([]),
-    register: registerEnum.optional(),
-  })
-    .superRefine((data, ctx) => {
-      const derived = registerFromDigestOrigin(data.origin);
-      if (data.register && data.register !== derived) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["register"],
-          message: `digest register "${data.register}" contradicts origin "${data.origin}" (must derive to "${derived}")`,
-        });
-      }
-    })
-    .transform((data) => ({ ...data, register: registerFromDigestOrigin(data.origin) })),
+  }),
 });
 
 // ---- transcripts (audio transcripts, joined to any audio entry by audioUrl) ----
@@ -347,13 +287,7 @@ const transcripts = defineCollection({
     audioUrl: z.string(), // the audio file this transcribes — the join key
     durationMin: z.number().optional(),
     words: z.number().int().optional(),
-  }).transform((data) => ({
-    ...data,
-    // register: machine-transcribed audio. Sensitive collection — DERIVED, not
-    // defaulted: the words may be Stephanie's but the transcription is machine
-    // output, so a transcript is hybrid and can NEVER surface as authored.
-    register: "hybrid" as const,
-  })),
+  }),
 });
 
 export const collections = {
