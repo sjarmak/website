@@ -73,28 +73,12 @@ test("global concepts payload contains no evidence-type or ev:-namespaced nodes"
 
 // ------------------------------------------------------------- heartbeat
 
-test("heartbeat fields are visible in the built HTML", () => {
-  const sync = JSON.parse(
-    readFileSync(path.join(REPO_ROOT, "src", "data", "knowledge", "concept-sync-status.json"), "utf8"),
-  );
-  assert.match(html, /data-concept-heartbeat/);
-  assert.ok(html.includes("Sync heartbeat"));
-  assert.ok(html.includes(sync.updatedAt.slice(0, 10)), "status updated date visible");
-  // last-run section: either recorded steps or the explicit empty state
-  const stepNames = Object.keys(sync.steps);
-  if (stepNames.length > 0) {
-    for (const name of stepNames) assert.ok(html.includes(name), `step ${name} visible`);
-  } else {
-    assert.ok(html.includes("no steps recorded yet"));
-  }
-  assert.ok(html.includes(`${sync.backlog.count} pending`), "backlog count visible");
-  assert.ok(html.includes("Facet resolution"));
-  const rateLabel =
-    sync.facetResolution.rate !== null ? `${Math.round(sync.facetResolution.rate * 100)}%` : "n/a";
-  assert.ok(
-    html.includes(`${sync.facetResolution.resolved} of ${sync.facetResolution.total} resolved (${rateLabel})`),
-    "resolution rate visible",
-  );
+// The sync heartbeat is pipeline telemetry (owner decision 2026-07-04): the
+// pipeline still commits concept-sync-status.json, but it must not render on
+// the public page.
+test("sync heartbeat is not rendered on the public concepts page", () => {
+  assert.doesNotMatch(html, /data-concept-heartbeat/);
+  assert.ok(!html.includes("Sync heartbeat"));
 });
 
 // ---------------------------------------------- freshness (independent join)

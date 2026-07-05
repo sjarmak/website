@@ -1,5 +1,4 @@
 ---
-import { readFileSync } from "node:fs";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ConceptFallback from "@/components/graph/ConceptFallback.astro";
 import { buildConceptGraph } from "@/lib/graph/buildConceptGraph";
@@ -24,38 +23,6 @@ for (const node of data.nodes) {
 // The island payload: ConceptGraphData plus the freshness map. Extra fields
 // are inert on pages that embed plain GraphData.
 const payload = { ...data, freshness };
-
-// ---- sync heartbeat (committed by the concept pipeline) ----
-interface SyncStatus {
-  version: number;
-  updatedAt: string;
-  steps: Record<string, string | { lastRun?: string }>;
-  flags: Record<string, boolean | string>;
-  backlog: { count: number; oldestAgeSeconds: number | null };
-  facetResolution: { resolved: number; total: number; rate: number | null };
-}
-const sync = JSON.parse(
-  readFileSync("src/data/knowledge/concept-sync-status.json", "utf8"),
-) as SyncStatus;
-
-function stepLastRun(value: string | { lastRun?: string }): string {
-  if (typeof value === "string") return value;
-  return value.lastRun ?? "unknown";
-}
-
-function formatAge(seconds: number | null): string {
-  if (seconds === null) return "—";
-  if (seconds < 3600) return `${Math.round(seconds / 60)} min`;
-  if (seconds < 86400) return `${Math.round(seconds / 3600)} h`;
-  return `${Math.round(seconds / 86400)} d`;
-}
-
-const steps = Object.entries(sync.steps);
-const flags = Object.entries(sync.flags);
-const rateLabel =
-  sync.facetResolution.rate !== null
-    ? `${Math.round(sync.facetResolution.rate * 100)}%`
-    : "n/a";
 ---
 
 <BaseLayout
@@ -125,50 +92,6 @@ const rateLabel =
       </div>
     </div>
 
-    <section class="heartbeat" data-concept-heartbeat aria-label="Concept sync heartbeat">
-      <h2 class="heartbeat__head">Sync heartbeat</h2>
-      <dl class="heartbeat__grid">
-        <dt>Status updated</dt>
-        <dd>{sync.updatedAt.slice(0, 10)}</dd>
-
-        <dt>Last runs</dt>
-        <dd>
-          {
-            steps.length > 0 ? (
-              <ul role="list">
-                {steps.map(([name, value]) => (
-                  <li>
-                    {name}: {stepLastRun(value)}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              "no steps recorded yet"
-            )
-          }
-        </dd>
-
-        <dt>Flags</dt>
-        <dd>
-          {
-            flags.length > 0
-              ? flags.map(([name, value]) => `${name}: ${String(value)}`).join(", ")
-              : "none set"
-          }
-        </dd>
-
-        <dt>Proposal backlog</dt>
-        <dd>
-          {sync.backlog.count} pending
-          {sync.backlog.count > 0 ? ` · oldest ${formatAge(sync.backlog.oldestAgeSeconds)}` : ""}
-        </dd>
-
-        <dt>Facet resolution</dt>
-        <dd>
-          {sync.facetResolution.resolved} of {sync.facetResolution.total} resolved ({rateLabel})
-        </dd>
-      </dl>
-    </section>
   </div>
 
   <script type="application/json" data-graph-data set:html={JSON.stringify(payload)} is:inline
@@ -309,28 +232,5 @@ const rateLabel =
   /* Graph is the default view; the list is shown only when canvas is inactive. */
   .graph-explorer[data-canvas-active="true"] .graph-fallback-wrap {
     display: none;
-  }
-  .heartbeat {
-    margin-block: var(--space-xl);
-    padding: var(--space-m);
-    border: var(--border-hairline);
-    border-radius: var(--radius-l);
-    background: var(--color-bg-subtle);
-    font-size: var(--step--1);
-  }
-  .heartbeat__head {
-    font-size: var(--step-0);
-    margin-block-end: var(--space-s);
-  }
-  .heartbeat__grid {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-2xs) var(--space-m);
-  }
-  .heartbeat__grid dt {
-    color: var(--color-text-muted);
-  }
-  .heartbeat__grid dd {
-    margin: 0;
   }
 </style>
