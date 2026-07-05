@@ -277,6 +277,17 @@ function setup(root: HTMLElement, data: ExplorerData) {
   function closeDetail() {
     if (detail) detail.hidden = true;
   }
+
+  // Collapse the panel to a title bar so the evidence ring stays visible.
+  // The collapsed state is sticky across node selections; the button ships
+  // only on pages that opt in (e.g. /concepts).
+  const detailCollapse = detail?.querySelector<HTMLButtonElement>("[data-detail-collapse]") ?? null;
+  detailCollapse?.addEventListener("click", () => {
+    if (!detail) return;
+    const collapsed = detail.dataset.collapsed !== "true";
+    detail.dataset.collapsed = String(collapsed);
+    detailCollapse.setAttribute("aria-expanded", String(!collapsed));
+  });
   root.querySelector("[data-detail-close]")?.addEventListener("click", () => {
     closeDetail();
     clearHighlight();

@@ -79,6 +79,13 @@ const payload = { ...data, freshness };
           <button type="button" class="graph-detail__close" data-detail-close aria-label="Close detail"
             >×</button
           >
+          <button
+            type="button"
+            class="graph-detail__collapse"
+            data-detail-collapse
+            aria-expanded="true"
+            aria-label="Node details">▾</button
+          >
           <p class="graph-detail__type" data-detail-type></p>
           <h2 class="graph-detail__title" data-detail-title></h2>
           <p class="graph-detail__summary secondary" data-detail-summary></p>
@@ -190,6 +197,27 @@ const payload = { ...data, freshness };
     font-size: 1.5rem;
     line-height: 1;
     color: var(--color-text-muted);
+  }
+  /* Collapse to a title bar so the graph (and evidence ring) stays in view. */
+  .graph-detail__collapse {
+    position: absolute;
+    top: var(--space-2xs);
+    right: calc(var(--space-xs) + 1.75rem);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--color-text-muted);
+    transition: transform 0.15s ease;
+  }
+  .graph-detail[data-collapsed="true"] .graph-detail__collapse {
+    transform: rotate(180deg);
+  }
+  .graph-detail[data-collapsed="true"] .graph-detail__summary,
+  .graph-detail[data-collapsed="true"] .graph-detail__links,
+  .graph-detail[data-collapsed="true"] .graph-detail__evidence {
+    display: none;
+  }
+  .graph-detail[data-collapsed="true"] .graph-detail__title {
+    margin-block-end: 0;
   }
   .graph-detail__type {
     font-size: var(--step--1);

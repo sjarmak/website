@@ -52,6 +52,10 @@ test("detail panel evidence container ships in the page markup", () => {
   assert.match(html, /data-detail-evidence/);
 });
 
+test("detail panel collapse control ships, default expanded", () => {
+  assert.match(html, /data-detail-collapse[\s\S]{0,40}aria-expanded="true"/);
+});
+
 test("evidence toggle ships in the concepts toolbar, default ON", () => {
   assert.match(html, /data-evidence-toggle aria-pressed="true"/);
 });
