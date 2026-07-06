@@ -1294,6 +1294,31 @@
           "why": "An event-grounded episodic representation positioned against vector-RAG memory — the architectural claim is that semantic indexes belong downstream of an immutable event store, never as its source of truth."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260521997N",
+      "title": "The Log Is the Agent",
+      "firstAuthor": "Nakajima, Yohei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2605.21997",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260521997N/abstract",
+      "branches": [
+        "substrate",
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "ActiveGraph makes the append-only event log the persistence substrate itself: rules, rule changes, tool calls and responses, model requests/responses, and produced claims are all events in one ordered log, and the working graph is recomputed by folding that log forward. Model and tool responses persist in the log via a content-addressed cache keyed on a hash of the entire request (system message, user messages, model identifier, tool definitions, output schema), with disk cost bounded by run size; the stated limit is that replay cost grows with log length, so a million-event run is replayed in full today because checkpointing and compaction are not yet provided.",
+          "why": "This branch asks where bytes actually live beneath the semantic layer; the paper's answer collapses the two layers, arguing the durable byte store should be the single authoritative history everything else projects from, which trades storage growth and compaction burden for total provenance and exact replay."
+        },
+        {
+          "branch": "representation",
+          "takeaway": "Memory is a typed object-and-relation graph that is a deterministic projection of the event log, never mutated directly: every object carries a provenance block naming the behavior and causing event, behaviors subscribe to graph-shape patterns in a Cypher subset (e.g. 'a claim that addresses an unanswered question'), and relation-behaviors attach logic to typed edges. The paper explicitly contrasts this with memory-layer systems (MemGPT/Letta, Zep/Graphiti, Mem0, Hindsight) where memory is derived state, summaries, extractions, embeddings, layered onto an agent whose primary representation lives elsewhere and provenance is at best partial.",
+          "why": "This branch weighs flat RAG against graphs, atomic facts, and event-grounded records; the paper's position is that the event-grounded log and the entity-relation graph are complementary, not alternatives: the log makes state reproducible while the graph makes reactivity and structural comparison expressible, and neither alone is sufficient."
+        }
+      ]
     }
   ],
   "sections": [

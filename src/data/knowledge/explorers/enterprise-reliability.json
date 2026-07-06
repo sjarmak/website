@@ -1369,6 +1369,50 @@
           "why": "Reframes this branch's oversight question: keeping a human near the implementation loop makes attention the throughput bottleneck, so the sustainable role is ex-post, converting observed failures into the engineering environment that constrains subsequent agent work."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260521997N",
+      "title": "The Log Is the Agent",
+      "firstAuthor": "Nakajima, Yohei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2605.21997",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260521997N/abstract",
+      "branches": [
+        "recovery",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Recovery is replay, not handoff: any run is byte-reproducible from its log, and a fork branches at any event with the shared prefix served entirely from the content-addressed cache, so a fork of a 200-step run that changes one setting at step 150 pays only for steps 150 onward, the first 149 steps including their model calls are free. Side effects get transactional honesty rather than pretense: an external tool that mutates the world still mutates it on first execution, and only the recorded response replays deterministically; runaway reactive cascades halt against per-run budget caps on events, behavior calls, model calls, patches, recursion depth, wall-clock time, and cost.",
+          "why": "This branch holds that durable state beats conversational handoff, and the paper supplies the mechanism: state as a deterministic fold over an append-only log means resuming, auditing, or branching a run never depends on re-prompting or re-executing nondeterministic steps, while the side-effect caveat marks exactly where the transaction boundary sits."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "Every event carries id, type, payload, actor, a caused_by pointer to the triggering event, and a timestamp, giving end-to-end lineage from a high-level goal down to the individual model call: a claim like 'Northwind Q3 revenue grew 28% YoY to $42M' names the behavior that created it (document_researcher), the event that caused it, and the specific model request event that produced it. The worked diligence run yields 671 events, 93 objects, and 76 relations via 103 model calls and 48 tool calls, and strict replay compares the live event stream against the recorded one, pinning any divergence to the first event that differs.",
+          "why": "This branch says transcripts are not observability; the paper operationalizes the alternative, a structured, causally-linked, replayable trace where 'why is this fact in the agent's working set' becomes a query over the log, and a green strict replay is a machine-checkable proof that intent and action still correlate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260514460L",
+      "title": "Exploiting LLM Agent Supply Chains via Payload-Less Skills",
+      "firstAuthor": "Liu, Xinyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2605.14460",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260514460L/abstract",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Semantic Compliance Hijacking (SCH) weaponizes third-party Agent Skill files without any embedded code: it injects obfuscated natural-language 'compliance guidelines' that the agent's retrieve-contextualize-execute pipeline fuses directly into the LLM system prompt as authoritative directives, and the agent then synthesizes and runs the malicious logic itself at runtime (dumping os.environ and POSTing it as 'telemetry', or exec()-ing a fetched remote byte stream). Across 600 contextualized tasks over 3 frameworks (OpenClaw, Claude Code, Codex) and 3 models, SCH hit a peak 77.67% complete-leakage rate and 67.33% RCE, yet both SkillScan (AST/regex) and LLM Guard (semantic classifiers) flagged it at 0.00%, versus 62.00-96.00% detection for SkillJect and 91.61-99.81% for DDIPE explicit-payload baselines; an 'Alignment-Security Paradox' made the most-aligned model (GPT-5.4 mini, 62.11% avg complete leakage) the most exploitable because it best maps prose directives to concrete system APIs.",
+          "why": "It concretely demonstrates the branch's premise that skill/tool documentation entering an agent's context is untrusted input and that the skill marketplace is an attack-surface topology: a benign-looking natural-language file propagates through the load-and-execute chain into host-privileged code execution, defeating signature-based scanning and forcing the shift to semantic intent validation and bounded autonomy (declared network endpoints and read/write paths via an ABOM contract)."
+        }
+      ]
     }
   ],
   "sections": [
