@@ -1319,6 +1319,94 @@
           "why": "This branch weighs flat RAG against graphs, atomic facts, and event-grounded records; the paper's position is that the event-grounded log and the entity-relation graph are complementary, not alternatives: the log makes state reproducible while the graph makes reactivity and structural comparison expressible, and neither alone is sufficient."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626511Y",
+      "title": "Temporal Validity in Retrieval Memory: Eliminating Stale-Fact Errors for AI Agents over Evolving Knowledge",
+      "firstAuthor": "Yadav, Neeraj",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26511",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626511Y/abstract",
+      "branches": [
+        "temporal",
+        "forgetting",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "MemStrata replaces similarity-based staleness detection with a deterministic (subject, relation, object) supersession rule: when a newer assertion contradicts a stored one sharing the same key, the old row's validity interval closes and a new one opens in a bi-temporal ledger.",
+          "why": "Directly operationalizes bi-temporal validity/transaction-time tracking for agent memory rather than treating it as a database-only concept — the ledger retires facts instead of deleting or silently overwriting them."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "Facts are retired, not deleted, so superseded rows stay queryable for future as-of-time lookups; an aggressive-merge ablation that discarded detail at write time regressed to 0.62/0.13 accuracy on static recall, showing compression-as-forgetting actively hurts here.",
+          "why": "A rare quantified demonstration that lossy consolidation can be worse than doing nothing, cautioning against conflating forgetting with compression."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "On a calibrated 98-pair dataset, cosine similarity separates contradictions from duplicates at AUROC 0.59 (near chance) and max precision 0.67, because a value-flip edit sits textually closer to the original than a genuine rephrasing does.",
+          "why": "A structural impossibility result for similarity-only retrieval under knowledge evolution — no threshold fixes it, which motivates the deterministic supersession approach."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701071X",
+      "title": "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
+      "firstAuthor": "Xiang, Zhishang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01071",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701071X/abstract",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "A preliminary study shows injecting a plausible-but-wrong memory snippet before an objective question drops factual accuracy across all three tested models (e.g. DeepSeek-V4-Flash: 56.1% to 40.2%) and roughly doubles the sycophancy rate (24.3% to 52.3%).",
+          "why": "A clean demonstration that retrieval-correctness and answer-correctness diverge: retrieving the 'right' but stale or wrong memory can actively make answers worse, something most eval protocols never isolate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701224W",
+      "title": "AutoMem: Automated Learning of Memory as a Cognitive Skill",
+      "firstAuthor": "Wu, Shengguang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01224",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701224W/abstract",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Memory operations (read/write/search/append/create against files) are promoted to first-class actions alongside task actions, so what gets recorded, compressed, or reorganized is a decision the model makes and the outer loop can observe as a traceable action, not a fixed summarization rule.",
+          "why": "Tests the 'letting an LLM continuously rewrite its own memory' failure mode this branch flags, but with a review-and-revise structure (a meta-LLM auditing full traces) rather than unchecked self-rewriting, and reports it works: ~2x-4x gains on long-horizon games."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260703726Y",
+      "title": "SelfMem: Self-Optimizing Memory for AI Agents",
+      "firstAuthor": "Yang, Shu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.03726",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260703726Y/abstract",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "SelfMem separates 'framework constraints' (human-designed principles, tools, audit constraints) from 'memory strategy' (what to keep, compress, update, or leave for transcript retrieval); the strategy question is left entirely to the agent, checked via a self-review tool rather than a fixed summarization prompt.",
+          "why": "Directly tests whether an LLM should decide its own consolidation policy versus following a fixed extract/summarize rule, with quantified gains (Pass0.5 +14.3 to +17.0 points) rather than just an architectural proposal."
+        }
+      ]
     }
   ],
   "sections": [

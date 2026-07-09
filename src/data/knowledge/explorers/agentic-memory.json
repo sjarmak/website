@@ -2641,6 +2641,88 @@
           "why": "Directly answers how (or whether) consolidation and forgetting get measured: this paper measures consolidation by write economy and drift rather than recall, and bounds the negative result honestly — catastrophic-forgetting tools (replay, EWC, anti-training) help durable goals but fail at obsolescence. A clean datapoint that durable retention and stale-memory invalidation are different problems, and anti-training is the wrong object for the latter."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260626511Y",
+      "title": "Temporal Validity in Retrieval Memory: Eliminating Stale-Fact Errors for AI Agents over Evolving Knowledge",
+      "firstAuthor": "Yadav, Neeraj",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.26511",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260626511Y/abstract",
+      "branches": [
+        "forgetting",
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Across four marker-free evolving benchmarks (code mutation, config migration, dependency bumps, API evolution), plain RAG serves the superseded value 15-40% of the time when forced to answer; MemStrata drives this to ~0% via deterministic supersession rather than any decay or scoring-based forgetting heuristic.",
+          "why": "Quantifies a concrete stale-fact-error failure mode that similarity-based memory can't avoid by construction, with a fix that doesn't rely on scoring-based forgetting."
+        },
+        {
+          "branch": "architectures",
+          "takeaway": "MemStrata's write path short-circuits exact duplicates, tries a deterministic triple-key supersession match first, and only falls back to a similarity-plus-LLM-judge gate for non-triple prose, keeping the fast, safe path LLM-free.",
+          "why": "A concrete tiered-architecture pattern (deterministic-first, LLM-fallback-last) for memory writes that bounds both cost and error together."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701071X",
+      "title": "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory",
+      "firstAuthor": "Xiang, Zhishang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01071",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701071X/abstract",
+      "branches": [
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "MemSyco-Bench covers five task categories testing whether agents can reject memory as factual evidence, respect its scope, resolve memory-vs-evidence conflicts, track updates, and use valid memory for personalization, built after showing existing benchmarks (LongMemEval, LoCoMo, STALE, PersonaMem) put 47.4-66.1% of their errors in the retrieval-failure bucket versus only 5.8-13.7% in the post-retrieval-reasoning bucket.",
+          "why": "Names and measures memory-induced sycophancy as a failure mode prior long-term-memory benchmarks structurally can't isolate, since they conflate retrieval failure with reasoning-over-retrieved-memory failure."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260701224W",
+      "title": "AutoMem: Automated Learning of Memory as a Cognitive Skill",
+      "firstAuthor": "Wu, Shengguang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.01224",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260701224W/abstract",
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A meta-LLM reviews complete long-horizon episode traces (up to 10^5 steps) and iteratively revises the agent's memory scaffold — prompts, file schema, action vocabulary — based on diagnosed failure patterns, then a second loop selects the agent's own good memory decisions across many episodes as training signal to fine-tune a dedicated memory-specialist model.",
+          "why": "A two-axis (structure + proficiency) self-evolving memory loop where a meta-LLM performs trajectory review at a scale no human reviewer could manage, a clear instance of the reflection-to-experience frontier this branch tracks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260703726Y",
+      "title": "SelfMem: Self-Optimizing Memory for AI Agents",
+      "firstAuthor": "Yang, Shu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.03726",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260703726Y/abstract",
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "SelfMem exposes memory tools (read transcript, read/write/revise memory, review quality, extend the toolkit) plus feedback signals (response performance, cost, cache reuse) and lets the agent decide its own memory strategy rather than following a fixed schema, outperforming retrieval, compression, and agent-memory baselines on BEAM by 40.8-48.7% across 100K-1M token conversations.",
+          "why": "A direct instance of agent-controlled memory-policy improvement across trajectories, with the raw transcript kept as an immutable ground truth the agent can always fall back to, distinguishing self-optimization from unchecked self-rewriting."
+        }
+      ]
     }
   ],
   "sections": [

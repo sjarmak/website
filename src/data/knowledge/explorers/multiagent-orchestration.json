@@ -2037,6 +2037,50 @@
           "why": "A named system with real numbers for the co-evolution frontier: evaluation itself becomes an evolving component of the agent system, with convergence guarantees held per epoch rather than abandoned."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260628235R",
+      "title": "Govern the Repository, Not the Agent: Measuring Ecosystem-Level Risk in AI-Native Software",
+      "firstAuthor": "Russo, Daniel",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.28235",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260628235R/abstract",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "The paper measures 'statistical non-reducibility' with multilevel models the field already uses, and validates the agent-specific signal against a matched human-authored baseline in the same repositories.",
+          "why": "A practical, metric-independent method production teams can reuse to test whether their repos are absorbing agent-driven friction beyond what any single-agent benchmark would predict."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260627416P",
+      "title": "Glite ARF: Verifier-Driven Research with Parallel LLM Coding Agents",
+      "firstAuthor": "Philippov, Vassili",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.27416",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260627416P/abstract",
+      "branches": [
+        "production",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Deployed across three research campaigns including a BEA 2026 shared-task submission (first and second place) run by up to twelve parallel coding agents from a single laptop at ~$450 in API spend, with the framework's verification and isolation machinery adding only ~1% wall-clock overhead.",
+          "why": "Real cost and overhead numbers for running many parallel coding agents against a shared repository, useful evidence for routing and cost tradeoffs around structural guardrails."
+        },
+        {
+          "branch": "frameworks",
+          "takeaway": "Glite ARF is explicitly orthogonal to intra-task orchestration frameworks (AutoGen, MetaGPT, CrewAI): it wraps the campaign-level lifecycle (task isolation, immutable artifacts, verifier scripts) around whichever framework runs inside a single task.",
+          "why": "Names a coordination layer, a verifier-driven, spec-enforced task lifecycle, distinct from intra-task multi-agent frameworks, a pattern this branch tracks."
+        }
+      ]
     }
   ],
   "sections": [
