@@ -1513,6 +1513,88 @@
           "why": "A concrete risk-tiered autonomy design rather than a binary autonomous-or-not choice, for the human-oversight branch."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260526563W",
+      "title": "TrajAudit: Automated Failure Diagnosis for Agentic Coding Systems",
+      "firstAuthor": "Wang, Minxing",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2605.26563",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260526563W/abstract",
+      "branches": [
+        "reliability",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "RootSE distills 93 real repository-level agent failures (over 4,500 execution steps) into a diagnosis benchmark whose target is the earliest decisive error step - the single early mistake, such as a misread requirement or flawed plan, whose cumulative consequence is the eventual system failure.",
+          "why": "This branch tracks the failure taxonomy you need before scaling agent fan-out; RootSE is a concrete, complexity-graded catalog of how repo-level coding agents actually fail and where the decisive error first enters the trajectory."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "TrajAudit treats the raw trajectory as mostly noise (tool observations are over 70% of content) and replaces passive whole-trace ingestion with an investigator agent that folds observations down to failure-relevant fragments and retrieves detail on demand, lifting localization accuracy by over 24.4 points while cutting token use at least 18%.",
+          "why": "The branch's claim is that a transcript is not observability; TrajAudit is a worked case where structured, on-demand retrieval over the trace correlates the decisive action with the failure far better than feeding the model the entire log, which drops prior methods below 40% on long trajectories."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260708124N",
+      "title": "TTHE: Test-Time Harness Evolution",
+      "firstAuthor": "Nie, Jun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08124",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708124N/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "TTHE selects an improved agent harness during evaluation with no gold labels, committing candidate programs from execution-derived proxy signals via an agentic judge; its own trace audits attribute the remaining errors to that judge committing a plausible-but-wrong harness under imperfect proxies, and gains are non-monotonic in search budget.",
+          "why": "This branch grounds evaluation in execution and calibrated judges; TTHE is a direct study of the failure mode, naming execution-proxy reliability and judge calibration as the central bottleneck when execution stands in for an honest label."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260708010K",
+      "title": "Tool-Making and Self-Evolving LLM Agents in Low-Latency Systems",
+      "firstAuthor": "Kujanpaa, Kalle",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08010",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708010K/abstract",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "The runtime is a cascade - a cheap compiled tool per SOP node first, code generation only when a tool is missing or fails - and the paper records concrete cost facts from production: p50 latency down 42%, a further 62% from the resulting direct-call architecture, and end-to-end error rate down up to 53% from suppressed run-to-run variance.",
+          "why": "The branch holds that cascades beat always-on regeneration and that you record cost facts before optimizing routing; this is a deployed fulfillment-center instance with measured latency and error deltas rather than a treat-unknown-cost-as-zero estimate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260707980A",
+      "title": "3100 Opinions on Code Review in an AI World: Building Causal Theory from Practitioner Discourse",
+      "firstAuthor": "Agarwal, Shyam",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.07980",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260707980A/abstract",
+      "branches": [
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "Synthesizing 3,100 coded practitioner documents into a 26-construct, 67-relationship causal model, the paper's organizing claim is that code review is the control point through which a coding agent's effect on software is decided, and AI does not fix the sign of that effect - human expertise and how the team structures review set it; its observational study finds 40.1% of agent-authored PRs examined only by the developer who invoked the agent versus 21.5% of human PRs.",
+          "why": "This branch is about keeping humans on the reasoning chain; the paper supplies the theory of why that matters for agent-authored code - review is the human control point where the agent's effect is decided, and delegating it away (self-review, or no review) is where oversight quietly erodes."
+        }
+      ]
     }
   ],
   "sections": [

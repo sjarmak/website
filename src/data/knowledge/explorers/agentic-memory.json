@@ -2723,6 +2723,25 @@
           "why": "A direct instance of agent-controlled memory-policy improvement across trajectories, with the raw transcript kept as an immutable ground truth the agent can always fall back to, distinguishing self-optimization from unchecked self-rewriting."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260708010K",
+      "title": "Tool-Making and Self-Evolving LLM Agents in Low-Latency Systems",
+      "firstAuthor": "Kujanpaa, Kalle",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08010",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708010K/abstract",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Each repeated SOP step is compiled once into a validated, versioned tool - grounded in live execution traces (query code, observed backend schema, graded verdict) and repaired against labeled cases by a reflector loop - then invoked cheaply at runtime, with code generation kept only as a fallback.",
+          "why": "This is procedural-memory and skill induction in production: the agent amortizes a repeated procedure into a reusable, tested tool library rather than re-deriving the skill on each request, the core mechanism this branch tracks for coding and tool-use agents."
+        }
+      ]
     }
   ],
   "sections": [
