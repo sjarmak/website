@@ -1,0 +1,84 @@
+---
+title: The software factory as an observatory
+date: 2026-07-11
+description: "Observatories are software factories that publish their scheduling lessons: what ZTF, Rubin, and the Deep Space Network teach agent-fleet orchestrators about planning, proofs, fairness, and replaying your own nights."
+tags: [agents, orchestration, scheduling, astronomy]
+draft: false
+---
+
+At 20:47 on Palomar Mountain, the marine layer starts climbing the ridge, and a computer in the dome of the 48-inch Samuel Oschin Telescope throws away its plan for the night. Nobody is alarmed. The Zwicky Transient Facility loses pieces of its plan most nights, to clouds, to seeing, to a target-of-opportunity alert from a gravitational-wave detector. The scheduler was designed for this: it chops up the night into blocks of thirty minutes, assigns work to blocks by solving an integer program that maximizes how much sky gets searched per unit time, then, inside each block, solves a traveling-salesman tour so the telescope wastes as little time as possible slewing between targets [[2019PASP..131f8003B](https://ui.adsabs.harvard.edu/abs/2019PASP..131f8003B/abstract)]. When the clouds come, it re-solves, and it has been doing this in production since 2018.
+
+![Re-decide, not repair: the plan was never precious.](./img/factory-observatory-01-ztf-replans-around-clouds.png)
+
+That dome is my model for what a software factory is trying to become. An observatory is a factory whose raw material is photons and whose product is measurements. It has a backlog: approved observation requests, each with a scientific priority, each waiting for its moment. It has agents: telescopes and instruments, some interchangeable, some specialized, each with a cost to start up and a cost to switch tasks. It has a hard budget that renews daily and cannot be banked: the dark hours between dusk and dawn, which are to an observatory what wall-clock compute capacity is to a fleet of coding agents. It has a review committee upstream deciding what deserves time, an unreliable environment that fails jobs through no fault of the work (so does the aforementioned committee, because of the second variable, money), and, in many facilities, one shared serial resource everybody's output must eventually pass through. Astronomy has been running this factory for decades, at scales from an amateur in their backyard to a global network, and the history is published. We keep calling the software systems "agent orchestrators." Functionally, they are online schedulers, and astronomy has been fielding online schedulers, under harsher constraints and with better bookkeeping, for thirty-five years.
+
+## Two monasteries with opposing heresies
+
+Observatory schedulers answer a question every software factory eventually encounters: how much planning is enough? Two great survey telescopes answered it in opposite ways, and the disagreement itself is the lesson.
+
+ZTF is the planning monastery, with a deterministic optimization solved fresh whenever conditions change, the whole night laid out block by block, provably good against its objective. The Vera Rubin Observatory, whose survey is bigger and whose nights are more valuable, committed the opposite heresy. Its scheduler holds no plan at all. Naghib and colleagues formulated the problem as a Markov decision process and then declined to solve it as one, replacing the machinery with a scoring function: a weighted sum of handcrafted features of the current moment [[2019AJ....157..151N](https://ui.adsabs.harvard.edu/abs/2019AJ....157..151N/abstract)]. Take slew cost from here, sky brightness there, how long since this field was last visited, and evaluate it over every candidate. Best score wins, and you decide again after the next exposure. The weights get tuned offline against a simulator. When weather destroys twenty minutes, nothing needs repair, because there was never a plan to break. The policy just looks at the sky as it is and picks the next right thing.
+
+Seen this way, neither monastery is really a planner; both are closed-loop controllers that watch the sky, decide what to do next, and watch again. ZTF closes the loop at the block boundary, Rubin closes it after every exposure, and the architecture either one settles on is the same one an agent fleet converges on once it stops treating a plan as a commitment and starts treating it as the current output of a control loop over live metrics.
+
+![Observe, schedule, execute, measure, and around again: the plan is the loop's output.](./img/factory-observatory-08-closed-loop-controller.png)
+
+Explicit uncertainty modeling (scenario trees, probabilistic forecasts of which parts of the night will be lost) is not new as a discipline; stochastic and robust scheduling have decades of theory behind them. But what is striking is how little the deployed survey schedulers leaned on it. Dedicated stochastic treatments of weather arrive late even within astronomical scheduling, one such study a 2025 preprint [[2025arXiv250403666R](https://ui.adsabs.harvard.edu/abs/2025arXiv250403666R/abstract)], long after the fielded systems had settled for handling the most quantifiable uncertainty imaginable, weather, by simply re-deciding cheaply and often.
+
+Your agents fail stochastically, your queue mutates hourly, and the temptation is to model all of it. The observatories suggest you make re-decision nearly free instead: run a real optimization at coarse intervals the way ZTF does, score greedily but intelligently in between the way Rubin does, and let the weather be the weather.
+
+![Two monasteries: both close the loop.](./img/factory-observatory-02-two-monasteries.png)
+
+## The sky does not wait for proofs
+
+When two neutron stars collide and LIGO issues an alert, ZTF's follow-up scheduler has to choose which fields to image, packed into valid observing blocks, to maximize the probability of catching the kilonova before it fades. This is a hard combinatorial problem, and the team caps the solver at 500 seconds. Across 951 simulated alerts, most instances reached proven optimality inside the limit; the rest shipped whatever the best-found schedule was when the clock ran out, and the authors note, almost as an aside, that a 100-second limit would have cost them only 64 truncated solves [[2022ApJ...935...87P](https://ui.adsabs.harvard.edu/abs/2022ApJ...935...87P/abstract)].
+
+Every major production scheduler discussed here follows that pattern of a hard time cap with the incumbent taken as the answer and the certificate of optimality treated as a luxury that you shouldn't wait on. A plan a few percent off the true optimum but in hand now beats a perfect plan for a night that has already changed. Software factories inherit exactly the same constraint: the epoch planner gets a deadline measured in seconds, it ships the best schedule found, and nobody waits on a proof, because the merge queue, like the sky, keeps moving.
+
+There is a sharp edge to this pragmatism, though, and it cuts the other way. When Handley and colleagues compared their exact solver against a local-search heuristic on 360 telescope-sequencing instances, the heuristic failed to return a feasible schedule on seven of them. Six were infeasible, but on the seventh, a feasible schedule provably existed and the heuristic simply failed to find it, reporting infeasibility instead [[2024AJ....167...33H](https://ui.adsabs.harvard.edu/abs/2024AJ....167...33H/abstract)]. The heuristic returned a confident wrong answer (this is familiar to all of us now), and only the presence of an exact method revealed it. Any factory whose dispatcher can drop work without noticing, and most can, needs to account for the fact that heuristics shrug and solvers certify, and you want at least one component in the system capable of saying _there was work to do and we provably missed it_.
+
+![Best-found, not proven: the solver ships the incumbent when the clock runs out.](./img/factory-observatory-03-sky-does-not-wait.png)
+
+## Fairness is a constraint with a coefficient
+
+NASA's Deep Space Network schedules a small number of giant antennas against the competing demands of every active deep-space mission, including a spacecraft launched in 1977 that requires multiple antennas arrayed together just to hear it. The objective does not stop at throughput: alongside the visibility windows and the setup-and-teardown time bracketing every track, the scheduling model writes fairness down as math, explicit terms balancing each mission's share of satisfied time, validated against a real week of DSN operations [[2021arXiv211111628C](https://ui.adsabs.harvard.edu/abs/2021arXiv211111628C/abstract)]. Most orchestrators, by contrast, expose priorities and queues and then that's pretty much it. Fairness, if it emerges at all, emerges from tuning rather than from anything the optimizer is required to honor.
+
+Anyone who has watched an agent fleet knows the failure this prevents. One urgent epic arrives, and for days every worker in the pool is feeding it while maintenance work rots and a smaller project's tracked issues age past relevance. In most orchestrators the defense is a human noticing; in the DSN's formulation the defense is a coefficient, and a schedule that starves Voyager pays for it in the objective, visibly, instead of hiding it in a queue nobody audits. The same model carries the rest of the factory's session economics: setup and teardown are the agent's clone-and-context-load tax, minimum track durations exist because a session too short to do useful work still pays full spin-up cost, and arraying, several antennas on one oversized request, is several agents co-assigned to one epic under a single completion constraint.
+
+![Fairness is a constraint with a coefficient.](./img/factory-observatory-04-fairness-coefficient.png)
+
+## Every dome built its own scheduler, and paid for it
+
+The least flattering pattern in this literature is also the most familiar. Las Cumbres built a production ILP scheduler in 2014 [[2015arXiv150307170L](https://ui.adsabs.harvard.edu/abs/2015arXiv150307170L/abstract)]. ZTF built one in 2018. IPROS built one for a longitude-distributed relay network in 2025 [[2025RAA....25a5008J](https://ui.adsabs.harvard.edu/abs/2025RAA....25a5008J/abstract)]. These are recognizably the same slot-assignment integer program, rebuilt from scratch by group after group who share conferences, journals, and in some cases hallways. Every dome reinvented the scheduler for the same reason every company reinvents the build system: it looked like infrastructure, glue between the real work, rather than a product worth building once and sharing. The first deliberately multi-mission, open-source scheduling framework, M4OPT, arrived only in 2025 [[2025PASP..137g4501S](https://ui.adsabs.harvard.edu/abs/2025PASP..137g4501S/abstract)]. The software-factory ecosystem is speed-running the same pattern with dispatchers, every orchestration project hand-rolling its own priority heuristics, its own retry logic, its own capacity math, none of it cross-communicated, most of it unexamined; the correction available is the one the astronomers eventually made, noticing the shared kernel before the fifth reimplementation rather than after.
+
+![Every dome built its own scheduler: nobody's looking over the wall.](./img/factory-observatory-05-every-dome-own-scheduler.png)
+
+Observatories, though, are just physical instances of what operations research has spent the better part of a century on: online scheduling, stochastic and robust optimization, fair division, bin packing under deadlines. Almost none of that work has been within arm's reach of the people building orchestrators. The astronomers reached for it because a night is finite and expensive and they had no other option. A software factory has the same structure and, so far, less of an excuse. The right reading list for someone building a software factory is the same thirty-five years of scheduling papers that helped astronomers.
+
+![The reading list: still hasn't reached up.](./img/factory-observatory-06-or-reading-list.png)
+
+## Replay your own nights
+
+The one advantage a factory has over any dome is that a telescope gets each sky exactly once. That is why survey teams lean so hard on simulators: the only way to test a scheduler against last year's conditions is to synthesize them, because the real sky is gone. This is the door the astronomers cannot walk through, and it is precisely the door a factory can.
+
+A software factory can record every arrival, every claim, every outcome, and most orchestrators already do, in the audit ledgers they keep for other reasons: each work item's arrival time and priority, which agent claimed it and when, how long it ran, what it produced, whether review accepted it. That ledger is an experimental instrument. Replay an identical recorded week under two different dispatch policies, holding the arrival noise fixed, and whatever differs between the runs is the policy. The arrivals need no simulator because they were captured the first time. Datacenter scheduling already tested this out [[2018arXiv181001963M](https://ui.adsabs.harvard.edu/abs/2018arXiv181001963M/abstract)]. Among agent-orchestration systems, though, no published experiment of the kind appears anywhere in the corpus behind this piece, which includes all of arXiv.
+
+The argument that works for the software factory is to take your recorded traces, replay them under the dispatcher you have, then under a priority index of the kind Rubin points its billion-dollar survey with, then, if the index holds up, under a small integer program of the kind that has run ZTF's nights for eight years, and let the runs disagree about throughput, time-to-first-feedback, and how long the oldest queued item starved. The observatories spent thirty-five years and a great deal of precious telescope time learning which of these wins where. The replay is far simpler to test in a software factory, and unlike the sky, your nights will hold still while you measure them.
+
+![Spent once vs rewind: your nights will hold still while you measure them.](./img/factory-observatory-07-replay-your-own-nights.png)
+
+## References
+
+All bibcodes resolve at ADS.
+
+- Bellm et al. 2019, *The Zwicky Transient Facility: Surveys and Scheduler*, PASP 131, 068003 · [2019PASP..131f8003B](https://ui.adsabs.harvard.edu/abs/2019PASP..131f8003B/abstract)
+- Naghib et al. 2019, *A Framework for Telescope Schedulers: With Applications to the Large Synoptic Survey Telescope*, AJ 157, 151 · [2019AJ....157..151N](https://ui.adsabs.harvard.edu/abs/2019AJ....157..151N/abstract)
+- Parazin et al. 2022, *Foraging with MUSHROOMS: A Mixed-integer Linear Programming Scheduler for Multimessenger Target of Opportunity Searches with the Zwicky Transient Facility*, ApJ 935, 87 · [2022ApJ...935...87P](https://ui.adsabs.harvard.edu/abs/2022ApJ...935...87P/abstract)
+- Handley et al. 2024, *Solving the Traveling Telescope Problem with Mixed-integer Linear Programming*, AJ 167, 33 · [2024AJ....167...33H](https://ui.adsabs.harvard.edu/abs/2024AJ....167...33H/abstract)
+- Claudet et al. 2021, *Δ-MILP: Deep Space Network Scheduling via Mixed-integer Linear Programming*, arXiv:2111.11628 · [2021arXiv211111628C](https://ui.adsabs.harvard.edu/abs/2021arXiv211111628C/abstract)
+- Lampoudi et al. 2015, *An Integer Linear Programming Solution to the Telescope Network Scheduling Problem*, arXiv:1503.07170 · [2015arXiv150307170L](https://ui.adsabs.harvard.edu/abs/2015arXiv150307170L/abstract)
+- Singer et al. 2025, *Optimal Follow-Up of Gravitational-Wave Events with the UltraViolet EXplorer (UVEX)*, PASP 137, 074501 · [2025PASP..137g4501S](https://ui.adsabs.harvard.edu/abs/2025PASP..137g4501S/abstract)
+- Mao et al. 2018, *Learning Scheduling Algorithms for Data Processing Clusters* (Decima), arXiv:1810.01963 · [2018arXiv181001963M](https://ui.adsabs.harvard.edu/abs/2018arXiv181001963M/abstract)
+- RAA 25, 015008 (2025), relay observation scheduling of a globally distributed telescope array (IPROS) · [2025RAA....25a5008J](https://ui.adsabs.harvard.edu/abs/2025RAA....25a5008J/abstract)
+- arXiv:2504.03666 (2025 preprint), scenario-based scheduling under night-loss uncertainty · [2025arXiv250403666R](https://ui.adsabs.harvard.edu/abs/2025arXiv250403666R/abstract)
+
+*Illustrations in the [ian-xiaohei-illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) style (MIT-licensed skill by Ian Neo).*
