@@ -1595,6 +1595,37 @@
           "why": "This branch is about keeping humans on the reasoning chain; the paper supplies the theory of why that matters for agent-authored code - review is the human control point where the agent's effect is decided, and delegating it away (self-review, or no review) is where oversight quietly erodes."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260708028A",
+      "title": "From Prompts to Contracts: Harness Engineering for Auditable Enterprise LLM Agents",
+      "firstAuthor": "Ahn, Joongho",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08028",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708028A/abstract",
+      "branches": [
+        "observability",
+        "eval",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "The harness makes the assembly trace a checked artifact rather than a byproduct: every reader-facing answer records how it was built from bounded sources, trace completeness is one of the enforced contracts, and internal-trace or identifier leakage is caught before it reaches the reader. In the adversarial ablation, prompt-only leaked internal identifiers or trace records on all 15 leak-bait runs, each of which the harness blocked.",
+          "why": "This branch holds that transcripts are not observability; the paper operationalizes a structured trace that ties each visible claim back to the sources and routing that produced it, and treats trace leakage as a governed failure the system detects, not an accident."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Assurance is grounded in executable validators plus honest controls. A fault-injection negative control confirms the validators actually flag deliberately broken source, routing, trace, answer, and leakage contracts, and an enforcement-layer ablation shows the code-owned gate is load-bearing rather than reproducible by prompting. A bolt-on external guardrail blocks the same violations but over-refuses, with 4 false refusals and 28 of 30 adversarial runs blocked, dropping utility to 88/120 where the harness preserves 120/120 by falling back to a deterministic composer.",
+          "why": "This branch treats evaluation as risk reduction against an honest baseline; the paper measures the enforcement layer against both a negative control and a competing guardrail, separating whether a violation is blocked from whether utility survives, which is the tradeoff assurance work has to report."
+        },
+        {
+          "branch": "security",
+          "takeaway": "Governance holds only because it is code-owned, not prompted. With the model fixed and only the enforcement layer varied, prompt instructions alone let recommendation-language and internal-trace-leakage violations reach the reader on all 30 adversarial runs, every one of which the harness blocked; only source-backed claims are allowed to enter runtime context in the first place. Across 270 composition-boundary runs under three substituted models the contracts held, with failures confined to the model-composed side and recorded.",
+          "why": "This branch treats output hygiene and untrusted retrieved content as an enforced surface; the paper shows source boundaries and output-hygiene contracts survive model substitution only when enforcement lives in code, which is the governance property the branch tracks."
+        }
+      ]
     }
   ],
   "sections": [

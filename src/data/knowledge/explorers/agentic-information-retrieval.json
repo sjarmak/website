@@ -386,6 +386,44 @@
           "why": "Pushes this branch's retrieve-as-action idea one level up: not just when to retrieve but which retriever to invoke and how to compose cross-modal evidence, discovered through failure-driven evolution rather than a hardcoded pipeline."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260708662S",
+      "title": "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search",
+      "firstAuthor": "Song, Xiaoshuai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708662S/abstract",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "WebSwarm turns web search into evidence-driven recursive delegation: instead of committing to a fixed retrieval plan, each agentic node decides whether to search itself or delegate child nodes as intermediate evidence surfaces new entities and constraints, and reuses trajectory experience distilled from earlier sibling nodes to guide later ones. It consistently beats single-agent ReAct and multi-agent baselines across BrowseComp-Plus, WideSearch, DeepWideSearch, and GISA, with gains such as 10.91 Row F1 and 9.76 Item F1 over ReAct on WideSearch-EN.",
+          "why": "This branch is about retrieval becoming an action the model chooses and repeats; WebSwarm extends that loop from a single trajectory to a recursively expanding tree of search nodes whose shape is decided by accumulated evidence rather than the initial query."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260708691C",
+      "title": "ProjAgent: Procedural Similarity Retrieval for Repository-Level Code Generation",
+      "firstAuthor": "Chen, QiHong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08691",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708691C/abstract",
+      "branches": [
+        "reasoning-retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "reasoning-retrieval",
+          "takeaway": "ProjAgent is a concrete case of retrieval that surface similarity cannot do: it decomposes a target function into reasoning steps and retrieves repository functions that share the same underlying procedure, using LLM hidden-state projections rather than token or embedding overlap. Its example pair, two input-validation guard clauses in different modules, scores only 0.38 BM25 and 0.59 embedding similarity, and removing the procedural signal cuts REPOCOD Pass@1 from 41.14% to 25.76%.",
+          "why": "This branch defines the regime where relevance runs through a chain of inference and ordinary embeddings collapse; ProjAgent shows code retrieval falls squarely in it, since procedurally related functions are relevant through shared implementation logic that lexical and dense retrievers miss."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1743,6 +1743,31 @@
           "why": "Empirically instantiates the additive-ladder claim: lexical retrieval is retained for what it does well, structural/graph edges are added where behavior matters, and the diminishing returns of dense semantics show why each rung must be cost-justified rather than always-on."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260708691C",
+      "title": "ProjAgent: Procedural Similarity Retrieval for Repository-Level Code Generation",
+      "firstAuthor": "Chen, QiHong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08691",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708691C/abstract",
+      "branches": [
+        "techniques",
+        "repo-scale"
+      ],
+      "notes": [
+        {
+          "branch": "techniques",
+          "takeaway": "ProjAgent adds procedural similarity as a retrieval signal alongside lexical and semantic ones: it represents a function's implementation behavior with LLM hidden-state projections, so it can retrieve helper functions that share a computational procedure (input validation, unit conversion, state transformation) even when names, types, and domain vocabulary differ. Its motivating pair of guard-clause validators scores only 0.38 BM25 and 0.59 embedding similarity, too low to surface. On REPOCOD ProjAgent reaches 41.14% Pass@1, and removing the procedural signal drops that to 25.76%, a larger fall than removing the semantic signal.",
+          "why": "This branch frames retrieval techniques as an additive ladder where each signal owns what the others miss; procedural similarity is a new rung capturing behavioral relatedness that lexical, dense, and dataflow signals do not, and the ablation shows it is complementary rather than redundant."
+        },
+        {
+          "branch": "repo-scale",
+          "takeaway": "ProjAgent treats a repository as something to navigate: an agentic workflow decomposes the target function into reasoning steps, identifies and validates procedurally related functions per step, then expands the set with projection-similarity retrieval and merges it with lexical and semantic context to gather repository-specific APIs and symbols. A conservative static-analysis feedback loop then repairs the generated code against compiler and static-analysis output, adding a modest but measurable gain.",
+          "why": "This branch is about the repository as a world to traverse and the fork between retrieve-better-snippets and query-a-structured-model; ProjAgent sits on the retrieval side but adds behavior-level matching plus a static-analysis repair loop, showing repo-scale context assembly needs signals beyond surface similarity and a grounding check on the output."
+        }
+      ]
     }
   ],
   "sections": [

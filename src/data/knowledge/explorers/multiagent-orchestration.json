@@ -2081,6 +2081,31 @@
           "why": "Names a coordination layer, a verifier-driven, spec-enforced task lifecycle, distinct from intra-task multi-agent frameworks, a pattern this branch tracks."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260708662S",
+      "title": "WebSwarm: Recursive Multi-Agent Orchestration for Deep-and-Wide Web Search",
+      "firstAuthor": "Song, Xiaoshuai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.08662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260708662S/abstract",
+      "branches": [
+        "foundations",
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "WebSwarm replaces root-only task decomposition with progressive recursive delegation: the root agent instantiates search nodes as intermediate evidence reveals new subgoals, each node either solves its objective directly or spawns and coordinates child nodes, and results flow back up so a parent can expand, revise, or aggregate. On BrowseComp-Plus this deep-and-wide topology beats a single ReAct agent by 17.50 accuracy points, and an ablation removing recursive delegation drops BrowseComp-Plus accuracy from 68.00 to 63.50.",
+          "why": "This branch asks what a multi-agent system is as a topology and when structure beats one long trajectory; WebSwarm's answer is that the decomposition tree should be built as evidence accumulates rather than fixed upfront, and it measures that against single-agent and fixed-decomposition baselines."
+        },
+        {
+          "branch": "frameworks",
+          "takeaway": "Each node carries a search mode that selects its local collaboration pattern from a small vocabulary, parallel divide-and-conquer, sequential search-and-verification, or multi-path sampling and aggregation, rather than imposing one global paradigm across the task. A lightweight web-probing step first checks whether the needed evidence sits in a few hub pages or is spread along a dimension, and that signal decides how a node expands; removing web-probing inflates average web-tool calls (for example from 137.03 to 239.90 in one setting), so it mainly cuts redundant search.",
+          "why": "This branch tracks the recurring coordination patterns frameworks re-encode; WebSwarm's contribution is making the pattern a per-node choice conditioned on how the web organizes the needed evidence, instead of a single fixed collaboration structure."
+        }
+      ]
     }
   ],
   "sections": [
