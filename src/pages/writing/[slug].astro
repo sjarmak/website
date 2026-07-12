@@ -42,6 +42,17 @@ const isFieldNotes = data.tags.includes("field-notes");
   .post__body {
     margin-block: var(--space-l);
   }
+  /* White-background line-art figures (xiaohei illustrations) blend into the
+     page: multiply melts the white into the paper theme; in the dark theme,
+     invert + screen renders the linework cream on charcoal. Scoped by filename
+     so screenshots in other posts are untouched. */
+  .post__body :global(img[src*="factory-observatory"]) {
+    mix-blend-mode: multiply;
+  }
+  :global([data-theme="dark"]) .post__body :global(img[src*="factory-observatory"]) {
+    mix-blend-mode: screen;
+    filter: invert(1) hue-rotate(180deg);
+  }
   .post__back {
     margin-block-start: var(--space-xl);
   }
