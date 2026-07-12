@@ -146,6 +146,10 @@ const writing = defineCollection({
       title: z.string(),
       date: z.coerce.date().optional(), // omit for undated items (e.g. ebooks)
       source: z.enum(["medium", "sourcegraph", "ebook", "on-site", "external"]),
+      // Document type override for the index row label. Defaults to the
+      // source-derived label ("Essay" for on-site); set "technical-report"
+      // to present a piece as a technical report instead.
+      kind: z.enum(["essay", "technical-report"]).default("essay"),
       url: z.string().url().optional(),
       post: reference("posts").optional(),
       description: z.string(),
@@ -168,6 +172,9 @@ const posts = defineCollection({
       description: z.string(),
       cover: image().optional(),
       draft: z.boolean().default(false),
+      // Document type. Drives the on-page kicker: "essay" (default) renders
+      // "Essay", "technical-report" renders "Technical report".
+      kind: z.enum(["essay", "technical-report"]).default("essay"),
       tags: z.array(z.string()).default([]),
     }),
 });

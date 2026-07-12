@@ -14,12 +14,20 @@ const { Content } = await render(post);
 
 // Field-notes posts live on the digest page, not the writing index.
 const isFieldNotes = data.tags.includes("field-notes");
+// Kicker label: field-notes and the document `kind` take precedence over the
+// default "Essay". `kind` lets a single piece present as a technical report
+// without renaming the shared essay type site-wide.
+const kicker = isFieldNotes
+  ? "Field notes"
+  : data.kind === "technical-report"
+    ? "Technical report"
+    : "Essay";
 ---
 
 <BaseLayout title={data.title} description={data.description} type="article">
   <article class="container container-narrow post">
     <header class="post__head stack stack-s">
-      <p class="kicker">{isFieldNotes ? "Field notes" : "Essay"}</p>
+      <p class="kicker">{kicker}</p>
       <h1>{data.title}</h1>
       <p class="muted">
         {monthYear(data.date)}

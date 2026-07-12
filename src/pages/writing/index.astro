@@ -75,7 +75,7 @@ const sections = groups
                   </a>
                   <p class="muted row__desc">{w.data.description}</p>
                   <span class="row__meta muted">
-                    {sourceLabel[w.data.source]}
+                    {w.data.kind === "technical-report" ? "Technical report" : sourceLabel[w.data.source]}
                     {w.data.date && ` · ${monthYear(w.data.date)}`}
                   </span>
                 </li>
