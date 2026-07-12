@@ -66,6 +66,8 @@ The argument that works for the software factory is to take your recorded traces
 
 ![Spent once vs rewind: your nights will hold still while you measure them.](./img/factory-observatory-07-replay-your-own-nights.png)
 
+_The full argument, with the formulations, the Gas City implementation status, and a config-first adoption path, is in the companion technical report: [The factory's empty seams are solved scheduling problems](/writing/or-for-software-factories/)._
+
 ## References
 
 All bibcodes resolve at ADS.
