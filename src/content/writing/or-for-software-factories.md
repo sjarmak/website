@@ -1,5 +1,5 @@
 ---
-title: The factory's empty seams are solved scheduling problems
+title: Operations research as a framework for software-factory scheduling
 date: 2026-07-10
 source: on-site
 post: or-for-software-factories
