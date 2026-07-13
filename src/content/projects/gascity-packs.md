@@ -6,13 +6,13 @@ summary: Reusable packs for Gas City. The PR-pipeline and Slack packs are mine.
 role: Contributor
 repo: https://github.com/gastownhall/gascity-packs
 architecture: https://sjarmak.github.io/gascity-packs/
-tech: [Go, Agents]
+tech: [Go, Python, Agents]
 order: 17
 topics: [agents, code-intelligence]
 tags: [agents, packs]
 ---
 
-Packs are reusable integrations for the Gas City orchestrator; I built the PR-pipeline pack and the Slack pack, and most of the engineering went into the Slack pack. A Slack message reaches a Gas City agent and leaves again through three layers speaking HTTP: a Go adapter that terminates Slack's webhook, verifies HMAC-SHA256 signatures per workspace inside a five-minute replay window, and routes inbound messages to agent sessions; a Go CLI whose setup verbs write five JSON registries with atomic temp-and-rename and an all-or-nothing SIGHUP reload; and eleven Python one-shot commands behind `gc slack <verb>` wrappers. The split keeps the concurrency-heavy state (single-flight session spawn, dedup cache, registry lifecycle) in a race-detector-clean compiled binary, while the code that changes weekly stays in Python.
+Packs are reusable integrations for the Gas City orchestrator; I built the PR-pipeline pack and the Slack pack, and most of the engineering went into the Slack pack. A Slack message reaches a Gas City agent and leaves again through three layers speaking HTTP: a Go adapter that terminates Slack's webhook, verifies HMAC-SHA256 signatures per workspace inside a five-minute replay window, and routes inbound messages to agent sessions; a Go CLI whose setup verbs write four JSON registries with atomic temp-and-rename and an all-or-nothing SIGHUP reload; and eleven Python one-shot commands behind `gc slack <verb>` wrappers. The split keeps the concurrency-heavy state (single-flight session spawn, dedup cache, registry lifecycle) in a race-detector-clean compiled binary, while the code that changes weekly stays in Python.
 
 The adapter's go.mod has no dependencies, and that has been defended twice: once by duplicating a registry schema rather than importing orchestrator internals, and once by closing a symlink race with a hand-rolled path walk using stdlib openat and O_NOFOLLOW, the same kernel guarantee as openat2's RESOLVE_BENEATH with zero new imports.
 
