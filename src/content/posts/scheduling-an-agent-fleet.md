@@ -44,9 +44,65 @@ The highest-ROI first change is a feature-weighted priority index in place of th
 
 One invariant makes this safe to deploy. Adjacent priority bands sit 0.25 apart, and because each secondary feature is scaled to the [0, 1] interval, the three secondary weights can add at most their sum, 0.24, so declared priority strictly dominates and the index can only ever reorder items within a priority band. Cross-band ordering, the thing humans reason about when they set a priority, is untouched by construction rather than by hope. Within-band ordering is exactly where FCFS was leaving value on the floor: an aged, heavily-blocking, due-tomorrow item stuck behind a fresh, isolated one of the same declared priority, losing on arrival time alone.
 
+<figure class="post__diagram">
+<svg viewBox="0 0 840 400" role="img" aria-labelledby="bd-title" style="width:100%;height:auto;color:inherit;">
+<title id="bd-title">Priority bands sit 0.25 apart; the secondary weights sum to 0.24, so reordering stays within a band</title>
+<rect x="40" y="55" width="440" height="70" rx="10" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<rect x="40" y="160" width="440" height="70" rx="10" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<rect x="40" y="265" width="440" height="70" rx="10" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<text x="62" y="97" font-size="20" font-weight="600" fill="currentColor">P0</text>
+<text x="62" y="202" font-size="20" font-weight="600" fill="currentColor">P1</text>
+<text x="62" y="307" font-size="20" font-weight="600" fill="currentColor">P2</text>
+<line x1="150" y1="205" x2="450" y2="205" stroke="#cc7a3b" stroke-width="2"/>
+<path d="M150 205 l12 -6 v12 z" fill="#cc7a3b"/>
+<path d="M450 205 l-12 -6 v12 z" fill="#cc7a3b"/>
+<circle cx="220" cy="205" r="6" fill="#cc7a3b"/>
+<circle cx="380" cy="205" r="6" fill="#cc7a3b"/>
+<text x="300" y="188" font-size="13" text-anchor="middle" fill="currentColor" fill-opacity="0.85">reorder within band</text>
+<text x="300" y="223" font-size="11.5" text-anchor="middle" fill="currentColor" fill-opacity="0.6">due 0.10 · unblock 0.08 · age 0.06</text>
+<text x="40" y="362" font-size="13" fill="currentColor" fill-opacity="0.7">Higher priority band = higher score floor</text>
+<text x="684" y="86" font-size="13" text-anchor="middle" fill="currentColor" fill-opacity="0.85">0.24 &lt; 0.25</text>
+<rect x="600" y="110" width="56" height="220" rx="4" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-opacity="0.3"/>
+<rect x="700" y="119" width="56" height="211" rx="4" fill="#cc7a3b" fill-opacity="0.45" stroke="#cc7a3b" stroke-opacity="0.7"/>
+<line x1="596" y1="110" x2="772" y2="110" stroke="currentColor" stroke-opacity="0.4" stroke-dasharray="4 4"/>
+<text x="628" y="352" font-size="13" text-anchor="middle" fill="currentColor">0.25</text>
+<text x="628" y="370" font-size="11" text-anchor="middle" fill="currentColor" fill-opacity="0.7">band gap</text>
+<text x="728" y="352" font-size="13" text-anchor="middle" fill="currentColor">0.24</text>
+<text x="728" y="370" font-size="11" text-anchor="middle" fill="currentColor" fill-opacity="0.7">secondary</text>
+</svg>
+<figcaption class="muted">Priority sets the band; the secondary features reorder items inside it. Their weights sum to 0.24, just under the 0.25 band spacing, so an item never crosses into a neighboring priority band.</figcaption>
+</figure>
+
 Tune the weights offline against the replayed traces from Phase 0. In Gas City this lands as a pure configuration change, because dispatch is per-agent overridable; crash-robustness comes from the existing claim protocol, not from any property of the score, so a bad score costs ordering quality and nothing else. The missing deadline field arrives as an optional metadata convention that the scoring script reads and never enforces, which means items without deadlines behave exactly as before.
 
 The rollout discipline is a rule worth copying verbatim. Shadow mode first: log what the index would have claimed, change nothing, and diff against what FCFS actually claimed. Then a one-project canary: a single project live on the new policy while the rest of the fleet stays on FCFS. Then fleet-wide. Each stage gates on replayed-trace evidence, not on whether the queue feels better. And there is a structural safety net in the math itself: FCFS is itself a point in this weight space (age the only nonzero weight, declared priority set to zero), so a tuned index can only lose to it by overfitting, and a temporal holdout, tuning on the early weeks and scoring on held-back later weeks, catches exactly that.
+
+<figure class="post__diagram">
+<svg viewBox="0 0 860 250" role="img" aria-labelledby="rollout-title" style="width:100%;height:auto;color:inherit;">
+<title id="rollout-title">Rollout in three gated stages: shadow, then a one-project canary, then fleet</title>
+<rect x="20" y="45" width="230" height="120" rx="12" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<rect x="315" y="45" width="230" height="120" rx="12" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<rect x="610" y="45" width="230" height="120" rx="12" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-opacity="0.28"/>
+<text x="135" y="88" font-size="19" font-weight="600" text-anchor="middle" fill="currentColor">Shadow</text>
+<text x="135" y="115" font-size="13" text-anchor="middle" fill="currentColor" fill-opacity="0.72"><tspan x="135" dy="0">log the claim it would</tspan><tspan x="135" dy="17">make; change nothing</tspan></text>
+<text x="430" y="88" font-size="19" font-weight="600" text-anchor="middle" fill="currentColor">Canary</text>
+<text x="430" y="115" font-size="13" text-anchor="middle" fill="currentColor" fill-opacity="0.72"><tspan x="430" dy="0">one project live;</tspan><tspan x="430" dy="17">the rest stay on FCFS</tspan></text>
+<text x="725" y="88" font-size="19" font-weight="600" text-anchor="middle" fill="currentColor">Fleet</text>
+<text x="725" y="115" font-size="13" text-anchor="middle" fill="currentColor" fill-opacity="0.72"><tspan x="725" dy="0">every pool</tspan><tspan x="725" dy="17">runs the index</tspan></text>
+<path d="M282 90 l15 15 l-15 15 l-15 -15 z" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-opacity="0.4"/>
+<path d="M577 90 l15 15 l-15 15 l-15 -15 z" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-opacity="0.4"/>
+<text x="282" y="78" font-size="10.5" text-anchor="middle" fill="currentColor" fill-opacity="0.7">gate</text>
+<text x="577" y="78" font-size="10.5" text-anchor="middle" fill="currentColor" fill-opacity="0.7">gate</text>
+<line x1="250" y1="105" x2="266" y2="105" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>
+<line x1="298" y1="105" x2="313" y2="105" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>
+<path d="M315 105 l-10 -5 v10 z" fill="currentColor" fill-opacity="0.6"/>
+<line x1="545" y1="105" x2="561" y2="105" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>
+<line x1="593" y1="105" x2="608" y2="105" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.5"/>
+<path d="M610 105 l-10 -5 v10 z" fill="currentColor" fill-opacity="0.6"/>
+<text x="430" y="222" font-size="12.5" text-anchor="middle" fill="currentColor" fill-opacity="0.7">Each stage advances only on replayed-trace evidence; a temporal holdout catches overfitting.</text>
+</svg>
+<figcaption class="muted">The priority index reaches the fleet through three gates: shadow (no behavior change), a one-project canary, then fleet-wide, each admitted only on replayed-trace evidence.</figcaption>
+</figure>
 
 ## Seven rules from schedulers that already run in production
 

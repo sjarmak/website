@@ -110,3 +110,14 @@
   margin-inline: auto;
   border-radius: var(--radius);
 }
+.post__diagram {
+  margin-inline: auto;
+}
+.post__diagram svg {
+  display: block;
+}
+.post__diagram figcaption {
+  margin-block-start: var(--space-s);
+  text-align: center;
+  font-size: 0.9rem;
+}
