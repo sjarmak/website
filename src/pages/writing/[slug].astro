@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { monthYear } from "@/lib/dates";
+import { monthYear, fullDate } from "@/lib/dates";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", (p) => !p.data.draft);
@@ -31,7 +31,7 @@ const kicker = isFieldNotes
       <h1>{data.title}</h1>
       <p class="muted">
         {monthYear(data.date)}
-        {data.updated ? ` · updated ${monthYear(data.updated)}` : ""}
+        {data.updated ? ` · updated ${fullDate(data.updated)}` : ""}
       </p>
     </header>
     <div class="prose post__body">
