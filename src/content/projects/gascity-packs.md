@@ -3,7 +3,7 @@ title: Gas City Packs
 status: active
 domain: tooling
 summary: Reusable packs for Gas City. The PR-pipeline and Slack packs are mine.
-role: Contributor
+role: Maintainer
 repo: https://github.com/gastownhall/gascity-packs
 architecture: https://sjarmak.github.io/gascity-packs/
 tech: [Go, Python, Agents]

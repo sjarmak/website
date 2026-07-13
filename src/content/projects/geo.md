@@ -4,7 +4,7 @@ status: active
 domain: research
 summary: Measuring how LLM-powered tools discover, recommend, and describe products. GEO is the AI equivalent of SEO.
 role: Creator
-repo: https://github.com/sjarmak/geo
+repo: https://github.com/sjarmak/GEO_public
 architecture: https://sjarmak.github.io/geo-architecture/
 tech: [Evaluation, Retrieval, LLM]
 order: 14
@@ -18,4 +18,4 @@ Scoring is layered cheap-to-expensive. Presence and structural prominence (first
 
 The baseline run asked Claude about Sourcegraph and its competitors and put numbers on the question: across 526 responses, Sourcegraph surfaced at a 61.5% mention rate with a 26.9% share of voice against a locked competitor set where rivals like ripgrep and ack drew their own mentions. The same run counted how often the model's description tripped one of the six known misrepresentations, so the record is not just whether the tool comes up but whether what the model says about it holds.
 
-The next layer is statistical rather than lexical: treating model updates as deployments, so a snapshot that erodes your share of voice against pre-registered thresholds surfaces as a failing check instead of a feeling. That regression harness, with two-proportion z-tests and the power analysis that would size its repetition counts, is the part still to build; the deterministic scoring and the baseline are in place today.
+The statistics get the same care as the prompts. A power-analysis pass decomposes within- and between-prompt variance into a cluster-adjusted design effect, which sizes how many repetitions a given effect size needs to detect. A regression harness then treats model updates as deployments: it grades a metric pass, warn, or fail only when the change clears both an effect-size threshold and a two-proportion z-test, so a model release that erodes your share of voice surfaces as a failing check instead of a feeling.
