@@ -2,7 +2,7 @@
 import PageLayout from "@/layouts/PageLayout.astro";
 import EmptyState from "@/components/primitives/EmptyState.astro";
 import { getWriting, getPublications } from "@/lib/collections";
-import { monthYear } from "@/lib/dates";
+import { fullDate } from "@/lib/dates";
 
 const writing = await getWriting();
 const publications = await getPublications();
@@ -76,7 +76,7 @@ const sections = groups
                   <p class="muted row__desc">{w.data.description}</p>
                   <span class="row__meta muted">
                     {w.data.kind === "technical-report" ? "Technical report" : sourceLabel[w.data.source]}
-                    {w.data.date && ` · ${monthYear(w.data.date)}`}
+                    {w.data.date && ` · ${fullDate(w.data.date)}`}
                   </span>
                 </li>
               ))}
