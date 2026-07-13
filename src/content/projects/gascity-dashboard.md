@@ -3,7 +3,7 @@ title: Gas City Dashboard
 status: active
 domain: tooling
 summary: A dashboard for Gas City multi-agent orchestrations.
-role: Contributor
+role: Maintainer
 repo: https://github.com/gastownhall/gascity-dashboard
 architecture: https://sjarmak.github.io/gascity-dashboard/
 tech: [TypeScript, React]
