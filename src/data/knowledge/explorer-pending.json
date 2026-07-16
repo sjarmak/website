@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-07-12",
-      "lastAttempt": "2026-07-14",
-      "attempts": 3
+      "lastAttempt": "2026-07-16",
+      "attempts": 4
     },
     {
       "bibcode": "2026arXiv260107978W",
@@ -42,7 +42,92 @@
         }
       ],
       "firstSeen": "2026-07-14",
-      "lastAttempt": "2026-07-14",
+      "lastAttempt": "2026-07-16",
+      "attempts": 2
+    },
+    {
+      "bibcode": "2026arXiv260712227W",
+      "arxiv": "2607.12227",
+      "title": "Rethinking the Evaluation of Harness Evolution for Agents",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-16",
+      "lastAttempt": "2026-07-16",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260712893H",
+      "arxiv": "2607.12893",
+      "title": "MemOps: Benchmarking Lifecycle Memory Operations in Long-Horizon Conversations",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "benchmarks-catalog",
+            "eval-methodology"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "evaluation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-16",
+      "lastAttempt": "2026-07-16",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260713591H",
+      "arxiv": "2607.13591",
+      "title": "Memory as a Controlled Process: Learned Adaptive Memory Management for LLM Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "architectures",
+            "forgetting"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "retrieval",
+            "forgetting"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-16",
+      "lastAttempt": "2026-07-16",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260713359S",
+      "arxiv": "2607.13359",
+      "title": "Learning Latency-Aware Orchestration for Multi-Agent Systems",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "production"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "routing"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-16",
+      "lastAttempt": "2026-07-16",
       "attempts": 1
     }
   ]
