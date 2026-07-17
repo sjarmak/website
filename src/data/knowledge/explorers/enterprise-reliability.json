@@ -1651,6 +1651,25 @@
           "why": "This branch is about knowing the failure taxonomy before scaling. AgentAbstain names the failure modes that appear once agents can commit irreversible actions on a user's behalf, and shows model scale alone does not close the gap, so restraint has to be engineered rather than assumed as capability grows."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260713359S",
+      "title": "Learning Latency-Aware Orchestration for Multi-Agent Systems",
+      "firstAuthor": "Shi, Xi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.13359",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260713359S/abstract",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Cost and latency are not the same objective over an execution graph: cost accumulates additively over every operator, while latency is the maximum over source-to-sink paths, so two graphs with equal accuracy and equal cost can differ substantially in wall-clock time. LAMaS schedules against that distinction, reporting critical-path output tokens (CP Tokens) alongside wall-clock latency as a structural indicator of bottleneck workload; on GSM8K it holds 93.65% accuracy at 622 CP Tokens and 7.71e-4 USD per query against MaAS at 93.36%, 2501 CP Tokens and 31.52e-4 USD. The inference-time controller supplies the run-time trim a training-time graph cannot: removing it costs 16.5-21.1% latency and 16.0-25.2% cost while accuracy moves under 0.38 points.",
+          "why": "This branch holds that cost facts should be recorded before routing is optimized and that unknown cost is never zero. The paper extends that to scheduling: measuring total cost alone leaves the latency bottleneck unattributed, because a uniform penalty gives the same gradient to operators that cannot affect wall-clock time as to the ones that set it. Removing the latency objective entirely leaves accuracy within 0.25 points but inflates latency 24-70% and cost 19-35%, so the structure-aware objective is buying real deployment margin rather than trading accuracy away."
+        }
+      ]
     }
   ],
   "sections": [

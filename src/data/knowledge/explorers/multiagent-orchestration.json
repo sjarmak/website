@@ -2106,6 +2106,25 @@
           "why": "This branch tracks the recurring coordination patterns frameworks re-encode; WebSwarm's contribution is making the pattern a per-node choice conditioned on how the web organizes the needed evidence, instead of a single fixed collaboration structure."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260713359S",
+      "title": "Learning Latency-Aware Orchestration for Multi-Agent Systems",
+      "firstAuthor": "Shi, Xi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.13359",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260713359S/abstract",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "End-to-end latency in a multi-agent system is set by the critical execution path, the longest chain of dependent operators, not by the summed cost across all operators. LAMaS makes that structural fact the training signal: it minimizes E[lambda_t*T + lambda_c*C] subject to an accuracy floor E[S] >= S0, solved by Lagrangian relaxation whose dual variable rises when accuracy slips below the floor and relaxes when it holds. Credit is weighted per operator by path-criticality w(o) = l(o)/T, so bottleneck operators absorb the full latency penalty and off-path operators get effectively none. A second, lightweight MLP controller runs at inference and cuts redundant remaining agent calls once operator outputs already agree. Against MaAS, GDesigner and AgentDropout on GSM8K, HumanEval, MATH and MMLU-Pro with gpt-4o-mini, LAMaS cuts end-to-end latency 55.6-75.6% while matching or beating accuracy (GSM8K: 11.73s vs MaAS 48.11s at 93.65% vs 93.36%). The pipeline transfers: GDesigner+LAMaS drops GSM8K latency from 32.31s to 20.55s at unchanged accuracy.",
+          "why": "This branch covers the runtime properties that decide whether an orchestrated system survives deployment, and latency is the one automated-orchestration work has mostly folded into cost. The paper shows the two objectives diverge structurally, and its ablation prices the naive fix: bolting a uniform latency term onto the reward costs 1.30-5.34 accuracy points for only 2-11% latency savings, while the critical-path-aware version with an explicit accuracy floor keeps accuracy and takes the full reduction."
+        }
+      ]
     }
   ],
   "sections": [
