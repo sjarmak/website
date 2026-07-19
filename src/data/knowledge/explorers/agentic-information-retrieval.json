@@ -424,6 +424,25 @@
           "why": "This branch defines the regime where relevance runs through a chain of inference and ordinary embeddings collapse; ProjAgent shows code retrieval falls squarely in it, since procedurally related functions are relevant through shared implementation logic that lexical and dense retrievers miss."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260715253M",
+      "title": "Bridge Evidence: Static Retrieval Utility Does Not Predict Causal Utility in Multi-Step Agentic Search",
+      "firstAuthor": "Mukhopadhyay, Debayan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.15253",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260715253M",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Replaying a ReAct agent over 1000 HotpotQA questions and deleting each document it read one at a time (Counterfactual Trajectory Utility, built from answer, next-query, and turn-count deltas) shows static reader utility and causal utility are nearly independent (Spearman rho = -0.026 over 23,322 observations); about 35.7% of read documents are 'bridge documents' that are causally load-bearing yet score useless to a static reader.",
+          "why": "The agentic search loop is exactly where a document's value shifts from what it says about the current question to what it unlocks for the next query; a bridge document earns its keep by handing the agent a discriminative entity (carried into the next query 4.02x more often than non-discriminative ones) that redirects the search, so optimizing static relevance does not optimize the loop."
+        }
+      ]
     }
   ],
   "sections": [

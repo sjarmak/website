@@ -2742,6 +2742,31 @@
           "why": "This is procedural-memory and skill induction in production: the agent amortizes a repeated procedure into a reusable, tested tool library rather than re-deriving the skill on each request, the core mechanism this branch tracks for coding and tool-use agents."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260712893H",
+      "title": "MemOps: Benchmarking Lifecycle Memory Operations in Long-Horizon Conversations",
+      "firstAuthor": "Hao, Xixuan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.12893",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260712893H",
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "A controllably-generated long-horizon conversational-memory benchmark that reformulates memory as five lifecycle operations (remember, forget, update, reflect, and TrajectoryOps that compose events across time), each represented by a gold trace of trigger, target, scope, state transition, and verbatim evidence spans, with six operation-level probe categories evaluated under adjacent-evidence and long-context settings.",
+          "why": "The benchmarks branch catalogs long-term/multi-session memory datasets by construction and task type; MemOps adds one whose unit of construction is the memory operation and its state transition rather than downstream QA, built by a four-stage pipeline with schema/span gates plus an LLM verifier."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "By scoring operation traces, target binding, and ordered state trajectories instead of only the final answer, MemOps disentangles failure modes that answer accuracy conceals (e.g. a correct answer resting on an unsafe or stale memory state) and finds that reconstructing an ordered multi-operation state trajectory is far more fragile than any single-step operation, even for otherwise strong long-context models.",
+          "why": "This branch is about retrieval-aware versus answer-level scoring and failure attribution; MemOps is a direct instance of moving long-term-memory evaluation from black-box QA toward operation-level, state-transition diagnosis with fine-grained provenance checks."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1407,6 +1407,25 @@
           "why": "Directly tests whether an LLM should decide its own consolidation policy versus following a fixed extract/summarize rule, with quantified gains (Pass0.5 +14.3 to +17.0 points) rather than just an architectural proposal."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260712893H",
+      "title": "MemOps: Benchmarking Lifecycle Memory Operations in Long-Horizon Conversations",
+      "firstAuthor": "Hao, Xixuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.12893",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260712893H",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Across long-context, retrieval-based, parametric, and managed-memory systems, MemOps shows session-level retrieval beats turn-level, context-preserving memory units beat short isolated facts, parametric memory is unreliable across nearly all diagnostic dimensions, and diluting evidence into long distractor-laden histories degrades both answer accuracy and operation-level reliability.",
+          "why": "The evaluation branch asks how we know memory works beyond factual recall and how to separate retrieval-correctness from answer-correctness; MemOps supplies operation-level metrics and a cross-paradigm comparison that measures intermediate memory behavior, not just the final answer."
+        }
+      ]
     }
   ],
   "sections": [

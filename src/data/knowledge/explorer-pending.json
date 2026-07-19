@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-07-12",
-      "lastAttempt": "2026-07-17",
-      "attempts": 5
+      "lastAttempt": "2026-07-19",
+      "attempts": 6
     },
     {
       "bibcode": "2026arXiv260107978W",
@@ -42,47 +42,8 @@
         }
       ],
       "firstSeen": "2026-07-14",
-      "lastAttempt": "2026-07-17",
-      "attempts": 3
-    },
-    {
-      "bibcode": "2026arXiv260712227W",
-      "arxiv": "2607.12227",
-      "title": "Rethinking the Evaluation of Harness Evolution for Agents",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "eval"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-17",
-      "attempts": 2
-    },
-    {
-      "bibcode": "2026arXiv260712893H",
-      "arxiv": "2607.12893",
-      "title": "MemOps: Benchmarking Lifecycle Memory Operations in Long-Horizon Conversations",
-      "targets": [
-        {
-          "explorerId": "agentic-memory",
-          "branches": [
-            "benchmarks-catalog",
-            "eval-methodology"
-          ]
-        },
-        {
-          "explorerId": "memory-design",
-          "branches": [
-            "evaluation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-17",
-      "attempts": 2
+      "lastAttempt": "2026-07-19",
+      "attempts": 4
     },
     {
       "bibcode": "2026arXiv260713591H",
@@ -105,8 +66,52 @@
         }
       ],
       "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-17",
-      "attempts": 2
+      "lastAttempt": "2026-07-19",
+      "attempts": 3
+    },
+    {
+      "bibcode": "2026arXiv260622030S",
+      "arxiv": "2606.22030",
+      "title": "When Does Belief-Based Agent Memory Help? Reliability-Conditional Updating and Provenance-Capped Poisoning Defense",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "architectures",
+            "security-governance",
+            "eval-methodology"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "temporal",
+            "evaluation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-19",
+      "lastAttempt": "2026-07-19",
+      "attempts": 1,
+      "note": "SciX full text for bibcode 2026arXiv260622030S is the earlier version titled 'Nous: A Predictive World Model for Long-Term Agent Memory'; the cited abstract's headline contributions (reliability-conditioned updating, provenance-capped poisoning defense) are not in the indexed body. Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
+    },
+    {
+      "bibcode": "2026arXiv260714275B",
+      "arxiv": "2607.14275",
+      "title": "AI Agents Do Not Fail Alone: The Context Fails First",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval",
+            "reliability",
+            "security"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-19",
+      "lastAttempt": "2026-07-19",
+      "attempts": 1
     }
   ]
 }

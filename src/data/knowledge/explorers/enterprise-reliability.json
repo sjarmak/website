@@ -1670,6 +1670,25 @@
           "why": "This branch holds that cost facts should be recorded before routing is optimized and that unknown cost is never zero. The paper extends that to scheduling: measuring total cost alone leaves the latency bottleneck unattributed, because a uniform penalty gives the same gradient to operators that cannot affect wall-clock time as to the ones that set it. Removing the latency objective entirely leaves accuracy within 0.25 points but inflates latency 24-70% and cost 19-35%, so the structure-aware objective is buying real deployment margin rather than trading accuracy away."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260712227W",
+      "title": "Rethinking the Evaluation of Harness Evolution for Agents",
+      "firstAuthor": "Wang, Yike",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.12227",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260712227W",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "On Terminal-Bench 2.1 with Claude Opus 4.6, GPT-5.4, and GPT-5.4 mini under matched feedback and inference budgets, automatic harness evolution does not consistently beat simple test-time scaling: without unit tests it averages 67.4 pass@1 versus 72.3 for parallel sampling (and drops GPT-5.4 from 75.3 to 69.7), and a harness evolved on 45 training tasks transfers to 34 held-out tasks for only +0.6 pass@1 on average.",
+          "why": "Assurance has to be grounded in an honest baseline: because harness evolution is itself a search procedure evaluated on the same benchmark it searches over, its reported gains are largely repeated-sampling gains and overfit the search set, a direct warning about how agent-improvement methods are measured before they are trusted in production."
+        }
+      ]
     }
   ],
   "sections": [
