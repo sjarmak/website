@@ -29,9 +29,28 @@ for (const p of explorer.papers) {
 const reading = explorerReadingPath(explorer);
 const opportunities = explorerOpportunities(explorer);
 const showFilter = explorer.sections.length > 1;
+const showSearch = explorer.papers.length > 6;
+const resultNoun = explorer.id === "thirty-papers" ? "readings" : "papers";
+const noteLabel = explorer.id === "thirty-papers" ? "Why read it" : "Synthesis";
+const readingIntro =
+  explorer.id === "thirty-papers"
+    ? "Follow the collection in order. The route moves from practical intuition through architecture and scale, then closes on compression, complexity, and intelligence."
+    : "Start here and read in order; the path moves from foundations toward the open edge.";
 
 function authorYear(p: ExplorerPaper): string {
   return [p.firstAuthor, p.year].filter(Boolean).join(" · ");
+}
+
+function paperId(p: ExplorerPaper): string {
+  return p.bibcode ?? p.arxiv ?? p.url ?? p.title;
+}
+
+function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
+  const notes = (p.notes ?? []).flatMap((note) => [note.takeaway, note.why]);
+  return [p.title, p.firstAuthor, p.year, section.label, ...notes]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase();
 }
 ---
 
@@ -47,17 +66,82 @@ function authorYear(p: ExplorerPaper): string {
     </div>
 
     {
-      showFilter && (
-        <nav class="theme-filter cluster" aria-label="Filter by theme" style="--cluster-gap: var(--space-2xs)">
-          <button class="filter-btn filter-btn--active" data-key="all" aria-pressed="true">
-            All themes
-          </button>
-          {explorer.sections.map((s: ExplorerSection) => (
-            <button class="filter-btn" data-key={s.key} aria-pressed="false">
-              {s.label}
-            </button>
-          ))}
-        </nav>
+      explorer.source && (
+        <aside class="source-note" data-source-credit>
+          <div>
+            <p class="source-note__label">Source collection</p>
+            <p class="source-note__copy measure">{explorer.source.note}</p>
+          </div>
+          <a
+            class="source-note__link"
+            href={explorer.source.url}
+            rel="noopener noreferrer"
+          >
+            Open 30papers.com ↗
+          </a>
+        </aside>
+      )
+    }
+
+    {
+      (showSearch || showFilter) && (
+        <div class="explorer-tools">
+          {showSearch && (
+            <div class="paper-search">
+              <label class="visually-hidden" for="paper-search">
+                Search this explorer
+              </label>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <circle cx="8.5" cy="8.5" r="5.75"></circle>
+                <path d="m13 13 4 4"></path>
+              </svg>
+              <input
+                id="paper-search"
+                type="search"
+                placeholder="Search titles, authors, or ideas"
+                autocomplete="off"
+                aria-controls="themes"
+                data-paper-search
+              />
+            </div>
+          )}
+          <p
+            class="result-count"
+            aria-live="polite"
+            data-result-count
+            data-result-noun={resultNoun}
+          >
+            {explorer.paperCount} {resultNoun} shown
+          </p>
+          {showFilter && (
+            <nav
+              class="theme-filter cluster"
+              aria-label="Filter by theme"
+              data-theme-filter
+              style="--cluster-gap: var(--space-2xs)"
+            >
+              <button
+                class="filter-btn filter-btn--active"
+                data-key="all"
+                aria-controls="themes"
+                aria-pressed="true"
+              >
+                All themes
+              </button>
+              {explorer.sections.map((s: ExplorerSection) => (
+                <button
+                  class="filter-btn"
+                  data-key={s.key}
+                  aria-controls="themes"
+                  aria-pressed="false"
+                >
+                  {s.label}
+                  <span aria-hidden="true">{s.count}</span>
+                </button>
+              ))}
+            </nav>
+          )}
+        </div>
       )
     }
 
@@ -109,19 +193,28 @@ function authorYear(p: ExplorerPaper): string {
                         ] as const).filter(([, body]) => body?.trim())
                       : [];
                     return (
-                      <li class="paper">
+                      <li
+                        class="paper"
+                        data-paper-row
+                        data-paper-id={paperId(p)}
+                        data-search={paperSearchText(p, s)}
+                      >
                         <a href={explorerPaperUrl(p)} rel="noopener noreferrer" class="paper__title">
                           {p.title}
                         </a>
                         <p class="paper__meta muted">
                           {authorYear(p)}
-                          {" · "}
-                          <span>{p.citationCount} cites</span>
+                          {typeof p.citationCount === "number" && (
+                            <>
+                              <span aria-hidden="true">·</span>
+                              <span>{p.citationCount} cites</span>
+                            </>
+                          )}
                           {p.arxiv && <span class="tag">arXiv</span>}
                         </p>
                         {synthParts.length > 0 ? (
                           <details class="paper__note">
-                            <summary class="paper__note-toggle">Synthesis</summary>
+                            <summary class="paper__note-toggle">{noteLabel}</summary>
                             <div class="paper__note-body">
                               {synthParts.map(([label, body]) => (
                                 <p class="paper__note-text measure">
@@ -135,7 +228,7 @@ function authorYear(p: ExplorerPaper): string {
                           note &&
                           (note.takeaway || note.why) && (
                             <details class="paper__note">
-                              <summary class="paper__note-toggle">Synthesis</summary>
+                              <summary class="paper__note-toggle">{noteLabel}</summary>
                               <div class="paper__note-body">
                                 {note.takeaway && <p class="paper__note-text measure">{note.takeaway}</p>}
                                 {note.why && (
@@ -159,12 +252,16 @@ function authorYear(p: ExplorerPaper): string {
       }
     </div>
 
+    <p class="empty-state" hidden data-empty-state>
+      No {resultNoun} match this search and theme.
+    </p>
+
     {
       reading.length > 0 && (
         <section class="block">
           <h2 class="section-head">A reading path</h2>
           <p class="muted measure" style="margin-block-end: var(--space-m)">
-            Start here and read in order; the path moves from foundations toward the open edge.
+            {readingIntro}
           </p>
           <div class="stack stack-m">
             {reading.map((grp) => (
@@ -213,24 +310,54 @@ function authorYear(p: ExplorerPaper): string {
 </PageLayout>
 
 <script>
-  const filter = document.querySelector(".theme-filter");
-  if (filter) {
-    const buttons = filter.querySelectorAll<HTMLButtonElement>(".filter-btn");
-    const themes = document.querySelectorAll<HTMLElement>("#themes .theme");
-    filter.addEventListener("click", (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(".filter-btn");
-      if (!btn) return;
-      const key = btn.dataset.key;
-      buttons.forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle("filter-btn--active", active);
-        b.setAttribute("aria-pressed", active ? "true" : "false");
-      });
-      themes.forEach((t) => {
-        t.hidden = key !== "all" && t.dataset.key !== key;
-      });
-    });
+  const filter = document.querySelector<HTMLElement>("[data-theme-filter]");
+  const search = document.querySelector<HTMLInputElement>("[data-paper-search]");
+  const themes = [...document.querySelectorAll<HTMLElement>("#themes .theme")];
+  const resultCount = document.querySelector<HTMLElement>("[data-result-count]");
+  const emptyState = document.querySelector<HTMLElement>("[data-empty-state]");
+  let activeTheme = "all";
+
+  function updateExplorer() {
+    const query = search?.value.trim().toLocaleLowerCase() ?? "";
+    const visibleIds = new Set<string>();
+
+    for (const theme of themes) {
+      const themeMatches = activeTheme === "all" || theme.dataset.key === activeTheme;
+      let visibleRows = 0;
+
+      for (const row of theme.querySelectorAll<HTMLElement>("[data-paper-row]")) {
+        const searchMatches = !query || row.dataset.search?.includes(query);
+        const visible = themeMatches && Boolean(searchMatches);
+        row.hidden = !visible;
+        if (visible) {
+          visibleRows += 1;
+          if (row.dataset.paperId) visibleIds.add(row.dataset.paperId);
+        }
+      }
+
+      theme.hidden = !themeMatches || visibleRows === 0;
+    }
+
+    if (resultCount) {
+      const noun = resultCount.dataset.resultNoun ?? "papers";
+      resultCount.textContent = `${visibleIds.size} ${noun} shown`;
+    }
+    if (emptyState) emptyState.hidden = visibleIds.size > 0;
   }
+
+  filter?.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>(".filter-btn");
+    if (!button?.dataset.key) return;
+    activeTheme = button.dataset.key;
+    for (const candidate of filter.querySelectorAll<HTMLButtonElement>(".filter-btn")) {
+      const active = candidate === button;
+      candidate.classList.toggle("filter-btn--active", active);
+      candidate.setAttribute("aria-pressed", String(active));
+    }
+    updateExplorer();
+  });
+
+  search?.addEventListener("input", updateExplorer);
 </script>
 
 <style>
@@ -273,16 +400,96 @@ function authorYear(p: ExplorerPaper): string {
     color: var(--color-accent);
   }
 
-  /* ---- theme filter ---- */
-  .theme-filter {
-    padding-block: var(--space-xs);
+  /* ---- source provenance ---- */
+  .source-note {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-s) var(--space-l);
+    align-items: end;
+    padding-block: var(--space-m);
     border-block: var(--border-hairline);
+  }
+
+  .source-note__label {
+    margin: 0 0 var(--space-3xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-accent);
+  }
+
+  .source-note__copy {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+
+  .source-note__link {
+    font-size: var(--step--1);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  /* ---- search and theme filter ---- */
+  .explorer-tools {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1fr) auto;
+    gap: var(--space-s) var(--space-m);
+    align-items: center;
+    padding-block: var(--space-s);
+    border-block: var(--border-hairline);
+  }
+
+  .paper-search {
+    position: relative;
+    width: min(100%, 34rem);
+  }
+
+  .paper-search svg {
+    position: absolute;
+    inset-inline-start: var(--space-xs);
+    inset-block-start: 50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .paper-search input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: var(--space-2xs) var(--space-xs) var(--space-2xs) 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font: inherit;
+  }
+
+  .paper-search input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .result-count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .theme-filter {
+    grid-column: 1 / -1;
   }
 
   .filter-btn {
     font-family: var(--font-mono);
     font-size: var(--step--1);
-    padding: 0.2em 0.7em;
+    min-height: 2.75rem;
+    padding: 0.45em 0.8em;
     border-radius: 999px;
     border: 1px solid var(--color-border);
     background: transparent;
@@ -304,6 +511,11 @@ function authorYear(p: ExplorerPaper): string {
 
   [data-theme="dark"] .filter-btn--active {
     background: color-mix(in oklch, var(--color-accent) 18%, transparent);
+  }
+
+  .filter-btn span {
+    margin-inline-start: 0.4em;
+    color: var(--color-text-muted);
   }
 
   /* ---- theme sections ---- */
@@ -391,6 +603,11 @@ function authorYear(p: ExplorerPaper): string {
     border-bottom: var(--border-hairline);
   }
 
+  .paper[hidden],
+  .theme[hidden] {
+    display: none;
+  }
+
   .paper:first-child {
     border-top: var(--border-hairline);
   }
@@ -468,6 +685,15 @@ function authorYear(p: ExplorerPaper): string {
     letter-spacing: 0.04em;
     color: var(--color-text-muted);
     margin-block-end: var(--space-3xs);
+  }
+
+  .empty-state {
+    margin: 0;
+    padding: var(--space-l);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-text-secondary);
+    text-align: center;
   }
 
   /* ---- standalone blocks (reading path, open problems) ---- */
@@ -579,5 +805,28 @@ function authorYear(p: ExplorerPaper): string {
 
   .back-footer a:hover {
     color: var(--color-accent);
+  }
+
+  @media (max-width: 42rem) {
+    .source-note {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .source-note__link {
+      white-space: normal;
+    }
+
+    .explorer-tools {
+      grid-template-columns: 1fr;
+    }
+
+    .result-count {
+      grid-row: 2;
+    }
+
+    .theme-filter {
+      grid-column: 1;
+    }
   }
 </style>

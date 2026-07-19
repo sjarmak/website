@@ -1,0 +1,444 @@
+{
+  "id": "thirty-papers",
+  "title": "The 30 Papers",
+  "blurb": "A beginner-shaped route through the 27 readings currently published at 30papers.com, from neural-network foundations to compression and complexity.",
+  "learningSlug": "thirty-papers",
+  "homepage": "/library/explorers/thirty-papers",
+  "paperCount": 27,
+  "themeCount": 7,
+  "source": {
+    "name": "30papers.com",
+    "url": "https://30papers.com/",
+    "note": "30papers.com describes this as the rumoured reading list Ilya Sutskever gave John Carmack. Its public collection currently contains 27 entries, reconstructed from a list shared by Andrew Carr."
+  },
+  "papers": [
+    {
+      "title": "CS231n: Convolutional Neural Networks for Visual Recognition",
+      "firstAuthor": "Karpathy, Li, Johnson, and others",
+      "year": 2016,
+      "url": "https://cs231n.github.io/",
+      "branches": ["foundations"],
+      "notes": [{
+        "branch": "foundations",
+        "takeaway": "Course notes that build convolutional networks from linear classifiers, optimization, and backpropagation through the architectures used for visual recognition.",
+        "why": "Start here when the notation or training loop in later papers feels compressed. The notes supply the working vocabulary that those papers assume."
+      }]
+    },
+    {
+      "title": "The Unreasonable Effectiveness of Recurrent Neural Networks",
+      "firstAuthor": "Andrej Karpathy",
+      "year": 2015,
+      "url": "https://karpathy.github.io/2015/05/21/rnn-effectiveness/",
+      "branches": ["foundations"],
+      "notes": [{
+        "branch": "foundations",
+        "takeaway": "A character-level recurrent network learns enough local and long-range structure to generate convincing prose, code, and mathematical text from raw sequences.",
+        "why": "The examples make sequence modeling tangible before the formal papers arrive, including both the surprising capability and the failure modes of recurrent generation."
+      }]
+    },
+    {
+      "title": "Understanding LSTM Networks",
+      "firstAuthor": "Christopher Olah",
+      "year": 2015,
+      "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
+      "branches": ["foundations"],
+      "notes": [{
+        "branch": "foundations",
+        "takeaway": "A visual account of the LSTM cell, showing how gates regulate what a recurrent network keeps, writes, exposes, and forgets across a sequence.",
+        "why": "Read it before the sequence papers so their LSTM equations resolve into a mechanism rather than a wall of symbols."
+      }]
+    },
+    {
+      "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+      "firstAuthor": "Krizhevsky, Sutskever, and Hinton",
+      "year": 2012,
+      "url": "https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
+      "branches": ["vision"],
+      "notes": [{
+        "branch": "vision",
+        "takeaway": "AlexNet combines a large labeled dataset, GPU training, rectified linear units, dropout, and data augmentation to decisively improve ImageNet classification.",
+        "why": "The paper marks the practical break between hand-engineered vision pipelines and the modern deep-learning recipe of scale, compute, and learned representation."
+      }]
+    },
+    {
+      "title": "Deep Residual Learning for Image Recognition",
+      "firstAuthor": "He, Zhang, Ren, and Sun",
+      "year": 2015,
+      "arxiv": "1512.03385",
+      "branches": ["vision"],
+      "notes": [{
+        "branch": "vision",
+        "takeaway": "Residual blocks learn changes relative to an identity path, making optimization stable enough to train image networks hundreds of layers deep.",
+        "why": "Skip connections became a durable architectural primitive far beyond vision. This paper shows the optimization problem they were designed to solve."
+      }]
+    },
+    {
+      "title": "Multi-Scale Context Aggregation by Dilated Convolutions",
+      "firstAuthor": "Yu and Koltun",
+      "year": 2015,
+      "arxiv": "1511.07122",
+      "branches": ["vision"],
+      "notes": [{
+        "branch": "vision",
+        "takeaway": "Dilated convolutions enlarge a network's receptive field without reducing spatial resolution, allowing dense predictions to use context at several scales.",
+        "why": "It is a compact study in changing an operator to preserve information that pooling would discard, a recurring concern in structured prediction."
+      }]
+    },
+    {
+      "title": "Identity Mappings in Deep Residual Networks",
+      "firstAuthor": "He, Zhang, Ren, and Sun",
+      "year": 2016,
+      "arxiv": "1603.05027",
+      "branches": ["vision"],
+      "notes": [{
+        "branch": "vision",
+        "takeaway": "Clean identity shortcuts and pre-activation blocks improve information and gradient flow through very deep residual networks.",
+        "why": "The follow-up explains which part of ResNet matters and why. It rewards reading the original architecture as a hypothesis that can be tested and refined."
+      }]
+    },
+    {
+      "title": "Recurrent Neural Network Regularization",
+      "firstAuthor": "Zaremba, Sutskever, and Vinyals",
+      "year": 2014,
+      "arxiv": "1409.2329",
+      "branches": ["sequences"],
+      "notes": [{
+        "branch": "sequences",
+        "takeaway": "Dropout regularizes large LSTMs when applied to their non-recurrent connections, improving generalization without disrupting the recurrent state transition.",
+        "why": "The paper separates a useful training intervention from the places where that intervention breaks temporal memory, a practical lesson in respecting architecture."
+      }]
+    },
+    {
+      "title": "Deep Speech 2: End-to-End Speech Recognition in English and Mandarin",
+      "firstAuthor": "Amodei, Ananthanarayanan, and others",
+      "year": 2015,
+      "arxiv": "1512.02595",
+      "branches": ["sequences"],
+      "notes": [{
+        "branch": "sequences",
+        "takeaway": "A single end-to-end system combines recurrent networks, convolution, CTC training, and large-scale compute for speech recognition in two languages.",
+        "why": "It shows what changes when a model leaves a benchmark and becomes a production-scale sequence system: data, optimization, latency, and hardware all enter the argument."
+      }]
+    },
+    {
+      "title": "Order Matters: Sequence to Sequence for Sets",
+      "firstAuthor": "Vinyals, Bengio, and Kudlur",
+      "year": 2015,
+      "arxiv": "1511.06391",
+      "branches": ["sequences"],
+      "notes": [{
+        "branch": "sequences",
+        "takeaway": "Sequence models impose an order even when their inputs or outputs are sets, and the chosen order can materially change what the model learns.",
+        "why": "The paper exposes a representational mismatch that is easy to ignore: the machinery's sequence bias can leak into a problem whose structure is permutation-invariant."
+      }]
+    },
+    {
+      "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+      "firstAuthor": "Bahdanau, Cho, and Bengio",
+      "year": 2014,
+      "arxiv": "1409.0473",
+      "branches": ["attention"],
+      "notes": [{
+        "branch": "attention",
+        "takeaway": "A translation decoder learns a soft alignment over source words at each output step instead of relying on one fixed-length encoded sentence.",
+        "why": "This is attention before the Transformer: a direct answer to the bottleneck created when an entire source sequence must fit into one vector."
+      }]
+    },
+    {
+      "title": "Pointer Networks",
+      "firstAuthor": "Vinyals, Fortunato, and Jaitly",
+      "year": 2015,
+      "arxiv": "1506.03134",
+      "branches": ["attention"],
+      "notes": [{
+        "branch": "attention",
+        "takeaway": "The decoder's attention distribution becomes the output, allowing a network to point to positions in an input whose length varies from example to example.",
+        "why": "The paper turns attention from an internal weighting mechanism into an interface for structured prediction, extending what a sequence model can name."
+      }]
+    },
+    {
+      "title": "Attention Is All You Need",
+      "firstAuthor": "Vaswani, Shazeer, Parmar, and others",
+      "year": 2017,
+      "arxiv": "1706.03762",
+      "branches": ["attention"],
+      "notes": [{
+        "branch": "attention",
+        "takeaway": "The Transformer replaces recurrence with multi-head self-attention, positional information, and feed-forward layers that train efficiently in parallel.",
+        "why": "Most modern language-model architecture starts here. Read it after the earlier attention papers to see which constraints the Transformer removes and which it keeps."
+      }]
+    },
+    {
+      "title": "The Annotated Transformer",
+      "firstAuthor": "Sasha Rush and contributors",
+      "year": 2018,
+      "url": "https://nlp.seas.harvard.edu/annotated-transformer/",
+      "branches": ["attention"],
+      "notes": [{
+        "branch": "attention",
+        "takeaway": "A runnable implementation walks through the Transformer line by line, connecting the paper's equations to tensors, masks, optimization, and training code.",
+        "why": "Use it as the laboratory companion to Attention Is All You Need. The implementation turns architecture diagrams into operations you can inspect."
+      }]
+    },
+    {
+      "title": "Neural Turing Machines",
+      "firstAuthor": "Graves, Wayne, and Danihelka",
+      "year": 2014,
+      "arxiv": "1410.5401",
+      "branches": ["memory-reasoning"],
+      "notes": [{
+        "branch": "memory-reasoning",
+        "takeaway": "A neural controller learns differentiable read and write operations over an external memory, acquiring simple algorithms from input-output examples.",
+        "why": "The work asks what changes when memory becomes an addressable component rather than a hidden state, a question still active in agent systems."
+      }]
+    },
+    {
+      "title": "A Simple Neural Network Module for Relational Reasoning",
+      "firstAuthor": "Santoro, Raposo, Barrett, and others",
+      "year": 2017,
+      "arxiv": "1706.01427",
+      "branches": ["memory-reasoning"],
+      "notes": [{
+        "branch": "memory-reasoning",
+        "takeaway": "Relation Networks apply a shared function to pairs of object representations, giving a larger system an explicit mechanism for comparing entities.",
+        "why": "The module is intentionally small. Its value comes from matching the architecture to the structure of relational questions rather than adding undirected depth."
+      }]
+    },
+    {
+      "title": "Relational Recurrent Neural Networks",
+      "firstAuthor": "Santoro, Faulkner, Raposo, and others",
+      "year": 2018,
+      "arxiv": "1806.01822",
+      "branches": ["memory-reasoning"],
+      "notes": [{
+        "branch": "memory-reasoning",
+        "takeaway": "A recurrent core uses self-attention over a memory matrix so stored items can interact before the next state is produced.",
+        "why": "It joins two threads in the list, recurrence and relational attention, and tests whether memory works better when its contents can reason over one another."
+      }]
+    },
+    {
+      "title": "Neural Message Passing for Quantum Chemistry",
+      "firstAuthor": "Gilmer, Schoenholz, Riley, Vinyals, and Dahl",
+      "year": 2017,
+      "arxiv": "1704.01212",
+      "branches": ["memory-reasoning"],
+      "notes": [{
+        "branch": "memory-reasoning",
+        "takeaway": "A common message-passing framework unifies several graph neural networks and predicts molecular properties by exchanging information along chemical bonds.",
+        "why": "The framework makes relational computation concrete on graphs, where the data structure already declares which entities may communicate."
+      }]
+    },
+    {
+      "title": "Scaling Laws for Neural Language Models",
+      "firstAuthor": "Kaplan, McCandlish, and others",
+      "year": 2020,
+      "arxiv": "2001.08361",
+      "branches": ["scale"],
+      "notes": [{
+        "branch": "scale",
+        "takeaway": "Language-model loss follows predictable power laws with model size, data, and compute across the measured regime, exposing tradeoffs between those inputs.",
+        "why": "The paper turns scaling from an intuition into an empirical planning model and helps explain why research strategy moved toward larger training runs."
+      }]
+    },
+    {
+      "title": "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism",
+      "firstAuthor": "Huang, Cheng, and others",
+      "year": 2018,
+      "arxiv": "1811.06965",
+      "branches": ["scale"],
+      "notes": [{
+        "branch": "scale",
+        "takeaway": "Pipeline parallelism partitions a model across accelerators and splits batches into micro-batches so several partitions can work at once.",
+        "why": "Scaling laws only matter when systems can execute the implied training runs. GPipe shows one mechanism for turning model size into a schedulable workload."
+      }]
+    },
+    {
+      "title": "Keeping Neural Networks Simple by Minimizing the Description Length of the Weights",
+      "firstAuthor": "Hinton and van Camp",
+      "year": 1993,
+      "url": "https://www.cs.toronto.edu/~hinton/absps/colt93.pdf",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "A network can be regularized by minimizing how many bits are needed to describe its weights while still accounting for the training data.",
+        "why": "The paper connects generalization to compression early in the history of neural networks and sets up the description-length readings that follow."
+      }]
+    },
+    {
+      "title": "A Tutorial Introduction to the Minimum Description Length Principle",
+      "firstAuthor": "Peter Grünwald",
+      "year": 2004,
+      "arxiv": "math/0406077",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "Minimum Description Length chooses the model that gives the shortest combined encoding of the model and the data explained by it.",
+        "why": "The tutorial supplies the formal language behind the intuition that learning and compression are closely related, without requiring the reader to infer it from fragments."
+      }]
+    },
+    {
+      "title": "The First Law of Complexodynamics",
+      "firstAuthor": "Scott Aaronson",
+      "year": 2011,
+      "url": "https://scottaaronson.blog/?p=762",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "A blog essay asks how to formalize the observation that complexity often rises and later falls as a closed system approaches equilibrium.",
+        "why": "The question reframes complexity as a trajectory rather than a synonym for entropy, preparing the concrete coffee-automaton model that follows."
+      }]
+    },
+    {
+      "title": "Quantifying the Rise and Fall of Complexity in Closed Systems: The Coffee Automaton",
+      "firstAuthor": "Aaronson, Carroll, and Ouellette",
+      "year": 2014,
+      "arxiv": "1405.6903",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "A cellular automaton for mixing coffee and cream tests candidate measures of complexity as a system moves from order through structure to equilibrium.",
+        "why": "The model gives the previous essay an object you can simulate, measure, and disagree with instead of leaving the complexity claim at the level of metaphor."
+      }]
+    },
+    {
+      "title": "Kolmogorov Complexity",
+      "firstAuthor": "Cover and Thomas",
+      "year": 2006,
+      "url": "https://onlinelibrary.wiley.com/doi/book/10.1002/047174882X",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "Kolmogorov complexity defines the information in a string by the length of the shortest program that can generate it on a fixed universal machine.",
+        "why": "This is the formal backbone of algorithmic description length, including the sharp limit that the quantity itself cannot generally be computed."
+      }]
+    },
+    {
+      "title": "Variational Lossy Autoencoder",
+      "firstAuthor": "Chen, Kingma, Salimans, and others",
+      "year": 2016,
+      "arxiv": "1611.02731",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "An autoregressive decoder and variational latent code divide information so the model can choose what to preserve globally and what to reconstruct locally.",
+        "why": "The paper makes lossy representation a design variable, connecting the abstract compression block to a trainable generative model."
+      }]
+    },
+    {
+      "title": "Machine Super Intelligence",
+      "firstAuthor": "Shane Legg",
+      "year": 2008,
+      "url": "https://www.vetta.org/documents/Machine_Super_Intelligence.pdf",
+      "branches": ["complexity"],
+      "notes": [{
+        "branch": "complexity",
+        "takeaway": "A doctoral thesis develops a formal measure of universal intelligence and studies the behavior and consequences of agents that score highly under it.",
+        "why": "It closes the path by asking what intelligence means when the definition must range across environments rather than one benchmark or one task family."
+      }]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Build the working vocabulary",
+      "summary": "Three generous explanations establish the mechanics that the papers will later compress into notation: convolutional networks, recurrent generation, and LSTM memory.",
+      "count": 3,
+      "themes": [
+        "Learn the training loop and architecture vocabulary before reading compressed conference prose.",
+        "Use visible behavior to connect recurrent state and gating to what sequence models can produce."
+      ]
+    },
+    {
+      "key": "vision",
+      "label": "Depth becomes trainable",
+      "summary": "ImageNet scale, residual paths, dilation, and pre-activation trace a compact history of how vision networks became deeper without giving up optimization or resolution.",
+      "count": 4,
+      "themes": [
+        "Data, compute, and regularization establish the modern deep-learning recipe.",
+        "Identity paths and receptive fields become explicit architectural choices."
+      ]
+    },
+    {
+      "key": "sequences",
+      "label": "Sequences meet the real world",
+      "summary": "Regularization, speech recognition, and unordered sets test recurrent models against overfitting, production constraints, and data whose structure does not naturally fit a sequence.",
+      "count": 3,
+      "themes": [
+        "Regularize the model without damaging its recurrent memory.",
+        "Separate the sequence machinery from the structure of the problem."
+      ]
+    },
+    {
+      "key": "attention",
+      "label": "Attention removes the bottleneck",
+      "summary": "Alignment begins as a learned look-back for translation, becomes an output pointer, and finally replaces recurrence in the Transformer.",
+      "count": 4,
+      "themes": [
+        "Attention starts as a way around the fixed-vector bottleneck.",
+        "The Transformer turns that mechanism into the main computational substrate."
+      ]
+    },
+    {
+      "key": "memory-reasoning",
+      "label": "Memory becomes an interface",
+      "summary": "External memory, relation modules, self-attentive recurrent state, and graph message passing make storage and interaction explicit parts of the architecture.",
+      "count": 4,
+      "themes": [
+        "Addressable memory changes what a neural controller can learn to do.",
+        "Relational structure guides which representations should interact."
+      ]
+    },
+    {
+      "key": "scale",
+      "label": "Scale becomes predictable",
+      "summary": "Empirical power laws explain why larger training runs pay, while pipeline parallelism shows how those runs can be divided across hardware.",
+      "count": 2,
+      "themes": [
+        "Model, data, and compute trade against one another in measurable ways.",
+        "Systems design determines whether the scaling plan can run."
+      ]
+    },
+    {
+      "key": "complexity",
+      "label": "Compression frames the whole field",
+      "summary": "Description length, algorithmic complexity, lossy representation, and universal intelligence pull the practical arc back toward a harder question: what makes a learned explanation simple?",
+      "count": 7,
+      "themes": [
+        "Compression offers a language for model selection and generalization.",
+        "Complexity can rise and fall even while entropy moves in one direction.",
+        "Formal intelligence asks how an agent performs across environments, not one benchmark."
+      ]
+    }
+  ],
+  "reading": [
+    ["https://cs231n.github.io/", "CS231n: Convolutional Neural Networks for Visual Recognition", "Working vocabulary"],
+    ["https://karpathy.github.io/2015/05/21/rnn-effectiveness/", "The Unreasonable Effectiveness of Recurrent Neural Networks", "Working vocabulary"],
+    ["https://colah.github.io/posts/2015-08-Understanding-LSTMs/", "Understanding LSTM Networks", "Working vocabulary"],
+    ["https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html", "ImageNet Classification with Deep Convolutional Neural Networks", "Vision"],
+    ["1512.03385", "Deep Residual Learning for Image Recognition", "Vision"],
+    ["1511.07122", "Multi-Scale Context Aggregation by Dilated Convolutions", "Vision"],
+    ["1603.05027", "Identity Mappings in Deep Residual Networks", "Vision"],
+    ["1409.2329", "Recurrent Neural Network Regularization", "Sequences"],
+    ["1512.02595", "Deep Speech 2: End-to-End Speech Recognition in English and Mandarin", "Sequences"],
+    ["1511.06391", "Order Matters: Sequence to Sequence for Sets", "Sequences"],
+    ["1409.0473", "Neural Machine Translation by Jointly Learning to Align and Translate", "Attention"],
+    ["1506.03134", "Pointer Networks", "Attention"],
+    ["1706.03762", "Attention Is All You Need", "Attention"],
+    ["https://nlp.seas.harvard.edu/annotated-transformer/", "The Annotated Transformer", "Attention"],
+    ["1410.5401", "Neural Turing Machines", "Memory and reasoning"],
+    ["1706.01427", "A Simple Neural Network Module for Relational Reasoning", "Memory and reasoning"],
+    ["1806.01822", "Relational Recurrent Neural Networks", "Memory and reasoning"],
+    ["1704.01212", "Neural Message Passing for Quantum Chemistry", "Memory and reasoning"],
+    ["2001.08361", "Scaling Laws for Neural Language Models", "Scale"],
+    ["1811.06965", "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism", "Scale"],
+    ["https://www.cs.toronto.edu/~hinton/absps/colt93.pdf", "Keeping Neural Networks Simple by Minimizing the Description Length of the Weights", "Compression and complexity"],
+    ["math/0406077", "A Tutorial Introduction to the Minimum Description Length Principle", "Compression and complexity"],
+    ["https://scottaaronson.blog/?p=762", "The First Law of Complexodynamics", "Compression and complexity"],
+    ["1405.6903", "Quantifying the Rise and Fall of Complexity in Closed Systems: The Coffee Automaton", "Compression and complexity"],
+    ["https://onlinelibrary.wiley.com/doi/book/10.1002/047174882X", "Kolmogorov Complexity", "Compression and complexity"],
+    ["1611.02731", "Variational Lossy Autoencoder", "Compression and complexity"],
+    ["https://www.vetta.org/documents/Machine_Super_Intelligence.pdf", "Machine Super Intelligence", "Compression and complexity"]
+  ],
+  "opportunities": [],
+  "practices": []
+}

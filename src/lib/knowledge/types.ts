@@ -132,8 +132,8 @@ export interface ExplorerPaper {
   bibcode?: string;
   title: string;
   firstAuthor: string;
-  year?: string;
-  citationCount: number;
+  year?: number | string;
+  citationCount?: number;
   arxiv?: string | null;
   url?: string | null;
   branches?: string[];
@@ -151,6 +151,12 @@ export interface Explorer {
   learningSlug: string;
   paperCount: number;
   themeCount: number;
+  /** Provenance for a collection curated by an external source. */
+  source?: {
+    name: string;
+    url: string;
+    note: string;
+  };
   papers: ExplorerPaper[];
   sections: ExplorerSection[];
   /** Raw reading-order tuples: [bibcode, label, group]. */

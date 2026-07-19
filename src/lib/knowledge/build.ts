@@ -11,6 +11,7 @@ import citationData from "@/data/knowledge/citation-edges.json";
 import embeddingsData from "@/data/knowledge/embeddings.json";
 import librariesData from "@/data/knowledge/libraries.json";
 import explorersData from "@/data/knowledge/explorers.json";
+import thirtyPapersData from "@/data/knowledge/explorers/thirty-papers.json";
 import paperSynthesisData from "@/data/knowledge/paper-synthesis.json";
 import { buildBm25, bm25Query, rrf, semanticQuery, tokenize, type Scored } from "./retrieval";
 import type {
@@ -83,7 +84,10 @@ function joinSynthesis(explorer: Explorer): Explorer {
   };
 }
 
-const explorers = (explorersData.explorers as unknown as Explorer[]).map(joinSynthesis);
+const explorers = [
+  ...(explorersData.explorers as unknown as Explorer[]),
+  thirtyPapersData as unknown as Explorer,
+].map(joinSynthesis);
 const libraryByName = new Map(libraries.map((l) => [l.name, l]));
 const explorerById = new Map(explorers.map((e) => [e.id, e]));
 
@@ -356,24 +360,33 @@ export function explorerPaperUrl(p: ExplorerPaper): string {
 
 /** Parse the raw `[bibcode, title, group]` reading tuples into ordered, numbered groups. */
 export function explorerReadingPath(e: Explorer): ExplorerReadingGroup[] {
-  const byBibcode = new Map(e.papers.map((p) => [p.bibcode, p] as const));
+  const byReference = new Map<string, ExplorerPaper>();
+  for (const paper of e.papers) {
+    for (const reference of [paper.bibcode, paper.arxiv, paper.url]) {
+      if (reference) byReference.set(reference, paper);
+    }
+  }
   const groups: ExplorerReadingGroup[] = [];
   const indexByGroup = new Map<string, number>();
   let n = 0;
   for (const row of e.reading ?? []) {
     if (!Array.isArray(row)) continue;
-    const [bibcode, title, group] = row as [string, string, string?];
+    const [reference, title, group] = row as [string, string, string?];
     const g = group ?? "";
     if (!indexByGroup.has(g)) {
       indexByGroup.set(g, groups.length);
       groups.push({ group: g, stops: [] });
     }
-    const paper = bibcode ? byBibcode.get(bibcode) : undefined;
+    const paper = reference ? byReference.get(reference) : undefined;
     groups[indexByGroup.get(g)!].stops.push({
       n: ++n,
-      bibcode: bibcode ?? "",
-      title: title ?? bibcode ?? "",
-      url: arxivOrAds(bibcode, paper?.arxiv ?? null, paper?.url ?? null),
+      bibcode: paper?.bibcode ?? "",
+      title: title ?? reference ?? "",
+      url: paper
+        ? arxivOrAds(paper.bibcode, paper.arxiv ?? null, paper.url ?? null)
+        : reference?.startsWith("http")
+          ? reference
+          : arxivOrAds(undefined, reference, null),
     });
   }
   return groups;

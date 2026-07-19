@@ -77,6 +77,45 @@
   "digest:daily-2026-07-04": {
     "concept": "agentic-coding"
   },
+  "digest:daily-2026-07-05": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-06": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-08": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-09": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-10": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-11": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-12": {
+    "concept": "multi-agent-orchestration"
+  },
+  "digest:daily-2026-07-13": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-14": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-15": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-16": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-17": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-18": {
+    "concept": "agentic-coding"
+  },
   "digest:daily-general-2026-06-10": {
     "concept": "model-releases"
   },
@@ -152,6 +191,42 @@
   "digest:daily-general-2026-07-04": {
     "concept": "ai-economics"
   },
+  "digest:daily-general-2026-07-05": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-general-2026-07-06": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-08": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-09": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-10": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-11": {
+    "concept": "agent-tooling"
+  },
+  "digest:daily-general-2026-07-12": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-13": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-general-2026-07-14": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-general-2026-07-16": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-17": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-18": {
+    "concept": "model-releases"
+  },
   "digest:manual-enhancing-developer-productivity-with-google-colab-cli-and-agentic-observability": {
     "concept": "developer-productivity"
   },
@@ -170,6 +245,12 @@
   "digest:weekly-2026-06-29": {
     "concept": "evaluation"
   },
+  "digest:weekly-2026-07-06": {
+    "concept": "agentic-coding"
+  },
+  "digest:weekly-2026-07-13": {
+    "concept": "agentic-coding"
+  },
   "digest:weekly-general-2026-06-15": {
     "concept": "model-releases"
   },
@@ -178,6 +259,9 @@
   },
   "digest:weekly-general-2026-06-29": {
     "concept": "open-models"
+  },
+  "digest:weekly-general-2026-07-06": {
+    "concept": "model-releases"
   },
   "paper:2022arXiv221003629Y": {
     "concept": "reliability",
@@ -374,6 +458,10 @@
     "concept": "memory-consolidation",
     "takeaway": "Self-evolving memory that treats retrieval infrastructure as mutable, auto-researching its own organization across multi-session operation."
   },
+  "paper:2026arXiv260514460L": {
+    "concept": "ai-security",
+    "takeaway": "Semantic Compliance Hijacking (SCH) weaponizes third-party Agent Skill files without any embedded code: it injects obfuscated natural-language 'compliance guidelines' that the agent's retrieve-contextualize-execute pipeline fuses directly into the LLM system prompt as authoritative directives, and the agent then synthesizes and runs the malicious logic itself at runtime (dumping os.environ and POSTing it as 'telemetry', or exec()-ing a fetched remote byte stream). Across 600 contextualized tasks over 3 frameworks (OpenClaw, Claude Code, Codex) and 3 models, SCH hit a peak 77.67% complete-leakage rate and 67.33% RCE, yet both SkillScan (AST/regex) and LLM Guard (semantic classifiers) flagged it at 0.00%, versus 62.00-96.00% detection for SkillJect and 91.61-99.81% for DDIPE explicit-payload baselines; an 'Alignment-Security Paradox' made the most-aligned model (GPT-5.4 mini, 62.11% avg complete leakage) the most exploitable because it best maps prose directives to concrete system APIs."
+  },
   "paper:2026arXiv260514498Y": {
     "concept": "evaluation",
     "takeaway": "Introduces GroupMemBench, targeting memory in multi-party (group) conversations where the agent must attribute facts to specific speakers across many participants, a setting that dyadic benchmarks like LoCoMo/LongMemEval do not cover."
@@ -396,6 +484,10 @@
   "paper:2026arXiv260526352L": {
     "concept": "test-time-compute",
     "takeaway": "Critic-free policy optimization that turns retrieval interactions into localized credit signals for latent reasoning steps."
+  },
+  "paper:2026arXiv260526563W": {
+    "concept": "reliability",
+    "takeaway": "RootSE distills 93 real repository-level agent failures (over 4,500 execution steps) into a diagnosis benchmark whose target is the earliest decisive error step - the single early mistake, such as a misread requirement or flawed plan, whose cumulative consequence is the eventual system failure."
   },
   "paper:2026arXiv260526667G": {
     "concept": "evaluation",
@@ -461,9 +553,41 @@
     "concept": "reliability",
     "takeaway": "Names a failure taxonomy for the lab-to-production gap — fragile fixes (patches pass tests but leave latent bugs), token waste (trial-and-error instead of a planned approach), false confidence (never abstaining on impossible/ambiguous tasks), and broken intermediates (codebase left broken between steps). Baseline ReAct agents fail badly against it: no baseline abstained on any of the 6 impossible tasks, and even disciplined agents abstained correctly only 62% of the time. Recovery is the hardest mode and the one scaffolding does NOT fix — smallest gain of all five pillars, token-waste cut only 34%, doom loops persist when root cause isn't in the error message; the authors conclude recovery may need architectural changes beyond configuration-level frameworks."
   },
+  "paper:2026arXiv260626511Y": {
+    "concept": "memory-consolidation",
+    "takeaway": "Across four marker-free evolving benchmarks (code mutation, config migration, dependency bumps, API evolution), plain RAG serves the superseded value 15-40% of the time when forced to answer; MemStrata drives this to ~0% via deterministic supersession rather than any decay or scoring-based forgetting heuristic."
+  },
+  "paper:2026arXiv260626721Z": {
+    "concept": "ai-security",
+    "takeaway": "KPR treats an external collaborator's code, tests, and agent trace as a knowledge source, not a merge candidate; only a project-owned inner trusted coding agent regenerates code inside the receiving project's environment, under repository context and security policy, before anything can be merged."
+  },
   "paper:2026arXiv260626806H": {
     "concept": "memory-consolidation",
     "takeaway": "Frames consolidation on the complementary-learning-systems analogy (fast episodic plus slow consolidating stores) but states it is motivation only, not a biological model. Consolidation is measured by write economy and bounded drift, not task accuracy: EVAF reaches goal persistence and post-unload recovery of 0.812–0.904 with only 2–3 parametric writes per 200 events (L2 drift ~21–29), while Naive-LoRA writes every event (200 writes, L2 drift ~67 on TinyLlama, ~119 on GPT-2) and still fails the goal layer — so writing everything is not enough. Stability-plasticity is handled with replay plus an L2/EWC-style anchor. The unresolved boundary is stale-memory obsolescence: on public Memora event streams EVAF improves forgetting-absence only 91/222 to 95/222 (McNemar p=0.57, not significant), and negative-gradient/anti-training forgetting variants were unstable — append-only selective consolidation does not solve delete/update validity."
+  },
+  "paper:2026arXiv260627243L": {
+    "concept": "reliability",
+    "takeaway": "NOVA's verification cascade checks architecture semantics before expensive training or deployment, catching runnable-but-structurally-invalid candidates that pass unit tests but violate recommender-specific invariants like sequence masking; failed-verification diagnostics become reusable 'forbidden directions' that shape later search."
+  },
+  "paper:2026arXiv260627416P": {
+    "concept": "reliability",
+    "takeaway": "Glite ARF enforces task-level worktree isolation and immutability with a corrections overlay after an incident where one agent step recomputed and corrupted 20,304 historical training rows across 38 feature sets; completed task folders can't be modified, so fixes are separate, auditable downstream tasks."
+  },
+  "paper:2026arXiv260628235R": {
+    "concept": "reliability",
+    "takeaway": "Across 930,000+ agent-authored pull requests, multilevel models show about half the variance in integration friction survives after accounting for the contribution, its author, size, and agent, and it is a repository-level property. Agent-authored contributions concentrate this repository-level friction roughly twice as much as human ones (ICC 0.30 vs 0.16)."
+  },
+  "paper:2026arXiv260701071X": {
+    "concept": "evaluation",
+    "takeaway": "MemSyco-Bench covers five task categories testing whether agents can reject memory as factual evidence, respect its scope, resolve memory-vs-evidence conflicts, track updates, and use valid memory for personalization, built after showing existing benchmarks (LongMemEval, LoCoMo, STALE, PersonaMem) put 47.4-66.1% of their errors in the retrieval-failure bucket versus only 5.8-13.7% in the post-retrieval-reasoning bucket."
+  },
+  "paper:2026arXiv260708028A": {
+    "concept": "ai-security",
+    "takeaway": "Governance holds only because it is code-owned, not prompted. With the model fixed and only the enforcement layer varied, prompt instructions alone let recommendation-language and internal-trace-leakage violations reach the reader on all 30 adversarial runs, every one of which the harness blocked; only source-backed claims are allowed to enter runtime context in the first place. Across 270 composition-boundary runs under three substituted models the contracts held, with failures confined to the model-composed side and recorded."
+  },
+  "paper:2026arXiv260710059L": {
+    "concept": "reliability",
+    "takeaway": "The paper gives an agent-native failure taxonomy of 8 abstention scenarios, organized by when a trigger becomes observable (pre-execution reasoning vs. runtime discovery) and where it resides (query, environment state, or tools). Across 17 frontier LLMs in 4 harnesses the best agent, Gemini 3.1 Pro, reaches only 59.5% Paired Accuracy and 13 of 17 stay below 50%, and abstention capability tracks largely independently of general task-solving skill. The signature failure is post-hoc abstention: an agent commits an irreversible action, such as cancelling a flight before checking rebooking availability, then verbally acknowledges the problem, leaving unrecoverable side effects."
   },
   "paper:ACRFence": {
     "concept": "ai-security"
