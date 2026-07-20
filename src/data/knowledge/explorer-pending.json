@@ -20,8 +20,8 @@
         }
       ],
       "firstSeen": "2026-07-12",
-      "lastAttempt": "2026-07-19",
-      "attempts": 6
+      "lastAttempt": "2026-07-20",
+      "attempts": 7
     },
     {
       "bibcode": "2026arXiv260107978W",
@@ -42,8 +42,9 @@
         }
       ],
       "firstSeen": "2026-07-14",
-      "lastAttempt": "2026-07-19",
-      "attempts": 4
+      "lastAttempt": "2026-07-20",
+      "attempts": 5,
+      "note": "SciX has the record but has_body is false — abstract only, no parsed body. Nothing to ground a synthesis in yet."
     },
     {
       "bibcode": "2026arXiv260713591H",
@@ -66,8 +67,8 @@
         }
       ],
       "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-19",
-      "attempts": 3
+      "lastAttempt": "2026-07-20",
+      "attempts": 4
     },
     {
       "bibcode": "2026arXiv260622030S",
@@ -91,9 +92,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-19",
-      "attempts": 1,
-      "note": "SciX full text for bibcode 2026arXiv260622030S is the earlier version titled 'Nous: A Predictive World Model for Long-Term Agent Memory'; the cited abstract's headline contributions (reliability-conditioned updating, provenance-capped poisoning defense) are not in the indexed body. Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-07-20",
+      "attempts": 2,
+      "note": "SciX full text for bibcode 2026arXiv260622030S is still the earlier version titled 'Nous: A Predictive World Model for Long-Term Agent Memory'; body searches for reliability-conditional updating and provenance-capped poisoning defense return no matching passages. Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -110,7 +111,84 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-19",
+      "lastAttempt": "2026-07-20",
+      "attempts": 2
+    },
+    {
+      "bibcode": "2026arXiv260715524L",
+      "arxiv": "2607.15524",
+      "title": "Recursive Harness Self-Improvement",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "routing"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-20",
+      "lastAttempt": "2026-07-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260715557W",
+      "arxiv": "2607.15557",
+      "title": "SkillCorpus: Consolidating and Evaluating the Open Skill Ecosystem for Real-World LLM Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "procedural-skills"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-20",
+      "lastAttempt": "2026-07-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260715388Y",
+      "arxiv": "2607.15388",
+      "title": "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "foundations"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-20",
+      "lastAttempt": "2026-07-20",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260715516S",
+      "arxiv": "2607.15516",
+      "title": "Cache-Aware Prompt Compression: A Two-Tier Cost Model for LLM API Caching",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "routing"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-20",
+      "lastAttempt": "2026-07-20",
       "attempts": 1
     }
   ]
