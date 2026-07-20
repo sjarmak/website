@@ -11,12 +11,21 @@ Your job is to turn exactly those items into a high-signal issue.
 ## Parameters (filled by the runner)
 
 - Issue date: **{{DATE}}**
-- Curated items (JSON array): **{{ITEMS_FILE}}**
+- Curated handoff (JSON object): **{{ITEMS_FILE}}**
 - Podcast transcript target: **~{{WORD_TARGET}} words** (~{{MINUTES}} min at ~180 wpm)
 - Working directory for intermediate files: **{{WORK}}**
 - Website repo (run scripts from here): **{{WEBSITE_DIR}}**
 
-Each item in `{{ITEMS_FILE}}` has: `title`, `url`, `source`, `category`, `summary`,
+`{{ITEMS_FILE}}` is an object with two keys: `track` and `items`.
+
+`track` is the editorial lane the user picked, `"specialized"` or `"general"`. Unlike cadence
+you do not derive it — a hand-picked set carries no signal about which lane it belongs to, so
+the curator states it. Pass it through to the spec verbatim in step 7. It also sets the frame:
+a `specialized` issue goes deep on the site's core topics, a `general` issue reads as a
+field-wide roundup for someone who only reads this one issue. Older handoffs omit the key;
+treat a missing `track` as `"specialized"`.
+
+Each item in `items` has: `title`, `url`, `source`, `category`, `summary`,
 `publishedAt` (ISO date the item was published), and `fullText` (may be empty). Treat
 `fullText` as the ground truth; fall back to `summary` when `fullText` is empty. Never invent
 items, URLs, numbers, or quotes — everything traces to an item in this file.
@@ -87,7 +96,8 @@ Do:
 
 7. **Write `{{WORK}}/spec.json`** matching the publish-digest schema. Derive a slug from the
    title: `manual-` + the title lowercased, non-alphanumerics to single hyphens, trimmed,
-   capped ~80 chars. Set `cadence` to the value derived in step 6. Populate `items` from the
+   capped ~80 chars. Set `cadence` to the value derived in step 6, and `track` to the value
+   read from `{{ITEMS_FILE}}` — copy it, never guess it. Populate `items` from the
    curated set (this also drives the on-site link count), and `topics` from the distinct
    categories plus any obvious theme tags.
    ```json
@@ -95,6 +105,7 @@ Do:
      "slug": "manual-<kebab-title>",
      "title": "<your title>",
      "cadence": "<daily|weekly|monthly, derived in step 6>",
+     "track": "<specialized|general, copied from the handoff>",
      "origin": "manual",
      "date": "{{DATE}}",
      "summary": "<2-3 sentence summary>",
