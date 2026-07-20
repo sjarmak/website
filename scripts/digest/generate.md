@@ -97,7 +97,7 @@ reference (summary, title, body, transcript) to the window you actually pulled f
        "slug": "{{SLUG}}",
        "title": "<your title>",
        "cadence": "{{CADENCE}}",
-       "track": "specialized",
+       "track": "{{TRACK}}",
        "origin": "auto",
        "date": "{{DATE}}",
        "summary": "<2-3 sentence summary>",
