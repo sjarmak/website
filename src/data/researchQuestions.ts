@@ -38,7 +38,7 @@ export const researchQuestions: ResearchQuestion[] = [
     tags: ["evaluation", "benchmarks"],
     updated: "2026-04-02",
     note:
-      "Pass/fail on small isolated tasks misses the point for enterprise-scale engineering. CodeScaleBench is my attempt to operationalize what that actually means — 275 tasks across 20 suites, 9 work types, spanning multi-repo scope. The hard unsolved piece is how to score partial progress and recovery, not just task completion.",
+      "Pass/fail on small isolated tasks misses the point for enterprise-scale engineering. CodeScaleBench is my attempt to operationalize what that actually means — 370 tasks across 20 suites, 9 work types, spanning multi-repo scope. The hard unsolved piece is how to score partial progress and recovery, not just task completion.",
     links: [
       { label: "CodeScaleBench project", url: "/projects/codescalebench" },
       {
