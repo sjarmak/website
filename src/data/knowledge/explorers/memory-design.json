@@ -1426,6 +1426,31 @@
           "why": "The evaluation branch asks how we know memory works beyond factual recall and how to separate retrieval-correctness from answer-correctness; MemOps supplies operation-level metrics and a cross-paradigm comparison that measures intermediate memory behavior, not just the final answer."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260625449K",
+      "title": "Reclaim Evaluation: A Lossy Memory Is Worse Than an Empty One",
+      "firstAuthor": "Kwon, Alex",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.25449",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260625449K",
+      "branches": [
+        "consolidation",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "The summarizer's default of keeping the takeaway and dropping the working is backwards for correctability: a memory that kept a wrong conclusion but dropped its source makes every answer-disposed model tested emit the stale value confidently where an empty memory abstains, and a one-line source-first policy (keep the recomputable source, drop the re-derivable conclusion) restores reclaim at equal budget; the hand-built oracle reaches 1.00 and a one-prompt deployable distiller 0.49-0.88.",
+          "why": "Gives consolidation a concrete, tested selection rule: what the compression keeps decides whether later corrections can land at all, and because a dropped-source error compounds through memory-feeds-memory loops and stays uncorrectable however late it is caught, the choice is load-bearing for any system that summarizes its own history."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "Separates two regimes that look identical from outside: anchoring (the source is still in context and a directed correction works) and information loss (the source is gone and reclaim is 0.00 by measurement, checkable as a token test on the carried note); the wall and the source-first fix replicate across three deployed memory systems and on MultiWOZ dialogue.",
+          "why": "Adds a correctability axis that recall-style memory benchmarks miss entirely: a carried answer can look intact while whether it can be repaired depends on what the compression kept, and only paired memory conditions at matched budgets with judge-free exact scoring expose the difference."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1689,6 +1689,25 @@
           "why": "Assurance has to be grounded in an honest baseline: because harness evolution is itself a search procedure evaluated on the same benchmark it searches over, its reported gains are largely repeated-sampling gains and overfit the search set, a direct warning about how agent-improvement methods are measured before they are trusted in production."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260715516S",
+      "title": "Cache-Aware Prompt Compression: A Two-Tier Cost Model for LLM API Caching",
+      "firstAuthor": "Song, Yan",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.15516",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260715516S",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "Measures Anthropic's production prompt cache and finds a two-tier architecture with a sharp threshold near 3,500 tokens (hit rate plateaus at 0.83 below it, reaches ~1.0 above), then derives a cost model showing that query-aware compression, which rewrites the prefix every call and so voids the cache, is strictly dominated: cache-aware query-agnostic compression (CAPC) with a tier-preserving ratio bound is cheapest in 16 of 16 LongBench-v2 configurations, with mean savings of 49% over cache-only and 90% over vanilla.",
+          "why": "A direct instance of recording cost facts before optimizing: the compression literature's implicit assumption of a perfect cache hit rate misstates the real cost landscape, and on tau-bench retail the standard query-aware method costs 40.1% more than doing nothing at identical task reward, so the measured cost model, not the compression ratio, decides the routing choice."
+        }
+      ]
     }
   ],
   "sections": [

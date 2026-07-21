@@ -2767,6 +2767,44 @@
           "why": "This branch is about retrieval-aware versus answer-level scoring and failure attribution; MemOps is a direct instance of moving long-term-memory evaluation from black-box QA toward operation-level, state-transition diagnosis with fine-grained provenance checks."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260715557W",
+      "title": "SkillCorpus: Consolidating and Evaluating the Open Skill Ecosystem for Real-World LLM Agents",
+      "firstAuthor": "Wang, Yanze",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.15557",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260715557W",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Consolidates ~821,000 crawled SKILL.md files into a 96,401-skill corpus through a six-stage funnel (two-tier deduplication collapses 64% of stage input; an LLM judge scores utility, robustness, and safety with 19 flags, five of them hard gates; an OSI-permissive licence filter clears redistribution), then serves it with a fine-tuned retrieval-and-selection stack; integration lifts pass rates on all three real-task benchmarks, largest on SkillsBench at +7.5 pp, with +13.4 pp on the strongest cell against a 9.2% no-skill baseline.",
+          "why": "First end-to-end account of when a community skill library helps a real agent: gains track corpus coverage (mean per-task gain climbs from +2.2 to +25.1 pp across retrieval-match bins) and the harness's execute-verify-fix loop (Raven realises +13.4 pp where OpenClaw gets +5.7 pp from identical skill selections), so a skill library's value is a joint property of corpus, retrieval, and harness rather than of the skill files alone."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260625449K",
+      "title": "Reclaim Evaluation: A Lossy Memory Is Worse Than an Empty One",
+      "firstAuthor": "Kwon, Alex",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2606.25449",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260625449K",
+      "branches": [
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Reclaim evaluation scores a memory system by whether a later correction can recover a known answer: induce a known drift, compress the interaction at a fixed budget under paired policies that differ only in what they retain, deliver a correction naming the error locus, and score exact recovery with no judge; three validators built to come out false (including an anti-rig check against a deterministic fake) guard the protocol, with headline cells at n=96.",
+          "why": "Isolates correctability from capability and from memory budget: the wall sits in the same place from an 8B model to frontier systems, and a length-matched lossy-padded control rules out extra text as the lever, giving memory evaluation a judge-free, mechanism-level probe that answer-level recall scoring cannot express."
+        }
+      ]
     }
   ],
   "sections": [
