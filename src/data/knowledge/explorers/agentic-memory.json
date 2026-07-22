@@ -2805,6 +2805,31 @@
           "why": "Isolates correctability from capability and from memory budget: the wall sits in the same place from an 8B model to frontier systems, and a length-matched lossy-padded control rules out extra text as the lever, giving memory evaluation a judge-free, mechanism-level probe that answer-level recall scoring cannot express."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260716716S",
+      "title": "RECON: Benchmarking Agent Memory for Compositional Reasoning over Long Contexts",
+      "firstAuthor": "Shriniwas Arya, Mihir",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2607.16716",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260716716S",
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "A long-context memory benchmark of 24 investigative case files (criminal, medical, financial), each 50k-100k tokens, with 1,604 questions over six memory-intensive task families: chain reconstruction (locate and causally order 5-15 scattered evidence hops), cascade propagation (after an invalidation, decide which conclusions break and which survive on independent support), source-conflict resolution, counterfactual reasoning, temporal-constraint satisfaction, and temporal fact retrieval as a control. Ground truth is deterministic, built from a provenance DAG, with a fixed question matrix enforcing per-task and per-format quotas across cases.",
+          "why": "Adds a dependency-structured task family the catalog otherwise lacks: prior memory benchmarks test retrieving scattered facts or detecting that a fact changed, while RECON tests what happens after the change - which downstream conclusions are affected and which survive - over 50k-100k-token contexts, filling the composition and task-type coverage this branch tracks."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "RECON decomposes every failure along two axes rather than reporting one accuracy number: an Oracle solver given the ground-truth dependency graph sets a retrieval-perfect ceiling of 54.6%, and each question is binned into retrieval-hit-and-correct, retrieval-hit-but-wrong/abstain, or retrieval-miss cells using full-coverage entry-ID recall. The best non-Oracle system reaches 22.4% and RAG 20.6% on full-coverage hits; roughly four in five failures persist even when retrieval succeeds, and human annotators reach 63.0%, exceeding the Oracle solver by 8.4 points.",
+          "why": "This is a retrieval-aware, failure-attribution scoring design of exactly the kind this branch catalogs: the Oracle upper bound plus the hit/wrong/miss outcome cells separate retrieval error from reasoning error on the same items, showing that an answer-level accuracy alone would misplace the bottleneck, which here is reasoning rather than evidence selection."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1451,6 +1451,25 @@
           "why": "Adds a correctability axis that recall-style memory benchmarks miss entirely: a carried answer can look intact while whether it can be repaired depends on what the compression kept, and only paired memory conditions at matched budgets with judge-free exact scoring expose the difference."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260716716S",
+      "title": "RECON: Benchmarking Agent Memory for Compositional Reasoning over Long Contexts",
+      "firstAuthor": "Shriniwas Arya, Mihir",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.16716",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260716716S",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "A benchmark built to go past factual recall: six compositional tasks (multi-hop chain reconstruction, cascade propagation after invalidation, source-conflict resolution, counterfactual reasoning, temporal-constraint satisfaction, temporal fact retrieval) over 24 deterministic 50k-100k-token cases, scored with a retrieval-versus-reasoning decomposition. An Oracle handed the true dependency graph tops out at 54.6%, the best deployed system at 22.4%, and about four in five failures survive perfect retrieval; freeform answers are graded by two LLM judges from different families (gpt-4o, gemini-2.5-flash) and other formats scored deterministically with an abstain option (+1 / -0.2 / 0).",
+          "why": "Directly serves this branch's separation of retrieval-correctness from answer-correctness: RECON measures both on the same questions and adds a production reality check, since every long-context, RAG, and agentic-memory system tested lands far below an already-low retrieval-perfect ceiling, so recall-style scoring would report the wrong bottleneck."
+        }
+      ]
     }
   ],
   "sections": [
