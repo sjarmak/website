@@ -2125,6 +2125,25 @@
           "why": "This branch covers the runtime properties that decide whether an orchestrated system survives deployment, and latency is the one automated-orchestration work has mostly folded into cost. The paper shows the two objectives diverge structurally, and its ablation prices the naive fix: bolting a uniform latency term onto the reward costs 1.30-5.34 accuracy points for only 2-11% latency savings, while the critical-path-aware version with an explicit accuracy floor keeps accuracy and takes the full reduction."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260717044D",
+      "title": "Where Does Agent Reliability Come From? A Cross-Benchmark Decomposition of Verification Loops, Specialist Models, and Scaffolding in a Production Enterprise Agent",
+      "firstAuthor": "Dastidar, Arunabh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.17044",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260717044D",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "First end-to-end instrumentation of a production verification loop, yielding an empirical verifier confusion matrix: across 397 loop-triggering SpreadsheetBench tasks the specialist verifier flagged 8 artifacts (all true errors, zero false alarms), repaired 6, and missed 32 - catch rate c~0.20, fix rate r~0.75, false-alarm rate f~0 - grounding a compounding-reliability model (p' = p(1-fb) + (1-p)cr) in measured parameters. The loop's own telemetry then prices the next investment: raising the catch rate is worth up to +8 pp, raising the fix rate at most +0.5 pp, and the 32 missed errors localize the gap to the neurosymbolic leaderboard leader in the LLM-mediated comparison stage.",
+          "why": "The branch asks for causal attribution with named systems and real numbers; this delivers a measured operating point for a deployed loop plus a telemetry-driven investment rule, turning the verify-or-scale debate into instrument reading."
+        }
+      ]
     }
   ],
   "sections": [

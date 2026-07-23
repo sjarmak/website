@@ -1708,6 +1708,37 @@
           "why": "A direct instance of recording cost facts before optimizing: the compression literature's implicit assumption of a perfect cache hit rate misstates the real cost landscape, and on tau-bench retail the standard query-aware method costs 40.1% more than doing nothing at identical task reward, so the measured cost model, not the compression ratio, decides the routing choice."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260717044D",
+      "title": "Where Does Agent Reliability Come From? A Cross-Benchmark Decomposition of Verification Loops, Specialist Models, and Scaffolding in a Production Enterprise Agent",
+      "firstAuthor": "Dastidar, Arunabh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.17044",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260717044D",
+      "branches": [
+        "reliability",
+        "eval",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Decomposes a production enterprise agent's uplift over its bare base model (+11.0 pp on SpreadsheetBench Verified, +7-10 pp on BullshitBench v2, ~+15 pp on GAIA validation) by architectural layer: scaffolding and prompting account for +9.5 of the +11.0 pp on SpreadsheetBench, while the verification loop's isolated contribution is +1.5 pp (6 rescued tasks) - small but concentrated at the top of the score distribution, where every competitive system has already exhausted scaffolding gains. A specialist-swap ablation shows the loop's value rides on observer independence: moving observe/compare from the small trained verifier back onto the frontier model that generated the artifact cuts SpreadsheetBench rescues from 6 tasks to 2 and drops BullshitBench correct rejection 4-5 pp.",
+          "why": "Answers the branch's question with measurement instead of architecture faith: most of a verification-loop system's reliability comes from unglamorous structure (prompting, planner-executor splits, routing), so teams should invest there first - but the tail of a reliability SLA still needs the checkpoint, staffed by an observer that did not write the artifact."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "A vendor evaluation that does the honesty work: it retires the company's own earlier 77.6% GAIA figure after re-grading all 803 stored trajectories with the official scorer (the old number mixed best-of-k and pass@1 across tiers; clean pass@1 is 75.2%), runs a scripted retrieval-contamination audit that brackets the GAIA result at [70.9%, 75.2%], n-gram-scans 30,104 production messages against 365 evaluation items to audit specialist training contamination (4 matches, all from internal test accounts excluded from training), reports Wilson CIs throughout, and states which cross-system comparisons are statistically unresolvable, with measured run-to-run sensitivity of ~3 pp.",
+          "why": "A working template for the branch's honest-baseline demand: self-correcting a published headline, shipping contamination-audit scripts, and declaring resolvability limits are what separate evaluation-as-risk-reduction from leaderboard marketing - especially inside a vendor's evaluation of its own system."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Per-step verification is affordable because loop stages run on 0.5-4B post-trained specialists (Qwen3 bases distilled from a frontier teacher, 4-bit quantized) serving at roughly 0.02-0.1x frontier cost; on GAIA, per-step routing by the ~0.5B Route-XS specialist is credited ~4 pp of accuracy at net-negative cost, because cheap steps route to small models and fund extended reasoning on hard ones.",
+          "why": "Concrete cost facts for the branch's cascade thesis: small specialists observing every step while the frontier model only executes and fixes is what turns 'verify everything' from a luxury into the economical default."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2830,6 +2830,25 @@
           "why": "This is a retrieval-aware, failure-attribution scoring design of exactly the kind this branch catalogs: the Oracle upper bound plus the hit/wrong/miss outcome cells separate retrieval error from reasoning error on the same items, showing that an answer-level accuracy alone would misplace the bottleneck, which here is reasoning rather than evidence selection."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260717937X",
+      "title": "How Agent Skills Fail under Long Contexts: A White-Box Study in Code Auditing",
+      "firstAuthor": "Xue, Yue",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.17937",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260717937X",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Loading a skill does not keep it active: on a production-derived code-audit workflow with 24 frozen artifact checks, Codex with gpt-5.4-mini passes 8/10 runs in an 11K-character clean context but only 3/10 in both a 299K-character relevant and an equal-length irrelevant context, while requirement coverage stays above 92% - the failures are sparse single-obligation omissions (a mandatory empty array, an exceeded cardinality, a protected field) that invalidate an otherwise complete artifact, and 38 of 44 failed historical runs still closed with an explicit success message. A four-class taxonomy locates the first visible failure: lost requirements, editing drift, failed checking, or non-agent failure.",
+          "why": "The branch treats skills as durable procedural memory; this study measures the gap between possessing a procedure and keeping every clause of it active under context load, and finds the failure mode is not wholesale forgetting but silent dropping of individual requirements from the working set - a reliability property any skill-library design has to engineer around."
+        }
+      ]
     }
   ],
   "sections": [

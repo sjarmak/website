@@ -1470,6 +1470,25 @@
           "why": "Directly serves this branch's separation of retrieval-correctness from answer-correctness: RECON measures both on the same questions and adds a production reality check, since every long-context, RAG, and agentic-memory system tested lands far below an already-low retrieval-perfect ceiling, so recall-style scoring would report the wrong bottleneck."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260717937X",
+      "title": "How Agent Skills Fail under Long Contexts: A White-Box Study in Code Auditing",
+      "firstAuthor": "Xue, Yue",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.17937",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260717937X",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "A controlled working-memory experiment: same task, same 24 checks, only the surrounding context varies. 299K characters cut the observed pass rate by 50 points whether the added material is same-workflow-relevant or irrelevant archival text (3/10 each, Fisher p=1.0 between them; clean-vs-long p=0.0698, trend-level). A detailed external checklist restating all 24 obligations passes 10/10 runs versus 5/10 for a generic 'validate every constraint' self-check (p=0.0325) - the generic validator inherits the same omission as the edit it checks. A scaffold probe implicates working-set size rather than tools: for gpt-5.5, a small hand-selected evidence bundle passes 3/3 without tools while the full 299K direct prompt passes 1/3.",
+          "why": "Direct evidence for the branch's core claims: context load itself, not semantic interference, drives the degradation (relevant and irrelevant were indistinguishable), and the mitigation that works is an external requirement source independent of the agent's current summary - selective construction of the working set beats a bigger window."
+        }
+      ]
     }
   ],
   "sections": [
