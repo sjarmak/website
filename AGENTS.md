@@ -47,6 +47,16 @@ cp -rf source dest          # NOT: cp -r source dest
 - `apt-get` - use `-y` flag
 - `brew` - use `HOMEBREW_NO_AUTO_UPDATE=1` env var
 
+## Radar (link watchlist)
+
+"Add this link to our radar" / "add to the radar" means append an entry to the
+`links` content collection, which powers the `/radar` page.
+
+- **File:** `src/content/links/inbox.yaml` — a single YAML array; append one block, no `id` needed (it's derived from `title`).
+- **Fields:** `title`, `url`, `category` (freeform string used verbatim as the section heading — reuse an existing one to group under it), `kind` (`tool|repo|article|paper|video|thread|other`), `note` (why it's worth a follow-up), `tags` (array), `added` (date), optional `featured`.
+- **Schema:** `src/content.config.ts` (`links` collection); page `src/pages/radar.astro`; grouping helper `getLinksByCategory()` in `src/lib/collections.ts`.
+- Reuse the exact spelling of an existing `category` to file under it; a new string starts a new section. Then commit + push like any content change (CI check → Render deploy).
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
 

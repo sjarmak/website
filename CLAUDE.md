@@ -123,4 +123,12 @@ _A mechanically-derived high-altitude map of this rig's subsystems (from the Lik
 
 ## Conventions & Patterns
 
-_Add your project-specific conventions here_
+### Radar (link watchlist)
+
+"Add this link to our radar" / "add to the radar" means append an entry to the
+`links` content collection, which powers the `/radar` page.
+
+- **File:** `src/content/links/inbox.yaml` — a single YAML array; append one block, no `id` needed (it's derived from `title`).
+- **Fields:** `title`, `url`, `category` (freeform string used verbatim as the section heading — reuse an existing one to group under it), `kind` (`tool|repo|article|paper|video|thread|other`), `note` (why it's worth a follow-up), `tags` (array), `added` (date), optional `featured`.
+- **Schema:** defined in `src/content.config.ts` (`links` collection); page at `src/pages/radar.astro`; grouping helper `getLinksByCategory()` in `src/lib/collections.ts`.
+- Reuse the exact spelling of an existing `category` to file under it; a new string starts a new section. Then commit + push like any content change (CI check → Render deploy).
