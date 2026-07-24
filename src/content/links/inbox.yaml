@@ -5,10 +5,15 @@
 
 - title: SqueakyClean
   url: https://squeakyclean.ai/
-  category: AI writing
+  category: Agentic coding
   kind: tool
-  note: Strips the AI-slop tells out of a draft. Worth comparing against my own de-slop pass.
-  tags: [ai-slop, writing, editing]
+  note: >-
+    Opinionated, semi-deterministic codegen: one declarative ProblemSpec in, a
+    buildable Clean-Architecture app out. Uses small, pattern-specialized agents
+    (a 34-pattern library) instead of one big-context model, and runs in reverse
+    to refactor brownfield code onto the dependency rule. Interesting for the
+    small-model, architecture-first bet.
+  tags: [agentic-coding, codegen, clean-architecture]
   added: 2026-07-24
 
 - title: no-ai-slop
