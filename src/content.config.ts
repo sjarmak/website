@@ -1,5 +1,6 @@
 import { defineCollection, reference, z } from "astro:content";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
+import { parse as parseYaml } from "yaml";
 
 // ---- shared sub-schemas ----
 const link = z.object({
@@ -13,6 +14,27 @@ const dateRange = z.object({
 });
 
 const base = (dir: string) => glob({ pattern: "**/*.{md,mdx}", base: `./src/content/${dir}` });
+
+// Derive a stable, unique id per link so entries never need a hand-written `id`.
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60) || "link";
+
+// Parser for the single-file links collection: YAML array in, id-tagged records out.
+const linksParser = (text: string) => {
+  const items = parseYaml(text);
+  if (!Array.isArray(items)) return [];
+  const seen = new Map<string, number>();
+  return items.map((item) => {
+    const b = slugify(item?.title ?? item?.url ?? "link");
+    const n = seen.get(b) ?? 0;
+    seen.set(b, n + 1);
+    return { id: n === 0 ? b : `${b}-${n}`, ...item };
+  });
+};
 
 // ---- cv: timeline entries (roles, education, affiliations, awards, service) ----
 const cv = defineCollection({
@@ -284,6 +306,24 @@ const digest = defineCollection({
   }),
 });
 
+// ---- links / radar (categorized watchlist of resources to follow up on) ----
+const links = defineCollection({
+  loader: file("src/content/links/inbox.yaml", { parser: linksParser }),
+  schema: z.object({
+    title: z.string(),
+    url: z.string().url(),
+    // Freeform so a new category needs no schema change; used verbatim as the
+    // section heading, so write it human-readable (e.g. "AI writing").
+    category: z.string(),
+    kind: z.enum(["tool", "repo", "article", "paper", "video", "thread", "other"]).default("other"),
+    // Why it's worth a follow-up.
+    note: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    added: z.coerce.date(),
+    featured: z.boolean().default(false),
+  }),
+});
+
 // ---- transcripts (audio transcripts, joined to any audio entry by audioUrl) ----
 const transcripts = defineCollection({
   // raw transcripts live at repo root /transcripts (pipeline output); INDEX.md has no
@@ -311,5 +351,6 @@ export const collections = {
   art,
   learning,
   digest,
+  links,
   transcripts,
 };

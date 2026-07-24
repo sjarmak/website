@@ -63,3 +63,23 @@ export async function getPublications() {
   const pubs = await getCollection("publications");
   return pubs.sort((a, b) => b.data.year - a.data.year);
 }
+
+/**
+ * Radar links grouped by category. Entries sort newest-first within a category;
+ * categories sort by their freshest entry so recently-fed categories float up.
+ */
+export async function getLinksByCategory() {
+  const links = await getCollection("links");
+  const byCategory = new Map<string, CollectionEntry<"links">[]>();
+  for (const link of links) {
+    const group = byCategory.get(link.data.category) ?? [];
+    group.push(link);
+    byCategory.set(link.data.category, group);
+  }
+  return [...byCategory.entries()]
+    .map(([category, entries]) => ({
+      category,
+      entries: entries.sort((a, b) => +b.data.added - +a.data.added),
+    }))
+    .sort((a, b) => +b.entries[0].data.added - +a.entries[0].data.added);
+}

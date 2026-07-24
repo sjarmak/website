@@ -1,0 +1,36 @@
+# Radar — resources worth a follow-up, grouped by `category`.
+# Append a new block, save, done. No `id` needed (derived from the title).
+# Fields: title, url, category (verbatim heading), kind, note?, tags?, added, featured?
+#   kind: tool | repo | article | paper | video | thread | other
+
+- title: SqueakyClean
+  url: https://squeakyclean.ai/
+  category: AI writing
+  kind: tool
+  note: Strips the AI-slop tells out of a draft. Worth comparing against my own de-slop pass.
+  tags: [ai-slop, writing, editing]
+  added: 2026-07-24
+
+- title: no-ai-slop
+  url: https://github.com/petergyang/no-ai-slop
+  category: AI writing
+  kind: repo
+  note: Peter Yang's collected patterns for keeping AI writing from reading like AI. Mine against for my own rules.
+  tags: [ai-slop, writing, prompts]
+  added: 2026-07-24
+
+- title: tufte-vdqi-plugin
+  url: https://github.com/gnurio/tufte-vdqi-plugin
+  category: Data visualization
+  kind: repo
+  note: Tufte / Visual Display of Quantitative Information principles as a plugin. Check for the dataviz skill.
+  tags: [dataviz, tufte, design]
+  added: 2026-07-24
+
+- title: crap4java
+  url: https://github.com/unclebob/crap4java
+  category: Code quality
+  kind: repo
+  note: Uncle Bob's CRAP metric (Change Risk Anti-Patterns) for Java, complexity weighted by test coverage.
+  tags: [metrics, testing, code-quality]
+  added: 2026-07-24

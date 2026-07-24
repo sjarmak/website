@@ -1,0 +1,71 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import EmptyState from "@/components/primitives/EmptyState.astro";
+import { getLinksByCategory } from "@/lib/collections";
+import { fullDate } from "@/lib/dates";
+
+const sections = await getLinksByCategory();
+
+const kindLabel: Record<string, string> = {
+  tool: "Tool",
+  repo: "Repo",
+  article: "Article",
+  paper: "Paper",
+  video: "Video",
+  thread: "Thread",
+  other: "Link",
+};
+
+const hostOf = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+};
+---
+
+<PageLayout
+  title="Radar"
+  kicker="Watchlist"
+  intro="Tools, repos, and reading I've flagged to follow up on, grouped by what they're about. An open notebook, not a verdict."
+  description="A categorized watchlist of resources Stephanie Jarmak is tracking and wants to follow up on."
+>
+  {
+    sections.length === 0 ? (
+      <EmptyState title="Nothing on the radar yet" note="Interesting finds will collect here as I flag them." />
+    ) : (
+      <div class="stack stack-l">
+        {sections.map((section) => (
+          <section>
+            <h2 class="section__heading">{section.category}</h2>
+            <ul role="list" class="stack">
+              {section.entries.map((l) => (
+                <li class="row">
+                  <a class="row__title" href={l.data.url} rel="noopener" target="_blank">
+                    {l.data.title}
+                  </a>
+                  {l.data.note && <p class="muted row__desc">{l.data.note}</p>}
+                  <span class="row__meta muted">
+                    {kindLabel[l.data.kind]}
+                    {hostOf(l.data.url) && ` · ${hostOf(l.data.url)}`}
+                    {` · ${fullDate(l.data.added)}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    )
+  }
+</PageLayout>
+
+<style>
+  .section__heading {
+    font-size: var(--step-1);
+    padding-block-end: var(--space-s);
+    border-bottom: var(--border-hairline);
+    margin-block-end: var(--space-s);
+  }
+</style>

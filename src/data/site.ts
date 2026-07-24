@@ -17,6 +17,7 @@ export type NavItem = { label: string; href: string };
 export const nav: readonly NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Library", href: "/library" },
+  { label: "Radar", href: "/radar" },
   { label: "Digest", href: "/digest" },
   { label: "Writing", href: "/writing" },
   { label: "Talks", href: "/talks" },
