@@ -55,7 +55,7 @@
             text-transform: uppercase; color: var(--dim); margin: 0;
             display: flex; align-items: baseline; gap: var(--s3); }
   .kicker .ix { color: var(--vu); font-weight: 700; }
-  .kicker .clock { margin-left: auto; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+  .kicker .clock { display: none; }
 
   h1, h2 { font-family: var(--sans); font-weight: 750; color: var(--text-strong); margin: 0;
            letter-spacing: -0.022em; line-height: 1.06; text-wrap: balance; }
@@ -348,7 +348,7 @@
   <section class="slide">
     <div class="body">
       <p class="kicker"><span class="ix">04</span> the fit <span class="clock">4:00 to 5:30</span></p>
-      <h2>Why Temporal fits this seam</h2>
+      <h2>Why Temporal fits here</h2>
       <div class="quad">
         <div><h3>Durable progress</h3>
           <p>Each completed chunk Activity is an event in server-held history. Progress
@@ -636,9 +636,9 @@ cd presentation/code-intelligence-digest-audio/demo
 <span class="c"># evidence on disk, per run</span>
 out/run-{1,2,3}/run-artifacts/{<b>ledger.jsonl</b>, <b>history.json</b>, <b>verify-report.txt</b>}
 out/run-{1,2,3}/<b>final.wav</b>   <span class="g"># same sha256 all three runs</span></pre>
-      <p class="lead">The next decision is operational: <b>choose the production provider's policy for
-        ambiguous requests</b>, and make it explicit in the adapter contract before the first durable
-        render incurs real cost.</p>
+      <p class="lead">The render used to belong to an HTTP request. Now it belongs to a
+        <b>workflow</b>. Kill the process, kill the worker, and the completed chunks survive. That is
+        the one failure durable execution exists to prevent.</p>
     </div>
   </section>
 
@@ -677,20 +677,6 @@ out/run-{1,2,3}/<b>final.wav</b>   <span class="g"># same sha256 all three runs<
     window.addEventListener('click', function (e) {
       if (e.target.closest('a, button, video')) return;
       show(e.clientX / window.innerWidth < 0.32 ? i - 1 : i + 1);
-    });
-    /* Surface video load failures instead of a dead play button: the demo
-       recordings are separate files next to the deck, so a copied or
-       partially-synced deck.html fails silently otherwise. */
-    document.querySelectorAll('figure.demo video').forEach(function (v) {
-      v.addEventListener('error', function () {
-        var fig = v.closest('figure');
-        var note = document.createElement('div');
-        note.style.cssText = 'padding:1rem;border:1px dashed var(--line);font-size:.8rem;line-height:1.5';
-        note.textContent = 'Video file not found at ' + new URL(v.getAttribute('src'), location.href).href +
-          ' — this deck references recordings in the sibling demo/out/ directory. ' +
-          'Open deck.html from the full presentation checkout, or use deck-standalone.html (videos embedded).';
-        v.replaceWith(note);
-      });
     });
     var h = parseInt((location.hash || '').slice(1), 10);
     show(isFinite(h) && h > 0 ? h - 1 : 0);
