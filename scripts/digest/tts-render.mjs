@@ -3,7 +3,7 @@
 //
 // Usage:
 //   node scripts/digest/tts-render.mjs --in transcript.txt --out daily-2026-06-10 \
-//     [--voice am_onyx] [--speed 0.85]
+//     [--voice af_heart] [--speed 0.85]
 //
 // Prints a JSON line to stdout: { "audioUrl": "/media/digests/<out>.mp3", "durationSec": <n> }
 // so the publish step / generation agent can consume it directly.
@@ -22,7 +22,7 @@ import path from "node:path";
 const MAX_CHARS = 4000; // per-chunk cap keeps Kokoro inputs and memory bounded
 const OUT_DIR = "public/media/digests";
 const RENDERER = path.join(path.dirname(new URL(import.meta.url).pathname), "kokoro-render.py");
-const WORDS_PER_MIN = 150; // fallback duration estimate when ffprobe is absent (~am_onyx at speed 0.85)
+const WORDS_PER_MIN = 150; // fallback duration estimate when ffprobe is absent (~af_heart at speed 0.85)
 
 /** Strip markdown so the TTS reads clean spoken prose. Pure. */
 export function stripForSpeech(md) {
@@ -162,7 +162,7 @@ async function main() {
   if (!args.in || !args.out) {
     throw new Error("usage: tts-render.mjs --in <transcript.txt> --out <basename> [--voice v] [--speed s]");
   }
-  const voice = args.voice ?? "am_onyx";
+  const voice = args.voice ?? "af_heart";
   const speed = Number.parseFloat(args.speed ?? "0.85");
   if (!Number.isFinite(speed) || speed <= 0) throw new Error(`invalid --speed: ${args.speed}`);
   const base = path.basename(args.out, ".mp3");

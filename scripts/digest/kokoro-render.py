@@ -3,7 +3,7 @@
 
 Invoked by tts-render.mjs (one process per render so the model loads once):
 
-    <kokoro-venv>/bin/python kokoro-render.py --chunks-dir <dir> [--voice am_onyx] [--speed 0.85]
+    <kokoro-venv>/bin/python kokoro-render.py --chunks-dir <dir> [--voice af_heart] [--speed 0.85]
 
 Reads every chunk-NNN.txt in --chunks-dir and writes a matching part-NNN.wav
 (24 kHz mono) beside it. Fully offline once the model weights are in the
@@ -19,7 +19,7 @@ from pathlib import Path
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--chunks-dir", required=True)
-    ap.add_argument("--voice", default="am_onyx")
+    ap.add_argument("--voice", default="af_heart")
     ap.add_argument("--speed", type=float, default=0.85)
     args = ap.parse_args()
 

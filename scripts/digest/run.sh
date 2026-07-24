@@ -50,7 +50,7 @@ cd "$WEBSITE_DIR"
 # interactive hard-fail. Every run.sh invocation is the headless path.
 export DIGEST_CRON=1
 
-# TTS is fully local (Kokoro, voice am_onyx) — fail early if the venv is missing
+# TTS is fully local (Kokoro, voice af_heart) — fail early if the venv is missing
 # rather than after the agent has already written the issue.
 KOKORO_PYTHON="${KOKORO_VENV:-$HOME/.venvs/kokoro-tts}/bin/python"
 [ -x "$KOKORO_PYTHON" ] || { echo "Kokoro venv not found at ${KOKORO_VENV:-$HOME/.venvs/kokoro-tts} — run scripts/digest/setup-kokoro.sh" >&2; exit 2; }
