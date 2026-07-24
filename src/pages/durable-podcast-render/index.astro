@@ -1,0 +1,116 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const talkSrc = "/media/durable-podcast-render-talk.mp4";
+const talkPoster = "/media/durable-podcast-render-talk-poster.jpg";
+const demoSrc = "/media/durable-podcast-render-demo.mp4";
+const demoPoster = "/media/durable-podcast-render-demo-poster.jpg";
+const deckUrl = "/durable-podcast-render/deck.html";
+---
+
+<PageLayout
+  title="A podcast render that survives its worker"
+  kicker="Durable execution"
+  description="A durable-execution walkthrough: moving podcast-render progress from the request to the chunk with Temporal."
+  noindex={true}
+>
+  <div class="dpr stack stack-l">
+    <div class="dpr__premise stack measure">
+      <p>
+        The system is a podcast renderer: it takes digest text, sends it to a
+        text-to-speech provider in chunks, and stitches the pieces into one
+        audio file.
+      </p>
+      <p>
+        In the old shape, one HTTP request owns the whole job. It keeps the
+        finished chunks in memory and records nothing about partial progress.
+        When the process dies at chunk six of eight, those six paid-for chunks
+        vanish. Recovery restarts at chunk one and pays the provider again for
+        work already done.
+      </p>
+      <p>
+        Temporal moves the unit of durable progress from the request to the
+        chunk. Each finished chunk is recorded in workflow history, so you can
+        kill the process, kill the worker, and a replacement still replays what
+        completed and continues from chunk seven. A retryable provider error
+        retries only the chunk that failed.
+      </p>
+    </div>
+
+    <figure class="dpr__media">
+      <video
+        class="dpr__video"
+        controls
+        preload="metadata"
+        poster={talkPoster}
+      >
+        <source src={talkSrc} type="video/mp4" />
+      </video>
+      <figcaption class="dpr__caption muted">The full talk, ~20 min</figcaption>
+    </figure>
+
+    <figure class="dpr__media">
+      <video
+        class="dpr__video"
+        controls
+        preload="metadata"
+        poster={demoPoster}
+      >
+        <source src={demoSrc} type="video/mp4" />
+      </video>
+      <figcaption class="dpr__caption muted">
+        The demo, ~8 min: two process kills, one injected failure, eight chunks,
+        one file
+      </figcaption>
+    </figure>
+
+    <p class="cluster" style="--cluster-gap: var(--space-m)">
+      <a class="dpr__cta" href={deckUrl} target="_blank" rel="noopener">
+        Open the slides ↗
+      </a>
+    </p>
+
+    <p class="secondary measure">
+      Reproduction: the live sequence runs against a local Temporal server,
+      PostgreSQL, and object storage with a deterministic TTS adapter, so it
+      makes no provider calls and its retry counts are assertable.
+    </p>
+  </div>
+</PageLayout>
+
+<style>
+  .dpr__media {
+    margin: 0;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .dpr__video {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    background: var(--color-surface);
+    display: block;
+  }
+  .dpr__caption {
+    font-size: var(--step--1);
+  }
+  .dpr__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs) var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+  }
+  .dpr__cta:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+</style>

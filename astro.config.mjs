@@ -7,7 +7,14 @@ import sitemap from "@astrojs/sitemap";
 // sjarmak.ai is the launch/canonical domain; sjarmak.com 301-redirects here (deferred).
 export default defineConfig({
   site: "https://sjarmak.ai",
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      // Keep the unlisted durable-podcast-render page and its deck out of the
+      // sitemap; it is shareable by direct link only.
+      filter: (page) => !page.includes("/durable-podcast-render"),
+    }),
+  ],
   redirects: {
     "/prototypes/concepts": "/concepts",
   },
