@@ -443,6 +443,25 @@
           "why": "The agentic search loop is exactly where a document's value shifts from what it says about the current question to what it unlocks for the next query; a bridge document earns its keep by handing the agent a discriminative entity (carried into the next query 4.02x more often than non-discriminative ones) that redirects the search, so optimizing static relevance does not optimize the loop."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260720498Z",
+      "title": "AISE-Bench: A Full-Cycle Curated Benchmark for Information Seeking on Academic Knowledge Graphs",
+      "firstAuthor": "Zhang, Fanjin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.20498",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260720498Z",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "1,133 annotated QA pairs built from real AMiner user queries over an academic knowledge graph, each carrying a query taxonomy, a full multi-step API trajectory with validated parameters, and an answer with embedded reference links, so planning and execution are scored as first-class objects rather than inferred from the answer. The API library covers entity search, entity detail and entity relationship queries across papers, authors, venues and organizations. Across 14 methods - 6 LLMs, 4 API-using agent frameworks, 2 coding agents, 2 commercial deep-research systems - the strongest, PLAY2PROMPT with Gemini-3-Pro, reaches only 61.04% correctness and 60.9% completeness under LLM judges. GPT-5.2 records the highest Planning Graph Edit Distance and the lowest Execution Success Rate because it plans overly long API paths.",
+          "why": "The loop only becomes debuggable when the retrieval steps are annotated, and that is what separates this from the paper-centric benchmarks it compares against (PeerQA, ScholarQABench) and from graph benchmarks whose trajectories are synthesized by template or random walk. With planning and execution measured separately, the failure lands on the loop rather than the summarizer: a model can hold a defensible final answer while its API path is longer and less accurate than the annotated one. The residual gap at 61% correctness on real user queries marks how much of agentic search is still parameter filling and API disambiguation rather than reasoning over retrieved text."
+        }
+      ]
     }
   ],
   "sections": [

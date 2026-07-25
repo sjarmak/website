@@ -1739,6 +1739,50 @@
           "why": "Concrete cost facts for the branch's cascade thesis: small specialists observing every step while the frontier model only executes and fixes is what turns 'verify everything' from a luxury into the economical default."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260720491K",
+      "title": "DFAH-Bench: Benchmarking Observable Agent Instability in Financial Decision-Making",
+      "firstAuthor": "Khatchadourian, Raffi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.20491",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260720491K",
+      "branches": [
+        "eval",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Replaying 150 fixed cases across 10 models and 3 tool-using financial tasks (8,127 episodes, 1,338 case groups) separates Decision Agreement Rate from Trajectory Agreement Rate, and the two come apart: Claude Sonnet 4 agrees on compliance decisions 94.7% of the time but matches its own tool-call sequence only 76.7% of the time, an 18-point gap. Chance correction widens the picture - the three trajectory divergers fall from headline DAR of 0.86-0.95 to Fleiss' kappa of 0.53-0.56 once each model's own marginal label preferences are subtracted, and Claude Sonnet on DataOps reaches kappa = 0.054 at DAR = 0.947. Across the 10 model rows, modal-decision accuracy is not detectably correlated with DAR (rho = 0.115, permutation p = 0.763) or with the DAR-TAR gap (rho = -0.048, p = 0.919).",
+          "why": "An evaluation that presents each input once and records a single answer cannot see this axis at all; the paper's phrase is that within-model consistency is invisible to between-model benchmarks by design. The instruction it hands benchmark users is concrete: report conventional accuracy and behavioral-stability metrics side by side, because in this corpus neither substitutes for the other. It also shows what a stability number alone would hide in the other direction - Qwen 3.5 scores DAR = 1.000 while averaging 48% accuracy, consistently wrong."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "All three divergence channels are chosen so they require no access to hidden reasoning text: tool-call sequence, evidence-contact set scored as mean pairwise Jaccard distance over consulted tool outputs or output hashes, and decision concentration measured by normalized entropy across cases within a task. On DataOps exception handling 54.3% of evidence contacts differ across runs despite unanimous decisions. Each run records the final decision, the tool-call sequence, tool output hashes and runtime metadata, and can be packaged as an audit bundle with a SHA-256 hash chain over episode records plus an Ed25519 certificate for third-party verification. Metrics are computed only on channels actually present, with a channel-availability matrix reported alongside results - Granite 3.3 and Mistral 7B emit decisions at 0.00 tool calls per run, leaving no trajectory or evidence channel to measure.",
+          "why": "It draws the line between a transcript and a trace: what makes the instability measurable is the structured execution record - sequences, output hashes, an explicit availability matrix - not the model's narration of itself. The paper holds that line on its own naming, calling the phenomenon trajectory divergence rather than reasoning divergence because rationale-text coverage in the corpus is 0%. The disclosed protocol deviation (the Anthropic runner omitted an explicit temperature, so Claude episodes ran at provider default) is handled the same way: recorded in the sampling metadata and reported rather than quietly re-collected."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260720759S",
+      "title": "IssueTrojanBench: Benchmarking AI Coding Agents Against Malicious Issue Requests",
+      "firstAuthor": "Singh, Ankur",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.20759",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260720759S",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Six seed issues from SymPy and requests fan out into 696 adversarial artifacts - four attack categories (installing a disguised PyPI package, planting a hidden executable validation hook that phones an attacker endpoint, poisoning .cursorrules or CLAUDE.md so the agent stops asking for terminal confirmation, and spawning 10,000 worker threads), crossed with six delivery vectors and per-vector perturbations - executed across 6 agent-model configurations for 4,176 runs. 66.5% penetrate both agent- and LLM-level guardrails. Delivery vector is the dominant factor: payloads in ordinary text artifacts (issue bodies, PDFs) succeed in 72.2% of runs against 16.7% when confined to image alt-text, while cross-lingual translation and visual obfuscation show negligible effect. Of 1,400 resisted runs, 82.9% are blocked by the model explicitly refusing and 17.1% by the model classifying the source as untrusted metadata. Spotlighting-style boundary markers failed to stop payload execution.",
+          "why": "It puts numbers on treating retrieved content as untrusted, and locates the control where operators usually assume it is not: resistance is almost entirely model-level, so a harness relying on its agent framework as the safety layer is relying on a layer that contributed close to nothing here. The alt-text gap points at the defense that did work - the agent judging a low-authority source as data rather than instruction - which is a provenance property of the ingestion path, not payload detection. The configuration-poisoning category is the sharpest case for anyone running an agent under a rules file: the attack's whole objective is to get the agent to rewrite its own confirmation policy, turning the guardrail into part of the attack surface."
+        }
+      ]
     }
   ],
   "sections": [
