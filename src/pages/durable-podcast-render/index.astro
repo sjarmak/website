@@ -5,6 +5,8 @@ const talkSrc = "/media/durable-podcast-render-talk.mp4?v=2";
 const talkPoster = "/media/durable-podcast-render-talk-poster.jpg";
 const demoSrc = "/media/durable-podcast-render-demo.mp4?v=2";
 const demoPoster = "/media/durable-podcast-render-demo-poster.jpg";
+const pipelineSrc = "/media/durable-render-pipeline-demo.mp4?v=1";
+const pipelinePoster = "/media/durable-render-pipeline-demo-poster.jpg";
 const deckUrl = "/durable-podcast-render/deck.html";
 ---
 
@@ -75,6 +77,39 @@ const deckUrl = "/durable-podcast-render/deck.html";
       PostgreSQL, and object storage with a deterministic TTS adapter, so it
       makes no provider calls and its retry counts are assertable.
     </p>
+
+    <hr class="dpr__rule" />
+
+    <div class="dpr__premise stack measure">
+      <h2 class="dpr__h2">The tool that builds this is durable too</h2>
+      <p>
+        The videos above are rendered by a pipeline of their own: text-to-speech
+        clips, audio mixing, slide assembly, subtitle burn. That pipeline is
+        long and fails the same way the podcast render did, so it runs as its
+        own Temporal workflow.
+      </p>
+      <p>
+        Here it survives a worker kill mid-render. The replacement resumes from
+        recorded history, the finished steps are not redone, one injected
+        failure retries a single step, and the final file is byte-identical to a
+        clean run.
+      </p>
+    </div>
+
+    <figure class="dpr__media">
+      <video
+        class="dpr__video"
+        controls
+        preload="metadata"
+        poster={pipelinePoster}
+      >
+        <source src={pipelineSrc} type="video/mp4" />
+      </video>
+      <figcaption class="dpr__caption muted">
+        The render pipeline on Temporal, ~5 min: kill the worker mid-render,
+        resume from history, retry one step, same bytes
+      </figcaption>
+    </figure>
   </div>
 </PageLayout>
 
@@ -96,6 +131,17 @@ const deckUrl = "/durable-podcast-render/deck.html";
   }
   .dpr__caption {
     font-size: var(--step--1);
+  }
+  .dpr__rule {
+    width: 100%;
+    border: 0;
+    border-top: var(--border-hairline);
+    margin: 0;
+  }
+  .dpr__h2 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    margin: 0;
   }
   .dpr__cta {
     display: inline-flex;
