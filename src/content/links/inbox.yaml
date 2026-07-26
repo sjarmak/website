@@ -39,3 +39,99 @@
   note: Uncle Bob's CRAP metric (Change Risk Anti-Patterns) for Java, complexity weighted by test coverage.
   tags: [metrics, testing, code-quality]
   added: 2026-07-24
+
+- title: whatbroke
+  url: https://github.com/arthi-arumugam-git/whatbroke
+  category: Agentic coding
+  kind: repo
+  note: >-
+    Offline behavior-diff CLI for AI agents. Compares traces across model,
+    prompt, or framework changes to surface dropped tool calls, argument drift,
+    output changes, and cost or latency regressions; also supports behavior
+    contracts and CI gates.
+  tags: [agents, evals, observability, regression-testing]
+  added: 2026-07-26
+
+- title: "Proof-or-Stop: Don't Trust the Agent, Trust the Evidence"
+  url: https://ui.adsabs.harvard.edu/abs/2026arXiv260714890H
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Evidence-gated lifecycle control for autonomous coding loops: states such as
+    tested, done, and ready-to-merge require fresh, mechanically verifiable
+    evidence bound to the current source state. The evaluation emphasizes
+    preventing false-DONE outcomes and rejecting tampered evidence bundles.
+  tags: [agents, verification, lifecycle, evidence]
+  added: 2026-07-26
+
+- title: Is Agentic Code Review Helpful?
+  url: https://arxiv.org/abs/2607.03316
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Empirical study of 31,073 CodeRabbit reviews and developer responses. Only
+    36.4% of suggestions were accepted, while 56.3% were rejected, commonly for
+    false positives, redundancy, scope errors, or misalignment with developer
+    intent.
+  tags: [agents, code-review, empirical-study]
+  added: 2026-07-26
+
+- title: Tencent WorkBuddy Bench
+  url: https://arxiv.org/abs/2607.20911
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Open, multi-domain coding-agent benchmark spanning code, web, office, and
+    security work. Tasks are reverse-engineered from real commits and business
+    scenarios, then rewritten to resist prompt recovery and contamination while
+    retaining reproducible environments, tests, and reference solutions.
+  tags: [agents, benchmarks, evals, contamination]
+  added: 2026-07-26
+
+- title: "M-RAG: Semantic Key-Value Indexing for Retrieval-Augmented Generation"
+  url: https://arxiv.org/abs/2603.26667
+  category: RAG
+  kind: paper
+  note: >-
+    Separates retrieval keys from generation evidence instead of using the same
+    chunks for both. Semantic key-value records and provenance pointers improve
+    coverage, context assembly, and retrieval latency, especially under tight
+    token budgets.
+  tags: [rag, retrieval, indexing, context]
+  added: 2026-07-26
+
+- title: Where Does Agent Reliability Come From?
+  url: https://ui.adsabs.harvard.edu/abs/2026arXiv260717044D
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Decomposes reliability gains in a production enterprise agent across
+    verification loops, specialist models, routing, and scaffolding. Most uplift
+    came from scaffolding and specialists; the verification step added less
+    overall but rescued difficult failures near the top of the score range.
+  tags: [agents, reliability, verification, scaffolding]
+  added: 2026-07-26
+
+- title: How we made six coding-agent CLIs observable without wrapping their processes
+  url: https://www.reddit.com/r/LLMDevs/comments/1v3dchv/how_we_made_six_codingagent_clis_observable/
+  category: Agentic coding
+  kind: thread
+  note: >-
+    Cate maps native hooks from Claude Code, Codex, Cursor, Grok, OpenCode, and
+    Pi into one lifecycle event stream for working, awaiting input or
+    permission, and finished states. The adapters deliberately avoid inferring
+    state when a CLI's signals are ambiguous.
+  tags: [agents, cli, observability, interoperability]
+  added: 2026-07-26
+
+- title: "Kimi K3's Code Security Results Look Competitive — Until You Look at Precision"
+  url: https://semgrep.dev/blog/2026/kimi-k3s-code-security-results-lack-precision
+  category: Code security
+  kind: article
+  note: >-
+    Semgrep's IDOR benchmark finds Kimi K3 competitive on aggregate F1 but
+    substantially weaker on precision and on the largest enterprise-style
+    repository. A useful case for evaluating false-positive triage cost and
+    representative repository scale, not headline scores alone.
+  tags: [code-security, benchmarks, kimi-k3, precision]
+  added: 2026-07-26
