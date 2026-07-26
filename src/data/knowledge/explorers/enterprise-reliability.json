@@ -1783,6 +1783,56 @@
           "why": "It puts numbers on treating retrieved content as untrusted, and locates the control where operators usually assume it is not: resistance is almost entirely model-level, so a harness relying on its agent framework as the safety layer is relying on a layer that contributed close to nothing here. The alt-text gap points at the defense that did work - the agent judging a low-authority source as data rather than instruction - which is a provenance property of the ingestion path, not payload detection. The configuration-poisoning category is the sharpest case for anyone running an agent under a rules file: the attack's whole objective is to get the agent to rewrite its own confirmation policy, turning the guardrail into part of the attack surface."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260714890H",
+      "title": "Proof-or-Stop: Don't Trust the Agent, Trust the Evidence -- Loop Engineering for Verifiable Evidence-Gated Lifecycle Control",
+      "firstAuthor": "Huang, Jek",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.14890",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260714890H",
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Treats every agent-emitted lifecycle claim (reviewed, tested, done, ready-to-merge) as inadmissible until fresh, tracked-source-state-bound evidence satisfies a gate. In a 9,240-cell powered ablation, the pre-registered contrast between the gated loop and a compute-budgeted naive loop cut visible-pass/hidden-fail amplification from 31/1,800 injected cells to 2/1,800 (+1.6pp not-amplified, 95% CI [0.8, 2.5]); a near-compute contrast (14/1,800 vs 2/1,800) shows the gain tracks enforcing the review signal as a hard gate, not just adding a reviewer.",
+          "why": "A measured entry in the false-DONE failure taxonomy this branch tracks: it names the exact mechanism (self-report vs. gate-admissible evidence) that turns a green pipeline into a false completeness claim, and gives real numbers for how much a lifecycle gate closes that gap versus a naive loop."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Evaluates the control layer itself through mechanism tests (10/10 loop scenarios, zero false-done), the powered ablation above, and an operated self-application corpus (565 stories, 1,007 review findings, 94.8% resolved, plus a 68-row high/critical cross-vendor exhibit) rather than narrative claims of correctness.",
+          "why": "Grounds evaluation in execution exactly as this branch asks: it does not trust the agent's own account of being done, it checks whether the evidence supporting that account is fresh, tamper-resistant (18 tamper classes rejected, zero false accepts), and bound to the tracked source state."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260713716W",
+      "title": "CAVA: Canonical Action Verification and Attestation for Runtime Governance of Agentic AI Systems",
+      "firstAuthor": "Wang, Zexun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.13716",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260713716W",
+      "branches": [
+        "observability",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Converts heterogeneous runtime records (local coding hooks, SDK tools, browser automation, MCP calls, CI/CD API requests, workflow engines) into a canonical, versioned, hashable, receipt-bearing action object, so an independent verifier can later reproduce what action was actually approved and executed.",
+          "why": "A direct instance of 'transcripts are not observability': raw runtime logs of the same action differ by runtime, so this branch's replayable-trace requirement needs exactly the stable, cross-runtime action identity CAVA formalizes."
+        },
+        {
+          "branch": "security",
+          "takeaway": "A 96-seed, 384-variant benchmark shows raw-text and first-token approval binding are defeated by wrappers (env, sudo, bash -c, aliases, SDK indirection), while canonical fingerprinting resists wrapper bypass and approval drift; ablating the canonical fingerprint is the single most damaging removal tested, collapsing the retained score to 0.00 since there is no longer a stable object for approval to bind to.",
+          "why": "Puts numbers on 'topology is an attack surface': it shows concretely how an equivalent rewrite of the same action can bypass a policy bound to raw text or a first token, and measures how much a canonical action fingerprint closes that gap."
+        }
+      ]
     }
   ],
   "sections": [

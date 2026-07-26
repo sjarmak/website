@@ -2144,6 +2144,44 @@
           "why": "The branch asks for causal attribution with named systems and real numbers; this delivers a measured operating point for a deployed loop plus a telemetry-driven investment rule, turning the verify-or-scale debate into instrument reading."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260714890H",
+      "title": "Proof-or-Stop: Don't Trust the Agent, Trust the Evidence -- Loop Engineering for Verifiable Evidence-Gated Lifecycle Control",
+      "firstAuthor": "Huang, Jek",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.14890",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260714890H",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "A named, model-agnostic verified-protocol system for the claim-admissibility problem: lifecycle transitions (reviewed, tested, done, ready-to-merge) advance only on fresh, tracked-source-state-bound, mechanically verifiable evidence, never on agent self-report. Measured in a 9,240-cell powered ablation (hidden-fail amplification cut from 31/1,800 to 2/1,800) and an operated self-application corpus (565 stories, 1,007 review findings, 94.8% resolved).",
+          "why": "This is exactly the 'verified protocols' strand of the 2026 reliability reckoning: a concrete system with real numbers for deciding which autonomous-agent claims a lifecycle may safely act on, rather than a general appeal to 'add more review'."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260713716W",
+      "title": "CAVA: Canonical Action Verification and Attestation for Runtime Governance of Agentic AI Systems",
+      "firstAuthor": "Wang, Zexun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.13716",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260713716W",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Positions itself below Proof-Carrying Agent Actions (PCAA) as the canonical, versioned, hashable action object that a deployer's route-review-prove governance loop operates on, spanning coding hooks, browser automation, payment triggers, and data exports. A 96-seed, 384-variant benchmark shows canonical fingerprinting resists wrapper bypass and approval drift where raw-text and first-token approval binding fail.",
+          "why": "Names exactly the runtime property this branch tracks for deployment survival: a stable, cross-runtime governance substrate for 'what action was actually approved,' with measured wrapper-bypass and tamper-detection numbers rather than a policy statement alone."
+        }
+      ]
     }
   ],
   "sections": [
