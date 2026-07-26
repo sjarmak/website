@@ -135,3 +135,16 @@
     representative repository scale, not headline scores alone.
   tags: [code-security, benchmarks, kimi-k3, precision]
   added: 2026-07-26
+
+- title: Jolli Memory
+  url: https://www.jolli.ai/memory
+  category: Agentic coding
+  kind: tool
+  note: >-
+    Local-first memory layer that captures the reasoning, alternatives, linked
+    files, and agent context behind each commit, then rolls it up by branch for
+    later recall through MCP. Designed to keep context portable across coding
+    agents, with optional cloud sync and workflows for living specs, reports,
+    and documentation.
+  tags: [agents, memory, context-engineering, mcp]
+  added: 2026-07-26
