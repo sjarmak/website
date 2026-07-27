@@ -1,29 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260706906S",
-      "arxiv": "2607.06906",
-      "title": "The Harness Effect: How Orchestration Design Sets the Token Economics of Enterprise Agentic AI",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "routing",
-            "observability"
-          ]
-        },
-        {
-          "explorerId": "multiagent-orchestration",
-          "branches": [
-            "production"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-12",
-      "lastAttempt": "2026-07-26",
-      "attempts": 13
-    },
-    {
       "bibcode": "2026arXiv260107978W",
       "arxiv": "2601.07978",
       "title": "Cost and Accuracy of Long-Term Memory in Distributed Multi-Agent Systems Based on Large Language Models",
@@ -42,9 +19,9 @@
         }
       ],
       "firstSeen": "2026-07-14",
-      "lastAttempt": "2026-07-26",
-      "attempts": 11,
-      "note": "SciX has the record but has_body is false — abstract only, no parsed body. Nothing to ground a synthesis in yet."
+      "lastAttempt": "2026-07-27",
+      "attempts": 12,
+      "note": "SciX has the record but has_body is false — abstract only, no parsed body (re-confirmed 2026-07-27). Nothing to ground a synthesis in yet. Hits the 14-day drop threshold on 2026-07-29."
     },
     {
       "bibcode": "2026arXiv260713591H",
@@ -67,9 +44,9 @@
         }
       ],
       "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-26",
-      "attempts": 10,
-      "note": "Flaky today: one read_paper call (section=introduction) briefly reported has_body:true with only 'full' as an available section, but every immediate retry (section=full, default section, get_paper, search_query) returned 'Paper not found'. Treated as still unavailable rather than trusting the single inconsistent response — retry next run to see if it stabilizes."
+      "lastAttempt": "2026-07-27",
+      "attempts": 11,
+      "note": "Last run's flaky has_body:true response did not recur; read_paper returned a clean 'Paper not found' on 2026-07-27. Still unindexed."
     },
     {
       "bibcode": "2026arXiv260622030S",
@@ -93,9 +70,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-26",
-      "attempts": 8,
-      "note": "SciX full text for bibcode 2026arXiv260622030S is still the earlier version titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (confirmed again 2026-07-26). Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-07-27",
+      "attempts": 9,
+      "note": "SciX full text for bibcode 2026arXiv260622030S is still the earlier v1 titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (confirmed again 2026-07-27). Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -112,8 +89,8 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-26",
-      "attempts": 8
+      "lastAttempt": "2026-07-27",
+      "attempts": 9
     },
     {
       "bibcode": "2026arXiv260715524L",
@@ -134,8 +111,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-26",
-      "attempts": 7
+      "lastAttempt": "2026-07-27",
+      "attempts": 8
     },
     {
       "bibcode": "2026arXiv260715388Y",
@@ -157,8 +134,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-26",
-      "attempts": 7
+      "lastAttempt": "2026-07-27",
+      "attempts": 8
     },
     {
       "bibcode": "2026arXiv260326667S",
@@ -173,8 +150,41 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-07-26",
-      "attempts": 3
+      "lastAttempt": "2026-07-27",
+      "attempts": 4
+    },
+    {
+      "bibcode": "2026arXiv260722368S",
+      "arxiv": "2607.22368",
+      "title": "Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-27",
+      "lastAttempt": "2026-07-27",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260722520T",
+      "arxiv": "2607.22520",
+      "title": "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "procedural-skills",
+            "eval-methodology"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-27",
+      "lastAttempt": "2026-07-27",
+      "attempts": 1
     }
   ]
 }
