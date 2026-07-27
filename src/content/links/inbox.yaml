@@ -148,3 +148,80 @@
     and documentation.
   tags: [agents, memory, context-engineering, mcp]
   added: 2026-07-26
+
+- title: Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of
+    Agentic AI
+  url: https://arxiv.org/abs/2607.22368
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Introduces HackDetect, a post-hoc audit that flags when a benchmark score
+    comes from an exposure (leaked solutions, evaluation artifacts, generator
+    structure) rather than the intended capability. Auditing 2,385 traces
+    across 15 agent benchmarks finds exposures or reward hacking in 67.0% of
+    Frontier Science traces and 66.7% of AutoLab tasks, with score inflation
+    (the "Mislead gap") from 0.45 to 1.00.
+  tags: [agents, benchmarks, evals, reward-hacking]
+  added: 2026-07-27
+
+- title: Wattage
+  url: https://github.com/faizannraza/wattage
+  category: Agentic coding
+  kind: repo
+  note: >-
+    Token-cost profiler for AI agents: ingests OpenTelemetry traces, prices
+    each call against vendored pricing snapshots, and runs eight waste
+    detectors (prompt-caching failures, redundant tool calls, verbosity, model
+    mismatch, and "nonconvergence" loops that thrash without progress) into a
+    0-100 Token Efficiency grade usable as a CI cost-regression gate. Reports
+    unmeasured values as unknown rather than guessing.
+  tags: [agents, cost, observability, ci]
+  added: 2026-07-27
+
+- title: "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents"
+  url: https://arxiv.org/abs/2607.22520
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Across nearly 6,000 runs on two office-automation benchmarks and three
+    harness stacks, the best-performing agent skills win mainly by regressing
+    less, not gaining more. Identifies three causes of regression: description
+    osmosis (a skill changes behavior just by being present in context),
+    grounding displacement, and verification displacement, and argues skills
+    should be scored on the gain/regression decomposition rather than
+    aggregate improvement.
+  tags: [agents, skills, evals, evaluation-methodology]
+  added: 2026-07-27
+
+- title: "Learning on the Job: Continual Learning from Deployment Feedback for
+    Frozen-Weights Agents"
+  url: https://arxiv.org/abs/2607.22157
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Pairs a frozen model with an external memory that distills each episode's
+    outcome verdicts and after-the-fact corrections into retrievable
+    natural-language rules. On the tau-bench banking domain, learning from
+    outcome verdicts alone lifts single-trial success to 1.6x baseline and
+    from corrections to 2.6x, solving 22 of 84 tasks the no-memory baseline
+    never solves; the rule store transfers between Mistral Large and Claude
+    Sonnet 5.
+  tags: [agents, continual-learning, memory, tau-bench]
+  added: 2026-07-27
+
+- title: Benchmarking Coding Agents on Databricks' Multi-Million Line Codebase
+  url: https://www.databricks.com/blog/benchmarking-coding-agents-databricks-multi-million-line-codebase
+  category: Agentic coding
+  kind: article
+  note: >-
+    Databricks built roughly 200 tasks from real merged PRs across its
+    multi-language, multi-million-line codebase (sealed git history, neutral
+    problem statements, pass/fail against the original test suite) and found
+    per-token pricing predicts almost nothing about real task cost. Harness
+    choice dominates: one harness sent roughly 3x less context per turn than
+    alternatives for comparable quality, and open models like GLM 5.2 now
+    compete on hard tasks at a fraction of Opus 4.8's per-task cost. Argues
+    for routing by task complexity and measuring cost per verified task
+    instead of $/1M tokens.
+  tags: [agents, benchmarks, cost, harness]
+  added: 2026-07-27
