@@ -1,29 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260107978W",
-      "arxiv": "2601.07978",
-      "title": "Cost and Accuracy of Long-Term Memory in Distributed Multi-Agent Systems Based on Large Language Models",
-      "targets": [
-        {
-          "explorerId": "agentic-memory",
-          "branches": [
-            "eval-methodology"
-          ]
-        },
-        {
-          "explorerId": "memory-design",
-          "branches": [
-            "evaluation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-14",
-      "lastAttempt": "2026-07-27",
-      "attempts": 12,
-      "note": "SciX has the record but has_body is false — abstract only, no parsed body (re-confirmed 2026-07-27). Nothing to ground a synthesis in yet. Hits the 14-day drop threshold on 2026-07-29."
-    },
-    {
       "bibcode": "2026arXiv260713591H",
       "arxiv": "2607.13591",
       "title": "Memory as a Controlled Process: Learned Adaptive Memory Management for LLM Agents",
@@ -44,9 +21,9 @@
         }
       ],
       "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-27",
-      "attempts": 11,
-      "note": "Last run's flaky has_body:true response did not recur; read_paper returned a clean 'Paper not found' on 2026-07-27. Still unindexed."
+      "lastAttempt": "2026-07-29",
+      "attempts": 12,
+      "note": "read_paper still returns 'Paper not found' on 2026-07-29. Drops out of the queue on 2026-07-30 if SciX has not ingested it by then."
     },
     {
       "bibcode": "2026arXiv260622030S",
@@ -70,9 +47,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-27",
-      "attempts": 9,
-      "note": "SciX full text for bibcode 2026arXiv260622030S is still the earlier v1 titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (confirmed again 2026-07-27). Defer until SciX re-ingests the matching version so the synthesis and security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-07-29",
+      "attempts": 10,
+      "note": "SciX has a body for bibcode 2026arXiv260622030S, but it is still the earlier v1 titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (re-confirmed 2026-07-29). Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -89,8 +66,8 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-27",
-      "attempts": 9
+      "lastAttempt": "2026-07-29",
+      "attempts": 10
     },
     {
       "bibcode": "2026arXiv260715524L",
@@ -111,8 +88,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-27",
-      "attempts": 8
+      "lastAttempt": "2026-07-29",
+      "attempts": 9
     },
     {
       "bibcode": "2026arXiv260715388Y",
@@ -134,8 +111,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-27",
-      "attempts": 8
+      "lastAttempt": "2026-07-29",
+      "attempts": 9
     },
     {
       "bibcode": "2026arXiv260326667S",
@@ -150,40 +127,58 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-07-27",
-      "attempts": 4
+      "lastAttempt": "2026-07-29",
+      "attempts": 5
     },
     {
-      "bibcode": "2026arXiv260722368S",
-      "arxiv": "2607.22368",
-      "title": "Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI",
+      "bibcode": "2026arXiv260725152P",
+      "arxiv": "2607.25152",
+      "title": "When Do Agent Loops Mistake Stagnation for Progress? Self-Evaluation Bias and Externally Grounded Verification in Long-Running Autonomous LLM Agent Loops",
       "targets": [
         {
           "explorerId": "enterprise-reliability",
           "branches": [
-            "eval"
+            "eval",
+            "reliability"
           ]
         }
       ],
-      "firstSeen": "2026-07-27",
-      "lastAttempt": "2026-07-27",
+      "firstSeen": "2026-07-29",
+      "lastAttempt": "2026-07-29",
       "attempts": 1
     },
     {
-      "bibcode": "2026arXiv260722520T",
-      "arxiv": "2607.22520",
-      "title": "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents",
+      "bibcode": "2026arXiv260724882Q",
+      "arxiv": "2607.24882",
+      "title": "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents",
       "targets": [
         {
-          "explorerId": "agentic-memory",
+          "explorerId": "code-retrieval-enterprise",
           "branches": [
-            "procedural-skills",
-            "eval-methodology"
+            "repo-scale",
+            "techniques",
+            "enterprise"
           ]
         }
       ],
-      "firstSeen": "2026-07-27",
-      "lastAttempt": "2026-07-27",
+      "firstSeen": "2026-07-29",
+      "lastAttempt": "2026-07-29",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260725765L",
+      "arxiv": "2607.25765",
+      "title": "WorkSurface-Bench: Benchmarking Enterprise Agents on Multi-Surface Knowledge Routing",
+      "targets": [
+        {
+          "explorerId": "agentic-information-retrieval",
+          "branches": [
+            "agentic-loops"
+          ]
+        }
+      ],
+      "firstSeen": "2026-07-29",
+      "lastAttempt": "2026-07-29",
       "attempts": 1
     }
   ]

@@ -2849,6 +2849,31 @@
           "why": "The branch treats skills as durable procedural memory; this study measures the gap between possessing a procedure and keeping every clause of it active under context load, and finds the failure mode is not wholesale forgetting but silent dropping of individual requirements from the working set - a reliability property any skill-library design has to engineer around."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260722520T",
+      "title": "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents",
+      "firstAuthor": "Tank, Darshan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.22520",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260722520T",
+      "branches": [
+        "procedural-skills",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Across 5,832 paired runs (486 tasks x 4 conditions x 3 model-harness stacks) on OfficeQA-Pro and SpreadsheetBench, no skill library was free: regression counts per condition range from 2 to 41 and no condition reaches zero. Summed over the eighteen conditions, 324 regression transitions offset 59% of 553 gross gains, leaving a net of 229. On Claude Code / sonnet-4.6 with OfficeQA-Pro the three libraries gain 10, 11 and 12 tasks but regress 2, 4 and 7, so ranking by gains and ranking by net effect give opposite orders - the winner wins by breaking less. Three mechanisms are named and coded from traces: skill-description osmosis (a skill changes behavior while its body is never invoked, 70 of 243 SpreadsheetBench regressions and 14 of 81 on OfficeQA-Pro), grounding displacement (72.8% of OfficeQA-Pro regressions), and verification displacement. Whether a body is engaged at all is a property of the harness, not the skill: Codex / gpt-5.4-mini reads a skill file on 99-100% of OfficeQA-Pro tasks and on 0-1% of SpreadsheetBench tasks.",
+          "why": "The branch treats skill libraries as durable procedural memory that should compound. This paper prices the other side of the ledger and shows the cost is not incidental: a description sitting in the system prompt influences every step whether or not the skill is retrieved, so selection, masking and retrieval-gating methods cannot see the largest single regression channel. It also relocates the design target - existing skills over-serve the method stage, while the residual failures concentrate in grounding and verification."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Because pass-rate difference is exactly (gains - regressions) / N, the aggregate already contains the net effect and hides only the paired decomposition; the contribution is that decomposition, not a new scalar. Net effect is tested with the exact two-sided McNemar test on discordant pairs, with Newcombe 95% intervals. Five of eighteen conditions reach nominal p < .05, but under Bonferroni correction for eighteen simultaneous comparisons (alpha/18 = 0.0028) only three survive, all confined to one stack and one benchmark; the other thirteen intervals already include zero. Grader artifacts are handled as a separate correction rather than folded into the effect: the cell-value engine cannot recalculate Excel structured references and so scores correct formulas as failures, penalizing agents that write formulas instead of literals, and 226 treatment task-conditions were re-graded with a full spreadsheet engine and reported alongside the raw scores.",
+          "why": "This branch is about scoring targets, failure attribution and statistical rigor rather than headline numbers. The paper is a worked example of all three: an aggregate improvement that is genuinely positive can still be dominated by breakage, an uncorrected sweep across eighteen cells manufactures significance that mostly evaporates under correction, and a grader that mis-scores a correct answer will otherwise be attributed to the treatment. Each mechanism claim is held to trajectory evidence rather than to the delta."
+        }
+      ]
     }
   ],
   "sections": [

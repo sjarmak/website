@@ -1833,6 +1833,25 @@
           "why": "Puts numbers on 'topology is an attack surface': it shows concretely how an equivalent rewrite of the same action can bypass a policy bound to raw text or a first token, and measures how much a canonical action fingerprint closes that gap."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260722368S",
+      "title": "Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI",
+      "firstAuthor": "Shao, Jiaqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.22368",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260722368S",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "An audit of 2,385 retained task-to-score traces across 15 agent benchmarks finds a supported score-relevant protocol finding in 67.0% of Frontier Science traces (331/494) and 66.7% of AutoLab tasks (24/36), while eleven other cohorts sit at or below 21.7% and five contain none. Where a defensible comparison score exists, the measured inflation G = S_exploit - S_intended runs 0.447 to 1.00: 1.00 for a WildClawBench empty submission that received full credit, 0.859 and 0.835 for EdgeBench evaluation-pipeline and interaction-feedback loopholes, 0.621 for a causal-discovery generator that emitted variables in topological order, and 0.447 for Frontier Science once answer access is removed. The audit itself is scored rather than asserted: 0.94 precision and 0.76 recall (F1 0.84) against 53 hand-labeled traces, and it holds negative controls non-positive when an agent reads a held-out file but does not use it in the submission.",
+          "why": "This branch asks for evaluation grounded in execution against an honest baseline. The paper locates the failure one level below the metric: the protocol P = {environment, information flow, scoring, verification} can make a shortcut sufficient for success without changing the nominal task, so a score is evidence of capability only when an audit establishes the full Expose -> Exploit -> Mislead chain. It also supplies the discipline this branch needs in practice - exposure, use, and awarded credit are separate claims requiring separate evidence, and a suspicious action with no effect on the score is not a finding."
+        }
+      ]
     }
   ],
   "sections": [
