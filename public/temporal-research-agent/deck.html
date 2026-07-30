@@ -5,36 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Temporal brings a research pipeline back to life</title>
   <style>
-    :root {
-      color-scheme: dark;
-      --ground: oklch(0.18 0.018 275);
-      --raised: oklch(0.22 0.020 275);
-      --text: oklch(0.95 0.012 265);
-      --body: oklch(0.82 0.025 265);
-      --muted: oklch(0.62 0.025 265);
-      --blue: oklch(0.72 0.14 255);
-      --green: oklch(0.78 0.15 135);
-      --red: oklch(0.70 0.18 20);
-      --amber: oklch(0.78 0.13 75);
-      --rule: oklch(0.34 0.025 275);
-      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    @font-face {
+      font-family: "Literata";
+      src: url("/fonts/literata-latin-wght-normal.woff2") format("woff2-variations");
+      font-weight: 200 900;
+      font-style: normal;
+      font-display: swap;
     }
 
-    * { box-sizing: border-box; }
+    @font-face {
+      font-family: "Hanken Grotesk";
+      src: url("/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
 
-    html, body {
+    :root {
+      color-scheme: light;
+      --paper-50: oklch(98.5% 0.008 85);
+      --paper-100: oklch(96.5% 0.012 83);
+      --paper-200: oklch(93.5% 0.014 82);
+      --paper-300: oklch(88% 0.016 80);
+      --ink-900: oklch(23% 0.02 60);
+      --ink-700: oklch(38% 0.018 62);
+      --ink-500: oklch(52% 0.015 64);
+      --ember-300: oklch(82% 0.1 60);
+      --ember-500: oklch(60% 0.16 52);
+      --ember-600: oklch(53% 0.165 48);
+      --sage-500: oklch(62% 0.05 150);
+      --night-900: oklch(20% 0.012 70);
+      --night-800: oklch(24% 0.013 72);
+      --night-700: oklch(31% 0.014 72);
+      --night-cream-100: oklch(92% 0.015 85);
+      --night-cream-300: oklch(77% 0.013 80);
+
+      --color-bg: var(--paper-100);
+      --color-bg-subtle: var(--paper-50);
+      --color-surface: var(--paper-200);
+      --color-border: var(--paper-300);
+      --color-text: var(--ink-900);
+      --color-text-secondary: var(--ink-700);
+      --color-text-muted: var(--ink-500);
+      --color-accent: var(--ember-500);
+      --color-accent-hover: var(--ember-600);
+      --font-display: "Literata", Georgia, "Times New Roman", serif;
+      --font-body: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+      --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+
+      --syntax-text: var(--night-cream-100);
+      --syntax-keyword: oklch(80% 0.11 315);
+      --syntax-function: oklch(80% 0.10 235);
+      --syntax-string: oklch(82% 0.10 145);
+      --syntax-number: oklch(84% 0.12 78);
+      --syntax-class: oklch(84% 0.09 195);
+      --syntax-decorator: oklch(78% 0.15 45);
+      --syntax-comment: oklch(64% 0.02 78);
+      --syntax-operator: oklch(76% 0.09 255);
+      --syntax-parameter: oklch(86% 0.07 95);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       width: 100%;
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: var(--ground);
-      color: var(--text);
-      font-family: var(--sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
     }
 
     body {
       position: relative;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    ol,
+    ul,
+    dl,
+    dd,
+    figure,
+    pre {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-display);
+      font-weight: 620;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
     }
 
     .slide {
@@ -42,21 +111,40 @@
       inset: 0;
       display: none;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      grid-template-rows: auto 1fr auto;
-      gap: clamp(18px, 2.2vw, 34px);
-      padding: clamp(34px, 5vw, 72px);
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      column-gap: clamp(18px, 2.1vw, 34px);
+      row-gap: clamp(18px, 2.4vh, 30px);
+      padding: clamp(32px, 4.4vw, 70px);
       opacity: 0;
+    }
+
+    .slide::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(to right, transparent calc(100% - 1px), color-mix(in oklch, var(--color-border) 42%, transparent) 1px);
+      background-size: calc(100% / 12) 100%;
+      content: "";
+      opacity: 0.22;
+      pointer-events: none;
     }
 
     .slide.active {
       display: grid;
       opacity: 1;
-      animation: reveal 240ms cubic-bezier(0.16, 1, 0.3, 1);
+      animation: reveal 220ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes reveal {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .marker {
@@ -64,17 +152,17 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      color: var(--muted);
-      font: 600 13px/1 var(--mono);
-      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font: 620 12px/1 var(--font-mono);
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
     .marker::after {
-      content: "";
       height: 1px;
       flex: 1;
-      background: var(--rule);
+      background: var(--color-border);
+      content: "";
     }
 
     .content {
@@ -82,240 +170,147 @@
       align-self: center;
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: clamp(18px, 2.2vw, 34px);
+      gap: clamp(18px, 2.1vw, 34px);
       min-height: 0;
     }
 
-    h1, h2, p, pre, ul, dl, dd { margin: 0; }
-
-    h1 {
-      grid-column: 1 / 12;
-      max-width: 16ch;
-      font-size: clamp(54px, 7.6vw, 104px);
-      line-height: 0.94;
-      letter-spacing: -0.055em;
-      font-weight: 760;
-    }
-
-    h2 {
-      grid-column: 1 / 11;
-      max-width: 20ch;
-      font-size: clamp(40px, 5.5vw, 74px);
-      line-height: 1;
-      letter-spacing: -0.045em;
-      font-weight: 730;
-    }
-
-    .lede {
-      grid-column: 2 / 8;
-      align-self: end;
-      max-width: 60ch;
-      color: var(--body);
-      font-size: clamp(20px, 2.1vw, 30px);
-      line-height: 1.38;
-    }
-
-    .eyebrow {
-      grid-column: 1 / 5;
-      color: var(--blue);
-      font: 650 clamp(14px, 1.4vw, 18px)/1.4 var(--mono);
-    }
-
-    .metric {
-      grid-column: 9 / 13;
-      align-self: end;
-      color: var(--red);
-      font: 700 clamp(30px, 4vw, 58px)/1 var(--mono);
-      letter-spacing: -0.04em;
-    }
-
-    .metric small {
-      display: block;
-      margin-top: 10px;
-      color: var(--muted);
-      font: 500 14px/1.4 var(--sans);
-      letter-spacing: 0;
-    }
-
-    .code {
-      grid-column: 1 / 8;
-      align-self: stretch;
-      padding: clamp(18px, 2.4vw, 32px);
-      overflow: hidden;
-      border: 1px solid var(--rule);
-      background: var(--raised);
-      color: var(--body);
-      font: 500 clamp(13px, 1.3vw, 18px)/1.55 var(--mono);
-      white-space: pre-wrap;
-    }
-
-    .annotation {
-      grid-column: 9 / 13;
-      align-self: center;
-      color: var(--body);
-      font-size: clamp(19px, 2vw, 28px);
-      line-height: 1.42;
-    }
-
-    .annotation strong,
-    .blue { color: var(--blue); }
-    .pass { color: var(--green); }
-    .fail { color: var(--red); }
-    .warn { color: var(--amber); }
-
-    .windows {
+    .footer {
       grid-column: 1 / 13;
-      align-self: center;
-      display: grid;
-      grid-template-columns: 2fr 1fr 2fr 1fr 2fr;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 18px;
+      color: var(--color-text-muted);
+      font: 520 12px/1.35 var(--font-mono);
     }
 
-    .window {
-      min-height: 190px;
-      padding-top: 18px;
-      border-top: 2px solid var(--rule);
+    .footer a {
+      color: var(--color-accent);
+      text-underline-offset: 0.18em;
     }
 
-    .window b {
+    .cover-title {
+      grid-column: 1 / 11;
+      max-width: 15ch;
+      font-size: clamp(54px, 7.3vw, 104px);
+      line-height: 0.94;
+    }
+
+    .cover-promise {
+      grid-column: 2 / 9;
+      max-width: 62ch;
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.4;
+    }
+
+    .cover-promise strong {
+      color: var(--color-accent);
+      font-weight: 650;
+    }
+
+    .slide-title {
+      grid-column: 1 / 11;
+      font-size: clamp(40px, 5.2vw, 72px);
+      line-height: 1;
+    }
+
+    .walkthrough {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-self: end;
+      border-block: 1px solid var(--color-border);
+    }
+
+    .walkthrough-step {
+      min-height: 220px;
+      padding: clamp(22px, 2.5vw, 36px);
+      border-inline-end: 1px solid var(--color-border);
+    }
+
+    .walkthrough-step:last-child {
+      border-inline-end: 0;
+    }
+
+    .walkthrough-step b {
       display: block;
       margin-bottom: 22px;
-      color: var(--red);
-      font: 650 14px/1 var(--mono);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      color: var(--color-accent);
+      font: 620 13px/1.25 var(--font-mono);
     }
 
-    .window span {
-      color: var(--body);
-      font-size: clamp(20px, 2vw, 29px);
-      line-height: 1.28;
+    .walkthrough-step h3 {
+      margin-bottom: 14px;
+      font-size: clamp(23px, 2.4vw, 35px);
+      line-height: 1.08;
     }
 
-    .arrow {
-      color: var(--muted);
-      font: 400 34px/1 var(--mono);
-      text-align: center;
+    .walkthrough-step p {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.45;
     }
 
-    .boundary {
+    .pipeline {
       grid-column: 1 / 13;
       display: grid;
-      grid-template-columns: 5fr 2fr 5fr;
-      align-items: stretch;
-      gap: 0;
-      border-block: 1px solid var(--rule);
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: center;
+      border-block: 1px solid var(--color-border);
     }
 
-    .zone {
-      padding: clamp(22px, 3vw, 42px) 0;
+    .pipeline-step {
+      min-height: 165px;
+      padding: clamp(18px, 2vw, 30px);
     }
 
-    .zone h3 {
-      margin: 0 0 22px;
-      font-size: clamp(25px, 2.7vw, 38px);
-    }
-
-    .zone ul {
-      padding: 0;
-      list-style: none;
-      color: var(--body);
-      font-size: clamp(18px, 1.7vw, 24px);
-      line-height: 1.6;
-    }
-
-    .divider {
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      font: 600 13px/1.4 var(--mono);
-      writing-mode: vertical-rl;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .evidence {
-      grid-column: 1 / 13;
-      display: grid;
-      grid-template-columns: 4fr 4fr 4fr;
-      gap: clamp(24px, 4vw, 60px);
-    }
-
-    .datum {
-      padding-top: 16px;
-      border-top: 1px solid var(--rule);
-    }
-
-    .datum dt {
-      color: var(--muted);
-      font: 600 13px/1.3 var(--mono);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .datum dd {
-      margin-top: 14px;
-      color: var(--text);
-      font-size: clamp(28px, 3vw, 46px);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
-    }
-
-    .datum dd.pass { color: var(--green); }
-    .datum dd.fail { color: var(--red); }
-
-    .command {
-      grid-column: 1 / 10;
-      align-self: center;
-      padding: clamp(24px, 3vw, 42px);
-      border: 1px solid var(--blue);
-      background: var(--raised);
-      color: var(--text);
-      font: 600 clamp(22px, 2.5vw, 36px)/1.35 var(--mono);
-    }
-
-    .steps {
-      grid-column: 1 / 13;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--rule);
-      border: 1px solid var(--rule);
-    }
-
-    .step {
-      min-height: 164px;
-      padding: clamp(18px, 2vw, 28px);
-      background: var(--ground);
-    }
-
-    .step b {
+    .pipeline-step b {
       display: block;
-      margin-bottom: 20px;
-      color: var(--blue);
-      font: 650 14px/1 var(--mono);
+      margin-bottom: 16px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
     }
 
-    .step span {
-      color: var(--body);
-      font-size: clamp(17px, 1.55vw, 22px);
+    .pipeline-step span {
+      font-family: var(--font-display);
+      font-size: clamp(21px, 2vw, 30px);
+      line-height: 1.2;
+    }
+
+    .pipeline-arrow {
+      color: var(--color-text-muted);
+      font: 500 25px/1 var(--font-mono);
+    }
+
+    .pipeline-facts {
+      grid-column: 1 / 8;
+      display: flex;
+      gap: clamp(20px, 4vw, 56px);
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.7vw, 24px);
       line-height: 1.35;
     }
 
-    .caveat {
-      grid-column: 1 / 9;
-      color: var(--body);
-      font-size: clamp(25px, 3vw, 42px);
-      line-height: 1.22;
-      letter-spacing: -0.025em;
+    .pipeline-facts strong {
+      display: block;
+      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: 1.35em;
     }
 
-    .caveat code {
-      color: var(--amber);
-      font-family: var(--mono);
-      font-size: 0.88em;
+    .failure-note {
+      grid-column: 9 / 13;
+      padding-top: 14px;
+      border-top: 2px solid var(--color-accent);
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.7vw, 24px);
+      line-height: 1.4;
+    }
+
+    .failure-note strong {
+      color: var(--color-text);
     }
 
     .code-comparison {
@@ -326,164 +321,219 @@
       min-height: 0;
     }
 
-    .code-pane {
-      min-width: 0;
-      padding: clamp(16px, 2vw, 26px);
-      border: 1px solid var(--rule);
-      background: var(--raised);
+    .code-layout {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: minmax(0, 8fr) minmax(14rem, 4fr);
+      gap: clamp(22px, 3vw, 44px);
+      align-items: center;
+      min-height: 0;
     }
 
-    .code-pane h3 {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font: 650 13px/1.2 var(--mono);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .code-pair {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2vw, 30px);
+      min-height: 0;
+    }
+
+    .code-pane {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--night-700);
+      background: var(--night-900);
+      color: var(--syntax-text);
+    }
+
+    .code-pane header {
+      display: flex;
+      min-height: 42px;
+      padding: 0 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--night-700);
+      background: var(--night-800);
+      color: var(--night-cream-300);
+      font: 540 11px/1 var(--font-mono);
+    }
+
+    .code-pane header span:last-child {
+      color: var(--syntax-comment);
     }
 
     .code-pane pre {
-      margin: 0;
-      color: var(--body);
-      font: 500 clamp(11px, 1.05vw, 15px)/1.45 var(--mono);
+      padding: clamp(16px, 1.8vw, 26px);
+      overflow: hidden;
+      color: var(--syntax-text);
+      font: 500 clamp(11px, 1.03vw, 15px)/1.55 var(--font-mono);
+      tab-size: 4;
       white-space: pre-wrap;
+    }
+
+    .code-pane code {
+      font-family: inherit;
+    }
+
+    .tok-keyword { color: var(--syntax-keyword); }
+    .tok-function { color: var(--syntax-function); }
+    .tok-string { color: var(--syntax-string); }
+    .tok-number { color: var(--syntax-number); }
+    .tok-class { color: var(--syntax-class); }
+    .tok-decorator { color: var(--syntax-decorator); }
+    .tok-comment { color: var(--syntax-comment); font-style: italic; }
+    .tok-operator { color: var(--syntax-operator); }
+    .tok-parameter { color: var(--syntax-parameter); }
+
+    .code-notes {
+      display: grid;
+      gap: 22px;
+      align-self: center;
+    }
+
+    .code-note {
+      padding-top: 15px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .code-note b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .code-note p {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.4;
     }
 
     .contract {
       grid-column: 1 / 13;
-      align-self: center;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      border-block: 1px solid var(--rule);
+      border-block: 1px solid var(--color-border);
     }
 
     .contract-step {
-      padding: clamp(18px, 2.4vw, 32px);
-      border-inline-end: 1px solid var(--rule);
+      min-height: 165px;
+      padding: clamp(18px, 2.3vw, 32px);
+      border-inline-end: 1px solid var(--color-border);
     }
 
-    .contract-step:last-child { border-inline-end: 0; }
+    .contract-step:last-child {
+      border-inline-end: 0;
+    }
 
     .contract-step b {
       display: block;
-      margin-bottom: 14px;
-      color: var(--blue);
-      font: 650 13px/1.2 var(--mono);
+      margin-bottom: 16px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
     }
 
     .contract-step span {
-      color: var(--body);
-      font-size: clamp(17px, 1.6vw, 23px);
-      line-height: 1.35;
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.55vw, 23px);
+      line-height: 1.38;
     }
 
-    .contract-note {
-      grid-column: 1 / 11;
-      color: var(--body);
-      font-size: clamp(18px, 1.8vw, 25px);
-      line-height: 1.4;
+    .tradeoff {
+      grid-column: 2 / 11;
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.42;
     }
 
-    .skill-flow {
-      grid-column: 1 / 13;
-      align-self: center;
-      display: grid;
-      grid-template-columns: 2fr auto 2fr auto 2fr;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .skill-node {
-      min-height: 170px;
-      padding: clamp(18px, 2vw, 28px);
-      border-block: 1px solid var(--rule);
-    }
-
-    .skill-node b {
-      display: block;
-      margin-bottom: 18px;
-      color: var(--blue);
-      font: 650 13px/1.2 var(--mono);
-    }
-
-    .skill-node span {
-      color: var(--body);
-      font-size: clamp(18px, 1.8vw, 25px);
-      line-height: 1.35;
-    }
-
-    .skill-command {
-      grid-column: 2 / 12;
-      padding: 18px 24px;
-      border: 1px solid var(--rule);
-      background: var(--raised);
-      color: var(--text);
-      font: 600 clamp(15px, 1.5vw, 21px)/1.4 var(--mono);
+    .tradeoff strong {
+      color: var(--color-text);
     }
 
     .media-single {
       grid-column: 1 / 13;
       display: grid;
-      grid-template-columns: 9fr 3fr;
+      grid-template-columns: minmax(0, 9fr) minmax(13rem, 3fr);
       gap: clamp(20px, 3vw, 42px);
       align-items: center;
-    }
-
-    .media-single .annotation {
-      grid-column: auto;
-      font-size: clamp(17px, 1.7vw, 23px);
-    }
-
-    .media-pair {
-      grid-column: 1 / 13;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(18px, 2.4vw, 34px);
-      align-items: start;
+      min-height: 0;
     }
 
     .proof {
-      margin: 0;
+      min-width: 0;
     }
 
     .proof img,
     .proof video {
       display: block;
       width: 100%;
-      border: 1px solid var(--rule);
+      border: 1px solid var(--color-border);
+      background: var(--night-900);
     }
 
     .proof video {
       aspect-ratio: 16 / 9;
-      background: var(--raised);
     }
 
     .proof figcaption {
       margin-top: 10px;
-      color: var(--muted);
-      font: 500 13px/1.4 var(--mono);
+      color: var(--color-text-muted);
+      font: 520 12px/1.4 var(--font-mono);
     }
 
-    .availability {
+    .demo-copy {
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.65vw, 24px);
+      line-height: 1.45;
+    }
+
+    .demo-copy strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--color-accent);
+      font-family: var(--font-display);
+      font-size: 1.3em;
+      line-height: 1.15;
+    }
+
+    .verification {
       grid-column: 1 / 13;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(32px, 6vw, 80px);
+      grid-template-columns: minmax(0, 7fr) minmax(15rem, 5fr);
+      gap: clamp(28px, 4vw, 58px);
+      align-items: center;
     }
 
-    .availability section {
-      padding-top: 18px;
-      border-top: 1px solid var(--rule);
+    .verification-copy {
+      display: grid;
+      border-block: 1px solid var(--color-border);
     }
 
-    .availability h3 {
-      margin: 0 0 20px;
-      font-size: clamp(25px, 2.6vw, 38px);
+    .verification-row {
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.7fr) 2fr;
+      padding: 18px 0;
+      gap: 20px;
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .availability p {
-      color: var(--body);
-      font-size: clamp(18px, 1.7vw, 24px);
-      line-height: 1.5;
+    .verification-row:last-child {
+      border-bottom: 0;
+    }
+
+    .verification-row b {
+      color: var(--color-accent);
+      font: 620 12px/1.3 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .verification-row span {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.45vw, 21px);
+      line-height: 1.35;
     }
 
     .summary-fields {
@@ -494,54 +544,49 @@
     }
 
     .summary-fields section {
-      border-top: 1px solid var(--rule);
       padding-top: 18px;
+      border-top: 1px solid var(--color-border);
     }
 
     .summary-fields h3 {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font: 650 13px/1.2 var(--mono);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      margin-bottom: 22px;
+      color: var(--color-accent);
+      font-size: clamp(25px, 2.6vw, 38px);
+      line-height: 1.08;
     }
 
     .summary-fields ul {
-      margin: 0;
       padding: 0;
-      list-style: none;
-      color: var(--body);
-      font-size: clamp(20px, 2.1vw, 30px);
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
       line-height: 1.55;
-    }
-
-    .footer {
-      grid-column: 1 / 13;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--muted);
-      font: 500 12px/1 var(--mono);
+      list-style: none;
     }
 
     .controls {
+      position: fixed;
+      right: 24px;
+      bottom: 18px;
+      z-index: 10;
       display: flex;
-      gap: 8px;
+      gap: 7px;
     }
 
     button {
-      min-width: 42px;
-      min-height: 36px;
-      border: 1px solid var(--rule);
-      background: transparent;
-      color: var(--muted);
-      font: 600 14px/1 var(--mono);
+      width: 42px;
+      height: 36px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background: color-mix(in oklch, var(--color-bg) 90%, transparent);
+      color: var(--color-text-muted);
+      font: 620 14px/1 var(--font-mono);
       cursor: pointer;
     }
 
-    button:hover, button:focus-visible {
-      border-color: var(--blue);
-      color: var(--text);
+    button:hover,
+    button:focus-visible {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
       outline: 2px solid transparent;
     }
 
@@ -549,40 +594,108 @@
       position: fixed;
       inset: auto 0 0;
       height: 3px;
-      background: var(--rule);
+      background: var(--color-border);
     }
 
     .progress span {
       display: block;
-      width: 10%;
+      width: 100%;
       height: 100%;
-      background: var(--blue);
+      background: var(--color-accent);
+      transform: scaleX(0.1);
       transform-origin: left;
       transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @media (max-width: 800px) {
-      .slide { padding: 28px; }
-      .lede, .code, .annotation, .command, .caveat { grid-column: 1 / 13; }
-      .metric { grid-column: 8 / 13; }
-      .windows, .steps, .code-comparison, .contract, .skill-flow,
-      .media-single, .media-pair, .availability, .summary-fields {
+      html,
+      body {
+        min-height: 100%;
+        overflow: auto;
+      }
+
+      .slide {
+        position: relative;
+        min-height: 100vh;
+        grid-template-rows: auto auto auto;
+        padding: 26px;
+      }
+
+      .slide.active {
+        display: grid;
+      }
+
+      .content {
+        align-self: start;
+      }
+
+      .walkthrough,
+      .pipeline,
+      .code-comparison,
+      .code-layout,
+      .code-pair,
+      .contract,
+      .media-single,
+      .verification,
+      .summary-fields {
         grid-template-columns: 1fr;
       }
-      .arrow { display: none; }
-      .window, .step { min-height: auto; }
-      .boundary { grid-template-columns: 1fr; }
-      .divider { display: none; }
-      .evidence { grid-template-columns: 1fr 1fr; }
+
+      .walkthrough-step,
+      .contract-step {
+        min-height: auto;
+        border-inline-end: 0;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .walkthrough-step:last-child,
+      .contract-step:last-child {
+        border-bottom: 0;
+      }
+
+      .pipeline-arrow {
+        display: none;
+      }
+
+      .pipeline-step {
+        min-height: auto;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .pipeline-facts,
+      .failure-note,
+      .tradeoff {
+        grid-column: 1 / 13;
+      }
+
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        padding-bottom: 44px;
+      }
+
+      .controls {
+        position: fixed;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .slide.active { animation: none; }
-      .progress span { transition: none; }
+      .slide.active {
+        animation: none;
+      }
+
+      .progress span {
+        transition: none;
+      }
     }
 
     @media print {
-      html, body { overflow: visible; }
+      html,
+      body {
+        overflow: visible;
+      }
+
       .slide {
         position: relative;
         display: grid;
@@ -591,143 +704,243 @@
         break-after: page;
         opacity: 1;
       }
-      .controls, .progress { display: none; }
+
+      .controls,
+      .progress {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
   <main aria-live="polite">
     <section class="slide active" aria-label="Slide 1 of 10">
-      <div class="marker">01 / the migration</div>
+      <div class="marker">01 / Temporal assignment</div>
       <div class="content">
-        <h1>Temporal brings a research pipeline back to life</h1>
-        <p class="lede">Improving the durability of our research pipeline using Temporal's Python SDK</p>
-        <p class="metric">SIGKILL<small>during two heartbeat-emitting Activities</small></p>
+        <h1 class="cover-title">Temporal brings a research pipeline back to life</h1>
+        <p class="cover-promise"><strong>I’ll show</strong> the existing research pipeline, its Python rewrite with Temporal Workflows and Activities, and the same Workflow Execution surviving a killed Worker.</p>
       </div>
-      <div class="footer"><span>Temporal × SciX × Code Intel Digest</span></div>
+      <div class="footer">
+        <span>Code Intelligence Digest + SciX</span>
+        <span>Python SDK · before, after, recovery proof</span>
+      </div>
     </section>
 
     <section class="slide" aria-label="Slide 2 of 10">
-      <div class="marker">02 / the original product</div>
+      <div class="marker">02 / what I will show</div>
       <div class="content">
-        <dl class="evidence">
-          <div class="datum">
-            <dt>Research program</dt>
-            <dd>2 series</dd>
-          </div>
-          <div class="datum">
-            <dt>Episode branches</dt>
-            <dd>10 episodes</dd>
-          </div>
-          <div class="datum">
-            <dt>Deliverables</dt>
-            <dd>32 documents</dd>
-          </div>
-        </dl>
-        <p class="contract-note">Each episode moved through research → deep dive → podcast script.
-          Two literature reviews waited for all five episodes in their series. The JavaScript
-          client held the active phase and in-flight promises in memory.</p>
+        <h2 class="slide-title">The walkthrough has three parts</h2>
+        <div class="walkthrough">
+          <section class="walkthrough-step">
+            <b>01</b>
+            <h3>The code we already had</h3>
+            <p>A ten-episode research pipeline with real prompts, dependencies, and published outputs.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>02</b>
+            <h3>The Python rewrite</h3>
+            <p>A Temporal Workflow for orchestration, Activities for external work, and a Worker that registers both.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>03</b>
+            <h3>The recovery proof</h3>
+            <p>Kill the Worker during two Activities, restart it, and inspect the retry in Temporal Web.</p>
+          </section>
+        </div>
       </div>
-      <div class="footer"><span>Existing Code Intelligence Digest pipeline · real briefs, prompts, and outputs</span></div>
+      <div class="footer">
+        <span>The README follows this same sequence</span>
+        <span>Designed for a 10–15 minute walkthrough</span>
+      </div>
     </section>
 
-    <section class="slide" id="code-comparison" aria-label="Slide 3 of 10">
-      <div class="marker">03 / before and after</div>
+    <section class="slide" aria-label="Slide 3 of 10">
+      <div class="marker">03 / the original problem</div>
+      <div class="content">
+        <h2 class="slide-title">Useful output, process-local progress</h2>
+        <div class="pipeline">
+          <div class="pipeline-step"><b>Per episode</b><span>Research</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Per episode</b><span>Deep dive</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Per episode</b><span>Podcast script</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Per series</b><span>Literature review</span></div>
+        </div>
+        <div class="pipeline-facts">
+          <p><strong>2</strong> series</p>
+          <p><strong>10</strong> episode branches</p>
+          <p><strong>32</strong> output documents</p>
+        </div>
+        <p class="failure-note"><strong>The Node process held the active phase and in-flight promises.</strong> After a crash, files remained, but no durable cursor said which calls had completed or which stage should resume.</p>
+      </div>
+      <div class="footer">
+        <span>The migration preserves the product and changes its execution model</span>
+      </div>
+    </section>
+
+    <section class="slide" id="code-comparison" aria-label="Slide 4 of 10">
+      <div class="marker">04 / before and after</div>
       <div class="content">
         <div class="code-comparison">
-          <div class="code-pane">
-            <h3>Before · client process owns progress</h3>
-            <pre><code>phase('Research')
-await pipeline(
-  EPS,
-  (it) => agent(researchPrompt(it)),
-  (research, it) => agent(deepDivePrompt(it, research)),
-  (deepDive, it) => agent(scriptPrompt(it, deepDive)),
+          <section class="code-pane">
+            <header><span>phaseE_workflow.js · excerpt</span><span>Before</span></header>
+            <pre><code class="language-javascript" data-source="phase('Research')"><span class="tok-function">phase</span>(<span class="tok-string">'Research'</span>)
+<span class="tok-keyword">await</span> <span class="tok-function">pipeline</span>(
+  <span class="tok-parameter">EPS</span>,
+  <span class="tok-comment">// Stage 1: research</span>
+  (<span class="tok-parameter">it</span>) <span class="tok-operator">=&gt;</span> <span class="tok-function">agent</span>(<span class="tok-string">`Research ONE podcast episode...`</span>),
+  <span class="tok-comment">// Stage 2: deep dive</span>
+  (<span class="tok-parameter">research</span>, <span class="tok-parameter">it</span>) <span class="tok-operator">=&gt;</span>
+    <span class="tok-function">agent</span>(<span class="tok-string">`Write a rigorous DEEP-DIVE...`</span>),
+  <span class="tok-comment">// Stage 3: script</span>
+  (<span class="tok-parameter">_dd</span>, <span class="tok-parameter">it</span>) <span class="tok-operator">=&gt;</span>
+    <span class="tok-function">agent</span>(<span class="tok-string">`Write a podcast SCRIPT...`</span>),
 )
 
-phase('Synthesis')
-await parallel(literatureReviews)</code></pre>
-          </div>
-          <div class="code-pane">
-            <h3>After · Workflow schedules durable stages</h3>
-            <pre><code>researched = await workflow.execute_activity(
-    "research_episode", request, ...)
-deep_dive = await workflow.execute_activity(
-    "write_deep_dive", DeepDiveRequest(...), ...)
-script = await workflow.execute_activity(
-    "write_podcast_script", ScriptRequest(...), ...)
+<span class="tok-function">phase</span>(<span class="tok-string">'Synthesis'</span>)
+<span class="tok-keyword">await</span> <span class="tok-function">parallel</span>(literatureReviews)</code></pre>
+          </section>
+          <section class="code-pane">
+            <header><span>podcast_workflow.py · excerpt</span><span>After</span></header>
+            <pre><code class="language-python"><span class="tok-parameter">researched</span> <span class="tok-operator">=</span> <span class="tok-keyword">await</span> workflow.<span class="tok-function">execute_activity</span>(
+    <span class="tok-string">"research_episode"</span>, request, ...)
+<span class="tok-parameter">deep_dive</span> <span class="tok-operator">=</span> <span class="tok-keyword">await</span> workflow.<span class="tok-function">execute_activity</span>(
+    <span class="tok-string">"write_deep_dive"</span>, <span class="tok-class">DeepDiveRequest</span>(...), ...)
+<span class="tok-parameter">script</span> <span class="tok-operator">=</span> <span class="tok-keyword">await</span> workflow.<span class="tok-function">execute_activity</span>(
+    <span class="tok-string">"write_podcast_script"</span>, <span class="tok-class">ScriptRequest</span>(...), ...)
 
-series_reviews = await asyncio.gather(
-    *(self._write_series_review(...) for series in pipeline.series)
+<span class="tok-parameter">series_reviews</span> <span class="tok-operator">=</span> <span class="tok-keyword">await</span> asyncio.<span class="tok-function">gather</span>(
+    <span class="tok-operator">*</span>(self.<span class="tok-function">_write_series_review</span>(...)
+      <span class="tok-keyword">for</span> series <span class="tok-keyword">in</span> pipeline.series)
 )</code></pre>
-          </div>
+          </section>
         </div>
       </div>
-      <div class="footer"><span>The ten briefs and full editorial prompt contracts are preserved in typed Python modules</span></div>
-    </section>
-
-    <section class="slide" aria-label="Slide 4 of 10">
-      <div class="marker">04 / what failed before Temporal</div>
-      <div class="content">
-        <div class="windows">
-          <div class="window"><b>01 · exit</b><span>The active phase and in-flight promises disappear.</span></div>
-          <div class="arrow">→</div>
-          <div class="window"><b>02 · inspect</b><span>Files remain, but no durable cursor says what finished.</span></div>
-          <div class="arrow">→</div>
-          <div class="window"><b>03 · decide</b><span>An operator chooses what to rerun and risks duplicate calls.</span></div>
-        </div>
+      <div class="footer">
+        <span>Same research → deep dive → script → review dependency graph</span>
+        <span>Complete source is linked from the case study</span>
       </div>
-      <div class="footer"><span>Recovery depended on manual artifact inspection and application-specific restart logic</span></div>
     </section>
 
     <section class="slide" aria-label="Slide 5 of 10">
-      <div class="marker">05 / the determinism boundary</div>
+      <div class="marker">05 / Temporal Workflow</div>
       <div class="content">
-        <div class="boundary">
-          <div class="zone">
-            <h3 class="blue">Temporal Workflow</h3>
-            <ul>
-              <li>episode order</li>
-              <li>two-branch concurrency</li>
-              <li>completion policy</li>
-              <li>series-review fan-in</li>
-              <li>queryable progress</li>
-            </ul>
-          </div>
-          <div class="divider">Event History boundary</div>
-          <div class="zone">
-            <h3 class="warn">Temporal Activities</h3>
-            <ul>
-              <li>SciX + Digest MCP</li>
-              <li>writer process</li>
-              <li>artifact reads/writes</li>
-              <li>clock + heartbeats</li>
-              <li>manifest generation</li>
-            </ul>
+        <div class="code-layout">
+          <section class="code-pane">
+            <header><span>podcast_workflow.py · excerpt</span><span>Deterministic orchestration</span></header>
+            <pre><code class="language-python"><span class="tok-decorator">@workflow.defn</span>
+<span class="tok-keyword">class</span> <span class="tok-class">PodcastResearchWorkflow</span>:
+    <span class="tok-decorator">@workflow.query</span>
+    <span class="tok-keyword">def</span> <span class="tok-function">progress</span>(<span class="tok-parameter">self</span>) <span class="tok-operator">-&gt;</span> <span class="tok-class">PodcastProgress</span>:
+        <span class="tok-keyword">return</span> self._progress
+
+    <span class="tok-decorator">@workflow.run</span>
+    <span class="tok-keyword">async def</span> <span class="tok-function">run</span>(<span class="tok-parameter">self</span>, <span class="tok-parameter">pipeline</span>: <span class="tok-class">PodcastPipelineInput</span>):
+        <span class="tok-keyword">for</span> offset <span class="tok-keyword">in</span> <span class="tok-function">range</span>(
+            <span class="tok-number">0</span>, total, pipeline.max_parallel_episodes
+        ):
+            batch <span class="tok-operator">=</span> pipeline.episodes[
+                offset : offset <span class="tok-operator">+</span> pipeline.max_parallel_episodes
+            ]
+            results <span class="tok-operator">=</span> <span class="tok-keyword">await</span> asyncio.<span class="tok-function">gather</span>(
+                <span class="tok-operator">*</span>(self.<span class="tok-function">_run_episode</span>(...)
+                  <span class="tok-keyword">for</span> episode <span class="tok-keyword">in</span> batch)
+            )
+        series_reviews <span class="tok-operator">=</span> <span class="tok-keyword">await</span> asyncio.<span class="tok-function">gather</span>(
+            <span class="tok-operator">*</span>(self.<span class="tok-function">_write_series_review</span>(...)
+              <span class="tok-keyword">for</span> series <span class="tok-keyword">in</span> pipeline.series)
+        )</code></pre>
+          </section>
+          <div class="code-notes">
+            <div class="code-note">
+              <b>Owns</b>
+              <p>Episode order, bounded concurrency, progress, completion policy, and final fan-in.</p>
+            </div>
+            <div class="code-note">
+              <b>Excludes</b>
+              <p>Network calls, model calls, file I/O, clock reads, and environment access.</p>
+            </div>
+            <div class="code-note">
+              <b>Persists</b>
+              <p>Temporal records the decisions in Event History so another Worker can replay them.</p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="footer"><span>Temporal Service persists Event History; large evidence stays in the artifact store</span></div>
+      <div class="footer">
+        <span>The Temporal Workflow owns orchestration state</span>
+      </div>
     </section>
 
     <section class="slide" aria-label="Slide 6 of 10">
-      <div class="marker">06 / recovery needs explicit contracts</div>
+      <div class="marker">06 / Temporal Activities and Temporal Worker</div>
       <div class="content">
-        <div class="contract">
-          <div class="contract-step"><b>RETRY</b><span>Three attempts with bounded exponential backoff</span></div>
-          <div class="contract-step"><b>TIMEOUT</b><span>Stage-specific Start-to-Close limits</span></div>
-          <div class="contract-step"><b>HEARTBEAT</b><span>Thirty seconds for long external calls</span></div>
-          <div class="contract-step"><b>IDENTITY</b><span>Stable request IDs and artifact paths</span></div>
+        <div class="code-pair">
+          <section class="code-pane">
+            <header><span>podcast_activities.py · excerpt</span><span>Nondeterministic work</span></header>
+            <pre><code class="language-python"><span class="tok-decorator">@activity.defn</span>(name<span class="tok-operator">=</span><span class="tok-string">"research_episode"</span>)
+<span class="tok-keyword">async def</span> <span class="tok-function">research_episode</span>(
+    <span class="tok-parameter">request</span>: <span class="tok-class">EpisodeRequest</span>,
+) <span class="tok-operator">-&gt;</span> <span class="tok-class">EpisodeResult</span>:
+    store <span class="tok-operator">=</span> <span class="tok-class">ArtifactStore</span>(
+        request.pipeline.artifact_root
+    )
+    <span class="tok-keyword">if</span> request.pipeline.mode <span class="tok-operator">==</span> <span class="tok-string">"fixture"</span>:
+        raw_sources <span class="tok-operator">=</span> <span class="tok-keyword">await</span> asyncio.<span class="tok-function">to_thread</span>(
+            _fixture_sources, request
+        )
+    <span class="tok-keyword">else</span>:
+        raw_sources <span class="tok-operator">=</span> <span class="tok-keyword">await</span> <span class="tok-function">_live_sources_with_heartbeats</span>(
+            request, store
+        )</code></pre>
+          </section>
+          <section class="code-pane">
+            <header><span>podcast_worker.py · excerpt</span><span>Registration boundary</span></header>
+            <pre><code class="language-python"><span class="tok-parameter">worker</span> <span class="tok-operator">=</span> <span class="tok-class">Worker</span>(
+    client,
+    task_queue<span class="tok-operator">=</span><span class="tok-parameter">TASK_QUEUE</span>,
+    workflows<span class="tok-operator">=</span>[<span class="tok-class">PodcastResearchWorkflow</span>],
+    activities<span class="tok-operator">=</span>[
+        <span class="tok-function">research_episode</span>,
+        <span class="tok-function">write_deep_dive</span>,
+        <span class="tok-function">write_podcast_script</span>,
+        <span class="tok-function">write_series_review</span>,
+        <span class="tok-function">write_pipeline_manifest</span>,
+    ],
+    graceful_shutdown_timeout<span class="tok-operator">=</span><span class="tok-class">timedelta</span>(
+        seconds<span class="tok-operator">=</span><span class="tok-number">30</span>
+    ),
+)
+<span class="tok-keyword">await</span> worker.<span class="tok-function">run</span>()</code></pre>
+          </section>
         </div>
-        <p class="contract-note">The response journal suppresses a repeated read once the response is stored.
-          Paid or mutating providers must honor the same idempotency key to close the
-          provider-success-before-journal-write gap.</p>
       </div>
-      <div class="footer"><span>Temporal gives Activities at-least-once execution; external-effect safety stays an application concern</span></div>
+      <div class="footer">
+        <span>Temporal Activities own MCP calls, writer calls, heartbeats, and artifact I/O</span>
+        <span>The Worker hosts the Workflow and all five Activities</span>
+      </div>
     </section>
 
     <section class="slide" aria-label="Slide 7 of 10">
-      <div class="marker">07 / kill the Worker, keep the run</div>
+      <div class="marker">07 / resilience and tradeoffs</div>
+      <div class="content">
+        <h2 class="slide-title">Retries need an application contract</h2>
+        <div class="contract">
+          <div class="contract-step"><b>Retry</b><span>Three attempts with bounded exponential backoff.</span></div>
+          <div class="contract-step"><b>Timeout</b><span>Stage-specific Start-to-Close limits.</span></div>
+          <div class="contract-step"><b>Heartbeat</b><span>Thirty seconds for long external calls.</span></div>
+          <div class="contract-step"><b>Identity</b><span>Stable request IDs and artifact paths.</span></div>
+        </div>
+        <p class="tradeoff"><strong>Temporal provides at-least-once Activity execution.</strong> The response journal suppresses repeated reads after a response is stored. A paid or mutating provider must also honor the request ID to cover the gap between provider success and the journal write.</p>
+      </div>
+      <div class="footer">
+        <span>Large evidence stays in artifact storage; Event History carries compact references</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 8 of 10">
+      <div class="marker">08 / recorded recovery</div>
       <div class="content">
         <div class="media-single">
           <figure class="proof">
@@ -735,53 +948,35 @@ series_reviews = await asyncio.gather(
               <source src="demo/out/temporal-literature-review-demo.mp4" type="video/mp4">
               Your browser does not support embedded video.
             </video>
-            <figcaption>Recorded recovery · play, pause, or open fullscreen</figcaption>
+            <figcaption>Play, pause, or open fullscreen</figcaption>
           </figure>
-          <p class="annotation"><strong>SIGKILL lands while two Activities are in flight.</strong><br><br>
-            A replacement Worker receives attempt 2. Research, deep dives, scripts,
-            reviews, and the manifest finish under the same Workflow Execution.</p>
+          <p class="demo-copy"><strong>Kill the Worker, keep the run</strong>Two research Activities lose their Worker. Temporal schedules attempt 2 on the replacement Worker. The same Workflow Execution finishes its deep dives, scripts, reviews, and manifest.</p>
         </div>
       </div>
-      <div class="footer"><span>Terminal + Temporal Web · one Workflow ID and Run ID</span></div>
+      <div class="footer">
+        <span>Terminal + Temporal Web · one Workflow ID and Run ID</span>
+      </div>
     </section>
 
-    <section class="slide" aria-label="Slide 8 of 10">
-      <div class="marker">08 / Event History is the evidence</div>
+    <section class="slide" aria-label="Slide 9 of 10">
+      <div class="marker">09 / testability and proof</div>
       <div class="content">
-        <div class="media-pair">
-          <figure class="proof">
-            <img src="deck-assets/workflow-completed.png" alt="Terminal showing both episode branches and both series reviews completed under the original Workflow run">
-            <figcaption>Both episode branches and both series reviews complete</figcaption>
-          </figure>
+        <div class="verification">
           <figure class="proof">
             <img src="deck-assets/activity-attempt-two.png" alt="Temporal Web Event History showing both research_episode Activities starting on attempt two">
             <figcaption>Temporal Web records attempt 2 for both research Activities</figcaption>
           </figure>
+          <div class="verification-copy">
+            <div class="verification-row"><b>Recovery</b><span>Same Workflow ID and Run ID after Worker replacement.</span></div>
+            <div class="verification-row"><b>Result</b><span>Two episode branches and two series reviews completed in the recorded run.</span></div>
+            <div class="verification-row"><b>Tests</b><span>89 tests with branch-aware coverage above 80 percent.</span></div>
+            <div class="verification-row"><b>Quality</b><span>Typed dataclasses, strict MyPy, Ruff, and Activity registration tests.</span></div>
+          </div>
         </div>
       </div>
-      <div class="footer"><span>Heartbeat Timeout → replacement Worker → completed pipeline</span></div>
-    </section>
-
-    <section class="slide" aria-label="Slide 9 of 10">
-      <div class="marker">09 / what I would ask in review</div>
-      <div class="content">
-        <div class="availability">
-          <section>
-            <h3 class="pass">Verified here</h3>
-            <p>Typed dataclasses, deterministic Workflow imports, Activity
-              registration tests, Worker-kill evidence, strict MyPy, Ruff,
-              and branch-aware test coverage above 80 percent.</p>
-          </section>
-          <section>
-            <h3 class="warn">Production decisions</h3>
-            <p>Provider-enforced idempotency, shared artifact storage,
-              task-queue capacity, Activity-specific retry policy, metrics,
-              Worker Versioning, and Continue-As-New or Child Workflows as the
-              catalog grows.</p>
-          </section>
-        </div>
+      <div class="footer">
+        <span>The README documents the migration, limits, and complete source</span>
       </div>
-      <div class="footer"><span>The sample makes its limits visible instead of treating completion as correctness</span></div>
     </section>
 
     <section class="slide" aria-label="Slide 10 of 10">
@@ -791,7 +986,7 @@ series_reviews = await asyncio.gather(
           <section>
             <h3>The code already provided</h3>
             <ul>
-              <li>10 episode briefs + prompts</li>
+              <li>10 episode briefs and prompts</li>
               <li>Research → deep dive → script</li>
               <li>2 series literature reviews</li>
             </ul>
@@ -801,15 +996,18 @@ series_reviews = await asyncio.gather(
             <ul>
               <li>Durable Workflow progress</li>
               <li>Activity retries after failure</li>
-              <li>Queryable progress + Event History</li>
+              <li>Queryable progress and Event History</li>
             </ul>
           </section>
         </div>
       </div>
+      <div class="footer">
+        <span>Before source · Python source · README · recorded recovery</span>
+      </div>
     </section>
   </main>
 
-  <nav class="controls" aria-label="Slide controls" style="position:fixed;right:24px;bottom:20px;z-index:10">
+  <nav class="controls" aria-label="Slide controls">
     <button id="previous" type="button" aria-label="Previous slide">←</button>
     <button id="next" type="button" aria-label="Next slide">→</button>
   </nav>

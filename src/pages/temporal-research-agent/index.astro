@@ -1,9 +1,45 @@
 ---
+import { codeToHtml } from "shiki";
+
 import PageLayout from "@/layouts/PageLayout.astro";
 
 const root = "/temporal-research-agent";
 const video = `${root}/demo/out/temporal-literature-review-demo.mp4`;
 const poster = `${root}/deck-assets/worker-killed.png`;
+const codeThemes = {
+  light: "github-light-high-contrast",
+  dark: "github-dark-high-contrast",
+} as const;
+const beforeCode = await codeToHtml(
+  `phase('Research')
+await pipeline(
+  EPS,
+  // Stage 1: research
+  (it) => agent(\`Research ONE podcast episode...\`),
+  // Stage 2: deep dive
+  (research, it) => agent(\`Write a rigorous DEEP-DIVE...\`),
+  // Stage 3: script
+  (_dd, it) => agent(\`Write a podcast SCRIPT...\`),
+)
+
+phase('Synthesis')
+await parallel(literatureReviews)`,
+  { lang: "javascript", themes: codeThemes },
+);
+const afterCode = await codeToHtml(
+  `researched = await workflow.execute_activity(
+    "research_episode", request, ...)
+deep_dive = await workflow.execute_activity(
+    "write_deep_dive", DeepDiveRequest(...), ...)
+script = await workflow.execute_activity(
+    "write_podcast_script", ScriptRequest(...), ...)
+
+series_reviews = await asyncio.gather(
+    *(self._write_series_review(...)
+      for series in pipeline.series)
+)`,
+  { lang: "python", themes: codeThemes },
+);
 ---
 
 <PageLayout
@@ -60,27 +96,13 @@ const poster = `${root}/deck-assets/worker-killed.png`;
       <div class="tra__code">
         <section>
           <h3>Before source</h3>
-          <pre><code>phase('Research')
-await pipeline(
-  EPS,
-  (it) =&gt; agent(researchPrompt(it)),
-  (research, it) =&gt; agent(deepDivePrompt(it, research)),
-  (deepDive, it) =&gt; agent(scriptPrompt(it, deepDive)),
-)
-
-phase('Synthesis')
-await parallel(literatureReviews)</code></pre>
+          <div class="tra__code-render" set:html={beforeCode} />
           <p>Condensed here; the code reader contains all 124 source lines.</p>
           <a href={`${root}/code/before`}>Open the complete annotated JavaScript</a>
         </section>
         <section>
           <h3>After source</h3>
-          <pre><code>researched = await workflow.execute_activity(
-    "research_episode", request, ...)
-deep_dive = await workflow.execute_activity(
-    "write_deep_dive", DeepDiveRequest(...), ...)
-script = await workflow.execute_activity(
-    "write_podcast_script", ScriptRequest(...), ...)</code></pre>
+          <div class="tra__code-render" set:html={afterCode} />
           <p class="cluster">
             <a href={`${root}/code/inputs`}>Business inputs</a>
             <a href={`${root}/code/prompts`}>Prompt contracts</a>
@@ -90,45 +112,6 @@ script = await workflow.execute_activity(
           </p>
         </section>
       </div>
-    </section>
-
-    <section class="tra__section tra__skill">
-      <div class="tra__skill-copy">
-        <p class="kicker">Separate follow-on work</p>
-        <h2>The general research Workflow also has an agent skill</h2>
-        <p>
-          <code>run-durable-research</code> submits a Workflow and returns its
-          identifiers. The calling agent can exit. Another agent on the same
-          workstation can query progress or retrieve the cited report and
-          provenance manifest later.
-        </p>
-        <p>
-          This skill wraps the separate general-purpose literature-review
-          Workflow. The assignment itself uses the faithful
-          <code>PodcastResearchWorkflow</code> shown above. Both keep
-          orchestration in a Temporal Workflow and perform
-          <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a>,
-          <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>,
-          artifact I/O, and model calls in Temporal Activities.
-        </p>
-        <a href={`${root}/skills/run-durable-research/SKILL.md`}>Read the skill contract</a>
-      </div>
-      <figure>
-        <button
-          class="tra__expand"
-          type="button"
-          data-expand-image
-          aria-label="Expand the completed Workflow screenshot"
-        >
-          <img
-            src={`${root}/deck-assets/workflow-completed.png`}
-            alt="Recorded demo frame showing both episode branches and both series reviews completed"
-            loading="lazy"
-          />
-          <span>Open full view</span>
-        </button>
-        <figcaption>Both episode branches and both series reviews completed in the original Workflow Execution.</figcaption>
-      </figure>
     </section>
 
     <section class="tra__section">
@@ -257,8 +240,7 @@ script = await workflow.execute_activity(
   }
 
   .tra__media,
-  .tra__evidence figure,
-  .tra__skill figure {
+  .tra__evidence figure {
     margin: 0;
   }
 
@@ -324,33 +306,29 @@ script = await workflow.execute_activity(
     font-size: var(--step-1);
   }
 
-  .tra__code pre {
+  .tra__code-render {
     min-height: 15rem;
     margin: 0 0 var(--space-s);
-    padding: var(--space-m);
     overflow: auto;
-    border: var(--border-hairline);
+    border: 1px solid var(--night-700);
     border-radius: var(--radius);
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: var(--night-900);
+  }
+
+  .tra__code-render :global(.shiki) {
+    min-width: max-content;
+    min-height: 15rem;
+    margin: 0;
+    padding: var(--space-m);
+    background: transparent !important;
     font-size: var(--step--1);
     line-height: 1.55;
   }
 
-  .tra__skill {
-    grid-template-columns: 5fr 7fr;
-    align-items: center;
+  .tra__code-render :global(.shiki span) {
+    color: var(--shiki-dark) !important;
   }
 
-  .tra__skill-copy {
-    max-width: 38rem;
-  }
-
-  .tra__skill-copy > * + * {
-    margin-block-start: var(--space-m);
-  }
-
-  .tra__skill img,
   .tra__evidence img {
     display: block;
     width: 100%;
@@ -477,7 +455,6 @@ script = await workflow.execute_activity(
   @media (max-width: 760px) {
     .tra__artifacts,
     .tra__code,
-    .tra__skill,
     .tra__evidence {
       grid-template-columns: 1fr;
     }

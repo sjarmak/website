@@ -39,6 +39,13 @@ test("off-navigation walkthrough exposes the faithful assignment package", () =>
   );
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
+  assert.match(source, /codeToHtml/);
+  assert.match(source, /github-light-high-contrast/);
+  assert.match(source, /github-dark-high-contrast/);
+  assert.match(source, /set:html=\{beforeCode\}/);
+  assert.match(source, /set:html=\{afterCode\}/);
+  assert.match(source, /background: var\(--night-900\)/);
+  assert.match(source, /color: var\(--shiki-dark\) !important/);
   for (const slug of [
     "before",
     "inputs",
@@ -57,10 +64,13 @@ test("off-navigation walkthrough exposes the faithful assignment package", () =>
     source,
     /href="https:\/\/www\.sjarmak\.ai\/projects\/scix-agent"/,
   );
-  assert.match(source, /researchPrompt/);
+  assert.match(source, /Stage 1: research/);
+  assert.match(source, /Research ONE podcast episode/);
   assert.match(source, /write_deep_dive/);
   assert.match(source, /write_podcast_script/);
-  assert.match(source, /run-durable-research/);
+  assert.doesNotMatch(source, /run-durable-research/);
+  assert.doesNotMatch(source, /Separate follow-on work/);
+  assert.doesNotMatch(source, /general research Workflow/);
   assert.match(source, /configured workstation/i);
   assert.match(source, /A Temporal\s+Workflow owns episode order/);
   assert.match(source, /Temporal Activities own MCP calls/);
@@ -186,10 +196,10 @@ test("README tables use a readable thin grid and scroll on narrow screens", () =
   assert.match(route, /background: var\(--color-bg-subtle\)/);
 });
 
-test("each evidence screenshot opens in an accessible full-view dialog", () => {
+test("each assignment evidence screenshot opens in an accessible full-view dialog", () => {
   const source = readFileSync(PAGE, "utf8");
 
-  assert.equal((source.match(/data-expand-image\s/g) ?? []).length, 3);
+  assert.equal((source.match(/data-expand-image\s/g) ?? []).length, 2);
   assert.match(source, /<dialog[^>]+id="evidence-viewer"/);
   assert.match(source, /showModal\(\)/);
   assert.match(source, /data-close-viewer/);
@@ -234,4 +244,35 @@ test("packaged media, deck, faithful code, and products exist", () => {
   ]) {
     assert.equal(existsSync(path.join(ROOT, relativePath)), true, relativePath);
   }
+});
+
+test("deck follows the site design system and keeps code token-colored", () => {
+  const deck = readFileSync(
+    path.join(ROOT, "public/temporal-research-agent/deck.html"),
+    "utf8",
+  );
+
+  assert.match(deck, /I’ll show/);
+  assert.match(deck, /The code we already had/);
+  assert.match(deck, /The Python rewrite/);
+  assert.match(deck, /The recovery proof/);
+  assert.match(deck, /--paper-100: oklch\(96\.5% 0\.012 83\)/);
+  assert.match(deck, /--ember-500: oklch\(60% 0\.16 52\)/);
+  assert.match(deck, /font-family: "Literata"/);
+  assert.match(deck, /font-family: "Hanken Grotesk"/);
+  assert.match(deck, /class="language-javascript"/);
+  assert.match(deck, /class="language-python"/);
+  for (const token of [
+    "tok-keyword",
+    "tok-function",
+    "tok-string",
+    "tok-class",
+    "tok-decorator",
+    "tok-comment",
+  ]) {
+    assert.match(deck, new RegExp(`class="${token}"`));
+  }
+  assert.doesNotMatch(deck, /run-durable-research/);
+  assert.doesNotMatch(deck, /what I would ask in review/);
+  assert.equal((deck.match(/class="slide(?: |")/g) ?? []).length, 10);
 });

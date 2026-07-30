@@ -66,6 +66,8 @@ test("reader renders the full file as click-to-expand semantic sections", () => 
   assert.match(route, /event\.key === " "/);
   assert.doesNotMatch(route, /Mouse over, focus, or tap/);
   assert.doesNotMatch(route, /<details/);
+  assert.match(route, /github-light-high-contrast/);
+  assert.match(route, /github-dark-high-contrast/);
   assert.match(route, /color: var\(--shiki-light\) !important/);
   assert.match(route, /color: var\(--shiki-dark\) !important/);
 });

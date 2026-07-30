@@ -2,132 +2,131 @@
 
 Target: 11–13 minutes, followed by questions.
 
-## Slide 1: The migration
+## Slide 1: Temporal assignment
 
 I started with an existing Code Intelligence Digest pipeline that used SciX
-for scholarly retrieval. I did not choose a toy order-processing example. This
-program had already produced ten podcast episodes across two research series.
+for scholarly retrieval. The program had already produced ten podcast episodes
+across two research series.
 
-The test you will see is abrupt: I send `SIGKILL` to the Worker while two
-research Activities are running. A replacement Worker finishes the same
-Workflow Execution.
+I will show the original pipeline, the Python implementation built with
+Temporal Workflows and Activities, and a recovery test where I kill the Worker
+while two research Activities are running.
 
-## Slide 2: The original product
+## Slide 2: What I will show
 
-The input contains two series and ten episode briefs. Each episode has a
-title, focus, seed papers, and sometimes a frontier flag.
+The walkthrough has three parts.
+
+First, I will establish the original product and failure boundary. Second, I
+will show where the business sequence moved into a Temporal Workflow, where
+external work moved into Activities, and how the Worker registers both. Third,
+I will play the recorded Worker-kill test and inspect its Event History.
+
+The README uses the same sequence so someone can revisit the migration without
+the presentation.
+
+## Slide 3: The original problem
+
+The input contains two series and ten episode briefs. Each episode has a title,
+focus, seed papers, and sometimes a frontier flag.
 
 Each branch produces three documents in order: research, a technical deep
 dive, and a podcast script. Two literature reviews wait for the episode work.
 The original program also wrote ten new-bibcode files, so the complete product
 graph contains 32 documents.
 
-The important point is that the old code already had useful business logic.
-The migration must preserve it.
+The Node process owned the active phase and in-flight promises. Files written
+before an exit survived, but no durable cursor identified the last completed
+stage. An operator had to inspect the directory and decide which calls were
+safe to repeat.
 
-## Slide 3: Before and after
-
-The JavaScript version uses `pipeline()` to sequence the three stages and
-`parallel()` for the two final reviews. That graph is sensible.
-
-The Python replacement schedules the same stages as
-`research_episode`, `write_deep_dive`, and `write_podcast_script` Activities.
-The Workflow then fans completed episodes into `write_series_review`.
-
-The full 124-line JavaScript file is included. Separate code readers show the
-ten typed episode inputs and the preserved prompt contracts, so the comparison
-does not hide the business rules behind ellipses.
-
-## Slide 4: Failure before Temporal
-
-The old client owned the active phase, the pipeline cursor, and every in-flight
-promise. A process exit removed that state.
-
-Files written before the exit survived, which created an ambiguous recovery
-problem. An operator had to inspect the directory, infer the last complete
-stage, and decide whether an external call was safe to repeat.
-
-A direct Python rewrite with `asyncio.gather()` would have the same
+A direct Python rewrite with `asyncio.gather()` would keep the same
 process-level failure boundary.
 
-## Slide 5: The determinism boundary
+## Slide 4: Before and after
+
+The JavaScript source uses `pipeline()` to sequence research, deep-dive
+writing, and script writing. It uses `parallel()` for the two final reviews.
+That dependency graph is the business logic I needed to preserve.
+
+The Python Workflow schedules the same stages as `research_episode`,
+`write_deep_dive`, and `write_podcast_script` Activities. It then fans
+completed episodes into `write_series_review`.
+
+The slide shows excerpts for readability. The case study includes the complete
+124-line JavaScript source, the ten typed episode inputs, the prompt contracts,
+and every Python source file.
+
+## Slide 5: Temporal Workflow
 
 The Temporal Workflow owns episode order, bounded concurrency, completion
-policy, series-review fan-in, and progress. These decisions replay from Event
-History.
+policy, series-review fan-in, and queryable progress.
 
-Temporal Activities own SciX and Code Intelligence Digest calls, the writer
-process, clock reads, heartbeats, and artifact I/O. Those operations depend on
-external state and may be retried.
+The Workflow code only makes deterministic orchestration decisions. Network
+calls, model calls, clock reads, environment access, and artifact I/O stay
+outside it. Temporal records these decisions in Event History so a replacement
+Worker can replay them.
 
-The Temporal Service persists Event History and schedules tasks. Full evidence
-and long documents stay in the artifact store, so Workflow payloads remain
-compact.
+The full run keeps ten bounded episode branches in one Workflow Execution. A
+larger or continuously refreshed catalog could use Child Workflows or
+Continue-As-New.
 
-## Slide 6: Recovery contracts
+## Slide 6: Temporal Activities and Temporal Worker
 
-Temporal makes retry and timeout state durable. The application still chooses
-the contract.
+The `research_episode` Activity chooses fixture or live evidence, calls SciX
+and Code Intelligence Digest on the live path, emits heartbeats, and writes
+evidence to artifact storage. The other Activities write deep dives, podcast
+scripts, series reviews, and the final manifest.
 
-The sample uses three attempts with bounded exponential backoff,
+The Worker connects to Temporal, polls the task queue, and registers the
+Workflow plus all five Activities. Another Worker with the same registrations
+can continue the execution after the first process disappears.
+
+## Slide 7: Resilience and tradeoffs
+
+The sample uses three Activity attempts with bounded exponential backoff,
 stage-specific Start-to-Close Timeouts, and a 30-second Heartbeat Timeout for
 long calls.
 
-Live MCP responses use stable logical request IDs and a response journal.
-That suppresses repeats once the response is stored. It cannot close the crash
-window between provider success and journal persistence. The current searches
-are read-only. Paid or mutating providers must enforce the same idempotency key.
+Live MCP responses use stable logical request IDs and a response journal. Once
+a response is stored, a retry can reuse it. The remaining gap is a crash after
+provider success and before journal persistence. The current searches are
+read-only. Paid or mutating providers must enforce the same idempotency key.
 
-The writer has the same at-least-once concern. Stable artifact paths prevent
-duplicate files, while provider-side deduplication or a writer response journal
-would prevent a repeated model charge.
+Large research evidence and generated documents stay in artifact storage.
+Event History carries compact inputs, statuses, hashes, and artifact paths.
 
-## Slide 7: Recorded failure
+## Slide 8: Recorded recovery
 
 Play the recording.
 
-The two representative episode branches are already in
-`research_episode`. The script verifies pending Activities and heartbeat data
-before killing the exact Worker PID.
+Two representative episode branches are already running
+`research_episode`. The recovery script verifies the pending Activities and
+their heartbeat data before killing the Worker process.
 
-The replacement Worker polls the same task queue. After the Heartbeat
-Timeouts, it receives attempt 2. The video then shows research, deep dives,
-scripts, both series reviews, and the manifest completing.
+A replacement Worker polls the same task queue. After the Heartbeat Timeouts,
+it receives attempt 2. Research, deep dives, scripts, both series reviews, and
+the manifest finish under the same Workflow Execution.
 
-The right-hand captions never cover the terminal or Temporal Web. The proof
-frames pause long enough to read.
+## Slide 9: Testability and proof
 
-## Slide 8: Event History evidence
+Temporal Web shows both `research_episode` Activities starting on attempt 2
+under the replacement Worker. The result retains the original Workflow ID and
+Run ID and contains both completed episode keys and both review references.
 
-The terminal result contains the original Workflow ID and Run ID, both
-completed episode keys, no failed episodes, and both review references.
+The source uses frozen typed dataclasses at Workflow boundaries and keeps I/O
+dependencies out of Workflow imports. The package passes 89 tests, 81.9
+percent branch-aware coverage, Ruff, and strict MyPy.
 
-Temporal Web shows the same input and output. In ascending Event History, both
-`research_episode` Activities start on attempt 2 under the replacement Worker.
-
-This demonstrates Workflow recovery rather than a new run started by a shell
-script.
-
-## Slide 9: Engineering review
-
-The source uses frozen typed dataclasses at Workflow boundaries. Workflow
-imports are isolated from I/O dependencies. The package passes 89 tests,
-81.9 percent branch-aware coverage, Ruff, and strict MyPy.
-
-For production I would add shared artifact storage, provider-enforced
-idempotency for paid calls, Activity-specific retry policy, metrics, separate
-task queues where capacity differs, and Worker Versioning.
-
-Ten bounded episode branches fit in one execution. A larger or continuously
-refreshed catalog would prompt a Child Workflow or Continue-As-New design.
+The short recording runs two representative episodes. A separate fixture run
+executes all ten episodes through the same Workflow and Activity code.
 
 ## Slide 10: What changed
 
-The existing code already provided ten episode briefs and prompts, the
+The existing code provided ten episode briefs and prompts, the
 research-to-deep-dive-to-script sequence, and two series literature reviews.
 
 Adding Temporal provides durable Workflow progress, Activity retries after
-failure, queryable state, and Event History.
+failure, queryable progress, and Event History.
 
 ## Likely questions
 
@@ -156,8 +155,8 @@ or a transactional boundary.
 
 The recording tests Worker loss. Temporal Service durability depends on the
 deployment and its persistence layer. Temporal Cloud or a production
-self-hosted cluster provides that service-level durability; the local
-development server in the demo is not a production topology.
+self-hosted cluster provides that service-level durability. The local
+development server in the demo is a development topology.
 
 ### Why are the documents outside Event History?
 
@@ -176,7 +175,7 @@ representative episodes; the full fixture run executes all ten.
 
 The recording tests durability. Fixed evidence isolates that test from
 workstation index health, provider latency, and model variability. The live
-Activity path remains in the source and uses the same Workflow contract.
+Activity path uses the same Workflow contract.
 
 ### What changes require Workflow versioning?
 
