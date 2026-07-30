@@ -1,0 +1,182 @@
+{
+  "mas-ep1": {
+    "scix": [
+      {
+        "id": "2024arXiv240201680G",
+        "title": "Large Language Model based Multi-Agents: A Survey of Progress and Challenges",
+        "locator": "2024arXiv240201680G",
+        "summary": "The survey organizes multi-agent systems around agent profiles, communication, cooperation, and evaluation."
+      }
+    ],
+    "digest": [
+      {
+        "id": "magentic-one",
+        "title": "Magentic-One: A Generalist Multi-Agent System",
+        "locator": "https://arxiv.org/abs/2411.04468",
+        "summary": "Magentic-One uses an orchestrator-ledger pattern to coordinate specialized agents and track progress."
+      }
+    ]
+  },
+  "mas-ep2": {
+    "scix": [
+      {
+        "id": "2023arXiv230808155W",
+        "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+        "locator": "2023arXiv230808155W",
+        "summary": "AutoGen models application behavior as conversations among configurable agents."
+      }
+    ],
+    "digest": [
+      {
+        "id": "mcp-overview",
+        "title": "Model Context Protocol",
+        "locator": "https://modelcontextprotocol.io/",
+        "summary": "MCP standardizes how agent applications connect to tools and contextual data."
+      }
+    ]
+  },
+  "mas-ep3": {
+    "scix": [
+      {
+        "id": "2024arXiv240907429Z",
+        "title": "Agent Workflow Memory",
+        "locator": "2024arXiv240907429Z",
+        "summary": "Workflow memory stores reusable experience from prior agent trajectories."
+      }
+    ],
+    "digest": [
+      {
+        "id": "magentic-ledger",
+        "title": "Magentic-One progress ledger",
+        "locator": "https://arxiv.org/abs/2411.04468",
+        "summary": "A shared ledger gives an orchestrator an explicit record of facts, progress, and next steps."
+      }
+    ]
+  },
+  "mas-ep4": {
+    "scix": [
+      {
+        "id": "2025arXiv250313657C",
+        "title": "Why Do Multi-Agent LLM Systems Fail?",
+        "locator": "2025arXiv250313657C",
+        "summary": "MAST attributes many failures to coordination and inter-agent boundaries."
+      }
+    ],
+    "digest": [
+      {
+        "id": "anthropic-multi-agent",
+        "title": "How we built our multi-agent research system",
+        "locator": "https://www.anthropic.com/engineering/multi-agent-research-system",
+        "summary": "Anthropic describes production lessons in delegation, parallelism, evaluation, and reliability."
+      }
+    ]
+  },
+  "mas-ep5": {
+    "scix": [
+      {
+        "id": "2026arXiv260507935X",
+        "title": "TraceFix: Verified Coordination Protocols for Language Agents",
+        "locator": "2026arXiv260507935X",
+        "summary": "Trace-level verification provides a path toward checking coordination behavior instead of only final answers."
+      }
+    ],
+    "digest": [
+      {
+        "id": "agent-observability",
+        "title": "OpenTelemetry semantic conventions for generative AI",
+        "locator": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+        "summary": "Shared telemetry conventions can make agent traces comparable across frameworks and providers."
+      }
+    ]
+  },
+  "code-ep1": {
+    "scix": [
+      {
+        "id": "2019arXiv190909436H",
+        "title": "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search",
+        "locator": "2019arXiv190909436H",
+        "summary": "CodeSearchNet pairs natural-language queries with expert relevance judgments over code."
+      }
+    ],
+    "digest": [
+      {
+        "id": "codesearchnet",
+        "title": "CodeSearchNet",
+        "locator": "https://github.com/github/CodeSearchNet",
+        "summary": "The benchmark exposes the vocabulary and intent gap between queries and source code."
+      }
+    ]
+  },
+  "code-ep2": {
+    "scix": [
+      {
+        "id": "2020arXiv200908366G",
+        "title": "GraphCodeBERT: Pre-training Code Representations with Data Flow",
+        "locator": "2020arXiv200908366G",
+        "summary": "GraphCodeBERT incorporates data-flow relationships into code representations."
+      }
+    ],
+    "digest": [
+      {
+        "id": "colbert",
+        "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction",
+        "locator": "https://arxiv.org/abs/2004.12832",
+        "summary": "Late interaction retains token-level matching while precomputing document representations."
+      }
+    ]
+  },
+  "code-ep3": {
+    "scix": [
+      {
+        "id": "2023arXiv230312570Z",
+        "title": "RepoCoder: Repository-Level Code Completion Through Iterative Retrieval and Generation",
+        "locator": "2023arXiv230312570Z",
+        "summary": "RepoCoder iterates retrieval and generation to use repository-level context."
+      }
+    ],
+    "digest": [
+      {
+        "id": "swe-agent",
+        "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+        "locator": "https://arxiv.org/abs/2405.15793",
+        "summary": "Purpose-built interfaces improve an agent's ability to navigate and modify repositories."
+      }
+    ]
+  },
+  "code-ep4": {
+    "scix": [
+      {
+        "id": "2024arXiv240606025L",
+        "title": "RepoQA: Evaluating Long Context Code Understanding",
+        "locator": "2024arXiv240606025L",
+        "summary": "RepoQA evaluates whether systems can locate and understand relevant code across repositories."
+      }
+    ],
+    "digest": [
+      {
+        "id": "sourcegraph-scip",
+        "title": "SCIP: a code intelligence protocol",
+        "locator": "https://github.com/sourcegraph/scip",
+        "summary": "SCIP represents definitions, references, and relationships across languages and indexers."
+      }
+    ]
+  },
+  "code-ep5": {
+    "scix": [
+      {
+        "id": "2026arXiv260502421L",
+        "title": "AOCI: A Symbolic and Semantic Index for Agentic Code Intelligence",
+        "locator": "2026arXiv260502421L",
+        "summary": "AOCI combines symbolic structure with semantic retrieval for repository-scale agent navigation."
+      }
+    ],
+    "digest": [
+      {
+        "id": "zoekt",
+        "title": "Zoekt: fast trigram-based code search",
+        "locator": "https://github.com/sourcegraph/zoekt",
+        "summary": "Zoekt demonstrates the continued production value of fast lexical indexing alongside semantic systems."
+      }
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "completed_episode_keys": [
+    "mas-ep4",
+    "code-ep4"
+  ],
+  "episodes": [
+    {
+      "deep_dive_ref": "podcast-pipeline-8b7dcafae9f1/deep-dives/mas-ep4.md",
+      "episode_key": "mas-ep4",
+      "error": null,
+      "research_ref": "podcast-pipeline-8b7dcafae9f1/research/mas-ep4.md",
+      "script_ref": "podcast-pipeline-8b7dcafae9f1/scripts/podcast-script-multiagent-orchestration-ep4-enterprise-and-production.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-8b7dcafae9f1/evidence/95e748512a57fa3f0b75c9eedd2ef4a74e33629676d9e337b9b76fe6a93a9dd6.json",
+          "content_hash": "95e748512a57fa3f0b75c9eedd2ef4a74e33629676d9e337b9b76fe6a93a9dd6",
+          "lane": "scix",
+          "locator": "2025arXiv250313657C",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2025arXiv250313657C",
+          "title": "Why Do Multi-Agent LLM Systems Fail?"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-8b7dcafae9f1/evidence/7424bc1aa8be32247c1190a51e32f2d958f9e5425b7c3a8527d45cdf7e77e277.json",
+          "content_hash": "7424bc1aa8be32247c1190a51e32f2d958f9e5425b7c3a8527d45cdf7e77e277",
+          "lane": "digest",
+          "locator": "https://www.anthropic.com/engineering/multi-agent-research-system",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "anthropic-multi-agent",
+          "title": "How we built our multi-agent research system"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-8b7dcafae9f1/deep-dives/code-ep4.md",
+      "episode_key": "code-ep4",
+      "error": null,
+      "research_ref": "podcast-pipeline-8b7dcafae9f1/research/code-ep4.md",
+      "script_ref": "podcast-pipeline-8b7dcafae9f1/scripts/podcast-script-code-retrieval-ep4-enterprise-codebase-challenges.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-8b7dcafae9f1/evidence/4f7a4908979e36ec14caf8fff47cffbf14ff1b12b015b7b0ab309a32cf5b7b45.json",
+          "content_hash": "4f7a4908979e36ec14caf8fff47cffbf14ff1b12b015b7b0ab309a32cf5b7b45",
+          "lane": "scix",
+          "locator": "2024arXiv240606025L",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2024arXiv240606025L",
+          "title": "RepoQA: Evaluating Long Context Code Understanding"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-8b7dcafae9f1/evidence/e053897a0d7b065f7e8ea345d4b5a19b2bb3c02260ea76abc04fe5e5264e3626.json",
+          "content_hash": "e053897a0d7b065f7e8ea345d4b5a19b2bb3c02260ea76abc04fe5e5264e3626",
+          "lane": "digest",
+          "locator": "https://github.com/sourcegraph/scip",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "sourcegraph-scip",
+          "title": "SCIP: a code intelligence protocol"
+        }
+      ],
+      "status": "complete"
+    }
+  ],
+  "failed_episode_keys": [],
+  "pipeline_id": "podcast-pipeline-8b7dcafae9f1",
+  "series_reviews": [
+    {
+      "episode_keys": [
+        "mas-ep4"
+      ],
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md",
+      "series_key": "mas"
+    },
+    {
+      "episode_keys": [
+        "code-ep4"
+      ],
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md",
+      "series_key": "code"
+    }
+  ]
+}

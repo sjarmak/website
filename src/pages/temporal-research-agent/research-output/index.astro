@@ -1,137 +1,143 @@
 ---
-import ResearchReport from "@/components/temporal-research-agent/ResearchReport.md";
+import TemporalCodeReview from "@/components/temporal-research-agent/TemporalCodeReview.md";
+import TemporalMasReview from "@/components/temporal-research-agent/TemporalMasReview.md";
 import PageLayout from "@/layouts/PageLayout.astro";
 
 const root = "/temporal-research-agent";
+const outputRoot = `${root}/after/fixture-products`;
+const beforeRoot = `${root}/before/products`;
+
+const series = [
+  {
+    name: "Multi-Agent Orchestration",
+    review: `${outputRoot}/reviews/mas-literature-review.md`,
+    originalReview: `${beforeRoot}/multiagent-orchestration/20-literature-review.md`,
+    scripts: [
+      ["Foundations & Topologies", "podcast-script-multiagent-orchestration-ep1-foundations-and-topologies.md"],
+      ["Patterns & Frameworks", "podcast-script-multiagent-orchestration-ep2-patterns-and-frameworks.md"],
+      ["Memory in Multi-Agent Systems", "podcast-script-multiagent-orchestration-ep3-memory-in-mas.md"],
+      ["Enterprise & Production", "podcast-script-multiagent-orchestration-ep4-enterprise-and-production.md"],
+      ["Frontier & Open Problems", "podcast-script-multiagent-orchestration-ep5-frontier-and-open-problems.md"],
+    ],
+    folder: "multiagent-orchestration",
+  },
+  {
+    name: "Code Retrieval & Enterprise Codebases",
+    review: `${outputRoot}/reviews/code-literature-review.md`,
+    originalReview: `${beforeRoot}/code-retrieval/20-literature-review.md`,
+    scripts: [
+      ["Why Code Isn't Text IR", "podcast-script-code-retrieval-ep1-why-code-isnt-text-ir.md"],
+      ["Techniques: Lexical → Neural → Graph", "podcast-script-code-retrieval-ep2-techniques-lexical-neural-graph.md"],
+      ["Repository-Scale & Code Graphs", "podcast-script-code-retrieval-ep3-repo-scale-and-code-graphs.md"],
+      ["Enterprise Codebase Challenges", "podcast-script-code-retrieval-ep4-enterprise-codebase-challenges.md"],
+      ["Frontier & Open Problems", "podcast-script-code-retrieval-ep5-frontier-and-open-problems.md"],
+    ],
+    folder: "code-retrieval",
+  },
+];
 ---
 
 <PageLayout
-  title="Durable literature-review agents"
-  kicker="The live research product"
-  intro="A cited report produced by the Temporal-backed research pipeline, with its method and provenance kept close at hand."
-  description="The completed research output from a durable literature-review Workflow using live SciX and Code Intelligence Digest evidence."
+  title="The research products behind the migration"
+  kicker="Pipeline output"
+  intro="The original long-form products establish what the JavaScript program made. A full ten-episode Temporal fixture run proves that the Python replacement preserves the same document graph."
+  description="Original and Temporal-produced research outputs from the podcast pipeline migration."
   noindex={true}
 >
   <article class="research-output">
     <nav class="research-output__nav" aria-label="Research output links">
       <a href={root}>← Case study</a>
       <a href={`${root}/readme`}>README</a>
-      <a href={`${root}/research-output/report.md`}>Raw Markdown</a>
-      <a href={`${root}/research-output/manifest.json`}>Provenance manifest</a>
+      <a href={`${outputRoot}/manifest.json`}>Temporal run manifest</a>
     </nav>
 
     <section class="research-output__summary" aria-labelledby="run-summary">
       <div>
-        <p class="kicker">Completed run</p>
-        <h2 id="run-summary">Retrieval survived long enough to become synthesis</h2>
+        <p class="kicker">Full fixture run</p>
+        <h2 id="run-summary">All ten episode branches completed</h2>
       </div>
-      <p>
-        We ran the same four-angle Workflow against the live SciX and Code
-        Intelligence Digest indexes. It finished with <strong>4 completed
-        angles</strong>, <strong>0 failed angles</strong>, and <strong>48
-        retrieved records</strong>: 24 from SciX and 24 from Code Intelligence
-        Digest. When one provider indexed more than one record for the same
-        title, the readable report shows that title once per question. The
-        provenance manifest retains all 48 retrieved records.
-      </p>
+      <dl>
+        <div><dt>Episodes</dt><dd>10 complete</dd></div>
+        <div><dt>Failures</dt><dd>0</dd></div>
+        <div><dt>Sources</dt><dd>20 records</dd></div>
+        <div><dt>Products</dt><dd>32 documents</dd></div>
+      </dl>
     </section>
 
     <section class="research-output__method" aria-labelledby="pipeline-heading">
       <header>
-        <p class="kicker">How the report was made</p>
-        <h2 id="pipeline-heading">The durable research pipeline</h2>
+        <p class="kicker">How each product was made</p>
+        <h2 id="pipeline-heading">The Activity chain</h2>
       </header>
-      <ol aria-label="Durable research pipeline">
-        <li>
-          <code>research_angle</code>
-          <span>
-            searches both providers and stores the full responses as durable
-            evidence artifacts.
-          </span>
-        </li>
-        <li>
-          <code>verify_evidence</code>
-          <span>
-            re-reads the artifacts and checks their content hashes before
-            evidence enters the report.
-          </span>
-        </li>
-        <li>
-          <code>synthesize_section</code>
-          <span>
-            turns each question’s normalized evidence into findings with
-            readable, linked citations.
-          </span>
-        </li>
-        <li>
-          <code>finalize_review</code>
-          <span>
-            calls SciX <code>synthesize_findings</code> across the combined
-            scholarly working set, then writes the report and provenance
-            manifest.
-          </span>
-        </li>
+      <ol>
+        <li><code>research_episode</code><span>stores SciX-shaped and Code Intelligence Digest-shaped evidence, then writes one research artifact.</span></li>
+        <li><code>write_deep_dive</code><span>turns that research into the source document for the episode.</span></li>
+        <li><code>write_podcast_script</code><span>preserves the original six-segment podcast format and citation contract.</span></li>
+        <li><code>write_series_review</code><span>synthesizes the five completed deep dives in each series.</span></li>
+        <li><code>write_pipeline_manifest</code><span>indexes every stage, source record, content hash, and artifact reference.</span></li>
       </ol>
     </section>
 
-    <aside class="research-output__finding" aria-labelledby="synthesized-finding">
-      <p class="kicker">Synthesized finding</p>
-      <h2 id="synthesized-finding">
-        Durability is a property of the whole research pipeline
-      </h2>
+    <aside class="research-output__note">
+      <p class="kicker">Evidence boundary</p>
       <p>
-        Temporal preserves orchestration decisions and retries nondeterministic
-        work, but correct recovery still depends on idempotent tool contracts,
-        durable artifacts with provenance, and tests that verify intermediate
-        state and output fidelity.
+        The Temporal-produced documents below are fixture-backed demonstration
+        editions. They exercise the complete Workflow and artifact path without
+        depending on local index health. The historical products are the
+        long-form material made by the original live pipeline.
       </p>
     </aside>
 
-    <section class="research-output__lane" aria-labelledby="digest-contribution">
-      <div>
-        <p class="kicker">Engineering evidence</p>
-        <h2 id="digest-contribution">What Code Intelligence Digest contributed</h2>
-      </div>
-      <div>
-        <p>
-          The 24 Digest records include practitioner material and indexed
-          technical discussions. In the report, the provider appears as a
-          readable label, duplicate titles within a question are collapsed,
-          and every displayed title links directly to its source. Internal item
-          IDs and every retrieved record remain in the provenance manifest.
-        </p>
-        <ul>
-          <li>
-            <a href="https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/">
-              Building a Durable Execution Engine with SQLite
-            </a>
-          </li>
-          <li>
-            <a href="https://www.reddit.com/r/LLMDevs/comments/1r0fzyc/replay_is_not_reexecution_the_reproducibility_gap/">
-              Replay is not re-execution
-            </a>
-          </li>
-          <li>
-            <a href="https://devops.com/agentic-ai-in-observability-platforms-empowering-autonomous-sre/">
-              Agentic AI in Observability Platforms
-            </a>
-          </li>
-        </ul>
+    <section class="research-output__index" aria-labelledby="output-index">
+      <header>
+        <p class="kicker">All deliverables</p>
+        <h2 id="output-index">Two series, five episodes each</h2>
+      </header>
+      <div class="research-output__series">
+        {
+          series.map((item) => (
+            <section>
+              <h3>{item.name}</h3>
+              <div class="research-output__review-links">
+                <a href={item.review}>Temporal fixture review</a>
+                <a href={item.originalReview}>Original long-form review</a>
+              </div>
+              <ol>
+                {item.scripts.map(([title, filename]) => (
+                  <li>
+                    <span>{title}</span>
+                    <span>
+                      <a href={`${outputRoot}/scripts/${filename}`}>Temporal</a>
+                      <a href={`${beforeRoot}/${item.folder}/${filename}`}>Original</a>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))
+        }
       </div>
     </section>
 
-    <article class="research-output__report prose" aria-label="Completed live research report">
-      <ResearchReport />
-    </article>
+    <section class="research-output__reports" aria-labelledby="rendered-reviews">
+      <header>
+        <p class="kicker">Temporal-produced research output</p>
+        <h2 id="rendered-reviews">The two series reviews and all cited sources</h2>
+      </header>
+      <article class="prose">
+        <TemporalMasReview />
+      </article>
+      <article class="prose">
+        <TemporalCodeReview />
+      </article>
+    </section>
 
     <footer class="research-output__footer">
       <p>
-        The readable report omits repository-specific source IDs. The
-        <a href={`${root}/research-output/manifest.json`}>provenance manifest</a>
-        preserves them with content hashes, retrieval timestamps, artifact
-        references, and provider lanes.
+        The <a href={`${outputRoot}/manifest.json`}>manifest</a> retains the
+        source lane, locator, retrieval time, content hash, and artifact
+        reference for every episode.
       </p>
-      <a href={`${root}/research-output/synthesis.json`}>Inspect the SciX synthesis output →</a>
     </footer>
   </article>
 </PageLayout>
@@ -152,200 +158,185 @@ const root = "/temporal-research-agent";
   }
 
   .research-output__nav a {
-    display: flex;
     min-height: 3.5rem;
     padding: var(--space-xs) var(--space-s);
+    display: flex;
     align-items: center;
     border-inline-end: var(--border-hairline);
     color: var(--color-text);
     text-decoration: none;
   }
 
-  .research-output__nav a:hover {
-    background: var(--color-bg-subtle);
+  .research-output__nav a:hover,
+  .research-output__index a:hover,
+  .research-output__footer a:hover {
     color: var(--color-accent);
   }
 
   .research-output__summary,
-  .research-output__lane {
+  .research-output__method,
+  .research-output__index > header,
+  .research-output__reports > header {
     display: grid;
     grid-template-columns: minmax(15rem, 4fr) minmax(0, 7fr);
     gap: var(--space-xl);
-    align-items: start;
   }
 
-  .research-output__summary h2,
-  .research-output__lane h2,
-  .research-output__method h2,
-  .research-output__finding h2 {
+  h2,
+  h3,
+  .kicker {
     margin: 0;
   }
 
-  .research-output__summary .kicker,
-  .research-output__lane .kicker,
-  .research-output__method .kicker,
-  .research-output__finding .kicker {
-    margin: 0 0 var(--space-xs);
+  .kicker {
+    margin-block-end: var(--space-xs);
   }
 
-  .research-output__summary > p,
-  .research-output__lane p {
-    max-width: var(--measure);
+  .research-output__summary dl {
     margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: var(--border-hairline);
+    border-left: var(--border-hairline);
+  }
+
+  .research-output__summary dl div {
+    padding: var(--space-s);
+    border-right: var(--border-hairline);
+    border-bottom: var(--border-hairline);
+  }
+
+  .research-output__summary dt {
     color: var(--color-text-secondary);
-    font-size: var(--step-1);
-    line-height: var(--leading-relaxed);
+    font: var(--font-label);
+    text-transform: uppercase;
   }
 
-  .research-output__method {
-    display: grid;
-    grid-template-columns: minmax(15rem, 4fr) minmax(0, 7fr);
-    gap: var(--space-xl);
+  .research-output__summary dd {
+    margin: var(--space-2xs) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
   }
 
   .research-output__method ol {
     margin: 0;
     padding: 0;
-    counter-reset: pipeline;
     list-style: none;
   }
 
   .research-output__method li {
+    padding-block: var(--space-s);
     display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: var(--space-xs) var(--space-s);
-    padding-block: var(--space-m);
+    grid-template-columns: minmax(14rem, 1fr) 2fr;
+    gap: var(--space-s);
     border-top: var(--border-hairline);
-    counter-increment: pipeline;
   }
 
-  .research-output__method li::before {
-    content: counter(pipeline, decimal-leading-zero);
-    grid-row: span 2;
-    color: var(--color-text-muted);
-    font-variant-numeric: tabular-nums;
+  .research-output__method li:last-child {
+    border-bottom: var(--border-hairline);
   }
 
-  .research-output__method code {
-    color: var(--color-text);
-    font-weight: 650;
-  }
-
-  .research-output__method span {
+  .research-output__method li span,
+  .research-output__note p:last-child,
+  .research-output__footer p {
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
   }
 
-  .research-output__finding {
-    max-width: 52rem;
-    padding: clamp(var(--space-l), 5vw, var(--space-2xl));
-    border-inline-start: 0.35rem solid var(--color-accent);
+  .research-output__note {
+    padding: var(--space-l);
+    border: var(--border-hairline);
     background: var(--color-bg-subtle);
   }
 
-  .research-output__finding h2 {
-    max-width: 19ch;
-    font-size: var(--step-3);
-  }
-
-  .research-output__finding > p:last-child {
+  .research-output__note p:last-child {
     max-width: var(--measure);
-    margin: var(--space-m) 0 0;
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
-  }
-
-  .research-output__lane ul {
-    margin: var(--space-m) 0 0;
-    padding-inline-start: 1.2rem;
-  }
-
-  .research-output__lane li + li {
-    margin-block-start: var(--space-xs);
-  }
-
-  .research-output__report {
-    width: 100%;
-    max-width: 78ch;
-    padding-block: var(--space-xl);
-    border-block: var(--border-hairline);
-    overflow-wrap: anywhere;
-  }
-
-  :global(.research-output__report > h1:first-child) {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  :global(.research-output__report h2) {
-    margin-block: var(--space-2xl) var(--space-s);
-    font-size: var(--step-2);
-  }
-
-  :global(.research-output__report h3) {
-    margin-block: var(--space-l) var(--space-xs);
+    margin: 0;
     font-size: var(--step-1);
   }
 
-  :global(.research-output__report h4) {
-    margin-block: var(--space-m) var(--space-xs);
-    color: var(--color-text-secondary);
-    font-size: var(--step-0);
-  }
-
-  :global(.research-output__report li + li) {
-    margin-block-start: var(--space-xs);
-  }
-
-  :global(.research-output__report a) {
-    font-weight: 600;
-  }
-
-  .research-output__footer {
+  .research-output__series {
+    margin-block-start: var(--space-xl);
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-xl);
-    padding-block-start: var(--space-l);
+  }
+
+  .research-output__series > section {
+    border-top: 2px solid var(--color-text);
+  }
+
+  .research-output__series h3 {
+    padding-block: var(--space-s);
+    font-size: var(--step-2);
+  }
+
+  .research-output__review-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    padding-block-end: var(--space-s);
+  }
+
+  .research-output__index a,
+  .research-output__footer a {
+    color: var(--color-text);
+    text-underline-offset: 0.2em;
+  }
+
+  .research-output__series ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     border-top: var(--border-hairline);
   }
 
-  .research-output__footer p {
-    max-width: var(--measure);
-    margin: 0;
-    color: var(--color-text-secondary);
+  .research-output__series li {
+    padding-block: var(--space-xs);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    border-bottom: var(--border-hairline);
   }
 
-  .research-output__footer > a {
-    justify-self: end;
+  .research-output__series li > span:last-child {
+    display: flex;
+    gap: var(--space-xs);
+    white-space: nowrap;
+  }
+
+  .research-output__reports > article {
+    margin-block-start: var(--space-xl);
+    padding: clamp(var(--space-m), 4vw, var(--space-xl));
+    border: var(--border-hairline);
+    background: var(--color-bg-subtle);
+  }
+
+  .research-output__reports :global(h1) {
+    font-size: var(--step-3);
+  }
+
+  .research-output__footer {
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
   }
 
   @media (max-width: 760px) {
     .research-output__summary,
     .research-output__method,
-    .research-output__lane,
-    .research-output__footer {
+    .research-output__index > header,
+    .research-output__reports > header,
+    .research-output__series {
       grid-template-columns: 1fr;
-      gap: var(--space-l);
     }
 
-    .research-output__nav a {
-      width: 50%;
-      border-bottom: var(--border-hairline);
+    .research-output__method li {
+      grid-template-columns: 1fr;
     }
 
-    .research-output__finding {
-      padding: var(--space-l);
-    }
-
-    .research-output__footer > a {
-      justify-self: start;
+    .research-output__series li {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 </style>

@@ -14,19 +14,28 @@ const SAMPLES = path.join(
   "src/data/temporal-research-code-samples.ts",
 );
 
-test("annotated reader exposes all four complete source samples", () => {
+test("annotated reader exposes all six complete source samples", () => {
   assert.equal(existsSync(ROUTE), true);
   assert.equal(existsSync(SAMPLES), true);
 
   const samples = readFileSync(SAMPLES, "utf8");
-  for (const slug of ["before", "workflow", "activities", "worker"]) {
+  for (const slug of [
+    "before",
+    "inputs",
+    "prompts",
+    "workflow",
+    "activities",
+    "worker",
+  ]) {
     assert.match(samples, new RegExp(`slug: "${slug}"`));
   }
   for (const filename of [
-    "phaseE_workflow.excerpt.js",
-    "workflow.py",
-    "activities.py",
-    "worker.py",
+    "phaseE_workflow.js",
+    "podcast_preset.py",
+    "podcast_prompts.py",
+    "podcast_workflow.py",
+    "podcast_activities.py",
+    "podcast_worker.py",
   ]) {
     assert.match(samples, new RegExp(filename.replace(".", "\\.")));
   }
@@ -68,8 +77,10 @@ test("each reader links to its stable raw downloadable source", () => {
   assert.match(route, /href=\{sample\.rawPath\}/);
   assert.match(route, /download=\{sample\.filename\}/);
   assert.match(route, /Download raw/);
-  assert.match(samples, /\/before\/phaseE_workflow\.excerpt\.js/);
-  assert.match(samples, /\/src\/durable_research\/workflow\.py/);
-  assert.match(samples, /\/src\/durable_research\/activities\.py/);
-  assert.match(samples, /\/src\/durable_research\/worker\.py/);
+  assert.match(samples, /\/before\/phaseE_workflow\.js/);
+  assert.match(samples, /\/src\/durable_research\/podcast_preset\.py/);
+  assert.match(samples, /\/src\/durable_research\/podcast_prompts\.py/);
+  assert.match(samples, /\/src\/durable_research\/podcast_workflow\.py/);
+  assert.match(samples, /\/src\/durable_research\/podcast_activities\.py/);
+  assert.match(samples, /\/src\/durable_research\/podcast_worker\.py/);
 });

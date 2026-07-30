@@ -16,6 +16,8 @@ dependencies = [
 durable-research = "durable_research.agent_cli:main"
 durable-research-worker = "durable_research.worker:main"
 durable-research-start = "durable_research.starter:main"
+phasee-worker = "durable_research.podcast_worker:main"
+phasee-start = "durable_research.podcast_starter:main"
 
 [dependency-groups]
 dev = [
@@ -38,6 +40,8 @@ testpaths = ["tests"]
 branch = true
 source = ["durable_research"]
 omit = [
+  "src/durable_research/podcast_starter.py",
+  "src/durable_research/podcast_worker.py",
   "src/durable_research/starter.py",
   "src/durable_research/worker.py",
 ]

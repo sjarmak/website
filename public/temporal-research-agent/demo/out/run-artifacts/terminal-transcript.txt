@@ -1,0 +1,70 @@
+0/5 Start private Temporal server at 127.0.0.1:7723
+1/5 Start phaseE Worker
+2/5 Start two-episode Workflow with slow, heartbeat-emitting research Activities
+3/5 Kill Worker PID 3494508 while Activities are running
+Pending Activities: 2
+
+  ActivityId            1
+  Type                  research_episode
+  State                 Started
+  Attempt               1
+  MaximumAttempts       3
+  ScheduledTime         now
+  LastStartedTime       now
+  LastHeartbeatTime     now
+  LastWorkerIdentity    3494508@ds-5090
+  LastHeartbeatDetails  [{"episode":"mas-ep4","remaining_seconds":8,"stage":"research"}]
+
+  ActivityId            2
+  Type                  research_episode
+  State                 Started
+  Attempt               1
+  MaximumAttempts       3
+  ScheduledTime         now
+  LastStartedTime       now
+  LastHeartbeatTime     now
+  LastWorkerIdentity    3494508@ds-5090
+  LastHeartbeatDetails  [{"episode":"code-ep4","remaining_seconds":8,"stage":"research"}]
+
+Pending Child Workflows: 0
+Pending Nexus Operations: 0
+4/5 Restart Worker PID 3494644; the same Workflow run resumes
+5/5 Verify completion
+started: workflow_id=temporal-phasee-demo-1785443614 run_id=019fb4bb-817e-70cc-ad36-1857e4f10388
+Temporal UI: http://127.0.0.1:8723
+{
+  "pipeline_id": "podcast-pipeline-8b7dcafae9f1",
+  "manifest_ref": "podcast-pipeline-8b7dcafae9f1/manifest.json",
+  "completed_episode_keys": [
+    "mas-ep4",
+    "code-ep4"
+  ],
+  "failed_episode_keys": [],
+  "series_reviews": [
+    {
+      "series_key": "mas",
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md",
+      "episode_keys": [
+        "mas-ep4"
+      ]
+    },
+    {
+      "series_key": "code",
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md",
+      "episode_keys": [
+        "code-ep4"
+      ]
+    }
+  ]
+}
+  WorkflowId            temporal-phasee-demo-1785443614
+  RunId                 019fb4bb-817e-70cc-ad36-1857e4f10388
+  RootWorkflowId        temporal-phasee-demo-1785443614
+  RootRunId             019fb4bb-817e-70cc-ad36-1857e4f10388
+  Status          COMPLETED
+  Result          {"completed_episode_keys":["mas-ep4","code-ep4"],"failed_episode_keys":null,"manifest_ref":"podcast-pipeline-8b7dcafae9f1/manifest.json","pipeline_id":"podcast-pipeline-8b7dcafae9f1","series_reviews":[{"episode_keys":["mas-ep4"],"report_ref":"podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md","series_key":"mas"},{"episode_keys":["code-ep4"],"report_ref":"podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md","series_key":"code"}]}
+Replacement Activity Worker identities recorded in Event History:
+3494644@ds-5090
+Outputs: /home/ds/temporal_devrel/presentation/temporal-literature-review/.demo/phasee-recovery/temporal-phasee-demo-1785443614/podcast-pipeline-8b7dcafae9f1
+Recording Temporal Web: completed Workflow, Activities, and Event History
+record_webui: wrote /home/ds/temporal_devrel/presentation/temporal-literature-review/demo/out/raw/02-temporal-web.webm

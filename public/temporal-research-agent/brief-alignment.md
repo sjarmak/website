@@ -1,78 +1,74 @@
-# Brief alignment
+# Assignment alignment record
 
-Status: all requested deliverables are present. The live MCP runtime remains
-workstation-only. The presentation uses captured evidence and does not offer
-a public reproduction path.
+This file is an internal coverage check. It is not linked from the landing
+page or included as a section in the PDF.
 
 ## Objective
 
-The prior sample is the JavaScript research pipeline preserved in
-[`before/phaseE_workflow.excerpt.js`](before/phaseE_workflow.excerpt.js), with
-its source path and SHA-256 in
-[`before/provenance.json`](before/provenance.json). The replacement uses
-Temporal's Python SDK in
-[`workflow.py`](src/durable_research/workflow.py),
-[`activities.py`](src/durable_research/activities.py), and
-[`worker.py`](src/durable_research/worker.py).
+The historical code sample is the complete
+[`phaseE_workflow.js`](before/phaseE_workflow.js) from Code Intelligence
+Digest. The Python replacement preserves its two series, ten episode briefs,
+research-to-deep-dive-to-script sequence, and two final literature reviews.
+
+The rewrite uses Temporal's Python SDK. The recorded explanation targets a
+developer audience and fits a 10–15 minute presentation.
 
 ## Conversion requirements
 
 | Requirement | Evidence |
 |---|---|
-| Identify state, retry, timeout, and durability needs | Crash windows and boundary choices in [`README.md`](README.md) and [`blog.md`](blog.md) |
-| Implement Worker, Workflow, and Activities | Python source under [`src/durable_research`](src/durable_research) |
-| Use a supported SDK | `temporalio` Python dependency in [`pyproject.toml`](pyproject.toml) |
-| Keep nondeterminism out of Workflow code | MCP, clock, heartbeat, and artifact operations live in Activities |
-| Make retries safe | Content-addressed artifacts, write-once named outputs, and the request journal in [`external_calls.py`](src/durable_research/external_calls.py) |
-| Test resilience | Worker-kill recording, 8/8 evidence gate, Workflow tests, Activity tests, caller-exit recovery, and Worker-replacement recovery |
+| Identify state, retry, timeout, and durability needs | README sections “What a process failure meant before Temporal” and “Design considerations and tradeoffs” |
+| Implement a Workflow | `PodcastResearchWorkflow` owns episode order, bounded concurrency, completion policy, progress, series fan-in, and manifest scheduling |
+| Implement Activities | Five Activities own MCP retrieval, writer calls, heartbeats, clock reads, artifact I/O, and manifest generation |
+| Implement a Worker | `podcast_worker.py` registers the faithful Workflow and five Activities on `temporal-podcast-research` |
+| Use a supported SDK | Python SDK |
+| Make it testable | 89 tests with 81.90% branch-aware coverage, strict MyPy, and Ruff |
+| Make it resilient | Real Worker-kill run, two Heartbeat Timeouts, two attempt-2 starts, same Workflow ID and Run ID, completed outputs |
 
 ## Presentation questions
 
-The 12-minute sequence in [`talk.md`](talk.md) covers:
-
-1. The original research problem and process-local implementation.
-2. Three concrete failure windows.
-3. The Workflow and Activity split.
-4. Retry, timeout, partial-result, artifact, and request-journal policies.
-5. The durable `run-durable-research` agent skill.
-6. Worker-kill evidence in the terminal and Temporal Web.
-7. Trade-offs, including at-least-once external calls and local-only MCP
-   infrastructure.
-8. How the code, recording, README, blog, and verification record teach the
-   design to a developer audience.
-
-The slide timings total 12 minutes, inside the requested 10–15 minute range.
+| Question | Covered in |
+|---|---|
+| What was the original problem? | Deck slides 2–4, README original-code and failure sections |
+| How did the code work before? | Complete annotated JavaScript, business-input reader, prompt-contract reader |
+| What challenges existed? | Process-local cursor, ambiguous artifact recovery, external-call duplication window |
+| How does Temporal improve it? | Workflow/Activity boundary, durable retries and timers, progress Query, Event History |
+| What tradeoffs were made? | README table, deck slides 6 and 9, report sections 3 and 7 |
+| How would it be taught? | README “How I would teach the migration” and `talk.md` |
 
 ## Deliverables
 
 | Deliverable | Location |
 |---|---|
-| Before code | [`before/phaseE_workflow.excerpt.js`](before/phaseE_workflow.excerpt.js) |
-| After code | [`src/durable_research`](src/durable_research) |
-| README | [`README.md`](README.md) |
-| Blog-style explanation | [`blog.md`](blog.md) |
-| Presentation deck | [`deck.html`](deck.html) |
-| Speaker notes | [`talk.md`](talk.md) |
-| Recorded walkthrough | [`demo/out/temporal-literature-review-demo.mp4`](demo/out/temporal-literature-review-demo.mp4) |
-| Run verification | [`verification.md`](verification.md) |
-| Durable research skill | [`skills/run-durable-research/SKILL.md`](skills/run-durable-research/SKILL.md) |
+| Before code | `before/phaseE_workflow.js` |
+| After Workflow | `src/durable_research/podcast_workflow.py` |
+| After Activities | `src/durable_research/podcast_activities.py` |
+| After Worker | `src/durable_research/podcast_worker.py` |
+| Preserved business inputs | `src/durable_research/podcast_preset.py` |
+| Preserved prompt contracts | `src/durable_research/podcast_prompts.py` |
+| README | `README.md` |
+| Presentation deck | `deck.html` |
+| Recorded walkthrough | `demo/out/temporal-literature-review-demo.mp4` |
+| Temporal Web evidence | `deck-assets/activity-attempt-two.png` and exported Event History |
+| Research products | `before/products/` and `after/fixture-products/` |
+| Email attachment | `submission/Stephanie-Jarmak-Temporal-Homework-Report.pdf` |
 
-## Evaluation criteria
+## Review checks
 
-- **Technical depth:** typed Workflows and Activities, bounded concurrency,
-  heartbeats, timeouts, retry policy, partial results, progress Query,
-  compact Event History, artifact provenance, and request journaling.
-- **Clarity of explanation:** one side-by-side code slide and one failure
-  boundary per subsequent section.
-- **Developer empathy:** the docs name the operational cost, the
-  response-before-journal gap, and the workstation-only integration boundary.
-- **Code quality:** strict typing, linting, branch-aware coverage above 80%,
-  Temporal test environment coverage, evidence-gate checks, and deterministic
-  video rendering.
+- Technical depth: deterministic Workflow code, five Activity boundaries,
+  retries, timeouts, heartbeats, typed progress, external idempotency analysis,
+  artifact boundary, Worker replacement, and Event History evidence.
+- Clarity: the same episode sequence appears in the before source, after code,
+  architecture diagram, video, deck, README, and PDF.
+- Developer empathy: the package shows complete source, raw downloads,
+  click-to-expand explanations, actual outputs, limits, and likely production
+  questions.
+- Code quality: frozen typed dataclasses, strict MyPy, Ruff, branch-aware
+  coverage above 80 percent, Workflow tests, Activity tests, and real recovery
+  verification.
 
-## Honest limitation
+## Runtime limitation
 
-The published artifacts can be reviewed from any computer. Running the demo
-or live research path requires our local Temporal setup plus the SciX and Code
-Intelligence Digest repositories, indexes, databases, and service
-configuration. The landing page and documents state that boundary directly.
+The live MCP path depends on the configured workstation. The public site
+contains reviewable source and captured evidence and does not present the live
+integration as a public runnable release.

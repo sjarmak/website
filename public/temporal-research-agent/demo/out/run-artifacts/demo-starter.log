@@ -1,0 +1,27 @@
+started: workflow_id=temporal-phasee-demo-1785443614 run_id=019fb4bb-817e-70cc-ad36-1857e4f10388
+Temporal UI: http://127.0.0.1:8723
+{
+  "pipeline_id": "podcast-pipeline-8b7dcafae9f1",
+  "manifest_ref": "podcast-pipeline-8b7dcafae9f1/manifest.json",
+  "completed_episode_keys": [
+    "mas-ep4",
+    "code-ep4"
+  ],
+  "failed_episode_keys": [],
+  "series_reviews": [
+    {
+      "series_key": "mas",
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md",
+      "episode_keys": [
+        "mas-ep4"
+      ]
+    },
+    {
+      "series_key": "code",
+      "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md",
+      "episode_keys": [
+        "code-ep4"
+      ]
+    }
+  ]
+}

@@ -7,10 +7,10 @@ const poster = `${root}/deck-assets/worker-killed.png`;
 ---
 
 <PageLayout
-  title="Temporal lets us bring a research agent back to life"
+  title="Temporal brings a research pipeline back to life"
   kicker="Temporal case study"
   intro="Improving the durability of our research pipeline using Temporal's Python SDK"
-  description="A before-and-after rewrite of a literature-review agent as a durable Temporal Workflow, with code, recorded failure evidence, and implementation notes."
+  description="A faithful rewrite of a ten-episode podcast research pipeline as a Python Temporal Workflow, with complete source, recorded failure evidence, and implementation notes."
   image={poster}
   noindex={true}
 >
@@ -28,25 +28,27 @@ const poster = `${root}/deck-assets/worker-killed.png`;
       </video>
       <figcaption>
         The Worker dies with two research Activities in flight; Temporal Web
-        shows both retries and the completed Workflow.
+        shows both retries and the completed episode and series-review outputs.
       </figcaption>
     </figure>
 
     <section class="tra__premise prose">
-      <h2>The original pipeline had already done useful work</h2>
+      <h2>The original pipeline already had real business logic</h2>
       <p>
         A JavaScript workflow in the
         <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest project</a>
-        sent ten research branches through
+        sent ten podcast episodes through
         <a href="https://www.sjarmak.ai/projects/scix-agent">SciX retrieval</a>,
         deep dives, and podcast scripts, then produced two literature reviews.
-        One client process held the schedule and inferred progress from files.
+        The complete source includes every episode brief, seed list, and
+        editorial prompt contract. One client process held the active phase
+        and in-flight promises.
       </p>
       <p>
-        The Python rewrite gives that progress to a Temporal Workflow. Network
-        calls, heartbeats, clock reads, and artifact I/O run as Activities.
-        Full evidence stays in an artifact store; Event History carries compact
-        IDs, hashes, statuses, and paths.
+        The Python rewrite preserves that dependency graph. A Temporal
+        Workflow owns episode order, bounded concurrency, completion policy,
+        progress, and final fan-in. Temporal Activities own MCP calls, writer
+        calls, heartbeats, clock reads, and artifact I/O.
       </p>
     </section>
 
@@ -61,26 +63,27 @@ const poster = `${root}/deck-assets/worker-killed.png`;
           <pre><code>phase('Research')
 await pipeline(
   EPS,
-  (it) =&gt; agent(/* prompt omitted */, &lbrace;
-    label: 'research:' + it.s + '-ep' + it.ep,
-    phase: 'Research',
-  &rbrace;),
+  (it) =&gt; agent(researchPrompt(it)),
+  (research, it) =&gt; agent(deepDivePrompt(it, research)),
+  (deepDive, it) =&gt; agent(scriptPrompt(it, deepDive)),
 )
 
 phase('Synthesis')
 await parallel(literatureReviews)</code></pre>
-          <p>Condensed for this page.</p>
-          <a href={`${root}/code/before`}>Open the annotated JavaScript source</a>
+          <p>Condensed here; the code reader contains all 124 source lines.</p>
+          <a href={`${root}/code/before`}>Open the complete annotated JavaScript</a>
         </section>
         <section>
           <h3>After source</h3>
           <pre><code>researched = await workflow.execute_activity(
-    "research_angle",
-    request,
-    heartbeat_timeout=timedelta(seconds=30),
-    retry_policy=self._retry_policy(review),
-)</code></pre>
+    "research_episode", request, ...)
+deep_dive = await workflow.execute_activity(
+    "write_deep_dive", DeepDiveRequest(...), ...)
+script = await workflow.execute_activity(
+    "write_podcast_script", ScriptRequest(...), ...)</code></pre>
           <p class="cluster">
+            <a href={`${root}/code/inputs`}>Business inputs</a>
+            <a href={`${root}/code/prompts`}>Prompt contracts</a>
             <a href={`${root}/code/workflow`}>Workflow</a>
             <a href={`${root}/code/activities`}>Activities</a>
             <a href={`${root}/code/worker`}>Worker</a>
@@ -91,8 +94,8 @@ await parallel(literatureReviews)</code></pre>
 
     <section class="tra__section tra__skill">
       <div class="tra__skill-copy">
-        <p class="kicker">Beyond the demo</p>
-        <h2>The Workflow became an agent skill</h2>
+        <p class="kicker">Separate follow-on work</p>
+        <h2>The general research Workflow also has an agent skill</h2>
         <p>
           <code>run-durable-research</code> submits a Workflow and returns its
           identifiers. The calling agent can exit. Another agent on the same
@@ -100,12 +103,13 @@ await parallel(literatureReviews)</code></pre>
           provenance manifest later.
         </p>
         <p>
-          The Workflow owns durable branch state and retry policy. The Temporal
-          Service persists Event History and schedules execution. Activities
-          perform
+          This skill wraps the separate general-purpose literature-review
+          Workflow. The assignment itself uses the faithful
+          <code>PodcastResearchWorkflow</code> shown above. Both keep
+          orchestration in a Temporal Workflow and perform
           <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a>,
           <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>,
-          artifact I/O, and future model calls.
+          artifact I/O, and model calls in Temporal Activities.
         </p>
         <a href={`${root}/skills/run-durable-research/SKILL.md`}>Read the skill contract</a>
       </div>
@@ -118,12 +122,12 @@ await parallel(literatureReviews)</code></pre>
         >
           <img
             src={`${root}/deck-assets/workflow-completed.png`}
-            alt="Recorded demo frame showing four completed research angles and the replacement Worker identity"
+            alt="Recorded demo frame showing both episode branches and both series reviews completed"
             loading="lazy"
           />
           <span>Open full view</span>
         </button>
-        <figcaption>Four angles completed under the original Workflow run.</figcaption>
+        <figcaption>Both episode branches and both series reviews completed in the original Workflow Execution.</figcaption>
       </figure>
     </section>
 
@@ -163,7 +167,7 @@ await parallel(literatureReviews)</code></pre>
             />
             <span>Open full view</span>
           </button>
-          <figcaption>Events 7 and 10 show both research Activities on attempt two.</figcaption>
+          <figcaption>Event History shows both <code>research_episode</code> Activities on attempt 2.</figcaption>
         </figure>
       </div>
     </section>
@@ -171,14 +175,12 @@ await parallel(literatureReviews)</code></pre>
     <aside class="tra__boundary" aria-labelledby="runtime-boundary">
       <h2 id="runtime-boundary">Runtime boundary</h2>
       <p>
-        The source, deck, documents, recording, and captured evidence are
-        portable. Running the demo and live research integration is
-        workstation-only.
+        This page publishes the source and captured evidence as documentation.
+        The live research integration runs on the configured workstation.
         <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a> and
         <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>
         depend on local repositories, indexes, databases, services, and Worker
-        configuration that are not included here. This page is the
-        documentation package; the research service remains local.
+        configuration that are not included here.
       </p>
     </aside>
 

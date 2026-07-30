@@ -1,0 +1,130 @@
+{
+  "closeEvent": {
+    "eventId": "47",
+    "eventTime": "2026-07-30T20:34:15.530808158Z",
+    "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
+    "taskId": "1048714",
+    "workflowExecutionCompletedEventAttributes": {
+      "result": [
+        {
+          "completed_episode_keys": [
+            "mas-ep4",
+            "code-ep4"
+          ],
+          "failed_episode_keys": null,
+          "manifest_ref": "podcast-pipeline-8b7dcafae9f1/manifest.json",
+          "pipeline_id": "podcast-pipeline-8b7dcafae9f1",
+          "series_reviews": [
+            {
+              "episode_keys": [
+                "mas-ep4"
+              ],
+              "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md",
+              "series_key": "mas"
+            },
+            {
+              "episode_keys": [
+                "code-ep4"
+              ],
+              "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md",
+              "series_key": "code"
+            }
+          ]
+        }
+      ],
+      "workflowTaskCompletedEventId": "46"
+    }
+  },
+  "executionConfig": {
+    "defaultWorkflowTaskTimeout": "10s",
+    "taskQueue": {
+      "kind": "TASK_QUEUE_KIND_NORMAL",
+      "name": "temporal-podcast-research"
+    }
+  },
+  "result": {
+    "completed_episode_keys": [
+      "mas-ep4",
+      "code-ep4"
+    ],
+    "failed_episode_keys": null,
+    "manifest_ref": "podcast-pipeline-8b7dcafae9f1/manifest.json",
+    "pipeline_id": "podcast-pipeline-8b7dcafae9f1",
+    "series_reviews": [
+      {
+        "episode_keys": [
+          "mas-ep4"
+        ],
+        "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/mas-literature-review.md",
+        "series_key": "mas"
+      },
+      {
+        "episode_keys": [
+          "code-ep4"
+        ],
+        "report_ref": "podcast-pipeline-8b7dcafae9f1/reviews/code-literature-review.md",
+        "series_key": "code"
+      }
+    ]
+  },
+  "workflowExecutionInfo": {
+    "autoResetPoints": {
+      "points": [
+        {
+          "buildId": "4af9081cece1d18b505b0a658a5b5484",
+          "createTime": "2026-07-30T20:33:35.339818625Z",
+          "firstWorkflowTaskCompletedId": "4",
+          "resettable": true,
+          "runId": "019fb4bb-817e-70cc-ad36-1857e4f10388"
+        }
+      ]
+    },
+    "closeTime": "2026-07-30T20:34:15.530808158Z",
+    "execution": {
+      "runId": "019fb4bb-817e-70cc-ad36-1857e4f10388",
+      "workflowId": "temporal-phasee-demo-1785443614"
+    },
+    "executionDuration": "40.428755145s",
+    "executionTime": "2026-07-30T20:33:35.102053013Z",
+    "firstRunId": "019fb4bb-817e-70cc-ad36-1857e4f10388",
+    "historyLength": "47",
+    "historySizeBytes": "40121",
+    "memo": {},
+    "mostRecentWorkerVersionStamp": {
+      "buildId": "4af9081cece1d18b505b0a658a5b5484"
+    },
+    "priority": {},
+    "rootExecution": {
+      "runId": "019fb4bb-817e-70cc-ad36-1857e4f10388",
+      "workflowId": "temporal-phasee-demo-1785443614"
+    },
+    "searchAttributes": {
+      "indexedFields": {
+        "BuildIds": {
+          "data": "WyJ1bnZlcnNpb25lZCIsInVudmVyc2lvbmVkOjRhZjkwODFjZWNlMWQxOGI1MDViMGE2NThhNWI1NDg0Il0=",
+          "metadata": {
+            "encoding": "anNvbi9wbGFpbg==",
+            "type": "S2V5d29yZExpc3Q="
+          }
+        }
+      }
+    },
+    "startTime": "2026-07-30T20:33:35.102053013Z",
+    "stateTransitionCount": "40",
+    "status": "WORKFLOW_EXECUTION_STATUS_COMPLETED",
+    "taskQueue": "temporal-podcast-research",
+    "type": {
+      "name": "PodcastResearchWorkflow"
+    }
+  },
+  "workflowExtendedInfo": {
+    "originalStartTime": "2026-07-30T20:33:35.102053013Z",
+    "requestIdInfos": {
+      "0d3c4387-449e-4783-ad1b-8d27421b2198": {
+        "eventId": "1",
+        "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+      }
+    },
+    "runExpirationTime": "0001-01-01T00:00:00Z"
+  }
+}

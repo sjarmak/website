@@ -8,7 +8,7 @@ export interface CodeSection {
 }
 
 export interface TemporalCodeSample {
-  slug: "before" | "workflow" | "activities" | "worker";
+  slug: "before" | "inputs" | "prompts" | "workflow" | "activities" | "worker";
   filename: string;
   title: string;
   kicker: string;
@@ -24,317 +24,464 @@ const root = "/temporal-research-agent";
 export const temporalResearchCodeSamples: TemporalCodeSample[] = [
   {
     slug: "before",
-    filename: "phaseE_workflow.excerpt.js",
-    title: "The captured JavaScript pipeline",
+    filename: "phaseE_workflow.js",
+    title: "The complete JavaScript pipeline",
     kicker: "Before Temporal",
     summary:
-      "The original process had a sensible research graph, but the caller owned scheduling and progress. A process exit meant reconstructing state from files and deciding what to run again.",
+      "This is the full historical program: two series, ten episode briefs, the editorial prompt contracts, three stages per episode, and two final literature reviews.",
     language: "javascript",
-    sourcePath:
-      "public/temporal-research-agent/before/phaseE_workflow.excerpt.js",
-    rawPath: `${root}/before/phaseE_workflow.excerpt.js`,
+    sourcePath: "public/temporal-research-agent/before/phaseE_workflow.js",
+    rawPath: `${root}/before/phaseE_workflow.js`,
     sections: [
       {
         start: 1,
-        end: 3,
-        title: "Provenance note",
+        end: 11,
+        title: "Pipeline intent and stages",
         purpose:
-          "Identifies the earlier workflow and makes clear that this is a captured excerpt rather than a newly invented straw man.",
+          "Names the prior workflow and declares the research, deep-dive, script, and literature-review stages.",
         whyTemporal:
-          "A useful migration starts with the real dependency graph and its actual failure boundary.",
-        details: ["Source fidelity", "Migration boundary"],
+          "The migration starts from the real product sequence, so durability is added without changing what the program is meant to produce.",
+        details: ["Historical source", "Four business stages"],
       },
       {
-        start: 4,
-        end: 8,
-        title: "One process owns the run",
+        start: 12,
+        end: 27,
+        title: "Series configuration",
         purpose:
-          "Creates the workflow and keeps its execution inside a single JavaScript client process.",
+          "Defines the two research series, their directories, names, and output prefixes.",
         whyTemporal:
-          "There is no durable orchestration history outside this caller. If it disappears, the control state disappears with it.",
-        details: ["Process-local state", "No durable resume point"],
+          "These values are business input. They belong in typed Workflow input rather than hidden in Worker state.",
+        details: ["Two series", "Output identity"],
       },
       {
-        start: 9,
-        end: 17,
-        title: "Research fan-out",
-        purpose:
-          "Runs the episode research branches through a helper that coordinates concurrent agent calls.",
-        whyTemporal:
-          "The concurrency is useful, but completion and retry decisions are not durably recorded by an orchestration system.",
-        details: ["Parallel branches", "Caller-managed progress"],
-      },
-      {
-        start: 18,
-        end: 29,
-        title: "Deep-dive fan-out",
-        purpose:
-          "Starts another set of independent research jobs from the same process.",
-        whyTemporal:
-          "A failure between phases leaves the operator to infer which branches committed their output and which should be repeated.",
-        details: ["Phase boundary", "Manual recovery"],
-      },
-      {
-        start: 30,
-        end: 36,
-        title: "Podcast-script generation",
-        purpose:
-          "Transforms the retrieved material into per-episode scripts.",
-        whyTemporal:
-          "This is another nondeterministic call whose outcome needs an explicit retry and deduplication contract.",
-        details: ["External side effect", "Idempotency required"],
-      },
-      {
-        start: 37,
+        start: 28,
         end: 43,
-        title: "Final synthesis",
+        title: "Shared research contract",
         purpose:
-          "Fans the accumulated evidence into two literature-review products.",
+          "Sets source-verification rules and the structured schema returned by episode research.",
         whyTemporal:
-          "The graph is worth preserving. Temporalization moves its control state into a replayable Workflow while leaving external work in Activities.",
-        details: ["Fan-in", "Same graph, durable control"],
+          "A durable retry needs a stable input and output contract. The Python version models both as dataclasses.",
+        details: ["Source policy", "Structured result"],
+      },
+      {
+        start: 44,
+        end: 78,
+        title: "Ten episode briefs",
+        purpose:
+          "Carries every title, focus statement, seed list, and frontier flag for the two five-episode series.",
+        whyTemporal:
+          "This is the business logic that a generic research-angle example would miss. The replacement preserves all ten records.",
+        details: ["Ten episodes", "Seeds", "Frontier flags"],
+      },
+      {
+        start: 79,
+        end: 82,
+        title: "Podcast format",
+        purpose:
+          "Defines the spoken format, six segments, citation table, voice, and approximately 3,000-word target.",
+        whyTemporal:
+          "Temporal schedules the writing step; the application still owns the editorial definition of a correct result.",
+        details: ["Editorial contract", "Output quality"],
+      },
+      {
+        start: 83,
+        end: 113,
+        title: "Per-episode pipeline",
+        purpose:
+          "Runs research, deep-dive writing, and script writing in sequence for each episode, with concurrent episode branches.",
+        whyTemporal:
+          "The graph is sound. The missing piece is a durable record of which stage and branch completed when the client process exits.",
+        details: ["Sequential stages", "Concurrent branches", "Process-local progress"],
+      },
+      {
+        start: 114,
+        end: 123,
+        title: "Series-level synthesis",
+        purpose:
+          "Waits for episode work, then writes one literature review for each complete series.",
+        whyTemporal:
+          "The Temporal Workflow makes this fan-in explicit and schedules each review as a retriable Activity.",
+        details: ["Fan-in", "Two reviews"],
+      },
+      {
+        start: 124,
+        end: 124,
+        title: "Process-local completion",
+        purpose:
+          "Returns a compact list after the JavaScript process reaches the end of the happy path.",
+        whyTemporal:
+          "Temporal records the final result in Workflow state, so a later client can retrieve it without keeping this caller alive.",
+        details: ["Final result", "Caller lifetime"],
+      },
+    ],
+  },
+  {
+    slug: "inputs",
+    filename: "podcast_preset.py",
+    title: "The preserved business inputs",
+    kicker: "After Temporal · domain configuration",
+    summary:
+      "The Python preset keeps the original two series and all ten episode briefs visible, typed, and separate from orchestration code.",
+    language: "python",
+    sourcePath:
+      "public/temporal-research-agent/src/durable_research/podcast_preset.py",
+    rawPath: `${root}/src/durable_research/podcast_preset.py`,
+    sections: [
+      {
+        start: 1,
+        end: 18,
+        title: "Task queue and dependencies",
+        purpose:
+          "Imports the typed input models, selects the podcast task queue, and locates bundled fixtures.",
+        whyTemporal:
+          "The task queue connects the Workflow to compatible Workers while input data remains independent of Worker memory.",
+        details: ["Task queue", "Typed input"],
+      },
+      {
+        start: 19,
+        end: 30,
+        title: "Two series",
+        purpose:
+          "Recreates the Multi-Agent Orchestration and Code Retrieval series with stable keys and output prefixes.",
+        whyTemporal:
+          "Stable domain keys support deterministic Workflow identity and repeatable artifact paths.",
+        details: ["Series identity", "Artifact naming"],
+      },
+      {
+        start: 31,
+        end: 188,
+        title: "All ten episode briefs",
+        purpose:
+          "Preserves titles, focus statements, seed papers, and frontier flags for every historical episode.",
+        whyTemporal:
+          "Temporalization changes execution semantics. It does not flatten the application into anonymous branches.",
+        details: ["Business logic", "Ten typed episodes"],
+      },
+      {
+        start: 189,
+        end: 226,
+        title: "Full pipeline input",
+        purpose:
+          "Builds the ten-episode input with live or fixture providers, two-way concurrency, three retry attempts, and a full-completion threshold.",
+        whyTemporal:
+          "Policies are explicit Workflow input, so each execution records the values that governed it.",
+        details: ["Recorded policy", "Live and fixture modes"],
+      },
+      {
+        start: 227,
+        end: 246,
+        title: "Timed recovery preset",
+        purpose:
+          "Selects one production-focused episode from each series for the short Worker-kill recording.",
+        whyTemporal:
+          "The smaller recording input exercises the same Workflow and Activity graph while keeping the proof easy to follow.",
+        details: ["Same code path", "Two-episode demo"],
+      },
+    ],
+  },
+  {
+    slug: "prompts",
+    filename: "podcast_prompts.py",
+    title: "The preserved editorial contracts",
+    kicker: "After Temporal · business rules",
+    summary:
+      "The prompt module keeps research depth, document structure, script length, citation rules, and series synthesis out of the orchestration layer.",
+    language: "python",
+    sourcePath:
+      "public/temporal-research-agent/src/durable_research/podcast_prompts.py",
+    rawPath: `${root}/src/durable_research/podcast_prompts.py`,
+    sections: [
+      {
+        start: 1,
+        end: 32,
+        title: "Episode research",
+        purpose:
+          "Requires 5–9 searches, confirmed scholarly records, grounded findings, new bibcodes, and examples suitable for a cold open.",
+        whyTemporal:
+          "The Activity may retry, so its prompt and structured result need a stable contract independent of attempt number.",
+        details: ["5–9 searches", "Grounded sources", "Structured findings"],
+      },
+      {
+        start: 33,
+        end: 62,
+        title: "Deep-dive document",
+        purpose:
+          "Defines the 1,500–2,500 word source document, its seven sections, and its citation requirements.",
+        whyTemporal:
+          "The Workflow passes an artifact reference into this stage. The full research payload stays outside Event History.",
+        details: ["Artifact input", "Long-form contract"],
+      },
+      {
+        start: 63,
+        end: 100,
+        title: "Podcast script",
+        purpose:
+          "Defines the six-segment spoken format, cold open, outro, citations, voice, and approximately 3,000-word target.",
+        whyTemporal:
+          "Writing remains application logic inside an Activity. Temporal controls when it runs and how failure is handled.",
+        details: ["Six segments", "Spoken voice", "Citations"],
+      },
+      {
+        start: 101,
+        end: 128,
+        title: "Series literature review",
+        purpose:
+          "Synthesizes completed episode deep dives into one structured review while preserving disagreements and evidence quality.",
+        whyTemporal:
+          "This is the durable fan-in after episode branches complete. A separate Activity keeps model and file I/O out of Workflow replay.",
+        details: ["Series fan-in", "Synthesis contract"],
       },
     ],
   },
   {
     slug: "workflow",
-    filename: "workflow.py",
+    filename: "podcast_workflow.py",
     title: "The deterministic Workflow",
     kicker: "After Temporal · orchestration",
     summary:
-      "The Workflow owns durable branch state, bounded fan-out, retry policy selection, progress queries, and the final fan-in. It contains no network, filesystem, or wall-clock calls.",
+      "The Workflow owns episode order, bounded concurrency, completion policy, progress, series-review fan-in, and the final manifest.",
     language: "python",
     sourcePath:
-      "public/temporal-research-agent/src/durable_research/workflow.py",
-    rawPath: `${root}/src/durable_research/workflow.py`,
+      "public/temporal-research-agent/src/durable_research/podcast_workflow.py",
+    rawPath: `${root}/src/durable_research/podcast_workflow.py`,
     sections: [
       {
         start: 1,
-        end: 23,
+        end: 27,
         title: "Replay-safe imports",
         purpose:
-          "Imports Temporal’s Workflow API and passes data-model imports through the Workflow sandbox.",
+          "Imports Temporal Workflow APIs and passes typed data models through the sandbox without importing the I/O implementation.",
         whyTemporal:
-          "Workflow code must replay deterministically. Keeping side-effecting integrations out of this module makes that boundary inspectable.",
-        details: ["Workflow sandbox", "Deterministic boundary"],
+          "Workflow code replays from Event History. Separating Activity dependencies makes the determinism boundary visible.",
+        details: ["Workflow sandbox", "Typed payloads"],
       },
       {
-        start: 24,
-        end: 33,
-        title: "Durable state with a query",
+        start: 28,
+        end: 38,
+        title: "Workflow state and query",
         purpose:
-          "Defines the Workflow and exposes current branch progress without mutating execution.",
+          "Defines the Workflow and exposes a read-only progress snapshot.",
         whyTemporal:
-          "The progress value is rebuilt from Event History after a Worker restart, so callers do not need to keep the original process alive.",
-        details: ["Workflow state", "Read-only query"],
+          "A replacement Worker rebuilds this state from Event History. The starting client does not need to remain alive.",
+        details: ["Durable state", "Progress query"],
       },
       {
-        start: 34,
-        end: 58,
-        title: "Bounded research fan-out",
-        purpose:
-          "Runs research angles in configured batches and updates progress after each durable branch result.",
-        whyTemporal:
-          "The Workflow records scheduling and completion decisions. Replay reconstructs them rather than launching the external calls again.",
-        details: ["Bounded concurrency", "Durable checkpoints"],
-      },
-      {
-        start: 59,
+        start: 39,
         end: 71,
-        title: "Explicit quorum policy",
+        title: "Bounded episode fan-out",
         purpose:
-          "Stops the run if too few research angles complete, otherwise advances to finalization.",
+          "Runs episode branches in batches, records typed results, and updates progress after each batch.",
         whyTemporal:
-          "Partial failure is a domain decision, not an incidental exception. Encoding it here makes recovery behavior stable and testable.",
-        details: ["Failure policy", "Non-retryable domain error"],
+          "Activity scheduling and completion are recorded. Replay restores the same branch decisions without repeating completed stages.",
+        details: ["Bounded concurrency", "Durable progress"],
       },
       {
         start: 72,
-        end: 87,
-        title: "Durable fan-in",
+        end: 81,
+        title: "Completion policy",
         purpose:
-          "Schedules final report assembly as an Activity and records the completed result in Workflow state.",
+          "Stops the Workflow with a non-retryable domain error when too few episodes complete.",
         whyTemporal:
-          "Artifact reads, writes, and synthesis are nondeterministic, so the Workflow schedules them but does not perform them.",
-        details: ["Activity boundary", "Final result"],
+          "Partial completion is a product decision, so it belongs in deterministic Workflow logic.",
+        details: ["Domain policy", "Typed failure"],
       },
       {
-        start: 88,
-        end: 121,
-        title: "Per-angle Activity chain",
+        start: 82,
+        end: 128,
+        title: "Series fan-in and manifest",
         purpose:
-          "Sequences retrieval, evidence verification, and section synthesis with timeouts, heartbeats, and a typed failure result.",
+          "Schedules both series reviews, writes the manifest, and records the compact completed result.",
         whyTemporal:
-          "Temporal can retry each nondeterministic step independently while Event History preserves the branch’s orchestration path.",
-        details: ["Timeouts", "Heartbeats", "Typed failure"],
+          "The Workflow coordinates synthesis while Activities perform the file and writer operations.",
+        details: ["Series reviews", "Manifest", "Final result"],
       },
       {
-        start: 122,
-        end: 129,
+        start: 129,
+        end: 165,
+        title: "Three Activity stages per episode",
+        purpose:
+          "Sequences research, deep-dive writing, and script writing with timeouts, heartbeats, retries, and a typed failed-episode result.",
+        whyTemporal:
+          "Each nondeterministic stage can retry independently. Event History retains the orchestration path across Worker loss.",
+        details: ["Stage chain", "Timeouts", "Heartbeat recovery"],
+      },
+      {
+        start: 166,
+        end: 188,
+        title: "Per-series review Activity",
+        purpose:
+          "Filters completed episodes for one series and schedules its literature review.",
+        whyTemporal:
+          "The filter decision replays deterministically while the external synthesis remains retriable Activity work.",
+        details: ["Completed-input filter", "Activity boundary"],
+      },
+      {
+        start: 189,
+        end: 196,
         title: "Bounded retry policy",
         purpose:
-          "Centralizes exponential backoff and caps attempts using review input.",
+          "Defines exponential backoff, a five-second cap, and an input-controlled attempt limit.",
         whyTemporal:
-          "Retries are durable timers rather than sleeps in a client process, but the limit still needs to reflect cost and provider behavior.",
-        details: ["Exponential backoff", "Cost boundary"],
+          "Temporal persists retry timers, but the application still chooses limits that reflect provider cost and latency.",
+        details: ["Exponential backoff", "Attempt limit"],
       },
     ],
   },
   {
     slug: "activities",
-    filename: "activities.py",
+    filename: "podcast_activities.py",
     title: "The nondeterministic Activities",
     kicker: "After Temporal · external work",
     summary:
-      "Activities own MCP and CLI calls, artifact I/O, content verification, report rendering, and live synthesis. Their outputs are durable inputs to the Workflow’s next decision.",
+      "Five Activities own MCP retrieval, writer calls, heartbeats, artifact I/O, series synthesis, and the final manifest.",
     language: "python",
     sourcePath:
-      "public/temporal-research-agent/src/durable_research/activities.py",
-    rawPath: `${root}/src/durable_research/activities.py`,
+      "public/temporal-research-agent/src/durable_research/podcast_activities.py",
+    rawPath: `${root}/src/durable_research/podcast_activities.py`,
     sections: [
       {
         start: 1,
-        end: 27,
+        end: 41,
         title: "Side-effecting dependencies",
         purpose:
-          "Imports filesystem, hashing, MCP, recording, and Activity APIs in the module where nondeterministic work is allowed.",
+          "Imports filesystem, time, subprocess, MCP, artifact, prompt, and Activity dependencies in the external-work module.",
         whyTemporal:
-          "This boundary keeps replay-sensitive Workflow code separate from external state and changing services.",
+          "Keeping these imports out of the Workflow module protects replay from changing external state.",
         details: ["Activity module", "Nondeterministic dependencies"],
       },
       {
-        start: 28,
-        end: 79,
-        title: "Retrieve and persist evidence",
+        start: 42,
+        end: 117,
+        title: "Research and persist one episode",
         purpose:
-          "Searches SciX and Code Intelligence Digest, stores each response, and returns compact source metadata with hashes.",
+          "Retrieves fixture or live evidence, stores each source, writes an evidence index and research document, then returns compact references.",
         whyTemporal:
-          "Activities may retry after a crash. Stable artifact names and a request-derived review ID prevent retries from multiplying output.",
-        details: ["MCP calls", "Artifact references", "Stable identity"],
+          "The Activity can be retried after Worker loss. Stable pipeline identity and artifact paths keep repeated attempts on one logical output.",
+        details: ["SciX + Digest", "Evidence hashes", "Artifact references"],
       },
       {
-        start: 80,
-        end: 103,
-        title: "Verify before synthesis",
+        start: 118,
+        end: 150,
+        title: "Write the deep dive",
         purpose:
-          "Re-reads every evidence artifact and checks required metadata and its SHA-256 content hash.",
+          "Validates the research stage, invokes the live writer or fixture renderer, and writes the deep-dive artifact.",
         whyTemporal:
-          "Temporal durably schedules work; this application-level check proves the referenced evidence is still the evidence that was retrieved.",
-        details: ["Content integrity", "Application invariant"],
+          "This long external call has its own timeout, heartbeat, retry, and stable output path.",
+        details: ["Stage invariant", "Writer call", "Stable path"],
       },
       {
-        start: 104,
-        end: 176,
-        title: "Render readable citations",
+        start: 151,
+        end: 188,
+        title: "Write the podcast script",
         purpose:
-          "Builds one report section per angle, normalizes provider labels, links titles, and collapses duplicate titles in the human report.",
+          "Requires a completed deep dive, invokes the writer, and records the script under the original naming convention.",
         whyTemporal:
-          "All retrieved records remain in the returned branch for provenance. Presentation deduplication is deliberately separate from execution history.",
-        details: ["Human-readable output", "Lossless provenance"],
+          "A script attempt can fail without discarding completed research or deep-dive work.",
+        details: ["Independent retry", "Historical filename"],
       },
       {
-        start: 177,
-        end: 271,
-        title: "Finalize report and provenance",
+        start: 189,
+        end: 246,
+        title: "Write a series review",
         purpose:
-          "Fans completed sections into the report, calls live SciX synthesis when configured, and writes a manifest that retains every source record.",
+          "Collects completed deep dives for one series and writes its literature review.",
         whyTemporal:
-          "Finalization is retriable external work. Named artifacts and recorded hashes give repeated attempts an idempotent write target.",
-        details: ["Durable fan-in", "Provenance manifest", "Idempotent writes"],
+          "The Workflow chooses the completed inputs; this Activity performs nondeterministic reads, writing, and synthesis.",
+        details: ["Series fan-in", "Completed inputs"],
       },
       {
-        start: 272,
-        end: 317,
-        title: "Normalize SciX synthesis",
+        start: 247,
+        end: 296,
+        title: "Write the provenance manifest",
         purpose:
-          "Turns the provider’s structured synthesis response into readable Markdown without leaking raw response shapes into the report.",
+          "Indexes episode status, every artifact reference, all source metadata, and both series-review outputs.",
         whyTemporal:
-          "Provider response parsing can evolve in Activity code without changing the Workflow’s orchestration contract.",
-        details: ["Provider adapter", "Stable Workflow contract"],
+          "The Workflow returns this compact reference while the full research product stays outside Event History.",
+        details: ["Provenance", "Compact Workflow result"],
       },
       {
-        start: 318,
-        end: 336,
-        title: "Fixture-backed evidence",
+        start: 297,
+        end: 362,
+        title: "Fixture and live retrieval",
         purpose:
-          "Provides deterministic SciX-shaped and Digest-shaped inputs for the recorded failure demonstration.",
+          "Selects fixed evidence for the recording or calls both local MCP servers through the response journal.",
         whyTemporal:
-          "Fixtures isolate the durability experiment from local index health; a separate live run proves the real integration.",
-        details: ["Reproducible demo", "Live path kept separate"],
+          "Stable logical request IDs suppress repeats after a journaled response. The read-only providers tolerate the remaining pre-journal crash window.",
+        details: ["Fixture lane", "Live MCP lane", "Request journal"],
       },
       {
-        start: 337,
-        end: 408,
-        title: "Live provider calls and heartbeats",
+        start: 363,
+        end: 450,
+        title: "Heartbeats and writer process",
         purpose:
-          "Executes both live research lanes and emits heartbeats while long-running requests are in flight.",
+          "Emits progress while retrieval or writing is in flight, cancels child work on shutdown, and launches the writer without a shell.",
         whyTemporal:
-          "Heartbeats let the Service detect an Activity lost with its Worker and make retry progress observable.",
-        details: ["Live MCP/CLI boundary", "Heartbeat timeout"],
+          "Heartbeats let the Service detect an Activity lost with its Worker. Subprocess argument arrays avoid shell interpolation.",
+        details: ["Heartbeat Timeout", "Cancellation", "No shell"],
       },
       {
-        start: 409,
-        end: 457,
-        title: "Normalize provider records",
+        start: 451,
+        end: 627,
+        title: "Research product renderers",
         purpose:
-          "Maps heterogeneous provider results into the shared source model while retaining raw response artifacts.",
+          "Builds inspectable fixture research, deep dives, scripts, and series reviews with linked SciX and Digest sources.",
         whyTemporal:
-          "The Workflow receives a compact, stable payload instead of large or provider-specific records in Event History.",
-        details: ["Payload discipline", "Shared source model"],
+          "Fixtures keep the failure experiment repeatable while exercising the same artifacts and stage transitions.",
+        details: ["Deterministic fixture", "Readable products"],
       },
       {
-        start: 458,
-        end: 499,
-        title: "Text cleanup and demo pacing",
+        start: 628,
+        end: 686,
+        title: "Artifact and source helpers",
         purpose:
-          "Converts HTML summaries to readable text, emits demo heartbeats during an intentional delay, and validates artifact references.",
+          "Extracts document sections, renders citations, resolves scholarly URLs, and validates series, episode, and pipeline references.",
         whyTemporal:
-          "Clock waits and heartbeat calls belong in Activities. A Workflow-side sleep would be durable, but it would not demonstrate recovery of in-flight external work.",
-        details: ["Text normalization", "Activity heartbeat", "Reference guard"],
+          "These helpers enforce application invariants around the compact references that cross Activity boundaries.",
+        details: ["Reference validation", "Citation rendering"],
       },
     ],
   },
   {
     slug: "worker",
-    filename: "worker.py",
+    filename: "podcast_worker.py",
     title: "The Worker process",
     kicker: "After Temporal · execution host",
     summary:
-      "The Worker connects to the Temporal Service, polls one task queue, and registers the Workflow and four Activities. It is replaceable: killing this process does not erase the Workflow run.",
+      "The Worker registers the faithful podcast Workflow and all five Activities on one task queue. Another compatible Worker can replace it.",
     language: "python",
     sourcePath:
-      "public/temporal-research-agent/src/durable_research/worker.py",
-    rawPath: `${root}/src/durable_research/worker.py`,
+      "public/temporal-research-agent/src/durable_research/podcast_worker.py",
+    rawPath: `${root}/src/durable_research/podcast_worker.py`,
     sections: [
       {
         start: 1,
-        end: 18,
-        title: "Register the implementation",
+        end: 20,
+        title: "Implementation registration",
         purpose:
-          "Imports the Temporal client and Worker plus the exact Workflow and Activity functions this process can execute.",
+          "Imports the client, Worker, task queue, podcast Workflow, and the complete Activity set.",
         whyTemporal:
-          "Registration is explicit: the task queue routes durable tasks to a Worker that knows their implementation.",
-        details: ["Worker dependencies", "Task implementation"],
+          "Registration is explicit. A Worker can execute only the task types whose implementations it has loaded.",
+        details: ["Workflow type", "Five Activities", "Task queue"],
       },
       {
-        start: 19,
-        end: 33,
+        start: 21,
+        end: 40,
         title: "Connect, poll, and drain",
         purpose:
-          "Connects to the configured Service, polls the research task queue, and allows in-flight Activities a graceful shutdown window.",
+          "Connects to the configured Temporal Service, polls the podcast queue, and gives in-flight Activities a 30-second graceful-shutdown window.",
         whyTemporal:
-          "The Worker owns compute, not orchestration state. Another compatible Worker can continue from the same Event History.",
-        details: ["Task queue", "Graceful shutdown", "Replaceable compute"],
+          "The Worker supplies compute. Event History remains in the Service, so a replacement Worker can continue the Workflow.",
+        details: ["Replaceable compute", "Graceful shutdown"],
       },
       {
-        start: 34,
-        end: 43,
+        start: 41,
+        end: 50,
         title: "Process lifecycle",
         purpose:
-          "Runs the asynchronous Worker and handles an intentional keyboard shutdown cleanly.",
+          "Runs the asynchronous Worker and handles a cooperative keyboard shutdown.",
         whyTemporal:
-          "Normal shutdown is cooperative; the recorded demo uses SIGKILL to prove recovery when cooperation is impossible.",
-        details: ["Async entry point", "Failure demonstration"],
+          "The demo uses SIGKILL to bypass this normal path and prove recovery from an abrupt process loss.",
+        details: ["Async entry point", "Failure test"],
       },
     ],
   },

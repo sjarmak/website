@@ -65,8 +65,13 @@ def verify_recording(
         "recording must show distinct Worker PIDs",
     )
     _require(
-        run.get("completed_angles") == 4 and run.get("failed_angles") == 0,
-        "recording must complete all four research angles",
+        run.get("completed_episode_keys") == ["mas-ep4", "code-ep4"]
+        and run.get("failed_episode_keys") == [],
+        "recording must complete both demonstration episodes",
+    )
+    _require(
+        run.get("series_review_keys") == ["mas", "code"],
+        "recording must produce both series reviews",
     )
 
     events = history.get("events")

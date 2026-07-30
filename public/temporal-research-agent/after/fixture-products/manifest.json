@@ -1,0 +1,352 @@
+{
+  "completed_episode_keys": [
+    "mas-ep1",
+    "mas-ep2",
+    "mas-ep3",
+    "mas-ep4",
+    "mas-ep5",
+    "code-ep1",
+    "code-ep2",
+    "code-ep3",
+    "code-ep4",
+    "code-ep5"
+  ],
+  "episodes": [
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/mas-ep1.md",
+      "episode_key": "mas-ep1",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/mas-ep1.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-multiagent-orchestration-ep1-foundations-and-topologies.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/64e3a3943f596a0fcf468a6ef7aeab6c5bb94f3e8ee9e3f17bb876e224fdee78.json",
+          "content_hash": "64e3a3943f596a0fcf468a6ef7aeab6c5bb94f3e8ee9e3f17bb876e224fdee78",
+          "lane": "scix",
+          "locator": "2024arXiv240201680G",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2024arXiv240201680G",
+          "title": "Large Language Model based Multi-Agents: A Survey of Progress and Challenges"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/3f53865d0d82770ee096ef83c0612f061e6494d9b54e239f45920206acbed9cb.json",
+          "content_hash": "3f53865d0d82770ee096ef83c0612f061e6494d9b54e239f45920206acbed9cb",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2411.04468",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "magentic-one",
+          "title": "Magentic-One: A Generalist Multi-Agent System"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/mas-ep2.md",
+      "episode_key": "mas-ep2",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/mas-ep2.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-multiagent-orchestration-ep2-patterns-and-frameworks.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/c1daa7f15e551ab5f065c79e7c834cd02b47d6350138d477b40f1854359c9e60.json",
+          "content_hash": "c1daa7f15e551ab5f065c79e7c834cd02b47d6350138d477b40f1854359c9e60",
+          "lane": "scix",
+          "locator": "2023arXiv230808155W",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2023arXiv230808155W",
+          "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/894f11353d766634e861ac75d0211d7212771940123530a5dc16de41b086eceb.json",
+          "content_hash": "894f11353d766634e861ac75d0211d7212771940123530a5dc16de41b086eceb",
+          "lane": "digest",
+          "locator": "https://modelcontextprotocol.io/",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "mcp-overview",
+          "title": "Model Context Protocol"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/mas-ep3.md",
+      "episode_key": "mas-ep3",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/mas-ep3.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-multiagent-orchestration-ep3-memory-in-mas.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/d0f7545368a4251b297c446fc22957f5fca671f142ce4d3790f8077633933880.json",
+          "content_hash": "d0f7545368a4251b297c446fc22957f5fca671f142ce4d3790f8077633933880",
+          "lane": "scix",
+          "locator": "2024arXiv240907429Z",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2024arXiv240907429Z",
+          "title": "Agent Workflow Memory"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/d54b89534415bb50fbff3a3b2d3d9d5f0f9ce4845d83b2d486aa2680256f9e1f.json",
+          "content_hash": "d54b89534415bb50fbff3a3b2d3d9d5f0f9ce4845d83b2d486aa2680256f9e1f",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2411.04468",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "magentic-ledger",
+          "title": "Magentic-One progress ledger"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/mas-ep4.md",
+      "episode_key": "mas-ep4",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/mas-ep4.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-multiagent-orchestration-ep4-enterprise-and-production.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/95e748512a57fa3f0b75c9eedd2ef4a74e33629676d9e337b9b76fe6a93a9dd6.json",
+          "content_hash": "95e748512a57fa3f0b75c9eedd2ef4a74e33629676d9e337b9b76fe6a93a9dd6",
+          "lane": "scix",
+          "locator": "2025arXiv250313657C",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2025arXiv250313657C",
+          "title": "Why Do Multi-Agent LLM Systems Fail?"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/7424bc1aa8be32247c1190a51e32f2d958f9e5425b7c3a8527d45cdf7e77e277.json",
+          "content_hash": "7424bc1aa8be32247c1190a51e32f2d958f9e5425b7c3a8527d45cdf7e77e277",
+          "lane": "digest",
+          "locator": "https://www.anthropic.com/engineering/multi-agent-research-system",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "anthropic-multi-agent",
+          "title": "How we built our multi-agent research system"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/mas-ep5.md",
+      "episode_key": "mas-ep5",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/mas-ep5.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-multiagent-orchestration-ep5-frontier-and-open-problems.md",
+      "series_key": "mas",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/5849b490072a8eabd7a3a3544b5d3c874f6a60cfe70c04a1fb0f83c84f8e87c9.json",
+          "content_hash": "5849b490072a8eabd7a3a3544b5d3c874f6a60cfe70c04a1fb0f83c84f8e87c9",
+          "lane": "scix",
+          "locator": "2026arXiv260507935X",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2026arXiv260507935X",
+          "title": "TraceFix: Verified Coordination Protocols for Language Agents"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/dbe02ed00891e53a31fad5020818e5028b4efc2cf8cbe1fee09218de2c9b8335.json",
+          "content_hash": "dbe02ed00891e53a31fad5020818e5028b4efc2cf8cbe1fee09218de2c9b8335",
+          "lane": "digest",
+          "locator": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "agent-observability",
+          "title": "OpenTelemetry semantic conventions for generative AI"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/code-ep1.md",
+      "episode_key": "code-ep1",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/code-ep1.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-code-retrieval-ep1-why-code-isnt-text-ir.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/7130589301038334b62b3d1294535a0c537baa5590a8afc20b6a2a49920114cf.json",
+          "content_hash": "7130589301038334b62b3d1294535a0c537baa5590a8afc20b6a2a49920114cf",
+          "lane": "scix",
+          "locator": "2019arXiv190909436H",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2019arXiv190909436H",
+          "title": "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/226f7b688a95fb1f6aa93068a67920fcfa8e6ffdb3305c69cdbb31d2e2847977.json",
+          "content_hash": "226f7b688a95fb1f6aa93068a67920fcfa8e6ffdb3305c69cdbb31d2e2847977",
+          "lane": "digest",
+          "locator": "https://github.com/github/CodeSearchNet",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "codesearchnet",
+          "title": "CodeSearchNet"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/code-ep2.md",
+      "episode_key": "code-ep2",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/code-ep2.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-code-retrieval-ep2-techniques-lexical-neural-graph.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/6edbee411336f05abbc06400d1b244c8dbec862ad8b72d1efafa5672852dd75e.json",
+          "content_hash": "6edbee411336f05abbc06400d1b244c8dbec862ad8b72d1efafa5672852dd75e",
+          "lane": "scix",
+          "locator": "2020arXiv200908366G",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2020arXiv200908366G",
+          "title": "GraphCodeBERT: Pre-training Code Representations with Data Flow"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/4a1abdb026cc00146c83cf7e6e60d60a73904c50a8ca84a001c9161fa5bea827.json",
+          "content_hash": "4a1abdb026cc00146c83cf7e6e60d60a73904c50a8ca84a001c9161fa5bea827",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2004.12832",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "colbert",
+          "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/code-ep3.md",
+      "episode_key": "code-ep3",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/code-ep3.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-code-retrieval-ep3-repo-scale-and-code-graphs.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/a2e78eaa7a7828247f5339750908e85039eeb7868f60b4a53fb9d783f7cecd3f.json",
+          "content_hash": "a2e78eaa7a7828247f5339750908e85039eeb7868f60b4a53fb9d783f7cecd3f",
+          "lane": "scix",
+          "locator": "2023arXiv230312570Z",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2023arXiv230312570Z",
+          "title": "RepoCoder: Repository-Level Code Completion Through Iterative Retrieval and Generation"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/ac1ba7102a4d9164f77de2f529ade7303f8830438e5707273b74431d5a3ec3e0.json",
+          "content_hash": "ac1ba7102a4d9164f77de2f529ade7303f8830438e5707273b74431d5a3ec3e0",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2405.15793",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "swe-agent",
+          "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/code-ep4.md",
+      "episode_key": "code-ep4",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/code-ep4.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-code-retrieval-ep4-enterprise-codebase-challenges.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/4f7a4908979e36ec14caf8fff47cffbf14ff1b12b015b7b0ab309a32cf5b7b45.json",
+          "content_hash": "4f7a4908979e36ec14caf8fff47cffbf14ff1b12b015b7b0ab309a32cf5b7b45",
+          "lane": "scix",
+          "locator": "2024arXiv240606025L",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2024arXiv240606025L",
+          "title": "RepoQA: Evaluating Long Context Code Understanding"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/e053897a0d7b065f7e8ea345d4b5a19b2bb3c02260ea76abc04fe5e5264e3626.json",
+          "content_hash": "e053897a0d7b065f7e8ea345d4b5a19b2bb3c02260ea76abc04fe5e5264e3626",
+          "lane": "digest",
+          "locator": "https://github.com/sourcegraph/scip",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "sourcegraph-scip",
+          "title": "SCIP: a code intelligence protocol"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "deep_dive_ref": "podcast-pipeline-24ecbbe71bc8/deep-dives/code-ep5.md",
+      "episode_key": "code-ep5",
+      "error": null,
+      "research_ref": "podcast-pipeline-24ecbbe71bc8/research/code-ep5.md",
+      "script_ref": "podcast-pipeline-24ecbbe71bc8/scripts/podcast-script-code-retrieval-ep5-frontier-and-open-problems.md",
+      "series_key": "code",
+      "sources": [
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/6e886ef54612761b96ebb2fa7d1e2dd92b15e4301757b98d0c68d0b809087602.json",
+          "content_hash": "6e886ef54612761b96ebb2fa7d1e2dd92b15e4301757b98d0c68d0b809087602",
+          "lane": "scix",
+          "locator": "2026arXiv260502421L",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "2026arXiv260502421L",
+          "title": "AOCI: A Symbolic and Semantic Index for Agentic Code Intelligence"
+        },
+        {
+          "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/0888265dbdef71a5e36276790ae606cb1d6d8aff375804dfb5dfd694a3d78ef0.json",
+          "content_hash": "0888265dbdef71a5e36276790ae606cb1d6d8aff375804dfb5dfd694a3d78ef0",
+          "lane": "digest",
+          "locator": "https://github.com/sourcegraph/zoekt",
+          "request_id": null,
+          "retrieved_at": "2026-07-30T00:00:00Z",
+          "source_id": "zoekt",
+          "title": "Zoekt: fast trigram-based code search"
+        }
+      ],
+      "status": "complete"
+    }
+  ],
+  "failed_episode_keys": [],
+  "pipeline_id": "podcast-pipeline-24ecbbe71bc8",
+  "series_reviews": [
+    {
+      "episode_keys": [
+        "mas-ep1",
+        "mas-ep2",
+        "mas-ep3",
+        "mas-ep4",
+        "mas-ep5"
+      ],
+      "report_ref": "podcast-pipeline-24ecbbe71bc8/reviews/mas-literature-review.md",
+      "series_key": "mas"
+    },
+    {
+      "episode_keys": [
+        "code-ep1",
+        "code-ep2",
+        "code-ep3",
+        "code-ep4",
+        "code-ep5"
+      ],
+      "report_ref": "podcast-pipeline-24ecbbe71bc8/reviews/code-literature-review.md",
+      "series_key": "code"
+    }
+  ]
+}

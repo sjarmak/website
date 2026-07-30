@@ -1,0 +1,25 @@
+{
+  "episode_key": "code-ep5",
+  "sources": [
+    {
+      "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/6e886ef54612761b96ebb2fa7d1e2dd92b15e4301757b98d0c68d0b809087602.json",
+      "content_hash": "6e886ef54612761b96ebb2fa7d1e2dd92b15e4301757b98d0c68d0b809087602",
+      "lane": "scix",
+      "locator": "2026arXiv260502421L",
+      "request_id": null,
+      "retrieved_at": "2026-07-30T00:00:00Z",
+      "source_id": "2026arXiv260502421L",
+      "title": "AOCI: A Symbolic and Semantic Index for Agentic Code Intelligence"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-24ecbbe71bc8/evidence/0888265dbdef71a5e36276790ae606cb1d6d8aff375804dfb5dfd694a3d78ef0.json",
+      "content_hash": "0888265dbdef71a5e36276790ae606cb1d6d8aff375804dfb5dfd694a3d78ef0",
+      "lane": "digest",
+      "locator": "https://github.com/sourcegraph/zoekt",
+      "request_id": null,
+      "retrieved_at": "2026-07-30T00:00:00Z",
+      "source_id": "zoekt",
+      "title": "Zoekt: fast trigram-based code search"
+    }
+  ]
+}

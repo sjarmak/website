@@ -1,9 +1,11 @@
 # Recorded Worker-recovery demo
 
-This recording follows one literature-review Workflow across two views:
+This recording follows the Temporalized version of the podcast research
+pipeline across two views:
 
-1. The terminal starts two heartbeat-emitting research Activities, kills their
-   Worker with `SIGKILL`, starts a replacement Worker, and waits for completion.
+1. The terminal starts two episode branches, kills their Worker with `SIGKILL`
+   while research Activities are running, starts a replacement Worker, and
+   waits for research, deep dives, scripts, and series reviews to complete.
 2. Temporal Web opens the same run, shows the completed result, then sorts
    Event History oldest-first so Activity attempts 2 are visible.
 
@@ -37,9 +39,9 @@ The final card contains only this comparison:
 
 | The code already provided | Adding Temporal provides |
 |---|---|
-| SciX + Digest retrieval | Durable Workflow state |
-| Parallel research angles | Activity retries + recovery |
-| Cited report + provenance | Progress + Event History |
+| 10 episode plans + prompts | Durable Workflow progress |
+| Research → deep dive → script | Activity retries after failure |
+| Two series literature reviews | Queryable state + Event History |
 
 The manifest records the Workflow ID, run ID, duration, media profile,
 editorial timing and stroke width, and SHA-256 hashes.
@@ -57,10 +59,10 @@ package without downloading another browser when the local cache is present.
 
 `capture.sh` rejects a take unless Event History proves a heartbeat timeout
 followed by Activity attempt 2 on a distinct replacement Worker. It also
-requires four completed research angles and non-empty terminal and Temporal
-Web recordings. `render.sh` validates the edit plan, caption-panel bounds,
-crop and highlight coordinates, duration, resolution, codec, and pixel format
-before writing the manifest.
+requires two completed episode branches, both series reviews, no failed
+episodes, and non-empty terminal and Temporal Web recordings. `render.sh`
+validates the edit plan, caption-panel bounds, crop and highlight coordinates,
+duration, resolution, codec, and pixel format before writing the manifest.
 
 The browser recorder can also be run against an existing Workflow:
 
