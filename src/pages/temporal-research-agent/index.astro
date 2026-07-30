@@ -98,17 +98,27 @@ await parallel(literatureReviews)</code></pre>
           provenance manifest later.
         </p>
         <p>
-          Temporal owns branch state and retries. Activities own SciX, Code
-          Intelligence Digest, artifact I/O, and future model calls.
+          The Workflow owns durable branch state and retry policy. The Temporal
+          Service persists Event History and schedules execution. Activities
+          perform SciX, Code Intelligence Digest, artifact I/O, and future
+          model calls.
         </p>
         <a href={`${root}/skills/run-durable-research/SKILL.md`}>Read the skill contract</a>
       </div>
       <figure>
-        <img
-          src={`${root}/deck-assets/workflow-completed.png`}
-          alt="Recorded demo frame showing four completed research angles and the replacement Worker identity"
-          loading="lazy"
-        />
+        <button
+          class="tra__expand"
+          type="button"
+          data-expand-image
+          aria-label="Expand the completed Workflow screenshot"
+        >
+          <img
+            src={`${root}/deck-assets/workflow-completed.png`}
+            alt="Recorded demo frame showing four completed research angles and the replacement Worker identity"
+            loading="lazy"
+          />
+          <span>Open full view</span>
+        </button>
         <figcaption>Four angles completed under the original Workflow run.</figcaption>
       </figure>
     </section>
@@ -120,70 +130,38 @@ await parallel(literatureReviews)</code></pre>
       </header>
       <div class="tra__evidence">
         <figure>
-          <img
-            src={`${root}/deck-assets/worker-killed.png`}
-            alt="Terminal showing the Worker killed while two Activities are in flight"
-            loading="lazy"
-          />
+          <button
+            class="tra__expand"
+            type="button"
+            data-expand-image
+            aria-label="Expand the Worker failure screenshot"
+          >
+            <img
+              src={`${root}/deck-assets/worker-killed.png`}
+              alt="Terminal showing the Worker killed while two Activities are in flight"
+              loading="lazy"
+            />
+            <span>Open full view</span>
+          </button>
           <figcaption>The Workflow remains open after the Worker receives SIGKILL.</figcaption>
         </figure>
         <figure>
-          <img
-            src={`${root}/deck-assets/activity-attempt-two.png`}
-            alt="Temporal Web showing two research Activities starting on attempt two"
-            loading="lazy"
-          />
+          <button
+            class="tra__expand"
+            type="button"
+            data-expand-image
+            aria-label="Expand the Temporal Web retry screenshot"
+          >
+            <img
+              src={`${root}/deck-assets/activity-attempt-two.png`}
+              alt="Temporal Web showing two research Activities starting on attempt two"
+              loading="lazy"
+            />
+            <span>Open full view</span>
+          </button>
           <figcaption>Events 7 and 10 show both research Activities on attempt two.</figcaption>
         </figure>
       </div>
-    </section>
-
-    <section class="tra__section">
-      <header class="tra__section-head">
-        <p class="kicker">Assignment fit</p>
-        <h2>Evidence for each evaluation criterion</h2>
-      </header>
-      <dl class="tra__criteria">
-        <div>
-          <dt>Technical depth</dt>
-          <dd>
-            A typed Python Workflow, four Activity types, a Worker, bounded
-            concurrency, timeouts, heartbeats, retries, partial-result policy,
-            compact history, and a durable external-request journal.
-          </dd>
-        </div>
-        <div>
-          <dt>Clarity of explanation</dt>
-          <dd>
-            The deck puts the old and new code side by side. The blog and
-            README trace the migration from process-local progress to recorded
-            Workflow state.
-          </dd>
-        </div>
-        <div>
-          <dt>Developer empathy</dt>
-          <dd>
-            The walkthrough names the crash windows, shows the Temporal Web
-            evidence, explains trade-offs, and states which parts depend on
-            local infrastructure.
-          </dd>
-        </div>
-        <div>
-          <dt>Code quality</dt>
-          <dd>
-            Tests cover Workflow behavior, Activity boundaries, request
-            journaling, artifact conflicts, caller exit, Worker replacement,
-            recording invariants, and presentation contracts.
-          </dd>
-        </div>
-      </dl>
-      <p class="tra__verification">
-        <a href={`${root}/verification.md`}>Open the verification record</a>
-        <span>·</span>
-        <a href={`${root}/brief-alignment.md`}>Open the brief alignment</a>
-        <span>·</span>
-        <a href={`${root}/talk.md`}>Open the 12-minute talk plan</a>
-      </p>
     </section>
 
     <aside class="tra__boundary" aria-labelledby="runtime-boundary">
@@ -198,7 +176,42 @@ await parallel(literatureReviews)</code></pre>
       </p>
     </aside>
   </article>
+
+  <dialog id="evidence-viewer" class="tra-viewer" aria-label="Expanded evidence screenshot">
+    <button class="tra-viewer__close" type="button" data-close-viewer>
+      Close <span aria-hidden="true">×</span>
+    </button>
+    <figure>
+      <img alt="" />
+      <figcaption></figcaption>
+    </figure>
+  </dialog>
 </PageLayout>
+
+<script>
+  const viewer = document.querySelector<HTMLDialogElement>("#evidence-viewer");
+  const viewerImage = viewer?.querySelector<HTMLImageElement>("img");
+  const viewerCaption = viewer?.querySelector<HTMLElement>("figcaption");
+  const closeButton = viewer?.querySelector<HTMLButtonElement>("[data-close-viewer]");
+
+  document.querySelectorAll<HTMLButtonElement>("[data-expand-image]").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const image = trigger.querySelector<HTMLImageElement>("img");
+      const caption = trigger.closest("figure")?.querySelector("figcaption");
+      if (!viewer || !viewerImage || !viewerCaption || !image) return;
+
+      viewerImage.src = image.currentSrc || image.src;
+      viewerImage.alt = image.alt;
+      viewerCaption.textContent = caption?.textContent ?? "";
+      viewer.showModal();
+    });
+  });
+
+  closeButton?.addEventListener("click", () => viewer?.close());
+  viewer?.addEventListener("click", (event) => {
+    if (event.target === viewer) viewer.close();
+  });
+</script>
 
 <style>
   .tra {
@@ -328,43 +341,102 @@ await parallel(literatureReviews)</code></pre>
     border-radius: var(--radius);
   }
 
+  .tra__expand {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: inherit;
+    cursor: zoom-in;
+  }
+
+  .tra__expand span {
+    position: absolute;
+    inset: auto var(--space-xs) var(--space-xs) auto;
+    padding: 0.35rem 0.55rem;
+    border-radius: var(--radius);
+    background: color-mix(in oklch, var(--color-bg) 88%, transparent);
+    color: var(--color-text);
+    font-size: var(--step--2);
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    transition:
+      opacity 160ms ease-out,
+      transform 160ms ease-out;
+  }
+
+  .tra__expand:hover span,
+  .tra__expand:focus-visible span {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tra__expand:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
   .tra__evidence {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-l);
   }
 
-  .tra__criteria {
+  .tra-viewer {
+    position: fixed;
+    width: min(96vw, 96rem);
+    max-width: none;
+    height: min(94dvh, 60rem);
+    max-height: none;
     margin: 0;
-    border-top: var(--border-hairline);
+    padding: var(--space-m);
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg);
+    color: var(--color-text);
   }
 
-  .tra__criteria div {
+  .tra-viewer::backdrop {
+    background: oklch(0.12 0.01 70 / 0.84);
+  }
+
+  .tra-viewer figure {
     display: grid;
-    grid-template-columns: minmax(10rem, 1fr) 3fr;
-    gap: var(--space-l);
-    padding-block: var(--space-m);
-    border-bottom: var(--border-hairline);
-  }
-
-  .tra__criteria dt {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    font-weight: var(--weight-semibold);
-  }
-
-  .tra__criteria dd {
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: 100%;
     margin: 0;
-    max-width: var(--measure);
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
   }
 
-  .tra__verification {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin: 0;
+  .tra-viewer img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+
+  .tra-viewer__close {
+    position: absolute;
+    z-index: 1;
+    inset: var(--space-xs) var(--space-xs) auto auto;
+    padding: 0.45rem 0.7rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .tra-viewer__close:hover {
+    color: var(--color-accent);
   }
 
   .tra__boundary {
@@ -401,9 +473,12 @@ await parallel(literatureReviews)</code></pre>
       border-bottom: 0;
     }
 
-    .tra__criteria div {
-      grid-template-columns: 1fr;
-      gap: var(--space-xs);
+    .tra-viewer {
+      width: 100vw;
+      height: 100dvh;
+      padding: var(--space-s);
+      border: 0;
+      border-radius: 0;
     }
   }
 </style>

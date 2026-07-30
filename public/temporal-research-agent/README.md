@@ -325,8 +325,8 @@ Neither current MCP tool accepts an idempotency key. If a Worker dies after a
 server answers but before the journal write, that read-only lookup can still
 run again. A paid or mutating provider must honor the stable request ID, or
 provide an equivalent transactional deduplication boundary, to close that
-last window. Temporal preserves orchestration state; it cannot make an
-external side effect transactional on its own.
+last window. The Temporal Service persists Workflow Event History; it cannot
+make an external side effect transactional on its own.
 
 ## History and artifact boundary
 

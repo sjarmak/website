@@ -687,7 +687,7 @@ await parallel(literatureReviews)</code></pre>
           persisted responses. A paid or mutating provider must also honor the
           idempotency key to close the response-before-journal gap.</p>
       </div>
-      <div class="footer"><span>Temporal records orchestration; providers own external-effect transactions</span></div>
+      <div class="footer"><span>Workflow History records orchestration; providers own external-effect transactions</span></div>
     </section>
 
     <section class="slide" aria-label="Slide 6 of 10">
@@ -696,7 +696,7 @@ await parallel(literatureReviews)</code></pre>
         <div class="skill-flow">
           <div class="skill-node"><b>AGENT</b><span>Calls <code>run-durable-research</code> and may exit.</span></div>
           <div class="arrow">→</div>
-          <div class="skill-node"><b>TEMPORAL</b><span>Owns branch state, retries, and progress.</span></div>
+          <div class="skill-node"><b>TEMPORAL WORKFLOW</b><span>Owns branch state, retry policy, and progress.</span></div>
           <div class="arrow">→</div>
           <div class="skill-node"><b>NEW AGENT</b><span>Queries status or retrieves report + provenance.</span></div>
         </div>

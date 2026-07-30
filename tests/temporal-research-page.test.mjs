@@ -16,16 +16,22 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.match(source, /Open the deck/);
   assert.match(source, /Read the blog/);
   assert.match(source, /Read the README/);
-  assert.match(source, /Open the brief alignment/);
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
   assert.doesNotMatch(source, /researchPrompt/);
   assert.match(source, /run-durable-research/);
   assert.match(source, /workstation-only/i);
+  assert.match(source, /The Workflow owns durable branch state/);
+  assert.match(source, /The Temporal\s+Service persists Event History/);
+  assert.doesNotMatch(source, /Temporal owns/);
 });
 
-test("walkthrough maps evidence to all four evaluation criteria", () => {
+test("brief maps evidence to all four evaluation criteria without appearing on the page", () => {
   const source = readFileSync(PAGE, "utf8");
+  const brief = readFileSync(
+    path.join(ROOT, "public/temporal-research-agent/brief-alignment.md"),
+    "utf8",
+  );
 
   for (const criterion of [
     "Technical depth",
@@ -33,8 +39,22 @@ test("walkthrough maps evidence to all four evaluation criteria", () => {
     "Developer empathy",
     "Code quality",
   ]) {
-    assert.match(source, new RegExp(criterion));
+    assert.match(brief, new RegExp(criterion));
   }
+  assert.doesNotMatch(source, /Assignment fit/);
+  assert.doesNotMatch(source, /Evidence for each evaluation criterion/);
+  assert.doesNotMatch(source, /Open the brief alignment/);
+  assert.doesNotMatch(source, /Open the verification record/);
+  assert.doesNotMatch(source, /Open the 12-minute talk plan/);
+});
+
+test("each evidence screenshot opens in an accessible full-view dialog", () => {
+  const source = readFileSync(PAGE, "utf8");
+
+  assert.equal((source.match(/data-expand-image\s/g) ?? []).length, 3);
+  assert.match(source, /<dialog[^>]+id="evidence-viewer"/);
+  assert.match(source, /showModal\(\)/);
+  assert.match(source, /data-close-viewer/);
 });
 
 test("walkthrough stays out of navigation and the sitemap", () => {

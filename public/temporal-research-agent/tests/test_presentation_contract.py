@@ -16,6 +16,8 @@ def test_deck_has_requested_title_code_comparison_skill_and_demo_frames() -> Non
     assert "researchPrompt" not in comparison
     assert "run-durable-research" in deck
     assert "any agent on this workstation" in deck
+    assert "TEMPORAL WORKFLOW" in deck
+    assert "Temporal owns" not in deck
     assert deck.count('class="slide') == 10
 
     for asset in (
@@ -38,6 +40,8 @@ def test_readme_and_blog_do_not_imply_public_reproducibility() -> None:
     assert "from any agent on this workstation" in readme
     assert "Temporal engineers" not in readme
     assert "Temporal engineers" not in blog
+    assert "Temporal owns" not in readme
+    assert "Temporal owns" not in blog
 
 
 def test_brief_alignment_covers_deliverables_and_evaluation_criteria() -> None:

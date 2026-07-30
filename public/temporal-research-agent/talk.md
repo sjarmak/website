@@ -86,7 +86,7 @@ Say:
 > The Workflow owns decisions: bounded fan-out, fan-in, retry policy,
 > partial-result policy, and progress.
 
-> Activities own everything nondeterministic: SciX and Digest calls, the
+> Temporal Activities perform everything nondeterministic: SciX and Digest calls, the
 > clock, heartbeats, artifact I/O, hash verification, and any future model
 > synthesis.
 
@@ -117,9 +117,10 @@ Say:
 > The rewrite became a skill called `run-durable-research`, available to any
 > agent on this workstation.
 
-> The starting agent submits a request and can exit. Temporal owns the
-> Workflow. Another agent can use the Workflow and Run IDs to query progress,
-> wait, or retrieve the report and provenance manifest.
+> The starting agent submits a request and can exit. The Workflow owns the
+> durable branch graph and progress; the Temporal Service persists its Event
+> History and schedules execution. Another agent can use the Workflow and Run
+> IDs to query progress, wait, or retrieve the report and provenance manifest.
 
 > We verified this across caller exit, a persisted local Temporal Service
 > restart, and a Worker replacement. The skill stays a thin client while
@@ -181,9 +182,10 @@ Say:
 > Temporal adds durable Workflow state, Activity retries and recovery,
 > queryable progress, and an Event History that proves how the run survived.
 
-> The key teaching point is the boundary: Temporal preserves orchestration.
-> Activities isolate nondeterminism. External effects still need their own
-> request contract.
+> The key teaching point is the boundary: the Workflow owns orchestration
+> decisions, the Temporal Service persists Event History, and Activities
+> isolate nondeterminism. External effects still need their own request
+> contract.
 
 Invite questions.
 

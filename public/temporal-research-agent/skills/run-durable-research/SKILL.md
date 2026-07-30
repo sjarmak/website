@@ -5,10 +5,11 @@ description: Run long-lived literature reviews across SciX scholarly evidence an
 
 # Run Durable Research
 
-Use the bundled client as a thin control surface. Temporal owns orchestration
-state. `research_angle`, `verify_evidence`, `synthesize_section`, and
-`finalize_review` Activities own MCP calls, clock reads, artifact I/O, and any
-future model calls.
+Use the bundled client as a thin control surface. The Temporal Workflow owns
+orchestration decisions and state. The Temporal Service persists its Event
+History and schedules execution. `research_angle`, `verify_evidence`,
+`synthesize_section`, and `finalize_review` Activities perform MCP calls,
+clock reads, artifact I/O, and any future model calls.
 
 This skill is callable by any agent on the configured workstation. Its live
 mode is not portable: SciX and Code Intelligence Digest rely on local

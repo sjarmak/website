@@ -190,8 +190,9 @@ any agent on our workstation. Starting research returns a Workflow ID and Run
 ID, then the caller can exit. A later agent process can query progress, wait,
 or retrieve the cited report and provenance manifest using those identifiers.
 
-The skill stays thin. Temporal owns the durable branch graph and progress;
-Activities own SciX, Digest, artifact I/O, and any future model call. The
+The skill stays thin. The Workflow owns the durable branch graph and progress.
+The Temporal Service persists its Event History and schedules execution.
+Activities perform SciX, Digest, artifact I/O, and any future model call. The
 verified recovery run survived the starting caller's exit, a persisted local
 Temporal Service restart, and a Worker replacement before a fresh process
 retrieved the result.
