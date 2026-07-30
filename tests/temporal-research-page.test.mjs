@@ -54,19 +54,51 @@ test("walkthrough includes the completed research product and provenance", () =>
     ),
   );
 
-  assert.match(source, /The research product/);
-  assert.match(source, /fixture-backed/);
+  assert.match(source, /The live research product/);
+  assert.match(source, /live SciX and Code Intelligence\s+Digest indexes/);
   assert.match(source, /4 completed/);
   assert.match(source, /0 failed/);
-  assert.match(source, /8 cited\s+sources/);
+  assert.match(source, /48 retrieved\s+records/);
+  assert.match(source, /24 from SciX and 24 from Code Intelligence\s+Digest/);
   assert.match(source, /<ResearchReport \/>/);
+  assert.ok(
+    source.indexOf('id="research-output"') > source.indexOf('id="code-comparison"'),
+    "the research product should follow the code comparison",
+  );
+  for (const activityName of [
+    "research_angle",
+    "verify_evidence",
+    "synthesize_section",
+    "finalize_review",
+  ]) {
+    assert.match(source, new RegExp(activityName));
+  }
+  assert.match(source, /Synthesized finding/);
+  assert.match(source, /Durability is a property of the whole research pipeline/);
+  assert.match(source, /What Code Intelligence Digest contributed/);
+  assert.match(source, /Building a Durable Execution Engine with SQLite/);
+  assert.match(source, /Replay is not re-execution/);
   assert.equal(renderedReport.trim(), report.trim());
   assert.equal(manifest.completed_angles.length, 4);
   assert.equal(manifest.failed_angles.length, 0);
   assert.equal(
     manifest.branches.reduce((count, branch) => count + branch.sources.length, 0),
-    8,
+    48,
   );
+  assert.equal(
+    manifest.branches
+      .flatMap((branch) => branch.sources)
+      .filter((source) => source.lane === "scix").length,
+    24,
+  );
+  assert.equal(
+    manifest.branches
+      .flatMap((branch) => branch.sources)
+      .filter((source) => source.lane === "digest").length,
+    24,
+  );
+  assert.equal(manifest.synthesis.tool, "synthesize_findings");
+  assert.equal(manifest.synthesis.input_paper_count, 23);
 });
 
 test("brief maps evidence to all four evaluation criteria without appearing on the page", () => {
@@ -117,6 +149,7 @@ test("packaged media, deck, code, and document source exist", () => {
     "public/temporal-research-agent/demo/out/temporal-literature-review-demo.mp4",
     "public/temporal-research-agent/research-output/report.md",
     "public/temporal-research-agent/research-output/manifest.json",
+    "public/temporal-research-agent/research-output/synthesis.json",
     "public/temporal-research-agent/before/phaseE_workflow.excerpt.js",
     "public/temporal-research-agent/src/durable_research/workflow.py",
     "public/temporal-research-agent/src/durable_research/activities.py",

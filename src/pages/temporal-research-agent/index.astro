@@ -19,8 +19,8 @@ const poster = `${root}/deck-assets/worker-killed.png`;
     <nav class="tra__artifacts" aria-label="Project artifacts">
       <a href={`${root}/deck.html`} target="_blank" rel="noopener">Open the deck <span>↗</span></a>
       <a href={`${root}/readme`}>Read the README <span>→</span></a>
-      <a href="#research-output">Read the research <span>↓</span></a>
       <a href="#code-comparison">Compare the code <span>↓</span></a>
+      <a href="#research-output">Read the research <span>↓</span></a>
     </nav>
 
     <figure class="tra__media">
@@ -46,27 +46,6 @@ const poster = `${root}/deck-assets/worker-killed.png`;
         calls, heartbeats, clock reads, and artifact I/O run as Activities.
         Full evidence stays in an artifact store; Event History carries compact
         IDs, hashes, statuses, and paths.
-      </p>
-    </section>
-
-    <section id="research-output" class="tra__section tra__outcome">
-      <header class="tra__section-head">
-        <p class="kicker">The research product</p>
-        <h2>The recovered run produced a cited report</h2>
-        <p>
-          The fixture-backed recording completed the same research pipeline
-          shown in the video: 4 completed angles, 0 failed angles, and 8 cited
-          sources. Fixed SciX-shaped and Digest-shaped evidence isolates the
-          durability test from workstation index health; the separate live
-          integration is documented in the README.
-        </p>
-      </header>
-      <article class="tra__report prose" aria-label="Completed research report">
-        <ResearchReport />
-      </article>
-      <p class="tra__report-links">
-        <a href={`${root}/research-output/report.md`}>Open the Markdown report</a>
-        <a href={`${root}/research-output/manifest.json`}>Inspect the provenance manifest</a>
       </p>
     </section>
 
@@ -197,6 +176,100 @@ await parallel(literatureReviews)</code></pre>
         the research service remains local.
       </p>
     </aside>
+
+    <section id="research-output" class="tra__section tra__outcome">
+      <header class="tra__section-head">
+        <p class="kicker">The live research product</p>
+        <h2>A durable run from retrieval through synthesis</h2>
+        <p>
+          After recording the deterministic recovery demo, we ran the same
+          four-angle Workflow against the live SciX and Code Intelligence
+          Digest indexes. It finished with 4 completed angles, 0 failed angles,
+          and 48 retrieved records: 24 from SciX and 24 from Code Intelligence
+          Digest.
+        </p>
+      </header>
+
+      <ol class="tra__pipeline" aria-label="Durable research pipeline">
+        <li>
+          <code>research_angle</code>
+          <span>
+            searches both providers and stores full responses as durable
+            evidence artifacts.
+          </span>
+        </li>
+        <li>
+          <code>verify_evidence</code>
+          <span>
+            re-reads those artifacts and checks their content hashes before
+            they can enter the report.
+          </span>
+        </li>
+        <li>
+          <code>synthesize_section</code>
+          <span>
+            turns each research question’s normalized evidence into a cited
+            findings section.
+          </span>
+        </li>
+        <li>
+          <code>finalize_review</code>
+          <span>
+            calls SciX <code>synthesize_findings</code> across the combined
+            scholarly working set, then writes the final report and provenance
+            manifest.
+          </span>
+        </li>
+      </ol>
+
+      <aside class="tra__synthesis" aria-labelledby="synthesized-finding">
+        <p class="kicker">Synthesized finding</p>
+        <h3 id="synthesized-finding">
+          Durability is a property of the whole research pipeline
+        </h3>
+        <p>
+          Temporal preserves orchestration decisions and retries
+          nondeterministic work, but correct recovery still depends on
+          idempotent tool contracts, durable artifacts with provenance, and
+          tests that verify intermediate state and output fidelity.
+        </p>
+      </aside>
+
+      <section class="tra__lane" aria-labelledby="digest-contribution">
+        <h3 id="digest-contribution">What Code Intelligence Digest contributed</h3>
+        <p>
+          The 24 Digest records are labeled throughout the report. They include
+          practitioner material and indexed technical discussions, not Temporal
+          documentation fixtures.
+        </p>
+        <ul>
+          <li>
+            <a href="https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/">
+              Building a Durable Execution Engine with SQLite
+            </a>
+          </li>
+          <li>
+            <a href="https://www.reddit.com/r/LLMDevs/comments/1r0fzyc/replay_is_not_reexecution_the_reproducibility_gap/">
+              Replay is not re-execution
+            </a>
+          </li>
+          <li>
+            <a href="https://devops.com/agentic-ai-in-observability-platforms-empowering-autonomous-sre/">
+              Agentic AI in Observability Platforms
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <article class="tra__report prose" aria-label="Completed live research report">
+        <ResearchReport />
+      </article>
+      <p class="tra__report-links">
+        <a href={`${root}/research-output/report.md`}>Open the Markdown report</a>
+        <a href={`${root}/research-output/manifest.json`}>Inspect the provenance manifest</a>
+        <a href={`${root}/research-output/synthesis.json`}>Inspect the SciX synthesis output</a>
+      </p>
+    </section>
   </article>
 
   <dialog id="evidence-viewer" class="tra-viewer" aria-label="Expanded evidence screenshot">
@@ -322,6 +395,88 @@ await parallel(literatureReviews)</code></pre>
 
   .tra__outcome {
     scroll-margin-block-start: var(--space-l);
+  }
+
+  .tra__pipeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 var(--space-l);
+    margin: 0;
+    padding: 0;
+    counter-reset: pipeline;
+    list-style: none;
+  }
+
+  .tra__pipeline li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-xs) var(--space-s);
+    min-width: 0;
+    padding-block: var(--space-m);
+    border-top: var(--border-hairline);
+    counter-increment: pipeline;
+  }
+
+  .tra__pipeline li::before {
+    content: counter(pipeline, decimal-leading-zero);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .tra__pipeline code {
+    color: var(--color-text);
+    font-weight: 650;
+  }
+
+  .tra__pipeline span {
+    grid-column: 2;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tra__synthesis {
+    max-width: var(--measure);
+    padding-block: var(--space-l);
+    border-block: var(--border-hairline);
+  }
+
+  .tra__synthesis .kicker {
+    margin: 0 0 var(--space-xs);
+  }
+
+  .tra__synthesis h3 {
+    margin: 0;
+    font-size: var(--step-2);
+  }
+
+  .tra__synthesis > p:last-child {
+    margin: var(--space-s) 0 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tra__lane {
+    max-width: var(--measure);
+  }
+
+  .tra__lane h3 {
+    margin: 0;
+    font-size: var(--step-1);
+  }
+
+  .tra__lane p {
+    margin: var(--space-xs) 0 var(--space-s);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tra__lane ul {
+    margin: 0;
+    padding-inline-start: 1.2rem;
+  }
+
+  .tra__lane li + li {
+    margin-block-start: var(--space-xs);
   }
 
   .tra__report {
@@ -538,7 +693,8 @@ await parallel(literatureReviews)</code></pre>
     .tra__artifacts,
     .tra__code,
     .tra__skill,
-    .tra__evidence {
+    .tra__evidence,
+    .tra__pipeline {
       grid-template-columns: 1fr;
     }
 

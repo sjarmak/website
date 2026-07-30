@@ -4,6 +4,7 @@ import asyncio
 import hashlib
 import json
 from datetime import UTC, datetime
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
@@ -113,12 +114,15 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
     for source in branch.sources:
         raw = await asyncio.to_thread(store.read_json, source.artifact_ref)
         summary = str(raw.get("summary") or raw.get("text") or "No summary returned.").strip()
-        findings.append(f"- {summary} [{source.source_id}]")
-        references.append(f"- [{source.source_id}] {source.title}. {source.locator}")
+        lane = "SciX" if source.lane == "scix" else "Code Intelligence Digest"
+        findings.append(f"- [{lane}] {summary} [{source.source_id}]")
+        references.append(
+            f"- [{lane}] [{source.source_id}] {source.title}. {source.locator}"
+        )
     body = (
         f"## {angle.key.replace('-', ' ').title()}\n\n"
         f"**Question:** {angle.question}\n\n"
-        "### Findings\n\n"
+        "### Synthesized findings\n\n"
         + "\n".join(findings)
         + "\n\n### Sources\n\n"
         + "\n".join(references)
@@ -147,7 +151,53 @@ async def finalize_review(request: FinalizeRequest) -> ReviewResult:
     for branch in request.branches:
         if branch.status == "complete" and branch.section_ref:
             sections.append(await asyncio.to_thread(store.read_text, branch.section_ref))
-    report = f"# {request.review.topic}\n\n" + "\n".join(sections)
+
+    synthesis_markdown = ""
+    synthesis_manifest: dict[str, Any] | None = None
+    scix_bibcodes = sorted(
+        {
+            source.source_id
+            for branch in request.branches
+            if branch.status == "complete"
+            for source in branch.sources
+            if source.lane == "scix"
+        }
+    )
+    if request.review.mode == "live" and request.review.scix_server and scix_bibcodes:
+        synthesis_call = await journaled_call_tool(
+            store=store,
+            review_id=request.review_id,
+            operation="review:scix-synthesize-findings:v1",
+            server=request.review.scix_server,
+            tool="synthesize_findings",
+            arguments={
+                "working_set_bibcodes": scix_bibcodes,
+                "include_full_abstracts": True,
+                "include_citation_contexts": True,
+            },
+        )
+        synthesis_artifact = await asyncio.to_thread(
+            store.put_json,
+            request.review_id,
+            "synthesis",
+            synthesis_call.response,
+        )
+        synthesis_markdown = _render_scix_synthesis(
+            synthesis_call.response,
+            paper_count=len(scix_bibcodes),
+        )
+        synthesis_manifest = {
+            "tool": "synthesize_findings",
+            "request_id": synthesis_call.request_id,
+            "artifact_ref": synthesis_artifact.path,
+            "input_paper_count": len(scix_bibcodes),
+        }
+
+    report = (
+        f"# {request.review.topic}\n\n"
+        + synthesis_markdown
+        + "\n".join(sections)
+    )
     report_ref = await asyncio.to_thread(
         store.put_named_text,
         f"{request.review_id}/report.md",
@@ -158,6 +208,7 @@ async def finalize_review(request: FinalizeRequest) -> ReviewResult:
         "topic": request.review.topic,
         "completed_angles": list(completed),
         "failed_angles": list(failed),
+        "synthesis": synthesis_manifest,
         "branches": [
             {
                 "angle": branch.angle_key,
@@ -181,6 +232,48 @@ async def finalize_review(request: FinalizeRequest) -> ReviewResult:
         completed_angles=completed,
         failed_angles=failed,
     )
+
+
+def _render_scix_synthesis(response: Any, *, paper_count: int) -> str:
+    if not isinstance(response, dict) or not isinstance(response.get("sections"), list):
+        return ""
+    lines = [
+        "## SciX synthesis scaffold",
+        "",
+        (
+            "SciX `synthesize_findings` mechanically grouped "
+            f"{paper_count} retrieved papers into an auditable writing outline. "
+            "The cited findings by research question follow this scaffold."
+        ),
+        "",
+    ]
+    for raw_section in response["sections"]:
+        if not isinstance(raw_section, dict):
+            continue
+        cited = raw_section.get("cited_papers")
+        if not isinstance(cited, list) or not cited:
+            continue
+        name = str(raw_section.get("name") or "section").replace("_", " ").title()
+        lines.extend((f"### {name}", ""))
+        for paper in cited:
+            if not isinstance(paper, dict):
+                continue
+            bibcode = str(paper.get("bibcode") or "unknown")
+            title = str(paper.get("title") or bibcode)
+            year = paper.get("year")
+            year_text = f" ({year})" if year is not None else ""
+            signal = str(paper.get("signal_used") or "unclassified").replace("_", " ")
+            lines.append(f"- {title}{year_text} [{bibcode}], assigned by {signal}.")
+        lines.append("")
+    unattributed = response.get("unattributed_bibcodes")
+    if isinstance(unattributed, list) and unattributed:
+        lines.extend(
+            (
+                f"Unattributed working-set papers: {', '.join(map(str, unattributed))}.",
+                "",
+            )
+        )
+    return "\n".join(lines) + "\n"
 
 
 def _fixture_sources(request: BranchRequest) -> list[dict[str, Any]]:
@@ -305,7 +398,13 @@ def _normalize_sources(
                     item.get("url") or item.get("doi") or item.get("bibcode") or source_id
                 ),
                 "summary": str(
-                    item.get("summary") or item.get("abstract") or item.get("description") or item
+                    _summary_text(
+                        item.get("summary")
+                        or item.get("abstract")
+                        or item.get("abstract_snippet")
+                        or item.get("description")
+                        or item
+                    )
                 ),
                 "retrieved_at": retrieved_at,
                 "request_id": request_id,
@@ -315,6 +414,29 @@ def _normalize_sources(
     if not normalized:
         raise ValueError(f"{lane} returned no usable sources")
     return normalized
+
+
+class _TextExtractor(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        self.parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"br", "div", "li", "p", "td", "tr"}:
+            self.parts.append(" ")
+
+
+def _summary_text(value: object, *, limit: int = 600) -> str:
+    text = str(value)
+    parser = _TextExtractor()
+    parser.feed(text)
+    normalized = " ".join("".join(parser.parts).split())
+    if len(normalized) <= limit:
+        return normalized
+    return normalized[: limit - 1].rstrip() + "…"
 
 
 async def _demo_delay(request: BranchRequest) -> None:

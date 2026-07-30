@@ -3,25 +3,127 @@
     {
       "angle": "durable-execution",
       "error": null,
-      "section_ref": "review-56ec9b0ec0d8/sections/durable-execution.md",
+      "section_ref": "review-6b30af381baf/sections/durable-execution.md",
       "sources": [
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/9fd8c624758aa4372e057f299ee80191ea05e6d527f7f88322604b1ab28ee3ad.json",
-          "content_hash": "9fd8c624758aa4372e057f299ee80191ea05e6d527f7f88322604b1ab28ee3ad",
+          "artifact_ref": "review-6b30af381baf/evidence/f045c8b9f3426820fc08653173d2dbf0629957864cb51ec9c6c5197648cf5070.json",
+          "content_hash": "f045c8b9f3426820fc08653173d2dbf0629957864cb51ec9c6c5197648cf5070",
           "lane": "scix",
-          "locator": "2025arXiv250313657C",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "2025arXiv250313657C",
-          "title": "Why Do Multi-Agent LLM Systems Fail?"
+          "locator": "2026arXiv260523311Y",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2026arXiv260523311Y",
+          "title": "DART: Semantic Recoverability for Structured Tool Agents"
         },
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/15184df98907187399cd3807380a70a170b37f2cce0b5a07d0d84463f11f2495.json",
-          "content_hash": "15184df98907187399cd3807380a70a170b37f2cce0b5a07d0d84463f11f2495",
+          "artifact_ref": "review-6b30af381baf/evidence/6ccad2d7ac5d09de80197edae2ccd29c49fa0d0a2bffd6cd360cc2fa519c7def.json",
+          "content_hash": "6ccad2d7ac5d09de80197edae2ccd29c49fa0d0a2bffd6cd360cc2fa519c7def",
+          "lane": "scix",
+          "locator": "2026arXiv260428138W",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2026arXiv260428138W",
+          "title": "Crab: A Semantics-Aware Checkpoint/Restore Runtime for Agent Sandboxes"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/b24d4170b89047103e955aa591a715c3f3c850b9ee031656b9300bf97c5e2d4c.json",
+          "content_hash": "b24d4170b89047103e955aa591a715c3f3c850b9ee031656b9300bf97c5e2d4c",
+          "lane": "scix",
+          "locator": "2023arXiv231010046W",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2023arXiv231010046W",
+          "title": "TRANSOM: An Efficient Fault-Tolerant System for Training LLMs"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/5e6737e9158c65f106e8864b24da3b9a7afaf430b94d6bd14c5e6770316811fd.json",
+          "content_hash": "5e6737e9158c65f106e8864b24da3b9a7afaf430b94d6bd14c5e6770316811fd",
+          "lane": "scix",
+          "locator": "2025cits.conf..174Z",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2025cits.conf..174Z",
+          "title": "Enhancing Survivability in Power IoT Systems Based on Compliance Checks"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/0aa1d554bcdd8bc1a7fa0f54b61fcd5b19163874c9a7a25d790b7e823b3b19da.json",
+          "content_hash": "0aa1d554bcdd8bc1a7fa0f54b61fcd5b19163874c9a7a25d790b7e823b3b19da",
+          "lane": "scix",
+          "locator": "2023arXiv231214647S",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2023arXiv231214647S",
+          "title": "Towards Message Brokers for Generative AI: Survey, Challenges, and Opportunities"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/ce6f16379a8652c602a544d7fb8400a3f76f6fd992f1a56320b810968aea0edd.json",
+          "content_hash": "ce6f16379a8652c602a544d7fb8400a3f76f6fd992f1a56320b810968aea0edd",
+          "lane": "scix",
+          "locator": "2025cits.conf..175G",
+          "request_id": "request-760570fcff950309011a",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "2025cits.conf..175G",
+          "title": "Organization-Level Identification in the Power IoT System"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/6ebf78f3c7601ffa3754174747faa9f3eded12f81a9b8cb9b122531c161ef22c.json",
+          "content_hash": "6ebf78f3c7601ffa3754174747faa9f3eded12f81a9b8cb9b122531c161ef22c",
           "lane": "digest",
-          "locator": "https://docs.temporal.io/workflows#durable-execution",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "temporal-durable-execution",
-          "title": "Temporal: Durable Execution"
+          "locator": "https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b03013b10",
+          "title": "Building a Durable Execution Engine with SQLite"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/42a348d75e0a89d1a4417b1636fb96f571bb7b3e5f1241ac293049024fb25d42.json",
+          "content_hash": "42a348d75e0a89d1a4417b1636fb96f571bb7b3e5f1241ac293049024fb25d42",
+          "lane": "digest",
+          "locator": "https://www.reddit.com/r/LLMDevs/comments/1r80a04/durable_execution/",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b3cb67afe",
+          "title": "Durable Execution"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/4d0c33720547cdfbd461429b699f950e57b3e38636cb25f1f8e89c4743b7e8ca.json",
+          "content_hash": "4d0c33720547cdfbd461429b699f950e57b3e38636cb25f1f8e89c4743b7e8ca",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2605.28607",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b7e782cbd",
+          "title": "Adaptive Multimodal Agents-Based Framework for Automatic Workflow Execution"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/80476244eed92b5c5991bb661eb7a6c608bd6b493ab0d0b8b16f65f5e9fcf917.json",
+          "content_hash": "80476244eed92b5c5991bb661eb7a6c608bd6b493ab0d0b8b16f65f5e9fcf917",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2606.08049",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b860c448c",
+          "title": "SKILL.nb: Selective Formalization and Gated Execution for Durable Agent Workflows"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/c5e0a805ffda2000353dc72455312e19bd8bcd20d0c39dd97c720cc9dd785788.json",
+          "content_hash": "c5e0a805ffda2000353dc72455312e19bd8bcd20d0c39dd97c720cc9dd785788",
+          "lane": "digest",
+          "locator": "https://ui.adsabs.harvard.edu/abs/2024arXiv240907429Z",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "ads:2024arXiv240907429Z",
+          "title": "Agent Workflow Memory"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/d2aa4c770c297de15f8c44b02a2520937e9a38214a8358baf548f65f73097c1b.json",
+          "content_hash": "d2aa4c770c297de15f8c44b02a2520937e9a38214a8358baf548f65f73097c1b",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2605.10057",
+          "request_id": "request-69577c2dabdc12be2481",
+          "retrieved_at": "2026-07-30T16:54:34.267502+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b740fdfdc",
+          "title": "Route by State, Recover from Trace: STAR with Failure-Aware Markov Routing for Multi-Agent Spatiotemporal Reasoning"
         }
       ],
       "status": "complete"
@@ -29,25 +131,127 @@
     {
       "angle": "tool-reliability",
       "error": null,
-      "section_ref": "review-56ec9b0ec0d8/sections/tool-reliability.md",
+      "section_ref": "review-6b30af381baf/sections/tool-reliability.md",
       "sources": [
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/d0a0c153885ff365eb3d9ca942a9a8b0aea6fa64c7fecdd24c6a3d8ea6edf985.json",
-          "content_hash": "d0a0c153885ff365eb3d9ca942a9a8b0aea6fa64c7fecdd24c6a3d8ea6edf985",
+          "artifact_ref": "review-6b30af381baf/evidence/7fe9b4136b2fbc0a69385f1fffa5e108388512e1e661988245c46e00cef8aa5f.json",
+          "content_hash": "7fe9b4136b2fbc0a69385f1fffa5e108388512e1e661988245c46e00cef8aa5f",
           "lane": "scix",
-          "locator": "2026arXiv260411641L",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "2026arXiv260411641L",
-          "title": "CodeTracer"
+          "locator": "2026arXiv260601365L",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2026arXiv260601365L",
+          "title": "Early Diagnosis of Wasted Computation in Multi-Agent LLM Systems via Failure-Aware Observability"
         },
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/8c5c8b4aa4473dcf0f6d8b0f7a28941ad98dd689d8f8d84f13ba8325dd6e47fc.json",
-          "content_hash": "8c5c8b4aa4473dcf0f6d8b0f7a28941ad98dd689d8f8d84f13ba8325dd6e47fc",
+          "artifact_ref": "review-6b30af381baf/evidence/7c3a1445b57ae0e1b5f5e264898201efd2c826ec9a702432167876ff0e20764b.json",
+          "content_hash": "7c3a1445b57ae0e1b5f5e264898201efd2c826ec9a702432167876ff0e20764b",
+          "lane": "scix",
+          "locator": "2026arXiv260601416B",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2026arXiv260601416B",
+          "title": "Self-Healing Agentic Orchestrators for Reliable Tool-Augmented Large Language Model Systems"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/398ecc8eb592619d0d31c069e83e37196127a37168034668c8ecdbc1c50f3562.json",
+          "content_hash": "398ecc8eb592619d0d31c069e83e37196127a37168034668c8ecdbc1c50f3562",
+          "lane": "scix",
+          "locator": "2024arXiv240619228S",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2024arXiv240619228S",
+          "title": "Tools Fail: Detecting Silent Errors in Faulty Tools"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/7e6fc5c5c8784a8f5b8f10d7563dcdbeb7aa27a2a8e43e1786117f90e0181fed.json",
+          "content_hash": "7e6fc5c5c8784a8f5b8f10d7563dcdbeb7aa27a2a8e43e1786117f90e0181fed",
+          "lane": "scix",
+          "locator": "2024cmps.conf..242T",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2024cmps.conf..242T",
+          "title": "Goal-Oriented Modeling in Fault Tolerant Service-Oriented Multi-Agent Systems"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/b0e9a826bb12e745fdf216c7637a6cedd9542047bab2363709cd7ddb7fb8c5c2.json",
+          "content_hash": "b0e9a826bb12e745fdf216c7637a6cedd9542047bab2363709cd7ddb7fb8c5c2",
+          "lane": "scix",
+          "locator": "2026arXiv260411270P",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2026arXiv260411270P",
+          "title": "Evaluating LLM Agents on Automated Software Analysis Tasks"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/088d390a161bd5fc34971c2bade8acc666dedb8e3e39239af08a4d8cf78510ee.json",
+          "content_hash": "088d390a161bd5fc34971c2bade8acc666dedb8e3e39239af08a4d8cf78510ee",
+          "lane": "scix",
+          "locator": "2025arXiv251209458N",
+          "request_id": "request-5af7e5cabf13b2868d40",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "2025arXiv251209458N",
+          "title": "Architectures for Building Agentic AI"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/1fab4fab27391c3e7fb065e3e790364057a3dd5b98f51ba9d563f05cb1e77ad9.json",
+          "content_hash": "1fab4fab27391c3e7fb065e3e790364057a3dd5b98f51ba9d563f05cb1e77ad9",
           "lane": "digest",
-          "locator": "https://docs.temporal.io/activities",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "temporal-activities",
-          "title": "Temporal: Activities"
+          "locator": "https://arxiv.org/abs/2601.06112",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b23c3fca2",
+          "title": "ReliabilityBench: Evaluating LLM Agent Reliability Under Production-Like Stress Conditions"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/5f9cf5826d4e1b7964097b03ea10d8fbf19d3e933a57a228beb8f34444ea8b99.json",
+          "content_hash": "5f9cf5826d4e1b7964097b03ea10d8fbf19d3e933a57a228beb8f34444ea8b99",
+          "lane": "digest",
+          "locator": "https://ui.adsabs.harvard.edu/abs/2026arXiv260116280H",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "ads:2026arXiv260116280H",
+          "title": "When Agents Fail to Act: A Diagnostic Framework for Tool Invocation Reliability in Multi-Agent LLM Systems"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/540109df32a85405e41f1da961bfb288165f598cd74ff88fe43beb7ae8648373.json",
+          "content_hash": "540109df32a85405e41f1da961bfb288165f598cd74ff88fe43beb7ae8648373",
+          "lane": "digest",
+          "locator": "https://devops.com/agentic-ai-in-observability-platforms-empowering-autonomous-sre/",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b0c2c37b0",
+          "title": "Agentic AI in Observability Platforms: Empowering Autonomous SRE\u00a0"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/02d45eb81a2bad0b5a068529e22505d041cdc8740fb81966efa1a62f8133f19d.json",
+          "content_hash": "02d45eb81a2bad0b5a068529e22505d041cdc8740fb81966efa1a62f8133f19d",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2605.06890",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b855a1cfe",
+          "title": "Beyond the Black Box: Interpretability of Agentic AI Tool Use"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/990a38bc9f11bab78deb4f43e827fa56a59d1e0fb71b2298485c698a249c9f6b.json",
+          "content_hash": "990a38bc9f11bab78deb4f43e827fa56a59d1e0fb71b2298485c698a249c9f6b",
+          "lane": "digest",
+          "locator": "https://www.reddit.com/r/LLMDevs/comments/1qwfrpx/agent_observability_what_tools_work/",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b3431807c",
+          "title": "agent observability \u2013 what tools work?"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/6f74f6b10369e5299c4f8c30cc4ab136977e8e118b306e6643d9dddf49eec28e.json",
+          "content_hash": "6f74f6b10369e5299c4f8c30cc4ab136977e8e118b306e6643d9dddf49eec28e",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2605.06890",
+          "request_id": "request-a3cca6b86971c0339812",
+          "retrieved_at": "2026-07-30T16:54:35.115467+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b7ad78059",
+          "title": "Beyond the Black Box: Interpretability of Agentic AI Tool Use"
         }
       ],
       "status": "complete"
@@ -55,25 +259,127 @@
     {
       "angle": "state-and-memory",
       "error": null,
-      "section_ref": "review-56ec9b0ec0d8/sections/state-and-memory.md",
+      "section_ref": "review-6b30af381baf/sections/state-and-memory.md",
       "sources": [
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/3ff7c0b309b9d38edcf19984e221bb1c52b3a07d82c6f2879c1cfcef3ff332ea.json",
-          "content_hash": "3ff7c0b309b9d38edcf19984e221bb1c52b3a07d82c6f2879c1cfcef3ff332ea",
+          "artifact_ref": "review-6b30af381baf/evidence/3f2462ea7dc56baae2c7a50b4c60f857a83e2fff7d53c9952455a18984715320.json",
+          "content_hash": "3f2462ea7dc56baae2c7a50b4c60f857a83e2fff7d53c9952455a18984715320",
           "lane": "scix",
-          "locator": "2024arXiv240907429Z",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "2024arXiv240907429Z",
-          "title": "Agent Workflow Memory"
+          "locator": "2026arXiv260314312W",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2026arXiv260314312W",
+          "title": "Autonomous Agents Coordinating Distributed Discovery Through Emergent Artifact Exchange"
         },
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/4d5f28af9213db72eb19856616f0a7b18a58d4077b0f36a86e5de3e5038cf8f4.json",
-          "content_hash": "4d5f28af9213db72eb19856616f0a7b18a58d4077b0f36a86e5de3e5038cf8f4",
+          "artifact_ref": "review-6b30af381baf/evidence/69f18bff58a5f3278c74dc53aa2220b2d691f6b506883386c41b96dfb456daa8.json",
+          "content_hash": "69f18bff58a5f3278c74dc53aa2220b2d691f6b506883386c41b96dfb456daa8",
+          "lane": "scix",
+          "locator": "2026arXiv260409836W",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2026arXiv260409836W",
+          "title": "COMPOSITE-Stem"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/0b4b08f23227bb1352837a792d8a8fdefadd4314049bda8b6f0197687d1268e6.json",
+          "content_hash": "0b4b08f23227bb1352837a792d8a8fdefadd4314049bda8b6f0197687d1268e6",
+          "lane": "scix",
+          "locator": "2025arXiv250802866S",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2025arXiv250802866S",
+          "title": "PROV-AGENT: Unified Provenance for Tracking AI Agent Interactions in Agentic Workflows"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/f7bb893f958ebd2554b2c78f245f0a2fb9df43dfb5a1b17021c00d273dc8e11c.json",
+          "content_hash": "f7bb893f958ebd2554b2c78f245f0a2fb9df43dfb5a1b17021c00d273dc8e11c",
+          "lane": "scix",
+          "locator": "2026arXiv260410473G",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2026arXiv260410473G",
+          "title": "AI Identification: An Integrated Framework for Sustainable Governance in Digital Enterprises"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/88ed18c0f6c4d3f18becd773a33c8727b101fb491f87c5dd4690e01db1042d51.json",
+          "content_hash": "88ed18c0f6c4d3f18becd773a33c8727b101fb491f87c5dd4690e01db1042d51",
+          "lane": "scix",
+          "locator": "2026arXiv260708740Q",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2026arXiv260708740Q",
+          "title": "Workflow as Knowledge: Semantic Persistence for LLM-Mediated Workflows"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/dcfdb05231930b89025187d5e929557ddb76d5804055a07cca072a27b8be7772.json",
+          "content_hash": "dcfdb05231930b89025187d5e929557ddb76d5804055a07cca072a27b8be7772",
+          "lane": "scix",
+          "locator": "2026arXiv260411270P",
+          "request_id": "request-123b765d1379c31be923",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "2026arXiv260411270P",
+          "title": "Evaluating LLM Agents on Automated Software Analysis Tasks"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/22493a49c5ba5ee785f3b13d6610607082e90fba4bc36218691cfd800118904f.json",
+          "content_hash": "22493a49c5ba5ee785f3b13d6610607082e90fba4bc36218691cfd800118904f",
           "lane": "digest",
-          "locator": "https://docs.temporal.io/workflow-execution/event",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "temporal-event-history",
-          "title": "Temporal: Event History"
+          "locator": "https://arxiv.org/abs/2504.12612",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b6d5863eb",
+          "title": "Chronology of Multi-Agent Interactions for Provenance of Evolving Information"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/6ddade3b58c433b691176222f05904323c5c4f789686adb4effc67c8e045f96d.json",
+          "content_hash": "6ddade3b58c433b691176222f05904323c5c4f789686adb4effc67c8e045f96d",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2604.21936",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b6a617a98",
+          "title": "An Artifact-based Agent Framework for Adaptive and Reproducible Medical Image Processing"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/0582703d2568fbf5422c863a862c73a10d33f70485782e0402417bf753b35cf7.json",
+          "content_hash": "0582703d2568fbf5422c863a862c73a10d33f70485782e0402417bf753b35cf7",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2603.21692",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b539ddc79",
+          "title": "Reasoning Provenance for Autonomous AI Agents: Structured Behavioral Analytics Beyond State Checkpoints and Execution Traces"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/bf43444daef32465f921a7083fc89fec73962c779996607149e10db459d7dd14.json",
+          "content_hash": "bf43444daef32465f921a7083fc89fec73962c779996607149e10db459d7dd14",
+          "lane": "digest",
+          "locator": "https://ui.adsabs.harvard.edu/abs/2026arXiv260321692V",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "ads:2026arXiv260321692V",
+          "title": "Reasoning Provenance for Autonomous AI Agents: Structured Behavioral Analytics Beyond State Checkpoints and Execution Traces"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/b1f8a56ec7bd2f0f513ef7b68e87b1a9ea20e467c4ac20abdfcfbe01ae8e88fe.json",
+          "content_hash": "b1f8a56ec7bd2f0f513ef7b68e87b1a9ea20e467c4ac20abdfcfbe01ae8e88fe",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2603.21692",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b61265c46",
+          "title": "Reasoning Provenance for Autonomous AI Agents: Structured Behavioral Analytics Beyond State Checkpoints and Execution Traces"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/d0da00458b72fb51dc208a0629b873ceac3b29bb201a03e86eb7654366cb007a.json",
+          "content_hash": "d0da00458b72fb51dc208a0629b873ceac3b29bb201a03e86eb7654366cb007a",
+          "lane": "digest",
+          "locator": "https://ui.adsabs.harvard.edu/abs/2026arXiv260210133A",
+          "request_id": "request-887b7728aa645616bb5d",
+          "retrieved_at": "2026-07-30T16:55:15.668675+00:00",
+          "source_id": "ads:2026arXiv260210133A",
+          "title": "AgentTrace: A Structured Logging Framework for Agent System Observability"
         }
       ],
       "status": "complete"
@@ -81,25 +387,127 @@
     {
       "angle": "evaluation",
       "error": null,
-      "section_ref": "review-56ec9b0ec0d8/sections/evaluation.md",
+      "section_ref": "review-6b30af381baf/sections/evaluation.md",
       "sources": [
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/5bff71c6e17e47647dc29a8d7039d096785808e60de8a39b76e85fa5f1f0bdd9.json",
-          "content_hash": "5bff71c6e17e47647dc29a8d7039d096785808e60de8a39b76e85fa5f1f0bdd9",
+          "artifact_ref": "review-6b30af381baf/evidence/96833ea37341386ebed5982c01646a7f7265de029ceae4e3373dd374890673e9.json",
+          "content_hash": "96833ea37341386ebed5982c01646a7f7265de029ceae4e3373dd374890673e9",
           "lane": "scix",
-          "locator": "2026arXiv260528732D",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "2026arXiv260528732D",
-          "title": "MemTrace"
+          "locator": "2026arXiv260710608C",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2026arXiv260710608C",
+          "title": "The Compliance Trap: Diagnosing How AI Agents Consume Conflicting Memory"
         },
         {
-          "artifact_ref": "review-56ec9b0ec0d8/evidence/fc8a26e04fce9b405baaf24125d1eaf681ffe55538e68e3d0b46292d0dfcd0ce.json",
-          "content_hash": "fc8a26e04fce9b405baaf24125d1eaf681ffe55538e68e3d0b46292d0dfcd0ce",
+          "artifact_ref": "review-6b30af381baf/evidence/75fda3d2c8b25026df96b3a394e287aa584495bedfcf590ad5296b67136b49f9.json",
+          "content_hash": "75fda3d2c8b25026df96b3a394e287aa584495bedfcf590ad5296b67136b49f9",
+          "lane": "scix",
+          "locator": "2026arXiv260609863A",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2026arXiv260609863A",
+          "title": "From Confident Closing to Silent Failure: Characterizing False Success in LLM Agents"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/7838966d52e394c6ece2a634a5c9fb1aa297fd7ed2e9ce5ea7c96712487943f6.json",
+          "content_hash": "7838966d52e394c6ece2a634a5c9fb1aa297fd7ed2e9ce5ea7c96712487943f6",
+          "lane": "scix",
+          "locator": "2026arXiv260409791A",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2026arXiv260409791A",
+          "title": "Pioneer Agent: Continual Improvement of Small Language Models in Production"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/e9277e96a7a12c855c8babe2e0fb2fe51c4c3495dbc78ae435986c85fae2095d.json",
+          "content_hash": "e9277e96a7a12c855c8babe2e0fb2fe51c4c3495dbc78ae435986c85fae2095d",
+          "lane": "scix",
+          "locator": "2026arXiv260303116C",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2026arXiv260303116C",
+          "title": "Beyond Task Completion: Revealing Corrupt Success in LLM Agents through Procedure-Aware Evaluation"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/2df96fa02d147c0eab38df647166121e038bae5c697b3599c9252e0b33a1c8c1.json",
+          "content_hash": "2df96fa02d147c0eab38df647166121e038bae5c697b3599c9252e0b33a1c8c1",
+          "lane": "scix",
+          "locator": "2023arXiv231211805G",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2023arXiv231211805G",
+          "title": "Gemini: A Family of Highly Capable Multimodal Models"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/fe4540b34a879069e9595387cd88b739bc51369fce6182ac232b1cbf6b22eb47.json",
+          "content_hash": "fe4540b34a879069e9595387cd88b739bc51369fce6182ac232b1cbf6b22eb47",
+          "lane": "scix",
+          "locator": "2026arXiv260508545K",
+          "request_id": "request-8fc06d953755a2e0b9ff",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "2026arXiv260508545K",
+          "title": "Log analysis is necessary for credible evaluation of AI agents"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/b13b361a37bcc66bbdc430e3ece87fad71094acdbd0970d4a2e92f3f48814ef1.json",
+          "content_hash": "b13b361a37bcc66bbdc430e3ece87fad71094acdbd0970d4a2e92f3f48814ef1",
           "lane": "digest",
-          "locator": "https://python.temporal.io/temporalio.testing.WorkflowEnvironment.html",
-          "retrieved_at": "2026-07-29T00:00:00Z",
-          "source_id": "temporal-testing",
-          "title": "Temporal Python SDK: Testing"
+          "locator": "https://www.reddit.com/r/LLMDevs/comments/1r0fzyc/replay_is_not_reexecution_the_reproducibility_gap/",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b36a181ab",
+          "title": "Replay is not re-execution. The reproducibility gap in production agents"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/de9fa7b736cfc40728677ab1c0b79f923537aa3637358fc40d3e4399274006fd.json",
+          "content_hash": "de9fa7b736cfc40728677ab1c0b79f923537aa3637358fc40d3e4399274006fd",
+          "lane": "digest",
+          "locator": "https://ui.adsabs.harvard.edu/abs/2026arXiv260506788F",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "ads:2026arXiv260506788F",
+          "title": "Conformal Agent Error Attribution"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/6c9b491cbc4963eb03d9a4dc214c33562fde5c254d1f09d90f041bc477295ae5.json",
+          "content_hash": "6c9b491cbc4963eb03d9a4dc214c33562fde5c254d1f09d90f041bc477295ae5",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2603.21357",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b539d25c4",
+          "title": "AgentHER: Hindsight Experience Replay for LLM Agent Trajectory Relabeling"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/76d4a38e6644a006c1f93426b4572495b59ec9e373a19886ffb6453f3329a04a.json",
+          "content_hash": "76d4a38e6644a006c1f93426b4572495b59ec9e373a19886ffb6453f3329a04a",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2605.06788",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b735bd9b2",
+          "title": "Conformal Agent Error Attribution"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/e20ee01fd5368aac5f52354d8938905d0f4dff7b6f6638cd70d2ccd8b07e25c0.json",
+          "content_hash": "e20ee01fd5368aac5f52354d8938905d0f4dff7b6f6638cd70d2ccd8b07e25c0",
+          "lane": "digest",
+          "locator": "https://arxiv.org/abs/2601.15322",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b4a981d78",
+          "title": "Replayable Financial Agents: A Determinism-Faithfulness Assurance Harness for Tool-Using LLM Agents"
+        },
+        {
+          "artifact_ref": "review-6b30af381baf/evidence/80cbf1eb36def793e64151cf5ec5fe622254c294463ebf0ea2e8ca3910e55e75.json",
+          "content_hash": "80cbf1eb36def793e64151cf5ec5fe622254c294463ebf0ea2e8ca3910e55e75",
+          "lane": "digest",
+          "locator": "https://www.reddit.com/r/SoftwareEngineering/comments/1tsgh7s/cicd_for_ai_agents_open_source_sdk_that_turns/",
+          "request_id": "request-38c99d6d2a1aa9411c81",
+          "retrieved_at": "2026-07-30T16:55:16.869458+00:00",
+          "source_id": "tag:google.com,2005:reader/item/0000000b804b9386",
+          "title": "CI/CD for AI agents , open source SDK that turns failed runs into regression tests"
         }
       ],
       "status": "complete"
@@ -112,6 +520,12 @@
     "evaluation"
   ],
   "failed_angles": [],
-  "review_id": "review-56ec9b0ec0d8",
-  "topic": "Durable literature-review agents"
+  "review_id": "review-6b30af381baf",
+  "synthesis": {
+    "artifact_ref": "review-6b30af381baf/synthesis/c718152381d4790422eeb12378edc3138e092f9a7ab8b90ac88d89938586e8cf.json",
+    "input_paper_count": 23,
+    "request_id": "request-cf3fd7e4a85ecfd633df",
+    "tool": "synthesize_findings"
+  },
+  "topic": "What durable execution changes about an agent research pipeline"
 }

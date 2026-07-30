@@ -1,0 +1,568 @@
+{
+  "assignment_coverage": {
+    "assigned_bibcodes": 16,
+    "community_assigned_bibcodes": 4,
+    "fallback_pulled_bibcodes": 12,
+    "fallback_pulled_per_section": {
+      "background": 0,
+      "methods": 4,
+      "open_questions": 4,
+      "results": 4
+    },
+    "intent_assigned_bibcodes": 0,
+    "override_assigned_bibcodes": 0,
+    "total_bibcodes": 23,
+    "unattributed_bibcodes": 7
+  },
+  "metadata": {
+    "modal_community_id": 36,
+    "override_count": 0,
+    "sections_requested": [
+      "background",
+      "methods",
+      "results",
+      "open_questions"
+    ]
+  },
+  "sections": [
+    {
+      "cited_papers": [
+        {
+          "abstract_full": "Small language models are attractive for production deployment due to their low cost, fast inference, and ease of specialization. However, adapting them to a specific task remains a challenging engineering loop, driven not by training itself but by surrounding decisions: data curation, failure diagnosis, regression avoidance, and iteration control. We present Pioneer Agent, a closed-loop system that automates this lifecycle. In cold-start mode, given only a natural-language task description, the agent acquires data, constructs evaluation sets, and iteratively trains models by jointly optimizing data, hyperparameters, and learning strategy. In production mode, given a deployed model with labeled failures, it diagnoses error patterns, constructs targeted training data, and retrains under explicit regression constraints. To evaluate this setting, we introduce AdaptFT-Bench, a benchmark of synthetic inference logs with progressively increasing noise, designed to test the full adaptation loop: diagnosis, curriculum synthesis, retraining, and verification. Across eight cold-start benchmarks spanning reasoning, math, code generation, summarization, and classification, Pioneer Agent improves over base models by 1.6-83.8 points. On AdaptFT-Bench, it improves or preserves performance in all seven scenarios, while naive retraining degrades by up to 43 points. On two production-style deployments built from public benchmark tasks, it raises intent classification from 84.9% to 99.3% and Entity F1 from 0.345 to 0.810. Beyond performance gains, the agent often discovers effective training strategies, including chain-of-thought supervision, task-specific optimization, and quality-focused data curation, purely from downstream feedback.",
+          "abstract_snippet": "Small language models are attractive for production deployment due to their low cost, fast inference, and ease of specialization. However, adapting them to a specific task remains a challenging engineering loop, driven not by training itself but by surrounding decisions: data cu…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260409791A",
+          "first_author": "Atreja, Dhruv",
+          "role": "background",
+          "section_assigned": "background",
+          "signal_used": "community_fallthrough",
+          "signals": {
+            "community_id": 36,
+            "community_share": 0.17391304347826086,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": true,
+            "modal_community_id": 36,
+            "share_tier": "core"
+          },
+          "title": "Pioneer Agent: Continual Improvement of Small Language Models in Production",
+          "year": 2026
+        },
+        {
+          "abstract_full": "Numerous software analysis tools exist today, yet applying them to diverse open-source projects remains challenging due to environment setup, dependency resolution, and tool configuration. LLM-based agents offer a potential solution, yet no prior work has systematically studied their effectiveness on the specific task of automated software analysis, which, unlike issue solving or general environment setup, requires installing and configuring a separate analysis tool alongside the target project, generating tool-specific prerequisites, and validating that the tool produces meaningful analysis outputs. We introduce AnalysisBench, a benchmark of 35 tool-project pairs spanning seven analysis tools and ten diverse C/C++ and Java projects, each with a manually constructed reference setup. Using AnalysisBench, we evaluate four agent architectures across four LLM backends. Our custom agent, AnalysisAgent, achieves manually verified success rates of 94% (Gemini-3-Flash, 33/35 tasks), compared to 77% for the best baseline (ExecutionAgent). Beyond quantitative results, we identify key limitations in existing agents, including stage mixing, poor error localization, and premature termination, and show that agentic architecture matters more than LLM capability alone. We further find that whole-program analyses and symbolic execution are the most difficult tasks, that Java toolchains pose greater challenges than C/C++, and that LLM-self-validated success consistently overstates manually verified success.",
+          "abstract_snippet": "Numerous software analysis tools exist today, yet applying them to diverse open-source projects remains challenging due to environment setup, dependency resolution, and tool configuration. LLM-based agents offer a potential solution, yet no prior work has systematically studied…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260411270P",
+          "first_author": "Pradel, Michael",
+          "role": "background",
+          "section_assigned": "background",
+          "signal_used": "community_fallthrough",
+          "signals": {
+            "community_id": 36,
+            "community_share": 0.17391304347826086,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": true,
+            "modal_community_id": 36,
+            "share_tier": "core"
+          },
+          "title": "Evaluating LLM Agents on Automated Software Analysis Tasks",
+          "year": 2026
+        },
+        {
+          "abstract_full": "Tools have become a mainstay of LLMs, allowing them to retrieve knowledge not in their weights, to perform tasks on the web, and even to control robots. However, most ontologies and surveys of tool-use have assumed the core challenge for LLMs is choosing the tool. Instead, we introduce a framework for tools more broadly which guides us to explore a model's ability to detect \"silent\" tool errors, and reflect on how to plan. This more directly aligns with the increasingly popular use of models as tools. We provide an initial approach to failure recovery with promising results both on a controlled calculator setting and embodied agent planning.",
+          "abstract_snippet": "Tools have become a mainstay of LLMs, allowing them to retrieve knowledge not in their weights, to perform tasks on the web, and even to control robots. However, most ontologies and surveys of tool-use have assumed the core challenge for LLMs is choosing the tool. Instead, we in…",
+          "alternative_sections": [],
+          "bibcode": "2024arXiv240619228S",
+          "first_author": "Sun, Jimin",
+          "role": "background",
+          "section_assigned": "background",
+          "signal_used": "community_fallthrough",
+          "signals": {
+            "community_id": 36,
+            "community_share": 0.17391304347826086,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": true,
+            "modal_community_id": 36,
+            "share_tier": "core"
+          },
+          "title": "Tools Fail: Detecting Silent Errors in Faulty Tools",
+          "year": 2024
+        },
+        {
+          "abstract_full": "In today's digital world, Generative Artificial Intelligence (GenAI) such as Large Language Models (LLMs) is becoming increasingly prevalent, extending its reach across diverse applications. This surge in adoption has sparked a significant increase in demand for data-centric GenAI models, highlighting the necessity for robust data communication infrastructures. Central to this need are message brokers, which serve as essential channels for data transfer within various system components. This survey aims to delve into a comprehensive analysis of traditional and modern message brokers, offering a comparative study of prevalent platforms. Our study considers numerous criteria including, but not limited to, open-source availability, integrated monitoring tools, message prioritization mechanisms, capabilities for parallel processing, reliability, distribution and clustering functionalities, authentication processes, data persistence strategies, fault tolerance, and scalability. Furthermore, we explore the intrinsic constraints that the design and operation of each message broker might impose, recognizing that these limitations are crucial in understanding their real-world applicability. Finally, this study examines the enhancement of message broker mechanisms specifically for GenAI contexts, emphasizing the criticality of developing a versatile message broker framework. Such a framework would be poised for quick adaptation, catering to the dynamic and growing demands of GenAI in the foreseeable future. Through this dual-pronged approach, we intend to contribute a foundational compendium that can guide future innovations and infrastructural advancements in the realm of GenAI data communication.",
+          "abstract_snippet": "In today's digital world, Generative Artificial Intelligence (GenAI) such as Large Language Models (LLMs) is becoming increasingly prevalent, extending its reach across diverse applications. This surge in adoption has sparked a significant increase in demand for data-centric Gen…",
+          "alternative_sections": [],
+          "bibcode": "2023arXiv231214647S",
+          "first_author": "Saleh, Alaa",
+          "role": "background",
+          "section_assigned": "background",
+          "signal_used": "community_fallthrough",
+          "signals": {
+            "community_id": 36,
+            "community_share": 0.17391304347826086,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": true,
+            "modal_community_id": 36,
+            "share_tier": "core"
+          },
+          "title": "Towards Message Brokers for Generative AI: Survey, Challenges, and Opportunities",
+          "year": 2023
+        }
+      ],
+      "name": "background",
+      "theme": {
+        "communities": [
+          {
+            "community_id": 36,
+            "label": "cs.SE + cs.AI · software engineering / software / languages",
+            "paper_count_in_section": 4,
+            "top_arxiv_classes": [
+              "cs.AI",
+              "cs.CL",
+              "cs.LG",
+              "stat.ML",
+              "cs.MA"
+            ],
+            "top_keywords": [
+              "computer science - artificial intelligence",
+              "computer science - machine learning",
+              "artificial intelligence",
+              "computation and language",
+              "machine learning"
+            ]
+          }
+        ],
+        "top_papers_by_citation": [
+          {
+            "bibcode": "2023arXiv231214647S",
+            "citation_count": 2,
+            "first_author": "Saleh, Alaa",
+            "title": "Towards Message Brokers for Generative AI: Survey, Challenges, and Opportunities"
+          },
+          {
+            "bibcode": "2024arXiv240619228S",
+            "citation_count": 1,
+            "first_author": "Sun, Jimin",
+            "title": "Tools Fail: Detecting Silent Errors in Faulty Tools"
+          },
+          {
+            "bibcode": "2026arXiv260409791A",
+            "citation_count": 0,
+            "first_author": "Atreja, Dhruv",
+            "title": "Pioneer Agent: Continual Improvement of Small Language Models in Production"
+          }
+        ]
+      },
+      "theme_summary": "cs.SE + cs.AI · software engineering / software / languages"
+    },
+    {
+      "cited_papers": [
+        {
+          "abstract_full": "Large Language Model (LLM)-based agents are increasingly adopted in high-stakes settings, but current benchmarks evaluate mainly whether a task was completed, not how. We introduce Procedure-Aware Evaluation (PAE), a framework that formalizes agent procedures as structured observations and exposes consistency relationships between what agents observe, communicate, and execute. PAE evaluates agents along complementary axes (Utility, Efficiency, Interaction Quality, Procedural Integrity) and applies multi-dimensional gating that categorically disqualifies corrupt outcomes. Evaluating state-of-the-art LLM agents on tau-bench yields findings at the axis, compliance, and benchmark levels. At the axis level, the dimensions capture non-redundant failure modes: utility masks reliability gaps, speed does not imply precision, and conciseness does not predict intent adherence. At the procedural compliance level, 27-78% of benchmark reported successes are corrupt successes concealing violations across interaction and integrity. Furthermore, gating substantially collapses Pass^4 rate and affects model rankings. The analysis of corrupt success cases reveals distinctive per-model failure signatures: GPT-5 spreads errors across policy, execution, and intent dimensions; Kimi-K2-Thinking concentrates 78% of violations in policy faithfulness and compliance; and Mistral-Large-3 is dominated by faithfulness failures. At the benchmark level, our analysis exposes structural flaws in the benchmark design, including task scope gaps, contradictory reward signals, and simulator artifacts that produce accidental successes.",
+          "abstract_snippet": "Large Language Model (LLM)-based agents are increasingly adopted in high-stakes settings, but current benchmarks evaluate mainly whether a task was completed, not how. We introduce Procedure-Aware Evaluation (PAE), a framework that formalizes agent procedures as structured obser…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260303116C",
+          "first_author": "Cao, Hongliu",
+          "role": "methods",
+          "section_assigned": "methods",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Beyond Task Completion: Revealing Corrupt Success in LLM Agents through Procedure-Aware Evaluation",
+          "year": 2026
+        },
+        {
+          "abstract_full": "Large Language Models (LLMs) and other foundation models are increasingly used as the core of AI agents. In agentic workflows, these agents plan tasks, interact with humans and peers, and influence scientific outcomes across federated and heterogeneous environments. However, agents can hallucinate or reason incorrectly, propagating errors when one agent's output becomes another's input. Thus, assuring that agents' actions are transparent, traceable, reproducible, and reliable is critical to assess hallucination risks and mitigate their workflow impacts. While provenance techniques have long supported these principles, existing methods fail to capture and relate agent-centric metadata such as prompts, responses, and decisions with the broader workflow context and downstream outcomes. In this paper, we introduce PROV-AGENT, a provenance model that extends W3C PROV and leverages the Model Context Protocol (MCP) and data observability to integrate agent interactions into end-to-end workflow provenance. Our contributions include: (1) a provenance model tailored for agentic workflows, (2) a near real-time, open-source system for capturing agentic provenance, and (3) a cross-facility evaluation spanning edge, cloud, and HPC environments, demonstrating support for critical provenance queries and agent reliability analysis.",
+          "abstract_snippet": "Large Language Models (LLMs) and other foundation models are increasingly used as the core of AI agents. In agentic workflows, these agents plan tasks, interact with humans and peers, and influence scientific outcomes across federated and heterogeneous environments. However, age…",
+          "alternative_sections": [],
+          "bibcode": "2025arXiv250802866S",
+          "first_author": "Souza, Renan",
+          "role": "methods",
+          "section_assigned": "methods",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "PROV-AGENT: Unified Provenance for Tracking AI Agent Interactions in Agentic Workflows",
+          "year": 2025
+        },
+        {
+          "abstract_full": "Large language models (LLMs) with hundreds of billions or trillions of parameters, represented by chatGPT, have achieved profound impact on various fields. However, training LLMs with super-large-scale parameters requires large high-performance GPU clusters and long training periods lasting for months. Due to the inevitable hardware and software failures in large-scale clusters, maintaining uninterrupted and long-duration training is extremely challenging. As a result, A substantial amount of training time is devoted to task checkpoint saving and loading, task rescheduling and restart, and task manual anomaly checks, which greatly harms the overall training efficiency. To address these issues, we propose TRANSOM, a novel fault-tolerant LLM training system. In this work, we design three key subsystems: the training pipeline automatic fault tolerance and recovery mechanism named Transom Operator and Launcher (TOL), the training task multi-dimensional metric automatic anomaly detection system named Transom Eagle Eye (TEE), and the training checkpoint asynchronous access automatic fault tolerance and recovery technology named Transom Checkpoint Engine (TCE). Here, TOL manages the lifecycle of training tasks, while TEE is responsible for task monitoring and anomaly reporting. TEE detects training anomalies and reports them to TOL, who automatically enters the fault tolerance strategy to eliminate abnormal nodes and restart the training task. And the asynchronous checkpoint saving and loading functionality provided by TCE greatly shorten the fault tolerance overhead. The experimental results indicate that TRANSOM significantly enhances the efficiency of large-scale LLM training on clusters. Specifically, the pre-training time for GPT3-175B has been reduced by 28%, while checkpoint saving and loading performance have improved by a factor of 20.",
+          "abstract_snippet": "Large language models (LLMs) with hundreds of billions or trillions of parameters, represented by chatGPT, have achieved profound impact on various fields. However, training LLMs with super-large-scale parameters requires large high-performance GPU clusters and long training per…",
+          "alternative_sections": [],
+          "bibcode": "2023arXiv231010046W",
+          "first_author": "Wu, Baodong",
+          "role": "methods",
+          "section_assigned": "methods",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": 118,
+            "community_share": 0.043478260869565216,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": "peripheral"
+          },
+          "title": "TRANSOM: An Efficient Fault-Tolerant System for Training LLMs",
+          "year": 2023
+        },
+        {
+          "abstract_full": "This report introduces a new family of multimodal models, Gemini, that exhibit remarkable capabilities across image, audio, video, and text understanding. The Gemini family consists of Ultra, Pro, and Nano sizes, suitable for applications ranging from complex reasoning tasks to on-device memory-constrained use-cases. Evaluation on a broad range of benchmarks shows that our most-capable Gemini Ultra model advances the state of the art in 30 of 32 of these benchmarks - notably being the first model to achieve human-expert performance on the well-studied exam benchmark MMLU, and improving the state of the art in every one of the 20 multimodal benchmarks we examined. We believe that the new capabilities of the Gemini family in cross-modal reasoning and language understanding will enable a wide variety of use cases. We discuss our approach toward post-training and deploying Gemini models responsibly to users through services including Gemini, Gemini Advanced, Google AI Studio, and Cloud Vertex AI.",
+          "abstract_snippet": "This report introduces a new family of multimodal models, Gemini, that exhibit remarkable capabilities across image, audio, video, and text understanding. The Gemini family consists of Ultra, Pro, and Nano sizes, suitable for applications ranging from complex reasoning tasks to…",
+          "alternative_sections": [],
+          "bibcode": "2023arXiv231211805G",
+          "first_author": "Gemini Team",
+          "role": "methods",
+          "section_assigned": "methods",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": 110,
+            "community_share": 0.043478260869565216,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": "peripheral"
+          },
+          "title": "Gemini: A Family of Highly Capable Multimodal Models",
+          "year": 2023
+        }
+      ],
+      "name": "methods",
+      "theme": {
+        "communities": [
+          {
+            "community_id": 110,
+            "label": "cs.CL + cs.CV · speech recognition / sentiment / action recognition",
+            "paper_count_in_section": 1,
+            "top_arxiv_classes": [
+              "cs.CL",
+              "cs.AI",
+              "cs.CV"
+            ],
+            "top_keywords": [
+              "computer science - computation and language",
+              "computer science - artificial intelligence",
+              "computer science - computer vision and pattern recognition"
+            ]
+          },
+          {
+            "community_id": 118,
+            "label": "cs.LG + cs.DC · scheduling / video coding / fpga",
+            "paper_count_in_section": 1,
+            "top_arxiv_classes": [
+              "cs.DC",
+              "cs.AI"
+            ],
+            "top_keywords": [
+              "computer science - distributed",
+              "parallel",
+              "and cluster computing",
+              "computer science - artificial intelligence"
+            ]
+          }
+        ],
+        "top_papers_by_citation": [
+          {
+            "bibcode": "2023arXiv231211805G",
+            "citation_count": 3251,
+            "first_author": "Gemini Team",
+            "title": "Gemini: A Family of Highly Capable Multimodal Models"
+          },
+          {
+            "bibcode": "2023arXiv231010046W",
+            "citation_count": 6,
+            "first_author": "Wu, Baodong",
+            "title": "TRANSOM: An Efficient Fault-Tolerant System for Training LLMs"
+          },
+          {
+            "bibcode": "2025arXiv250802866S",
+            "citation_count": 5,
+            "first_author": "Souza, Renan",
+            "title": "PROV-AGENT: Unified Provenance for Tracking AI Agent Interactions in Agentic Workflows"
+          }
+        ]
+      },
+      "theme_summary": "cs.LG + cs.DC · scheduling / video coding / fpga; cs.CL + cs.CV · speech recognition / sentiment / action recognition"
+    },
+    {
+      "cited_papers": [
+        {
+          "abstract_full": "We present ScienceClaw + Infinite, a framework for autonomous scientific investigation in which independent agents conduct research without central coordination, and any contributor can deploy new agents into a shared ecosystem. The system is built around three components: an extensible registry of over 300 interoperable scientific skills, an artifact layer that preserves full computational lineage as a directed acyclic graph (DAG), and a structured platform for agent-based scientific discourse with provenance-aware governance. Agents select and chain tools based on their scientific profiles, produce immutable artifacts with typed metadata and parent lineage, and broadcast unsatisfied information needs to a shared global index. The ArtifactReactor enables plannerless coordination: peer agents discover and fulfill open needs through pressure-based scoring, while schema-overlap matching triggers multi-parent synthesis across independent analyses. An autonomous mutation layer actively prunes the expanding artifact DAG to resolve conflicting or redundant workflows, while persistent memory allows agents to continuously build upon complex epistemic states across multiple cycles. Infinite converts these outputs into auditable scientific records through structured posts, provenance views, and machine-readable discourse relations, with community feedback steering subsequent investigation cycles. Across four autonomous investigations, peptide design for the somatostatin receptor SSTR2, lightweight impact-resistant ceramic screening, cross-domain resonance bridging biology, materials, and music, and formal analogy construction between urban morphology and grain-boundary evolution, the framework demonstrates heterogeneous tool chaining, emergent convergence among independently operating agents, and traceable reasoning from raw computation to published finding.",
+          "abstract_snippet": "We present ScienceClaw + Infinite, a framework for autonomous scientific investigation in which independent agents conduct research without central coordination, and any contributor can deploy new agents into a shared ecosystem. The system is built around three components: an ex…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260314312W",
+          "first_author": "Wang, Fiona Y.",
+          "role": "results",
+          "section_assigned": "results",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Autonomous Agents Coordinating Distributed Discovery Through Emergent Artifact Exchange",
+          "year": 2026
+        },
+        {
+          "abstract_full": "This chapter argues that the reliability of agentic and generative AI is chiefly an architectural property. We define agentic systems as goal-directed, tool-using decision makers operating in closed loops, and show how reliability emerges from principled componentisation (goal manager, planner, tool-router, executor, memory, verifiers, safety monitor, telemetry), disciplined interfaces (schema-constrained, validated, least-privilege tool calls), and explicit control and assurance loops. Building on classical foundations, we propose a practical taxonomy-tool-using agents, memory-augmented agents, planning and self-improvement agents, multi-agent systems, and embodied or web agents - and analyse how each pattern reshapes the reliability envelope and failure modes. We distil design guidance on typed schemas, idempotency, permissioning, transactional semantics, memory provenance and hygiene, runtime governance (budgets, termination conditions), and simulate-before-actuate safeguards.",
+          "abstract_snippet": "This chapter argues that the reliability of agentic and generative AI is chiefly an architectural property. We define agentic systems as goal-directed, tool-using decision makers operating in closed loops, and show how reliability emerges from principled componentisation (goal m…",
+          "alternative_sections": [],
+          "bibcode": "2025arXiv251209458N",
+          "first_author": "Nowaczyk, Sławomir",
+          "role": "results",
+          "section_assigned": "results",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Architectures for Building Agentic AI",
+          "year": 2025
+        },
+        {
+          "abstract_full": "This study proposes a survivability enhancement technique for Power IoT based on checkpoint fault tolerance technology. It aims to improve system survivability by periodically saving the system state and restoring it to the most recent checkpoint in the event of a failure. This paper introduces the basic principles of checkpoint fault tolerance technology and its application in Power IoT, detailing the implementation methods for performance monitoring, checkpoint setting, and recovery. Experimental results show that this technology effectively enhances system survivability and ensures the continuous operation of critical services.",
+          "abstract_snippet": "This study proposes a survivability enhancement technique for Power IoT based on checkpoint fault tolerance technology. It aims to improve system survivability by periodically saving the system state and restoring it to the most recent checkpoint in the event of a failure. This…",
+          "alternative_sections": [],
+          "bibcode": "2025cits.conf..174Z",
+          "first_author": "Zekun, Ma",
+          "role": "results",
+          "section_assigned": "results",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Enhancing Survivability in Power IoT Systems Based on Compliance Checks",
+          "year": 2025
+        },
+        {
+          "abstract_full": "Multi-agent systems are examples of complex distributed systems enabling dynamic adaptation in providing their services. By establishing on-the-fly collaborations, the agents can execute complex scenarios and adapt to changing operating conditions including agent failures. We investigate how goal-oriented modelling can enhance reliability by providing a structured support for designing fault tolerant service orchestration.",
+          "abstract_snippet": "Multi-agent systems are examples of complex distributed systems enabling dynamic adaptation in providing their services. By establishing on-the-fly collaborations, the agents can execute complex scenarios and adapt to changing operating conditions including agent failures. We in…",
+          "alternative_sections": [],
+          "bibcode": "2024cmps.conf..242T",
+          "first_author": "Troubitsyna, Elena",
+          "role": "results",
+          "section_assigned": "results",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Goal-Oriented Modeling in Fault Tolerant Service-Oriented Multi-Agent Systems",
+          "year": 2024
+        }
+      ],
+      "name": "results",
+      "theme": {
+        "communities": [],
+        "top_papers_by_citation": [
+          {
+            "bibcode": "2026arXiv260314312W",
+            "citation_count": 3,
+            "first_author": "Wang, Fiona Y.",
+            "title": "Autonomous Agents Coordinating Distributed Discovery Through Emergent Artifact Exchange"
+          },
+          {
+            "bibcode": "2025arXiv251209458N",
+            "citation_count": 1,
+            "first_author": "Nowaczyk, Sławomir",
+            "title": "Architectures for Building Agentic AI"
+          },
+          {
+            "bibcode": "2024cmps.conf..242T",
+            "citation_count": 0,
+            "first_author": "Troubitsyna, Elena",
+            "title": "Goal-Oriented Modeling in Fault Tolerant Service-Oriented Multi-Agent Systems"
+          }
+        ]
+      },
+      "theme_summary": ""
+    },
+    {
+      "cited_papers": [
+        {
+          "abstract_full": "AI agents hold growing promise for accelerating scientific discovery; yet, a lack of frontier evaluations hinders adoption into real workflows. Expert-written benchmarks have proven effective at measuring AI reasoning, but most at this stage have become saturated and only measure performance on constrained outputs. To help address this gap, we introduce COMPOSITE-STEM, a benchmark of 70 expert-written tasks in physics, biology, chemistry, and mathematics, curated by doctoral-level researchers. Our benchmark combines exact-match grading and criterion-based rubrics with an LLM-as-a-jury grading protocol, allowing more flexible assessment of scientifically meaningful outputs. Using an adapted multimodal Terminus-2 agent harness within the Harbor agentic evaluation framework, we evaluate four frontier models. The top-performing model achieves 21%, demonstrating that COMPOSITE-STEM captures capabilities beyond current agent reach. All tasks are open-sourced with contributor permission to support reproducibility and to promote additional research towards AI's acceleration of scientific progress in these domains.",
+          "abstract_snippet": "AI agents hold growing promise for accelerating scientific discovery; yet, a lack of frontier evaluations hinders adoption into real workflows. Expert-written benchmarks have proven effective at measuring AI reasoning, but most at this stage have become saturated and only measur…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260409836W",
+          "first_author": "Waters, Kyle",
+          "role": "open_questions",
+          "section_assigned": "open_questions",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": 56,
+            "community_share": 0.043478260869565216,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": "peripheral"
+          },
+          "title": "COMPOSITE-Stem",
+          "year": 2026
+        },
+        {
+          "abstract_full": "As artificial intelligence (AI) systems grow more powerful, autonomous, and embedded in critical infrastructure, their identification and traceability become foundational to regulatory oversight and sustainable digital governance. In digitally transformed enterprises, long-term sustainability depends on transparent, accountable, and lifecycle-governed AI systems, all of which require verifiable identity. This study proposes a conceptual and architectural framework for AI identification, combining technical and governance mechanisms to support lifecycle accountability. The framework integrates five components: model fingerprinting, cryptographic hashing, blockchain-based registration, zero-knowledge proof (ZKP)-based proof of possession, and post-deployment structural change screening. We introduce a dual-layer identifier, consisting of a machine-verifiable primary hash and a human-readable secondary identifier, anchored in a tamper-resistant registry. Identity validation is supported by selective ZKP-based verification at governance-defined checkpoints, while post-deployment changes are monitored using Lempel--Ziv Jaccard Distance (LZJD) as a governance-oriented screening signal rather than a semantic performance metric. The framework establishes an enforceable and transparent identity infrastructure that enables continuity, auditability, and policy-aligned oversight across AI system lifecycles. By embedding AI identification within enterprise architecture and governance processes, the proposed approach supports sustainable innovation, strengthens institutional accountability, and provides a foundation for selective, policy-defined verification during digital transformation.",
+          "abstract_snippet": "As artificial intelligence (AI) systems grow more powerful, autonomous, and embedded in critical infrastructure, their identification and traceability become foundational to regulatory oversight and sustainable digital governance. In digitally transformed enterprises, long-term…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260410473G",
+          "first_author": "Gao, Di Kevin",
+          "role": "open_questions",
+          "section_assigned": "open_questions",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": 28,
+            "community_share": 0.043478260869565216,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": "peripheral"
+          },
+          "title": "AI Identification: An Integrated Framework for Sustainable Governance in Digital Enterprises",
+          "year": 2026
+        },
+        {
+          "abstract_full": "Autonomous agents act through sandboxed containers and microVMs whose state spans filesystems, processes, and runtime artifacts. Checkpoint and restore (C/R) of this state is needed for fault tolerance, spot execution, RL rollout branching, and safe rollback-yet existing approaches fall into two extremes: application-level recovery preserves chat history but misses OS-side effects, while full per-turn checkpointing is correct but too expensive under dense co-location. The root cause is an agent-OS semantic gap: agent frameworks see tool calls but not their OS effects; the OS sees state changes but lacks turn-level context to judge recovery relevance. This gap hides massive sparsity: over 75% of agent turns produce no recovery-relevant state, so most checkpoints are unnecessary. Crab (Checkpoint-and-Restore for Agent SandBoxes) is a transparent host-side runtime that bridges this gap without modifying agents or C/R backends. An eBPF-based inspector classifies each turn's OS-visible effects to decide checkpoint granularity; a coordinator aligns checkpoints with turn boundaries and overlaps C/R with LLM wait time; and a host-scoped engine schedules checkpoint traffic across co-located sandboxes. On shell-intensive and code-repair workloads, Crab raises recovery correctness from 8% (chat-only) to 100%, cuts checkpoint traffic by up to 87%, and stays within 1.9% of fault-free execution time.",
+          "abstract_snippet": "Autonomous agents act through sandboxed containers and microVMs whose state spans filesystems, processes, and runtime artifacts. Checkpoint and restore (C/R) of this state is needed for fault tolerance, spot execution, RL rollout branching, and safe rollback-yet existing approac…",
+          "alternative_sections": [],
+          "bibcode": "2026arXiv260428138W",
+          "first_author": "Wu, Tianyuan",
+          "role": "open_questions",
+          "section_assigned": "open_questions",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Crab: A Semantics-Aware Checkpoint/Restore Runtime for Agent Sandboxes",
+          "year": 2026
+        },
+        {
+          "abstract_full": "This study proposes a survivability enhancement technique for Power IoT based on checkpoint fault tolerance technology. It aims to improve system survivability by periodically saving the system state and restoring it to the most recent checkpoint in the event of a failure. This paper introduces the basic principles of checkpoint fault tolerance technology and its application in Power IoT, detailing the implementation methods for performance monitoring, checkpoint setting, and recovery. Experimental results show that this technology effectively enhances system survivability and ensures the continuous operation of critical services.",
+          "abstract_snippet": "This study proposes a survivability enhancement technique for Power IoT based on checkpoint fault tolerance technology. It aims to improve system survivability by periodically saving the system state and restoring it to the most recent checkpoint in the event of a failure. This…",
+          "alternative_sections": [],
+          "bibcode": "2025cits.conf..175G",
+          "first_author": "Guangzhi, Deng",
+          "role": "open_questions",
+          "section_assigned": "open_questions",
+          "signal_used": "citation_count_fallback",
+          "signals": {
+            "community_id": null,
+            "community_share": 0.0,
+            "intent_counts": {},
+            "intent_total_rows": 0,
+            "is_modal_community": false,
+            "modal_community_id": 36,
+            "share_tier": null
+          },
+          "title": "Organization-Level Identification in the Power IoT System",
+          "year": 2025
+        }
+      ],
+      "name": "open_questions",
+      "theme": {
+        "communities": [
+          {
+            "community_id": 28,
+            "label": "physics.soc-ph + cs.CY · governance / policy / climate change",
+            "paper_count_in_section": 1,
+            "top_arxiv_classes": [
+              "cs.CR"
+            ],
+            "top_keywords": [
+              "cryptography and security"
+            ]
+          },
+          {
+            "community_id": 56,
+            "label": "cs.LG + cond-mat.mtrl-sci · learning / machine learning / prediction",
+            "paper_count_in_section": 1,
+            "top_arxiv_classes": [
+              "cs.AI",
+              "cs.CL",
+              "stat.ML"
+            ],
+            "top_keywords": [
+              "artificial intelligence",
+              "computation and language",
+              "machine learning"
+            ]
+          }
+        ],
+        "top_papers_by_citation": [
+          {
+            "bibcode": "2025cits.conf..175G",
+            "citation_count": 0,
+            "first_author": "Guangzhi, Deng",
+            "title": "Organization-Level Identification in the Power IoT System"
+          },
+          {
+            "bibcode": "2026arXiv260409836W",
+            "citation_count": 0,
+            "first_author": "Waters, Kyle",
+            "title": "COMPOSITE-Stem"
+          },
+          {
+            "bibcode": "2026arXiv260410473G",
+            "citation_count": 0,
+            "first_author": "Gao, Di Kevin",
+            "title": "AI Identification: An Integrated Framework for Sustainable Governance in Digital Enterprises"
+          }
+        ]
+      },
+      "theme_summary": "cs.LG + cond-mat.mtrl-sci · learning / machine learning / prediction; physics.soc-ph + cs.CY · governance / policy / climate change"
+    }
+  ],
+  "unattributed_bibcodes": [
+    "2026arXiv260508545K",
+    "2026arXiv260523311Y",
+    "2026arXiv260601365L",
+    "2026arXiv260601416B",
+    "2026arXiv260609863A",
+    "2026arXiv260708740Q",
+    "2026arXiv260710608C"
+  ]
+}

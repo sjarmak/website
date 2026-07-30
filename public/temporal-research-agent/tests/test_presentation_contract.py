@@ -46,6 +46,30 @@ def test_readme_and_blog_do_not_imply_public_reproducibility() -> None:
     assert "Temporal owns" not in readme
     assert "Temporal owns" not in blog
     assert "## Presentation materials" not in readme
+    assert "## Pipeline outcome" in readme
+    assert "four research angles" in readme
+    assert "48 retrieved records" in readme
+    assert "24 from SciX and 24 from Code Intelligence Digest" in " ".join(
+        readme.split()
+    )
+    assert "`synthesize_findings`" in readme
+    assert "fixture-backed" in readme
+    assert "## Design considerations and tradeoffs" in readme
+    for consideration in (
+        "Async Activities and blocking I/O",
+        "External-call deduplication",
+        "Artifact durability",
+        "Retry policy",
+        "Worker deployment and versioning",
+        "History growth",
+    ):
+        assert consideration in readme
+
+
+def test_worker_configures_a_graceful_shutdown_window() -> None:
+    worker = (PROJECT / "src/durable_research/worker.py").read_text()
+
+    assert "graceful_shutdown_timeout=timedelta(seconds=30)" in worker
 
 
 def test_brief_alignment_covers_deliverables_and_evaluation_criteria() -> None:

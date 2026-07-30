@@ -85,8 +85,8 @@ Every interaction with the outside world runs in an Activity:
 |---|---|---|
 | `research_angle` | SciX MCP, Digest MCP, fixture reads, evidence writes | source IDs, hashes, artifact references |
 | `verify_evidence` | artifact reads and SHA-256 checks | verified source references |
-| `synthesize_section` | evidence reads and section write; an LLM call can be added here | section reference |
-| `finalize_review` | section reads, report and manifest writes | report and manifest references |
+| `synthesize_section` | evidence reads and one cited findings section per research angle | section reference |
+| `finalize_review` | SciX `synthesize_findings`, section reads, report and manifest writes | report and manifest references |
 
 See [`activities.py`](src/durable_research/activities.py). Temporal's
 [Workflow documentation](https://docs.temporal.io/workflows) explains why
@@ -109,12 +109,21 @@ all four research angles.
 
 ## Pipeline outcome
 
-The recorded Workflow completed all four research angles, failed none, and
-produced a Markdown report backed by eight cited sources plus a JSON
-provenance manifest:
+After recording the fixture-backed recovery demo, we ran a separate Workflow
+against the live SciX and Code Intelligence Digest indexes. It completed all
+four research angles, failed none, and retained 48 retrieved records: 24 from
+SciX and 24 from Code Intelligence Digest.
+
+The Activity pipeline searches both providers, verifies persisted evidence
+hashes, writes a cited section for each angle, and then calls SciX
+`synthesize_findings` over the combined scholarly working set. That final
+mechanical synthesis grouped 23 distinct SciX bibcodes into an auditable
+writing scaffold before `finalize_review` wrote the report and provenance
+manifest:
 
 - [Research report](/temporal-research-agent/research-output/report.md)
 - [Provenance manifest](/temporal-research-agent/research-output/manifest.json)
+- [SciX synthesis output](/temporal-research-agent/research-output/synthesis.json)
 
 The research product answers four questions about durable agent pipelines. It
 finds that orchestration decisions must survive process loss, unreliable tools
@@ -122,15 +131,15 @@ need separately retryable and observable boundaries, large evidence should
 stay outside Workflow History, and recovery tests must check output
 correctness rather than completion alone. The manifest connects each finding
 to its SciX or Code Intelligence Digest lane, source locator, content hash,
-retrieval timestamp, and stored evidence artifact.
+retrieval timestamp, stored evidence artifact, external-call request ID, and
+source lane.
 
-This accepted recording used fixture-backed, SciX-shaped and Digest-shaped
-evidence. That was a deliberate presentation choice: the run proves that the
+The video remains a separate fixture-backed run with one SciX-shaped and one
+Digest-shaped record per angle. That deterministic run proves that the
 Workflow, Activities, retries, artifact writes, report, and provenance survive
 a Worker failure without making the recording depend on local index health.
-The separate live-provider smoke test below proves that both MCP transports
-worked on the verification date, but it is not the source of the recorded
-four-angle report.
+The live report linked above is the research product; the fixture report is
+only recording evidence.
 
 On the configured workstation, the internal recovery harness is:
 
@@ -406,7 +415,7 @@ citation verification, partial branch failure, the progress query, and
 decoded Event History. Workflow tests use the Python SDK's
 [`WorkflowEnvironment.start_time_skipping()`](https://python.temporal.io/temporalio.testing.WorkflowEnvironment.html).
 
-The current verified result is 67 passing tests with 84.64% branch-aware
+The current verified result is 69 passing tests with 84.58% branch-aware
 coverage. The published walkthrough supports inspection of the source and
 captured evidence. Running either the demo or live MCP integration still
 requires the configured workstation.
