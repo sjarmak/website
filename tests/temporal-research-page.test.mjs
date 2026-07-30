@@ -14,8 +14,12 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.match(source, /noindex=\{true\}/);
   assert.match(source, /temporal-literature-review-demo\.mp4/);
   assert.match(source, /Open the deck/);
-  assert.match(source, /Read the blog/);
   assert.match(source, /Read the README/);
+  assert.doesNotMatch(source, /Read the blog/);
+  assert.equal(
+    existsSync(path.join(ROOT, "src/pages/temporal-research-agent/blog.astro")),
+    false,
+  );
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
   assert.doesNotMatch(source, /researchPrompt/);
@@ -81,7 +85,6 @@ test("packaged media, deck, code, and document source exist", () => {
     "public/temporal-research-agent/skills/run-durable-research/scripts/research",
     "public/temporal-research-agent/blog.md",
     "public/temporal-research-agent/README.md",
-    "src/components/temporal-research-agent/Blog.md",
     "src/components/temporal-research-agent/Readme.md",
   ]) {
     assert.equal(existsSync(path.join(ROOT, relativePath)), true, relativePath);

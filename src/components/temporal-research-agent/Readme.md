@@ -359,13 +359,3 @@ The current verified result is 64 passing tests with 84.49% branch-aware
 coverage. The published walkthrough supports inspection of the source and
 captured evidence. Running either the demo or live MCP integration still
 requires the configured workstation.
-
-## Presentation materials
-
-- [`blog.md`](blog.md): the publishable narrative
-- [`talk.md`](talk.md): the 10–15 minute speaker script and stage directions
-- [`deck.html`](deck.html): offline slides
-- [`verification.md`](verification.md): commands, versions, run IDs, and
-  observed recovery evidence
-- [`brief-alignment.md`](brief-alignment.md): evidence mapped to the requested
-  objective, deliverables, and evaluation criteria
