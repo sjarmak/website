@@ -20,6 +20,44 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   .tra-document {
     padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
   }
+
+  :global(.tra-document .prose table) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    border: var(--border-hairline);
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+  }
+
+  :global(.tra-document .prose th),
+  :global(.tra-document .prose td) {
+    min-width: 10rem;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  :global(.tra-document .prose th) {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
+  :global(.tra-document .prose th:first-child),
+  :global(.tra-document .prose td:first-child) {
+    min-width: 12rem;
+  }
+
+  :global(.tra-document .prose tbody tr:hover td) {
+    background: color-mix(in oklch, var(--color-surface) 55%, transparent);
+  }
+
   .tra-document__back {
     margin-block-start: var(--space-xl);
     padding-block-start: var(--space-m);

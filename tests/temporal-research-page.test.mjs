@@ -10,6 +10,10 @@ const RESEARCH_PAGE = path.join(
   ROOT,
   "src/pages/temporal-research-agent/research-output/index.astro",
 );
+const README_PAGE = path.join(
+  ROOT,
+  "src/pages/temporal-research-agent/readme.astro",
+);
 
 test("off-navigation walkthrough exposes every requested deliverable", () => {
   const source = readFileSync(PAGE, "utf8");
@@ -186,6 +190,21 @@ test("README states the observed recovery result and gives a fair Python before 
   for (const slug of ["before", "workflow", "activities", "worker"]) {
     assert.match(readme, new RegExp(`/temporal-research-agent/code/${slug}/`));
   }
+});
+
+test("README tables use a readable thin grid and scroll on narrow screens", () => {
+  const route = readFileSync(README_PAGE, "utf8");
+
+  assert.match(
+    route,
+    /:global\(\.tra-document \.prose table\)[\s\S]*border: var\(--border-hairline\)/,
+  );
+  assert.match(
+    route,
+    /:global\(\.tra-document \.prose th\),[\s\S]*:global\(\.tra-document \.prose td\)[\s\S]*border: var\(--border-hairline\)/,
+  );
+  assert.match(route, /overflow-x: auto/);
+  assert.match(route, /background: var\(--color-bg-subtle\)/);
 });
 
 test("each evidence screenshot opens in an accessible full-view dialog", () => {
