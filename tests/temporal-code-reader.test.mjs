@@ -32,16 +32,31 @@ test("annotated reader exposes all four complete source samples", () => {
   }
 });
 
-test("reader teaches semantic sections with mouse, keyboard, and touch affordances", () => {
+test("reader renders the full file as click-to-expand semantic sections", () => {
   const route = readFileSync(ROUTE, "utf8");
 
   assert.match(route, /codeToHtml/);
-  assert.match(route, /class="code-reader__segment"/);
-  assert.match(route, /tabindex="0"/);
+  assert.match(
+    route,
+    /<section[\s\S]*class="code-reader__segment"[\s\S]*data-code-section/,
+  );
+  assert.match(
+    route,
+    /class="code-reader__source-trigger"[\s\S]*role="button"[\s\S]*tabindex="0"[\s\S]*aria-expanded="false"/,
+  );
+  assert.match(
+    route,
+    /<div[\s\S]*class="code-reader__source"[\s\S]*set:html=\{section\.html\}/,
+  );
   assert.match(route, /What this section does/);
   assert.match(route, /Why it matters for Temporal/);
-  assert.match(route, /Mouse over, focus, or tap/);
-  assert.match(route, /@media \(hover: hover\)/);
+  assert.match(route, /Click any line section to open its explanation/);
+  assert.match(route, /code-reader__explanation/);
+  assert.match(route, /explanation\.hidden = !expanded/);
+  assert.match(route, /event\.key === "Enter"/);
+  assert.match(route, /event\.key === " "/);
+  assert.doesNotMatch(route, /Mouse over, focus, or tap/);
+  assert.doesNotMatch(route, /<details/);
   assert.match(route, /color: var\(--shiki-light\) !important/);
   assert.match(route, /color: var\(--shiki-dark\) !important/);
 });

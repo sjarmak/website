@@ -82,9 +82,9 @@ const renderedSections = await Promise.all(
         <h2 id="reader-guide">Follow the execution boundary</h2>
       </div>
       <p>
-        Mouse over, focus, or tap a code section to bring its explanation
-        forward. Every line is shown, and every explanation remains available
-        without interaction.
+        Click any line section to open its explanation. The complete file stays
+        visible, and the selected explanation opens directly beneath the code
+        it describes.
       </p>
     </section>
 
@@ -103,40 +103,68 @@ const renderedSections = await Promise.all(
       }
     </nav>
 
-    <div class="code-reader__file">
+    <div class="code-reader__file" data-code-reader>
       {
         renderedSections.map((section) => (
           <section
             class="code-reader__segment"
-            tabindex="0"
-            aria-labelledby={`${sample.slug}-section-${section.start}`}
+            data-code-section
+            data-expanded="false"
           >
-            <aside class="code-reader__annotation">
-              <p class="code-reader__line-range">
-                Lines {section.start}–{section.end}
-              </p>
-              <h2 id={`${sample.slug}-section-${section.start}`}>
-                {section.title}
-              </h2>
-              <dl>
-                <div>
-                  <dt>What this section does</dt>
-                  <dd>{section.purpose}</dd>
-                </div>
-                <div>
-                  <dt>Why it matters for Temporal</dt>
-                  <dd>{section.whyTemporal}</dd>
-                </div>
-              </dl>
-              <ul aria-label="Section concepts">
-                {section.details.map((detail) => <li>{detail}</li>)}
-              </ul>
-            </aside>
             <div
-              class="code-reader__source"
-              style={`--start-line: ${section.start}`}
-              set:html={section.html}
-            />
+              class="code-reader__source-trigger"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls={`${sample.slug}-explanation-${section.start}`}
+              aria-label={`Lines ${section.start} through ${section.end}: ${section.title}. Toggle explanation.`}
+            >
+              <div
+                class="code-reader__source"
+                style={`--start-line: ${section.start}`}
+                set:html={section.html}
+              />
+              <span class="code-reader__section-cue" aria-hidden="true">
+                <span>Lines {section.start}–{section.end}</span>
+                <span class="code-reader__cue-action">
+                  <span class="code-reader__cue-open">Explain</span>
+                  <span class="code-reader__cue-close">Close</span>
+                  <span class="code-reader__chevron">⌄</span>
+                </span>
+              </span>
+            </div>
+
+            <div
+              class="code-reader__explanation"
+              id={`${sample.slug}-explanation-${section.start}`}
+              role="region"
+              aria-labelledby={`${sample.slug}-section-${section.start}`}
+              hidden
+            >
+              <header>
+                <p class="code-reader__line-range">
+                  Lines {section.start}–{section.end}
+                </p>
+                <h2 id={`${sample.slug}-section-${section.start}`}>
+                  {section.title}
+                </h2>
+              </header>
+              <div class="code-reader__explanation-body">
+                <dl>
+                  <div>
+                    <dt>What this section does</dt>
+                    <dd>{section.purpose}</dd>
+                  </div>
+                  <div>
+                    <dt>Why it matters for Temporal</dt>
+                    <dd>{section.whyTemporal}</dd>
+                  </div>
+                </dl>
+                <ul aria-label="Section concepts">
+                  {section.details.map((detail) => <li>{detail}</li>)}
+                </ul>
+              </div>
+            </div>
           </section>
         ))
       }
@@ -153,6 +181,56 @@ const renderedSections = await Promise.all(
     </footer>
   </article>
 </PageLayout>
+
+<script>
+  for (const reader of document.querySelectorAll<HTMLElement>(
+    "[data-code-reader]",
+  )) {
+    const sections = Array.from(
+      reader.querySelectorAll<HTMLElement>("[data-code-section]"),
+    );
+
+    const setExpanded = (current: HTMLElement, expanded: boolean) => {
+      const trigger = current.querySelector<HTMLElement>(
+        ".code-reader__source-trigger",
+      );
+      const explanation = current.querySelector<HTMLElement>(
+        ".code-reader__explanation",
+      );
+      if (!trigger || !explanation) return;
+
+      current.dataset.expanded = String(expanded);
+      trigger.setAttribute("aria-expanded", String(expanded));
+      explanation.hidden = !expanded;
+    };
+
+    for (const current of sections) {
+      const trigger = current.querySelector<HTMLElement>(
+        ".code-reader__source-trigger",
+      );
+      if (!trigger) continue;
+
+      const toggleCurrent = () => {
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed) return;
+
+        const shouldOpen = current.dataset.expanded !== "true";
+        for (const section of sections) {
+          if (section !== current) setExpanded(section, false);
+        }
+        setExpanded(current, shouldOpen);
+      };
+
+      trigger.addEventListener("click", toggleCurrent);
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleCurrent();
+        }
+      });
+    }
+  }
+</script>
 
 <style>
   .code-reader {
@@ -259,29 +337,102 @@ const renderedSections = await Promise.all(
 
   .code-reader__file {
     border: 1px solid var(--reader-rule);
+    padding-block: var(--space-xs);
+    overflow: clip;
     background: var(--color-surface);
   }
 
   .code-reader__segment {
-    display: grid;
-    grid-template-columns: minmax(17rem, 0.72fr) minmax(0, 1.7fr);
-    outline: none;
+    display: block;
     scroll-margin-top: 5rem;
-    transition:
-      background-color 160ms ease,
-      box-shadow 160ms ease;
   }
 
-  .code-reader__segment + .code-reader__segment {
-    border-top: 1px solid var(--reader-rule);
-  }
-
-  .code-reader__annotation {
+  .code-reader__source-trigger {
     position: relative;
-    z-index: 1;
-    padding: clamp(var(--space-m), 3vw, var(--space-l));
-    border-inline-end: 1px solid var(--reader-rule);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.75rem;
+    min-width: 0;
+    padding: 0;
+    cursor: pointer;
+    list-style: none;
+    outline: none;
+    transition:
+      background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .code-reader__source-trigger:focus-visible {
+    z-index: 2;
+    box-shadow: inset 0 0 0 3px var(--color-accent);
+  }
+
+  .code-reader__source-trigger:hover {
+    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-bg));
+  }
+
+  .code-reader__segment[data-expanded="true"] > .code-reader__source-trigger {
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
+    box-shadow: inset 3px 0 var(--color-accent);
+  }
+
+  .code-reader__section-cue {
+    display: grid;
+    padding: 0.45rem var(--space-xs);
+    align-content: center;
+    align-items: center;
+    border-inline-start: 1px solid var(--reader-rule);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  .code-reader__cue-action {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-text-secondary);
+  }
+
+  .code-reader__cue-close {
+    display: none;
+  }
+
+  .code-reader__chevron {
+    display: inline-block;
+    color: var(--color-accent);
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .code-reader__segment[data-expanded="true"] .code-reader__cue-open {
+    display: none;
+  }
+
+  .code-reader__segment[data-expanded="true"] .code-reader__cue-close {
+    display: inline;
+  }
+
+  .code-reader__segment[data-expanded="true"] .code-reader__chevron {
+    transform: rotate(180deg);
+  }
+
+  .code-reader__explanation {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 2fr);
+    padding: clamp(var(--space-m), 3vw, var(--space-xl));
+    gap: clamp(var(--space-m), 4vw, var(--space-xl));
+    border-block: 1px solid var(--reader-rule);
     background: var(--color-bg-subtle);
+  }
+
+  .code-reader__explanation[hidden] {
+    display: none;
+  }
+
+  .code-reader__explanation header {
+    align-self: start;
   }
 
   .code-reader__line-range {
@@ -291,20 +442,19 @@ const renderedSections = await Promise.all(
     font-size: var(--step--1);
   }
 
-  .code-reader__annotation h2 {
+  .code-reader__explanation h2 {
     margin: 0;
     font-size: var(--step-1);
   }
 
-  .code-reader__annotation dl {
-    margin: var(--space-m) 0 0;
+  .code-reader__explanation dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    gap: var(--space-l);
   }
 
-  .code-reader__annotation dl div + div {
-    margin-block-start: var(--space-s);
-  }
-
-  .code-reader__annotation dt {
+  .code-reader__explanation dt {
     color: var(--color-text-muted);
     font-size: var(--step--1);
     font-weight: 700;
@@ -312,14 +462,14 @@ const renderedSections = await Promise.all(
     text-transform: uppercase;
   }
 
-  .code-reader__annotation dd {
+  .code-reader__explanation dd {
     margin: 0.3rem 0 0;
     color: var(--color-text-secondary);
     font-size: var(--step--1);
     line-height: var(--leading-relaxed);
   }
 
-  .code-reader__annotation ul {
+  .code-reader__explanation ul {
     display: flex;
     flex-wrap: wrap;
     margin: var(--space-s) 0 0;
@@ -328,7 +478,7 @@ const renderedSections = await Promise.all(
     list-style: none;
   }
 
-  .code-reader__annotation li {
+  .code-reader__explanation li {
     padding: 0.2rem 0.5rem;
     border: 1px solid var(--reader-rule);
     border-radius: 999px;
@@ -339,15 +489,13 @@ const renderedSections = await Promise.all(
 
   .code-reader__source {
     min-width: 0;
-    padding-block: var(--space-m);
     overflow-x: auto;
-    background: color-mix(in srgb, var(--color-bg) 92%, var(--color-text));
   }
 
   .code-reader__source :global(.shiki) {
     min-width: max-content;
     margin: 0;
-    padding: 0 var(--space-m);
+    padding: 0 var(--space-m) 0 var(--space-s);
     background: transparent !important;
     font-size: clamp(0.74rem, 1.25vw, 0.88rem);
     line-height: 1.75;
@@ -380,28 +528,6 @@ const renderedSections = await Promise.all(
 
   :global([data-theme="dark"]) .code-reader__source :global(.shiki span) {
     color: var(--shiki-dark) !important;
-  }
-
-  .code-reader__segment:focus-visible {
-    box-shadow: inset 0 0 0 3px var(--color-accent);
-  }
-
-  .code-reader__segment:focus .code-reader__annotation {
-    background: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg-subtle));
-  }
-
-  .code-reader__segment:focus .code-reader__source {
-    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-bg));
-  }
-
-  @media (hover: hover) {
-    .code-reader__segment:hover .code-reader__annotation {
-      background: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg-subtle));
-    }
-
-    .code-reader__segment:hover .code-reader__source {
-      background: color-mix(in srgb, var(--color-accent) 5%, var(--color-bg));
-    }
   }
 
   .code-reader__footer {
@@ -442,13 +568,9 @@ const renderedSections = await Promise.all(
       border-block-end: 1px solid var(--reader-rule);
     }
 
-    .code-reader__segment {
+    .code-reader__explanation {
       grid-template-columns: 1fr;
-    }
-
-    .code-reader__annotation {
-      border-inline-end: 0;
-      border-block-end: 1px solid var(--reader-rule);
+      gap: var(--space-m);
     }
   }
 
@@ -475,6 +597,23 @@ const renderedSections = await Promise.all(
       border-block-end: 0;
     }
 
+    .code-reader__source-trigger {
+      grid-template-columns: minmax(0, 1fr) 4.5rem;
+    }
+
+    .code-reader__section-cue {
+      padding-inline: 0.4rem;
+    }
+
+    .code-reader__cue-action {
+      gap: 0.2rem;
+    }
+
+    .code-reader__explanation dl {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+
     .code-reader__footer {
       align-items: flex-start;
       flex-direction: column;
@@ -482,7 +621,8 @@ const renderedSections = await Promise.all(
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .code-reader__segment {
+    .code-reader__source-trigger,
+    .code-reader__chevron {
       transition: none;
     }
   }
