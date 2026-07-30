@@ -18,6 +18,9 @@ def test_deck_has_requested_title_code_comparison_skill_and_demo_frames() -> Non
     assert "any agent on this workstation" in deck
     assert "TEMPORAL WORKFLOW" in deck
     assert "Temporal owns" not in deck
+    slide_seven = deck.split('aria-label="Slide 7 of 10"', 1)[1].split("</section>", 1)[0]
+    assert "<video controls" in slide_seven
+    assert "temporal-literature-review-demo.mp4" in slide_seven
     assert deck.count('class="slide') == 10
 
     for asset in (

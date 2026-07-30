@@ -423,9 +423,14 @@
     .media-single {
       grid-column: 1 / 13;
       display: grid;
-      grid-template-columns: 8fr 4fr;
+      grid-template-columns: 9fr 3fr;
       gap: clamp(20px, 3vw, 42px);
       align-items: center;
+    }
+
+    .media-single .annotation {
+      grid-column: auto;
+      font-size: clamp(17px, 1.7vw, 23px);
     }
 
     .media-pair {
@@ -440,10 +445,16 @@
       margin: 0;
     }
 
-    .proof img {
+    .proof img,
+    .proof video {
       display: block;
       width: 100%;
       border: 1px solid var(--rule);
+    }
+
+    .proof video {
+      aspect-ratio: 16 / 9;
+      background: var(--raised);
     }
 
     .proof figcaption {
@@ -710,14 +721,17 @@ await parallel(literatureReviews)</code></pre>
       <div class="content">
         <div class="media-single">
           <figure class="proof">
-            <img src="deck-assets/worker-killed.png" alt="Terminal evidence showing the research Worker killed while two Activities are in flight">
-            <figcaption>Recorded demo, failure point</figcaption>
+            <video controls preload="metadata" poster="deck-assets/worker-killed.png">
+              <source src="demo/out/temporal-literature-review-demo.mp4" type="video/mp4">
+              Your browser does not support embedded video.
+            </video>
+            <figcaption>52-second recorded recovery · play, pause, or open fullscreen</figcaption>
           </figure>
           <p class="annotation"><strong>SIGKILL lands while two Activities are in flight.</strong><br><br>
             Temporal keeps the same Workflow run open until another Worker can continue it.</p>
         </div>
       </div>
-      <div class="footer"><span>Workstation-only fixture harness · captured evidence</span></div>
+      <div class="footer"><span>Embedded recording · same Workflow run from failure through recovery</span></div>
     </section>
 
     <section class="slide" aria-label="Slide 8 of 10">

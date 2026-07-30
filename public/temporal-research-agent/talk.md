@@ -128,7 +128,9 @@ Say:
 
 ## 7:05–8:30, slide 7: Kill the Worker
 
-Point to the recorded frame.
+Play the embedded recording. Pause at the Worker-kill frame if you want to
+read the pending Activity details before continuing; the player also supports
+fullscreen.
 
 Say:
 
