@@ -893,6 +893,12 @@
     <span class="tok-keyword">else</span>:
         raw_sources <span class="tok-operator">=</span> <span class="tok-keyword">await</span> <span class="tok-function">_live_sources_with_heartbeats</span>(
             request, store
+        )
+        prompt <span class="tok-operator">=</span> <span class="tok-function">research_synthesis_prompt</span>(
+            series, request.episode, ...
+        )
+        research_body <span class="tok-operator">=</span> <span class="tok-keyword">await</span> <span class="tok-function">_run_writer_with_heartbeats</span>(
+            request.pipeline.writer, prompt, ...
         )</code></pre>
           </section>
           <section class="code-pane">
@@ -967,10 +973,9 @@
             <figcaption>Temporal Web records attempt 2 for both research Activities</figcaption>
           </figure>
           <div class="verification-copy">
-            <div class="verification-row"><b>Recovery</b><span>Same Workflow ID and Run ID after Worker replacement.</span></div>
-            <div class="verification-row"><b>Result</b><span>Two episode branches and two series reviews completed in the recorded run.</span></div>
-            <div class="verification-row"><b>Tests</b><span>89 tests with branch-aware coverage above 80 percent.</span></div>
-            <div class="verification-row"><b>Quality</b><span>Typed dataclasses, strict MyPy, Ruff, and Activity registration tests.</span></div>
+            <div class="verification-row"><b>Recovery proof</b><span>Two Activities resumed on attempt 2 under the same Workflow ID and Run ID.</span></div>
+            <div class="verification-row"><b>Product proof</b><span>One selected episode produced research, a deep dive, a script, series synthesis, and a manifest.</span></div>
+            <div class="verification-row"><b>Code quality</b><span>Typed dataclasses, branch-aware coverage above 80 percent, strict MyPy, and Ruff.</span></div>
           </div>
         </div>
       </div>

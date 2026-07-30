@@ -1,0 +1,295 @@
+{
+  "episode_key": "mas-ep4",
+  "sources": [
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/8a23044ebd02261247fd2b92b33408bcbd32fc3213df84f87014331f72417aee.json",
+      "content_hash": "8a23044ebd02261247fd2b92b33408bcbd32fc3213df84f87014331f72417aee",
+      "lane": "scix",
+      "locator": "2026arXiv260610749L",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260610749L",
+      "title": "Toward Secure LLM Agents: Threat Surfaces, Attacks, Defenses, and Evaluation"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/4a9a4518f2e9db6874334c92c6a493db13c0186f3c2820238b1e3564874e8a3e.json",
+      "content_hash": "4a9a4518f2e9db6874334c92c6a493db13c0186f3c2820238b1e3564874e8a3e",
+      "lane": "scix",
+      "locator": "2026arXiv260507110C",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260507110C",
+      "title": "Securing Computer-Use Agents: A Unified Architecture-Lifecycle Framework for Deployment-Grounded Reliability"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/f28c5d2a246dcc81f1213507c95ba568217f4f64e80f04aa702fd639e8bd1e26.json",
+      "content_hash": "f28c5d2a246dcc81f1213507c95ba568217f4f64e80f04aa702fd639e8bd1e26",
+      "lane": "scix",
+      "locator": "2026arXiv260414228L",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260414228L",
+      "title": "Dive into Claude Code: The Design Space of Today's and Future AI Agent Systems"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/15723e1c34d4be637f9434e261266194ad769e1e45c4e6454f86ca7890c791f4.json",
+      "content_hash": "15723e1c34d4be637f9434e261266194ad769e1e45c4e6454f86ca7890c791f4",
+      "lane": "scix",
+      "locator": "2025arXiv251204123P",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2025arXiv251204123P",
+      "title": "Measuring Agents in Production"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/43189e9b2ad8e0919ec3193a8107336e0618b87bb3b363fe3b3ab8cc6ac1eeae.json",
+      "content_hash": "43189e9b2ad8e0919ec3193a8107336e0618b87bb3b363fe3b3ab8cc6ac1eeae",
+      "lane": "scix",
+      "locator": "2026arXiv260424686M",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260424686M",
+      "title": "Governing What You Cannot Observe: Adaptive Runtime Governance for Autonomous AI Agents"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/bba70727f207ef17beeab92665bec31454d6e44475f38dc51515a444b8e40b34.json",
+      "content_hash": "bba70727f207ef17beeab92665bec31454d6e44475f38dc51515a444b8e40b34",
+      "lane": "scix",
+      "locator": "2025arXiv250312687K",
+      "request_id": "request-855100f733695bf56839",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2025arXiv250312687K",
+      "title": "AI Agents: Evolution, Architecture, and Real-World Applications"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/fd380a27d7d49b30deaeae1d3f8c7070e320ace441f4d8e634fe30abd1f9f544.json",
+      "content_hash": "fd380a27d7d49b30deaeae1d3f8c7070e320ace441f4d8e634fe30abd1f9f544",
+      "lane": "scix",
+      "locator": "2025arXiv251209458N",
+      "request_id": "request-8c49e8eb77e3dbfc6e0c",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2025arXiv251209458N",
+      "title": "Architectures for Building Agentic AI"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/36c012ada6ae9f1a68f0808ea644329bb2d9756997b02d62e32954edb488be9e.json",
+      "content_hash": "36c012ada6ae9f1a68f0808ea644329bb2d9756997b02d62e32954edb488be9e",
+      "lane": "scix",
+      "locator": "2024arXiv240203578H",
+      "request_id": "request-8c49e8eb77e3dbfc6e0c",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2024arXiv240203578H",
+      "title": "LLM Multi-Agent Systems: Challenges and Open Problems"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/31c32c265773e4d447d063b5e19714380faf4cbf41107722adb34219550a521a.json",
+      "content_hash": "31c32c265773e4d447d063b5e19714380faf4cbf41107722adb34219550a521a",
+      "lane": "scix",
+      "locator": "2019ithi.conf..176M",
+      "request_id": "request-8c49e8eb77e3dbfc6e0c",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2019ithi.conf..176M",
+      "title": "Cyber Physical IoT Device Management Using a Lightweight Agent"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/a4bfd9cf03786bc8b35ced4e8c9ea03193fc1cd98c2592b8cb61ed549e7826f8.json",
+      "content_hash": "a4bfd9cf03786bc8b35ced4e8c9ea03193fc1cd98c2592b8cb61ed549e7826f8",
+      "lane": "scix",
+      "locator": "2020vtcs.conf..237G",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2020vtcs.conf..237G",
+      "title": "Next Generation Wi-Fi: Deployment Guidelines and Benefits of Massive MIMO for the Enterprise"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/292c441b7edd64dfbde028160251ff7cde3c032f17d72ab9f14f71eb17128807.json",
+      "content_hash": "292c441b7edd64dfbde028160251ff7cde3c032f17d72ab9f14f71eb17128807",
+      "lane": "scix",
+      "locator": "2026arXiv260427082C",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260427082C",
+      "title": "When Your LLM Reaches End-of-Life: A Framework for Confident Model Migration in Production Systems"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/4f657de72920f21cedcfd70ba0de7bef1f26e2095bde80cc8fda61679b4ed70e.json",
+      "content_hash": "4f657de72920f21cedcfd70ba0de7bef1f26e2095bde80cc8fda61679b4ed70e",
+      "lane": "scix",
+      "locator": "2026arXiv260604037L",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2026arXiv260604037L",
+      "title": "Toward Pre-Deployment Assurance for Enterprise AI Agents: Ontology-Grounded Simulation and Trust Certification"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/07726ac241f92656049ba57fe7aaf9ba6a6220dc9b9a2302b34c3e5fc809f7f3.json",
+      "content_hash": "07726ac241f92656049ba57fe7aaf9ba6a6220dc9b9a2302b34c3e5fc809f7f3",
+      "lane": "scix",
+      "locator": "2019date.conf..215A",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2019date.conf..215A",
+      "title": "A Security Architecture for RISC-V based IoT Devices"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/2e2cfcf4d0a180fd5c51ff21950a8b2fbe254332f72bce0a65a445725231faac.json",
+      "content_hash": "2e2cfcf4d0a180fd5c51ff21950a8b2fbe254332f72bce0a65a445725231faac",
+      "lane": "scix",
+      "locator": "2024arXiv241203879L",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2024arXiv241203879L",
+      "title": "E-Commerce in Africa: Divergent Impacts on Rural and Urban Economies"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/ec79a15ec9ae4eaab960c3d013a3e2e32390af48ef0eef8b565aff2fbbdb533f.json",
+      "content_hash": "ec79a15ec9ae4eaab960c3d013a3e2e32390af48ef0eef8b565aff2fbbdb533f",
+      "lane": "scix",
+      "locator": "2025arXiv250414760T",
+      "request_id": "request-cf672b1e52b618c42fc9",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2025arXiv250414760T",
+      "title": "Establishing Workload Identity for Zero Trust CI/CD: From Secrets to SPIFFE-Based Authentication"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/9f491752811767caa98358751bfd9825406facda528411da677334406291e14c.json",
+      "content_hash": "9f491752811767caa98358751bfd9825406facda528411da677334406291e14c",
+      "lane": "scix",
+      "locator": "2023MPEC....R..132S",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2023MPEC....R..132S",
+      "title": "2021 PN26"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/ecf3c1f51339f5684744b9b2da6777e7e42eb388827cde0ba4cb0128153ac3f5.json",
+      "content_hash": "ecf3c1f51339f5684744b9b2da6777e7e42eb388827cde0ba4cb0128153ac3f5",
+      "lane": "scix",
+      "locator": "2024MPEC....U..188S",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2024MPEC....U..188S",
+      "title": "2022 UV21"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/b34a6079dc3d47bc5b515748135357edeb920ad1fcc7bd34e68891ed28af71da.json",
+      "content_hash": "b34a6079dc3d47bc5b515748135357edeb920ad1fcc7bd34e68891ed28af71da",
+      "lane": "scix",
+      "locator": "2025MPEC....H..200L",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2025MPEC....H..200L",
+      "title": "2021 GM26"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/9c0da8155b9876aa77fcdf0bfc010f4b09644e6222689b587cc1c96649918e90.json",
+      "content_hash": "9c0da8155b9876aa77fcdf0bfc010f4b09644e6222689b587cc1c96649918e90",
+      "lane": "scix",
+      "locator": "2023MPEC....W...95B",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2023MPEC....W...95B",
+      "title": "2022 US21"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/e661f1d39c2fc8ef3f78acf4d8996e111f86bc67668643b86fd49c544c61896c.json",
+      "content_hash": "e661f1d39c2fc8ef3f78acf4d8996e111f86bc67668643b86fd49c544c61896c",
+      "lane": "scix",
+      "locator": "2020IAESM..35e..47.",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2020IAESM..35e..47.",
+      "title": "2020 Aerospace &amp; Electronics Systems Society Distinguished Lecturers"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/267cad2ceb46aeb31844f4eadafce3b9692c21d05a57b85143505b6da1b76eb9.json",
+      "content_hash": "267cad2ceb46aeb31844f4eadafce3b9692c21d05a57b85143505b6da1b76eb9",
+      "lane": "scix",
+      "locator": "2021ITAS...3116816C",
+      "request_id": "request-3183f90f8983605e9718",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "2021ITAS...3116816C",
+      "title": "ASEMD 2020\u2014Introduction"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/99dfb849d5da32914c737e6476c132ec2e6ab39928d1c08ec6f546d83a457e70.json",
+      "content_hash": "99dfb849d5da32914c737e6476c132ec2e6ab39928d1c08ec6f546d83a457e70",
+      "lane": "digest",
+      "locator": "https://arxiv.org/abs/2606.02494",
+      "request_id": "request-bc0f898ffc98950a7d42",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b8184dec3",
+      "title": "Monitoring Agentic Systems Before They're Reliable"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/3e19ed296f90845bb10d096bd32a9a3f5a9611ca5bbdfa2dccea4e59d62e126e.json",
+      "content_hash": "3e19ed296f90845bb10d096bd32a9a3f5a9611ca5bbdfa2dccea4e59d62e126e",
+      "lane": "digest",
+      "locator": "https://ui.adsabs.harvard.edu/abs/2026arXiv260612320T",
+      "request_id": "request-bc0f898ffc98950a7d42",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "ads:2026arXiv260612320T",
+      "title": "A Five-Plane Reference Architecture for Runtime Governance of Production AI Agents"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/585943cad66b8ab277b07cb8517c1ea2cf13687d42b9ebc7aa6b79e1199d6400.json",
+      "content_hash": "585943cad66b8ab277b07cb8517c1ea2cf13687d42b9ebc7aa6b79e1199d6400",
+      "lane": "digest",
+      "locator": "https://ui.adsabs.harvard.edu/abs/2025arXiv251207665X",
+      "request_id": "request-39fc6c51d7922dee8454",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "ads:2025arXiv251207665X",
+      "title": "Reliable agent engineering should integrate machine-compatible organizational principles"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/df9e65a339fde5845d5bc4f7560c9a28668693fd40e3e24de439fc565c11551b.json",
+      "content_hash": "df9e65a339fde5845d5bc4f7560c9a28668693fd40e3e24de439fc565c11551b",
+      "lane": "digest",
+      "locator": "https://arxiv.org/abs/2509.06301",
+      "request_id": "request-461f9a11aa7a5da3ebdf",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b427237e3",
+      "title": "Learning From Software Failures: A Case Study at a National Space Research Center"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/2449593a4f5f08f6781e33ffd64578d95bb89164ab00bba25b2d1a618a500a09.json",
+      "content_hash": "2449593a4f5f08f6781e33ffd64578d95bb89164ab00bba25b2d1a618a500a09",
+      "lane": "digest",
+      "locator": "https://www.reddit.com/r/LLMDevs/comments/1q25iar/why_enterprise_ai_agents_fail_in_production/",
+      "request_id": "request-461f9a11aa7a5da3ebdf",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b1e0abf65",
+      "title": "Why enterprise AI agents fail in production"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/280eafd8ba7f7dd3ba315baf662fbb4c2514f18d167790e9418c1e3a021bc587.json",
+      "content_hash": "280eafd8ba7f7dd3ba315baf662fbb4c2514f18d167790e9418c1e3a021bc587",
+      "lane": "digest",
+      "locator": "https://links.tldrnewsletter.com/VQZRX8",
+      "request_id": "request-461f9a11aa7a5da3ebdf",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b7f635203-article-14",
+      "title": "The Silent Failure of Reliability Metrics at Scale: Lessons Learned from a Decade of Broken Metrics (8 minute read)"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/0f2052a11e26a8e96bae0de1a683abf532175e7c8f647d1947ea7daa1fb38c57.json",
+      "content_hash": "0f2052a11e26a8e96bae0de1a683abf532175e7c8f647d1947ea7daa1fb38c57",
+      "lane": "digest",
+      "locator": "https://welodata.ai/ai-data-quality-systems/?utm_source=tldr-ai-newsletter%26utm_medium=email%26utm_campaign=2026-ad-welo-data-quality-at-scale",
+      "request_id": "request-461f9a11aa7a5da3ebdf",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b3662e3c6-article-2",
+      "title": "tbody> Together With"
+    },
+    {
+      "artifact_ref": "podcast-pipeline-2f3508412f1a/evidence/0b2bcaa4dc522c3bacca8c8f4fabc31ba69186f740426720eb29990deb90117e.json",
+      "content_hash": "0b2bcaa4dc522c3bacca8c8f4fabc31ba69186f740426720eb29990deb90117e",
+      "lane": "digest",
+      "locator": "https://welodata.ai/ai-data-quality-systems/?utm_source=tldr-ai-newsletter%26utm_medium=email%26utm_campaign=2026-ad-welo-data-quality-at-scale",
+      "request_id": "request-461f9a11aa7a5da3ebdf",
+      "retrieved_at": "2026-07-30T23:23:01.455233+00:00",
+      "source_id": "tag:google.com,2005:reader/item/0000000b3c8b44cb-article-7",
+      "title": "The weakest link in enterprise AI is rarely the models (Sponsor)"
+    }
+  ]
+}

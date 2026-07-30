@@ -1,0 +1,173 @@
+---
+import { readFile } from "node:fs/promises";
+
+import {
+  listTemporalResearchProducts,
+  type ResearchProduct,
+} from "@/data/temporal-research-products";
+import PageLayout from "@/layouts/PageLayout.astro";
+import rehypeStringify from "rehype-stringify";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+
+export function getStaticPaths() {
+  return listTemporalResearchProducts().map((product) => ({
+    params: {
+      run: product.run,
+      kind: product.kind,
+      slug: product.slug,
+    },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: ResearchProduct;
+}
+
+const { product } = Astro.props;
+const markdown = await readFile(product.filePath, "utf8");
+const rendered = await unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype)
+  .use(rehypeStringify)
+  .process(markdown);
+
+const runLabels = {
+  original: "Original JavaScript run",
+  live: "Live Temporal Workflow",
+  fixture: "Durability fixture",
+};
+
+const kindLabels = {
+  research: "Research notes",
+  "deep-dives": "Deep dive",
+  scripts: "Podcast script",
+  reviews: "Literature review",
+};
+---
+
+<PageLayout
+  title={product.title}
+  kicker={`${runLabels[product.run]} · ${kindLabels[product.kind]}`}
+  intro={`${product.wordCount.toLocaleString()} words. Rendered from the complete Markdown artifact.`}
+  description={`${product.title}, a research artifact from the Temporal podcast pipeline migration.`}
+  noindex={true}
+>
+  <article class="product-reader">
+    <nav class="product-reader__nav" aria-label="Research product navigation">
+      <a href="/temporal-research-agent/research-output/">← Research products</a>
+      <a href={product.rawPath} download={product.filename}>Download Markdown</a>
+    </nav>
+
+    <div class="product-reader__frame">
+      <aside aria-label="Artifact details">
+        <dl>
+          <div><dt>Run</dt><dd>{runLabels[product.run]}</dd></div>
+          <div><dt>Stage</dt><dd>{kindLabels[product.kind]}</dd></div>
+          <div><dt>Series</dt><dd>{product.series === "mas" ? "Multi-Agent Orchestration" : "Code Retrieval"}</dd></div>
+          <div><dt>Length</dt><dd>{product.wordCount.toLocaleString()} words</dd></div>
+        </dl>
+      </aside>
+      <div class="product-reader__document prose" set:html={String(rendered)} />
+    </div>
+  </article>
+</PageLayout>
+
+<style>
+  .product-reader {
+    padding-block-end: var(--space-3xl);
+  }
+
+  .product-reader__nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-block: var(--border-hairline);
+  }
+
+  .product-reader__nav a {
+    padding: var(--space-s) 0;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-underline-offset: 0.2em;
+  }
+
+  .product-reader__frame {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.28fr) minmax(0, 1fr);
+    gap: clamp(var(--space-xl), 7vw, var(--space-3xl));
+    align-items: start;
+    margin-block-start: clamp(var(--space-xl), 7vw, var(--space-3xl));
+  }
+
+  aside {
+    position: sticky;
+    top: var(--space-l);
+    color: var(--color-text-secondary);
+  }
+
+  dl,
+  dl div {
+    margin: 0;
+  }
+
+  dl div {
+    padding-block: var(--space-s);
+    border-block-end: var(--border-hairline);
+  }
+
+  dt {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: var(--space-2xs) 0 0;
+    font-size: var(--step--1);
+  }
+
+  .product-reader__document {
+    min-width: 0;
+    max-width: 72ch;
+  }
+
+  .product-reader__document :global(h1) {
+    display: none;
+  }
+
+  .product-reader__document :global(h2) {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .product-reader__document :global(h3) {
+    margin-block-start: var(--space-xl);
+  }
+
+  .product-reader__document :global(a) {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 760px) {
+    .product-reader__frame {
+      grid-template-columns: 1fr;
+    }
+
+    aside {
+      position: static;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 var(--space-l);
+    }
+  }
+</style>

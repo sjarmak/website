@@ -129,7 +129,7 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
     sections: [
       {
         start: 1,
-        end: 18,
+        end: 20,
         title: "Task queue and dependencies",
         purpose:
           "Imports the typed input models, selects the podcast task queue, and locates bundled fixtures.",
@@ -138,8 +138,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Task queue", "Typed input"],
       },
       {
-        start: 19,
-        end: 30,
+        start: 21,
+        end: 33,
         title: "Two series",
         purpose:
           "Recreates the Multi-Agent Orchestration and Code Retrieval series with stable keys and output prefixes.",
@@ -148,8 +148,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Series identity", "Artifact naming"],
       },
       {
-        start: 31,
-        end: 188,
+        start: 34,
+        end: 278,
         title: "All ten episode briefs",
         purpose:
           "Preserves titles, focus statements, seed papers, and frontier flags for every historical episode.",
@@ -158,18 +158,38 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Business logic", "Ten typed episodes"],
       },
       {
-        start: 189,
-        end: 226,
+        start: 279,
+        end: 297,
         title: "Full pipeline input",
         purpose:
-          "Builds the ten-episode input with live or fixture providers, two-way concurrency, three retry attempts, and a full-completion threshold.",
+          "Builds the complete historical input by delegating to the same selector used for smaller runs.",
         whyTemporal:
-          "Policies are explicit Workflow input, so each execution records the values that governed it.",
-        details: ["Recorded policy", "Live and fixture modes"],
+          "The ten-episode catalog is a preset, not Workflow control flow.",
+        details: ["Complete preset", "Shared selector"],
       },
       {
-        start: 227,
-        end: 246,
+        start: 298,
+        end: 354,
+        title: "Arbitrary episode selection",
+        purpose:
+          "Builds typed Workflow input for one episode, several episodes, or the complete preset, retaining only the referenced series.",
+        whyTemporal:
+          "The Workflow derives branches, concurrency, completion policy, and series fan-in from its input; it contains no episode constants.",
+        details: ["Input-driven branches", "One or many episodes"],
+      },
+      {
+        start: 355,
+        end: 367,
+        title: "Stable source-context identity",
+        purpose:
+          "Hashes the bibliography and brainstorm context for only the selected series.",
+        whyTemporal:
+          "Stable content hashes make the logical pipeline identity independent of workstation paths.",
+        details: ["Content identity", "Selected series"],
+      },
+      {
+        start: 368,
+        end: 387,
         title: "Timed recovery preset",
         purpose:
           "Selects one production-focused episode from each series for the short Worker-kill recording.",
@@ -203,7 +223,17 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
       },
       {
         start: 33,
-        end: 62,
+        end: 79,
+        title: "Research synthesis",
+        purpose:
+          "Turns retrieved evidence into an 800–1,500 word brief, removing off-topic and duplicate records before downstream writing.",
+        whyTemporal:
+          "Retrieval and synthesis remain in one retriable Activity while their large evidence stays outside Workflow History.",
+        details: ["Evidence selection", "Research product"],
+      },
+      {
+        start: 80,
+        end: 128,
         title: "Deep-dive document",
         purpose:
           "Defines the 1,500–2,500 word source document, its seven sections, and its citation requirements.",
@@ -212,8 +242,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Artifact input", "Long-form contract"],
       },
       {
-        start: 63,
-        end: 100,
+        start: 129,
+        end: 181,
         title: "Podcast script",
         purpose:
           "Defines the six-segment spoken format, cold open, outro, citations, voice, and approximately 3,000-word target.",
@@ -222,8 +252,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Six segments", "Spoken voice", "Citations"],
       },
       {
-        start: 101,
-        end: 128,
+        start: 182,
+        end: 239,
         title: "Series literature review",
         purpose:
           "Synthesizes completed episode deep dives into one structured review while preserving disagreements and evidence quality.",
@@ -290,7 +320,7 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         end: 128,
         title: "Series fan-in and manifest",
         purpose:
-          "Schedules both series reviews, writes the manifest, and records the compact completed result.",
+          "Schedules reviews for the selected series, writes the manifest, and records the compact completed result.",
         whyTemporal:
           "The Workflow coordinates synthesis while Activities perform the file and writer operations.",
         details: ["Series reviews", "Manifest", "Final result"],
@@ -341,7 +371,7 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
     sections: [
       {
         start: 1,
-        end: 41,
+        end: 43,
         title: "Side-effecting dependencies",
         purpose:
           "Imports filesystem, time, subprocess, MCP, artifact, prompt, and Activity dependencies in the external-work module.",
@@ -350,18 +380,18 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Activity module", "Nondeterministic dependencies"],
       },
       {
-        start: 42,
-        end: 117,
+        start: 44,
+        end: 140,
         title: "Research and persist one episode",
         purpose:
-          "Retrieves fixture or live evidence, stores each source, writes an evidence index and research document, then returns compact references.",
+          "Retrieves fixture or live evidence, stores each source, synthesizes the live research brief, and returns compact references.",
         whyTemporal:
           "The Activity can be retried after Worker loss. Stable pipeline identity and artifact paths keep repeated attempts on one logical output.",
         details: ["SciX + Digest", "Evidence hashes", "Artifact references"],
       },
       {
-        start: 118,
-        end: 150,
+        start: 141,
+        end: 185,
         title: "Write the deep dive",
         purpose:
           "Validates the research stage, invokes the live writer or fixture renderer, and writes the deep-dive artifact.",
@@ -370,8 +400,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Stage invariant", "Writer call", "Stable path"],
       },
       {
-        start: 151,
-        end: 188,
+        start: 186,
+        end: 233,
         title: "Write the podcast script",
         purpose:
           "Requires a completed deep dive, invokes the writer, and records the script under the original naming convention.",
@@ -380,8 +410,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Independent retry", "Historical filename"],
       },
       {
-        start: 189,
-        end: 246,
+        start: 234,
+        end: 303,
         title: "Write a series review",
         purpose:
           "Collects completed deep dives for one series and writes its literature review.",
@@ -390,18 +420,18 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Series fan-in", "Completed inputs"],
       },
       {
-        start: 247,
-        end: 296,
+        start: 304,
+        end: 353,
         title: "Write the provenance manifest",
         purpose:
-          "Indexes episode status, every artifact reference, all source metadata, and both series-review outputs.",
+          "Indexes episode status, every artifact reference, all source metadata, and the selected series-review outputs.",
         whyTemporal:
           "The Workflow returns this compact reference while the full research product stays outside Event History.",
         details: ["Provenance", "Compact Workflow result"],
       },
       {
-        start: 297,
-        end: 362,
+        start: 354,
+        end: 464,
         title: "Fixture and live retrieval",
         purpose:
           "Selects fixed evidence for the recording or calls both local MCP servers through the response journal.",
@@ -410,8 +440,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Fixture lane", "Live MCP lane", "Request journal"],
       },
       {
-        start: 363,
-        end: 450,
+        start: 465,
+        end: 552,
         title: "Heartbeats and writer process",
         purpose:
           "Emits progress while retrieval or writing is in flight, cancels child work on shutdown, and launches the writer without a shell.",
@@ -420,8 +450,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Heartbeat Timeout", "Cancellation", "No shell"],
       },
       {
-        start: 451,
-        end: 627,
+        start: 553,
+        end: 729,
         title: "Research product renderers",
         purpose:
           "Builds inspectable fixture research, deep dives, scripts, and series reviews with linked SciX and Digest sources.",
@@ -430,8 +460,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Deterministic fixture", "Readable products"],
       },
       {
-        start: 628,
-        end: 686,
+        start: 730,
+        end: 788,
         title: "Artifact and source helpers",
         purpose:
           "Extracts document sections, renders citations, resolves scholarly URLs, and validates series, episode, and pipeline references.",

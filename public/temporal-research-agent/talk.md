@@ -66,16 +66,17 @@ calls, model calls, clock reads, environment access, and artifact I/O stay
 outside it. Temporal records these decisions in Event History so a replacement
 Worker can replay them.
 
-The full run keeps ten bounded episode branches in one Workflow Execution. A
-larger or continuously refreshed catalog could use Child Workflows or
-Continue-As-New.
+With the complete preset, the Workflow keeps ten bounded episode branches in
+one execution. A larger or continuously refreshed catalog could use Child
+Workflows or Continue-As-New.
 
 ## Slide 6: Temporal Activities and Temporal Worker
 
-The `research_episode` Activity chooses fixture or live evidence, calls SciX
-and Code Intelligence Digest on the live path, emits heartbeats, and writes
-evidence to artifact storage. The other Activities write deep dives, podcast
-scripts, series reviews, and the final manifest.
+The `research_episode` Activity chooses fixture or live evidence. On the live
+path, it runs five SciX and three Code Intelligence Digest searches,
+deduplicates the records, emits heartbeats, saves the evidence, and asks the
+writer to synthesize a grounded research brief. The other Activities write
+deep dives, podcast scripts, series reviews, and the final manifest.
 
 The Worker connects to Temporal, polls the task queue, and registers the
 Workflow plus all five Activities. Another Worker with the same registrations
@@ -114,11 +115,14 @@ under the replacement Worker. The result retains the original Workflow ID and
 Run ID and contains both completed episode keys and both review references.
 
 The source uses frozen typed dataclasses at Workflow boundaries and keeps I/O
-dependencies out of Workflow imports. The package passes 89 tests, 81.9
-percent branch-aware coverage, Ruff, and strict MyPy.
+dependencies out of Workflow imports. The package passes its branch-aware test
+suite with more than 80 percent coverage, Ruff, and strict MyPy.
 
-The short recording runs two representative episodes. A separate fixture run
-executes all ten episodes through the same Workflow and Activity code.
+The recording runs two fixture-backed episodes so Worker recovery is easy to
+reproduce. A separate live Workflow selects one episode from the same typed
+business input and executes its complete product path against SciX, Code
+Intelligence Digest, and the configured writer: research brief, deep dive,
+podcast script, series synthesis, and provenance manifest.
 
 ## Slide 10: What changed
 
@@ -144,6 +148,13 @@ sample easier to inspect. Child Workflows become attractive when episodes need
 independent lifecycle operations, separate retention, or a much larger
 catalog.
 
+### Are the two series hardcoded into the Workflow?
+
+No. They are preserved business inputs in `podcast_preset.py`. The Workflow
+accepts typed series and episode tuples, and the starter can select one
+episode, several episodes, or the complete preset. The live product example
+uses `--episode-key mas-ep4`.
+
 ### Does Temporal guarantee that an MCP or model call runs once?
 
 No. Activities have at-least-once execution. The application needs
@@ -168,8 +179,9 @@ content hashes and artifact paths.
 
 The public package includes the full historical JavaScript, the two series,
 all ten episode briefs, the original editorial requirements, five Temporal
-Activities, and the original output filenames. The short video runs two
-representative episodes; the full fixture run executes all ten.
+Activities, and the original output filenames. The live example selects one
+episode through the same input contract; the fixture-backed recording
+isolates Worker recovery.
 
 ### Why use fixtures in the recording?
 

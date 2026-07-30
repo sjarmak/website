@@ -93,6 +93,8 @@ class PodcastPipelineInput:
     scix_server: McpServer | None = None
     digest_server: McpServer | None = None
     writer: WriterCommand | None = None
+    source_context_root: str | None = None
+    source_context_hashes: tuple[tuple[str, str], ...] = ()
     minimum_completed_episodes: int = 1
     max_parallel_episodes: int = 2
     activity_retry_attempts: int = 3
@@ -232,6 +234,7 @@ def stable_pipeline_id(pipeline: PodcastPipelineInput) -> str:
             }
             for episode in sorted(pipeline.episodes, key=lambda value: value.key)
         ],
+        "source_context_hashes": sorted(pipeline.source_context_hashes),
     }
     encoded = json.dumps(logical_input, sort_keys=True, separators=(",", ":")).encode()
     return f"podcast-pipeline-{hashlib.sha256(encoded).hexdigest()[:12]}"

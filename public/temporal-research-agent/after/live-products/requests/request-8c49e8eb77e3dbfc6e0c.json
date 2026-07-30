@@ -1,0 +1,97 @@
+{
+  "request": {
+    "arguments": {
+      "disambiguate": false,
+      "filters": {
+        "year_min": 2019
+      },
+      "limit": 6,
+      "mode": "hybrid",
+      "query": "Running agent systems in production: reliability and failure modes, observability and tracing, evaluation, guardrails and policy, cross-agent injection, cost and latency, human oversight, and real enterprise deployments. Use industry sources heavily. mechanisms architecture systems"
+    },
+    "operation": "mas-ep4:scix-search:v2:2",
+    "review_id": "podcast-pipeline-2f3508412f1a",
+    "tool": "search",
+    "version": 1
+  },
+  "request_id": "request-8c49e8eb77e3dbfc6e0c",
+  "response": {
+    "papers": [
+      {
+        "abstract_snippet": "Computer-use agents(CUAs)are moving frombounded benchmarks toward real software environments, wherethey operate browsers, desktops, mobile application...",
+        "bibcode": "2026arXiv260507110C",
+        "citation_count": 0,
+        "first_author": "Chen, Zejian",
+        "in_working_set": false,
+        "rrf_score": 0.028531,
+        "score": 0.0,
+        "title": "Securing Computer-Use Agents: A Unified Architecture-Lifecycle Framework for Deployment-Grounded Reliability",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "Claude Code is an agentic coding tool that can run shell commands, edit files, and call external services on behalf of the user. This study describes ...",
+        "bibcode": "2026arXiv260414228L",
+        "citation_count": 0,
+        "first_author": "Liu, Jiacheng",
+        "in_working_set": false,
+        "rrf_score": 0.016393,
+        "score": 0.0,
+        "title": "Dive into Claude Code: The Design Space of Today's and Future AI Agent Systems",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "This chapter argues that the reliability of agentic and generative AI is chiefly an architectural property. We define agentic systems as goal-directed...",
+        "bibcode": "2025arXiv251209458N",
+        "citation_count": 1,
+        "first_author": "Nowaczyk, Sławomir",
+        "in_working_set": false,
+        "rrf_score": 0.016393,
+        "score": 0.6240902,
+        "title": "Architectures for Building Agentic AI",
+        "year": 2025
+      },
+      {
+        "abstract_snippet": "Autonomous AI agents can remain fully authorized and still become unsafe as behavior drifts, adversaries adapt, and decision patterns shift without an...",
+        "bibcode": "2026arXiv260424686M",
+        "citation_count": 0,
+        "first_author": "Marin, German",
+        "in_working_set": false,
+        "rrf_score": 0.016129,
+        "score": 0.0,
+        "title": "Governing What You Cannot Observe: Adaptive Runtime Governance for Autonomous AI Agents",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "This paper explores existing works of multi-agent systems and identifies challenges that remain inadequately addressed. By leveraging the diverse capa...",
+        "bibcode": "2024arXiv240203578H",
+        "citation_count": 47,
+        "first_author": "Han, Shanshan",
+        "in_working_set": false,
+        "rrf_score": 0.016129,
+        "score": 0.6223507,
+        "title": "LLM Multi-Agent Systems: Challenges and Open Problems",
+        "year": 2024
+      },
+      {
+        "abstract_snippet": "Increasingly IoT-enabled infrastructure such as smart cities, energy delivery systems, communication networks, manufacturing plants and transportation...",
+        "bibcode": "2019ithi.conf..176M",
+        "citation_count": 0,
+        "first_author": "Maloney, Matthew",
+        "in_working_set": false,
+        "rrf_score": 0.015873,
+        "score": 0.6218662,
+        "title": "Cyber Physical IoT Device Management Using a Lightweight Agent",
+        "year": 2019
+      }
+    ],
+    "timing_ms": {
+      "body_lexical_ms": 290.99,
+      "fusion_ms": 0.04,
+      "lexical_ms": 118.09,
+      "rerank_ms": 0.0,
+      "total_ms": 669.88,
+      "vector_ms": 260.76
+    },
+    "total": 6
+  }
+}

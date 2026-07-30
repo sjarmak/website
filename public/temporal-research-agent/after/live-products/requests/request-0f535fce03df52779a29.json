@@ -1,0 +1,97 @@
+{
+  "request": {
+    "arguments": {
+      "disambiguate": false,
+      "filters": {
+        "year_min": 2019
+      },
+      "limit": 6,
+      "mode": "hybrid",
+      "query": "Running agent systems in production: reliability and failure modes, observability and tracing, evaluation, guardrails and policy, cross-agent injection, cost and latency, human oversight, and real enterprise deployments. Use industry sources heavily. evaluation benchmark empirical results"
+    },
+    "operation": "mas-ep4:scix-search:v2:3",
+    "review_id": "podcast-pipeline-2f3508412f1a",
+    "tool": "search",
+    "version": 1
+  },
+  "request_id": "request-0f535fce03df52779a29",
+  "response": {
+    "papers": [
+      {
+        "abstract_snippet": "Large language model (LLM) agents are rapidly moving from conversational interfaces to software components that plan, invoke tools, maintain memory, a...",
+        "bibcode": "2026arXiv260610749L",
+        "citation_count": 0,
+        "first_author": "Ling, Yuchen",
+        "in_working_set": false,
+        "rrf_score": 0.026779,
+        "score": 0.0,
+        "title": "Toward Secure LLM Agents: Threat Surfaces, Attacks, Defenses, and Evaluation",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "Computer-use agents(CUAs)are moving frombounded benchmarks toward real software environments, wherethey operate browsers, desktops, mobile application...",
+        "bibcode": "2026arXiv260507110C",
+        "citation_count": 0,
+        "first_author": "Chen, Zejian",
+        "in_working_set": false,
+        "rrf_score": 0.024569,
+        "score": 0.0,
+        "title": "Securing Computer-Use Agents: A Unified Architecture-Lifecycle Framework for Deployment-Grounded Reliability",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "Claude Code is an agentic coding tool that can run shell commands, edit files, and call external services on behalf of the user. This study describes ...",
+        "bibcode": "2026arXiv260414228L",
+        "citation_count": 0,
+        "first_author": "Liu, Jiacheng",
+        "in_working_set": false,
+        "rrf_score": 0.016393,
+        "score": 0.0,
+        "title": "Dive into Claude Code: The Design Space of Today's and Future AI Agent Systems",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "This paper examines the evolution, architecture, and practical applications of AI agents from their early, rule-based incarnations to modern sophistic...",
+        "bibcode": "2025arXiv250312687K",
+        "citation_count": 0,
+        "first_author": "Krishnan, Naveen",
+        "in_working_set": false,
+        "rrf_score": 0.016393,
+        "score": 0.6394863,
+        "title": "AI Agents: Evolution, Architecture, and Real-World Applications",
+        "year": 2025
+      },
+      {
+        "abstract_snippet": "Autonomous AI agents can remain fully authorized and still become unsafe as behavior drifts, adversaries adapt, and decision patterns shift without an...",
+        "bibcode": "2026arXiv260424686M",
+        "citation_count": 0,
+        "first_author": "Marin, German",
+        "in_working_set": false,
+        "rrf_score": 0.016129,
+        "score": 0.0,
+        "title": "Governing What You Cannot Observe: Adaptive Runtime Governance for Autonomous AI Agents",
+        "year": 2026
+      },
+      {
+        "abstract_snippet": "LLM-based agents already operate in production across many industries, yet we lack an understanding of what technical methods make deployments success...",
+        "bibcode": "2025arXiv251204123P",
+        "citation_count": 31,
+        "first_author": "Pan, Melissa Z.",
+        "in_working_set": false,
+        "rrf_score": 0.016129,
+        "score": 0.63500977,
+        "title": "Measuring Agents in Production",
+        "year": 2025
+      }
+    ],
+    "timing_ms": {
+      "body_lexical_ms": 253.26,
+      "fusion_ms": 0.03,
+      "lexical_ms": 100.91,
+      "rerank_ms": 0.0,
+      "total_ms": 677.69,
+      "vector_ms": 323.49
+    },
+    "total": 6
+  }
+}

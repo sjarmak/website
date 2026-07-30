@@ -1,0 +1,78 @@
+{
+  "request": {
+    "arguments": {
+      "limit": 6,
+      "query": "Enterprise & Production Running agent systems in production: reliability and failure modes, observability and tracing, evaluation, guardrails and policy, cross-agent injection, cost and latency, human oversight, and real enterprise deployments. Use industry sources heavily."
+    },
+    "operation": "mas-ep4:digest-search:v2:6",
+    "review_id": "podcast-pipeline-2f3508412f1a",
+    "tool": "semantic_search_items",
+    "version": 1
+  },
+  "request_id": "request-bc0f898ffc98950a7d42",
+  "response": {
+    "count": 6,
+    "items": [
+      {
+        "author": "Melissa Z. Pan, Negar Arabzadeh, Riccardo Cogo, Yuxuan Zhu, Alexander Xiong, Lakshya A Agrawal, Huanzhi Mao, Emma Shen, Sid Pallerla, Liana Patel, Shu Liu, Tianneng Shi, Xiaoyuan Liu, Jared Quincy Davis, Emmanuele Lacavalla, Alessandro Basile, Shuyi Yang, Paul Castro, Daniel Kang, Koushik Sen, Dawn Song, Joseph E. Gonzalez, Ion Stoica, Matei Zaharia, Marquita Ellis",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b8556b4f8",
+        "published_at": "2026-06-08T04:00:00.000Z",
+        "source": "cs.SE updates on arXiv.org",
+        "summary": "arXiv:2512.04123v4 Announce Type: replace-cross  \nAbstract: LLM-based agents already operate in production across many industries, yet we lack an understanding of what technical methods make deployments successful. We present the first systematic study of Measuring Agents in Production, MAP, using first-hand data from agent developers. We conducted 20 case studies via in-depth interviews and surve",
+        "title": "Measuring Agents in Production",
+        "url": "https://arxiv.org/abs/2512.04123"
+      },
+      {
+        "author": "Melissa Z. Pan, Negar Arabzadeh, Riccardo Cogo, Yuxuan Zhu, Alexander Xiong, Lakshya A Agrawal, Huanzhi Mao, Emma Shen, Sid Pallerla, Liana Patel, Shu Liu, Tianneng Shi, Xiaoyuan Liu, Jared Quincy Davis, Emmanuele Lacavalla, Alessandro Basile, Shuyi Yang, Paul Castro, Daniel Kang, Joseph E. Gonzalez, Koushik Sen, Dawn Song, Ion Stoica, Matei Zaharia, Marquita Ellis",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b31fb29b7",
+        "published_at": "2025-12-02T16:45:10.000Z",
+        "source": "cs.AI updates on arXiv.org",
+        "summary": "arXiv:2512.04123v2 Announce Type: replace-cross  \nAbstract: LLM-based agents already operate in production across many industries, yet we lack an understanding of what technical methods make deployments successful. We present the first systematic study of Measuring Agents in Production, MAP, using first-hand data from agent developers. We conducted 20 case studies via in-depth interviews and surve",
+        "title": "Measuring Agents in Production",
+        "url": "https://arxiv.org/abs/2512.04123"
+      },
+      {
+        "author": "Pan, Melissa Z., Arabzadeh, Negar, Cogo, Riccardo, Zhu, Yuxuan, Xiong, Alexander, Agrawal, Lakshya A, Mao, Huanzhi, Shen, Emma, Pallerla, Sid, Patel, Liana, Liu, Shu, Shi, Tianneng, Liu, Xiaoyuan, Quincy Davis, Jared, Lacavalla, Emmanuele, Basile, Alessandro, Yang, Shuyi, Castro, Paul, Kang, Daniel, Gonzalez, Joseph E., Sen, Koushik, Song, Dawn, Stoica, Ion, Zaharia, Matei, Ellis, Marquita",
+        "category": "research",
+        "id": "ads:2025arXiv251204123P",
+        "published_at": "2026-03-17T11:33:16.000Z",
+        "source": "ADS Research",
+        "summary": "LLM-based agents already operate in production across many industries, yet we lack an understanding of what technical methods make deployments successful. We present the first systematic study of Measuring Agents in Production, MAP, using first-hand data from agent developers. We conducted 20 case studies via in-depth interviews and surveyed 306 practitioners across 26 domains. We investigate why ",
+        "title": "Measuring Agents in Production",
+        "url": "https://ui.adsabs.harvard.edu/abs/2025arXiv251204123P"
+      },
+      {
+        "author": "Marisa Ferrara Boston, Glen Hanson, Effi Georgala, JD Hudgens, Heather Frase",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b8184dec3",
+        "published_at": "2026-06-02T04:00:00.000Z",
+        "source": "cs.AI updates on arXiv.org",
+        "summary": "arXiv:2606.02494v1 Announce Type: cross  \nAbstract: Agentic systems entering production typically operate as partially integrated assemblies where structural defects, not task-level errors, dominate the failure landscape. At this maturity level, task-level error detection may be infeasible: structural failure modes mask the signal that task-level monitors are designed to detect.We present a monito",
+        "title": "Monitoring Agentic Systems Before They're Reliable",
+        "url": "https://arxiv.org/abs/2606.02494"
+      },
+      {
+        "author": "Tallam, Krti",
+        "category": "research",
+        "id": "ads:2026arXiv260612320T",
+        "published_at": "2026-06-01T00:00:00.000Z",
+        "source": "ADS Research",
+        "summary": "Enterprise security was built to govern data boundaries: the protected surface was data at rest and in transit, and the controls -- access control, data-loss prevention, perimeter inspection -- governed crossings of that boundary. Production AI agents dissolve this assumption. An agent reads context, calls tools, invokes connectors, and modifies systems of record on an enterprise's behalf, so risk",
+        "title": "A Five-Plane Reference Architecture for Runtime Governance of Production AI Agents",
+        "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260612320T"
+      },
+      {
+        "author": "Krti Tallam",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b87846a56",
+        "published_at": "2026-06-10T16:54:47.000Z",
+        "source": "cs.AI updates on arXiv.org",
+        "summary": "arXiv:2606.12320v1 Announce Type: new  \nAbstract: Enterprise security was built to govern data boundaries: the protected surface was data at rest and in transit, and the controls -- access control, data-loss prevention, perimeter inspection -- governed crossings of that boundary. Production AI agents dissolve this assumption. An agent reads context, calls tools, invokes connectors, and modifies sy",
+        "title": "A Five-Plane Reference Architecture for Runtime Governance of Production AI Agents",
+        "url": "https://arxiv.org/abs/2606.12320"
+      }
+    ]
+  }
+}

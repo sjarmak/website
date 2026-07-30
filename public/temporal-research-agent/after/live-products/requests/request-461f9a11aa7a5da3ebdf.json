@@ -1,0 +1,78 @@
+{
+  "request": {
+    "arguments": {
+      "limit": 6,
+      "query": "Enterprise & Production evaluation failures lessons learned"
+    },
+    "operation": "mas-ep4:digest-search:v2:8",
+    "review_id": "podcast-pipeline-2f3508412f1a",
+    "tool": "semantic_search_items",
+    "version": 1
+  },
+  "request_id": "request-461f9a11aa7a5da3ebdf",
+  "response": {
+    "count": 6,
+    "items": [
+      {
+        "author": "Dharun Anandayuvaraj, Tanmay Singla, Zain Hammadeh, Andreas Lund, Alexandra Holloway, James C. Davis",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b427237e3",
+        "published_at": "2026-02-27T05:00:00.000Z",
+        "source": "cs.SE updates on arXiv.org",
+        "summary": "arXiv:2509.06301v3 Announce Type: replace  \nAbstract: Software failures can have significant consequences, making learning from failures a critical aspect of software engineering. While software organizations are recommended to conduct postmortems, the effectiveness and adoption of these practices vary widely. Understanding how engineers gather, document, share, and apply lessons from failures is ",
+        "title": "Learning From Software Failures: A Case Study at a National Space Research Center",
+        "url": "https://arxiv.org/abs/2509.06301"
+      },
+      {
+        "author": "/u/Arindam_200",
+        "category": "community",
+        "id": "tag:google.com,2005:reader/item/0000000b1e0abf65",
+        "published_at": "2026-01-02T17:56:10.000Z",
+        "source": "LLMDevs",
+        "summary": "<p><a href=\"https://www.reddit.com/r/LLMDevs/comments/1q25iar/why_enterprise_ai_agents_fail_in_production/\"><img src=\"https://b.thumbs.redditmedia.com/xexe95Wcf367j9PWj0woXKMuYR9oZLsQosnQ5v7x_DE.jpg\" alt=\"xexe95Wcf367j9PWj0woXKMuYR9oZLsQosnQ5v7x\"></a></p><table> <tr><td> <div><p>I keep seeing the same pattern with enterprise AI agents: they look fine in demos, then break once they’re embedded in r",
+        "title": "Why enterprise AI agents fail in production",
+        "url": "https://www.reddit.com/r/LLMDevs/comments/1q25iar/why_enterprise_ai_agents_fail_in_production/"
+      },
+      {
+        "author": "TLDR DevOps ",
+        "category": "newsletters",
+        "id": "tag:google.com,2005:reader/item/0000000b7f635203-article-14",
+        "published_at": "2026-05-29T11:07:04.000Z",
+        "source": "TLDR - Topics",
+        "summary": "The Silent Failure of Reliability Metrics at Scale: Lessons Learned from a Decade of Broken Metrics (8 minute read) [SECTION:Miscellaneous]",
+        "title": "The Silent Failure of Reliability Metrics at Scale: Lessons Learned from a Decade of Broken Metrics (8 minute read)",
+        "url": "https://links.tldrnewsletter.com/VQZRX8"
+      },
+      {
+        "author": "Marisa Ferrara Boston, Glen Hanson, Effi Georgala, JD Hudgens, Heather Frase",
+        "category": "research",
+        "id": "tag:google.com,2005:reader/item/0000000b8184dec3",
+        "published_at": "2026-06-02T04:00:00.000Z",
+        "source": "cs.AI updates on arXiv.org",
+        "summary": "arXiv:2606.02494v1 Announce Type: cross  \nAbstract: Agentic systems entering production typically operate as partially integrated assemblies where structural defects, not task-level errors, dominate the failure landscape. At this maturity level, task-level error detection may be infeasible: structural failure modes mask the signal that task-level monitors are designed to detect.We present a monito",
+        "title": "Monitoring Agentic Systems Before They're Reliable",
+        "url": "https://arxiv.org/abs/2606.02494"
+      },
+      {
+        "author": "TLDR AI ",
+        "category": "newsletters",
+        "id": "tag:google.com,2005:reader/item/0000000b3662e3c6-article-2",
+        "published_at": "2026-02-09T14:20:50.000Z",
+        "source": "TLDR - Topics",
+        "summary": "tbody> Together With",
+        "title": "tbody> Together With",
+        "url": "https://welodata.ai/ai-data-quality-systems/?utm_source=tldr-ai-newsletter%26utm_medium=email%26utm_campaign=2026-ad-welo-data-quality-at-scale"
+      },
+      {
+        "author": "TLDR AI ",
+        "category": "newsletters",
+        "id": "tag:google.com,2005:reader/item/0000000b3c8b44cb-article-7",
+        "published_at": "2026-02-18T14:19:10.000Z",
+        "source": "TLDR - Topics",
+        "summary": "The weakest link in enterprise AI is rarely the models (Sponsor)",
+        "title": "The weakest link in enterprise AI is rarely the models (Sponsor)",
+        "url": "https://welodata.ai/ai-data-quality-systems/?utm_source=tldr-ai-newsletter%26utm_medium=email%26utm_campaign=2026-ad-welo-data-quality-at-scale"
+      }
+    ]
+  }
+}

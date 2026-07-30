@@ -8,7 +8,13 @@ import os
 from temporalio.client import Client
 
 from durable_research.podcast_models import stable_pipeline_id
-from durable_research.podcast_preset import TASK_QUEUE, phase_e_demo, phase_e_pipeline
+from durable_research.podcast_preset import (
+    EPISODES,
+    TASK_QUEUE,
+    phase_e_demo,
+    phase_e_pipeline,
+    phase_e_selection,
+)
 from durable_research.podcast_workflow import PodcastResearchWorkflow
 
 
@@ -20,11 +26,28 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--delay", type=float, default=0)
     value.add_argument("--fail-once", metavar="EPISODE_KEY")
     value.add_argument("--workflow-id")
+    value.add_argument(
+        "--episode-key",
+        action="append",
+        choices=tuple(episode.key for episode in EPISODES),
+        help=(
+            "run only this episode; repeat the option to select several episodes "
+            "from the preserved business input"
+        ),
+    )
     return value
 
 
 async def start(args: argparse.Namespace) -> None:
-    if args.scope == "demo":
+    if args.episode_key:
+        pipeline = phase_e_selection(
+            args.artifacts,
+            episode_keys=tuple(args.episode_key),
+            mode=args.mode,
+            activity_delay_seconds=args.delay,
+            fail_once_episode=args.fail_once,
+        )
+    elif args.scope == "demo":
         if args.mode != "fixture":
             raise ValueError("the bounded demo scope is fixture-backed")
         pipeline = phase_e_demo(

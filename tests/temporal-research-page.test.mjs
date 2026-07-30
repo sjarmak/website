@@ -14,6 +14,10 @@ const README_PAGE = path.join(
   ROOT,
   "src/pages/temporal-research-agent/readme.astro",
 );
+const PRODUCT_PAGE = path.join(
+  ROOT,
+  "src/pages/temporal-research-agent/research-output/[run]/[kind]/[slug].astro",
+);
 
 test("off-navigation walkthrough exposes the faithful assignment package", () => {
   const source = readFileSync(PAGE, "utf8");
@@ -77,28 +81,14 @@ test("off-navigation walkthrough exposes the faithful assignment package", () =>
   assert.doesNotMatch(source, /Temporal owns/);
 });
 
-test("walkthrough links to the original and Temporal-produced research products", () => {
+test("research output separates publishable products from durability fixtures", () => {
   const source = readFileSync(PAGE, "utf8");
   const researchPage = readFileSync(RESEARCH_PAGE, "utf8");
-  const masReview = readFileSync(
-    path.join(
-      ROOT,
-      "src/components/temporal-research-agent/TemporalMasReview.md",
-    ),
-    "utf8",
-  );
-  const codeReview = readFileSync(
-    path.join(
-      ROOT,
-      "src/components/temporal-research-agent/TemporalCodeReview.md",
-    ),
-    "utf8",
-  );
-  const manifest = JSON.parse(
+  const liveManifest = JSON.parse(
     readFileSync(
       path.join(
         ROOT,
-        "public/temporal-research-agent/after/fixture-products/manifest.json",
+        "public/temporal-research-agent/after/live-products/manifest.json",
       ),
       "utf8",
     ),
@@ -106,14 +96,23 @@ test("walkthrough links to the original and Temporal-produced research products"
 
   assert.doesNotMatch(source, /<TemporalMasReview \/>/);
   assert.doesNotMatch(source, /id="research-output"/);
-  assert.match(researchPage, /All ten episode branches completed/);
-  assert.match(researchPage, /10 complete/);
-  assert.match(researchPage, /20 records/);
-  assert.match(researchPage, /32 documents/);
-  assert.match(researchPage, /Original long-form review/);
-  assert.match(researchPage, /Temporal fixture review/);
-  assert.match(researchPage, /<TemporalMasReview \/>/);
-  assert.match(researchPage, /<TemporalCodeReview \/>/);
+  assert.match(researchPage, /Publishable live Workflow run/);
+  assert.match(researchPage, /Workflow run record/);
+  assert.match(researchPage, /Durability fixture run/);
+  assert.match(researchPage, /Original JavaScript run/);
+  assert.match(researchPage, /completed_episode_keys\.length/);
+  assert.match(researchPage, /Selected-run synthesis/);
+  assert.match(researchPage, /Original five-episode review/);
+  assert.doesNotMatch(researchPage, /Temporal fixture review/);
+  assert.match(researchPage, /Research notes/);
+  assert.match(researchPage, /Deep dive/);
+  assert.match(researchPage, /Podcast script/);
+  assert.match(researchPage, /View fixture artifacts/);
+  assert.equal(existsSync(PRODUCT_PAGE), true);
+  const productPage = readFileSync(PRODUCT_PAGE, "utf8");
+  assert.match(productPage, /getStaticPaths/);
+  assert.match(productPage, /remarkParse/);
+  assert.match(productPage, /Download Markdown/);
   for (const activityName of [
     "research_episode",
     "write_deep_dive",
@@ -123,19 +122,14 @@ test("walkthrough links to the original and Temporal-produced research products"
   ]) {
     assert.match(researchPage, new RegExp(activityName));
   }
-  assert.match(masReview, /Code Intelligence Digest/);
-  assert.match(masReview, /SciX/);
-  assert.match(codeReview, /Code Intelligence Digest/);
-  assert.match(codeReview, /SciX/);
-  assert.equal(manifest.completed_episode_keys.length, 10);
-  assert.equal(manifest.failed_episode_keys.length, 0);
-  assert.equal(manifest.series_reviews.length, 2);
-  assert.equal(
-    manifest.episodes.reduce(
+  assert.deepEqual(liveManifest.completed_episode_keys, ["mas-ep4"]);
+  assert.equal(liveManifest.failed_episode_keys.length, 0);
+  assert.equal(liveManifest.series_reviews.length, 1);
+  assert.ok(
+    liveManifest.episodes.reduce(
       (count, episode) => count + episode.sources.length,
       0,
-    ),
-    20,
+    ) >= 15,
   );
 });
 
@@ -164,11 +158,16 @@ test("README explains the original failure and complete business sequence", () =
   assert.match(readme, /research, a deep dive, and a podcast/);
   assert.match(readme, /replacement Worker/);
   assert.match(readme, /same Workflow ID and Run ID/);
+  assert.match(readme, /eight journaled searches/);
+  assert.match(readme, /Live product run/);
+  assert.match(readme, /Durability fixture/);
+  assert.match(readme, /after\/live-products\/reviews\/mas-literature-review\.md/);
   assert.match(readme, /What a process failure meant before Temporal/);
   assert.match(readme, /async def run_pipeline\(\)/);
   assert.match(readme, /Design considerations and tradeoffs/);
   assert.match(readme, /How I would teach the migration/);
   assert.doesNotMatch(readme, /It gives us a real before and after/);
+  assert.doesNotMatch(readme, /Separate durable-research skill/);
   for (const slug of [
     "before",
     "inputs",
@@ -230,6 +229,9 @@ test("packaged media, deck, faithful code, and products exist", () => {
     "public/temporal-research-agent/after/fixture-products/manifest.json",
     "public/temporal-research-agent/after/fixture-products/reviews/mas-literature-review.md",
     "public/temporal-research-agent/after/fixture-products/reviews/code-literature-review.md",
+    "public/temporal-research-agent/after/live-products/manifest.json",
+    "public/temporal-research-agent/after/live-products/workflow-run.json",
+    "public/temporal-research-agent/after/live-products/reviews/mas-literature-review.md",
     "public/temporal-research-agent/src/durable_research/podcast_preset.py",
     "public/temporal-research-agent/src/durable_research/podcast_prompts.py",
     "public/temporal-research-agent/src/durable_research/podcast_workflow.py",
@@ -241,6 +243,7 @@ test("packaged media, deck, faithful code, and products exist", () => {
     "src/components/temporal-research-agent/TemporalMasReview.md",
     "src/components/temporal-research-agent/TemporalCodeReview.md",
     "src/pages/temporal-research-agent/research-output/index.astro",
+    "src/pages/temporal-research-agent/research-output/[run]/[kind]/[slug].astro",
   ]) {
     assert.equal(existsSync(path.join(ROOT, relativePath)), true, relativePath);
   }
@@ -275,4 +278,17 @@ test("deck follows the site design system and keeps code token-colored", () => {
   assert.doesNotMatch(deck, /run-durable-research/);
   assert.doesNotMatch(deck, /what I would ask in review/);
   assert.equal((deck.match(/class="slide(?: |")/g) ?? []).length, 10);
+});
+
+test("annotated code readers explain the generic selection and research synthesis", () => {
+  const samples = readFileSync(
+    path.join(ROOT, "src/data/temporal-research-code-samples.ts"),
+    "utf8",
+  );
+
+  assert.match(samples, /Arbitrary episode selection/);
+  assert.match(samples, /one episode, several episodes, or the complete preset/);
+  assert.match(samples, /The Workflow derives branches/);
+  assert.match(samples, /Research synthesis/);
+  assert.match(samples, /Do not reproduce the retrieval dump|removing off-topic/);
 });

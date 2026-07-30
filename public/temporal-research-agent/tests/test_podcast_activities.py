@@ -3,6 +3,8 @@ import json
 import pytest
 
 from durable_research.podcast_activities import (
+    _deduplicate_sources,
+    _episode_search_queries,
     research_episode,
     write_deep_dive,
     write_pipeline_manifest,
@@ -123,3 +125,51 @@ async def test_deep_dive_requires_researched_input(tmp_path, fixture_file) -> No
                 episode_result=None,
             )
         )
+
+
+def test_live_research_plan_runs_eight_distinct_searches_across_both_lanes(
+    tmp_path,
+    fixture_file,
+) -> None:
+    request = pipeline(tmp_path, fixture_file)
+    episode = request.episodes[0]
+
+    searches = _episode_search_queries(episode)
+
+    assert len(searches) == 8
+    assert len(set(searches)) == 8
+    assert sum(lane == "scix" for lane, _ in searches) == 5
+    assert sum(lane == "digest" for lane, _ in searches) == 3
+    assert any("2025arXiv250313657C" in query for _, query in searches)
+    assert any("evaluation" in query for _, query in searches)
+
+
+def test_live_research_collapses_versioned_and_cross_index_duplicates() -> None:
+    sources = [
+        {
+            "lane": "digest",
+            "id": "digest-v1",
+            "title": "Agent Workflow Memory",
+            "locator": "https://arxiv.org/abs/2409.07429v1",
+        },
+        {
+            "lane": "digest",
+            "id": "digest-v3",
+            "title": "Agent Workflow Memory",
+            "locator": "https://arxiv.org/abs/2409.07429v3",
+        },
+        {
+            "lane": "scix",
+            "id": "2024arXiv240907429Z",
+            "title": "Agent Workflow Memory",
+            "locator": "https://ui.adsabs.harvard.edu/abs/2024arXiv240907429Z/abstract",
+        },
+        {
+            "lane": "digest",
+            "id": "different",
+            "title": "A Different Paper",
+            "locator": "https://example.test/different",
+        },
+    ]
+
+    assert _deduplicate_sources(sources) == [sources[0], sources[3]]

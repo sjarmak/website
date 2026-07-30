@@ -132,7 +132,7 @@ class PodcastResearchWorkflow:
                 "research_episode",
                 request,
                 result_type=EpisodeResult,
-                start_to_close_timeout=timedelta(minutes=5),
+                start_to_close_timeout=timedelta(minutes=10),
                 heartbeat_timeout=timedelta(seconds=30),
                 retry_policy=self._retry_policy(request.pipeline),
             )

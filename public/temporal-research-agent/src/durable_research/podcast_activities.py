@@ -21,6 +21,7 @@ from durable_research.podcast_models import (
     EpisodeResult,
     ManifestRequest,
     PodcastEpisode,
+    PodcastPipelineInput,
     PodcastPipelineResult,
     PodcastSeries,
     PodcastSourceRef,
@@ -33,6 +34,7 @@ from durable_research.podcast_prompts import (
     deep_dive_prompt,
     podcast_script_prompt,
     research_prompt,
+    research_synthesis_prompt,
     series_review_prompt,
 )
 
@@ -93,13 +95,34 @@ async def research_episode(request: EpisodeRequest) -> EpisodeResult:
         + "\n",
     )
     series = _series_for(request.pipeline.series, request.episode.series_key)
-    research_body = await asyncio.to_thread(
+    evidence_body = await asyncio.to_thread(
         _render_research,
         store,
         series,
         request.episode,
         tuple(source_refs),
     )
+    if request.pipeline.mode == "fixture":
+        research_body = evidence_body
+    else:
+        bibliography, brainstorm = await asyncio.to_thread(
+            _source_context,
+            request.pipeline,
+            series.key,
+        )
+        prompt = research_synthesis_prompt(
+            series,
+            request.episode,
+            evidence_content=evidence_body,
+            bibliography_content=bibliography,
+            brainstorm_content=brainstorm if request.episode.frontier else "",
+        )
+        research_body = await _run_writer_with_heartbeats(
+            request.pipeline.writer,
+            prompt,
+            episode_key=request.episode.key,
+            stage="research-synthesis",
+        )
     research_artifact = await asyncio.to_thread(
         store.put_named_text,
         f"{request.pipeline_id}/research/{request.episode.key}.md",
@@ -127,9 +150,21 @@ async def write_deep_dive(request: DeepDiveRequest) -> EpisodeResult:
 
     store = ArtifactStore(request.pipeline.artifact_root)
     series = _series_for(request.pipeline.series, request.episode.series_key)
-    prompt = deep_dive_prompt(series, request.episode, research_ref=result.research_ref)
+    research = await asyncio.to_thread(store.read_text, result.research_ref)
+    bibliography, brainstorm = await asyncio.to_thread(
+        _source_context,
+        request.pipeline,
+        series.key,
+    )
+    prompt = deep_dive_prompt(
+        series,
+        request.episode,
+        research_ref=result.research_ref,
+        research_content=research,
+        bibliography_content=bibliography,
+        brainstorm_content=brainstorm if request.episode.frontier else "",
+    )
     if request.pipeline.mode == "fixture":
-        research = await asyncio.to_thread(store.read_text, result.research_ref)
         body = _render_fixture_deep_dive(series, request.episode, research, result.sources)
     else:
         body = await _run_writer_with_heartbeats(
@@ -159,10 +194,20 @@ async def write_podcast_script(request: ScriptRequest) -> EpisodeResult:
 
     store = ArtifactStore(request.pipeline.artifact_root)
     series = _series_for(request.pipeline.series, request.episode.series_key)
+    bibliography, _ = await asyncio.to_thread(
+        _source_context,
+        request.pipeline,
+        series.key,
+    )
     prompt = podcast_script_prompt(
         series,
         request.episode,
         deep_dive_ref=result.deep_dive_ref,
+        deep_dive_content=await asyncio.to_thread(
+            store.read_text,
+            result.deep_dive_ref,
+        ),
+        bibliography_content=bibliography,
     )
     if request.pipeline.mode == "fixture":
         deep_dive = await asyncio.to_thread(store.read_text, result.deep_dive_ref)
@@ -207,16 +252,28 @@ async def write_series_review(request: SeriesReviewRequest) -> SeriesReviewResul
         for result in request.episodes
         if result.deep_dive_ref is not None
     )
-    prompt = series_review_prompt(request.series, episode_specs, deep_dive_refs)
-    if request.pipeline.mode == "fixture":
-        deep_dives = tuple(
-            await asyncio.gather(
-                *(
-                    asyncio.to_thread(store.read_text, reference)
-                    for reference in deep_dive_refs
-                )
+    deep_dives = tuple(
+        await asyncio.gather(
+            *(
+                asyncio.to_thread(store.read_text, reference)
+                for reference in deep_dive_refs
             )
         )
+    )
+    bibliography, brainstorm = await asyncio.to_thread(
+        _source_context,
+        request.pipeline,
+        request.series.key,
+    )
+    prompt = series_review_prompt(
+        request.series,
+        episode_specs,
+        deep_dive_refs,
+        deep_dives,
+        bibliography_content=bibliography,
+        brainstorm_content=brainstorm,
+    )
+    if request.pipeline.mode == "fixture":
         body = _render_fixture_series_review(
             request.series,
             episode_specs,
@@ -320,44 +377,89 @@ async def _live_sources(
     pipeline = request.pipeline
     if pipeline.scix_server is None or pipeline.digest_server is None:
         raise ValueError("live mode requires both SciX and Digest servers")
-    query = f"{request.episode.title}: {request.episode.focus}"
-    scix_call = await journaled_call_tool(
-        store=store,
-        review_id=request.pipeline_id,
-        operation=f"{request.episode.key}:scix-search:v1",
-        server=pipeline.scix_server,
-        tool="search",
-        arguments={
-            "query": query,
-            "mode": "hybrid",
-            "filters": {"year_min": 2019},
-            "limit": 6,
-            "disambiguate": False,
-        },
-    )
-    digest_call = await journaled_call_tool(
-        store=store,
-        review_id=request.pipeline_id,
-        operation=f"{request.episode.key}:digest-search:v1",
-        server=pipeline.digest_server,
-        tool="semantic_search_items",
-        arguments={"query": query, "limit": 6},
-    )
     timestamp = datetime.now(UTC).isoformat()
-    return [
-        *_normalize_sources(
-            scix_call.response,
-            "scix",
-            timestamp,
-            request_id=scix_call.request_id,
-        ),
-        *_normalize_sources(
-            digest_call.response,
-            "digest",
-            timestamp,
-            request_id=digest_call.request_id,
-        ),
-    ]
+    sources: list[dict[str, Any]] = []
+    for index, (lane, query) in enumerate(
+        _episode_search_queries(request.episode),
+        start=1,
+    ):
+        if lane == "scix":
+            call = await journaled_call_tool(
+                store=store,
+                review_id=request.pipeline_id,
+                operation=f"{request.episode.key}:scix-search:v2:{index}",
+                server=pipeline.scix_server,
+                tool="search",
+                arguments={
+                    "query": query,
+                    "mode": "hybrid",
+                    "filters": {"year_min": 2019},
+                    "limit": 6,
+                    "disambiguate": False,
+                },
+            )
+        else:
+            call = await journaled_call_tool(
+                store=store,
+                review_id=request.pipeline_id,
+                operation=f"{request.episode.key}:digest-search:v2:{index}",
+                server=pipeline.digest_server,
+                tool="semantic_search_items",
+                arguments={"query": query, "limit": 6},
+            )
+        sources.extend(
+            _normalize_sources(
+                call.response,
+                lane,
+                timestamp,
+                request_id=call.request_id,
+            )
+        )
+    return _deduplicate_sources(sources)
+
+
+def _episode_search_queries(
+    episode: PodcastEpisode,
+) -> tuple[tuple[str, str], ...]:
+    """Build the eight-search plan promised by the historical pipeline."""
+    frontier = (
+        "open problems future directions"
+        if episode.frontier
+        else "limitations production deployment"
+    )
+    seeds = " ".join(episode.seeds)
+    return (
+        ("scix", f"{episode.title} {episode.focus}"),
+        ("scix", f"{episode.focus} mechanisms architecture systems"),
+        ("scix", f"{episode.focus} evaluation benchmark empirical results"),
+        ("scix", f"{episode.title} {frontier}"),
+        ("scix", f"{episode.title} known sources {seeds}".strip()),
+        ("digest", f"{episode.title} {episode.focus}"),
+        ("digest", f"{episode.focus} implementation production engineering"),
+        ("digest", f"{episode.title} evaluation failures lessons learned"),
+    )
+
+
+def _deduplicate_sources(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    unique: dict[str, dict[str, Any]] = {}
+    for source in sources:
+        title = " ".join(str(source["title"]).casefold().split())
+        key = title or f"{source['lane']}:{source['id']}"
+        unique.setdefault(key, source)
+    return list(unique.values())
+
+
+def _source_context(
+    pipeline: PodcastPipelineInput,
+    series_key: str,
+) -> tuple[str, str]:
+    if pipeline.source_context_root is None:
+        return "", ""
+    directory = Path(pipeline.source_context_root) / series_key
+    return (
+        (directory / "bibliography.md").read_text(),
+        (directory / "brainstorm.md").read_text(),
+    )
 
 
 async def _live_sources_with_heartbeats(

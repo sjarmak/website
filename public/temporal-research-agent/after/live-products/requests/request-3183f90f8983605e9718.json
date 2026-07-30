@@ -1,0 +1,97 @@
+{
+  "request": {
+    "arguments": {
+      "disambiguate": false,
+      "filters": {
+        "year_min": 2019
+      },
+      "limit": 6,
+      "mode": "hybrid",
+      "query": "Enterprise & Production known sources 2025arXiv250313657C 2026arXiv260509076L 2026arXiv260520874S 2025arXiv250211448L 2024arXiv241007283L 2024arXiv241002644Z 2026arXiv260412262C 2026arXiv260411641L 2026arXiv260602755L"
+    },
+    "operation": "mas-ep4:scix-search:v2:5",
+    "review_id": "podcast-pipeline-2f3508412f1a",
+    "tool": "search",
+    "version": 1
+  },
+  "request_id": "request-3183f90f8983605e9718",
+  "response": {
+    "papers": [
+      {
+        "abstract_snippet": null,
+        "bibcode": "2023MPEC....R..132S",
+        "citation_count": 0,
+        "first_author": "Schwab, E.",
+        "in_working_set": false,
+        "rrf_score": 0.016393,
+        "score": 0.5724697,
+        "title": "2021 PN26",
+        "year": 2023
+      },
+      {
+        "abstract_snippet": null,
+        "bibcode": "2024MPEC....U..188S",
+        "citation_count": 0,
+        "first_author": "Sárneczky, K.",
+        "in_working_set": false,
+        "rrf_score": 0.016129,
+        "score": 0.57128716,
+        "title": "2022 UV21",
+        "year": 2024
+      },
+      {
+        "abstract_snippet": null,
+        "bibcode": "2025MPEC....H..200L",
+        "citation_count": 0,
+        "first_author": "Lin, C.-C.",
+        "in_working_set": false,
+        "rrf_score": 0.015873,
+        "score": 0.57024574,
+        "title": "2021 GM26",
+        "year": 2025
+      },
+      {
+        "abstract_snippet": null,
+        "bibcode": "2023MPEC....W...95B",
+        "citation_count": 0,
+        "first_author": "Beshore, E. C.",
+        "in_working_set": false,
+        "rrf_score": 0.015625,
+        "score": 0.5700455,
+        "title": "2022 US21",
+        "year": 2023
+      },
+      {
+        "abstract_snippet": "Presents information on the Aerospace &amp; Electronics Systems Society Distinguished Lecturers series.",
+        "bibcode": "2020IAESM..35e..47.",
+        "citation_count": 0,
+        "first_author": null,
+        "in_working_set": false,
+        "rrf_score": 0.015385,
+        "score": 0.56565285,
+        "title": "2020 Aerospace &amp; Electronics Systems Society Distinguished Lecturers",
+        "year": 2020
+      },
+      {
+        "abstract_snippet": null,
+        "bibcode": "2021ITAS...3116816C",
+        "citation_count": 1,
+        "first_author": "Jin, Jian Xun",
+        "in_working_set": false,
+        "rrf_score": 0.015152,
+        "score": 0.56489563,
+        "title": "ASEMD 2020—Introduction",
+        "year": 2021
+      }
+    ],
+    "timing_ms": {
+      "body_lexical_ms": 1.5,
+      "fusion_ms": 0.03,
+      "lexical_ms": 21.57,
+      "rerank_ms": 0.0,
+      "total_ms": 886.98,
+      "vector_ms": 863.88
+    },
+    "total": 6
+  }
+}

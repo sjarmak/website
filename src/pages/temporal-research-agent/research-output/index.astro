@@ -1,144 +1,273 @@
 ---
-import TemporalCodeReview from "@/components/temporal-research-agent/TemporalCodeReview.md";
-import TemporalMasReview from "@/components/temporal-research-agent/TemporalMasReview.md";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+import {
+  listTemporalResearchProducts,
+  type ResearchKind,
+  type ResearchProduct,
+  type ResearchRun,
+} from "@/data/temporal-research-products";
 import PageLayout from "@/layouts/PageLayout.astro";
 
 const root = "/temporal-research-agent";
-const outputRoot = `${root}/after/fixture-products`;
-const beforeRoot = `${root}/before/products`;
+const liveRoot = `${root}/after/live-products`;
+const fixtureRoot = `${root}/after/fixture-products`;
+const publicRoot = path.resolve("public", "temporal-research-agent");
+const products = listTemporalResearchProducts();
 
-const series = [
-  {
-    name: "Multi-Agent Orchestration",
-    review: `${outputRoot}/reviews/mas-literature-review.md`,
-    originalReview: `${beforeRoot}/multiagent-orchestration/20-literature-review.md`,
-    scripts: [
-      ["Foundations & Topologies", "podcast-script-multiagent-orchestration-ep1-foundations-and-topologies.md"],
-      ["Patterns & Frameworks", "podcast-script-multiagent-orchestration-ep2-patterns-and-frameworks.md"],
-      ["Memory in Multi-Agent Systems", "podcast-script-multiagent-orchestration-ep3-memory-in-mas.md"],
-      ["Enterprise & Production", "podcast-script-multiagent-orchestration-ep4-enterprise-and-production.md"],
-      ["Frontier & Open Problems", "podcast-script-multiagent-orchestration-ep5-frontier-and-open-problems.md"],
-    ],
-    folder: "multiagent-orchestration",
-  },
-  {
-    name: "Code Retrieval & Enterprise Codebases",
-    review: `${outputRoot}/reviews/code-literature-review.md`,
-    originalReview: `${beforeRoot}/code-retrieval/20-literature-review.md`,
-    scripts: [
-      ["Why Code Isn't Text IR", "podcast-script-code-retrieval-ep1-why-code-isnt-text-ir.md"],
-      ["Techniques: Lexical → Neural → Graph", "podcast-script-code-retrieval-ep2-techniques-lexical-neural-graph.md"],
-      ["Repository-Scale & Code Graphs", "podcast-script-code-retrieval-ep3-repo-scale-and-code-graphs.md"],
-      ["Enterprise Codebase Challenges", "podcast-script-code-retrieval-ep4-enterprise-codebase-challenges.md"],
-      ["Frontier & Open Problems", "podcast-script-code-retrieval-ep5-frontier-and-open-problems.md"],
-    ],
-    folder: "code-retrieval",
-  },
-];
+interface ManifestEpisode {
+  episode_key: string;
+  series_key: "mas" | "code";
+  research_ref: string;
+  deep_dive_ref: string;
+  script_ref: string;
+  sources: unknown[];
+}
+
+interface ManifestReview {
+  series_key: "mas" | "code";
+  report_ref: string;
+}
+
+interface PipelineManifest {
+  completed_episode_keys: string[];
+  failed_episode_keys: string[];
+  episodes: ManifestEpisode[];
+  series_reviews: ManifestReview[];
+}
+
+interface WorkflowRunRecord {
+  workflow_id: string;
+  run_id: string;
+  status: string;
+}
+
+const manifestPath = path.join(
+  publicRoot,
+  "after",
+  "live-products",
+  "manifest.json",
+);
+const liveManifest: PipelineManifest = existsSync(manifestPath)
+  ? JSON.parse(readFileSync(manifestPath, "utf8"))
+  : {
+      completed_episode_keys: [],
+      failed_episode_keys: [],
+      episodes: [],
+      series_reviews: [],
+    };
+const runRecord: WorkflowRunRecord = JSON.parse(
+  readFileSync(
+    path.join(publicRoot, "after", "live-products", "workflow-run.json"),
+    "utf8",
+  ),
+);
+
+function filename(reference: string): string {
+  return path.basename(reference);
+}
+
+function findProduct(
+  run: ResearchRun,
+  kind: ResearchKind,
+  artifactFilename: string,
+): ResearchProduct | undefined {
+  return products.find(
+    (product) =>
+      product.run === run &&
+      product.kind === kind &&
+      product.filename === artifactFilename,
+  );
+}
+
+const episodes = liveManifest.episodes.map((episode) => {
+  const research = findProduct("live", "research", filename(episode.research_ref));
+  const deepDive = findProduct("live", "deep-dives", filename(episode.deep_dive_ref));
+  const script = findProduct("live", "scripts", filename(episode.script_ref));
+  const original = findProduct("original", "scripts", filename(episode.script_ref));
+  return {
+    ...episode,
+    title: research?.title.replace(/\s+[—-]\s+Research$/, "") || episode.episode_key,
+    research,
+    deepDive,
+    script,
+    original,
+  };
+});
+
+const allSeries = [
+  { key: "mas", name: "Multi-Agent Orchestration" },
+  { key: "code", name: "Code Retrieval & Enterprise Codebases" },
+] as const;
+const completedSeries = new Set(
+  liveManifest.series_reviews.map((review) => review.series_key),
+);
+const series = allSeries.filter((item) => completedSeries.has(item.key));
+
+const reviews = series.map((item) => {
+  const liveReview = liveManifest.series_reviews.find(
+    (review) => review.series_key === item.key,
+  );
+  return {
+    ...item,
+    live: liveReview
+      ? findProduct("live", "reviews", filename(liveReview.report_ref))
+      : undefined,
+    original: products.find(
+      (product) =>
+        product.run === "original" &&
+        product.kind === "reviews" &&
+        product.series === item.key,
+    ),
+  };
+});
+
+const sourceCount = liveManifest.episodes.reduce(
+  (count, episode) => count + episode.sources.length,
+  0,
+);
+const fixtureProducts = products.filter((product) => product.run === "fixture");
 ---
 
 <PageLayout
   title="The research products behind the migration"
   kicker="Pipeline output"
-  intro="The original long-form products establish what the JavaScript program made. A full ten-episode Temporal fixture run proves that the Python replacement preserves the same document graph."
-  description="Original and Temporal-produced research outputs from the podcast pipeline migration."
+  intro="One live episode shows the complete product path. The fixture run remains a separate recovery test."
+  description="Original, live Temporal, and fixture evidence outputs from the podcast pipeline migration."
   noindex={true}
 >
   <article class="research-output">
     <nav class="research-output__nav" aria-label="Research output links">
       <a href={root}>← Case study</a>
       <a href={`${root}/readme`}>README</a>
-      <a href={`${outputRoot}/manifest.json`}>Temporal run manifest</a>
+      <a href={`${liveRoot}/manifest.json`}>Live run manifest</a>
+      <a href={`${liveRoot}/workflow-run.json`}>Workflow run record</a>
     </nav>
 
-    <section class="research-output__summary" aria-labelledby="run-summary">
-      <div>
-        <p class="kicker">Full fixture run</p>
-        <h2 id="run-summary">All ten episode branches completed</h2>
-      </div>
+    <section class="research-output__summary" aria-labelledby="live-run-heading">
+      <header>
+        <p class="kicker">Publishable live Workflow run</p>
+        <h2 id="live-run-heading">One episode completed through Temporal</h2>
+        <p>
+          The selected episode ran eight journaled searches, then passed its
+          synthesized research into deep-dive, podcast-writing, and
+          series-synthesis Activities.
+        </p>
+        <p class="research-output__run-id">
+          Workflow <code>{runRecord.workflow_id}</code><br />
+          Run <code>{runRecord.run_id}</code>
+        </p>
+      </header>
       <dl>
-        <div><dt>Episodes</dt><dd>10 complete</dd></div>
-        <div><dt>Failures</dt><dd>0</dd></div>
-        <div><dt>Sources</dt><dd>20 records</dd></div>
-        <div><dt>Products</dt><dd>32 documents</dd></div>
+        <div><dt>Episodes</dt><dd><strong>{liveManifest.completed_episode_keys.length}</strong><span>complete</span></dd></div>
+        <div><dt>Failures</dt><dd><strong>{liveManifest.failed_episode_keys.length}</strong><span>failed</span></dd></div>
+        <div><dt>Retrieved</dt><dd><strong>{sourceCount}</strong><span>deduplicated records</span></dd></div>
+        <div><dt>Products</dt><dd><strong>{products.filter((product) => product.run === "live").length}</strong><span>documents</span></dd></div>
       </dl>
     </section>
 
     <section class="research-output__method" aria-labelledby="pipeline-heading">
       <header>
-        <p class="kicker">How each product was made</p>
+        <p class="kicker">How the live collection was made</p>
         <h2 id="pipeline-heading">The Activity chain</h2>
       </header>
       <ol>
-        <li><code>research_episode</code><span>stores SciX-shaped and Code Intelligence Digest-shaped evidence, then writes one research artifact.</span></li>
-        <li><code>write_deep_dive</code><span>turns that research into the source document for the episode.</span></li>
-        <li><code>write_podcast_script</code><span>preserves the original six-segment podcast format and citation contract.</span></li>
-        <li><code>write_series_review</code><span>synthesizes the five completed deep dives in each series.</span></li>
-        <li><code>write_pipeline_manifest</code><span>indexes every stage, source record, content hash, and artifact reference.</span></li>
+        <li><code>research_episode</code><span>runs five SciX and three Code Intelligence Digest searches, deduplicates the results, and synthesizes a grounded research brief.</span></li>
+        <li><code>write_deep_dive</code><span>reads the saved research inside the Activity and writes the 1,500–2,500 word source document.</span></li>
+        <li><code>write_podcast_script</code><span>turns the deep dive into the original six-segment, approximately 3,000-word episode format.</span></li>
+        <li><code>write_series_review</code><span>synthesizes the completed deep dives selected for each series.</span></li>
+        <li><code>write_pipeline_manifest</code><span>indexes the completed stages, source records, hashes, and artifact references.</span></li>
       </ol>
     </section>
 
-    <aside class="research-output__note">
-      <p class="kicker">Evidence boundary</p>
-      <p>
-        The Temporal-produced documents below are fixture-backed demonstration
-        editions. They exercise the complete Workflow and artifact path without
-        depending on local index health. The historical products are the
-        long-form material made by the original live pipeline.
-      </p>
-    </aside>
-
-    <section class="research-output__index" aria-labelledby="output-index">
+    <section class="research-output__reviews" aria-labelledby="reviews-heading">
       <header>
-        <p class="kicker">All deliverables</p>
-        <h2 id="output-index">Two series, five episodes each</h2>
+        <p class="kicker">Literature reviews</p>
+        <h2 id="reviews-heading">Original context and selected-run synthesis</h2>
+        <p>
+          The historical review covers all five episodes in this series. The
+          live synthesis covers only the selected episode and is labeled
+          separately.
+        </p>
       </header>
-      <div class="research-output__series">
-        {
-          series.map((item) => (
-            <section>
-              <h3>{item.name}</h3>
-              <div class="research-output__review-links">
-                <a href={item.review}>Temporal fixture review</a>
-                <a href={item.originalReview}>Original long-form review</a>
-              </div>
-              <ol>
-                {item.scripts.map(([title, filename]) => (
-                  <li>
-                    <span>{title}</span>
-                    <span>
-                      <a href={`${outputRoot}/scripts/${filename}`}>Temporal</a>
-                      <a href={`${beforeRoot}/${item.folder}/${filename}`}>Original</a>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))
-        }
+      {
+        reviews.map((review) => (
+          <div class="research-output__review-row">
+            <h3>{review.name}</h3>
+            <span>
+              {review.original && <a href={review.original.href}>Original five-episode review</a>}
+              {review.live && <a href={review.live.href}>Selected-run synthesis</a>}
+            </span>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="research-output__episodes" aria-labelledby="episodes-heading">
+      <header>
+        <p class="kicker">Episode collection</p>
+        <h2 id="episodes-heading">Every stage of the live branch</h2>
+      </header>
+      <div class="research-output__table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Episode</th>
+              <th>Original JavaScript run</th>
+              <th colspan="3">Live Temporal Workflow</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Podcast script</th>
+              <th>Research notes</th>
+              <th>Deep dive</th>
+              <th>Podcast script</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              episodes.map((episode) => (
+                <tr>
+                  <th scope="row" data-label="Episode">{episode.title}</th>
+                  <td data-label="Original podcast script">{episode.original && <a href={episode.original.href}>Read</a>}</td>
+                  <td data-label="Live research notes">{episode.research && <a href={episode.research.href}>Read</a>}</td>
+                  <td data-label="Live deep dive">{episode.deepDive && <a href={episode.deepDive.href}>Read</a>}</td>
+                  <td data-label="Live podcast script">{episode.script && <a href={episode.script.href}>Read</a>}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <section class="research-output__reports" aria-labelledby="rendered-reviews">
+    <section class="research-output__fixture" aria-labelledby="fixture-heading">
       <header>
-        <p class="kicker">Temporal-produced research output</p>
-        <h2 id="rendered-reviews">The two series reviews and all cited sources</h2>
+        <p class="kicker">Durability fixture run</p>
+        <h2 id="fixture-heading">Recovery evidence with fixed inputs</h2>
+        <p>
+          This run tests Workflow shape, retries, artifact sequencing, and
+          recovery without measuring writing quality.
+        </p>
       </header>
-      <article class="prose">
-        <TemporalMasReview />
-      </article>
-      <article class="prose">
-        <TemporalCodeReview />
-      </article>
-    </section>
-
-    <footer class="research-output__footer">
-      <p>
-        The <a href={`${outputRoot}/manifest.json`}>manifest</a> retains the
-        source lane, locator, retrieval time, content hash, and artifact
-        reference for every episode.
+      <details>
+        <summary>View fixture artifacts</summary>
+        <ul>
+          {
+            fixtureProducts.map((product) => (
+              <li>
+                <span>{product.title}</span>
+                <a href={product.href}>{product.kind}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
+      <p class="research-output__manifest">
+        <a href={`${fixtureRoot}/manifest.json`}>Download the fixture manifest</a>
       </p>
-    </footer>
+    </section>
   </article>
 </PageLayout>
 
@@ -154,189 +283,255 @@ const series = [
   .research-output__nav {
     display: flex;
     flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
     border-block: var(--border-hairline);
   }
 
   .research-output__nav a {
-    min-height: 3.5rem;
-    padding: var(--space-xs) var(--space-s);
-    display: flex;
-    align-items: center;
-    border-inline-end: var(--border-hairline);
-    color: var(--color-text);
-    text-decoration: none;
-  }
-
-  .research-output__nav a:hover,
-  .research-output__index a:hover,
-  .research-output__footer a:hover {
-    color: var(--color-accent);
+    padding-block: var(--space-s);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-underline-offset: 0.2em;
   }
 
   .research-output__summary,
   .research-output__method,
-  .research-output__index > header,
-  .research-output__reports > header {
+  .research-output__reviews > header,
+  .research-output__episodes > header,
+  .research-output__fixture > header {
     display: grid;
-    grid-template-columns: minmax(15rem, 4fr) minmax(0, 7fr);
-    gap: var(--space-xl);
+    grid-template-columns: minmax(0, 0.72fr) minmax(15rem, 0.28fr);
+    gap: clamp(var(--space-xl), 7vw, var(--space-3xl));
+    align-items: end;
   }
 
-  h2,
-  h3,
-  .kicker {
-    margin: 0;
+  .research-output__summary {
+    grid-template-columns: minmax(0, 0.62fr) minmax(20rem, 0.38fr);
+    gap: clamp(var(--space-l), 5vw, var(--space-2xl));
   }
 
-  .kicker {
-    margin-block-end: var(--space-xs);
+  .research-output__summary header p:last-child,
+  .research-output__fixture header p:last-child {
+    max-width: 64ch;
+    color: var(--color-text-secondary);
+  }
+
+  .research-output__run-id {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    overflow-wrap: anywhere;
   }
 
   .research-output__summary dl {
-    margin: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border-top: var(--border-hairline);
-    border-left: var(--border-hairline);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-block-start: var(--border-hairline);
   }
 
   .research-output__summary dl div {
-    padding: var(--space-s);
-    border-right: var(--border-hairline);
-    border-bottom: var(--border-hairline);
+    padding: var(--space-s) 0;
+    border-block-end: var(--border-hairline);
   }
 
   .research-output__summary dt {
-    color: var(--color-text-secondary);
-    font: var(--font-label);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
     text-transform: uppercase;
   }
 
   .research-output__summary dd {
     margin: var(--space-2xs) 0 0;
+  }
+
+  .research-output__summary dd strong {
+    display: block;
     font-family: var(--font-display);
-    font-size: var(--step-2);
+    font-size: var(--step-1);
+    font-weight: var(--weight-normal);
+  }
+
+  .research-output__summary dd span {
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
   }
 
   .research-output__method ol {
-    margin: 0;
+    grid-column: 1 / -1;
+    margin: var(--space-l) 0 0;
     padding: 0;
+    counter-reset: activity;
     list-style: none;
+    border-block-start: var(--border-hairline);
   }
 
   .research-output__method li {
-    padding-block: var(--space-s);
     display: grid;
-    grid-template-columns: minmax(14rem, 1fr) 2fr;
-    gap: var(--space-s);
-    border-top: var(--border-hairline);
-  }
-
-  .research-output__method li:last-child {
-    border-bottom: var(--border-hairline);
-  }
-
-  .research-output__method li span,
-  .research-output__note p:last-child,
-  .research-output__footer p {
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
-  }
-
-  .research-output__note {
-    padding: var(--space-l);
-    border: var(--border-hairline);
-    background: var(--color-bg-subtle);
-  }
-
-  .research-output__note p:last-child {
-    max-width: var(--measure);
-    margin: 0;
-    font-size: var(--step-1);
-  }
-
-  .research-output__series {
-    margin-block-start: var(--space-xl);
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
     gap: var(--space-xl);
+    padding-block: var(--space-m);
+    border-block-end: var(--border-hairline);
+    counter-increment: activity;
   }
 
-  .research-output__series > section {
-    border-top: 2px solid var(--color-text);
+  .research-output__method li code::before {
+    margin-inline-end: var(--space-s);
+    color: var(--color-accent);
+    content: counter(activity, decimal-leading-zero);
   }
 
-  .research-output__series h3 {
-    padding-block: var(--space-s);
-    font-size: var(--step-2);
+  .research-output__method li span {
+    color: var(--color-text-secondary);
   }
 
-  .research-output__review-links {
+  .research-output__review-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-xl);
+    align-items: baseline;
+    padding-block: var(--space-m);
+    border-block-end: var(--border-hairline);
+  }
+
+  .research-output__reviews > header,
+  .research-output__episodes > header,
+  .research-output__fixture > header {
+    display: block;
+    margin-block-end: var(--space-l);
+  }
+
+  .research-output__review-row h3 {
+    margin: 0;
+  }
+
+  .research-output__review-row span {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-s);
-    padding-block-end: var(--space-s);
+    gap: var(--space-l);
   }
 
-  .research-output__index a,
-  .research-output__footer a {
-    color: var(--color-text);
+  .research-output a {
     text-underline-offset: 0.2em;
   }
 
-  .research-output__series ol {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: var(--border-hairline);
+  .research-output__table-wrap {
+    overflow-x: auto;
   }
 
-  .research-output__series li {
-    padding-block: var(--space-xs);
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-s);
-    border-bottom: var(--border-hairline);
+  table {
+    width: 100%;
+    min-width: 58rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
   }
 
-  .research-output__series li > span:last-child {
-    display: flex;
-    gap: var(--space-xs);
-    white-space: nowrap;
-  }
-
-  .research-output__reports > article {
-    margin-block-start: var(--space-xl);
-    padding: clamp(var(--space-m), 4vw, var(--space-xl));
+  th,
+  td {
+    padding: var(--space-s);
     border: var(--border-hairline);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
     background: var(--color-bg-subtle);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
   }
 
-  .research-output__reports :global(h1) {
-    font-size: var(--step-3);
+  tbody th {
+    max-width: 22rem;
+    font-weight: 560;
   }
 
-  .research-output__footer {
-    padding-block-start: var(--space-m);
-    border-top: var(--border-hairline);
+  details {
+    border-block: var(--border-hairline);
+  }
+
+  summary {
+    padding-block: var(--space-m);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  details ul {
+    margin: 0;
+    padding: 0 0 var(--space-m);
+    list-style: none;
+  }
+
+  details li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-l);
+    padding-block: var(--space-xs);
+    border-block-start: var(--border-hairline);
+  }
+
+  details li a,
+  .research-output__manifest {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .research-output__manifest {
+    margin-block-start: var(--space-m);
   }
 
   @media (max-width: 760px) {
     .research-output__summary,
-    .research-output__method,
-    .research-output__index > header,
-    .research-output__reports > header,
-    .research-output__series {
+    .research-output__method {
       grid-template-columns: 1fr;
     }
 
     .research-output__method li {
       grid-template-columns: 1fr;
+      gap: var(--space-xs);
     }
 
-    .research-output__series li {
-      align-items: flex-start;
-      flex-direction: column;
+    .research-output__review-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+    }
+
+    table {
+      display: block;
+      min-width: 0;
+    }
+
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    tbody,
+    tr {
+      display: block;
+    }
+
+    th,
+    td {
+      display: grid;
+      grid-template-columns: minmax(8rem, 0.46fr) minmax(0, 1fr);
+      gap: var(--space-s);
+      border-block-start: 0;
+    }
+
+    th::before,
+    td::before {
+      color: var(--color-text-muted);
+      content: attr(data-label);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      font-weight: var(--weight-normal);
     }
   }
 </style>
