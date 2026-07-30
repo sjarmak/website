@@ -13,8 +13,10 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.match(source, /Temporal lets us bring a research agent back to life/);
   assert.match(source, /noindex=\{true\}/);
   assert.match(source, /temporal-literature-review-demo\.mp4/);
+  assert.doesNotMatch(source, /52 seconds\./);
   assert.match(source, /Open the deck/);
   assert.match(source, /Read the README/);
+  assert.match(source, /Read the research/);
   assert.doesNotMatch(source, /Read the blog/);
   assert.equal(
     existsSync(path.join(ROOT, "src/pages/temporal-research-agent/blog.astro")),
@@ -33,6 +35,38 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.match(source, /The Workflow owns durable branch state/);
   assert.match(source, /The Temporal\s+Service persists Event History/);
   assert.doesNotMatch(source, /Temporal owns/);
+});
+
+test("walkthrough includes the completed research product and provenance", () => {
+  const source = readFileSync(PAGE, "utf8");
+  const report = readFileSync(
+    path.join(ROOT, "public/temporal-research-agent/research-output/report.md"),
+    "utf8",
+  );
+  const renderedReport = readFileSync(
+    path.join(ROOT, "src/components/temporal-research-agent/ResearchReport.md"),
+    "utf8",
+  );
+  const manifest = JSON.parse(
+    readFileSync(
+      path.join(ROOT, "public/temporal-research-agent/research-output/manifest.json"),
+      "utf8",
+    ),
+  );
+
+  assert.match(source, /The research product/);
+  assert.match(source, /fixture-backed/);
+  assert.match(source, /4 completed/);
+  assert.match(source, /0 failed/);
+  assert.match(source, /8 cited\s+sources/);
+  assert.match(source, /<ResearchReport \/>/);
+  assert.equal(renderedReport.trim(), report.trim());
+  assert.equal(manifest.completed_angles.length, 4);
+  assert.equal(manifest.failed_angles.length, 0);
+  assert.equal(
+    manifest.branches.reduce((count, branch) => count + branch.sources.length, 0),
+    8,
+  );
 });
 
 test("brief maps evidence to all four evaluation criteria without appearing on the page", () => {
@@ -81,6 +115,8 @@ test("packaged media, deck, code, and document source exist", () => {
     "public/temporal-research-agent/deck-assets/workflow-completed.png",
     "public/temporal-research-agent/deck-assets/activity-attempt-two.png",
     "public/temporal-research-agent/demo/out/temporal-literature-review-demo.mp4",
+    "public/temporal-research-agent/research-output/report.md",
+    "public/temporal-research-agent/research-output/manifest.json",
     "public/temporal-research-agent/before/phaseE_workflow.excerpt.js",
     "public/temporal-research-agent/src/durable_research/workflow.py",
     "public/temporal-research-agent/src/durable_research/activities.py",
@@ -91,6 +127,7 @@ test("packaged media, deck, code, and document source exist", () => {
     "public/temporal-research-agent/blog.md",
     "public/temporal-research-agent/README.md",
     "src/components/temporal-research-agent/Readme.md",
+    "src/components/temporal-research-agent/ResearchReport.md",
   ]) {
     assert.equal(existsSync(path.join(ROOT, relativePath)), true, relativePath);
   }

@@ -1,0 +1,117 @@
+{
+  "branches": [
+    {
+      "angle": "durable-execution",
+      "error": null,
+      "section_ref": "review-56ec9b0ec0d8/sections/durable-execution.md",
+      "sources": [
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/9fd8c624758aa4372e057f299ee80191ea05e6d527f7f88322604b1ab28ee3ad.json",
+          "content_hash": "9fd8c624758aa4372e057f299ee80191ea05e6d527f7f88322604b1ab28ee3ad",
+          "lane": "scix",
+          "locator": "2025arXiv250313657C",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "2025arXiv250313657C",
+          "title": "Why Do Multi-Agent LLM Systems Fail?"
+        },
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/15184df98907187399cd3807380a70a170b37f2cce0b5a07d0d84463f11f2495.json",
+          "content_hash": "15184df98907187399cd3807380a70a170b37f2cce0b5a07d0d84463f11f2495",
+          "lane": "digest",
+          "locator": "https://docs.temporal.io/workflows#durable-execution",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "temporal-durable-execution",
+          "title": "Temporal: Durable Execution"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "angle": "tool-reliability",
+      "error": null,
+      "section_ref": "review-56ec9b0ec0d8/sections/tool-reliability.md",
+      "sources": [
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/d0a0c153885ff365eb3d9ca942a9a8b0aea6fa64c7fecdd24c6a3d8ea6edf985.json",
+          "content_hash": "d0a0c153885ff365eb3d9ca942a9a8b0aea6fa64c7fecdd24c6a3d8ea6edf985",
+          "lane": "scix",
+          "locator": "2026arXiv260411641L",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "2026arXiv260411641L",
+          "title": "CodeTracer"
+        },
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/8c5c8b4aa4473dcf0f6d8b0f7a28941ad98dd689d8f8d84f13ba8325dd6e47fc.json",
+          "content_hash": "8c5c8b4aa4473dcf0f6d8b0f7a28941ad98dd689d8f8d84f13ba8325dd6e47fc",
+          "lane": "digest",
+          "locator": "https://docs.temporal.io/activities",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "temporal-activities",
+          "title": "Temporal: Activities"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "angle": "state-and-memory",
+      "error": null,
+      "section_ref": "review-56ec9b0ec0d8/sections/state-and-memory.md",
+      "sources": [
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/3ff7c0b309b9d38edcf19984e221bb1c52b3a07d82c6f2879c1cfcef3ff332ea.json",
+          "content_hash": "3ff7c0b309b9d38edcf19984e221bb1c52b3a07d82c6f2879c1cfcef3ff332ea",
+          "lane": "scix",
+          "locator": "2024arXiv240907429Z",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "2024arXiv240907429Z",
+          "title": "Agent Workflow Memory"
+        },
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/4d5f28af9213db72eb19856616f0a7b18a58d4077b0f36a86e5de3e5038cf8f4.json",
+          "content_hash": "4d5f28af9213db72eb19856616f0a7b18a58d4077b0f36a86e5de3e5038cf8f4",
+          "lane": "digest",
+          "locator": "https://docs.temporal.io/workflow-execution/event",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "temporal-event-history",
+          "title": "Temporal: Event History"
+        }
+      ],
+      "status": "complete"
+    },
+    {
+      "angle": "evaluation",
+      "error": null,
+      "section_ref": "review-56ec9b0ec0d8/sections/evaluation.md",
+      "sources": [
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/5bff71c6e17e47647dc29a8d7039d096785808e60de8a39b76e85fa5f1f0bdd9.json",
+          "content_hash": "5bff71c6e17e47647dc29a8d7039d096785808e60de8a39b76e85fa5f1f0bdd9",
+          "lane": "scix",
+          "locator": "2026arXiv260528732D",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "2026arXiv260528732D",
+          "title": "MemTrace"
+        },
+        {
+          "artifact_ref": "review-56ec9b0ec0d8/evidence/fc8a26e04fce9b405baaf24125d1eaf681ffe55538e68e3d0b46292d0dfcd0ce.json",
+          "content_hash": "fc8a26e04fce9b405baaf24125d1eaf681ffe55538e68e3d0b46292d0dfcd0ce",
+          "lane": "digest",
+          "locator": "https://python.temporal.io/temporalio.testing.WorkflowEnvironment.html",
+          "retrieved_at": "2026-07-29T00:00:00Z",
+          "source_id": "temporal-testing",
+          "title": "Temporal Python SDK: Testing"
+        }
+      ],
+      "status": "complete"
+    }
+  ],
+  "completed_angles": [
+    "durable-execution",
+    "tool-reliability",
+    "state-and-memory",
+    "evaluation"
+  ],
+  "failed_angles": [],
+  "review_id": "review-56ec9b0ec0d8",
+  "topic": "Durable literature-review agents"
+}

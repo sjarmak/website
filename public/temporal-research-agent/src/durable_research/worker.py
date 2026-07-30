@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+from datetime import timedelta
 
 from temporalio.client import Client
 from temporalio.worker import Worker
@@ -24,6 +25,7 @@ async def run_worker() -> None:
         task_queue=TASK_QUEUE,
         workflows=[LiteratureReviewWorkflow],
         activities=[research_angle, verify_evidence, synthesize_section, finalize_review],
+        graceful_shutdown_timeout=timedelta(seconds=30),
     )
     print(f"worker ready: pid={os.getpid()} queue={TASK_QUEUE} server={address}", flush=True)
     print(f"demo recovery: kill -9 {os.getpid()}, then run the worker again", flush=True)

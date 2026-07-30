@@ -21,6 +21,8 @@ from durable_research.models import (
     VerifyRequest,
 )
 
+_HEARTBEAT_INTERVAL_SECONDS = 10.0
+
 
 @activity.defn(name="research_angle")
 async def research_angle(request: BranchRequest) -> BranchResult:
@@ -34,13 +36,18 @@ async def research_angle(request: BranchRequest) -> BranchResult:
         raise RuntimeError(f"injected transient failure for {request.angle.key}")
     store = ArtifactStore(request.review.artifact_root)
     if request.review.mode == "fixture":
-        sources = _fixture_sources(request)
+        sources = await asyncio.to_thread(_fixture_sources, request)
     else:
-        sources = await _live_sources(request, store)
+        sources = await _live_sources_with_heartbeats(request, store)
 
     refs: list[SourceRef] = []
     for raw in sources:
-        artifact = store.put_json(request.review_id, "evidence", raw)
+        artifact = await asyncio.to_thread(
+            store.put_json,
+            request.review_id,
+            "evidence",
+            raw,
+        )
         refs.append(
             SourceRef(
                 source_id=str(raw["id"]),
@@ -55,7 +62,8 @@ async def research_angle(request: BranchRequest) -> BranchResult:
                 ),
             )
         )
-    index = store.put_json(
+    index = await asyncio.to_thread(
+        store.put_json,
         request.review_id,
         f"branches/{request.angle.key}",
         {"angle": request.angle.key, "sources": [ref.__dict__ for ref in refs]},
@@ -80,7 +88,7 @@ async def verify_evidence(request: VerifyRequest) -> BranchResult:
     for source in branch.sources:
         if not source.source_id or not source.title or not source.locator:
             raise ValueError(f"incomplete source metadata in {branch.angle_key}")
-        content = store.read_text(source.artifact_ref)
+        content = await asyncio.to_thread(store.read_text, source.artifact_ref)
         digest = hashlib.sha256(content.encode()).hexdigest()
         if digest != source.content_hash:
             raise ValueError(f"evidence hash mismatch for {source.source_id}")
@@ -103,7 +111,7 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
     findings: list[str] = []
     references: list[str] = []
     for source in branch.sources:
-        raw = store.read_json(source.artifact_ref)
+        raw = await asyncio.to_thread(store.read_json, source.artifact_ref)
         summary = str(raw.get("summary") or raw.get("text") or "No summary returned.").strip()
         findings.append(f"- {summary} [{source.source_id}]")
         references.append(f"- [{source.source_id}] {source.title}. {source.locator}")
@@ -117,7 +125,7 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
         + "\n"
     )
     path = f"{_review_id_from_ref(branch.evidence_ref)}/sections/{branch.angle_key}.md"
-    artifact = store.put_named_text(path, body)
+    artifact = await asyncio.to_thread(store.put_named_text, path, body)
     return BranchResult(
         angle_key=branch.angle_key,
         status="complete",
@@ -135,13 +143,16 @@ async def finalize_review(request: FinalizeRequest) -> ReviewResult:
         branch.angle_key for branch in request.branches if branch.status == "complete"
     )
     failed = tuple(branch.angle_key for branch in request.branches if branch.status == "failed")
-    sections = [
-        store.read_text(branch.section_ref)
-        for branch in request.branches
-        if branch.status == "complete" and branch.section_ref
-    ]
+    sections = []
+    for branch in request.branches:
+        if branch.status == "complete" and branch.section_ref:
+            sections.append(await asyncio.to_thread(store.read_text, branch.section_ref))
     report = f"# {request.review.topic}\n\n" + "\n".join(sections)
-    report_ref = store.put_named_text(f"{request.review_id}/report.md", report)
+    report_ref = await asyncio.to_thread(
+        store.put_named_text,
+        f"{request.review_id}/report.md",
+        report,
+    )
     manifest = {
         "review_id": request.review_id,
         "topic": request.review.topic,
@@ -158,7 +169,8 @@ async def finalize_review(request: FinalizeRequest) -> ReviewResult:
             for branch in request.branches
         ],
     }
-    manifest_ref = store.put_named_text(
+    manifest_ref = await asyncio.to_thread(
+        store.put_named_text,
         f"{request.review_id}/manifest.json",
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
     )
@@ -233,6 +245,33 @@ async def _live_sources(
             request_id=digest_call.request_id,
         ),
     ]
+
+
+async def _live_sources_with_heartbeats(
+    request: BranchRequest,
+    store: ArtifactStore,
+) -> list[dict[str, Any]]:
+    retrieval = asyncio.create_task(_live_sources(request, store))
+    try:
+        while True:
+            if activity.in_activity():
+                activity.heartbeat(
+                    {
+                        "angle": request.angle.key,
+                        "stage": "retrieval",
+                    }
+                )
+            try:
+                return await asyncio.wait_for(
+                    asyncio.shield(retrieval),
+                    timeout=_HEARTBEAT_INTERVAL_SECONDS,
+                )
+            except TimeoutError:
+                continue
+    finally:
+        if not retrieval.done():
+            retrieval.cancel()
+            await asyncio.gather(retrieval, return_exceptions=True)
 
 
 def _normalize_sources(

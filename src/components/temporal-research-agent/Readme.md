@@ -107,6 +107,31 @@ Worker receives new Activity attempts. The client that started the Workflow
 keeps waiting on the same Workflow ID and run ID. The final report contains
 all four research angles.
 
+## Pipeline outcome
+
+The recorded Workflow completed all four research angles, failed none, and
+produced a Markdown report backed by eight cited sources plus a JSON
+provenance manifest:
+
+- [Research report](/temporal-research-agent/research-output/report.md)
+- [Provenance manifest](/temporal-research-agent/research-output/manifest.json)
+
+The research product answers four questions about durable agent pipelines. It
+finds that orchestration decisions must survive process loss, unreliable tools
+need separately retryable and observable boundaries, large evidence should
+stay outside Workflow History, and recovery tests must check output
+correctness rather than completion alone. The manifest connects each finding
+to its SciX or Code Intelligence Digest lane, source locator, content hash,
+retrieval timestamp, and stored evidence artifact.
+
+This accepted recording used fixture-backed, SciX-shaped and Digest-shaped
+evidence. That was a deliberate presentation choice: the run proves that the
+Workflow, Activities, retries, artifact writes, report, and provenance survive
+a Worker failure without making the recording depend on local index health.
+The separate live-provider smoke test below proves that both MCP transports
+worked on the verification date, but it is not the source of the recorded
+four-angle report.
+
 On the configured workstation, the internal recovery harness is:
 
 ```bash
@@ -293,6 +318,32 @@ citation lineage. The digest is the place to see what practitioners are
 building and struggling with now. A final claim can cite one lane or compare
 both, while the manifest retains the source and retrieval lane.
 
+## Design considerations and tradeoffs
+
+This is an intentionally small, inspectable Temporal application. The choices
+that make the demo reliable also define where a production implementation
+would need to evolve.
+
+| Consideration | Choice in this sample | Benefit and tradeoff |
+|---|---|---|
+| Workflow and Activity boundary | The Workflow owns branch order, concurrency, the completion threshold, and finalization. Activities own MCP calls, time, and artifact I/O. | Workflow replay stays deterministic. Three Activities per branch create more History events, but retrieval, verification, and synthesis can retry independently. |
+| Async Activities and blocking I/O | MCP transport remains asynchronous; filesystem and request-journal operations run through `asyncio.to_thread`. Live retrieval heartbeats throughout the MCP wait. | One Worker can make concurrent MCP calls without blocking its event loop, and cancellation or Worker loss is detected through the 30-second Heartbeat Timeout. Any new library added to an async Activity must receive the same blocking-I/O audit. |
+| Partial results | A failed branch becomes a typed result, and finalization requires a configurable minimum number of completed angles. | A transiently unavailable source lane need not discard useful research. Consumers must still inspect `failed_angles`; completion does not imply that every requested angle succeeded. |
+| External-call deduplication | A stable logical request ID and write-once response journal suppress retries after the response is stored. | Read-only searches are safe to repeat. External-call deduplication still has a crash window between provider success and journal persistence; paid or mutating providers must honor the key or supply a transactional equivalent. |
+| Artifact durability | Full evidence, sections, report, and manifest live outside Event History; only compact references and hashes cross the Workflow boundary. | History remains small and replayable. The bundled filesystem store is workstation-local, not protected by the Temporal Service, and would need shared durable object storage or a database for multi-host Workers. |
+| Retry policy | The demo uses three attempts with 100 ms initial backoff and a five-second cap. | Failures are visible quickly in a short presentation. A production Worker should use Activity-specific policies, especially slower backoff and rate-limit handling for paid APIs or MCP providers. |
+| Activity names | Workflow code schedules Activities by registered string name. | The Workflow module imports only deterministic models and remains isolated from I/O modules. The cost is less call-site type checking than direct function references, so registration and integration tests protect the name contract. |
+| Worker deployment and versioning | One Worker hosts the Workflow and Activities, with a 30-second graceful shutdown window. The kill demo deliberately uses `SIGKILL`, which bypasses graceful shutdown. | The package is easy to understand and the recovery boundary is real. Production deployment would normally separate or tune Workers under load and use [Worker Versioning](https://docs.temporal.io/develop/python/workers/run-worker-process#run-a-versioned-worker) before changing replay-sensitive Workflow code. |
+| History growth | Four bounded branches complete in one Workflow Execution. | No Continue-As-New complexity is needed for this short run. An open-ended review with many branches, signals, or repeated refreshes should use [Continue-As-New](https://docs.temporal.io/develop/python/continue-as-new) before Event History becomes large. |
+| Fixture versus live evidence | The recording uses fixed evidence; live mode uses workstation-only SciX and Digest MCP servers. | The failure demo is reproducible on the configured workstation. The recorded report demonstrates orchestration and provenance, not the freshness or quality of a live literature search. |
+
+These choices follow Temporal's Python guidance on
+[deterministic Workflow sandboxing](https://docs.temporal.io/develop/python/best-practices/python-sdk-sandbox),
+[async Activity safety](https://docs.temporal.io/develop/python/best-practices/python-sdk-sync-vs-async),
+[Activity idempotency](https://docs.temporal.io/develop/python/best-practices/error-handling#make-activities-idempotent),
+[heartbeats](https://docs.temporal.io/encyclopedia/detecting-activity-failures#activity-heartbeat),
+and [graceful Worker shutdown](https://docs.temporal.io/develop/python/workers/run-worker-process#shut-down-a-worker).
+
 ## Retry and idempotency behavior
 
 Pass `--fail-once` to make one retrieval Activity fail on its first attempt:
@@ -355,7 +406,7 @@ citation verification, partial branch failure, the progress query, and
 decoded Event History. Workflow tests use the Python SDK's
 [`WorkflowEnvironment.start_time_skipping()`](https://python.temporal.io/temporalio.testing.WorkflowEnvironment.html).
 
-The current verified result is 64 passing tests with 84.49% branch-aware
+The current verified result is 67 passing tests with 84.64% branch-aware
 coverage. The published walkthrough supports inspection of the source and
 captured evidence. Running either the demo or live MCP integration still
 requires the configured workstation.

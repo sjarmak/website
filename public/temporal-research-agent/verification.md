@@ -30,8 +30,8 @@ uv run mypy src
 Result:
 
 ```text
-64 passed
-84.49% branch-aware coverage
+67 passed
+84.64% branch-aware coverage
 All checks passed
 Success: no issues found in 15 source files
 ```
@@ -41,6 +41,28 @@ compact-history test decoded all Event History payloads, found the external
 artifact path, and did not find the 20 KB source-body sentinel. External-call
 tests verify stable request IDs, journal reuse, and provider idempotency-key
 forwarding.
+
+## Temporal Python best-practice audit
+
+Audited on 2026-07-30 against Temporal's official Python guidance for
+deterministic Workflow sandboxing, async Activity safety, idempotency,
+heartbeats, timeouts, testing, and graceful Worker shutdown.
+
+The audit retained the deterministic Workflow and compact-history boundary,
+then made three implementation changes:
+
+- synchronous filesystem and request-journal work now runs through
+  `asyncio.to_thread` instead of blocking the Worker's async event loop;
+- live MCP retrieval emits heartbeats throughout the external wait, not only
+  during the recorded demo delay;
+- the Worker now has a 30-second graceful shutdown window, while the recovery
+  demonstration still uses `SIGKILL` to prove crash recovery.
+
+New tests exercise the off-thread fixture read and repeated live-retrieval
+heartbeats. The remaining production considerations, including shared artifact
+storage, provider-side deduplication, Activity-specific retry policies, Worker
+Versioning, and Continue-As-New for long histories, are explicit in the
+README rather than presented as capabilities of this workstation demo.
 
 ## Agent skill lifecycle and recovery
 

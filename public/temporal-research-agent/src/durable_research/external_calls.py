@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 from collections.abc import Awaitable, Callable
@@ -46,7 +47,7 @@ async def journaled_call_tool(
     request_id = _request_id(request)
     journal_ref = f"{review_id}/requests/{request_id}.json"
     try:
-        envelope = store.read_json(journal_ref)
+        envelope = await asyncio.to_thread(store.read_json, journal_ref)
     except FileNotFoundError:
         envelope = None
     if envelope is not None:
@@ -70,7 +71,8 @@ async def journaled_call_tool(
             )
         outgoing[idempotency_argument] = request_id
     response = await caller(server, tool, outgoing)
-    store.put_named_text(
+    await asyncio.to_thread(
+        store.put_named_text,
         journal_ref,
         json.dumps(
             {
