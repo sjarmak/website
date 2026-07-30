@@ -18,6 +18,7 @@ export default defineConfig({
   ],
   redirects: {
     "/prototypes/concepts": "/concepts",
+    "/temporal-research-agent/blog": "/temporal-research-agent/readme",
   },
   prefetch: {
     prefetchAll: true,

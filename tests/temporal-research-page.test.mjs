@@ -20,6 +20,11 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
     existsSync(path.join(ROOT, "src/pages/temporal-research-agent/blog.astro")),
     false,
   );
+  const config = readFileSync(path.join(ROOT, "astro.config.mjs"), "utf8");
+  assert.match(
+    config,
+    /"\/temporal-research-agent\/blog": "\/temporal-research-agent\/readme"/,
+  );
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
   assert.doesNotMatch(source, /researchPrompt/);
