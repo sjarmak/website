@@ -1768,6 +1768,37 @@
           "why": "This branch is about the repository as a world to traverse and the fork between retrieve-better-snippets and query-a-structured-model; ProjAgent sits on the retrieval side but adds behavior-level matching plus a static-analysis repair loop, showing repo-scale context assembly needs signals beyond surface similarity and a grounding check on the output."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260724882Q",
+      "title": "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents",
+      "firstAuthor": "Qin, Bowen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.24882",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260724882Q/abstract",
+      "branches": [
+        "repo-scale",
+        "techniques",
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "The benchmark redefines the retrieval unit and the relevance target for repository scale: given a workflow-derived query and a repository frozen at its base commit, rank the files an agent needs to read next. Relevance is the next useful step in the software task, not query-to-file textual similarity, and the four positive tasks encode four different shapes of that indirection. code2test asks for the tests related to an implementation change, comment2context for context files beyond the reviewed file, trace2code for the root-cause source behind reproduced failure output rather than the visible test frames it mentions, and edit2ripple for the additional files a given anchored change touches. Interactive exploration does not remove the need to measure this layer, it only changes the cost model, and the logged trajectories show what that costs: an OpenAI strict-context agent reads 3.2 files per sample and Codex CLI recovered contexts show about 6 file/path events per sample, yet over the 287 code2test, comment2context and trace2code samples the agents never touch any gold file on 35.2% of OpenAI samples and 27.2 to 29.3% of Codex samples. Where gold is eventually reached, the median first hit is step 2 for OpenAI and step 3 for Codex.",
+          "why": "This branch treats a repository as a world to navigate rather than a file to read, and asks how the retrieve-better-snippets and query-a-structured-model camps relate with agentic navigation moving between them. The paper gives that navigation a measurable upstream surface: a third of agent trajectories never reach the file that mattered, which is a navigation failure that end-to-end patch scores absorb silently. Its own scope note is explicit that this is a component-level claim, not evidence that retrieval dominates patch failure."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "No retrieval family dominates, and the reversals are the finding rather than the noise. Over all 345 positive samples Qwen3-Embedding-4B takes the best sample-weighted MRR, Qwen3-Embedding-8B the best Recall@20, and vectorless RepoMap the best Budgeted Context Yield at an 8k token budget, so the winner changes with the metric. Per-task winners diverge further: on trace2code, RepoMap leads on both MRR and Recall@20, plain lexical retrieval beats most embedding baselines on MRR, and Qwen3-4B posts a trace2code MRR of 0.0827 despite leading overall MRR. On edit2ripple the two Qwen model sizes swap order across context budgets, with 4B ahead at a fully packed 4k and 8B ahead at a fully packed 8k. Lexical matching stays competitive with RepoMap on MRR and BCY while neither beats the embedding models on Recall@20. Budgeted Context Yield is the metric that makes this legible, asking how much labeled gold context actually fits inside a fixed token budget after a ranker has ordered files, rather than scoring rank position in the abstract.",
+          "why": "This branch models techniques as an additive ladder where lexical owns rare tokens, dense embeddings own intent, structural methods own behavior, and cascades place each where its cost is justified. The results are a direct measurement of that additivity: the trace2code case, where a failure trace names a test file while the root cause is an implementation file that looks nothing like the error text, is the paper's strongest evidence that semantic embeddings alone are insufficient, and the budget-dependent size reversal shows the choice is a cascade-placement decision rather than a leaderboard."
+        },
+        {
+          "branch": "enterprise",
+          "takeaway": "The construction spends most of its effort on the hygiene that repository-scale evaluation usually lacks. The 427 samples span 25 repositories and are evaluated against frozen base-commit corpora using pre-resolution files only, so the fixed code cannot leak; the combined corpus manifest covers 308 base-commit snapshots, 392K files and 7.9M chunks, with the released samples drawing on 271 snapshots. Validity diagnostics report complete corpus coverage, zero schema or corpus invalid rows, and zero fatal shortcut leakage from exact gold paths, raw patches, fix commits or autogenerated review artifacts. A fifth subset targets abstention rather than recall, pairing 50 natural evidence-backed no-gold cases with 32 counterfactual wrong-repository controls, and it exposes a calibration gap: selective thresholds look useful when the counterfactual controls are mixed in, but fail to improve selective success on the 50 natural no-gold cases. A 45-sample single-run closed-tool seed-intervention pilot finds retrieval-derived initial context yields higher File F1 with less post-seed exploration than random non-gold context, while oracle gold context still leaves substantial headroom.",
+          "why": "This branch holds that scale changes which problems exist, and names an evaluation crisis where ground truth is contaminated or tautological. This benchmark is a worked answer to that specific charge, with base-commit freezing against fixed-code leakage, an audited leakage sweep over the obvious shortcut channels, and a no-gold subset that separates knowing when to abstain from knowing what to rank. That the abstention thresholds hold up only against the easy counterfactual controls is the more useful result, because the wrong-repository case is not the one a production agent faces."
+        }
+      ]
     }
   ],
   "sections": [

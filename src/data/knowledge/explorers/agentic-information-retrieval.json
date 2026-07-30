@@ -462,6 +462,25 @@
           "why": "The loop only becomes debuggable when the retrieval steps are annotated, and that is what separates this from the paper-centric benchmarks it compares against (PeerQA, ScholarQABench) and from graph benchmarks whose trajectories are synthesized by template or random walk. With planning and execution measured separately, the failure lands on the loop rather than the summarizer: a model can hold a defensible final answer while its API path is longer and less accurate than the annotated one. The residual gap at 61% correctness on real user queries marks how much of agentic search is still parameter filling and API disambiguation rather than reasoning over retrieved text."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260725765L",
+      "title": "WorkSurface-Bench: Benchmarking Enterprise Agents on Multi-Surface Knowledge Routing",
+      "firstAuthor": "Liang, Hao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.25765",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260725765L",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "The benchmark isolates the decision an agent makes before it retrieves anything: which kind of knowledge the question requires. Five persona-scoped Workspace-Bench-Lite workspaces are projected onto three surface-native interfaces, a 493-document knowledge base, a 207-view DuckDB table registry, and a 1,438-edge file dependency graph carrying file-depends-on-file, file-supports-output and task-requires-file relations, with procedural SOPs left as task metadata rather than a fourth routable surface. The 1,151 atomic tasks split into 213 document, 279 table, 171 graph and 488 cross-surface questions, and each is scored on four separate axes: Route F1 over selected against required surfaces, Evidence over artifact access, Answer, and Efficiency. Four backbones under six agent settings produce 27,624 retained trajectories with no protocol errors. The headline is that routing and answering come apart: gold-constrained agents reach 98.7 to 99.8 Route F1 while Answer stays at 56.1 to 75.3%. A matched intervention separates the two further, with surface hints improving Answer for three of four models while removing irrelevant tools mainly improves routing and efficiency. Reference answers never come from model free text; table answers are reproduced by executed DuckDB queries, document answers checked against verbatim spans, and graph answers derived from source dependency annotations, screened from 2,000 candidates down to 1,151 and audited by three independent annotators over a 200-task sample that passed all six criteria by majority.",
+          "why": "This branch is about retrieval ceasing to be a fixed preprocessing step and becoming an action the model chooses. Surface routing is that choice one level above retriever selection: the agent picks a representation, and only then a retriever or query program inside it, which is why the paper distinguishes routing among information types from the tool and API routing that MetaTool, T-Eval and API-Bank measure, and from mmRAG, which covers the same three sources but flattens them into retrievable documents instead of keeping surface-native tools. Scoring the choice separately from the answer is what makes the loop debuggable, and it produces the branch's most load-bearing negative result: near-saturated routing sits alongside answers that are wrong 25 to 44% of the time, so the retrieval decision is no longer where the headroom is. The paper is careful that artifact-level Evidence does not prove correct semantic use, so high Route plus high Evidence with low Answer only points at downstream synthesis rather than proving it."
+        }
+      ]
     }
   ],
   "sections": [

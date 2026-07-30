@@ -1852,6 +1852,31 @@
           "why": "This branch asks for evaluation grounded in execution against an honest baseline. The paper locates the failure one level below the metric: the protocol P = {environment, information flow, scoring, verification} can make a shortcut sufficient for success without changing the nominal task, so a score is evidence of capability only when an audit establishes the full Expose -> Exploit -> Mislead chain. It also supplies the discipline this branch needs in practice - exposure, use, and awarded credit are separate claims requiring separate evidence, and a suspicious action with no effect on the score is not a finding."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260725152P",
+      "title": "When Do Agent Loops Mistake Stagnation for Progress? Self-Evaluation Bias and Externally Grounded Verification in Long-Running Autonomous LLM Agent Loops",
+      "firstAuthor": "Park, Hyundoo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.25152",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260725152P",
+      "branches": [
+        "eval",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "The testbed holds the agent and its tool surface fixed and varies only what the evaluator gating the loop can see, so the comparison isolates evaluator grounding rather than evaluator quality. Three arms sit behind one interface: in-band-self, which accepts a cycle if the agent edited files and stated a rationale; the strongest in-band judge, which reads the full artifact text, the change diff and its own verdict history; and an out-of-band evaluator that reads a world-state oracle with its own tools. Across 54 cycles the agent claimed improvement every time while 56% of those cycles had an oracle-measured delta of zero or below, so in-band-self degenerated into accept-all and eroded the best deployed state it had reached by 19% through later regressions. The strong in-band judge did not close the gap: it accepted cycles of which 44% were real-world regressions and rejected 38% of real improvements, rejecting the preregistered hypothesis that a better judge suffices. Two controls pin the mechanism down. On a boundary task whose success specification is verifiable from the artifact itself, the same judge's mirage rate fell to zero and the gap to out-of-band closed within the registered threshold. In a sign-only variant that strips the oracle numbers and returns just the accept/reject verdict, real-world output held up (mean 110.0 against 113.0 for full feedback), so the benefit comes from where the gate is grounded, not from the richness of its feedback.",
+          "why": "This branch asks for evaluation grounded in execution against an honest baseline, and for LLM judges to be calibrated rather than trusted. The paper supplies the calibration numbers directly as conditional acceptance rates, and then shows that calibrating harder is the wrong lever: when the success signal lives outside the transcript, no amount of judge strength recovers it, because the evidence is not in the channel the judge reads. It also draws the boundary where in-band evaluation is legitimate, which is the useful engineering line rather than a blanket verdict on LLM-as-judge."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "The paper names the failure mode, the progress mirage, and defines it as a measurable rate rather than an anecdote: the fraction of evaluator-accepted cycles whose oracle-measured delta is zero or below. The definition was deliberately widened from the preregistered wording of exactly zero, because a delta of zero excludes the worse error of accepting an outright regression. Alongside it the paper reports a wasted-cycle ratio, acceptance rates conditioned separately on non-positive and positive deltas, and time-to-first-positive with right-censoring recorded, all computed mechanically from raw cycle logs with no human discretion. The oracle is a synthetic user simulator kept unreachable by container and network isolation, with a boundary proof run at every run and a canary scan at every cycle, so the ground truth cannot be quietly contaminated by the agent under test. The proposed architecture puts the evaluator in a separate process reading databases, version-control history, web analytics and append-only ledgers, and forces a rejected cycle to leave an artifact the next iteration must read first at boot. Four supporting mechanisms (append-only state, file-based handoff between sessions, periodic frame-adversarial self-review, a self-healing scheduler) are presented as field-derived design notes and are not individually validated.",
+          "why": "This branch holds that scaling a loop only helps when the help is measured, and that the failure taxonomy comes before the scale-up. The progress mirage is a taxonomy entry with an operational definition and a base rate, and it is specifically a failure that gets worse with autonomy: the longer the loop runs unsupervised, the longer a misspecified reward persists with rising confidence. The measurement is a pilot with one model on one task family and the field observation is motivation only, so the rate is an existence proof with a mechanism, not a population estimate."
+        }
+      ]
     }
   ],
   "sections": [

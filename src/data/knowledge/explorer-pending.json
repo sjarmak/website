@@ -21,9 +21,9 @@
         }
       ],
       "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-29",
-      "attempts": 12,
-      "note": "read_paper still returns 'Paper not found' on 2026-07-29. Drops out of the queue on 2026-07-30 if SciX has not ingested it by then."
+      "lastAttempt": "2026-07-30",
+      "attempts": 13,
+      "note": "read_paper still returns 'Paper not found' on 2026-07-30 (attempt 13). firstSeen is exactly 14 days back, which is not yet past the 14-day drop rule, so it stays queued one more run; it drops on 2026-07-31 if SciX has still not ingested it."
     },
     {
       "bibcode": "2026arXiv260622030S",
@@ -47,9 +47,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-29",
-      "attempts": 10,
-      "note": "SciX has a body for bibcode 2026arXiv260622030S, but it is still the earlier v1 titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (re-confirmed 2026-07-29). Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-07-30",
+      "attempts": 11,
+      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-07-30. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -66,8 +66,8 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-29",
-      "attempts": 10
+      "lastAttempt": "2026-07-30",
+      "attempts": 11
     },
     {
       "bibcode": "2026arXiv260715524L",
@@ -88,8 +88,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-29",
-      "attempts": 9
+      "lastAttempt": "2026-07-30",
+      "attempts": 10
     },
     {
       "bibcode": "2026arXiv260715388Y",
@@ -111,8 +111,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-29",
-      "attempts": 9
+      "lastAttempt": "2026-07-30",
+      "attempts": 10
     },
     {
       "bibcode": "2026arXiv260326667S",
@@ -127,58 +127,64 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-07-29",
-      "attempts": 5
+      "lastAttempt": "2026-07-30",
+      "attempts": 6
     },
     {
-      "bibcode": "2026arXiv260725152P",
-      "arxiv": "2607.25152",
-      "title": "When Do Agent Loops Mistake Stagnation for Progress? Self-Evaluation Bias and Externally Grounded Verification in Long-Running Autonomous LLM Agent Loops",
+      "bibcode": "2026arXiv260726451P",
+      "arxiv": "2607.26451",
+      "title": "ExplainBench: Evaluating Code Explanations from Agents",
       "targets": [
         {
           "explorerId": "enterprise-reliability",
           "branches": [
             "eval",
-            "reliability"
+            "human"
           ]
         }
       ],
-      "firstSeen": "2026-07-29",
-      "lastAttempt": "2026-07-29",
+      "firstSeen": "2026-07-30",
+      "lastAttempt": "2026-07-30",
       "attempts": 1
     },
     {
-      "bibcode": "2026arXiv260724882Q",
-      "arxiv": "2607.24882",
-      "title": "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents",
+      "bibcode": "2026arXiv260401527J",
+      "arxiv": "2604.01527",
+      "title": "REAP: Automatic Curation of Coding Agent Benchmarks from Interactive Production Usage",
       "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        },
         {
           "explorerId": "code-retrieval-enterprise",
           "branches": [
-            "repo-scale",
-            "techniques",
             "enterprise"
           ]
         }
       ],
-      "firstSeen": "2026-07-29",
-      "lastAttempt": "2026-07-29",
-      "attempts": 1
+      "firstSeen": "2026-07-30",
+      "lastAttempt": "2026-07-30",
+      "attempts": 1,
+      "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX has no record for this bibcode yet."
     },
     {
-      "bibcode": "2026arXiv260725765L",
-      "arxiv": "2607.25765",
-      "title": "WorkSurface-Bench: Benchmarking Enterprise Agents on Multi-Surface Knowledge Routing",
+      "bibcode": "2026arXiv260727155Z",
+      "arxiv": "2607.27155",
+      "title": "OmegaUse-OfficeVal: Benchmarking LLM Agents on Long-Horizon Office-Suite Tasks with Economic Grounding",
       "targets": [
         {
-          "explorerId": "agentic-information-retrieval",
+          "explorerId": "enterprise-reliability",
           "branches": [
-            "agentic-loops"
+            "routing",
+            "eval"
           ]
         }
       ],
-      "firstSeen": "2026-07-29",
-      "lastAttempt": "2026-07-29",
+      "firstSeen": "2026-07-30",
+      "lastAttempt": "2026-07-30",
       "attempts": 1
     }
   ]
