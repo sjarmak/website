@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = path.join(ROOT, "src/pages/temporal-research-agent/index.astro");
+const RESEARCH_PAGE = path.join(
+  ROOT,
+  "src/pages/temporal-research-agent/research-output/index.astro",
+);
 
 test("off-navigation walkthrough exposes every requested deliverable", () => {
   const source = readFileSync(PAGE, "utf8");
@@ -16,7 +20,9 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.doesNotMatch(source, /52 seconds\./);
   assert.match(source, /Open the deck/);
   assert.match(source, /Read the README/);
-  assert.match(source, /Read the research/);
+  assert.match(source, /Read the research output/);
+  assert.match(source, /href=\{`\$\{root\}\/research-output`\}/);
+  assert.doesNotMatch(source, /href="#research-output"/);
   assert.doesNotMatch(source, /Read the blog/);
   assert.equal(
     existsSync(path.join(ROOT, "src/pages/temporal-research-agent/blog.astro")),
@@ -29,6 +35,12 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   );
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
+  for (const filename of ["workflow.py", "activities.py", "worker.py"]) {
+    assert.match(
+      source,
+      new RegExp(`src/durable_research/${filename.replace(".", "\\.")}`),
+    );
+  }
   assert.doesNotMatch(source, /researchPrompt/);
   assert.match(source, /run-durable-research/);
   assert.match(source, /workstation-only/i);
@@ -37,8 +49,9 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   assert.doesNotMatch(source, /Temporal owns/);
 });
 
-test("walkthrough includes the completed research product and provenance", () => {
+test("walkthrough links to a separate completed research product", () => {
   const source = readFileSync(PAGE, "utf8");
+  const researchPage = readFileSync(RESEARCH_PAGE, "utf8");
   const report = readFileSync(
     path.join(ROOT, "public/temporal-research-agent/research-output/report.md"),
     "utf8",
@@ -54,31 +67,45 @@ test("walkthrough includes the completed research product and provenance", () =>
     ),
   );
 
-  assert.match(source, /The live research product/);
-  assert.match(source, /live SciX and Code Intelligence\s+Digest indexes/);
-  assert.match(source, /4 completed/);
-  assert.match(source, /0 failed/);
-  assert.match(source, /48 retrieved\s+records/);
-  assert.match(source, /24 from SciX and 24 from Code Intelligence\s+Digest/);
-  assert.match(source, /<ResearchReport \/>/);
-  assert.ok(
-    source.indexOf('id="research-output"') > source.indexOf('id="code-comparison"'),
-    "the research product should follow the code comparison",
+  assert.doesNotMatch(source, /<ResearchReport \/>/);
+  assert.doesNotMatch(source, /id="research-output"/);
+  assert.match(researchPage, /The live research product/);
+  assert.match(
+    researchPage,
+    /live SciX and Code\s+Intelligence\s+Digest indexes/,
   );
+  assert.match(researchPage, /4 completed/);
+  assert.match(researchPage, /0 failed/);
+  assert.match(researchPage, /48\s+retrieved records/);
+  assert.match(
+    researchPage,
+    /24 from SciX and 24 from Code\s+Intelligence\s+Digest/,
+  );
+  assert.match(researchPage, /<ResearchReport \/>/);
   for (const activityName of [
     "research_angle",
     "verify_evidence",
     "synthesize_section",
     "finalize_review",
   ]) {
-    assert.match(source, new RegExp(activityName));
+    assert.match(researchPage, new RegExp(activityName));
   }
-  assert.match(source, /Synthesized finding/);
-  assert.match(source, /Durability is a property of the whole research pipeline/);
-  assert.match(source, /What Code Intelligence Digest contributed/);
-  assert.match(source, /Building a Durable Execution Engine with SQLite/);
-  assert.match(source, /Replay is not re-execution/);
+  assert.match(researchPage, /Synthesized finding/);
+  assert.match(
+    researchPage,
+    /Durability is a property of the whole research pipeline/,
+  );
+  assert.match(researchPage, /What Code Intelligence Digest contributed/);
+  assert.match(researchPage, /Building a Durable Execution Engine with SQLite/);
+  assert.match(researchPage, /Replay is not re-execution/);
   assert.equal(renderedReport.trim(), report.trim());
+  assert.doesNotMatch(report, /\[tag:google\.com/);
+  assert.doesNotMatch(report, /\[ads:/);
+  assert.doesNotMatch(report, /\[20\d{2}arXiv/);
+  assert.match(
+    report,
+    /\[SKILL\.nb: Selective Formalization and Gated Execution for Durable Agent Workflows\]\(https:\/\/arxiv\.org\/abs\/2606\.08049\)/,
+  );
   assert.equal(manifest.completed_angles.length, 4);
   assert.equal(manifest.failed_angles.length, 0);
   assert.equal(
@@ -161,6 +188,7 @@ test("packaged media, deck, code, and document source exist", () => {
     "public/temporal-research-agent/README.md",
     "src/components/temporal-research-agent/Readme.md",
     "src/components/temporal-research-agent/ResearchReport.md",
+    "src/pages/temporal-research-agent/research-output/index.astro",
   ]) {
     assert.equal(existsSync(path.join(ROOT, relativePath)), true, relativePath);
   }

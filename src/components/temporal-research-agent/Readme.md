@@ -121,7 +121,8 @@ mechanical synthesis grouped 23 distinct SciX bibcodes into an auditable
 writing scaffold before `finalize_review` wrote the report and provenance
 manifest:
 
-- [Research report](/temporal-research-agent/research-output/report.md)
+- [Read the research output](/temporal-research-agent/research-output/)
+- [Raw Markdown report](/temporal-research-agent/research-output/report.md)
 - [Provenance manifest](/temporal-research-agent/research-output/manifest.json)
 - [SciX synthesis output](/temporal-research-agent/research-output/synthesis.json)
 

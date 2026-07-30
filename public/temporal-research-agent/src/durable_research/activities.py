@@ -110,22 +110,32 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
     store = ArtifactStore(request.review.artifact_root)
     angle = next(angle for angle in request.review.angles if angle.key == branch.angle_key)
     findings: list[str] = []
-    references: list[str] = []
+    references: dict[str, list[str]] = {
+        "SciX": [],
+        "Code Intelligence Digest": [],
+    }
     for source in branch.sources:
         raw = await asyncio.to_thread(store.read_json, source.artifact_ref)
         summary = str(raw.get("summary") or raw.get("text") or "No summary returned.").strip()
         lane = "SciX" if source.lane == "scix" else "Code Intelligence Digest"
-        findings.append(f"- [{lane}] {summary} [{source.source_id}]")
-        references.append(
-            f"- [{lane}] [{source.source_id}] {source.title}. {source.locator}"
+        title = _escape_markdown_text(source.title)
+        locator = _source_url(source)
+        findings.append(
+            f"- **{lane}:** {summary} ([{title}]({locator}))"
         )
+        references[lane].append(f"- [{title}]({locator})")
+    rendered_references = "\n\n".join(
+        f"#### {lane}\n\n" + "\n".join(items)
+        for lane, items in references.items()
+        if items
+    )
     body = (
         f"## {angle.key.replace('-', ' ').title()}\n\n"
         f"**Question:** {angle.question}\n\n"
-        "### Synthesized findings\n\n"
+        "### Findings\n\n"
         + "\n".join(findings)
         + "\n\n### Sources\n\n"
-        + "\n".join(references)
+        + rendered_references
         + "\n"
     )
     path = f"{_review_id_from_ref(branch.evidence_ref)}/sections/{branch.angle_key}.md"
@@ -137,6 +147,21 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
         section_ref=artifact.path,
         sources=branch.sources,
     )
+
+
+def _source_url(source: SourceRef) -> str:
+    locator = source.locator.strip()
+    if locator.startswith(("https://", "http://")):
+        return locator
+    if locator.startswith("doi:"):
+        return f"https://doi.org/{locator.removeprefix('doi:')}"
+    if source.lane == "scix":
+        return f"https://ui.adsabs.harvard.edu/abs/{locator}/abstract"
+    return locator
+
+
+def _escape_markdown_text(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
 
 
 @activity.defn(name="finalize_review")
@@ -259,17 +284,21 @@ def _render_scix_synthesis(response: Any, *, paper_count: int) -> str:
             if not isinstance(paper, dict):
                 continue
             bibcode = str(paper.get("bibcode") or "unknown")
-            title = str(paper.get("title") or bibcode)
+            title = _escape_markdown_text(str(paper.get("title") or bibcode))
             year = paper.get("year")
             year_text = f" ({year})" if year is not None else ""
             signal = str(paper.get("signal_used") or "unclassified").replace("_", " ")
-            lines.append(f"- {title}{year_text} [{bibcode}], assigned by {signal}.")
+            url = f"https://ui.adsabs.harvard.edu/abs/{bibcode}/abstract"
+            lines.append(f"- [{title}]({url}){year_text}, assigned by {signal}.")
         lines.append("")
     unattributed = response.get("unattributed_bibcodes")
     if isinstance(unattributed, list) and unattributed:
         lines.extend(
             (
-                f"Unattributed working-set papers: {', '.join(map(str, unattributed))}.",
+                (
+                    f"{len(unattributed)} working-set papers were not assigned to a "
+                    "scaffold section; their identifiers remain in the synthesis artifact."
+                ),
                 "",
             )
         )
