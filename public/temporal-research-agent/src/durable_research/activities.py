@@ -114,7 +114,12 @@ async def synthesize_section(request: SectionRequest) -> BranchResult:
         "SciX": [],
         "Code Intelligence Digest": [],
     }
+    rendered_sources: set[tuple[str, str]] = set()
     for source in branch.sources:
+        citation_key = _citation_key(source)
+        if citation_key in rendered_sources:
+            continue
+        rendered_sources.add(citation_key)
         raw = await asyncio.to_thread(store.read_json, source.artifact_ref)
         summary = str(raw.get("summary") or raw.get("text") or "No summary returned.").strip()
         lane = "SciX" if source.lane == "scix" else "Code Intelligence Digest"
@@ -158,6 +163,11 @@ def _source_url(source: SourceRef) -> str:
     if source.lane == "scix":
         return f"https://ui.adsabs.harvard.edu/abs/{locator}/abstract"
     return locator
+
+
+def _citation_key(source: SourceRef) -> tuple[str, str]:
+    normalized_title = " ".join(source.title.casefold().split())
+    return source.lane, normalized_title
 
 
 def _escape_markdown_text(value: str) -> str:

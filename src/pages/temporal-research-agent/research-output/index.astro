@@ -30,7 +30,9 @@ const root = "/temporal-research-agent";
         Intelligence Digest indexes. It finished with <strong>4 completed
         angles</strong>, <strong>0 failed angles</strong>, and <strong>48
         retrieved records</strong>: 24 from SciX and 24 from Code Intelligence
-        Digest.
+        Digest. When one provider indexed more than one record for the same
+        title, the readable report shows that title once per question. The
+        provenance manifest retains all 48 retrieved records.
       </p>
     </section>
 
@@ -94,8 +96,9 @@ const root = "/temporal-research-agent";
         <p>
           The 24 Digest records include practitioner material and indexed
           technical discussions. In the report, the provider appears as a
-          readable label and every title links directly to its source; internal
-          item IDs remain in the provenance manifest.
+          readable label, duplicate titles within a question are collapsed,
+          and every displayed title links directly to its source. Internal item
+          IDs and every retrieved record remain in the provenance manifest.
         </p>
         <ul>
           <li>

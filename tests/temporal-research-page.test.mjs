@@ -35,12 +35,17 @@ test("off-navigation walkthrough exposes every requested deliverable", () => {
   );
   assert.match(source, /Before source/);
   assert.match(source, /After source/);
-  for (const filename of ["workflow.py", "activities.py", "worker.py"]) {
-    assert.match(
-      source,
-      new RegExp(`src/durable_research/${filename.replace(".", "\\.")}`),
-    );
+  for (const slug of ["before", "workflow", "activities", "worker"]) {
+    assert.match(source, new RegExp(`\\$\\{root\\}/code/${slug}`));
   }
+  assert.match(
+    source,
+    /href="https:\/\/www\.sjarmak\.ai\/projects\/code-intelligence-digest"/,
+  );
+  assert.match(
+    source,
+    /href="https:\/\/www\.sjarmak\.ai\/projects\/scix-agent"/,
+  );
   assert.doesNotMatch(source, /researchPrompt/);
   assert.match(source, /run-durable-research/);
   assert.match(source, /workstation-only/i);
@@ -102,6 +107,15 @@ test("walkthrough links to a separate completed research product", () => {
   assert.doesNotMatch(report, /\[tag:google\.com/);
   assert.doesNotMatch(report, /\[ads:/);
   assert.doesNotMatch(report, /\[20\d{2}arXiv/);
+  assert.equal(
+    (
+      report.match(
+        /\[Reasoning Provenance for Autonomous AI Agents: Structured Behavioral Analytics Beyond State Checkpoints and Execution Traces\]/g,
+      ) ?? []
+    ).length,
+    2,
+    "one finding link and one source link should remain for the duplicated Digest work",
+  );
   assert.match(
     report,
     /\[SKILL\.nb: Selective Formalization and Gated Execution for Durable Agent Workflows\]\(https:\/\/arxiv\.org\/abs\/2606\.08049\)/,
@@ -148,6 +162,30 @@ test("brief maps evidence to all four evaluation criteria without appearing on t
   assert.doesNotMatch(source, /Open the brief alignment/);
   assert.doesNotMatch(source, /Open the verification record/);
   assert.doesNotMatch(source, /Open the 12-minute talk plan/);
+});
+
+test("README states the observed recovery result and gives a fair Python before comparison", () => {
+  const readme = readFileSync(
+    path.join(ROOT, "src/components/temporal-research-agent/Readme.md"),
+    "utf8",
+  );
+
+  assert.match(
+    readme,
+    /This project reimplements an existing research pipeline as a Python\s+application built on Temporal\./,
+  );
+  assert.match(readme, /killing a Worker\s+mid-Activity/);
+  assert.match(readme, /replacement Worker/);
+  assert.match(readme, /same Workflow run completed/);
+  assert.match(readme, /would have ended the orchestrator/);
+  assert.match(readme, /in-memory progress/);
+  assert.match(readme, /explanatory Python\s+translation/);
+  assert.match(readme, /async def run_review\(\)/);
+  assert.match(readme, /did not have a durable record/);
+  assert.doesNotMatch(readme, /It gives us a real before and after/);
+  for (const slug of ["before", "workflow", "activities", "worker"]) {
+    assert.match(readme, new RegExp(`/temporal-research-agent/code/${slug}/`));
+  }
 });
 
 test("each evidence screenshot opens in an accessible full-view dialog", () => {

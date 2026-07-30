@@ -35,10 +35,12 @@ const poster = `${root}/deck-assets/worker-killed.png`;
     <section class="tra__premise prose">
       <h2>The original pipeline had already done useful work</h2>
       <p>
-        A JavaScript workflow in the Code Intelligence Digest project sent ten
-        research branches through SciX retrieval, deep dives, and podcast
-        scripts, then produced two literature reviews. One client process held
-        the schedule and inferred progress from files.
+        A JavaScript workflow in the
+        <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest project</a>
+        sent ten research branches through
+        <a href="https://www.sjarmak.ai/projects/scix-agent">SciX retrieval</a>,
+        deep dives, and podcast scripts, then produced two literature reviews.
+        One client process held the schedule and inferred progress from files.
       </p>
       <p>
         The Python rewrite gives that progress to a Temporal Workflow. Network
@@ -68,7 +70,7 @@ await pipeline(
 phase('Synthesis')
 await parallel(literatureReviews)</code></pre>
           <p>Condensed for this page.</p>
-          <a href={`${root}/before/phaseE_workflow.excerpt.js`}>Open the captured JavaScript excerpt</a>
+          <a href={`${root}/code/before`}>Open the annotated JavaScript source</a>
         </section>
         <section>
           <h3>After source</h3>
@@ -79,9 +81,9 @@ await parallel(literatureReviews)</code></pre>
     retry_policy=self._retry_policy(review),
 )</code></pre>
           <p class="cluster">
-            <a href={`${root}/src/durable_research/workflow.py`}>Workflow</a>
-            <a href={`${root}/src/durable_research/activities.py`}>Activities</a>
-            <a href={`${root}/src/durable_research/worker.py`}>Worker</a>
+            <a href={`${root}/code/workflow`}>Workflow</a>
+            <a href={`${root}/code/activities`}>Activities</a>
+            <a href={`${root}/code/worker`}>Worker</a>
           </p>
         </section>
       </div>
@@ -100,8 +102,10 @@ await parallel(literatureReviews)</code></pre>
         <p>
           The Workflow owns durable branch state and retry policy. The Temporal
           Service persists Event History and schedules execution. Activities
-          perform SciX, Code Intelligence Digest, artifact I/O, and future
-          model calls.
+          perform
+          <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a>,
+          <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>,
+          artifact I/O, and future model calls.
         </p>
         <a href={`${root}/skills/run-durable-research/SKILL.md`}>Read the skill contract</a>
       </div>
@@ -169,10 +173,12 @@ await parallel(literatureReviews)</code></pre>
       <p>
         The source, deck, documents, recording, and captured evidence are
         portable. Running the demo and live research integration is
-        workstation-only. SciX and Code Intelligence Digest depend on local
-        repositories, indexes, databases, services, and Worker configuration
-        that are not included here. This page is the documentation package;
-        the research service remains local.
+        workstation-only.
+        <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a> and
+        <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>
+        depend on local repositories, indexes, databases, services, and Worker
+        configuration that are not included here. This page is the
+        documentation package; the research service remains local.
       </p>
     </aside>
 

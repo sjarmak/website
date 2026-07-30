@@ -1,9 +1,15 @@
 # Durable literature review with Temporal, SciX, and Code Intel Digest
 
-This project rewrites a literature-review pipeline we had already run with
-Claude and SciX as a Python Temporal application. It gives us a real before
-and after, a Worker-kill demo, and a workstation-only fixture path that does
-not depend on an LLM key or a healthy research index.
+This project reimplements an existing research pipeline as a Python
+application built on Temporal. We tested the change by killing a Worker
+mid-Activity. Temporal retried the interrupted Activities on a replacement
+Worker, and the same Workflow run completed with all four research angles.
+
+In the original design, killing the only client process at the same point
+would have ended the orchestrator and discarded its in-memory progress. Files
+written before the kill would have remained. The code had no durable record
+of which call was in flight or which phase should resume, so an operator would
+have needed to inspect the artifacts and decide what to run again.
 
 The research question used in the demo is: **What does durable execution
 change about an agent research pipeline?**
@@ -11,7 +17,7 @@ change about an agent research pipeline?**
 ## Why this was the right workflow to rewrite
 
 The original
-[`phaseE_workflow.js`](before/phaseE_workflow.excerpt.js) coordinated research,
+[`phaseE_workflow.js`](/temporal-research-agent/code/before/) coordinated research,
 deep dives, scripts, and two final literature reviews. It produced real work,
 including the Code Intelligence Digest reviews on multi-agent orchestration
 and code retrieval. Its orchestration lived in one client process, however.
@@ -37,7 +43,7 @@ workflow and uses our two research systems.
 
 ## Before and after
 
-The before code expressed the happy-path dependency graph:
+The historical before code expressed the happy-path dependency graph:
 
 ```javascript
 phase('Research')
@@ -51,6 +57,33 @@ await pipeline(
 phase('Synthesis')
 await parallel(/* write final literature reviews */)
 ```
+
+For an apples-to-apples language comparison, this explanatory Python
+translation shows the same process-local control flow. It was not part of the
+original project:
+
+```python
+async def run_episode(item: Episode) -> None:
+    research = await agent(item, task="research with SciX")
+    deep_dive = await agent(research, task="write deep dive")
+    await agent(deep_dive, task="write script")
+
+
+async def run_review() -> None:
+    phase("Research")
+    await asyncio.gather(*(run_episode(item) for item in EPISODES))
+
+    phase("Synthesis")
+    await asyncio.gather(
+        *(write_literature_review(review) for review in literature_reviews)
+    )
+```
+
+An abrupt process exit inside `run_review()` would have ended its event loop.
+Completed files would still exist. The program did not have a durable record
+of the current phase, completed branches, or outstanding calls. Recovery
+would have required application-specific checkpointing and deduplication
+before making another external call.
 
 The Temporal Workflow records the orchestration as durable state:
 
@@ -74,7 +107,7 @@ async def run(self, review: ReviewInput) -> ReviewResult:
 ```
 
 The full implementation is in
-[`workflow.py`](src/durable_research/workflow.py). Its code schedules work,
+[`workflow.py`](/temporal-research-agent/code/workflow/). Its code schedules work,
 tracks progress, applies retry policy, and chooses whether enough branches
 succeeded. It does not call MCP servers, read the clock, or touch the
 filesystem.
@@ -88,7 +121,9 @@ Every interaction with the outside world runs in an Activity:
 | `synthesize_section` | evidence reads and one cited findings section per research angle | section reference |
 | `finalize_review` | SciX `synthesize_findings`, section reads, report and manifest writes | report and manifest references |
 
-See [`activities.py`](src/durable_research/activities.py). Temporal's
+See [`activities.py`](/temporal-research-agent/code/activities/) and the
+[`worker.py`](/temporal-research-agent/code/worker/) registration.
+Temporal's
 [Workflow documentation](https://docs.temporal.io/workflows) explains why
 network calls, LLM calls, and file I/O belong in Activities: Workflow code is
 replayed and must make the same decisions from the same Event History.
@@ -416,7 +451,7 @@ citation verification, partial branch failure, the progress query, and
 decoded Event History. Workflow tests use the Python SDK's
 [`WorkflowEnvironment.start_time_skipping()`](https://python.temporal.io/temporalio.testing.WorkflowEnvironment.html).
 
-The current verified result is 69 passing tests with 84.58% branch-aware
+The current verified result is 69 passing tests with 84.47% branch-aware
 coverage. The published walkthrough supports inspection of the source and
 captured evidence. Running either the demo or live MCP integration still
 requires the configured workstation.
