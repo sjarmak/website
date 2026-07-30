@@ -1,0 +1,30 @@
+{
+  "workflow_id": "temporal-lit-review-live-demo-1785377848",
+  "run_id": "019fb0d0-0308-71f4-9b31-f232d2dd838a",
+  "duration_seconds": 51.800000,
+  "temporal_web_source_seconds": 16.233333,
+  "video": {
+    "path": "temporal-literature-review-demo.mp4",
+    "sha256": "43bf8f4e5c72b10db90b2e59606a78f47c48de2c0ab8095e2c8a74e7876ae3a4"
+  },
+  "teaser": {
+    "path": "temporal-literature-review-teaser.gif",
+    "sha256": "5fb63a3cbf280dd0112268100bea203c3f81906be76b0e6ee2e51d75ef4eb126"
+  },
+  "profile": {
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "pixel_format": "yuv420p"
+  },
+  "editorial": {
+    "caption_layout": "dedicated_right_panel",
+    "freeze_beats": 4,
+    "zoom_beats": 2,
+    "animated_zoom_beats": 1,
+    "highlight_boxes": 1,
+    "highlight_stroke_width": 3,
+    "summary_card_seconds": 10
+  },
+  "evidence_gate": "run-artifacts/verify-report.txt"
+}

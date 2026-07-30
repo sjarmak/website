@@ -1,0 +1,28 @@
+---
+import Readme from "@/components/temporal-research-agent/Readme.md";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Durable literature review: README"
+  description="Implementation, architecture, workstation setup, skill lifecycle, retry behavior, and verification commands."
+  type="article"
+  noindex={true}
+>
+  <base slot="head" href="/temporal-research-agent/" />
+  <article class="container container-narrow tra-document">
+    <div class="prose"><Readme /></div>
+    <p class="tra-document__back"><a href="/temporal-research-agent">← Project walkthrough</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .tra-document {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+  .tra-document__back {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+  }
+</style>

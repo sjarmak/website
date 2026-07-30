@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+
+project_root = Path(__file__).resolve().parents[3]
+address = os.environ.get("TEMPORAL_ADDRESS", "localhost:7233")
+namespace = os.environ.get("TEMPORAL_NAMESPACE", "default")
+task_queue = os.environ.get(
+    "TEMPORAL_RESEARCH_TASK_QUEUE",
+    "temporal-literature-review",
+)
+
+
+def check_command(command: str) -> bool:
+    if shutil.which(command) is None:
+        print(f"FAIL command not found: {command}")
+        return False
+    print(f"PASS command found: {command}")
+    return True
+
+
+def run_check(label: str, command: list[str]) -> bool:
+    result = subprocess.run(command, text=True, capture_output=True, check=False)
+    if result.returncode == 0:
+        print(f"PASS {label}")
+        return True
+    detail = (result.stderr or result.stdout).strip().splitlines()
+    suffix = f": {detail[-1]}" if detail else ""
+    print(f"FAIL {label}{suffix}")
+    return False
+
+
+def check_pollers(task_type: str) -> bool:
+    command = [
+        "temporal",
+        "task-queue",
+        "describe",
+        "--address",
+        address,
+        "--namespace",
+        namespace,
+        "--task-queue",
+        task_queue,
+        "--task-queue-type",
+        task_type,
+        "--legacy-mode",
+        "--output",
+        "json",
+        "--command-timeout",
+        "2s",
+    ]
+    result = subprocess.run(command, text=True, capture_output=True, check=False)
+    try:
+        payload = json.loads(result.stdout) if result.returncode == 0 else {}
+    except json.JSONDecodeError:
+        payload = {}
+    if payload.get("pollers"):
+        print(f"PASS {task_type} Worker poller on {task_queue}")
+        return True
+    print(f"FAIL no {task_type} Worker poller on {task_queue}")
+    return False
+
+
+checks = [
+    project_root.joinpath("pyproject.toml").is_file(),
+    check_command("uv"),
+    check_command("temporal"),
+]
+print(
+    f"{'PASS' if checks[0] else 'FAIL'} project source: "
+    f"{project_root / 'pyproject.toml'}"
+)
+if checks[1] and checks[2]:
+    checks.append(
+        run_check(
+            f"Temporal Service {address}",
+            [
+                "temporal",
+                "operator",
+                "cluster",
+                "health",
+                "--address",
+                address,
+                "--command-timeout",
+                "2s",
+            ],
+        )
+    )
+if all(checks):
+    checks.extend((check_pollers("workflow"), check_pollers("activity")))
+
+if not all(checks):
+    print(
+        "Runtime unavailable. Start a persistent local service with "
+        "`temporal server start-dev --db-filename /absolute/path/to/temporal.db` "
+        "and start `scripts/research-worker`, or configure a managed Temporal Service."
+    )
+    raise SystemExit(1)
+
+print(f"READY address={address} namespace={namespace} task_queue={task_queue}")

@@ -1,0 +1,409 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const root = "/temporal-research-agent";
+const video = `${root}/demo/out/temporal-literature-review-demo.mp4`;
+const poster = `${root}/deck-assets/worker-killed.png`;
+---
+
+<PageLayout
+  title="Temporal lets us bring a research agent back to life"
+  kicker="Temporal case study"
+  intro="Improving the durability of our research pipeline using Temporal's Python SDK"
+  description="A before-and-after rewrite of a literature-review agent as a durable Temporal Workflow, with code, recorded failure evidence, and implementation notes."
+  image={poster}
+  noindex={true}
+>
+  <article class="tra stack">
+    <nav class="tra__artifacts" aria-label="Project artifacts">
+      <a href={`${root}/deck.html`} target="_blank" rel="noopener">Open the deck <span>↗</span></a>
+      <a href={`${root}/blog`}>Read the blog <span>→</span></a>
+      <a href={`${root}/readme`}>Read the README <span>→</span></a>
+      <a href="#code-comparison">Compare the code <span>↓</span></a>
+    </nav>
+
+    <figure class="tra__media">
+      <video controls preload="metadata" poster={poster}>
+        <source src={video} type="video/mp4" />
+      </video>
+      <figcaption>
+        52 seconds. The Worker dies with two research Activities in flight;
+        Temporal Web shows both retries and the completed Workflow.
+      </figcaption>
+    </figure>
+
+    <section class="tra__premise prose">
+      <h2>The original pipeline had already done useful work</h2>
+      <p>
+        A JavaScript workflow in the Code Intelligence Digest project sent ten
+        research branches through SciX retrieval, deep dives, and podcast
+        scripts, then produced two literature reviews. One client process held
+        the schedule and inferred progress from files.
+      </p>
+      <p>
+        The Python rewrite gives that progress to a Temporal Workflow. Network
+        calls, heartbeats, clock reads, and artifact I/O run as Activities.
+        Full evidence stays in an artifact store; Event History carries compact
+        IDs, hashes, statuses, and paths.
+      </p>
+    </section>
+
+    <section id="code-comparison" class="tra__section">
+      <header class="tra__section-head">
+        <p class="kicker">The code sample</p>
+        <h2>The dependency graph stays recognizable</h2>
+      </header>
+      <div class="tra__code">
+        <section>
+          <h3>Before source</h3>
+          <pre><code>phase('Research')
+await pipeline(
+  EPS,
+  (it) =&gt; agent(/* prompt omitted */, &lbrace;
+    label: 'research:' + it.s + '-ep' + it.ep,
+    phase: 'Research',
+  &rbrace;),
+)
+
+phase('Synthesis')
+await parallel(literatureReviews)</code></pre>
+          <p>Condensed for this page.</p>
+          <a href={`${root}/before/phaseE_workflow.excerpt.js`}>Open the captured JavaScript excerpt</a>
+        </section>
+        <section>
+          <h3>After source</h3>
+          <pre><code>researched = await workflow.execute_activity(
+    "research_angle",
+    request,
+    heartbeat_timeout=timedelta(seconds=30),
+    retry_policy=self._retry_policy(review),
+)</code></pre>
+          <p class="cluster">
+            <a href={`${root}/src/durable_research/workflow.py`}>Workflow</a>
+            <a href={`${root}/src/durable_research/activities.py`}>Activities</a>
+            <a href={`${root}/src/durable_research/worker.py`}>Worker</a>
+          </p>
+        </section>
+      </div>
+    </section>
+
+    <section class="tra__section tra__skill">
+      <div class="tra__skill-copy">
+        <p class="kicker">Beyond the demo</p>
+        <h2>The Workflow became an agent skill</h2>
+        <p>
+          <code>run-durable-research</code> submits a Workflow and returns its
+          identifiers. The calling agent can exit. Another agent on the same
+          workstation can query progress or retrieve the cited report and
+          provenance manifest later.
+        </p>
+        <p>
+          Temporal owns branch state and retries. Activities own SciX, Code
+          Intelligence Digest, artifact I/O, and future model calls.
+        </p>
+        <a href={`${root}/skills/run-durable-research/SKILL.md`}>Read the skill contract</a>
+      </div>
+      <figure>
+        <img
+          src={`${root}/deck-assets/workflow-completed.png`}
+          alt="Recorded demo frame showing four completed research angles and the replacement Worker identity"
+          loading="lazy"
+        />
+        <figcaption>Four angles completed under the original Workflow run.</figcaption>
+      </figure>
+    </section>
+
+    <section class="tra__section">
+      <header class="tra__section-head">
+        <p class="kicker">Observed recovery</p>
+        <h2>Event History records the handoff</h2>
+      </header>
+      <div class="tra__evidence">
+        <figure>
+          <img
+            src={`${root}/deck-assets/worker-killed.png`}
+            alt="Terminal showing the Worker killed while two Activities are in flight"
+            loading="lazy"
+          />
+          <figcaption>The Workflow remains open after the Worker receives SIGKILL.</figcaption>
+        </figure>
+        <figure>
+          <img
+            src={`${root}/deck-assets/activity-attempt-two.png`}
+            alt="Temporal Web showing two research Activities starting on attempt two"
+            loading="lazy"
+          />
+          <figcaption>Events 7 and 10 show both research Activities on attempt two.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="tra__section">
+      <header class="tra__section-head">
+        <p class="kicker">Assignment fit</p>
+        <h2>Evidence for each evaluation criterion</h2>
+      </header>
+      <dl class="tra__criteria">
+        <div>
+          <dt>Technical depth</dt>
+          <dd>
+            A typed Python Workflow, four Activity types, a Worker, bounded
+            concurrency, timeouts, heartbeats, retries, partial-result policy,
+            compact history, and a durable external-request journal.
+          </dd>
+        </div>
+        <div>
+          <dt>Clarity of explanation</dt>
+          <dd>
+            The deck puts the old and new code side by side. The blog and
+            README trace the migration from process-local progress to recorded
+            Workflow state.
+          </dd>
+        </div>
+        <div>
+          <dt>Developer empathy</dt>
+          <dd>
+            The walkthrough names the crash windows, shows the Temporal Web
+            evidence, explains trade-offs, and states which parts depend on
+            local infrastructure.
+          </dd>
+        </div>
+        <div>
+          <dt>Code quality</dt>
+          <dd>
+            Tests cover Workflow behavior, Activity boundaries, request
+            journaling, artifact conflicts, caller exit, Worker replacement,
+            recording invariants, and presentation contracts.
+          </dd>
+        </div>
+      </dl>
+      <p class="tra__verification">
+        <a href={`${root}/verification.md`}>Open the verification record</a>
+        <span>·</span>
+        <a href={`${root}/brief-alignment.md`}>Open the brief alignment</a>
+        <span>·</span>
+        <a href={`${root}/talk.md`}>Open the 12-minute talk plan</a>
+      </p>
+    </section>
+
+    <aside class="tra__boundary" aria-labelledby="runtime-boundary">
+      <h2 id="runtime-boundary">Runtime boundary</h2>
+      <p>
+        The source, deck, documents, recording, and captured evidence are
+        portable. Running the demo and live research integration is
+        workstation-only. SciX and Code Intelligence Digest depend on local
+        repositories, indexes, databases, services, and Worker configuration
+        that are not included here. This page is the documentation package;
+        the research service remains local.
+      </p>
+    </aside>
+  </article>
+</PageLayout>
+
+<style>
+  .tra {
+    --stack-gap: clamp(var(--space-xl), 8vw, var(--space-3xl));
+    padding-block-end: var(--space-3xl);
+  }
+
+  .tra__artifacts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-block: var(--border-hairline);
+  }
+
+  .tra__artifacts a {
+    display: flex;
+    min-height: 4.5rem;
+    padding: var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    border-inline-end: var(--border-hairline);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    text-decoration: none;
+  }
+
+  .tra__artifacts a:last-child {
+    border-inline-end: 0;
+  }
+
+  .tra__artifacts a:hover {
+    color: var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .tra__media,
+  .tra__evidence figure,
+  .tra__skill figure {
+    margin: 0;
+  }
+
+  .tra__media video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+  }
+
+  figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .tra__premise {
+    font-size: var(--step-1);
+  }
+
+  .tra__section {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .tra__section-head {
+    max-width: var(--measure);
+  }
+
+  .tra__section-head .kicker {
+    margin: 0 0 var(--space-xs);
+  }
+
+  .tra__section-head h2 {
+    margin: 0;
+  }
+
+  .tra__code {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-l);
+  }
+
+  .tra__code section {
+    min-width: 0;
+    padding-block-start: var(--space-s);
+    border-top: var(--border-hairline);
+  }
+
+  .tra__code h3 {
+    margin: 0 0 var(--space-s);
+    font-size: var(--step-1);
+  }
+
+  .tra__code pre {
+    min-height: 15rem;
+    margin: 0 0 var(--space-s);
+    padding: var(--space-m);
+    overflow: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  .tra__skill {
+    grid-template-columns: 5fr 7fr;
+    align-items: center;
+  }
+
+  .tra__skill-copy {
+    max-width: 38rem;
+  }
+
+  .tra__skill-copy > * + * {
+    margin-block-start: var(--space-m);
+  }
+
+  .tra__skill img,
+  .tra__evidence img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+  }
+
+  .tra__evidence {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-l);
+  }
+
+  .tra__criteria {
+    margin: 0;
+    border-top: var(--border-hairline);
+  }
+
+  .tra__criteria div {
+    display: grid;
+    grid-template-columns: minmax(10rem, 1fr) 3fr;
+    gap: var(--space-l);
+    padding-block: var(--space-m);
+    border-bottom: var(--border-hairline);
+  }
+
+  .tra__criteria dt {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: var(--weight-semibold);
+  }
+
+  .tra__criteria dd {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tra__verification {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin: 0;
+  }
+
+  .tra__boundary {
+    padding-block: var(--space-l);
+    border-block: var(--border-hairline);
+  }
+
+  .tra__boundary h2 {
+    margin: 0 0 var(--space-s);
+    font-size: var(--step-2);
+  }
+
+  .tra__boundary p {
+    max-width: var(--measure);
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  @media (max-width: 760px) {
+    .tra__artifacts,
+    .tra__code,
+    .tra__skill,
+    .tra__evidence {
+      grid-template-columns: 1fr;
+    }
+
+    .tra__artifacts a {
+      border-inline-end: 0;
+      border-bottom: var(--border-hairline);
+    }
+
+    .tra__artifacts a:last-child {
+      border-bottom: 0;
+    }
+
+    .tra__criteria div {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+  }
+</style>

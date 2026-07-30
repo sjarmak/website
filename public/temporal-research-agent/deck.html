@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Temporal lets us bring a research agent back to life</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ground: oklch(0.18 0.018 275);
+      --raised: oklch(0.22 0.020 275);
+      --text: oklch(0.95 0.012 265);
+      --body: oklch(0.82 0.025 265);
+      --muted: oklch(0.62 0.025 265);
+      --blue: oklch(0.72 0.14 255);
+      --green: oklch(0.78 0.15 135);
+      --red: oklch(0.70 0.18 20);
+      --amber: oklch(0.78 0.13 75);
+      --rule: oklch(0.34 0.025 275);
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--ground);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    body {
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(18px, 2.2vw, 34px);
+      padding: clamp(34px, 5vw, 72px);
+      opacity: 0;
+    }
+
+    .slide.active {
+      display: grid;
+      opacity: 1;
+      animation: reveal 240ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .marker {
+      grid-column: 1 / 13;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font: 600 13px/1 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .marker::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--rule);
+    }
+
+    .content {
+      grid-column: 1 / 13;
+      align-self: center;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 2.2vw, 34px);
+      min-height: 0;
+    }
+
+    h1, h2, p, pre, ul, dl, dd { margin: 0; }
+
+    h1 {
+      grid-column: 1 / 12;
+      max-width: 16ch;
+      font-size: clamp(54px, 7.6vw, 104px);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      font-weight: 760;
+    }
+
+    h2 {
+      grid-column: 1 / 11;
+      max-width: 20ch;
+      font-size: clamp(40px, 5.5vw, 74px);
+      line-height: 1;
+      letter-spacing: -0.045em;
+      font-weight: 730;
+    }
+
+    .lede {
+      grid-column: 2 / 8;
+      align-self: end;
+      max-width: 60ch;
+      color: var(--body);
+      font-size: clamp(20px, 2.1vw, 30px);
+      line-height: 1.38;
+    }
+
+    .eyebrow {
+      grid-column: 1 / 5;
+      color: var(--blue);
+      font: 650 clamp(14px, 1.4vw, 18px)/1.4 var(--mono);
+    }
+
+    .metric {
+      grid-column: 9 / 13;
+      align-self: end;
+      color: var(--red);
+      font: 700 clamp(30px, 4vw, 58px)/1 var(--mono);
+      letter-spacing: -0.04em;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font: 500 14px/1.4 var(--sans);
+      letter-spacing: 0;
+    }
+
+    .code {
+      grid-column: 1 / 8;
+      align-self: stretch;
+      padding: clamp(18px, 2.4vw, 32px);
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      background: var(--raised);
+      color: var(--body);
+      font: 500 clamp(13px, 1.3vw, 18px)/1.55 var(--mono);
+      white-space: pre-wrap;
+    }
+
+    .annotation {
+      grid-column: 9 / 13;
+      align-self: center;
+      color: var(--body);
+      font-size: clamp(19px, 2vw, 28px);
+      line-height: 1.42;
+    }
+
+    .annotation strong,
+    .blue { color: var(--blue); }
+    .pass { color: var(--green); }
+    .fail { color: var(--red); }
+    .warn { color: var(--amber); }
+
+    .windows {
+      grid-column: 1 / 13;
+      align-self: center;
+      display: grid;
+      grid-template-columns: 2fr 1fr 2fr 1fr 2fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .window {
+      min-height: 190px;
+      padding-top: 18px;
+      border-top: 2px solid var(--rule);
+    }
+
+    .window b {
+      display: block;
+      margin-bottom: 22px;
+      color: var(--red);
+      font: 650 14px/1 var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .window span {
+      color: var(--body);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.28;
+    }
+
+    .arrow {
+      color: var(--muted);
+      font: 400 34px/1 var(--mono);
+      text-align: center;
+    }
+
+    .boundary {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 5fr 2fr 5fr;
+      align-items: stretch;
+      gap: 0;
+      border-block: 1px solid var(--rule);
+    }
+
+    .zone {
+      padding: clamp(22px, 3vw, 42px) 0;
+    }
+
+    .zone h3 {
+      margin: 0 0 22px;
+      font-size: clamp(25px, 2.7vw, 38px);
+    }
+
+    .zone ul {
+      padding: 0;
+      list-style: none;
+      color: var(--body);
+      font-size: clamp(18px, 1.7vw, 24px);
+      line-height: 1.6;
+    }
+
+    .divider {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font: 600 13px/1.4 var(--mono);
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .evidence {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 4fr 4fr 4fr;
+      gap: clamp(24px, 4vw, 60px);
+    }
+
+    .datum {
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .datum dt {
+      color: var(--muted);
+      font: 600 13px/1.3 var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .datum dd {
+      margin-top: 14px;
+      color: var(--text);
+      font-size: clamp(28px, 3vw, 46px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .datum dd.pass { color: var(--green); }
+    .datum dd.fail { color: var(--red); }
+
+    .command {
+      grid-column: 1 / 10;
+      align-self: center;
+      padding: clamp(24px, 3vw, 42px);
+      border: 1px solid var(--blue);
+      background: var(--raised);
+      color: var(--text);
+      font: 600 clamp(22px, 2.5vw, 36px)/1.35 var(--mono);
+    }
+
+    .steps {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .step {
+      min-height: 164px;
+      padding: clamp(18px, 2vw, 28px);
+      background: var(--ground);
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--blue);
+      font: 650 14px/1 var(--mono);
+    }
+
+    .step span {
+      color: var(--body);
+      font-size: clamp(17px, 1.55vw, 22px);
+      line-height: 1.35;
+    }
+
+    .caveat {
+      grid-column: 1 / 9;
+      color: var(--body);
+      font-size: clamp(25px, 3vw, 42px);
+      line-height: 1.22;
+      letter-spacing: -0.025em;
+    }
+
+    .caveat code {
+      color: var(--amber);
+      font-family: var(--mono);
+      font-size: 0.88em;
+    }
+
+    .code-comparison {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2vw, 30px);
+      min-height: 0;
+    }
+
+    .code-pane {
+      min-width: 0;
+      padding: clamp(16px, 2vw, 26px);
+      border: 1px solid var(--rule);
+      background: var(--raised);
+    }
+
+    .code-pane h3 {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font: 650 13px/1.2 var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .code-pane pre {
+      margin: 0;
+      color: var(--body);
+      font: 500 clamp(11px, 1.05vw, 15px)/1.45 var(--mono);
+      white-space: pre-wrap;
+    }
+
+    .contract {
+      grid-column: 1 / 13;
+      align-self: center;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-block: 1px solid var(--rule);
+    }
+
+    .contract-step {
+      padding: clamp(18px, 2.4vw, 32px);
+      border-inline-end: 1px solid var(--rule);
+    }
+
+    .contract-step:last-child { border-inline-end: 0; }
+
+    .contract-step b {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--blue);
+      font: 650 13px/1.2 var(--mono);
+    }
+
+    .contract-step span {
+      color: var(--body);
+      font-size: clamp(17px, 1.6vw, 23px);
+      line-height: 1.35;
+    }
+
+    .contract-note {
+      grid-column: 1 / 11;
+      color: var(--body);
+      font-size: clamp(18px, 1.8vw, 25px);
+      line-height: 1.4;
+    }
+
+    .skill-flow {
+      grid-column: 1 / 13;
+      align-self: center;
+      display: grid;
+      grid-template-columns: 2fr auto 2fr auto 2fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .skill-node {
+      min-height: 170px;
+      padding: clamp(18px, 2vw, 28px);
+      border-block: 1px solid var(--rule);
+    }
+
+    .skill-node b {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--blue);
+      font: 650 13px/1.2 var(--mono);
+    }
+
+    .skill-node span {
+      color: var(--body);
+      font-size: clamp(18px, 1.8vw, 25px);
+      line-height: 1.35;
+    }
+
+    .skill-command {
+      grid-column: 2 / 12;
+      padding: 18px 24px;
+      border: 1px solid var(--rule);
+      background: var(--raised);
+      color: var(--text);
+      font: 600 clamp(15px, 1.5vw, 21px)/1.4 var(--mono);
+    }
+
+    .media-single {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 8fr 4fr;
+      gap: clamp(20px, 3vw, 42px);
+      align-items: center;
+    }
+
+    .media-pair {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2.4vw, 34px);
+      align-items: start;
+    }
+
+    .proof {
+      margin: 0;
+    }
+
+    .proof img {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--rule);
+    }
+
+    .proof figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font: 500 13px/1.4 var(--mono);
+    }
+
+    .availability {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 6vw, 80px);
+    }
+
+    .availability section {
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .availability h3 {
+      margin: 0 0 20px;
+      font-size: clamp(25px, 2.6vw, 38px);
+    }
+
+    .availability p {
+      color: var(--body);
+      font-size: clamp(18px, 1.7vw, 24px);
+      line-height: 1.5;
+    }
+
+    .summary-fields {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(34px, 7vw, 90px);
+    }
+
+    .summary-fields section {
+      border-top: 1px solid var(--rule);
+      padding-top: 18px;
+    }
+
+    .summary-fields h3 {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font: 650 13px/1.2 var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .summary-fields ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--body);
+      font-size: clamp(20px, 2.1vw, 30px);
+      line-height: 1.55;
+    }
+
+    .footer {
+      grid-column: 1 / 13;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font: 500 12px/1 var(--mono);
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      min-width: 42px;
+      min-height: 36px;
+      border: 1px solid var(--rule);
+      background: transparent;
+      color: var(--muted);
+      font: 600 14px/1 var(--mono);
+      cursor: pointer;
+    }
+
+    button:hover, button:focus-visible {
+      border-color: var(--blue);
+      color: var(--text);
+      outline: 2px solid transparent;
+    }
+
+    .progress {
+      position: fixed;
+      inset: auto 0 0;
+      height: 3px;
+      background: var(--rule);
+    }
+
+    .progress span {
+      display: block;
+      width: 10%;
+      height: 100%;
+      background: var(--blue);
+      transform-origin: left;
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (max-width: 800px) {
+      .slide { padding: 28px; }
+      .lede, .code, .annotation, .command, .caveat { grid-column: 1 / 13; }
+      .metric { grid-column: 8 / 13; }
+      .windows, .steps, .code-comparison, .contract, .skill-flow,
+      .media-single, .media-pair, .availability, .summary-fields {
+        grid-template-columns: 1fr;
+      }
+      .arrow { display: none; }
+      .window, .step { min-height: auto; }
+      .boundary { grid-template-columns: 1fr; }
+      .divider { display: none; }
+      .evidence { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide.active { animation: none; }
+      .progress span { transition: none; }
+    }
+
+    @media print {
+      html, body { overflow: visible; }
+      .slide {
+        position: relative;
+        display: grid;
+        width: 1280px;
+        height: 720px;
+        break-after: page;
+        opacity: 1;
+      }
+      .controls, .progress { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-live="polite">
+    <section class="slide active" aria-label="Slide 1 of 10">
+      <div class="marker">01 / failure as proof</div>
+      <div class="content">
+        <h1>Temporal lets us bring a research agent back to life</h1>
+        <p class="lede">Improving the durability of our research pipeline using Temporal's Python SDK</p>
+        <p class="metric">SIGKILL<small>during two heartbeat-emitting Activities</small></p>
+      </div>
+      <div class="footer"><span>Temporal × SciX × Code Intel Digest</span></div>
+    </section>
+
+    <section class="slide" id="code-comparison" aria-label="Slide 2 of 10">
+      <div class="marker">02 / before and after</div>
+      <div class="content">
+        <div class="code-comparison">
+          <div class="code-pane">
+            <h3>Before · client process owns progress</h3>
+            <pre><code>phase('Research')
+await pipeline(
+  EPS,
+  (it) => agent(/* prompt omitted */, {
+    label: `research:${it.s}-ep${it.ep}`,
+    phase: 'Research',
+  }),
+)
+
+phase('Synthesis')
+await parallel(literatureReviews)</code></pre>
+          </div>
+          <div class="code-pane">
+            <h3>After · Temporal records progress</h3>
+            <pre><code>researched = await workflow.execute_activity(
+    "research_angle",
+    request,
+    result_type=BranchResult,
+    start_to_close_timeout=timedelta(minutes=5),
+    heartbeat_timeout=timedelta(seconds=30),
+    retry_policy=self._retry_policy(review),
+)</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Condensed excerpts · full before snapshot and Python replacement are included</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 3 of 10">
+      <div class="marker">03 / three crash windows</div>
+      <div class="content">
+        <div class="windows">
+          <div class="window"><b>01</b><span>Search returned. The process did not record it.</span></div>
+          <div class="arrow">→</div>
+          <div class="window"><b>02</b><span>A file exists. The client does not know it.</span></div>
+          <div class="arrow">→</div>
+          <div class="window"><b>03</b><span>One branch failed. Three useful branches remain.</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>Retry policy · idempotent artifacts · partial-result rule</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 4 of 10">
+      <div class="marker">04 / the determinism boundary</div>
+      <div class="content">
+        <div class="boundary">
+          <div class="zone">
+            <h3 class="blue">Workflow decides</h3>
+            <ul>
+              <li>bounded batches</li>
+              <li>fan-out and fan-in</li>
+              <li>retry policy</li>
+              <li>minimum 3 of 4</li>
+              <li>progress query</li>
+            </ul>
+          </div>
+          <div class="divider">Event History boundary</div>
+          <div class="zone">
+            <h3 class="warn">Activities interact</h3>
+            <ul>
+              <li>SciX + Digest MCP</li>
+              <li>clock and heartbeats</li>
+              <li>artifact reads/writes</li>
+              <li>citation hash checks</li>
+              <li>future LLM synthesis</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Full evidence stays outside Workflow history</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 5 of 10">
+      <div class="marker">05 / retries need a request contract</div>
+      <div class="content">
+        <div class="contract">
+          <div class="contract-step"><b>01</b><span>Hash the logical request</span></div>
+          <div class="contract-step"><b>02</b><span>Reuse a durable journal hit</span></div>
+          <div class="contract-step"><b>03</b><span>Forward the same provider key</span></div>
+          <div class="contract-step"><b>04</b><span>Record the key in provenance</span></div>
+        </div>
+        <p class="contract-note">SciX and Digest are read-only and now reuse
+          persisted responses. A paid or mutating provider must also honor the
+          idempotency key to close the response-before-journal gap.</p>
+      </div>
+      <div class="footer"><span>Temporal records orchestration; providers own external-effect transactions</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 6 of 10">
+      <div class="marker">06 / the workflow became a skill</div>
+      <div class="content">
+        <div class="skill-flow">
+          <div class="skill-node"><b>AGENT</b><span>Calls <code>run-durable-research</code> and may exit.</span></div>
+          <div class="arrow">→</div>
+          <div class="skill-node"><b>TEMPORAL</b><span>Owns branch state, retries, and progress.</span></div>
+          <div class="arrow">→</div>
+          <div class="skill-node"><b>NEW AGENT</b><span>Queries status or retrieves report + provenance.</span></div>
+        </div>
+        <p class="skill-command">research start request.json → status WORKFLOW_ID → result WORKFLOW_ID</p>
+      </div>
+      <div class="footer"><span>Callable from any agent on this workstation</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 7 of 10">
+      <div class="marker">07 / kill the Worker, keep the run</div>
+      <div class="content">
+        <div class="media-single">
+          <figure class="proof">
+            <img src="deck-assets/worker-killed.png" alt="Terminal evidence showing the research Worker killed while two Activities are in flight">
+            <figcaption>Recorded demo, failure point</figcaption>
+          </figure>
+          <p class="annotation"><strong>SIGKILL lands while two Activities are in flight.</strong><br><br>
+            Temporal keeps the same Workflow run open until another Worker can continue it.</p>
+        </div>
+      </div>
+      <div class="footer"><span>Workstation-only fixture harness · captured evidence</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 8 of 10">
+      <div class="marker">08 / the same run completes</div>
+      <div class="content">
+        <div class="media-pair">
+          <figure class="proof">
+            <img src="deck-assets/workflow-completed.png" alt="Terminal showing all four research angles completed under the original Workflow run">
+            <figcaption>Four angles, status COMPLETED, replacement identity recorded</figcaption>
+          </figure>
+          <figure class="proof">
+            <img src="deck-assets/activity-attempt-two.png" alt="Temporal Web Event History showing research Activities starting on attempt two">
+            <figcaption>Temporal Web, events 7 and 10 show Activity attempt 2</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="footer"><span>Heartbeat timeout → attempt 2 → report + manifest</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 9 of 10">
+      <div class="marker">09 / availability is part of the contract</div>
+      <div class="content">
+        <div class="availability">
+          <section>
+            <h3 class="pass">Portable</h3>
+            <p>The before and after source, explanation, deck, recording, and
+              captured Event History can be reviewed anywhere.</p>
+          </section>
+          <section>
+            <h3 class="warn">Workstation-only</h3>
+            <p>The live SciX and Digest MCP integrations, indexes, Worker, and
+              demo harness depend on services and repositories on this machine.
+              The published artifact is a walkthrough of captured evidence.</p>
+          </section>
+        </div>
+      </div>
+      <div class="footer"><span>Show the evidence without overstating reproducibility</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 10 of 10">
+      <div class="marker">10 / what changed</div>
+      <div class="content">
+        <div class="summary-fields">
+          <section>
+            <h3>The code already provided</h3>
+            <ul>
+              <li>SciX + Digest retrieval</li>
+              <li>Parallel research branches</li>
+              <li>Cited reports + provenance</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Temporal adds</h3>
+            <ul>
+              <li>Durable Workflow state</li>
+              <li>Activity retries + recovery</li>
+              <li>Queryable progress + Event History</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div class="footer"><span>Questions</span></div>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Slide controls" style="position:fixed;right:24px;bottom:20px;z-index:10">
+    <button id="previous" type="button" aria-label="Previous slide">←</button>
+    <button id="next" type="button" aria-label="Next slide">→</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const progress = document.querySelector("#progress");
+    let current = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, position) => {
+        const active = position === current;
+        slide.classList.toggle("active", active);
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+      progress.style.transform = `scaleX(${(current + 1) / slides.length})`;
+      document.title = `${current + 1}/${slides.length} · Temporal lets us bring a research agent back to life`;
+    }
+
+    document.querySelector("#previous").addEventListener("click", () => show(current - 1));
+    document.querySelector("#next").addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        show(current + 1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        show(current - 1);
+      }
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+
+    const requestedSlide = Number(new URLSearchParams(location.search).get("slide"));
+    show(Number.isInteger(requestedSlide) && requestedSlide > 0 ? requestedSlide - 1 : 0);
+  </script>
+</body>
+</html>

@@ -10,9 +10,10 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      // Keep the unlisted durable-podcast-render page and its deck out of the
-      // sitemap; it is shareable by direct link only.
-      filter: (page) => !page.includes("/durable-podcast-render"),
+      // Keep direct-link-only presentation pages out of the sitemap.
+      filter: (page) =>
+        !page.includes("/durable-podcast-render") &&
+        !page.includes("/temporal-research-agent"),
     }),
   ],
   redirects: {
