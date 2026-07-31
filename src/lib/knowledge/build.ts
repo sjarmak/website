@@ -13,6 +13,7 @@ import librariesData from "@/data/knowledge/libraries.json";
 import explorersData from "@/data/knowledge/explorers.json";
 import thirtyPapersData from "@/data/knowledge/explorers/thirty-papers.json";
 import paperSynthesisData from "@/data/knowledge/paper-synthesis.json";
+import { byDate, byString, thenBy } from "@/lib/sorting";
 import { buildBm25, bm25Query, rrf, semanticQuery, tokenize, type Scored } from "./retrieval";
 import type {
   DigestItem,
@@ -471,7 +472,7 @@ export async function getDigests(): Promise<DigestIssue[]> {
       highlights: e.data.highlights,
       linkCount: Math.max(e.data.items.length, countBodyLinks(e.body ?? "")),
     }))
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
+    .sort(thenBy(byDate((d) => d.date, "desc"), byString((d) => d.slug)));
 }
 
 /** Count the distinct external links in a digest's markdown body. */

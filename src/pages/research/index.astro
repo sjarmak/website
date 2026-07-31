@@ -7,8 +7,8 @@ import { getCollection } from "astro:content";
 const publications = await getPublications();
 const pressYear = (p: { data: { date?: Date; year?: number } }) =>
   p.data.year ?? p.data.date?.getUTCFullYear();
-const press = (await getCollection("press")).sort(
-  (a, b) => (pressYear(b) ?? 0) - (pressYear(a) ?? 0),
+const press = [...(await getCollection("press"))].sort(
+  (a, b) => (pressYear(b) ?? 0) - (pressYear(a) ?? 0) || a.id.localeCompare(b.id),
 );
 ---
 

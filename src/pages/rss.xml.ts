@@ -1,11 +1,11 @@
 import rss from "@astrojs/rss";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import type { APIContext } from "astro";
 import { site } from "@/data/site";
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection("posts", (p) => !p.data.draft)).sort(
-    (a, b) => +b.data.date - +a.data.date,
+  const posts = [...(await getCollection("posts", (p: CollectionEntry<"posts">) => !p.data.draft))].sort(
+    (a, b) => +b.data.date - +a.data.date || a.id.localeCompare(b.id),
   );
 
   return rss({

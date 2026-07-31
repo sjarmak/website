@@ -1,4 +1,4 @@
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export type StarKind = "project" | "writing" | "talk" | "publication" | "topic" | "learning";
 
@@ -14,6 +14,8 @@ export interface StarPoint {
 export interface StarmapData {
   points: StarPoint[];
 }
+
+type ContentRef = { id: string };
 
 // ---- PRNG (mulberry32, deterministic, seeded) ----
 
@@ -144,12 +146,12 @@ function normalizeCoords(
 
 export async function buildStarmap(): Promise<StarmapData> {
   const [projects, topics, writing, talks, publications, learning] = await Promise.all([
-    getCollection("projects"),
-    getCollection("topics"),
-    getCollection("writing"),
-    getCollection("talks"),
-    getCollection("publications"),
-    getCollection("learning"),
+    getCollection("projects") as Promise<CollectionEntry<"projects">[]>,
+    getCollection("topics") as Promise<CollectionEntry<"topics">[]>,
+    getCollection("writing") as Promise<CollectionEntry<"writing">[]>,
+    getCollection("talks") as Promise<CollectionEntry<"talks">[]>,
+    getCollection("publications") as Promise<CollectionEntry<"publications">[]>,
+    getCollection("learning") as Promise<CollectionEntry<"learning">[]>,
   ]);
 
   // Build topic slug → id map for resolving references
@@ -166,18 +168,29 @@ export async function buildStarmap(): Promise<StarmapData> {
   const items: RawItem[] = [];
 
   // Topics
-  for (const t of topics) {
+  const sortedTopics = [...topics].sort((a, b) => b.data.weight - a.data.weight || a.id.localeCompare(b.id));
+  const sortedProjects = [...projects].sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.id.localeCompare(b.id));
+  const sortedWriting = [...writing].sort((a, b) => {
+    const ad = a.data.date ? +a.data.date : -Infinity;
+    const bd = b.data.date ? +b.data.date : -Infinity;
+    return bd - ad || a.id.localeCompare(b.id);
+  });
+  const sortedTalks = [...talks].sort((a, b) => +b.data.date - +a.data.date || a.id.localeCompare(b.id));
+  const sortedPublications = [...publications].sort((a, b) => b.data.year - a.data.year || a.id.localeCompare(b.id));
+  const sortedLearning = [...learning].sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.id.localeCompare(b.id));
+
+  for (const t of sortedTopics) {
     const tokens = tokenBag([
       ...titleTokens(t.data.title),
       t.id,
-      ...t.data.related.map((r) => r.id),
+      ...t.data.related.map((r: ContentRef) => r.id),
     ]);
     items.push({ id: `topic:${t.id}`, kind: "topic", title: t.data.title, url: `/projects/explorer?node=${t.id}`, tokens });
   }
 
   // Projects
-  for (const p of projects) {
-    const topicTokens = p.data.topics.map((ref) => topicSlugById.get(ref.id) ?? ref.id);
+  for (const p of sortedProjects) {
+    const topicTokens = p.data.topics.map((ref: ContentRef) => topicSlugById.get(ref.id) ?? ref.id);
     const tokens = tokenBag([
       ...titleTokens(p.data.title),
       ...(p.data.tags ?? []),
@@ -188,7 +201,7 @@ export async function buildStarmap(): Promise<StarmapData> {
   }
 
   // Writing
-  for (const w of writing) {
+  for (const w of sortedWriting) {
     const tokens = tokenBag([
       ...titleTokens(w.data.title),
       ...(w.data.tags ?? []),
@@ -198,7 +211,7 @@ export async function buildStarmap(): Promise<StarmapData> {
   }
 
   // Talks
-  for (const t of talks) {
+  for (const t of sortedTalks) {
     const tokens = tokenBag([
       ...titleTokens(t.data.title),
       t.data.kind,
@@ -209,7 +222,7 @@ export async function buildStarmap(): Promise<StarmapData> {
   }
 
   // Publications
-  for (const p of publications) {
+  for (const p of sortedPublications) {
     const tokens = tokenBag([
       ...titleTokens(p.data.title),
       ...(p.data.tags ?? []),
@@ -224,7 +237,7 @@ export async function buildStarmap(): Promise<StarmapData> {
   }
 
   // Learning
-  for (const l of learning) {
+  for (const l of sortedLearning) {
     const tokens = tokenBag([
       ...titleTokens(l.data.title),
       l.data.kind,
