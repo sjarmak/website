@@ -1,0 +1,294 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  bookChapterHref,
+  bookChapterSlug,
+  bookCompanionHref,
+} from "@/lib/books";
+
+export async function getStaticPaths() {
+  const [books, chapters] = await Promise.all([
+    getCollection("books"),
+    getCollection("bookChapters"),
+  ]);
+
+  return books.map((book) => ({
+    params: { book: book.id },
+    props: {
+      book,
+      chapters: chapters
+        .filter((chapter) => chapter.data.book.id === book.id)
+        .sort((a, b) => a.data.order - b.data.order),
+    },
+  }));
+}
+
+interface Props {
+  book: CollectionEntry<"books">;
+  chapters: CollectionEntry<"bookChapters">[];
+}
+
+const { book, chapters } = Astro.props;
+const introduction = chapters.find((chapter) => chapter.data.kind === "introduction");
+const closing = chapters.find((chapter) => chapter.data.kind === "closing");
+const chaptersByPart = book.data.parts.map((part) => ({
+  ...part,
+  chapters: chapters.filter(
+    (chapter) => chapter.data.kind === "chapter" && chapter.data.part === part.number,
+  ),
+}));
+const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
+  bookChapterHref(book.id, bookChapterSlug(chapter.id));
+---
+
+<BaseLayout title={book.data.title} description={book.data.description} type="article">
+  <article class="book">
+    <header class="book-head container">
+      <div class="book-head__context">
+        <a href="/writing">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>Book</span>
+      </div>
+      <div class="book-head__title">
+        <p class="kicker">Book</p>
+        <h1>{book.data.title}</h1>
+      </div>
+      <div class="book-head__details">
+        <p class="book-head__author">By {book.data.author}</p>
+        <p class="lead">{book.data.description}</p>
+        <p class="muted">
+          18 chapters · {book.data.parts.length} parts · {book.data.wordCount.toLocaleString("en-US")} words
+        </p>
+        {
+          introduction && (
+            <a class="book-head__start" href={hrefFor(introduction)}>
+              Start reading <span aria-hidden="true">→</span>
+            </a>
+          )
+        }
+        <a class="book-head__companion" href={bookCompanionHref(book.id)}>
+          Browse all 192 practices <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="contents container" aria-labelledby="contents-heading">
+      <h2 id="contents-heading">Contents</h2>
+
+      {
+        introduction && (
+          <a class="contents__edge" href={hrefFor(introduction)}>
+            <span class="contents__marker">Start here</span>
+            <span>{introduction.data.title}</span>
+          </a>
+        )
+      }
+
+      <div class="contents__parts">
+        {
+          chaptersByPart.map((part) => (
+            <section class="part">
+              <header class="part__head">
+                <p>Part {part.number}</p>
+                <h3>{part.title}</h3>
+              </header>
+              <ol class="part__chapters" start={part.chapters[0]?.data.number}>
+                {part.chapters.map((chapter) => (
+                  <li value={chapter.data.number}>
+                    <a href={hrefFor(chapter)}>{chapter.data.title}</a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+      </div>
+
+      {
+        closing && (
+          <a class="contents__edge contents__edge--closing" href={hrefFor(closing)}>
+            <span class="contents__marker">Closing</span>
+            <span>{closing.data.title.replace(/^Closing:\s*/, "")}</span>
+          </a>
+        )
+      }
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .book {
+    padding-block-end: clamp(var(--space-xl), 8vw, var(--space-3xl));
+  }
+
+  .book-head {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+    gap: var(--space-m) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block: clamp(var(--space-l), 7vw, var(--space-2xl));
+    border-bottom: var(--border-hairline);
+  }
+
+  .book-head__context {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: baseline;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .book-head__title h1 {
+    max-width: 18ch;
+  }
+
+  .book-head__details {
+    grid-column: 2;
+    max-width: 43rem;
+  }
+
+  .book-head__details > * + * {
+    margin-block-start: var(--space-s);
+  }
+
+  .book-head__author {
+    font-weight: var(--weight-semibold);
+  }
+
+  .book-head__start {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+  }
+
+  .book-head__companion {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    margin-inline-start: var(--space-m);
+    min-height: 2.75rem;
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+  }
+
+  .contents {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+    gap: var(--space-l) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block-start: clamp(var(--space-xl), 8vw, var(--space-2xl));
+  }
+
+  .contents > h2 {
+    font-size: var(--step-1);
+  }
+
+  .contents__parts,
+  .contents__edge {
+    grid-column: 2;
+  }
+
+  .contents__edge {
+    display: grid;
+    grid-template-columns: minmax(5rem, 0.25fr) 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-m);
+    border-block: var(--border-hairline);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    text-decoration: none;
+  }
+
+  .contents__edge--closing {
+    border-top: 0;
+  }
+
+  .contents__marker {
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+  }
+
+  .contents__parts {
+    border-bottom: var(--border-hairline);
+  }
+
+  .part {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.45fr) minmax(0, 1fr);
+    gap: var(--space-m) var(--space-l);
+    padding-block: clamp(var(--space-l), 5vw, var(--space-xl));
+    border-top: var(--border-hairline);
+  }
+
+  .part__head p {
+    color: var(--color-accent);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
+  .part__head h3 {
+    margin-block-start: var(--space-2xs);
+    font-size: var(--step-1);
+  }
+
+  .part__chapters {
+    padding-inline-start: 2.25rem;
+  }
+
+  .part__chapters li {
+    padding-inline-start: var(--space-2xs);
+  }
+
+  .part__chapters li + li {
+    margin-block-start: var(--space-m);
+  }
+
+  .part__chapters li::marker {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .part__chapters a {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+    text-decoration: none;
+  }
+
+  .part__chapters a:hover,
+  .contents__edge:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 44rem) {
+    .book-head,
+    .contents {
+      grid-template-columns: 1fr;
+    }
+
+    .book-head__title,
+    .book-head__details,
+    .contents > h2,
+    .contents__parts,
+    .contents__edge {
+      grid-column: 1;
+    }
+
+    .part {
+      grid-template-columns: 1fr;
+    }
+
+    .contents__edge {
+      grid-template-columns: 5rem 1fr;
+    }
+
+    .book-head__companion {
+      margin-inline-start: 0;
+    }
+  }
+</style>

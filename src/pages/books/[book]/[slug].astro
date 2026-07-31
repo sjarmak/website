@@ -1,0 +1,474 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  bookChapterHref,
+  bookChapterSlug,
+  bookCompanionHref,
+} from "@/lib/books";
+
+export async function getStaticPaths() {
+  const [books, chapters] = await Promise.all([
+    getCollection("books"),
+    getCollection("bookChapters"),
+  ]);
+  const booksById = new Map(books.map((book) => [book.id, book]));
+
+  return chapters.map((chapter) => {
+    const book = booksById.get(chapter.data.book.id);
+    if (!book) throw new Error(`Missing book for chapter ${chapter.id}`);
+    const ordered = chapters
+      .filter((candidate) => candidate.data.book.id === book.id)
+      .sort((a, b) => a.data.order - b.data.order);
+
+    return {
+      params: { book: book.id, slug: bookChapterSlug(chapter.id) },
+      props: { book, chapter, ordered },
+    };
+  });
+}
+
+interface Props {
+  book: CollectionEntry<"books">;
+  chapter: CollectionEntry<"bookChapters">;
+  ordered: CollectionEntry<"bookChapters">[];
+}
+
+const { book, chapter, ordered } = Astro.props;
+const { Content } = await render(chapter);
+const index = ordered.findIndex((candidate) => candidate.id === chapter.id);
+const previous = index > 0 ? ordered[index - 1] : undefined;
+const next = index < ordered.length - 1 ? ordered[index + 1] : undefined;
+const part = book.data.parts.find((candidate) => candidate.number === chapter.data.part);
+const kicker =
+  chapter.data.kind === "introduction"
+    ? "Introduction"
+    : chapter.data.kind === "closing"
+      ? "Closing"
+      : `Part ${chapter.data.part} · Chapter ${chapter.data.number}`;
+const hrefFor = (entry: CollectionEntry<"bookChapters">) =>
+  bookChapterHref(book.id, bookChapterSlug(entry.id));
+const navigationTitle = (entry: CollectionEntry<"bookChapters">) =>
+  entry.data.kind === "chapter" ? `Chapter ${entry.data.number}: ${entry.data.title}` : entry.data.title;
+---
+
+<BaseLayout
+  title={`${chapter.data.title} · ${book.data.title}`}
+  description={book.data.description}
+  type="article"
+>
+  <article class="chapter container">
+    <header class="chapter-head">
+      <div class="chapter-head__trail">
+        <a href="/writing">Writing</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/books/${book.id}`}>{book.data.title}</a>
+      </div>
+      <div class="chapter-head__main">
+        <p class="kicker">{kicker}</p>
+        <h1>{chapter.data.title}</h1>
+        {part && <p class="chapter-head__part">{part.title}</p>}
+      </div>
+    </header>
+
+    <div class="chapter-layout">
+      <aside class="chapter-context" aria-label="Reading progress">
+        <p>{index + 1} of {ordered.length}</p>
+        <a href={`/books/${book.id}`}>Full contents</a>
+        <a
+          href={`${bookCompanionHref(book.id)}${
+            chapter.data.number ? `#chapter-${chapter.data.number}` : ""
+          }`}
+        >
+          Companion catalog
+        </a>
+      </aside>
+
+      <div class="prose chapter-body">
+        <Content />
+      </div>
+    </div>
+
+    <nav class="chapter-nav" aria-label="Book chapters">
+      {
+        previous ? (
+          <a class="chapter-nav__previous" href={hrefFor(previous)}>
+            <span>Previous</span>
+            <strong>{navigationTitle(previous)}</strong>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a class="chapter-nav__next" href={hrefFor(next)}>
+            <span>Next</span>
+            <strong>{navigationTitle(next)}</strong>
+          </a>
+        ) : (
+          <a class="chapter-nav__next" href={`/books/${book.id}`}>
+            <span>Finished</span>
+            <strong>Back to the contents</strong>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .chapter {
+    padding-block: clamp(var(--space-l), 6vw, var(--space-2xl)) var(--space-2xl);
+  }
+
+  .chapter-head {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, var(--container-narrow));
+    gap: var(--space-m) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block-end: clamp(var(--space-l), 6vw, var(--space-xl));
+    border-bottom: var(--border-hairline);
+  }
+
+  .chapter-head__trail {
+    min-width: 0;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .chapter-head__trail > * {
+    display: block;
+  }
+
+  .chapter-head__trail span {
+    margin-block: var(--space-3xs);
+  }
+
+  .chapter-head__trail a:last-child {
+    overflow-wrap: anywhere;
+  }
+
+  .chapter-head__main h1 {
+    max-width: 22ch;
+  }
+
+  .chapter-head__part {
+    margin-block-start: var(--space-s);
+    color: var(--color-text-muted);
+  }
+
+  .chapter-layout {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, var(--container-narrow));
+    gap: var(--space-l) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block-start: clamp(var(--space-l), 6vw, var(--space-xl));
+  }
+
+  .chapter-context {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .chapter-context a {
+    display: block;
+    margin-block-start: var(--space-2xs);
+  }
+
+  .chapter-body {
+    min-width: 0;
+  }
+
+  .chapter-body :global(pre) {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.55;
+    white-space: pre;
+    overscroll-behavior-inline: contain;
+  }
+
+  .chapter-body :global(pre code) {
+    font: inherit;
+  }
+
+  .chapter-body :global(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  .chapter-body :global(th),
+  .chapter-body :global(td) {
+    padding: var(--space-2xs) var(--space-s);
+    border-bottom: var(--border-hairline);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .chapter-body :global(blockquote) {
+    padding: var(--space-s) var(--space-m);
+    border-block: var(--border-hairline);
+    color: var(--color-text-secondary);
+  }
+
+  .chapter-body :global(.book-figure) {
+    width: 100%;
+    max-width: 100%;
+    margin-block: clamp(var(--space-l), 6vw, var(--space-xl));
+  }
+
+  .chapter-body :global(.book-figure__scroll) {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .chapter-body :global(.book-figure .bookfig) {
+    display: block;
+    width: 100%;
+    min-width: 30rem;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  /*
+    Inline book diagrams inherit the same semantic palette as the surrounding
+    page. The canvas fallback also neutralizes cached/source SVG markup that
+    still contains its original full-size background rectangle.
+  */
+  .chapter-body :global(.book-figure .bookfig > rect.f-bg:first-of-type:not([x]):not([y])) {
+    fill: transparent;
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-bg) {
+    fill: var(--color-bg);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-bg) {
+    stroke: var(--color-bg);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-ink) {
+    fill: var(--color-text);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-ink) {
+    stroke: var(--color-text);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-mid) {
+    fill: var(--color-text-secondary);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-mid) {
+    stroke: var(--color-text-secondary);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-faint) {
+    fill: var(--color-border);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-faint) {
+    stroke: var(--color-border);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-wash) {
+    fill: var(--color-surface);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-wash) {
+    stroke: var(--color-surface);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-accent) {
+    fill: var(--color-accent);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-accent) {
+    stroke: var(--color-accent);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .f-onacc) {
+    fill: var(--color-bg);
+  }
+
+  .chapter-body :global(.book-figure .bookfig .s-onacc) {
+    stroke: var(--color-bg);
+  }
+
+  .chapter-body :global(.book-figure + p) {
+    margin-block-start: calc(-1 * var(--space-m));
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    line-height: var(--leading-normal);
+  }
+
+  .chapter-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-l);
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .chapter-nav a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    min-height: 4rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .chapter-nav a:hover {
+    color: var(--color-accent);
+  }
+
+  .chapter-nav span {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    font-weight: var(--weight-normal);
+  }
+
+  .chapter-nav strong {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    line-height: var(--leading-snug);
+  }
+
+  .chapter-nav__next {
+    text-align: right;
+  }
+
+  @media (max-width: 44rem) {
+    .chapter-head,
+    .chapter-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .chapter-head__trail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2xs);
+    }
+
+    .chapter-head__trail > * {
+      display: inline;
+    }
+
+    .chapter-head__trail span {
+      margin-block: 0;
+    }
+
+    .chapter-context {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-m);
+    }
+
+    .chapter-context a {
+      margin-block-start: 0;
+    }
+
+    .chapter-nav {
+      grid-template-columns: 1fr;
+      margin-inline-start: 0;
+    }
+
+    .chapter-nav__next {
+      text-align: left;
+    }
+  }
+
+  @media print {
+    .chapter {
+      padding: 0;
+    }
+
+    .chapter-head__trail,
+    .chapter-context,
+    .chapter-nav {
+      display: none;
+    }
+
+    .chapter-head,
+    .chapter-layout {
+      display: block;
+    }
+
+    .chapter-body {
+      max-width: none;
+    }
+
+    .chapter-body :global(.book-figure .bookfig) {
+      min-width: 0;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-bg) {
+      fill: #ffffff !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-bg) {
+      stroke: #ffffff !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-ink) {
+      fill: #1a1a1a !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-ink) {
+      stroke: #1a1a1a !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-mid) {
+      fill: #6b6b6b !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-mid) {
+      stroke: #6b6b6b !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-faint) {
+      fill: #b8b8b8 !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-faint) {
+      stroke: #b8b8b8 !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-wash) {
+      fill: #e2e2e2 !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-wash) {
+      stroke: #e2e2e2 !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-accent) {
+      fill: #8f4e1c !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-accent) {
+      stroke: #8f4e1c !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .f-onacc) {
+      fill: #ffffff !important;
+    }
+
+    .chapter-body :global(.book-figure .bookfig .s-onacc) {
+      stroke: #ffffff !important;
+    }
+  }
+</style>

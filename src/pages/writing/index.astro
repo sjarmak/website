@@ -13,6 +13,7 @@ const sourceLabel: Record<string, string> = {
   medium: "Medium",
   sourcegraph: "Sourcegraph",
   ebook: "Ebook",
+  book: "Book",
   "on-site": "Essay",
   external: "External",
 };
@@ -27,13 +28,17 @@ const pubTypeLabel: Record<string, string> = {
 };
 
 const hrefFor = (w: Entry) =>
-  w.data.source === "on-site" && w.data.post ? `/writing/${w.data.post.id}` : (w.data.url ?? "#");
+  w.data.source === "on-site" && w.data.post
+    ? `/writing/${w.data.post.id}`
+    : w.data.source === "book" && w.data.book
+      ? `/books/${w.data.book.id}`
+      : (w.data.url ?? "#");
 
 // Grouped, in reading order. getWriting() already sorts newest-first within each source.
 const groups: { heading: string; sources: Entry["data"]["source"][] }[] = [
   { heading: "Essays", sources: ["medium", "on-site"] },
   { heading: "Engineering blog", sources: ["sourcegraph"] },
-  { heading: "Guides & ebooks", sources: ["ebook"] },
+  { heading: "Guides & ebooks", sources: ["book", "ebook"] },
   { heading: "Elsewhere", sources: ["external"] },
 ];
 

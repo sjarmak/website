@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486 486" width="486" height="486" role="img" aria-labelledby="figtitle-ch13-capacity-competence" class="bookfig">
+<title id="figtitle-ch13-capacity-competence">Across incomparable metrics, RULER is about half-satisfactory at 32k, long-context RAG saturates near 64k, LONGCODEU degrades beyond 32k, and toward 1M Claude 3.5 Sonnet falls 29% to 3% while Qwen2.5 falls 70.2% to 40%.</title>
+<style>.bookfig .f-bg{fill:#ffffff}.bookfig .s-bg{stroke:#ffffff}.bookfig .f-ink{fill:#1a1a1a}.bookfig .s-ink{stroke:#1a1a1a}.bookfig .f-mid{fill:#6b6b6b}.bookfig .s-mid{stroke:#6b6b6b}.bookfig .f-faint{fill:#b8b8b8}.bookfig .s-faint{stroke:#b8b8b8}.bookfig .f-wash{fill:#e2e2e2}.bookfig .s-wash{stroke:#e2e2e2}.bookfig .f-accent{fill:#8f4e1c}.bookfig .s-accent{stroke:#8f4e1c}.bookfig .f-onacc{fill:#ffffff}.bookfig .s-onacc{stroke:#ffffff}@media (prefers-color-scheme:dark){.bookfig .f-bg{fill:#232019}.bookfig .s-bg{stroke:#232019}.bookfig .f-ink{fill:#ede5d6}.bookfig .s-ink{stroke:#ede5d6}.bookfig .f-mid{fill:#9a8f7c}.bookfig .s-mid{stroke:#9a8f7c}.bookfig .f-faint{fill:#5c5346}.bookfig .s-faint{stroke:#5c5346}.bookfig .f-wash{fill:#3d382f}.bookfig .s-wash{stroke:#3d382f}.bookfig .f-accent{fill:#df9d5e}.bookfig .s-accent{stroke:#df9d5e}.bookfig .f-onacc{fill:#232019}.bookfig .s-onacc{stroke:#232019}}:where([data-theme="dark"]) .bookfig .f-bg{fill:#232019}:where([data-theme="dark"]) .bookfig .s-bg{stroke:#232019}:where([data-theme="dark"]) .bookfig .f-ink{fill:#ede5d6}:where([data-theme="dark"]) .bookfig .s-ink{stroke:#ede5d6}:where([data-theme="dark"]) .bookfig .f-mid{fill:#9a8f7c}:where([data-theme="dark"]) .bookfig .s-mid{stroke:#9a8f7c}:where([data-theme="dark"]) .bookfig .f-faint{fill:#5c5346}:where([data-theme="dark"]) .bookfig .s-faint{stroke:#5c5346}:where([data-theme="dark"]) .bookfig .f-wash{fill:#3d382f}:where([data-theme="dark"]) .bookfig .s-wash{stroke:#3d382f}:where([data-theme="dark"]) .bookfig .f-accent{fill:#df9d5e}:where([data-theme="dark"]) .bookfig .s-accent{stroke:#df9d5e}:where([data-theme="dark"]) .bookfig .f-onacc{fill:#232019}:where([data-theme="dark"]) .bookfig .s-onacc{stroke:#232019}:where([data-theme="light"]) .bookfig .f-bg{fill:#ffffff}:where([data-theme="light"]) .bookfig .s-bg{stroke:#ffffff}:where([data-theme="light"]) .bookfig .f-ink{fill:#1a1a1a}:where([data-theme="light"]) .bookfig .s-ink{stroke:#1a1a1a}:where([data-theme="light"]) .bookfig .f-mid{fill:#6b6b6b}:where([data-theme="light"]) .bookfig .s-mid{stroke:#6b6b6b}:where([data-theme="light"]) .bookfig .f-faint{fill:#b8b8b8}:where([data-theme="light"]) .bookfig .s-faint{stroke:#b8b8b8}:where([data-theme="light"]) .bookfig .f-wash{fill:#e2e2e2}:where([data-theme="light"]) .bookfig .s-wash{stroke:#e2e2e2}:where([data-theme="light"]) .bookfig .f-accent{fill:#8f4e1c}:where([data-theme="light"]) .bookfig .s-accent{stroke:#8f4e1c}:where([data-theme="light"]) .bookfig .f-onacc{fill:#ffffff}:where([data-theme="light"]) .bookfig .s-onacc{stroke:#ffffff}</style>
+<rect class="f-bg" width="486" height="486" fill="#ffffff"/>
+<line class="s-faint" x1="186.0" y1="87.4" x2="186.0" y2="388.6" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 4"/>
+<text class="f-mid" x="186.0" y="402.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b6b6b" text-anchor="middle">2k</text>
+<line class="s-faint" x1="243.0" y1="87.4" x2="243.0" y2="388.6" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 4"/>
+<text class="f-mid" x="243.0" y="402.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b6b6b" text-anchor="middle">8k</text>
+<line class="s-faint" x1="299.9" y1="87.4" x2="299.9" y2="388.6" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 4"/>
+<text class="f-mid" x="299.9" y="402.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b6b6b" text-anchor="middle">32k</text>
+<line class="s-faint" x1="356.9" y1="87.4" x2="356.9" y2="388.6" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 4"/>
+<text class="f-mid" x="356.9" y="402.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b6b6b" text-anchor="middle">128k</text>
+<line class="s-faint" x1="441.4" y1="87.4" x2="441.4" y2="388.6" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 4"/>
+<text class="f-mid" x="441.4" y="402.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" fill="#6b6b6b" text-anchor="middle">1M</text>
+<line class="s-ink" x1="179.1" y1="388.6" x2="449.7" y2="388.6" stroke="#1a1a1a" stroke-width="1.2"/>
+<text class="f-ink" x="313.7" y="417.8" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#1a1a1a" text-anchor="middle">Context length in tokens - log scale</text>
+<text class="f-ink" x="12.5" y="122.1" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#1a1a1a" text-anchor="start">RULER</text>
+<text class="f-mid" x="12.5" y="137.4" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">13 task types and 17 models</text>
+<rect class="f-wash" x="186.0" y="113.8" width="113.9" height="11.1" fill="#e2e2e2" fill-opacity="0.85"/>
+<line class="s-wash" x1="299.9" y1="119.4" x2="305.0" y2="119.4" stroke="#e2e2e2" stroke-width="14.0"/>
+<path class="f-wash" d="M 318.0 119.4 L 305.0 124.6 L 305.0 114.2 Z" fill="#e2e2e2"/>
+<line class="s-accent" x1="299.9" y1="111.0" x2="299.9" y2="127.7" stroke="#8f4e1c" stroke-width="2.6"/>
+<rect class="f-bg" x="301.8" y="141.6" width="142.5" height="16.2" fill="#ffffff" fill-opacity="1.0"/>
+<text class="f-mid" x="304.8" y="153.4" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">About half satisfactory at 32k.</text>
+<text class="f-ink" x="12.5" y="186.0" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#1a1a1a" text-anchor="start">Long-context RAG</text>
+<text class="f-mid" x="12.5" y="201.3" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">20 models, retrieval-augmented</text>
+<rect class="f-wash" x="186.0" y="177.7" width="170.9" height="11.1" fill="#e2e2e2" fill-opacity="0.85"/>
+<line class="s-accent" x1="328.4" y1="174.9" x2="328.4" y2="191.5" stroke="#8f4e1c" stroke-width="2.6"/>
+<rect class="f-bg" x="185.6" y="205.5" width="141.0" height="16.2" fill="#ffffff" fill-opacity="1.0"/>
+<text class="f-mid" x="323.6" y="217.2" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="end">Accuracy saturated near 64k.</text>
+<text class="f-ink" x="12.5" y="249.8" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#1a1a1a" text-anchor="start">LONGCODEU</text>
+<text class="f-mid" x="12.5" y="265.1" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">9 models, long-code understanding</text>
+<rect class="f-wash" x="186.0" y="241.5" width="255.4" height="11.1" fill="#e2e2e2" fill-opacity="0.85"/>
+<line class="s-accent" x1="299.9" y1="238.7" x2="299.9" y2="255.4" stroke="#8f4e1c" stroke-width="2.6"/>
+<rect class="f-bg" x="301.8" y="269.1" width="159.5" height="16.5" fill="#ffffff" fill-opacity="1.0"/>
+<text class="f-mid" x="304.8" y="281.1" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">Substantial degradation past 32k.</text>
+<text class="f-ink" x="12.5" y="313.7" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#1a1a1a" text-anchor="start">LongCodeBench</text>
+<text class="f-mid" x="12.5" y="329.0" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="start">Issue answering and bug fixing</text>
+<rect class="f-wash" x="186.0" y="305.4" width="255.4" height="11.1" fill="#e2e2e2" fill-opacity="0.85"/>
+<line class="s-accent" x1="441.4" y1="302.6" x2="441.4" y2="319.2" stroke="#8f4e1c" stroke-width="2.6"/>
+<rect class="f-bg" x="159.3" y="333.7" width="280.2" height="15.8" fill="#ffffff" fill-opacity="1.0"/>
+<text class="f-mid" x="436.5" y="344.9" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="end">Toward 1M tokens, Claude 3.5 Sonnet fell from 29% to 3%;</text>
+<rect class="f-bg" x="281.5" y="355.5" width="158.0" height="14.8" fill="#ffffff" fill-opacity="1.0"/>
+<text class="f-mid" x="436.5" y="365.7" font-family="Helvetica, Arial, sans-serif" font-size="10.5" fill="#6b6b6b" text-anchor="end">Qwen2.5 fell from 70.2% to 40%.</text>
+<rect class="f-wash" x="186.0" y="26.4" width="20.8" height="9.0" fill="#e2e2e2" fill-opacity="0.85"/>
+<text class="f-mid" x="216.5" y="34.7" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b6b" text-anchor="start">Tested or advertised window</text>
+<line class="s-accent" x1="196.4" y1="45.8" x2="196.4" y2="59.7" stroke="#8f4e1c" stroke-width="2.6"/>
+<text class="f-accent" x="216.5" y="56.9" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#8f4e1c" text-anchor="start">Located decline</text>
+<rect class="f-wash" x="186.0" y="66.6" width="12.5" height="9.0" fill="#e2e2e2" fill-opacity="0.85"/>
+<line class="s-wash" x1="198.5" y1="70.8" x2="202.8" y2="70.8" stroke="#e2e2e2" stroke-width="11.0"/>
+<path class="f-wash" d="M 213.8 70.8 L 202.8 76.0 L 202.8 65.6 Z" fill="#e2e2e2"/>
+<text class="f-mid" x="222.1" y="74.3" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b6b" text-anchor="start">At least this far - no upper limit</text>
+<text class="f-mid" x="12.5" y="448.3" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b6b" text-anchor="start">Tasks and metrics differ.</text>
+<text class="f-mid" x="12.5" y="466.4" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#6b6b6b" text-anchor="start">Rows are not directly comparable.</text>
+</svg>

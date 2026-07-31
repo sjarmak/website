@@ -167,20 +167,78 @@ const writing = defineCollection({
     .object({
       title: z.string(),
       date: z.coerce.date().optional(), // omit for undated items (e.g. ebooks)
-      source: z.enum(["medium", "sourcegraph", "ebook", "on-site", "external"]),
+      source: z.enum(["medium", "sourcegraph", "ebook", "book", "on-site", "external"]),
       // Document type override for the index row label. Defaults to the
       // source-derived label ("Essay" for on-site); set "technical-report"
       // to present a piece as a technical report instead.
       kind: z.enum(["essay", "technical-report"]).default("essay"),
       url: z.string().url().optional(),
       post: reference("posts").optional(),
+      book: reference("books").optional(),
       description: z.string(),
       tags: z.array(z.string()).default([]),
       featured: z.boolean().default(false),
     })
-    .refine((d) => (d.source === "on-site" ? !!d.post : !!d.url), {
-      message: "External writing needs `url`; on-site writing needs a `post` reference.",
+    .refine((d) => {
+      if (d.source === "on-site") return !!d.post && !d.book && !d.url;
+      if (d.source === "book") return !!d.book && !d.post && !d.url;
+      return !!d.url && !d.post && !d.book;
+    }, {
+      message:
+        "External writing needs `url`; on-site writing needs `post`; book writing needs `book`.",
     }),
+});
+
+// ---- books (landing metadata) ----
+const books = defineCollection({
+  loader: base("books"),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    description: z.string(),
+    wordCount: z.number().int().positive(),
+    parts: z.array(
+      z.object({
+        number: z.number().int().positive(),
+        title: z.string(),
+      }),
+    ),
+  }),
+});
+
+// ---- book chapters (ordered long-form bodies) ----
+const bookChapters = defineCollection({
+  loader: base("book-chapters"),
+  schema: z.object({
+    title: z.string(),
+    book: reference("books"),
+    order: z.number().int().nonnegative(),
+    part: z.number().int().nonnegative(),
+    kind: z.enum(["introduction", "chapter", "closing"]),
+    number: z.number().int().positive().optional(),
+  }),
+});
+
+// ---- book companion catalogs (complete practice indexes) ----
+const bookCompanions = defineCollection({
+  loader: base("book-companions"),
+  schema: z.object({
+    title: z.string(),
+    introTitle: z.string(),
+    book: reference("books"),
+    practiceCount: z.number().int().positive(),
+    taughtCount: z.number().int().nonnegative(),
+    untaughtCount: z.number().int().nonnegative(),
+    chapters: z.array(
+      z.object({
+        number: z.number().int().positive(),
+        title: z.string(),
+        taughtCount: z.number().int().nonnegative(),
+        untaughtCount: z.number().int().nonnegative(),
+        totalCount: z.number().int().positive(),
+      }),
+    ),
+  }),
 });
 
 // ---- posts (on-site long-form, rendered bodies) ----
@@ -346,6 +404,9 @@ export const collections = {
   concepts,
   outputs,
   writing,
+  books,
+  bookChapters,
+  bookCompanions,
   posts,
   talks,
   art,
