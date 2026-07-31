@@ -183,6 +183,24 @@ test("research output separates publishable products from durability fixtures", 
   );
 });
 
+test("the Activity chain keeps its numbered markers separate from code labels", () => {
+  const researchPage = readFileSync(RESEARCH_PAGE, "utf8");
+
+  assert.match(
+    researchPage,
+    /\.research-output__method li::before[\s\S]*content: counter\(activity, decimal-leading-zero\)/,
+  );
+  assert.match(
+    researchPage,
+    /grid-template-columns: 2\.25rem minmax\(14rem, 0\.32fr\) minmax\(0, 1fr\)/,
+  );
+  assert.doesNotMatch(
+    researchPage,
+    /\.research-output__method li code::before/,
+  );
+  assert.match(researchPage, /\.research-output__method li code[\s\S]*width: fit-content/);
+});
+
 test("assignment and internal verification links stay off the landing page", () => {
   const source = readFileSync(PAGE, "utf8");
 

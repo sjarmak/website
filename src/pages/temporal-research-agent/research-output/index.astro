@@ -370,20 +370,36 @@ const fixtureProducts = products.filter((product) => product.run === "fixture");
 
   .research-output__method li {
     display: grid;
-    grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
-    gap: var(--space-xl);
+    grid-template-columns: 2.25rem minmax(14rem, 0.32fr) minmax(0, 1fr);
+    gap: var(--space-m);
+    align-items: start;
     padding-block: var(--space-m);
     border-block-end: var(--border-hairline);
     counter-increment: activity;
   }
 
-  .research-output__method li code::before {
-    margin-inline-end: var(--space-s);
+  .research-output__method li::before {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
     color: var(--color-accent);
     content: counter(activity, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1;
+  }
+
+  .research-output__method li code {
+    width: fit-content;
+    margin-block-start: 0.15rem;
   }
 
   .research-output__method li span {
+    padding-block-start: 0.25rem;
     color: var(--color-text-secondary);
   }
 
@@ -489,8 +505,17 @@ const fixtureProducts = products.filter((product) => product.run === "fixture");
     }
 
     .research-output__method li {
-      grid-template-columns: 1fr;
-      gap: var(--space-xs);
+      grid-template-columns: 2.25rem minmax(0, 1fr);
+      gap: var(--space-xs) var(--space-s);
+    }
+
+    .research-output__method li code {
+      grid-column: 2;
+    }
+
+    .research-output__method li span {
+      grid-column: 2;
+      padding-block-start: 0;
     }
 
     .research-output__review-row {
