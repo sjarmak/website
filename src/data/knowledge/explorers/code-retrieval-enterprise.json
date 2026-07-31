@@ -1799,6 +1799,31 @@
           "why": "This branch holds that scale changes which problems exist, and names an evaluation crisis where ground truth is contaminated or tautological. This benchmark is a worked answer to that specific charge, with base-commit freezing against fixed-code leakage, an audited leakage sweep over the obvious shortcut channels, and a no-gold subset that separates knowing when to abstain from knowing what to rank. That the abstention thresholds hold up only against the easy counterfactual controls is the more useful result, because the wrong-repository case is not the one a production agent faces."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260726937L",
+      "title": "VITAL-RAG: Invariance Race for Context Allocation in Coding Agents",
+      "firstAuthor": "Lu, Zijian",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.26937",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260726937L/abstract",
+      "branches": [
+        "repo-scale",
+        "techniques"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "The paper isolates a stage neither the better-snippets camp nor the code-graph camp owns: what happens after ranking and before generation, when retrieved views compete for a bounded model input. Measured over 16,490 screened RepoBench tasks from 2,798 repositories (8,556 Java, 7,934 Python), required cross-file evidence enters the selected top five for 64.16% of tasks but survives intact inside a 4,096-token input for only 39.59% — a gap of 24.57 points, 26.37 on Java and 22.64 on Python. Recall@4K credits only a complete labeled snippet, so a surviving path or a clipped signature does not count. The cause is authority multiplication: a repository index renders one code object as a signature, a body slice, a call site and a test fragment, and when each competes independently, one object claims several input positions and clips the independent helper the task actually needs. VITAL-RAG closes most of the gap by quotienting that authority, raising Recall@4K from 39.59% to 63.67% while using 35.63% fewer evidence tokens, without changing the candidate set.",
+          "why": "This branch treats a repository as a world to navigate rather than a file to read. The paper adds a consequence specific to that scale: at repository scale the same object exists in several renderings, so the count of representations rather than the relevance of objects ends up deciding context share. That makes retrieval-side metrics misleading on their own. The paper shows a context builder can raise input-level recall by 24 points with the ranking held fixed, and conversely that improving Recall@5 buys nothing when the evidence is clipped during rendering — so anyone measuring repository navigation with recall at k is measuring the wrong end of the pipeline."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "VITAL-RAG is a retriever-agnostic allocation layer rather than another rung on the lexical/dense/graph ladder. It accepts ranked multi-view evidence from sparse, dense or graph retrieval and takes object identity from a provenance adapter supplied by the repository index, which can be parser-qualified symbol IDs, graph nodes, or in their evaluation the pair of normalized path and casefolded identifier. Allocation runs in three stages. Views mapping to the same canonical object compete for one position; the strongest by retrieval order takes it and inherits its score, with no accumulation across views, and an object's authority multiplicity is formally capped at one, so adding renderings may replace an object's representative but cannot buy it a second slot. One of the five positions is reserved for a query-relevant companion, admitted only if it sits on a source path already represented in the core set and shares identifier-like tokens with the task, which preserves the validator or exception helper that pure object-level invariance would erase. Rendering then assigns per-object and global token budgets, taking the largest line-complete rendering that fits. The controls this replaces do not work: exact deduplication moves Recall@4K by 0.02 points, and Canonical-5, File Quota, MMR and Entity-First 4+1 all reach roughly 64% Recall@5 and about 4.42 canonical objects among five candidates while landing between 39.41% and 39.59% at 4K.",
+          "why": "This branch reads the field as an additive ladder where cascades put each technique where its cost is justified. This contribution is orthogonal to the ladder and worth separating from it: allocation is a distinct decision from retrieval, it is settled by provenance rather than text similarity, and the familiar diversity knobs are the wrong instrument for it. The control table is the useful evidence — four standard redundancy and coverage methods, each removing a different kind of repetition, all landing within 0.2 points of each other at the model input. That says the bottleneck is not diversity at all, but who owns a slot and how much text they get."
+        }
+      ]
     }
   ],
   "sections": [

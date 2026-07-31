@@ -1,31 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260713591H",
-      "arxiv": "2607.13591",
-      "title": "Memory as a Controlled Process: Learned Adaptive Memory Management for LLM Agents",
-      "targets": [
-        {
-          "explorerId": "agentic-memory",
-          "branches": [
-            "architectures",
-            "forgetting"
-          ]
-        },
-        {
-          "explorerId": "memory-design",
-          "branches": [
-            "retrieval",
-            "forgetting"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-16",
-      "lastAttempt": "2026-07-30",
-      "attempts": 13,
-      "note": "read_paper still returns 'Paper not found' on 2026-07-30 (attempt 13). firstSeen is exactly 14 days back, which is not yet past the 14-day drop rule, so it stays queued one more run; it drops on 2026-07-31 if SciX has still not ingested it."
-    },
-    {
       "bibcode": "2026arXiv260622030S",
       "arxiv": "2606.22030",
       "title": "When Does Belief-Based Agent Memory Help? Reliability-Conditional Updating and Provenance-Capped Poisoning Defense",
@@ -47,9 +22,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-30",
-      "attempts": 11,
-      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-07-30. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-07-31",
+      "attempts": 12,
+      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-07-31. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -66,8 +41,8 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-30",
-      "attempts": 11
+      "lastAttempt": "2026-07-31",
+      "attempts": 12
     },
     {
       "bibcode": "2026arXiv260715524L",
@@ -88,8 +63,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-30",
-      "attempts": 10
+      "lastAttempt": "2026-07-31",
+      "attempts": 11
     },
     {
       "bibcode": "2026arXiv260715388Y",
@@ -111,8 +86,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-30",
-      "attempts": 10
+      "lastAttempt": "2026-07-31",
+      "attempts": 11
     },
     {
       "bibcode": "2026arXiv260326667S",
@@ -127,25 +102,8 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-07-30",
-      "attempts": 6
-    },
-    {
-      "bibcode": "2026arXiv260726451P",
-      "arxiv": "2607.26451",
-      "title": "ExplainBench: Evaluating Code Explanations from Agents",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "eval",
-            "human"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-07-30",
-      "attempts": 1
+      "lastAttempt": "2026-07-31",
+      "attempts": 7
     },
     {
       "bibcode": "2026arXiv260401527J",
@@ -166,26 +124,32 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-07-30",
-      "attempts": 1,
-      "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX has no record for this bibcode yet."
+      "lastAttempt": "2026-07-31",
+      "attempts": 2,
+      "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-07-31."
     },
     {
-      "bibcode": "2026arXiv260727155Z",
-      "arxiv": "2607.27155",
-      "title": "OmegaUse-OfficeVal: Benchmarking LLM Agents on Long-Horizon Office-Suite Tasks with Economic Grounding",
+      "bibcode": "2026arXiv260728587W",
+      "arxiv": "2607.28587",
+      "title": "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks",
       "targets": [
         {
           "explorerId": "enterprise-reliability",
           "branches": [
-            "routing",
             "eval"
+          ]
+        },
+        {
+          "explorerId": "code-retrieval-enterprise",
+          "branches": [
+            "enterprise"
           ]
         }
       ],
-      "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-07-30",
-      "attempts": 1
+      "firstSeen": "2026-07-31",
+      "lastAttempt": "2026-07-31",
+      "attempts": 1,
+      "note": "read_paper returns 'Paper not found' on 2026-07-31; ADS has the bibcode but SciX has not ingested the body yet."
     }
   ]
 }
