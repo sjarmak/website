@@ -1,4 +1,5 @@
 import AnnotatedCode from "./AnnotatedCode.astro";
+import ConceptFigure from "./ConceptFigure.astro";
 
 # An agent started. The coordinator died. Now what?
 
@@ -19,6 +20,8 @@ The ledger survives a process crash. The procedure used to survive as a collecti
 I am moving that procedure into Temporal with the Go SDK. A Temporal Workflow owns the deterministic progression of one finite orchestration episode. Temporal Activities own work-store access, agent execution, tests, reviews, and other nondeterministic effects. The existing ledger remains the source of record for mutable work facts and operator repair.
 
 That division is the project.
+
+<ConceptFigure kind="orchestrator" />
 
 ## The old system could prove that work existed
 
@@ -69,6 +72,8 @@ The Workflow stores compact typed state and artifact references. Prompts, model 
 
 That gives both systems a clear recovery story. Temporal reconstructs procedure from Event History. The ledger remains inspectable even if Temporal is unavailable.
 
+<ConceptFigure kind="ownership" />
+
 ## The handoff starts with an outbox
 
 A ready transition and its delivery event are written in the same ledger transaction. A bridge reads the pending event and calls [Signal-With-Start](https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start) under a stable Workflow ID:
@@ -100,6 +105,8 @@ If the Activity Worker disappears, Temporal detects the missed heartbeat and sch
 Completion goes through the fence. The ledger accepts the terminal receipt only when the work-item ID, generation, claim token, and session binding still match. A stale executor can finish successfully and still be rejected.
 
 Cancellation uses the same identity. The Activity sends a cancellation request for one bead, generation, claim token, and session. It does not issue a broad “stop whatever is running” command.
+
+<ConceptFigure kind="recovery" />
 
 ## Formula metadata belongs in the execution view
 

@@ -1,0 +1,579 @@
+---
+interface Props {
+  kind: "orchestrator" | "ownership" | "recovery";
+}
+
+const { kind } = Astro.props;
+const titleId = `concept-figure-${kind}`;
+---
+
+{
+  kind === "orchestrator" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">01 / Existing system</p>
+        <h3 id={titleId}>The existing multi-agent orchestrator</h3>
+      </header>
+
+      <div class="orchestrator-map" aria-hidden="true">
+        <div class="orchestrator-map__stage">
+          <span class="concept-figure__eyebrow">Describe</span>
+          <strong>Formula</strong>
+          <small>steps + dependencies</small>
+        </div>
+        <span class="concept-figure__arrow">→</span>
+        <div class="orchestrator-map__stage orchestrator-map__ledger">
+          <span class="concept-figure__eyebrow">Remember facts</span>
+          <strong>Work ledger</strong>
+          <small>ready · claimed · complete</small>
+        </div>
+        <span class="concept-figure__arrow">→</span>
+        <div class="orchestrator-map__stage">
+          <span class="concept-figure__eyebrow">Route</span>
+          <strong>Dispatcher</strong>
+          <small>find eligible work</small>
+        </div>
+        <span class="concept-figure__arrow concept-figure__arrow--fan">⇢</span>
+        <div class="orchestrator-map__agents">
+          <span>agent session A</span>
+          <span>agent session B</span>
+          <span>agent session C</span>
+        </div>
+        <span class="concept-figure__arrow concept-figure__arrow--join">⇢</span>
+        <div class="orchestrator-map__stage">
+          <span class="concept-figure__eyebrow">Verify + record</span>
+          <strong>Review and receipt</strong>
+          <small>artifacts · tests · outcome</small>
+        </div>
+        <div class="orchestrator-map__repair">
+          <span>repair scans</span>
+          <span class="orchestrator-map__repair-line"></span>
+          <span>infer a missing handoff from surviving facts</span>
+        </div>
+      </div>
+
+      <figcaption>
+        The ledger preserves task facts. Dispatch, agent sessions, and repair
+        loops collectively advance the procedure, so a crash can leave the next
+        safe action ambiguous.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "ownership" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">02 / New boundary</p>
+        <h3 id={titleId}>Who owns what after the move</h3>
+      </header>
+
+      <div class="ownership-map">
+        <section>
+          <div class="ownership-map__owner">
+            <span class="concept-figure__eyebrow">Application record</span>
+            <strong>Work ledger</strong>
+          </div>
+          <p>Mutable task facts, claims, dependencies, artifacts, and outcomes</p>
+          <ul aria-label="Work ledger examples">
+            <li>ready</li>
+            <li>generation</li>
+            <li>receipt</li>
+          </ul>
+        </section>
+        <section class="ownership-map__temporal">
+          <div class="ownership-map__owner">
+            <span class="concept-figure__eyebrow">Durable procedure</span>
+            <strong>Temporal Workflow</strong>
+          </div>
+          <p>Deterministic decisions, waits, retries, cancellation, and progress</p>
+          <ul aria-label="Temporal Workflow examples">
+            <li>Event History</li>
+            <li>timers</li>
+            <li>signals</li>
+          </ul>
+        </section>
+        <section>
+          <div class="ownership-map__owner">
+            <span class="concept-figure__eyebrow">Nondeterministic work</span>
+            <strong>Temporal Activities</strong>
+          </div>
+          <p>Ledger I/O, agent processes, tests, reviews, and external calls</p>
+          <ul aria-label="Temporal Activity examples">
+            <li>heartbeat</li>
+            <li>fence</li>
+            <li>idempotency</li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="ownership-map__service">
+        <span>Temporal service</span>
+        persists Workflow Event History and coordinates Task Queues. Workers can
+        disappear without taking the recorded procedure with them.
+      </p>
+
+      <figcaption>
+        The work ledger remains the source for task facts. Temporal gives the
+        procedure a durable owner and routes side effects through retryable
+        Activities.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "recovery" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">03 / Recovery invariant</p>
+        <h3 id={titleId}>One agent session survives Worker loss</h3>
+      </header>
+
+      <div class="recovery-map">
+        <ol class="recovery-map__events">
+          <li>
+            <span class="recovery-map__number">1</span>
+            <strong>Worker A schedules the Activity</strong>
+            <small>stable Activity ID + claim token</small>
+          </li>
+          <li>
+            <span class="recovery-map__number">2</span>
+            <strong>The Activity binds an agent</strong>
+            <small>progress is heartbeated</small>
+          </li>
+          <li class="recovery-map__failure">
+            <span class="recovery-map__number">×</span>
+            <strong>Worker A dies</strong>
+            <small>the agent session keeps running</small>
+          </li>
+          <li>
+            <span class="recovery-map__number">3</span>
+            <strong>Worker B resumes</strong>
+            <small>replay + heartbeat recovery</small>
+          </li>
+          <li>
+            <span class="recovery-map__number">4</span>
+            <strong>The retry reattaches</strong>
+            <small>one fenced terminal receipt</small>
+          </li>
+        </ol>
+
+        <div class="recovery-map__session" aria-hidden="true">
+          <span>one session</span>
+          <i></i>
+          <span>one generation</span>
+        </div>
+      </div>
+
+      <figcaption>
+        Workflow replay recovers orchestration state. The application’s
+        start-or-attach protocol and generation fence keep Activity retry from
+        creating a second agent or accepting a stale result.
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .concept-figure {
+    --figure-rule: color-mix(in srgb, var(--color-text) 22%, transparent);
+    width: 100%;
+    max-width: 68rem;
+    min-width: 0;
+    margin: clamp(var(--space-xl), 7vw, var(--space-3xl)) auto;
+    color: var(--color-text);
+  }
+
+  .concept-figure__header {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.55fr) minmax(0, 1fr);
+    padding-block-end: var(--space-s);
+    align-items: end;
+    gap: var(--space-l);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .concept-figure__header p,
+  .concept-figure__header h3 {
+    margin: 0;
+  }
+
+  .concept-figure__header h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-tight);
+  }
+
+  .concept-figure__index,
+  .concept-figure__eyebrow {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .concept-figure__eyebrow {
+    display: block;
+    margin-block-end: 0.2rem;
+    color: var(--color-accent);
+  }
+
+  .concept-figure figcaption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .orchestrator-map {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 0.8fr) auto minmax(0, 1fr) auto minmax(0, 0.8fr) auto
+      minmax(0, 1fr) auto minmax(0, 1fr);
+    min-width: 0;
+    padding-block: var(--space-l);
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .orchestrator-map__stage {
+    min-width: 0;
+  }
+
+  .orchestrator-map__stage strong,
+  .orchestrator-map__agents span {
+    display: block;
+    font-family: var(--font-display);
+    line-height: var(--leading-snug);
+  }
+
+  .orchestrator-map__stage small {
+    display: block;
+    margin-block-start: 0.3rem;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    line-height: var(--leading-normal);
+  }
+
+  .orchestrator-map__ledger {
+    padding: var(--space-s);
+    border: 1px solid var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
+  }
+
+  .orchestrator-map__agents {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-xs);
+  }
+
+  .orchestrator-map__agents span {
+    padding-block: 0.35rem;
+    border-block-end: 1px solid var(--figure-rule);
+    font-size: var(--step--1);
+  }
+
+  .concept-figure__arrow {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .concept-figure__arrow--fan,
+  .concept-figure__arrow--join {
+    color: var(--color-accent);
+  }
+
+  .orchestrator-map__repair {
+    display: grid;
+    grid-column: 2 / 9;
+    grid-template-columns: auto minmax(2rem, 1fr) minmax(0, auto);
+    margin-block-start: var(--space-s);
+    align-items: center;
+    gap: var(--space-s);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .orchestrator-map__repair-line {
+    border-block-start: 1px dashed var(--color-accent);
+  }
+
+  .ownership-map {
+    min-width: 0;
+    margin-block: var(--space-m) 0;
+    border-block: 1px solid var(--figure-rule);
+  }
+
+  .ownership-map section {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.5fr) minmax(12rem, 1fr);
+    min-width: 0;
+    padding-block: var(--space-m);
+    align-items: center;
+    gap: var(--space-l);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .ownership-map section:last-child {
+    border-block-end: 0;
+  }
+
+  .ownership-map__temporal {
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
+  }
+
+  .ownership-map__owner {
+    padding-inline-start: var(--space-s);
+  }
+
+  .ownership-map__owner strong {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .ownership-map p,
+  .ownership-map ul {
+    margin: 0;
+  }
+
+  .ownership-map p {
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .ownership-map ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    gap: 0.3rem;
+    list-style: none;
+  }
+
+  .ownership-map li {
+    padding: 0.2rem 0.45rem;
+    border: 1px solid var(--figure-rule);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .ownership-map__service {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 2.5fr);
+    margin: 0;
+    padding: var(--space-s);
+    gap: var(--space-l);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .ownership-map__service span {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .recovery-map {
+    min-width: 0;
+    padding-block: var(--space-l) var(--space-m);
+  }
+
+  .recovery-map__events {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    list-style: none;
+  }
+
+  .recovery-map__events li {
+    position: relative;
+    min-width: 0;
+    padding: 2.2rem var(--space-s) var(--space-s);
+    border-block-start: 1px solid var(--figure-rule);
+  }
+
+  .recovery-map__events li::after {
+    position: absolute;
+    inset: -0.28rem calc(-0.28rem - 1px) auto auto;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--color-text-muted);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    content: "";
+  }
+
+  .recovery-map__events li:last-child::after {
+    display: none;
+  }
+
+  .recovery-map__number {
+    position: absolute;
+    inset: -0.8rem auto auto var(--space-s);
+    display: grid;
+    width: 1.55rem;
+    height: 1.55rem;
+    place-items: center;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .recovery-map__events strong,
+  .recovery-map__events small {
+    display: block;
+  }
+
+  .recovery-map__events strong {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    line-height: var(--leading-snug);
+  }
+
+  .recovery-map__events small {
+    margin-block-start: 0.35rem;
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    line-height: var(--leading-normal);
+  }
+
+  .recovery-map__failure {
+    background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
+  }
+
+  .recovery-map__failure .recovery-map__number {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .recovery-map__session {
+    display: grid;
+    grid-template-columns: auto minmax(2rem, 1fr) auto;
+    padding: var(--space-s);
+    align-items: center;
+    gap: var(--space-s);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .recovery-map__session i {
+    height: 2px;
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 900px) {
+    .orchestrator-map {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+
+    .orchestrator-map__agents,
+    .orchestrator-map__stage {
+      min-height: 5.5rem;
+    }
+
+    .orchestrator-map > :nth-child(7) {
+      grid-column: 1;
+      grid-row: 3;
+    }
+
+    .orchestrator-map > :nth-child(8) {
+      grid-column: 2;
+      grid-row: 3;
+    }
+
+    .orchestrator-map > :nth-child(9) {
+      grid-column: 3;
+      grid-row: 3;
+    }
+
+    .orchestrator-map__repair {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .concept-figure__header {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+
+    .orchestrator-map {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: var(--space-m);
+    }
+
+    .orchestrator-map__stage,
+    .orchestrator-map__agents {
+      min-height: 0;
+    }
+
+    .orchestrator-map > :nth-child(n) {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .concept-figure__arrow {
+      transform: rotate(90deg);
+      justify-self: start;
+    }
+
+    .orchestrator-map__repair {
+      grid-template-columns: 1fr;
+      margin-block-start: var(--space-m);
+      padding-block-start: var(--space-s);
+      border-block-start: 1px dashed var(--color-accent);
+    }
+
+    .orchestrator-map__repair-line {
+      display: none;
+    }
+
+    .ownership-map section,
+    .ownership-map__service {
+      grid-template-columns: 1fr;
+      padding: var(--space-m) var(--space-s);
+      gap: var(--space-xs);
+    }
+
+    .ownership-map__owner {
+      padding-inline-start: 0;
+    }
+
+    .recovery-map__events {
+      grid-template-columns: 1fr;
+      padding-inline-start: 0.8rem;
+    }
+
+    .recovery-map__events li {
+      padding: var(--space-s) var(--space-s) var(--space-m) 2.4rem;
+      border-block-start: 0;
+      border-inline-start: 1px solid var(--figure-rule);
+    }
+
+    .recovery-map__events li::after {
+      inset: auto auto -0.25rem -0.28rem;
+      transform: rotate(90deg);
+    }
+
+    .recovery-map__number {
+      inset: var(--space-s) auto auto -0.8rem;
+    }
+
+    .recovery-map__session {
+      padding-inline: 2.4rem var(--space-s);
+    }
+  }
+</style>

@@ -17,6 +17,10 @@ const READER = path.join(
   ROOT,
   "src/components/temporal-agent-orchestration/AnnotatedCode.astro",
 );
+const FIGURES = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/ConceptFigure.astro",
+);
 const SAMPLES = path.join(
   ROOT,
   "src/data/temporal-agent-orchestration-code-samples.ts",
@@ -110,4 +114,55 @@ test("the embedded reader retains the established responsive and accessible trea
   assert.match(reader, /font-style: var\(--shiki-dark-font-style, inherit\)/);
   assert.match(page, /width: min\(100% - 2 \* var\(--space-m\), 78rem\)/);
   assert.match(page, /max-width: var\(--measure\)/);
+});
+
+test("each full file starts as a bounded preview and can expand or collapse", () => {
+  const reader = readFileSync(READER, "utf8");
+
+  assert.match(reader, /data-file-expanded="false"/);
+  assert.match(reader, /data-file-toggle/);
+  assert.match(reader, /Show full file/);
+  assert.match(reader, /Collapse file/);
+  assert.match(reader, /aria-expanded="false"/);
+  assert.match(reader, /panel\.dataset\.fileExpanded = String\(expanded\)/);
+  assert.match(reader, /setFileExpanded\(panel, true\)/);
+  assert.match(
+    reader,
+    /\.annotated-code__panel\[data-file-expanded="false"\][\s\S]*\.annotated-code__file-frame[\s\S]*max-height: 24rem[\s\S]*overflow: hidden/,
+  );
+});
+
+test("long source lines wrap inside the article instead of widening the page", () => {
+  const reader = readFileSync(READER, "utf8");
+
+  assert.match(reader, /\.annotated-code \{[\s\S]*width: 100%[\s\S]*max-width: 68rem/);
+  assert.match(reader, /\.annotated-code__panel[\s\S]*min-width: 0/);
+  assert.match(reader, /\.annotated-code__source[\s\S]*overflow-x: hidden/);
+  assert.match(
+    reader,
+    /\.annotated-code__source :global\(\.line\)[\s\S]*white-space: pre-wrap[\s\S]*overflow-wrap: anywhere/,
+  );
+  assert.doesNotMatch(reader, /min-width: max-content/);
+  assert.doesNotMatch(reader, /translateX\(-50%\)/);
+});
+
+test("the essay teaches the orchestrator, ownership boundary, and recovery path visually", () => {
+  assert.equal(existsSync(FIGURES), true);
+
+  const article = readFileSync(ARTICLE, "utf8");
+  const figures = readFileSync(FIGURES, "utf8");
+
+  assert.match(article, /import ConceptFigure from "\.\/ConceptFigure\.astro"/);
+  assert.match(article, /<ConceptFigure kind="orchestrator"/);
+  assert.match(article, /<ConceptFigure kind="ownership"/);
+  assert.match(article, /<ConceptFigure kind="recovery"/);
+
+  assert.match(figures, /The existing multi-agent orchestrator/);
+  assert.match(figures, /Who owns what after the move/);
+  assert.match(figures, /One agent session survives Worker loss/);
+  assert.match(figures, /<figcaption>/);
+  assert.match(figures, /aria-labelledby=\{titleId\}/);
+  assert.match(figures, /@media \(max-width: 720px\)/);
+  assert.match(figures, /min-width: 0/);
+  assert.doesNotMatch(figures, /overflow-x: auto/);
 });
