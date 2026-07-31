@@ -42,7 +42,11 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
   bookChapterHref(book.id, bookChapterSlug(chapter.id));
 ---
 
-<BaseLayout title={book.data.title} description={book.data.description} type="article">
+<BaseLayout
+  title={`${book.data.title}: ${book.data.subtitle}`}
+  description={book.data.description}
+  type="article"
+>
   <article class="book">
     <header class="book-head container">
       <div class="book-head__context">
@@ -53,6 +57,7 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
       <div class="book-head__title">
         <p class="kicker">Book</p>
         <h1>{book.data.title}</h1>
+        <p class="book-head__subtitle">{book.data.subtitle}</p>
       </div>
       <div class="book-head__details">
         <p class="book-head__author">By {book.data.author}</p>
@@ -140,6 +145,14 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
 
   .book-head__title h1 {
     max-width: 18ch;
+  }
+
+  .book-head__subtitle {
+    max-width: 34ch;
+    margin-block-start: var(--space-s);
+    color: var(--color-text-secondary);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
   }
 
   .book-head__details {

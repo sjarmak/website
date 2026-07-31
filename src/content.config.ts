@@ -194,6 +194,7 @@ const books = defineCollection({
   loader: base("books"),
   schema: z.object({
     title: z.string(),
+    subtitle: z.string(),
     author: z.string(),
     description: z.string(),
     wordCount: z.number().int().positive(),

@@ -1,10 +1,12 @@
 ---
-title: "The System Around the Model: Running AI Coding Agents Reliably"
+title: "Engineering Reliable Coding Agents"
 book: the-system-around-the-model
 order: 0
 part: 0
 kind: introduction
 ---
+
+*Evaluation, Recovery, Context, and Control Beyond the Model*
 
 Stephanie Jarmak
 

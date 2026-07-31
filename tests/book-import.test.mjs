@@ -23,6 +23,11 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 
 test("book manifest covers the approved 20 entries in a stable reading order", () => {
   assert.equal(BOOK.slug, "the-system-around-the-model");
+  assert.equal(BOOK.title, "Engineering Reliable Coding Agents");
+  assert.equal(
+    BOOK.subtitle,
+    "Evaluation, Recovery, Context, and Control Beyond the Model",
+  );
   assert.equal(CHAPTERS.length, 20);
   assert.deepEqual(
     CHAPTERS.map((chapter) => chapter.order),
