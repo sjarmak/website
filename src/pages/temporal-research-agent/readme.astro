@@ -11,6 +11,14 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 >
   <base slot="head" href="/temporal-research-agent/" />
   <article class="container container-narrow tra-document">
+    <nav class="tra-document__nav" aria-label="Temporal research project">
+      <a href="/temporal-research-agent/">Report</a>
+      <a href="/temporal-research-agent/code">Code</a>
+      <a href="/temporal-research-agent/readme" aria-current="page">README</a>
+      <a href="/temporal-research-agent/blog">Blog</a>
+      <a href="/temporal-research-agent/deck.html" target="_blank" rel="noopener">Deck</a>
+      <a href="/temporal-research-agent/research-output">Output</a>
+    </nav>
     <div class="prose"><Readme /></div>
     <p class="tra-document__back"><a href="/temporal-research-agent">← Project walkthrough</a></p>
   </article>
@@ -19,6 +27,27 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 <style>
   .tra-document {
     padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+
+  .tra-document__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    margin-block-end: var(--space-xl);
+    padding-block: var(--space-s);
+    border-block: var(--border-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .tra-document__nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .tra-document__nav a:hover,
+  .tra-document__nav a[aria-current="page"] {
+    color: var(--color-accent);
   }
 
   :global(.tra-document .prose table) {

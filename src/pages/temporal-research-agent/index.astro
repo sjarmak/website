@@ -54,8 +54,9 @@ series_reviews = await asyncio.gather(
     <nav class="tra__tabs" aria-label="Submission materials">
       <a href={`${root}/code`}><span>01</span> Code</a>
       <a href={`${root}/readme`}><span>02</span> README</a>
-      <a href={`${root}/deck.html`} target="_blank" rel="noopener"><span>03</span> Deck</a>
-      <a href={`${root}/research-output`}><span>04</span> Output</a>
+      <a href={`${root}/blog`}><span>03</span> Blog</a>
+      <a href={`${root}/deck.html`} target="_blank" rel="noopener"><span>04</span> Deck</a>
+      <a href={`${root}/research-output`}><span>05</span> Output</a>
     </nav>
 
     <section class="tra__section tra__summary">
@@ -369,7 +370,7 @@ series_reviews = await asyncio.gather(
 
   .tra__tabs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     border-block: var(--border-hairline);
   }
 

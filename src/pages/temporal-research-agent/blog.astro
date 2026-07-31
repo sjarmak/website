@@ -1,0 +1,279 @@
+---
+import Blog from "@/components/temporal-research-agent/Blog.md";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const root = "/temporal-research-agent";
+const poster = `${root}/deck-assets/worker-killed.png`;
+---
+
+<BaseLayout
+  title="I killed my research pipeline mid-run. Temporal brought it back."
+  description="What changed when I rebuilt an existing research pipeline with Temporal's Python SDK, then killed its Worker during two running Activities."
+  image={poster}
+  type="article"
+  noindex={true}
+>
+  <article class="container temporal-blog">
+    <nav class="temporal-blog__nav" aria-label="Temporal research project">
+      <a href={root}>Report</a>
+      <a href={`${root}/code`}>Code</a>
+      <a href={`${root}/readme`}>README</a>
+      <a href={`${root}/blog`} aria-current="page">Blog</a>
+      <a href={`${root}/deck.html`} target="_blank" rel="noopener">Deck</a>
+      <a href={`${root}/research-output`}>Output</a>
+    </nav>
+
+    <div class="prose temporal-blog__body">
+      <Blog />
+    </div>
+  </article>
+
+  <dialog
+    id="blog-image-viewer"
+    class="temporal-blog-viewer"
+    aria-label="Expanded Temporal Web screenshot"
+  >
+    <button class="temporal-blog-viewer__close" type="button" data-close-viewer>
+      Close <span aria-hidden="true">×</span>
+    </button>
+    <figure>
+      <img alt="" />
+      <figcaption></figcaption>
+    </figure>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const viewer = document.querySelector<HTMLDialogElement>("#blog-image-viewer");
+  const viewerImage = viewer?.querySelector<HTMLImageElement>("img");
+  const viewerCaption = viewer?.querySelector<HTMLElement>("figcaption");
+  const closeButton = viewer?.querySelector<HTMLButtonElement>("[data-close-viewer]");
+
+  document
+    .querySelectorAll<HTMLAnchorElement>(".temporal-blog__body a:has(img)")
+    .forEach((trigger) => {
+      trigger.setAttribute("aria-haspopup", "dialog");
+      trigger.addEventListener("click", (event) => {
+        const image = trigger.querySelector<HTMLImageElement>("img");
+        if (!viewer || !viewerImage || !viewerCaption || !image) return;
+
+        event.preventDefault();
+        viewerImage.src = image.currentSrc || image.src;
+        viewerImage.alt = image.alt;
+        viewerCaption.textContent = image.alt;
+        viewer.showModal();
+      });
+    });
+
+  closeButton?.addEventListener("click", () => viewer?.close());
+  viewer?.addEventListener("click", (event) => {
+    if (event.target === viewer) viewer.close();
+  });
+</script>
+
+<style>
+  .temporal-blog {
+    width: min(100% - 2 * var(--space-m), 78rem);
+    padding-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-3xl);
+  }
+
+  .temporal-blog__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    margin-block-end: clamp(var(--space-xl), 7vw, var(--space-3xl));
+    padding-block: var(--space-s);
+    border-block: var(--border-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .temporal-blog__nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .temporal-blog__nav a:hover,
+  .temporal-blog__nav a[aria-current="page"] {
+    color: var(--color-accent);
+  }
+
+  :global(.temporal-blog__body > *) {
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  :global(.temporal-blog__body > h1) {
+    max-width: 18ch;
+    margin-block: 0 var(--space-s);
+    font-size: var(--step-5);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  :global(.temporal-blog__body > h1 + p) {
+    margin-block: 0 clamp(var(--space-l), 5vw, var(--space-2xl));
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+  }
+
+  :global(.temporal-blog__body > h2) {
+    margin-block-start: clamp(var(--space-xl), 7vw, var(--space-3xl));
+  }
+
+  :global(.temporal-blog__body > pre),
+  :global(.temporal-blog__body > p:has(> a > img)) {
+    width: min(100%, 68rem);
+    max-width: none;
+  }
+
+  :global(.temporal-blog__body > pre) {
+    margin-block: var(--space-l);
+    padding: var(--space-m);
+    overflow-x: auto;
+    border: 1px solid var(--night-700);
+    border-radius: var(--radius);
+    background: var(--night-900);
+    color: var(--night-100);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  :global(.temporal-blog__body > p:has(> a > img)) {
+    margin-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-s);
+  }
+
+  :global(.temporal-blog__body a:has(img)) {
+    position: relative;
+    display: block;
+    border-radius: var(--radius-l);
+    cursor: zoom-in;
+  }
+
+  :global(.temporal-blog__body a:has(img)::after) {
+    position: absolute;
+    inset: auto var(--space-xs) var(--space-xs) auto;
+    padding: 0.4rem 0.6rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: color-mix(in oklch, var(--color-bg) 92%, transparent);
+    color: var(--color-text);
+    content: "Open full view";
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(0.2rem);
+    transition:
+      opacity 160ms ease-out,
+      transform 160ms ease-out;
+  }
+
+  :global(.temporal-blog__body a:has(img):hover::after),
+  :global(.temporal-blog__body a:has(img):focus-visible::after) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :global(.temporal-blog__body a:has(img):focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  :global(.temporal-blog__body a:has(img) img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+  }
+
+  .temporal-blog-viewer {
+    position: fixed;
+    width: min(96vw, 96rem);
+    max-width: none;
+    height: min(94dvh, 60rem);
+    max-height: none;
+    margin: 0;
+    padding: var(--space-m);
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .temporal-blog-viewer::backdrop {
+    background: oklch(0.12 0.01 70 / 0.84);
+  }
+
+  .temporal-blog-viewer figure {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: 100%;
+    margin: 0;
+  }
+
+  .temporal-blog-viewer img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+
+  .temporal-blog-viewer figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .temporal-blog-viewer__close {
+    position: absolute;
+    z-index: 1;
+    inset: var(--space-xs) var(--space-xs) auto auto;
+    padding: 0.45rem 0.7rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .temporal-blog-viewer__close:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 720px) {
+    .temporal-blog {
+      width: min(100% - 2 * var(--space-s), 78rem);
+    }
+
+    .temporal-blog__nav {
+      gap: var(--space-s) var(--space-m);
+    }
+
+    :global(.temporal-blog__body > h1) {
+      max-width: none;
+    }
+
+    .temporal-blog-viewer {
+      width: 100vw;
+      height: 100dvh;
+      padding: var(--space-s);
+      border: 0;
+      border-radius: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.temporal-blog__body a:has(img)::after) {
+      transition: none;
+    }
+  }
+</style>

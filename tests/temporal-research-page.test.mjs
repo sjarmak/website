@@ -18,12 +18,20 @@ const README_PAGE = path.join(
   ROOT,
   "src/pages/temporal-research-agent/readme.astro",
 );
+const BLOG_PAGE = path.join(
+  ROOT,
+  "src/pages/temporal-research-agent/blog.astro",
+);
+const BLOG = path.join(
+  ROOT,
+  "src/components/temporal-research-agent/Blog.md",
+);
 const PRODUCT_PAGE = path.join(
   ROOT,
   "src/pages/temporal-research-agent/research-output/[run]/[kind]/[slug].astro",
 );
 
-test("the report landing page leads with the four submission tabs", () => {
+test("the report landing page leads with the five project tabs", () => {
   const source = readFileSync(PAGE, "utf8");
 
   assert.match(source, /Temporal brings a research pipeline back to life/);
@@ -32,20 +40,19 @@ test("the report landing page leads with the four submission tabs", () => {
   assert.doesNotMatch(source, /52 seconds\./);
   assert.match(source, /<span>01<\/span> Code</);
   assert.match(source, /<span>02<\/span> README</);
-  assert.match(source, /<span>03<\/span> Deck</);
-  assert.match(source, /<span>04<\/span> Output</);
+  assert.match(source, /<span>03<\/span> Blog</);
+  assert.match(source, /<span>04<\/span> Deck</);
+  assert.match(source, /<span>05<\/span> Output</);
   assert.match(source, /href=\{`\$\{root\}\/code`\}/);
   assert.match(source, /href=\{`\$\{root\}\/readme`\}/);
+  assert.match(source, /href=\{`\$\{root\}\/blog`\}/);
   assert.match(source, /href=\{`\$\{root\}\/deck\.html`\}/);
   assert.match(source, /href=\{`\$\{root\}\/research-output`\}/);
   assert.doesNotMatch(source, /href="#research-output"/);
-  assert.doesNotMatch(source, /Read the blog/);
-  assert.equal(
-    existsSync(path.join(ROOT, "src/pages/temporal-research-agent/blog.astro")),
-    false,
-  );
+  assert.equal(existsSync(BLOG_PAGE), true);
+  assert.equal(existsSync(BLOG), true);
   const config = readFileSync(path.join(ROOT, "astro.config.mjs"), "utf8");
-  assert.match(
+  assert.doesNotMatch(
     config,
     /"\/temporal-research-agent\/blog": "\/temporal-research-agent\/readme"/,
   );
@@ -89,6 +96,27 @@ test("the report landing page leads with the four submission tabs", () => {
   ]) {
     assert.match(source, new RegExp(heading));
   }
+});
+
+test("the blog is a standalone engineering article with expandable evidence", () => {
+  const page = readFileSync(BLOG_PAGE, "utf8");
+  const article = readFileSync(BLOG, "utf8");
+
+  assert.match(
+    article,
+    /I killed my research pipeline mid-run\. Temporal brought it back\./,
+  );
+  assert.match(article, /The same Workflow ID and Run ID survived/);
+  assert.match(article, /Activity retries forced me to think about idempotency/);
+  assert.match(article, /temporal-phasee-demo-1785443614/);
+  assert.match(article, /temporal-phasee-live-one-20260730-v1/);
+  assert.doesNotMatch(article, /assignment|homework|evaluation criteria/i);
+  assert.match(page, /<Blog \/>/);
+  assert.match(page, /aria-current="page">Blog/);
+  assert.match(page, /a:has\(img\)/);
+  assert.match(page, /<dialog[^>]+id="blog-image-viewer"/);
+  assert.match(page, /showModal\(\)/);
+  assert.match(page, /prefers-reduced-motion/);
 });
 
 test("the Code tab opens an index of every complete annotated source file", () => {
@@ -263,6 +291,7 @@ test("packaged media, deck, faithful code, and products exist", () => {
     "public/temporal-research-agent/tests/test_podcast_workflow.py",
     "public/temporal-research-agent/README.md",
     "src/components/temporal-research-agent/Readme.md",
+    "src/components/temporal-research-agent/Blog.md",
     "src/components/temporal-research-agent/TemporalMasReview.md",
     "src/components/temporal-research-agent/TemporalCodeReview.md",
     "src/pages/temporal-research-agent/research-output/index.astro",
