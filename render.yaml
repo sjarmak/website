@@ -43,4 +43,26 @@ services:
       - path: /media/*
         name: Cache-Control
         value: public, max-age=604800
+    routes:
+      - type: rewrite
+        source: /media/*
+        destination: https://sjarmak-ai-media.onrender.com/*
     # Single-page-style fallback is NOT needed; Astro emits real 404.html.
+
+  # Large, immutable audio and video assets live on a separate branch and
+  # service. This keeps ordinary site checkout and build work independent of
+  # the media archive while preserving every public /media URL.
+  - type: web
+    runtime: static
+    name: sjarmak-ai-media
+    branch: media
+    autoDeployTrigger: commit
+    buildCommand: echo "Media archive requires no compilation"
+    staticPublishPath: ./public/media
+    buildFilter:
+      paths:
+        - public/media/**
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=604800

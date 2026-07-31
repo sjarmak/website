@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = path.join(ROOT, "src/pages/temporal-research-agent/index.astro");
+const CODE_INDEX = path.join(
+  ROOT,
+  "src/pages/temporal-research-agent/code/index.astro",
+);
 const RESEARCH_PAGE = path.join(
   ROOT,
   "src/pages/temporal-research-agent/research-output/index.astro",
@@ -19,16 +23,20 @@ const PRODUCT_PAGE = path.join(
   "src/pages/temporal-research-agent/research-output/[run]/[kind]/[slug].astro",
 );
 
-test("off-navigation walkthrough exposes the faithful assignment package", () => {
+test("the report landing page leads with the four submission tabs", () => {
   const source = readFileSync(PAGE, "utf8");
 
   assert.match(source, /Temporal brings a research pipeline back to life/);
   assert.match(source, /noindex=\{true\}/);
   assert.match(source, /temporal-literature-review-demo\.mp4/);
   assert.doesNotMatch(source, /52 seconds\./);
-  assert.match(source, /Open the deck/);
-  assert.match(source, /Read the README/);
-  assert.match(source, /Read the research output/);
+  assert.match(source, /<span>01<\/span> Code</);
+  assert.match(source, /<span>02<\/span> README</);
+  assert.match(source, /<span>03<\/span> Deck</);
+  assert.match(source, /<span>04<\/span> Output</);
+  assert.match(source, /href=\{`\$\{root\}\/code`\}/);
+  assert.match(source, /href=\{`\$\{root\}\/readme`\}/);
+  assert.match(source, /href=\{`\$\{root\}\/deck\.html`\}/);
   assert.match(source, /href=\{`\$\{root\}\/research-output`\}/);
   assert.doesNotMatch(source, /href="#research-output"/);
   assert.doesNotMatch(source, /Read the blog/);
@@ -50,16 +58,8 @@ test("off-navigation walkthrough exposes the faithful assignment package", () =>
   assert.match(source, /set:html=\{afterCode\}/);
   assert.match(source, /background: var\(--night-900\)/);
   assert.match(source, /color: var\(--shiki-dark\) !important/);
-  for (const slug of [
-    "before",
-    "inputs",
-    "prompts",
-    "workflow",
-    "activities",
-    "worker",
-  ]) {
-    assert.match(source, new RegExp(`\\$\\{root\\}/code/${slug}`));
-  }
+  assert.match(source, /\$\{root\}\/code\/before/);
+  assert.match(source, /\$\{root\}\/code/);
   assert.match(
     source,
     /href="https:\/\/www\.sjarmak\.ai\/projects\/code-intelligence-digest"/,
@@ -79,6 +79,28 @@ test("off-navigation walkthrough exposes the faithful assignment package", () =>
   assert.match(source, /A Temporal\s+Workflow owns episode order/);
   assert.match(source, /Temporal Activities own MCP calls/);
   assert.doesNotMatch(source, /Temporal owns/);
+  for (const heading of [
+    "Executive summary",
+    "The code sample before Temporal",
+    "The Temporal implementation",
+    "Recovery proof",
+    "Design choices and tradeoffs",
+    "Results and verification",
+  ]) {
+    assert.match(source, new RegExp(heading));
+  }
+});
+
+test("the Code tab opens an index of every complete annotated source file", () => {
+  assert.equal(existsSync(CODE_INDEX), true);
+  const source = readFileSync(CODE_INDEX, "utf8");
+
+  assert.match(source, /Complete annotated source/);
+  assert.match(source, /temporalResearchCodeSamples/);
+  assert.match(source, /Open annotated source/);
+  assert.match(source, /sample\.filename/);
+  assert.match(source, /sample\.summary/);
+  assert.match(source, /href=\{`\$\{root\}\/code\/\$\{sample\.slug\}`\}/);
 });
 
 test("research output separates publishable products from durability fixtures", () => {
@@ -198,7 +220,8 @@ test("README tables use a readable thin grid and scroll on narrow screens", () =
 test("each assignment evidence screenshot opens in an accessible full-view dialog", () => {
   const source = readFileSync(PAGE, "utf8");
 
-  assert.equal((source.match(/data-expand-image\s/g) ?? []).length, 2);
+  assert.equal((source.match(/data-expand-image\s/g) ?? []).length, 3);
+  assert.match(source, /deck-assets\/workflow-completed\.png/);
   assert.match(source, /<dialog[^>]+id="evidence-viewer"/);
   assert.match(source, /showModal\(\)/);
   assert.match(source, /data-close-viewer/);

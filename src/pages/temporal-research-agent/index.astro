@@ -46,79 +46,147 @@ series_reviews = await asyncio.gather(
   title="Temporal brings a research pipeline back to life"
   kicker="Temporal case study"
   intro="Improving the durability of our research pipeline using Temporal's Python SDK"
-  description="A faithful rewrite of a ten-episode podcast research pipeline as a Python Temporal Workflow, with complete source, recorded failure evidence, and implementation notes."
+  description="A faithful rewrite of a podcast research pipeline as a Python Temporal Workflow, with complete source, recorded failure evidence, and implementation notes."
   image={poster}
   noindex={true}
 >
-  <article class="tra stack">
-    <nav class="tra__artifacts" aria-label="Project artifacts">
-      <a href={`${root}/deck.html`} target="_blank" rel="noopener">Open the deck <span>↗</span></a>
-      <a href={`${root}/readme`}>Read the README <span>→</span></a>
-      <a href="#code-comparison">Compare the code <span>↓</span></a>
-      <a href={`${root}/research-output`}>Read the research output <span>→</span></a>
+  <article class="tra">
+    <nav class="tra__tabs" aria-label="Submission materials">
+      <a href={`${root}/code`}><span>01</span> Code</a>
+      <a href={`${root}/readme`}><span>02</span> README</a>
+      <a href={`${root}/deck.html`} target="_blank" rel="noopener"><span>03</span> Deck</a>
+      <a href={`${root}/research-output`}><span>04</span> Output</a>
     </nav>
 
-    <figure class="tra__media">
-      <video controls preload="metadata" poster={poster}>
-        <source src={video} type="video/mp4" />
-      </video>
-      <figcaption>
-        The Worker dies with two research Activities in flight; Temporal Web
-        shows both retries and the completed episode and series-review outputs.
-      </figcaption>
-    </figure>
-
-    <section class="tra__premise prose">
-      <h2>The original pipeline already had real business logic</h2>
+    <section class="tra__section tra__summary">
+      <header class="tra__section-head">
+        <p class="kicker">Executive summary</p>
+        <h2>An existing research product, rebuilt around durable execution</h2>
+      </header>
+      <div class="tra__copy prose">
       <p>
-        A JavaScript workflow in the
-        <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest project</a>
-        sent ten podcast episodes through
-        <a href="https://www.sjarmak.ai/projects/scix-agent">SciX retrieval</a>,
-        deep dives, and podcast scripts, then produced two literature reviews.
-        The complete source includes every episode brief, seed list, and
-        editorial prompt contract. One client process held the active phase
-        and in-flight promises.
+        For this assignment, I selected an existing research pipeline that used
+        my <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>
+        and <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a> MCP
+        projects. The JavaScript program researched podcast episodes across two
+        series. Each episode moved through research, a technical deep dive, and
+        a podcast script. After those branches finished, it wrote one literature
+        review per series.
       </p>
       <p>
-        The Python rewrite preserves that dependency graph. A Temporal
-        Workflow owns episode order, bounded concurrency, completion policy,
-        progress, and final fan-in. Temporal Activities own MCP calls, writer
-        calls, heartbeats, clock reads, and artifact I/O.
+        I reimplemented that business flow as a Python application built on
+        Temporal. A Temporal Workflow owns episode order, bounded concurrency,
+        completion policy, progress, series synthesis, and the final result.
+        Temporal Activities own MCP calls, writer calls, heartbeats, clock
+        reads, and artifact I/O. A Worker registers both on one task queue.
       </p>
+      <p>
+        I tested recovery by killing the Worker while two research Activities
+        were running. A replacement Worker received Activity attempt 2, and the
+        same Workflow Execution completed. A separate one-episode live run
+        confirms that the input-driven Workflow still produces the full
+        research brief, deep dive, podcast script, series synthesis, and
+        provenance manifest.
+      </p>
+      </div>
     </section>
 
-    <section id="code-comparison" class="tra__section">
+    <section id="code-comparison" class="tra__section tra__numbered">
       <header class="tra__section-head">
-        <p class="kicker">The code sample</p>
-        <h2>The dependency graph stays recognizable</h2>
+        <p class="kicker">01</p>
+        <h2>The code sample before Temporal</h2>
+        <p>
+          The original program contains the complete domain model: episode
+          briefs, seed papers, research rules, deep-dive and script contracts,
+          and final literature reviews.
+        </p>
       </header>
       <div class="tra__code">
         <section>
-          <h3>Before source</h3>
+          <h3>Before source: process-local JavaScript</h3>
           <div class="tra__code-render" set:html={beforeCode} />
-          <p>Condensed here; the code reader contains all 124 source lines.</p>
+          <p>
+            The graph was valid, but one client process held the active phase,
+            pipeline cursor, and in-flight promises.
+          </p>
           <a href={`${root}/code/before`}>Open the complete annotated JavaScript</a>
         </section>
         <section>
-          <h3>After source</h3>
+          <h3>After source: durable Python orchestration</h3>
           <div class="tra__code-render" set:html={afterCode} />
-          <p class="cluster">
-            <a href={`${root}/code/inputs`}>Business inputs</a>
-            <a href={`${root}/code/prompts`}>Prompt contracts</a>
-            <a href={`${root}/code/workflow`}>Workflow</a>
-            <a href={`${root}/code/activities`}>Activities</a>
-            <a href={`${root}/code/worker`}>Worker</a>
+          <p>
+            The Python rewrite preserves the dependency graph while moving its
+            durable control flow into a Temporal Workflow.
           </p>
+          <a href={`${root}/code`}>Open all annotated Python files</a>
         </section>
       </div>
     </section>
 
-    <section class="tra__section">
+    <section class="tra__section tra__numbered">
       <header class="tra__section-head">
-        <p class="kicker">Observed recovery</p>
-        <h2>Event History records the handoff</h2>
+        <p class="kicker">02</p>
+        <h2>The Temporal implementation</h2>
+        <p>
+          Deterministic orchestration stays in the Workflow. External and
+          nondeterministic work stays in Activities.
+        </p>
       </header>
+      <div class="tra__architecture">
+        <article>
+          <h3>Temporal Service</h3>
+          <p>Persists Event History, Workflow state, task delivery, and durable timers.</p>
+        </article>
+        <article>
+          <h3>Workflow</h3>
+          <p>Owns ordering, bounded fan-out, completion policy, progress, and series-level fan-in.</p>
+        </article>
+        <article>
+          <h3>Activities</h3>
+          <p>Run MCP retrieval, writer calls, heartbeats, clock reads, and artifact I/O.</p>
+        </article>
+        <article>
+          <h3>Worker</h3>
+          <p>Polls the task queue and executes the registered Workflow and Activities.</p>
+        </article>
+      </div>
+      <div class="tra__copy prose">
+        <p>
+          Large documents remain outside Event History. Frozen typed dataclasses
+          carry stable IDs, result status, content hashes, and artifact
+          references between Workflow and Activity boundaries. Episode
+          definitions remain input data, so the same Workflow can run one
+          episode, a selected set, or the full historical input.
+        </p>
+        <p>
+          Each episode executes <code>research_episode</code>,
+          <code>write_deep_dive</code>, and
+          <code>write_podcast_script</code> in order. Completed branches fan in
+          to <code>write_series_review</code>, followed by the provenance
+          manifest.
+        </p>
+      </div>
+    </section>
+
+    <section class="tra__section tra__numbered">
+      <header class="tra__section-head">
+        <p class="kicker">03</p>
+        <h2>Recovery proof</h2>
+        <p>
+          The recovery script waits until two research Activities are
+          heartbeating, kills the Worker with SIGKILL, starts a replacement,
+          and waits on the original Workflow ID and Run ID.
+        </p>
+      </header>
+      <figure class="tra__media">
+        <video controls preload="metadata" poster={poster}>
+          <source src={video} type="video/mp4" />
+        </video>
+        <figcaption>
+          The Worker dies with two research Activities in flight. Temporal Web
+          shows both retries and the completed episode and series-review outputs.
+        </figcaption>
+      </figure>
       <div class="tra__evidence">
         <figure>
           <button
@@ -141,6 +209,22 @@ series_reviews = await asyncio.gather(
             class="tra__expand"
             type="button"
             data-expand-image
+            aria-label="Expand the completed Workflow screenshot"
+          >
+            <img
+              src={`${root}/deck-assets/workflow-completed.png`}
+              alt="Temporal Web showing the original Workflow Execution completed"
+              loading="lazy"
+            />
+            <span>Open full view</span>
+          </button>
+          <figcaption>The replacement Worker completes the original Workflow Execution.</figcaption>
+        </figure>
+        <figure>
+          <button
+            class="tra__expand"
+            type="button"
+            data-expand-image
             aria-label="Expand the Temporal Web retry screenshot"
           >
             <img
@@ -153,19 +237,88 @@ series_reviews = await asyncio.gather(
           <figcaption>Event History shows both <code>research_episode</code> Activities on attempt 2.</figcaption>
         </figure>
       </div>
+      <dl class="tra__run">
+        <div><dt>Workflow ID</dt><dd>temporal-phasee-demo-1785443614</dd></div>
+        <div><dt>Status</dt><dd>Completed</dd></div>
+        <div><dt>Episodes</dt><dd>mas-ep4, code-ep4</dd></div>
+        <div><dt>Failures</dt><dd>None</dd></div>
+      </dl>
     </section>
 
-    <aside class="tra__boundary" aria-labelledby="runtime-boundary">
-      <h2 id="runtime-boundary">Runtime boundary</h2>
-      <p>
-        This page publishes the source and captured evidence as documentation.
-        The live research integration runs on the configured workstation.
-        <a href="https://www.sjarmak.ai/projects/scix-agent">SciX</a> and
-        <a href="https://www.sjarmak.ai/projects/code-intelligence-digest">Code Intelligence Digest</a>
-        depend on local repositories, indexes, databases, services, and Worker
-        configuration that are not included here.
+    <section class="tra__section tra__numbered">
+      <header class="tra__section-head">
+        <p class="kicker">04</p>
+        <h2>Design choices and tradeoffs</h2>
+      </header>
+      <div class="tra__tradeoffs">
+        <article>
+          <h3>Retries and timeouts</h3>
+          <p>
+            Activities allow three attempts with bounded exponential backoff.
+            Research and writing use Start-to-Close and Heartbeat Timeouts. The
+            short demo values make recovery visible; production values should
+            reflect provider latency, cost, and rate limits.
+          </p>
+        </article>
+        <article>
+          <h3>At-least-once execution</h3>
+          <p>
+            MCP requests use stable hashes and a write-once response journal.
+            Read-only duplicate retrieval wastes work without changing external
+            state. Paid or mutating calls would also need provider-enforced
+            idempotency.
+          </p>
+        </article>
+        <article>
+          <h3>Artifacts and History</h3>
+          <p>
+            Stable references keep large research documents out of Event
+            History. The sample filesystem store is inspectable; multiple
+            Worker hosts would require shared object storage or a database.
+          </p>
+        </article>
+        <article>
+          <h3>Runtime boundary</h3>
+          <p>
+            The live integration runs on the configured workstation. SciX and
+            Code Intelligence Digest depend on local indexes and services that
+            are not part of this public documentation package.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="tra__section tra__numbered">
+      <header class="tra__section-head">
+        <p class="kicker">05</p>
+        <h2>Results and verification</h2>
+        <p>
+          The recovery run proves durable execution. The separate live run
+          proves that the same generic Workflow still produces a complete
+          research product.
+        </p>
+      </header>
+      <div class="tra__results">
+        <article>
+          <p class="kicker">Recovery run</p>
+          <strong>2 episode branches</strong>
+          <p>Two series reviews and one manifest completed after both research Activities reached attempt 2.</p>
+        </article>
+        <article>
+          <p class="kicker">Live product run</p>
+          <strong>29 records</strong>
+          <p>One research brief, deep dive, podcast script, series synthesis, and provenance manifest completed with no failed episodes.</p>
+        </article>
+        <article>
+          <p class="kicker">Quality gates</p>
+          <strong>Strict and typed</strong>
+          <p>Frozen dataclasses, strict MyPy, Ruff, and branch-aware tests above 80 percent coverage.</p>
+        </article>
+      </div>
+      <p class="tra__output-link">
+        <a href={`${root}/research-output`}>Inspect the original and Temporal research products <span>→</span></a>
       </p>
-    </aside>
+    </section>
 
   </article>
 
@@ -207,17 +360,20 @@ series_reviews = await asyncio.gather(
 
 <style>
   .tra {
-    --stack-gap: clamp(var(--space-xl), 8vw, var(--space-3xl));
     padding-block-end: var(--space-3xl);
   }
 
-  .tra__artifacts {
+  .tra > * + * {
+    margin-block-start: clamp(var(--space-xl), 8vw, var(--space-3xl));
+  }
+
+  .tra__tabs {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border-block: var(--border-hairline);
   }
 
-  .tra__artifacts a {
+  .tra__tabs a {
     display: flex;
     min-height: 4.5rem;
     padding: var(--space-s);
@@ -230,11 +386,17 @@ series_reviews = await asyncio.gather(
     text-decoration: none;
   }
 
-  .tra__artifacts a:last-child {
+  .tra__tabs a:last-child {
     border-inline-end: 0;
   }
 
-  .tra__artifacts a:hover {
+  .tra__tabs a span {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .tra__tabs a:hover {
     color: var(--color-accent);
     background: var(--color-bg-subtle);
   }
@@ -259,7 +421,7 @@ series_reviews = await asyncio.gather(
     font-size: var(--step--1);
   }
 
-  .tra__premise {
+  .tra__summary .tra__copy {
     font-size: var(--step-1);
   }
 
@@ -287,6 +449,10 @@ series_reviews = await asyncio.gather(
     margin-block-start: var(--space-s);
     color: var(--color-text-secondary);
     line-height: var(--leading-relaxed);
+  }
+
+  .tra__copy {
+    max-width: var(--measure);
   }
 
   .tra__code {
@@ -379,8 +545,118 @@ series_reviews = await asyncio.gather(
 
   .tra__evidence {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-l);
+  }
+
+  .tra__architecture,
+  .tra__tradeoffs,
+  .tra__results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-block: var(--border-hairline);
+  }
+
+  .tra__architecture article,
+  .tra__tradeoffs article,
+  .tra__results article {
+    padding: var(--space-m);
+    border-inline-end: var(--border-hairline);
+    border-block-end: var(--border-hairline);
+  }
+
+  .tra__architecture article:nth-child(2n),
+  .tra__tradeoffs article:nth-child(2n),
+  .tra__results article:last-child {
+    border-inline-end: 0;
+  }
+
+  .tra__architecture article:nth-last-child(-n + 2),
+  .tra__tradeoffs article:nth-last-child(-n + 2) {
+    border-block-end: 0;
+  }
+
+  .tra__architecture h3,
+  .tra__tradeoffs h3 {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--step-0);
+  }
+
+  .tra__architecture p,
+  .tra__tradeoffs p,
+  .tra__results p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tra__results {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tra__results article {
+    border-block-end: 0;
+  }
+
+  .tra__results .kicker {
+    margin-block-end: var(--space-s);
+  }
+
+  .tra__results strong {
+    display: block;
+    margin-block-end: var(--space-xs);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .tra__run {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    border-block: var(--border-hairline);
+  }
+
+  .tra__run div {
+    min-width: 0;
+    padding: var(--space-s);
+    border-inline-end: var(--border-hairline);
+  }
+
+  .tra__run div:last-child {
+    border-inline-end: 0;
+  }
+
+  .tra__run dt {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+  }
+
+  .tra__run dd {
+    margin: var(--space-2xs) 0 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tra__output-link {
+    margin: 0;
+  }
+
+  .tra__output-link a {
+    display: flex;
+    min-height: 4rem;
+    padding: var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    border: var(--border-hairline);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    text-decoration: none;
+  }
+
+  .tra__output-link a:hover {
+    color: var(--color-accent);
+    background: var(--color-bg-subtle);
   }
 
   .tra-viewer {
@@ -435,37 +711,39 @@ series_reviews = await asyncio.gather(
     color: var(--color-accent);
   }
 
-  .tra__boundary {
-    padding-block: var(--space-l);
-    border-block: var(--border-hairline);
-  }
-
-  .tra__boundary h2 {
-    margin: 0 0 var(--space-s);
-    font-size: var(--step-2);
-  }
-
-  .tra__boundary p {
-    max-width: var(--measure);
-    margin: 0;
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
-  }
-
   @media (max-width: 760px) {
-    .tra__artifacts,
+    .tra__tabs,
     .tra__code,
-    .tra__evidence {
+    .tra__evidence,
+    .tra__architecture,
+    .tra__tradeoffs,
+    .tra__results,
+    .tra__run {
       grid-template-columns: 1fr;
     }
 
-    .tra__artifacts a {
+    .tra__tabs a {
       border-inline-end: 0;
       border-bottom: var(--border-hairline);
     }
 
-    .tra__artifacts a:last-child {
+    .tra__tabs a:last-child {
       border-bottom: 0;
+    }
+
+    .tra__architecture article,
+    .tra__tradeoffs article,
+    .tra__results article,
+    .tra__run div {
+      border-inline-end: 0;
+      border-block-end: var(--border-hairline);
+    }
+
+    .tra__architecture article:last-child,
+    .tra__tradeoffs article:last-child,
+    .tra__results article:last-child,
+    .tra__run div:last-child {
+      border-block-end: 0;
     }
 
     .tra-viewer {
