@@ -1,0 +1,179 @@
+import AnnotatedCode from "./AnnotatedCode.astro";
+
+# An agent started. The coordinator died. Now what?
+
+*What changed when I moved the procedure of a multi-agent coding system into Temporal*
+
+A work item becomes ready. A coordinator claims it and starts an AI coding agent. The agent gets a worktree, edits files, runs tools, and may stay busy for an hour.
+
+Then the coordinator dies before it records the handoff.
+
+On restart, the system has three uncomfortable options. It can launch another agent and risk two processes changing the same worktree. It can wait for a process it no longer knows how to reach. Or it can abandon the claim and ask a repair loop to infer what happened from the evidence left behind.
+
+I have operated versions of all three.
+
+The multi-agent coding system behind this example uses an inspectable work ledger. Each record stores the task, dependencies, claim state, artifacts, and terminal result. Around that ledger, dispatchers find eligible work, session controllers start or wake agents, formulas describe multi-step jobs, and reapers look for stale claims, orphaned processes, stranded branches, and incomplete workflow steps.
+
+The ledger survives a process crash. The procedure used to survive as a collection of clues.
+
+I am moving that procedure into Temporal with the Go SDK. A Temporal Workflow owns the deterministic progression of one finite orchestration episode. Temporal Activities own work-store access, agent execution, tests, reviews, and other nondeterministic effects. The existing ledger remains the source of record for mutable work facts and operator repair.
+
+That division is the project.
+
+## The old system could prove that work existed
+
+The pre-Temporal path looked roughly like this:
+
+```text
+ready work
+    ↓
+dispatcher scan
+    ↓
+claim or route write
+    ↓
+session launch or nudge
+    ↓
+agent process
+    ↓
+terminal receipt
+```
+
+Every arrow crossed a process or persistence boundary. A crash after the claim write could strand assigned work. A crash after session launch could cause a duplicate agent on retry. A late completion could arrive after a newer generation of the same work item had already started.
+
+The repair layer inspected snapshots after the fact. It could see that a record was assigned, a process existed, or a branch had commits. It could not always tell whether repeating the next action was safe.
+
+Adding another reaper helped one failure mode at a time. It also spread ownership of the procedure across more processes.
+
+## I kept the work ledger
+
+Temporal Workflow History is a record of execution. My work ledger is where operators inspect and repair task facts. Those are different jobs.
+
+The ledger continues to own:
+
+- work descriptions and dependencies;
+- readiness and claim state;
+- artifact and review references;
+- terminal outcomes; and
+- audit events used by operators and repair tools.
+
+The Workflow owns:
+
+- which ready events have been accepted;
+- which Activity belongs to each generation;
+- which work is still in flight;
+- whether cancellation has been requested;
+- whether a finite run has received every expected event; and
+- whether the execution completed or failed.
+
+The Workflow stores compact typed state and artifact references. Prompts, model output, code changes, branches, and logs stay outside Event History.
+
+That gives both systems a clear recovery story. Temporal reconstructs procedure from Event History. The ledger remains inspectable even if Temporal is unavailable.
+
+## The handoff starts with an outbox
+
+A ready transition and its delivery event are written in the same ledger transaction. A bridge reads the pending event and calls [Signal-With-Start](https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start) under a stable Workflow ID:
+
+```text
+bead-orchestration/{city}/{run}/{work-item}
+```
+
+Signal-With-Start atomically signals the existing Workflow or starts it with the signal. The bridge verifies the returned Workflow receipt, then acknowledges the outbox event.
+
+There is still a crash window:
+
+```text
+Temporal accepts event → bridge dies → outbox acknowledgement is missing
+```
+
+The event will be delivered again. The Workflow keeps the accepted event IDs and ignores the duplicate. Stable identity turns redelivery into a normal condition.
+
+Closing a finite run needs the same care. A close command carries the complete authoritative set of ready-event IDs. The Workflow drains its signal channel and waits until it has seen that set and every scheduled Activity has reached a terminal state. A close signal cannot race ahead of the final ready event and make the Workflow exit early.
+
+## A retry must reattach to the same agent
+
+An agent Activity is a long-running external process, not a function I can repeat casually.
+
+The Activity first claims the exact work generation and receives a fencing token. It asks a trusted adapter to resolve a session from that token. The adapter either starts the session or returns the one already bound to the claim. Progress arrives over a bounded JSONL protocol and becomes compact Activity heartbeat details.
+
+If the Activity Worker disappears, Temporal detects the missed heartbeat and schedules another attempt. The new attempt reads the persisted [Activity heartbeat](https://docs.temporal.io/activity-execution), presents the same claim token, and reattaches to the same session.
+
+Completion goes through the fence. The ledger accepts the terminal receipt only when the work-item ID, generation, claim token, and session binding still match. A stale executor can finish successfully and still be rejected.
+
+Cancellation uses the same identity. The Activity sends a cancellation request for one bead, generation, claim token, and session. It does not issue a broad “stop whatever is running” command.
+
+## Formula metadata belongs in the execution view
+
+The original system could show an agent, a work item, or a workflow root without making the relationship between them obvious.
+
+Each ready event now snapshots an immutable formula reference:
+
+```text
+formula name
+formula hash and version
+formula root
+step key
+rig
+work-item generation
+optional maintenance parent
+```
+
+The bridge places that snapshot in Temporal Memo and, when the namespace is configured for it, custom Search Attributes. The Workflow derives a stable Activity ID from the formula root, step, and generation:
+
+```text
+formula/{root}/{step}/g{generation}
+```
+
+Temporal Web can then answer which formula step caused the execution without reading mutable formula state. Parent and child executions retain typed links, so an operator can move from a maintenance cycle to the exact agent work it started.
+
+<AnnotatedCode />
+
+## Activities still need application-level idempotency
+
+Temporal provides durable orchestration and at-least-once Activity execution. An Activity may finish an external effect and lose its completion response when the Worker dies. Temporal sees an incomplete Activity and schedules another attempt.
+
+The claim fence handles writes to the work ledger. The start-or-attach protocol handles agent sessions. External systems need their own rule.
+
+When a destination supports idempotency keys, the Activity should send a stable key derived from the logical operation. When it does not, the safer pattern is a retryable preflight, a durable pending claim, one execution attempt, and quarantine for an ambiguous outcome. GitHub, Slack, a payment provider, and an agent process do not acquire exactly-once behavior because their calls came from a Temporal Activity.
+
+This is where “Temporal handles retries” becomes an engineering decision. Temporal records the attempt and retry schedule. The application decides which effects may repeat and how to prove that a result belongs to the current generation.
+
+## The first Temporal pilot taught me what to leave alone
+
+My first maintenance pilot was a short synchronous job that ran every two hours. Put inside a Temporal Schedule, it behaved like cron plus a lockfile. Several cycles failed, and an external soak checker found them. The Workflow did not create a useful recovery path because the operation had no meaningful durable wait or coordination state.
+
+That pilot narrowed the target.
+
+The bead-to-agent procedure has the shape Temporal is good at: long-running work, process-loss exposure, retries, heartbeats, cancellation, human gates, parent-child coordination, and a need to inspect current state without reconstructing it from logs.
+
+Small scheduled commands can remain small scheduled commands.
+
+## Deployment has a fail-closed shadow mode
+
+The current implementation is running as a standalone Go service in shadow mode. It registers the production Workflow and Activity names and polls the real Task Queues. Its Activity implementation rejects execution before it can mutate the ledger or dispatch an agent.
+
+Canary mode requires three things the shadow Worker does not receive:
+
+1. the canonical work-store adapter;
+2. an absolute path to the trusted agent executable; and
+3. an explicit acknowledgement that the custom Search Attributes have been registered.
+
+The one-work-item canary and rollback are still gated. I am not describing the integration as fully deployed until that run has passed against the exact code shown here.
+
+The automated suite already covers duplicate delivery, a bridge crash window, concurrent claims, stale fences, cancellation, lost-event reconciliation, heartbeat recovery, bounded history, replay against captured [Event History](https://docs.temporal.io/workflow-execution/event#what-is-an-event-history), and Worker restart. The canary adds the production composition: one Workflow resumes, one agent session remains bound, and one generation-fenced terminal receipt is written.
+
+## Temporal owns the procedure, not the whole system
+
+The move removes a large class of process-local orchestration state. It also makes the remaining responsibilities easier to name.
+
+Temporal Workflows own deterministic decisions, durable waits, and progress through the procedure. Temporal Activities own nondeterministic calls and report compact results. The work ledger owns mutable task facts. The agent adapter owns session identity. Destination systems own the last word on external-effect deduplication. Infrastructure still owns memory limits, disk cleanup, database availability, and Worker deployment.
+
+The end state I want is boring to describe after a crash:
+
+```text
+the Workflow is still open
+the same agent session is still bound
+the replacement Worker resumes from the heartbeat
+one fenced receipt closes the generation
+```
+
+That is much easier to operate than another reaper trying to guess which step disappeared.

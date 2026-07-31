@@ -1,0 +1,655 @@
+---
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { codeToHtml } from "shiki";
+
+import {
+  temporalAgentOrchestrationCodeSamples,
+  validateTemporalAgentOrchestrationCodeSamples,
+} from "@/data/temporal-agent-orchestration-code-samples";
+
+const preparedSamples = await Promise.all(
+  temporalAgentOrchestrationCodeSamples.map(async (sample) => {
+    const source = readFileSync(path.join(process.cwd(), sample.sourcePath), "utf8")
+      .replace(/\n$/, "");
+    const lines = source.split("\n");
+    return {
+      ...sample,
+      lineCount: lines.length,
+      sections: await Promise.all(
+        sample.sections.map(async (section) => ({
+          ...section,
+          html: await codeToHtml(
+            lines.slice(section.start - 1, section.end).join("\n"),
+            {
+              lang: "go",
+              themes: {
+                light: "one-light",
+                dark: "one-dark-pro",
+              },
+            },
+          ),
+        })),
+      ),
+    };
+  }),
+);
+
+validateTemporalAgentOrchestrationCodeSamples(
+  Object.fromEntries(
+    preparedSamples.map((sample) => [sample.filename, sample.lineCount]),
+  ),
+);
+---
+
+<section class="annotated-code" aria-labelledby="annotated-code-title">
+  <header class="annotated-code__header">
+    <div>
+      <p class="annotated-code__kicker">The implementation</p>
+      <h2 id="annotated-code-title">Read the boundary in the code</h2>
+    </div>
+    <p>
+      Choose a file, then click any line section. The complete source stays in
+      place while its explanation opens directly below it.
+    </p>
+  </header>
+
+  <div class="annotated-code__tabs" role="tablist" aria-label="Go source files">
+    {
+      preparedSamples.map((sample, index) => (
+        <button
+          id={`code-tab-${sample.slug}`}
+          type="button"
+          role="tab"
+          aria-selected={index === 0 ? "true" : "false"}
+          aria-controls={`code-panel-${sample.slug}`}
+          tabindex={index === 0 ? "0" : "-1"}
+          data-code-tab={sample.slug}
+        >
+          <span>{sample.label}</span>
+          <small>{sample.filename}</small>
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    preparedSamples.map((sample, sampleIndex) => (
+      <section
+        id={`code-panel-${sample.slug}`}
+        class="annotated-code__panel"
+        role="tabpanel"
+        aria-labelledby={`code-tab-${sample.slug}`}
+        data-code-file={sample.slug}
+        hidden={sampleIndex !== 0}
+      >
+        <header class="annotated-code__file-header">
+          <div>
+            <h3>{sample.label}</h3>
+            <p>{sample.summary}</p>
+          </div>
+          <a href={sample.rawPath} download={sample.filename}>
+            Download {sample.filename} <span aria-hidden="true">↓</span>
+          </a>
+        </header>
+
+        <div class="annotated-code__file">
+          {sample.sections.map((section) => (
+            <section
+              class="annotated-code__segment"
+              data-code-section
+              data-expanded="false"
+            >
+              <div
+                class="annotated-code__source-trigger"
+                role="button"
+                tabindex="0"
+                aria-expanded="false"
+                aria-controls={`${sample.slug}-explanation-${section.start}`}
+                aria-label={`Lines ${section.start} through ${section.end}: ${section.title}. Toggle explanation.`}
+              >
+                <div
+                  class="annotated-code__source"
+                  style={`--start-line: ${section.start}`}
+                  set:html={section.html}
+                />
+                <span class="annotated-code__section-cue" aria-hidden="true">
+                  <span>Lines {section.start}–{section.end}</span>
+                  <span class="annotated-code__cue-action">
+                    <span class="annotated-code__cue-open">Explain</span>
+                    <span class="annotated-code__cue-close">Close</span>
+                    <span class="annotated-code__chevron">⌄</span>
+                  </span>
+                </span>
+              </div>
+
+              <div
+                class="annotated-code__explanation"
+                id={`${sample.slug}-explanation-${section.start}`}
+                role="region"
+                aria-labelledby={`${sample.slug}-section-${section.start}`}
+                hidden
+              >
+                <header>
+                  <p class="annotated-code__line-range">
+                    Lines {section.start}–{section.end}
+                  </p>
+                  <h3 id={`${sample.slug}-section-${section.start}`}>
+                    {section.title}
+                  </h3>
+                </header>
+                <div class="annotated-code__explanation-body">
+                  <dl>
+                    <div>
+                      <dt>What this section does</dt>
+                      <dd>{section.purpose}</dd>
+                    </div>
+                    <div>
+                      <dt>Why it matters for Temporal</dt>
+                      <dd>{section.whyTemporal}</dd>
+                    </div>
+                  </dl>
+                  <ul aria-label="Section concepts">
+                    {section.details.map((detail) => <li>{detail}</li>)}
+                  </ul>
+                </div>
+              </div>
+            </section>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</section>
+
+<script>
+  for (const reader of document.querySelectorAll<HTMLElement>(
+    ".annotated-code",
+  )) {
+    const tabs = Array.from(
+      reader.querySelectorAll<HTMLButtonElement>("[data-code-tab]"),
+    );
+    const panels = Array.from(
+      reader.querySelectorAll<HTMLElement>("[data-code-file]"),
+    );
+
+    const selectFile = (selected: HTMLButtonElement) => {
+      const slug = selected.dataset.codeTab;
+      for (const tab of tabs) {
+        const active = tab === selected;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      }
+      for (const panel of panels) {
+        panel.hidden = panel.dataset.codeFile !== slug;
+      }
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => selectFile(tab));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          return;
+        }
+        event.preventDefault();
+        const nextIndex =
+          event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? tabs.length - 1
+              : event.key === "ArrowRight"
+                ? (index + 1) % tabs.length
+                : (index - 1 + tabs.length) % tabs.length;
+        const next = tabs[nextIndex];
+        selectFile(next);
+        next.focus();
+      });
+    });
+
+    for (const panel of panels) {
+      const sections = Array.from(
+        panel.querySelectorAll<HTMLElement>("[data-code-section]"),
+      );
+      const setExpanded = (current: HTMLElement, expanded: boolean) => {
+        const trigger = current.querySelector<HTMLElement>(
+          ".annotated-code__source-trigger",
+        );
+        const explanation = current.querySelector<HTMLElement>(
+          ".annotated-code__explanation",
+        );
+        if (!trigger || !explanation) return;
+
+        current.dataset.expanded = String(expanded);
+        trigger.setAttribute("aria-expanded", String(expanded));
+        explanation.hidden = !expanded;
+      };
+
+      for (const current of sections) {
+        const trigger = current.querySelector<HTMLElement>(
+          ".annotated-code__source-trigger",
+        );
+        if (!trigger) continue;
+
+        const toggleCurrent = () => {
+          const selection = window.getSelection();
+          if (selection && !selection.isCollapsed) return;
+
+          const shouldOpen = current.dataset.expanded !== "true";
+          for (const section of sections) {
+            if (section !== current) setExpanded(section, false);
+          }
+          setExpanded(current, shouldOpen);
+        };
+
+        trigger.addEventListener("click", toggleCurrent);
+        trigger.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggleCurrent();
+          }
+        });
+      }
+    }
+  }
+</script>
+
+<style>
+  .annotated-code {
+    --reader-rule: color-mix(in srgb, var(--color-text) 18%, transparent);
+    width: min(68rem, calc(100vw - 2 * var(--space-m)));
+    margin-block: clamp(var(--space-xl), 7vw, var(--space-3xl));
+    margin-inline: 50%;
+    transform: translateX(-50%);
+  }
+
+  .annotated-code__header {
+    display: grid;
+    grid-template-columns: minmax(15rem, 4fr) minmax(0, 7fr);
+    margin-block-end: var(--space-l);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .annotated-code__kicker {
+    margin: 0 0 var(--space-xs);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__header h2,
+  .annotated-code__header > p {
+    margin: 0;
+  }
+
+  .annotated-code__header > p {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+    font-size: var(--step-1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .annotated-code__tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border: 1px solid var(--reader-rule);
+  }
+
+  .annotated-code__tabs button {
+    display: grid;
+    min-width: 0;
+    padding: var(--space-s);
+    gap: 0.15rem;
+    border: 0;
+    border-inline-end: 1px solid var(--reader-rule);
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .annotated-code__tabs button:last-child {
+    border-inline-end: 0;
+  }
+
+  .annotated-code__tabs button:hover,
+  .annotated-code__tabs button[aria-selected="true"] {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+  }
+
+  .annotated-code__tabs button[aria-selected="true"] {
+    box-shadow: inset 0 -3px var(--color-accent);
+  }
+
+  .annotated-code__tabs button:focus-visible {
+    z-index: 1;
+    outline: 2px solid var(--color-accent);
+    outline-offset: -3px;
+  }
+
+  .annotated-code__tabs span {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .annotated-code__tabs small {
+    overflow: hidden;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .annotated-code__panel[hidden] {
+    display: none;
+  }
+
+  .annotated-code__file-header {
+    display: flex;
+    padding-block: var(--space-m);
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-l);
+    border-block-end: 1px solid var(--reader-rule);
+  }
+
+  .annotated-code__file-header h3,
+  .annotated-code__file-header p {
+    margin: 0;
+  }
+
+  .annotated-code__file-header h3 {
+    font-size: var(--step-1);
+  }
+
+  .annotated-code__file-header p {
+    max-width: var(--measure);
+    margin-block-start: 0.3rem;
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__file-header a {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__file {
+    padding-block: var(--space-xs);
+    overflow: clip;
+    border: 1px solid var(--reader-rule);
+    border-block-start: 0;
+    background: var(--color-surface);
+  }
+
+  .annotated-code__segment {
+    display: block;
+    scroll-margin-top: 5rem;
+  }
+
+  .annotated-code__source-trigger {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.75rem;
+    min-width: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .annotated-code__source-trigger:focus-visible {
+    z-index: 2;
+    box-shadow: inset 0 0 0 3px var(--color-accent);
+  }
+
+  .annotated-code__source-trigger:hover {
+    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-bg));
+  }
+
+  .annotated-code__segment[data-expanded="true"]
+    > .annotated-code__source-trigger {
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+
+  .annotated-code__section-cue {
+    display: grid;
+    padding: 0.45rem var(--space-xs);
+    align-content: center;
+    align-items: center;
+    border-inline-start: 1px solid var(--reader-rule);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  .annotated-code__cue-action {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-text-secondary);
+  }
+
+  .annotated-code__cue-close {
+    display: none;
+  }
+
+  .annotated-code__chevron {
+    display: inline-block;
+    color: var(--color-accent);
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .annotated-code__segment[data-expanded="true"] .annotated-code__cue-open {
+    display: none;
+  }
+
+  .annotated-code__segment[data-expanded="true"] .annotated-code__cue-close {
+    display: inline;
+  }
+
+  .annotated-code__segment[data-expanded="true"] .annotated-code__chevron {
+    transform: rotate(180deg);
+  }
+
+  .annotated-code__explanation {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 2fr);
+    padding: clamp(var(--space-m), 3vw, var(--space-xl));
+    gap: clamp(var(--space-m), 4vw, var(--space-xl));
+    border-block: 1px solid var(--reader-rule);
+    background: var(--color-bg-subtle);
+  }
+
+  .annotated-code__explanation[hidden] {
+    display: none;
+  }
+
+  .annotated-code__explanation header {
+    align-self: start;
+  }
+
+  .annotated-code__line-range {
+    margin: 0 0 var(--space-xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__explanation h3 {
+    margin: 0;
+    font-size: var(--step-1);
+  }
+
+  .annotated-code__explanation dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    gap: var(--space-l);
+  }
+
+  .annotated-code__explanation dt {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .annotated-code__explanation dd {
+    margin: 0.3rem 0 0;
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .annotated-code__explanation ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    gap: 0.35rem;
+    list-style: none;
+  }
+
+  .annotated-code__explanation li {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--reader-rule);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .annotated-code__source {
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .annotated-code__source :global(.shiki) {
+    min-width: max-content;
+    margin: 0;
+    padding: 0 var(--space-m) 0 var(--space-s);
+    background: transparent !important;
+    font-size: clamp(0.74rem, 1.25vw, 0.88rem);
+    line-height: 1.75;
+  }
+
+  .annotated-code__source :global(code) {
+    counter-reset: line calc(var(--start-line) - 1);
+  }
+
+  .annotated-code__source :global(.line) {
+    display: inline-block;
+    width: 100%;
+    padding-inline-end: var(--space-m);
+  }
+
+  .annotated-code__source :global(.line::before) {
+    display: inline-block;
+    width: 3ch;
+    margin-inline-end: var(--space-m);
+    color: var(--color-text-muted);
+    content: counter(line);
+    counter-increment: line;
+    text-align: end;
+    user-select: none;
+  }
+
+  :global([data-theme="dark"])
+    .annotated-code__source
+    :global(.shiki span[style]) {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style, inherit);
+  }
+
+  @media (max-width: 800px) {
+    .annotated-code__header {
+      grid-template-columns: 1fr;
+      gap: var(--space-s);
+    }
+
+    .annotated-code__tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .annotated-code__tabs button {
+      border-block-end: 1px solid var(--reader-rule);
+    }
+
+    .annotated-code__tabs button:nth-child(2n) {
+      border-inline-end: 0;
+    }
+
+    .annotated-code__tabs button:last-child {
+      border-block-end: 0;
+    }
+
+    .annotated-code__explanation {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .annotated-code {
+      width: min(100vw - 2 * var(--space-s), 68rem);
+    }
+
+    .annotated-code__tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .annotated-code__tabs button,
+    .annotated-code__tabs button:nth-child(2n) {
+      border-inline-end: 0;
+      border-block-end: 1px solid var(--reader-rule);
+    }
+
+    .annotated-code__tabs button:last-child {
+      border-block-end: 0;
+    }
+
+    .annotated-code__file-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: var(--space-s);
+    }
+
+    .annotated-code__source-trigger {
+      grid-template-columns: minmax(0, 1fr) 4.5rem;
+    }
+
+    .annotated-code__section-cue {
+      padding-inline: 0.4rem;
+    }
+
+    .annotated-code__cue-action {
+      gap: 0.2rem;
+    }
+
+    .annotated-code__explanation dl {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .annotated-code__source-trigger,
+    .annotated-code__chevron {
+      transition: none;
+    }
+  }
+</style>

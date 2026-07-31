@@ -1,0 +1,73 @@
+---
+import Article from "@/components/temporal-agent-orchestration/Article.mdx";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="An agent started. The coordinator died. Now what?"
+  description="What changed when I moved the procedure of a production multi-agent coding system into Temporal Workflows and Activities with the Go SDK."
+  type="article"
+  noindex={true}
+>
+  <article class="container temporal-agent-article">
+    <div class="prose temporal-agent-article__body">
+      <Article />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .temporal-agent-article {
+    width: min(100% - 2 * var(--space-m), 78rem);
+    padding-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-3xl);
+  }
+
+  :global(.temporal-agent-article__body > :not(.annotated-code)) {
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  :global(.temporal-agent-article__body > h1) {
+    max-width: 17ch;
+    margin-block: 0 var(--space-s);
+    font-size: var(--step-5);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  :global(.temporal-agent-article__body > h1 + p) {
+    margin-block: 0 clamp(var(--space-l), 5vw, var(--space-2xl));
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+  }
+
+  :global(.temporal-agent-article__body > h2) {
+    margin-block-start: clamp(var(--space-xl), 7vw, var(--space-3xl));
+  }
+
+  :global(.temporal-agent-article__body > pre) {
+    width: min(100%, 68rem);
+    max-width: none;
+    margin-block: var(--space-l);
+    padding: var(--space-m);
+    overflow-x: auto;
+    border: 1px solid var(--night-700);
+    border-radius: var(--radius);
+    background: var(--night-900);
+    color: var(--night-100);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 720px) {
+    .temporal-agent-article {
+      width: min(100% - 2 * var(--space-s), 78rem);
+    }
+
+    :global(.temporal-agent-article__body > h1) {
+      max-width: none;
+    }
+  }
+</style>
