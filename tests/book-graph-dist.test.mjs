@@ -48,7 +48,11 @@ test("the server-rendered list exposes every chapter and practice without JavaSc
   const html = page("books", SLUG, "explore");
   assert.equal((html.match(/data-book-graph-chapter/g) ?? []).length, 18);
   assert.equal((html.match(/data-book-graph-practice/g) ?? []).length, 192);
-  assert.equal((html.match(new RegExp(`href="/books/${SLUG}/companion#`, "g")) ?? []).length, 192);
+  const practices = html.split("data-book-graph-practice").slice(1, 193);
+  assert.equal(practices.length, 192);
+  practices.forEach((practice) => {
+    assert.match(practice, new RegExp(`href="/books/${SLUG}/companion#`));
+  });
 });
 
 test("book and companion pages link to the explorer", () => {

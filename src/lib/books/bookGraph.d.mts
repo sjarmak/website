@@ -37,6 +37,62 @@ export interface BookGraphData {
   };
 }
 
+export type BookReferenceKind = "paper" | "article" | "repository" | "discussion";
+
+export interface BookReferenceLocation {
+  sourceId: string;
+  sourceKind: "chapter" | "practice";
+  label: string;
+  href: string;
+  part?: number;
+  chapter?: number;
+  classification?: PracticeClassification;
+}
+
+export interface BookReference {
+  id: string;
+  url: string;
+  citation: string;
+  identifier: string;
+  kind: BookReferenceKind;
+  citedBy: BookReferenceLocation[];
+}
+
+export interface BookReferenceCounts {
+  references: number;
+  citations: number;
+  papers: number;
+  articles: number;
+  repositories: number;
+  discussions: number;
+}
+
+export interface BookReferenceIndex {
+  references: BookReference[];
+  counts: BookReferenceCounts;
+}
+
+export function normalizeReferenceUrl(value: string): string;
+
+export function extractReferencesFromMarkdown(source: string): Array<{
+  position: number;
+  url: string;
+  citation: string;
+}>;
+
+export function buildBookReferences(input: {
+  bookId: string;
+  chapters: Array<{
+    id: string;
+    title: string;
+    kind: string;
+    number?: number;
+    part: number;
+    source: string;
+  }>;
+  companionSource: string;
+}): BookReferenceIndex;
+
 export function parseCompanionPractices(source: string): Array<{
   id: string;
   title: string;

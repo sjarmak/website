@@ -2,8 +2,9 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BookGraphFallback from "@/components/books/BookGraphFallback.astro";
+import BookReferenceIndex from "@/components/books/BookReferenceIndex.astro";
 import { bookChapterSlug } from "@/lib/books";
-import { buildBookGraph } from "@/lib/books/bookGraph.mjs";
+import { buildBookGraph, buildBookReferences } from "@/lib/books/bookGraph.mjs";
 
 export async function getStaticPaths() {
   const [books, chapters, companions] = await Promise.all([
@@ -33,6 +34,14 @@ interface Props {
 }
 
 const { book, companion, chapters } = Astro.props;
+const chapterData = chapters.map((chapter) => ({
+  id: bookChapterSlug(chapter.id),
+  title: chapter.data.title,
+  kind: chapter.data.kind,
+  number: chapter.data.number,
+  part: chapter.data.part,
+  source: chapter.body ?? "",
+}));
 const graph = buildBookGraph({
   book: {
     id: book.id,
@@ -41,13 +50,12 @@ const graph = buildBookGraph({
     description: book.data.description,
     parts: book.data.parts,
   },
-  chapters: chapters.map((chapter) => ({
-    id: bookChapterSlug(chapter.id),
-    title: chapter.data.title,
-    kind: chapter.data.kind,
-    number: chapter.data.number,
-    part: chapter.data.part,
-  })),
+  chapters: chapterData,
+  companionSource: companion.body ?? "",
+});
+const referenceIndex = buildBookReferences({
+  bookId: book.id,
+  chapters: chapterData,
   companionSource: companion.body ?? "",
 });
 const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
@@ -55,7 +63,7 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
 
 <BaseLayout
   title={`Explore ${book.data.title}`}
-  description={`An explorable map of the parts, chapters, and ${graph.counts.practices} practices in ${book.data.title}.`}
+  description={`Explore the parts, chapters, practices, and references in ${book.data.title}.`}
 >
   <main class="book-explorer container">
     <header class="book-explorer__head">
@@ -68,20 +76,21 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
         <p class="kicker">Knowledge graph</p>
         <h1>Explore the book</h1>
         <p class="lead">
-          Browse by part and chapter, then compare the 55 practices taught in the book with the 137 carried in the companion.
+          Browse by part and chapter, compare the {graph.counts.taught} practices taught in the book with the {graph.counts.untaught} carried in the companion, and trace the evidence to {referenceIndex.counts.references} sources.
         </p>
       </div>
-      <dl class="book-explorer__counts" aria-label="Graph contents">
+      <dl class="book-explorer__counts" aria-label="Explorer contents">
         <div><dt>Parts</dt><dd>{graph.counts.parts}</dd></div>
         <div><dt>Chapters</dt><dd>{graph.counts.chapters}</dd></div>
         <div><dt>Practices</dt><dd>{graph.counts.practices}</dd></div>
         <div><dt>Taught</dt><dd>{graph.counts.taught}</dd></div>
         <div><dt>Companion</dt><dd>{graph.counts.untaught}</dd></div>
+        <div><dt>References</dt><dd>{referenceIndex.counts.references}</dd></div>
       </dl>
     </header>
 
-    <section class="book-graph" data-book-graph-explorer aria-labelledby="graph-heading">
-      <h2 id="graph-heading" class="visually-hidden">Book graph</h2>
+    <section class="book-graph" data-book-graph-explorer data-view="list" aria-labelledby="graph-heading">
+      <h2 id="graph-heading" class="visually-hidden">Book explorer</h2>
       <div class="book-graph__toolbar">
         <label class="book-graph__search">
           <span>Search</span>
@@ -101,12 +110,14 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
           <button type="button" data-practice-filter="untaught" aria-pressed="true">Companion</button>
         </div>
 
-        <button type="button" class="book-graph__view" data-book-graph-view aria-pressed="false">
-          Graph view
-        </button>
+        <div class="book-graph__views" role="group" aria-label="Explorer view">
+          <button type="button" data-book-view="list" aria-pressed="true">List</button>
+          <button type="button" data-book-view="graph" aria-pressed="false">Graph</button>
+          <button type="button" data-book-view="references" aria-pressed="false">References</button>
+        </div>
       </div>
 
-      <p class="book-graph__key" aria-label="Relationship key">
+      <p class="book-graph__key" data-book-graph-key aria-label="Relationship key">
         <span><i class="book-graph__line"></i>Taught in chapter</span>
         <span><i class="book-graph__line book-graph__line--carried"></i>Carried in companion</span>
       </p>
@@ -130,6 +141,8 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
       <div data-book-graph-fallback>
         <BookGraphFallback nodes={graph.nodes} parts={book.data.parts} />
       </div>
+
+      <BookReferenceIndex references={referenceIndex.references} counts={referenceIndex.counts} />
     </section>
   </main>
 
@@ -244,7 +257,7 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
   }
 
   .book-graph__filters button,
-  .book-graph__view {
+  .book-graph__views button {
     min-height: 2.75rem;
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
@@ -259,8 +272,20 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
     color: var(--color-bg);
   }
 
-  .book-graph__view {
+  .book-graph__views {
+    display: flex;
+    gap: var(--space-2xs);
     margin-inline-start: auto;
+  }
+
+  .book-graph__views button[aria-pressed="true"] {
+    border-color: var(--color-text);
+    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+  }
+
+  .book-graph[data-view="references"] .book-graph__filters {
+    display: none;
   }
 
   .book-graph__key {
@@ -346,10 +371,6 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
     font-weight: var(--weight-semibold);
   }
 
-  .book-graph[data-canvas-active="true"] [data-book-graph-fallback] {
-    display: none;
-  }
-
   @media (max-width: 48rem) {
     .book-explorer__head {
       grid-template-columns: 1fr;
@@ -359,7 +380,7 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
       grid-column: 1;
     }
 
-    .book-graph__view {
+    .book-graph__views {
       margin-inline-start: 0;
     }
   }

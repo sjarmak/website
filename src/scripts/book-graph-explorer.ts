@@ -11,6 +11,7 @@ import type {
 } from "@/lib/books/bookGraph.mjs";
 
 type Palette = Record<string, string>;
+type ExplorerView = "list" | "graph" | "references";
 
 const tokenNames = [
   "--graph-node-topic",
@@ -193,16 +194,18 @@ function setup(root: HTMLElement, data: BookGraphData) {
   const practiceFilters = Array.from(
     root.querySelectorAll<HTMLButtonElement>("[data-practice-filter]"),
   );
-  const viewButton = root.querySelector<HTMLButtonElement>("[data-book-graph-view]");
+  const viewButtons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-book-view]"));
   const stage = root.querySelector<HTMLElement>("[data-book-graph-stage]");
   const canvas = root.querySelector<HTMLElement>("[data-book-graph-canvas]");
   const fallback = root.querySelector<HTMLElement>("[data-book-graph-fallback]");
+  const referenceIndex = root.querySelector<HTMLElement>("[data-book-reference-index]");
+  const graphKey = root.querySelector<HTMLElement>("[data-book-graph-key]");
   const detail = root.querySelector<HTMLElement>("[data-book-graph-detail]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const smallViewport = window.matchMedia("(max-width: 40rem)");
   const activeClasses = new Set<PracticeClassification>(["taught", "untaught"]);
   let cy: Core | null = null;
-  let canvasActive = false;
+  let activeView: ExplorerView = "list";
 
   function state() {
     return {
@@ -289,22 +292,53 @@ function setup(root: HTMLElement, data: BookGraphData) {
     }
   }
 
+  function filterReferences() {
+    if (!referenceIndex) return;
+    const { query, part } = state();
+    referenceIndex.querySelectorAll<HTMLElement>("[data-book-reference]").forEach((item) => {
+      const parts = item.dataset.parts?.split(",") ?? [];
+      const matchesPart = part === "all" || parts.includes(part);
+      const matchesQuery = !query || item.dataset.searchText?.includes(query);
+      item.hidden = !matchesPart || !matchesQuery;
+    });
+    referenceIndex.querySelectorAll<HTMLElement>("[data-reference-group]").forEach((group) => {
+      group.hidden = !group.querySelector("[data-book-reference]:not([hidden])");
+    });
+    const any = !!referenceIndex.querySelector("[data-book-reference]:not([hidden])");
+    const empty = referenceIndex.querySelector<HTMLElement>("[data-reference-empty]");
+    if (empty) empty.hidden = any;
+  }
+
   function applyFilters() {
     filterList();
     filterCanvas();
+    filterReferences();
   }
 
-  function setCanvasActive(active: boolean) {
-    canvasActive = active;
-    root.dataset.canvasActive = String(active);
-    if (stage) stage.hidden = !active;
-    if (viewButton) {
-      viewButton.setAttribute("aria-pressed", String(active));
-      viewButton.textContent = active ? "List view" : "Graph view";
+  function setView(view: ExplorerView, updateUrl = false) {
+    activeView = view;
+    root.dataset.view = view;
+    if (stage) stage.hidden = view !== "graph";
+    if (fallback) fallback.hidden = view !== "list";
+    if (referenceIndex) referenceIndex.hidden = view !== "references";
+    if (graphKey) graphKey.hidden = view === "references";
+    viewButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.bookView === view));
+    });
+    if (search) {
+      search.placeholder = view === "references"
+        ? "Source, author, chapter, or practice"
+        : "Chapter or practice";
     }
-    if (active && cy) {
+    if (view === "graph" && cy) {
       cy.resize();
       filterCanvas();
+    }
+    if (updateUrl) {
+      const url = new URL(location.href);
+      url.searchParams.set("view", view);
+      if (view !== "graph") url.searchParams.delete("node");
+      history.replaceState(null, "", url);
     }
   }
 
@@ -332,7 +366,6 @@ function setup(root: HTMLElement, data: BookGraphData) {
     if (cy || !canvas) return;
     const module = await import("cytoscape").catch(() => null);
     if (!module) return;
-    setCanvasActive(true);
     const colors = palette();
     cy = module.default({
       container: canvas,
@@ -356,7 +389,9 @@ function setup(root: HTMLElement, data: BookGraphData) {
     cy.on("tap", (event) => {
       if (event.target !== cy) return;
       closeDetail();
-      history.replaceState(null, "", location.pathname);
+      const url = new URL(location.href);
+      url.searchParams.delete("node");
+      history.replaceState(null, "", url);
     });
     applyFilters();
 
@@ -366,6 +401,15 @@ function setup(root: HTMLElement, data: BookGraphData) {
       node.select();
       openDetail(initialId);
       cy.animate({ center: { eles: node }, zoom: 1.15 }, { duration: reducedMotion ? 0 : 300 });
+    }
+  }
+
+  async function activateView(view: ExplorerView, updateUrl = false) {
+    setView(view, updateUrl);
+    if (view === "graph" && !cy) await initializeCanvas();
+    if (view === "graph" && cy) {
+      cy.resize();
+      filterCanvas();
     }
   }
 
@@ -380,9 +424,12 @@ function setup(root: HTMLElement, data: BookGraphData) {
       applyFilters();
     });
   });
-  viewButton?.addEventListener("click", async () => {
-    if (!cy) await initializeCanvas();
-    else setCanvasActive(!canvasActive);
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const view = button.dataset.bookView as ExplorerView;
+      if (view === activeView) return;
+      void activateView(view, true);
+    });
   });
   root.querySelector("[data-book-graph-detail-close]")?.addEventListener("click", closeDetail);
   root.addEventListener("keydown", (event) => {
@@ -405,8 +452,17 @@ function setup(root: HTMLElement, data: BookGraphData) {
     cy.style(graphStyles(colors));
   });
 
-  filterList();
-  if (!smallViewport.matches) initializeCanvas();
+  applyFilters();
+  const params = new URL(location.href).searchParams;
+  const requestedView = params.get("view");
+  const initialView: ExplorerView = requestedView === "references"
+    ? "references"
+    : requestedView === "list"
+      ? "list"
+      : requestedView === "graph" || params.has("node") || !smallViewport.matches
+        ? "graph"
+        : "list";
+  void activateView(initialView);
 }
 
 function run() {
