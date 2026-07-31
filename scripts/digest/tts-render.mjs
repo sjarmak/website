@@ -18,9 +18,9 @@ import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import os from "node:os";
 import path from "node:path";
+import { requireMediaRoot } from "./media-location.mjs";
 
 const MAX_CHARS = 4000; // per-chunk cap keeps Kokoro inputs and memory bounded
-const OUT_DIR = "public/media/digests";
 const RENDERER = path.join(path.dirname(new URL(import.meta.url).pathname), "kokoro-render.py");
 const WORDS_PER_MIN = 150; // fallback duration estimate when ffprobe is absent (~af_heart at speed 0.85)
 
@@ -166,19 +166,20 @@ async function main() {
   const speed = Number.parseFloat(args.speed ?? "0.85");
   if (!Number.isFinite(speed) || speed <= 0) throw new Error(`invalid --speed: ${args.speed}`);
   const base = path.basename(args.out, ".mp3");
+  const outDir = path.join(requireMediaRoot(), "digests");
 
   const raw = await readFile(args.in, "utf8");
   const speech = stripForSpeech(raw);
   const chunks = chunkText(speech);
   if (chunks.length === 0) throw new Error("transcript produced no speakable text");
 
-  await mkdir(OUT_DIR, { recursive: true });
-  const tmpDir = path.join(OUT_DIR, `.tmp-${base}`);
+  await mkdir(outDir, { recursive: true });
+  const tmpDir = path.join(outDir, `.tmp-${base}`);
   await mkdir(tmpDir, { recursive: true });
 
   const partFiles = await renderChunks({ chunks, tmpDir, voice, speed });
 
-  const outFile = path.join(OUT_DIR, `${base}.mp3`);
+  const outFile = path.join(outDir, `${base}.mp3`);
   await concatChunks(partFiles, outFile, path.join(tmpDir, "concat.txt"));
   await rm(tmpDir, { recursive: true, force: true });
 

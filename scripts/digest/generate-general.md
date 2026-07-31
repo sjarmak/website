@@ -136,7 +136,7 @@ reference (summary, title, body, transcript) to the window you actually pulled f
    node scripts/digest/tts-render.mjs --in {{WORK}}/transcript.txt --out {{SLUG}}
    ```
    It prints `{"audioUrl": "...", "durationSec": N}`. Add `audioFile` (the produced MP3 path,
-   `public/media/digests/{{SLUG}}.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
+   `{{WEBSITE_MEDIA_DIR}}/public/media/digests/{{SLUG}}.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
 
 9. **Publish.** From {{WEBSITE_DIR}}, run:
    ```

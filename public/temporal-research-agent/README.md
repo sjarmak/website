@@ -203,10 +203,13 @@ The research writer selects the on-topic evidence and collapses versioned
 records instead of publishing the retrieval dump. Large research documents
 and deep dives never enter Workflow History.
 
-The writer command is also at-least-once. Its artifact path is stable, so a
-retry replaces the same logical output, but the external model call can run
-again. Production use should add a provider-side idempotency contract, a
-request journal around the writer, or both.
+Writer calls now use the same durable pattern. The journal key covers the
+pipeline, stage, writer command, and prompt hash. Once a response is recorded,
+an Activity retry reuses it without starting the writer again. A writer adapter
+can also receive that stable request ID through a configured environment
+variable. The remaining crash window is between provider success and the
+journal write; only a provider-side idempotency contract or equivalent
+transaction can close it completely.
 
 ## Worker registration
 
@@ -370,7 +373,7 @@ derives branches and series fan-in from `PodcastPipelineInput`.
 | Retries | Activities use three attempts with bounded exponential backoff. | The demo recovers quickly. Production policies should account for rate limits, cost, and provider-specific errors. |
 | Partial completion | Episode Activity failure becomes a typed result; the input defines the minimum number of completed episodes. | The domain decides whether synthesis may continue. Consumers must inspect `failed_episode_keys`. |
 | Artifact boundary | Evidence and documents live outside Event History; the Workflow carries compact references and hashes. | History stays readable. The local filesystem store must become shared object storage or a database for multi-host Workers. |
-| External-call idempotency | MCP responses use a request journal; artifact names are stable. | Read-only retries are acceptable. Paid or mutating calls still require a provider-enforced deduplication contract. |
+| External-call idempotency | MCP and writer responses use stable request IDs and write-once journals; artifact names are stable. | Completed calls are reused on retry. Paid or mutating providers still need to honor the stable key to close the post-success, pre-journal crash window. |
 | Activity names | The Workflow schedules registered string names. | The Workflow avoids importing I/O modules. Registration and integration tests protect the name contract. |
 | History growth | Ten bounded episode branches fit in one Workflow Execution. | A larger or continuously refreshed catalog should use Child Workflows or Continue-As-New before History grows too large. |
 | Deployment changes | One Worker hosts the sample Workflow and Activities. | Production rollout should add metrics, separate task queues where load differs, and Worker Versioning before replay-sensitive Workflow changes. |

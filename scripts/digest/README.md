@@ -20,7 +20,7 @@ site (`/digest`). Two producers, one library:
 |------|------|
 | `generate.md` | Specialized-track prompt (runner fills `{{CADENCE}}`, `{{SLUG}}`, etc.). |
 | `generate-general.md` | General-track prompt: recency sweep + convergence ranking, no topic whitelist. |
-| `tts-render.mjs` | Transcript → chunked **local Kokoro TTS** (voice `am_onyx`, speed 0.85, fully offline) → single MP3 in `public/media/digests/`. |
+| `tts-render.mjs` | Transcript → chunked **local Kokoro TTS** (voice `am_onyx`, speed 0.85, fully offline) → one MP3 in the media-branch worktree. |
 | `kokoro-render.py` | Python half of the renderer: runs inside the Kokoro venv, WAV per chunk. |
 | `setup-kokoro.sh` | One-time venv setup for the local TTS (`~/.venvs/kokoro-tts`). |
 | `publish-digest.mjs` | Validate an issue spec → write the `digest` collection entry + stage. |
@@ -53,6 +53,15 @@ The website side (collection, `/digest` pages, RSS) is already in the repo.
   home in `~/.claude-homes/` carries the `code-intel-copilot` MCP. Override with
   `CLAUDE_BIN=claude` to pin the default account.
 - **git push credentials** for this repo (only needed once you enable `DIGEST_PUSH=1`).
+- **Media worktree** — check out the `media` branch beside the site:
+
+  ```bash
+  git worktree add /home/ds/projects/website-media media
+  ```
+
+  `run.sh` exports its `public/media` directory as `WEBSITE_MEDIA_ROOT`, commits
+  audio on `media`, then commits page content on `main`. Override the worktree
+  location with `WEBSITE_MEDIA_DIR`.
 
 ## Step 0 — validate before scheduling (do this first)
 
@@ -66,7 +75,7 @@ DIGEST_PUSH=0 scripts/digest/run.sh daily
 
 Then check:
 - `src/content/digest/daily-<date>.md` was written and reads well.
-- `public/media/digests/daily-<date>.mp3` plays.
+- `/home/ds/projects/website-media/public/media/digests/daily-<date>.mp3` plays.
 - `npx astro build` parses it; `npx astro dev` → open `/digest`.
 
 If `claude -p` stops to ask for tool permission, tune `CLAUDE_FLAGS` (e.g. an
@@ -90,7 +99,8 @@ each run publish to the live site automatically.
 ## Manual publish (ad-hoc)
 
 ```bash
-node scripts/digest/publish-digest.mjs --spec issue.json   # add --commit to commit
+WEBSITE_MEDIA_ROOT=/home/ds/projects/website-media/public/media \
+  node scripts/digest/publish-digest.mjs --spec issue.json
 ```
 
 `issue.json` matches the schema in `publish-digest.mjs` (`title`, `cadence`, `date`,

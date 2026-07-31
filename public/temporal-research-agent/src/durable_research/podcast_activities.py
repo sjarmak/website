@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
+import os
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -120,6 +122,8 @@ async def research_episode(request: EpisodeRequest) -> EpisodeResult:
         research_body = await _run_writer_with_heartbeats(
             request.pipeline.writer,
             prompt,
+            store=store,
+            pipeline_id=request.pipeline_id,
             episode_key=request.episode.key,
             stage="research-synthesis",
         )
@@ -164,17 +168,19 @@ async def write_deep_dive(request: DeepDiveRequest) -> EpisodeResult:
         bibliography_content=bibliography,
         brainstorm_content=brainstorm if request.episode.frontier else "",
     )
+    pipeline_id = _pipeline_id_from_ref(result.research_ref)
     if request.pipeline.mode == "fixture":
         body = _render_fixture_deep_dive(series, request.episode, research, result.sources)
     else:
         body = await _run_writer_with_heartbeats(
             request.pipeline.writer,
             prompt,
+            store=store,
+            pipeline_id=pipeline_id,
             episode_key=request.episode.key,
             stage="deep-dive",
         )
 
-    pipeline_id = _pipeline_id_from_ref(result.research_ref)
     artifact = await asyncio.to_thread(
         store.put_named_text,
         f"{pipeline_id}/deep-dives/{request.episode.key}.md",
@@ -209,6 +215,7 @@ async def write_podcast_script(request: ScriptRequest) -> EpisodeResult:
         ),
         bibliography_content=bibliography,
     )
+    pipeline_id = _pipeline_id_from_ref(result.deep_dive_ref)
     if request.pipeline.mode == "fixture":
         deep_dive = await asyncio.to_thread(store.read_text, result.deep_dive_ref)
         body = _render_fixture_script(series, request.episode, deep_dive, result.sources)
@@ -216,11 +223,12 @@ async def write_podcast_script(request: ScriptRequest) -> EpisodeResult:
         body = await _run_writer_with_heartbeats(
             request.pipeline.writer,
             prompt,
+            store=store,
+            pipeline_id=pipeline_id,
             episode_key=request.episode.key,
             stage="script",
         )
 
-    pipeline_id = _pipeline_id_from_ref(result.deep_dive_ref)
     artifact = await asyncio.to_thread(
         store.put_named_text,
         f"{pipeline_id}/scripts/"
@@ -273,6 +281,7 @@ async def write_series_review(request: SeriesReviewRequest) -> SeriesReviewResul
         bibliography_content=bibliography,
         brainstorm_content=brainstorm,
     )
+    pipeline_id = _pipeline_id_from_ref(deep_dive_refs[0])
     if request.pipeline.mode == "fixture":
         body = _render_fixture_series_review(
             request.series,
@@ -284,11 +293,12 @@ async def write_series_review(request: SeriesReviewRequest) -> SeriesReviewResul
         body = await _run_writer_with_heartbeats(
             request.pipeline.writer,
             prompt,
+            store=store,
+            pipeline_id=pipeline_id,
             episode_key=request.series.key,
             stage="series-review",
         )
 
-    pipeline_id = _pipeline_id_from_ref(deep_dive_refs[0])
     artifact = await asyncio.to_thread(
         store.put_named_text,
         f"{pipeline_id}/reviews/{request.series.key}-literature-review.md",
@@ -487,17 +497,92 @@ async def _run_writer_with_heartbeats(
     writer: WriterCommand | None,
     prompt: str,
     *,
+    store: ArtifactStore,
+    pipeline_id: str,
     episode_key: str,
     stage: str,
 ) -> str:
     if writer is None:
         raise ValueError("live writing requires a configured writer command")
+    request = {
+        "version": 1,
+        "pipeline_id": pipeline_id,
+        "operation": f"{episode_key}:{stage}",
+        "writer": {
+            "command": writer.command,
+            "args": list(writer.args),
+            "idempotency_key_env": writer.idempotency_key_env,
+        },
+        "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+    }
+    encoded = json.dumps(
+        request,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode()
+    request_id = f"writer-request-{hashlib.sha256(encoded).hexdigest()[:20]}"
+    journal_ref = f"{pipeline_id}/writer-requests/{request_id}.json"
+    try:
+        envelope = await asyncio.to_thread(store.read_json, journal_ref)
+    except FileNotFoundError:
+        envelope = None
+    if envelope is not None:
+        if not isinstance(envelope, dict) or envelope.get("request") != request:
+            raise RuntimeError(
+                f"writer request journal does not match logical request: {journal_ref}"
+            )
+        response = envelope.get("response")
+        if not isinstance(response, str) or not response:
+            raise RuntimeError(f"writer request journal has no response: {journal_ref}")
+        return response
+
+    result = await _invoke_writer_with_heartbeats(
+        writer,
+        prompt,
+        episode_key=episode_key,
+        stage=stage,
+        request_id=request_id,
+    )
+    await asyncio.to_thread(
+        store.put_named_text,
+        journal_ref,
+        json.dumps(
+            {
+                "request_id": request_id,
+                "request": request,
+                "response": result,
+            },
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
+    )
+    return result
+
+
+async def _invoke_writer_with_heartbeats(
+    writer: WriterCommand,
+    prompt: str,
+    *,
+    episode_key: str,
+    stage: str,
+    request_id: str,
+) -> str:
+    environment = None
+    if writer.idempotency_key_env is not None:
+        environment = {
+            **os.environ,
+            writer.idempotency_key_env: request_id,
+        }
     process = await asyncio.create_subprocess_exec(
         writer.command,
         *writer.args,
         stdin=asyncio.subprocess.PIPE,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
+        env=environment,
     )
     communication = asyncio.create_task(process.communicate(prompt.encode()))
     try:

@@ -121,7 +121,7 @@ Do:
    node scripts/digest/tts-render.mjs --in {{WORK}}/transcript.txt --out <slug>
    ```
    It prints `{"audioUrl": "...", "durationSec": N}`. Add `audioFile`
-   (`public/media/digests/<slug>.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
+   (`{{WEBSITE_MEDIA_DIR}}/public/media/digests/<slug>.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
 
 9. **Publish.** From {{WEBSITE_DIR}}, run:
    ```

@@ -17,6 +17,7 @@
 #   CLAUDE_FLAGS    (optional — override the claude -p permission flags; see README)
 #   CLAUDE_BIN      (optional — claude binary/router; default claude-auto)
 #   WEBSITE_DIR     (optional — defaults to this repo)
+#   WEBSITE_MEDIA_DIR (optional — media-branch worktree beside this repo)
 set -euo pipefail
 
 MODE="${1:-}"
@@ -43,6 +44,17 @@ case "$CADENCE" in
 esac
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
+WEBSITE_MEDIA_DIR="${WEBSITE_MEDIA_DIR:-$(dirname "$WEBSITE_DIR")/website-media}"
+[ -d "$WEBSITE_MEDIA_DIR" ] || {
+  echo "Media worktree not found at $WEBSITE_MEDIA_DIR — create it from the media branch" >&2
+  exit 2
+}
+MEDIA_BRANCH="$(git -C "$WEBSITE_MEDIA_DIR" branch --show-current)"
+[ "$MEDIA_BRANCH" = "media" ] || {
+  echo "Media worktree must be on branch media, found: ${MEDIA_BRANCH:-detached}" >&2
+  exit 2
+}
+export WEBSITE_MEDIA_ROOT="$WEBSITE_MEDIA_DIR/public/media"
 cd "$WEBSITE_DIR"
 
 # Headless/cron marker: publish-digest's concept gate warns-and-publishes under
@@ -97,6 +109,7 @@ PROMPT="$(sed \
   -e "s|{{WORK}}|${WORK}|g" \
   -e "s|{{ITEMS_FILE}}|${ITEMS_FILE}|g" \
   -e "s|{{WEBSITE_DIR}}|${WEBSITE_DIR}|g" \
+  -e "s|{{WEBSITE_MEDIA_DIR}}|${WEBSITE_MEDIA_DIR}|g" \
   "$TEMPLATE")"
 
 CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,Write,Read,Edit,mcp__code-intel-copilot__search_items,mcp__code-intel-copilot__semantic_search_items,mcp__code-intel-copilot__aggregate_items,mcp__code-intel-copilot__get_item,mcp__code-intel-copilot__mirror_status}"
@@ -107,15 +120,34 @@ echo "[digest] ${MODE} ${DATE} — generating (work=${WORK}, via ${CLAUDE_BIN})"
 # shellcheck disable=SC2086
 "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
-git add src/content/digest public/media/digests 2>/dev/null || true
-if git diff --cached --quiet; then
+git add src/content/digest 2>/dev/null || true
+git -C "$WEBSITE_MEDIA_DIR" add public/media/digests 2>/dev/null || true
+
+SITE_CHANGED=1
+MEDIA_CHANGED=1
+git diff --cached --quiet && SITE_CHANGED=0
+git -C "$WEBSITE_MEDIA_DIR" diff --cached --quiet && MEDIA_CHANGED=0
+
+if [ "$SITE_CHANGED" = "0" ] && [ "$MEDIA_CHANGED" = "0" ]; then
   echo "[digest] nothing new to commit — agent may have written a 'quiet day' issue or failed; see $LOG" | tee -a "$LOG"
 else
-  git commit -q -m "content(digest): ${MODE} ${DATE}"
-  echo "[digest] committed locally" | tee -a "$LOG"
+  if [ "$MEDIA_CHANGED" = "1" ]; then
+    git -C "$WEBSITE_MEDIA_DIR" commit -q -m "media(digest): ${MODE} ${DATE}"
+  fi
+  if [ "$SITE_CHANGED" = "1" ]; then
+    git commit -q -m "content(digest): ${MODE} ${DATE}"
+  fi
+  echo "[digest] committed site and media changes in their respective branches" | tee -a "$LOG"
   if [ "${DIGEST_PUSH:-0}" = "1" ]; then
-    git pull --rebase --autostash && git push
-    echo "[digest] pushed — site will rebuild" | tee -a "$LOG"
+    if [ "$MEDIA_CHANGED" = "1" ]; then
+      git -C "$WEBSITE_MEDIA_DIR" pull --rebase --autostash
+      git -C "$WEBSITE_MEDIA_DIR" push origin media
+    fi
+    if [ "$SITE_CHANGED" = "1" ]; then
+      git pull --rebase --autostash
+      git push
+    fi
+    echo "[digest] pushed media first, then site content" | tee -a "$LOG"
   else
     echo "[digest] DIGEST_PUSH!=1, not pushing (validate, then enable)" | tee -a "$LOG"
   fi

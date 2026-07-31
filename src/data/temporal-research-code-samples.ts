@@ -371,7 +371,7 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
     sections: [
       {
         start: 1,
-        end: 43,
+        end: 45,
         title: "Side-effecting dependencies",
         purpose:
           "Imports filesystem, time, subprocess, MCP, artifact, prompt, and Activity dependencies in the external-work module.",
@@ -380,8 +380,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Activity module", "Nondeterministic dependencies"],
       },
       {
-        start: 44,
-        end: 140,
+        start: 46,
+        end: 144,
         title: "Research and persist one episode",
         purpose:
           "Retrieves fixture or live evidence, stores each source, synthesizes the live research brief, and returns compact references.",
@@ -390,8 +390,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["SciX + Digest", "Evidence hashes", "Artifact references"],
       },
       {
-        start: 141,
-        end: 185,
+        start: 145,
+        end: 191,
         title: "Write the deep dive",
         purpose:
           "Validates the research stage, invokes the live writer or fixture renderer, and writes the deep-dive artifact.",
@@ -400,8 +400,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Stage invariant", "Writer call", "Stable path"],
       },
       {
-        start: 186,
-        end: 233,
+        start: 192,
+        end: 241,
         title: "Write the podcast script",
         purpose:
           "Requires a completed deep dive, invokes the writer, and records the script under the original naming convention.",
@@ -410,8 +410,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Independent retry", "Historical filename"],
       },
       {
-        start: 234,
-        end: 303,
+        start: 242,
+        end: 313,
         title: "Write a series review",
         purpose:
           "Collects completed deep dives for one series and writes its literature review.",
@@ -420,8 +420,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Series fan-in", "Completed inputs"],
       },
       {
-        start: 304,
-        end: 353,
+        start: 314,
+        end: 363,
         title: "Write the provenance manifest",
         purpose:
           "Indexes episode status, every artifact reference, all source metadata, and the selected series-review outputs.",
@@ -430,8 +430,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Provenance", "Compact Workflow result"],
       },
       {
-        start: 354,
-        end: 464,
+        start: 364,
+        end: 474,
         title: "Fixture and live retrieval",
         purpose:
           "Selects fixed evidence for the recording or calls both local MCP servers through the response journal.",
@@ -440,18 +440,18 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Fixture lane", "Live MCP lane", "Request journal"],
       },
       {
-        start: 465,
-        end: 552,
-        title: "Heartbeats and writer process",
+        start: 475,
+        end: 637,
+        title: "Heartbeats and journaled writer calls",
         purpose:
-          "Emits progress while retrieval or writing is in flight, cancels child work on shutdown, and launches the writer without a shell.",
+          "Reuses completed writer responses by stable request ID, passes that ID to compatible providers, emits progress, and launches the writer without a shell.",
         whyTemporal:
-          "Heartbeats let the Service detect an Activity lost with its Worker. Subprocess argument arrays avoid shell interpolation.",
-        details: ["Heartbeat Timeout", "Cancellation", "No shell"],
+          "Activity retries are at least once. The response journal suppresses completed duplicates, while provider-side idempotency can close the remaining pre-journal crash window.",
+        details: ["Response journal", "Stable provider key", "Heartbeat Timeout"],
       },
       {
-        start: 553,
-        end: 729,
+        start: 638,
+        end: 814,
         title: "Research product renderers",
         purpose:
           "Builds inspectable fixture research, deep dives, scripts, and series reviews with linked SciX and Digest sources.",
@@ -460,8 +460,8 @@ export const temporalResearchCodeSamples: TemporalCodeSample[] = [
         details: ["Deterministic fixture", "Readable products"],
       },
       {
-        start: 730,
-        end: 788,
+        start: 815,
+        end: 873,
         title: "Artifact and source helpers",
         purpose:
           "Extracts document sections, renders citations, resolves scholarly URLs, and validates series, episode, and pipeline references.",

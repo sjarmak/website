@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -29,4 +30,12 @@ test("existing /media URLs are served by the isolated media service", () => {
     source: "/media/*",
     destination: "https://sjarmak-ai-media.onrender.com/*",
   });
+});
+
+test("the main worktree does not carry the versioned media archive", () => {
+  assert.equal(
+    existsSync("public/media"),
+    false,
+    "public/media belongs only in the media-branch worktree",
+  );
 });

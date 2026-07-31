@@ -938,7 +938,7 @@
           <div class="contract-step"><b>Heartbeat</b><span>Thirty seconds for long external calls.</span></div>
           <div class="contract-step"><b>Identity</b><span>Stable request IDs and artifact paths.</span></div>
         </div>
-        <p class="tradeoff"><strong>Temporal provides at-least-once Activity execution.</strong> The response journal suppresses repeated reads after a response is stored. A paid or mutating provider must also honor the request ID to cover the gap between provider success and the journal write.</p>
+        <p class="tradeoff"><strong>Temporal provides at-least-once Activity execution.</strong> MCP and writer response journals reuse completed calls. A paid or mutating provider must also honor the request ID to cover the gap between provider success and the journal write.</p>
       </div>
       <div class="footer">
         <span>Large evidence stays in artifact storage; Event History carries compact references</span>

@@ -263,10 +263,10 @@ series_reviews = await asyncio.gather(
         <article>
           <h3>At-least-once execution</h3>
           <p>
-            MCP requests use stable hashes and a write-once response journal.
-            Read-only duplicate retrieval wastes work without changing external
-            state. Paid or mutating calls would also need provider-enforced
-            idempotency.
+            MCP and writer requests use stable IDs and write-once response
+            journals, so completed calls are reused on retry. Paid or mutating
+            providers must also honor the stable key to cover a crash after
+            provider success but before journal persistence.
           </p>
         </article>
         <article>

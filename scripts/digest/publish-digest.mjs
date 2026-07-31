@@ -11,7 +11,7 @@
 //
 // The spec is JSON. `body` is the newsletter markdown (inline string), or pass
 // `bodyFile` to read it from a file. `audioFile` (a rendered MP3 path) is copied
-// into public/media/digests/<slug>.mp3; alternatively pass a ready `audioUrl`.
+// into the configured media worktree; alternatively pass a ready `audioUrl`.
 //
 // Writes src/content/digest/<slug>.md and git-adds it. With --commit it also
 // commits locally. It never pushes — that stays an explicit, separate step.
@@ -24,9 +24,9 @@ import { z } from "zod";
 import YAML from "yaml";
 import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
 import { evaluateConceptGate, isCronMode, runPostPublishSideEffects } from "./concept-gate.mjs";
+import { digestAudioPath } from "./media-location.mjs";
 
 const CONTENT_DIR = "src/content/digest";
-const AUDIO_DIR = "public/media/digests";
 
 // Mirrors the `digest` collection schema in src/content.config.ts. Kept minimal
 // here because the Astro schema can't be imported outside the Astro runtime.
@@ -116,11 +116,12 @@ async function publish(spec) {
   // 1. resolve audio (copy a rendered file in, or use a provided URL)
   let audioUrl = spec.audioUrl;
   if (spec.audioFile) {
-    await mkdir(AUDIO_DIR, { recursive: true });
-    const dest = path.join(AUDIO_DIR, `${slug}.mp3`);
-    await copyFile(spec.audioFile, dest);
+    const dest = digestAudioPath(slug);
+    await mkdir(path.dirname(dest), { recursive: true });
+    if (path.resolve(spec.audioFile) !== path.resolve(dest)) {
+      await copyFile(spec.audioFile, dest);
+    }
     audioUrl = `/media/digests/${slug}.mp3`;
-    written.push(dest);
   }
 
   // 2. assemble frontmatter — only include keys that are set

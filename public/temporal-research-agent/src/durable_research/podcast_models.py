@@ -9,6 +9,7 @@ from typing import Literal
 from durable_research.models import McpServer
 
 _SAFE_KEY = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+_SAFE_ENV_KEY = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 
 
 @dataclass(frozen=True)
@@ -61,10 +62,16 @@ class PodcastEpisode:
 class WriterCommand:
     command: str
     args: tuple[str, ...] = ("-p",)
+    idempotency_key_env: str | None = None
 
     def __post_init__(self) -> None:
         if not self.command.strip():
             raise ValueError("writer command must not be empty")
+        if (
+            self.idempotency_key_env is not None
+            and _SAFE_ENV_KEY.fullmatch(self.idempotency_key_env) is None
+        ):
+            raise ValueError("writer idempotency_key_env must be an environment variable name")
 
 
 @dataclass(frozen=True)
