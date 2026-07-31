@@ -1,13 +1,16 @@
 ---
+import { receiptDomId } from "@/lib/receipts/domId";
+
 interface Props {
   kind: "paper" | "repo" | "dataset" | "talk" | "post" | "press";
   source: string;
   url: string;
+  id: string;
 }
 
-const { kind, source, url } = Astro.props;
+const { kind, source, url, id } = Astro.props;
 
-const uid = `receipt-${crypto.randomUUID().slice(0, 8)}`;
+const uid = receiptDomId({ kind, source, url, id });
 const popId = `${uid}-pop`;
 
 const kindGlyph: Record<Props["kind"], string> = {
