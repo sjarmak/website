@@ -41,12 +41,51 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
   assert.match(page, /noindex=\{true\}/);
   assert.match(page, /type="article"/);
   assert.match(article, /An agent started\. The coordinator died\./);
-  assert.match(article, /<AnnotatedCode \/>/);
+  assert.match(article, /<AnnotatedCode mode="before" \/>/);
+  assert.match(article, /<AnnotatedCode mode="after" \/>/);
+  assert.ok(
+    article.indexOf('<AnnotatedCode mode="before" />') <
+      article.indexOf('<AnnotatedCode mode="after" />'),
+    "the before source must appear before the Temporal implementation",
+  );
   assert.doesNotMatch(article, /assignment|homework|evaluation criteria/i);
   assert.doesNotMatch(header, /temporal-agent-orchestration/);
 });
 
-test("the essay embeds complete syntax-colored Go files with inline explanations", () => {
+test("the essay shows versioned pre-Temporal code excerpts with provenance", () => {
+  const reader = readFileSync(READER, "utf8");
+  const samples = readFileSync(SAMPLES, "utf8");
+
+  for (const filename of [
+    "city_runtime_excerpt.go",
+    "session_recovery_excerpt.go",
+  ]) {
+    assert.match(samples, new RegExp(filename.replaceAll(".", "\\.")));
+    assert.equal(
+      existsSync(
+        path.join(
+          ROOT,
+          "public/temporal-agent-orchestration/code/before",
+          filename,
+        ),
+      ),
+      true,
+      filename,
+    );
+  }
+
+  assert.match(samples, /b78058917bc65846db89e1c3b25dc17269822483/);
+  assert.match(samples, /cmd\/gc\/city_runtime\.go/);
+  assert.match(samples, /cmd\/gc\/session_beads\.go/);
+  assert.match(reader, /mode === "before"/);
+  assert.match(reader, /Before Temporal/);
+  assert.match(reader, /Versioned before code/);
+  assert.match(reader, /sample\.sourceUrl/);
+  assert.match(reader, /View original source/);
+  assert.match(reader, /These are selected excerpts, not standalone Go files/);
+});
+
+test("the essay embeds syntax-colored Go source with selectable explanations", () => {
   assert.equal(existsSync(READER), true);
   assert.equal(existsSync(SAMPLES), true);
 
@@ -87,9 +126,27 @@ test("the essay embeds complete syntax-colored Go files with inline explanations
   assert.match(reader, /Why it matters for Temporal/);
   assert.match(reader, /event\.key === "Enter"/);
   assert.match(reader, /event\.key === " "/);
-  assert.match(reader, /explanation\.hidden = !expanded/);
+  assert.match(reader, /data-code-inspector/);
+  assert.match(reader, /data-code-explanation/);
+  assert.match(reader, /explanation\.hidden = explanation !== selected/);
   assert.match(reader, /href=\{sample\.rawPath\}/);
   assert.match(reader, /download=\{sample\.filename\}/);
+});
+
+test("selected code explanations open in a right-hand inspector on wide screens", () => {
+  const reader = readFileSync(READER, "utf8");
+
+  assert.match(reader, /annotated-code__stage/);
+  assert.match(
+    reader,
+    /\.annotated-code__stage\[data-inspector-open="true"\][\s\S]*grid-template-columns:[\s\S]*minmax\(18rem, 0\.8fr\)/,
+  );
+  assert.match(reader, /\.annotated-code__inspector[\s\S]*position: sticky/);
+  assert.match(reader, /dataset\.inspectorOpen = String/);
+  assert.match(
+    reader,
+    /@media \(max-width: 900px\)[\s\S]*\.annotated-code__stage\[data-inspector-open="true"\][\s\S]*grid-template-columns: minmax\(0, 1fr\)/,
+  );
 });
 
 test("every embedded source file is completely and contiguously annotated", async () => {
@@ -125,7 +182,7 @@ test("each full file starts as a bounded preview and can expand or collapse", ()
   assert.match(reader, /Collapse file/);
   assert.match(reader, /aria-expanded="false"/);
   assert.match(reader, /panel\.dataset\.fileExpanded = String\(expanded\)/);
-  assert.match(reader, /setFileExpanded\(panel, true\)/);
+  assert.doesNotMatch(reader, /setFileExpanded\(panel, true\)/);
   assert.match(
     reader,
     /\.annotated-code__panel\[data-file-expanded="false"\][\s\S]*\.annotated-code__file-frame[\s\S]*max-height: 24rem[\s\S]*overflow: hidden/,
@@ -134,8 +191,13 @@ test("each full file starts as a bounded preview and can expand or collapse", ()
 
 test("long source lines wrap inside the article instead of widening the page", () => {
   const reader = readFileSync(READER, "utf8");
+  const page = readFileSync(PAGE, "utf8");
 
-  assert.match(reader, /\.annotated-code \{[\s\S]*width: 100%[\s\S]*max-width: 68rem/);
+  assert.match(
+    reader,
+    /\.annotated-code \{[\s\S]*width: 100%[\s\S]*max-width: 78rem/,
+  );
+  assert.match(page, /\.temporal-agent-article__body \{[\s\S]*max-width: none/);
   assert.match(reader, /\.annotated-code__panel[\s\S]*min-width: 0/);
   assert.match(reader, /\.annotated-code__source[\s\S]*overflow-x: hidden/);
   assert.match(

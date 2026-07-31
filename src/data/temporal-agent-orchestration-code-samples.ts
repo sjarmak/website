@@ -8,16 +8,164 @@ export interface AgentOrchestrationCodeSection {
 }
 
 export interface AgentOrchestrationCodeSample {
-  slug: "bridge" | "workflow" | "activity" | "executor" | "workers";
+  slug: string;
   filename: string;
   label: string;
   summary: string;
   sourcePath: string;
   rawPath: string;
+  sourceUrl?: string;
+  sourceLabel?: string;
   sections: AgentOrchestrationCodeSection[];
 }
 
 const root = "/temporal-agent-orchestration";
+const beforeRevision = "b78058917bc65846db89e1c3b25dc17269822483";
+const upstreamSource = `https://github.com/gastownhall/gascity/blob/${beforeRevision}`;
+
+export const preTemporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample[] =
+  [
+    {
+      slug: "before-controller",
+      filename: "city_runtime_excerpt.go",
+      label: "Controller tick",
+      summary:
+        "A readable abridgment of the production tick that repaired orphaned assignments, reconciled sessions, delivered nudges, and ran a second wake-up backstop.",
+      sourcePath:
+        "public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go",
+      rawPath: `${root}/code/before/city_runtime_excerpt.go`,
+      sourceUrl: `${upstreamSource}/cmd/gc/city_runtime.go#L2140-L2384`,
+      sourceLabel: `cmd/gc/city_runtime.go at ${beforeRevision.slice(0, 9)}`,
+      sections: [
+        {
+          start: 1,
+          end: 19,
+          title: "Enter through one process-owned tick",
+          purpose:
+            "Identifies the exact upstream revision and enters the controller method that owned this pass through the current snapshots.",
+          whyTemporal:
+            "If this process stopped, the call stack and its current position disappeared. The next process could only run another tick against persisted facts.",
+          details: [
+            "Process-local procedure",
+            "Versioned source",
+            "Snapshot input",
+          ],
+        },
+        {
+          start: 20,
+          end: 54,
+          title: "Repair what the previous owner left behind",
+          purpose:
+            "Reloads session state, searches for assignments whose session no longer owns them, reopens those records, and filters the current snapshot.",
+          whyTemporal:
+            "The repair is inferential. It observes the resulting records after a failure rather than replaying the command that was in progress.",
+          details: ["Snapshot repair", "Orphan scan", "Reopen event"],
+        },
+        {
+          start: 55,
+          end: 101,
+          title: "Reconcile desired sessions with current sessions",
+          purpose:
+            "Selects assigned work that should wake a session, then passes a large state bundle into the session reconciler.",
+          whyTemporal:
+            "The procedure crosses work-store, runtime, timing, and provider boundaries inside one controller pass. None of those calls were a durable step.",
+          details: [
+            "Session reconciliation",
+            "Desired state",
+            "Runtime boundary",
+          ],
+        },
+        {
+          start: 102,
+          end: 117,
+          title: "Deliver the wake-up after reconciliation",
+          purpose:
+            "Reloads session state, sends ready-wait nudges, and runs a patrol fallback in case the wake socket lost an enqueue.",
+          whyTemporal:
+            "The fallback addresses one delivery gap, but it still reconstructs intent from queue and session state after the fact.",
+          details: ["Nudge delivery", "Patrol fallback", "Second snapshot"],
+        },
+        {
+          start: 118,
+          end: 130,
+          title: "Add another recovery lane for idle sessions",
+          purpose:
+            "Runs a separate backstop for a live session that received work but never claimed its trigger record.",
+          whyTemporal:
+            "This is the accumulated cost of missing durable procedure state: each ambiguous boundary needs its own detector and retry rule.",
+          details: ["Idle-claim detector", "Re-nudge", "Repair loop"],
+        },
+      ],
+    },
+    {
+      slug: "before-recovery",
+      filename: "session_recovery_excerpt.go",
+      label: "Session recovery",
+      summary:
+        "A readable abridgment of the production close-and-release path used to recover work after a session disappeared.",
+      sourcePath:
+        "public/temporal-agent-orchestration/code/before/session_recovery_excerpt.go",
+      rawPath: `${root}/code/before/session_recovery_excerpt.go`,
+      sourceUrl: `${upstreamSource}/cmd/gc/session_beads.go#L2923-L3027`,
+      sourceLabel: `cmd/gc/session_beads.go at ${beforeRevision.slice(0, 9)}`,
+      sections: [
+        {
+          start: 1,
+          end: 18,
+          title: "Close only from persisted session facts",
+          purpose:
+            "Introduces the versioned source and begins the best-effort close path with a promise that a later reconciler tick can try again.",
+          whyTemporal:
+            "Retry belonged to a future controller scan. There was no execution record naming which command failed or when it should resume.",
+          details: ["Best-effort close", "Future scan", "No execution history"],
+        },
+        {
+          start: 19,
+          end: 48,
+          title: "Commit metadata, close, then release",
+          purpose:
+            "Reads a snapshot, writes close metadata, closes the session record, cleans related state, and only then asks the release helper to find its work.",
+          whyTemporal:
+            "Each successful write creates another crash boundary. A later scan sees the writes but not the coordinator's lost call stack.",
+          details: ["Ordered writes", "Crash windows", "Idempotent guard"],
+        },
+        {
+          start: 49,
+          end: 69,
+          title: "Reconstruct every identity the session may have used",
+          purpose:
+            "Builds a set of bead, session, configured-name, and alias identities that might appear as an assignee.",
+          whyTemporal:
+            "Recovery has to infer ownership from several mutable identifiers because no single durable execution owns the handoff.",
+          details: [
+            "Identity reconstruction",
+            "Assignee aliases",
+            "Mutable facts",
+          ],
+        },
+        {
+          start: 70,
+          end: 94,
+          title: "Search open and in-progress work",
+          purpose:
+            "Queries every reconstructed assignee in two statuses, skips session records, and deduplicates work found through overlapping identities.",
+          whyTemporal:
+            "The repair cost grows with the number of representations that can describe the same logical operation.",
+          details: ["Multi-query scan", "Deduplication", "Status inference"],
+        },
+        {
+          start: 95,
+          end: 106,
+          title: "Reopen work without restoring its route",
+          purpose:
+            "Clears the dead assignee and resets in-progress work to open, passing an empty route fallback in this historical revision.",
+          whyTemporal:
+            "This exact path could leave completed, pushed work open but undiscoverable. A later production fix had to add another recovery contract.",
+          details: ["Empty route", "Stranded handoff", "Historical failure"],
+        },
+      ],
+    },
+  ];
 
 export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample[] =
   [
@@ -350,9 +498,10 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
   ];
 
 export function validateTemporalAgentOrchestrationCodeSamples(
+  samples: AgentOrchestrationCodeSample[],
   lineCounts: Record<string, number>,
 ): void {
-  for (const sample of temporalAgentOrchestrationCodeSamples) {
+  for (const sample of samples) {
     let expectedStart = 1;
     for (const section of sample.sections) {
       if (section.start !== expectedStart || section.end < section.start) {

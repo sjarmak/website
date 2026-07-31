@@ -47,6 +47,10 @@ The repair layer inspected snapshots after the fact. It could see that a record 
 
 Adding another reaper helped one failure mode at a time. It also spread ownership of the procedure across more processes.
 
+The code had the same shape as the diagram. There was no single coordinator to replace. One controller tick loaded snapshots, repaired orphaned work, reconciled sessions, and delivered nudges. A separate close path searched for work left behind by a dead session and reopened it. The abridged views below capture those two paths at one source revision and link to the complete original files.
+
+<AnnotatedCode mode="before" />
+
 ## I kept the work ledger
 
 Temporal Workflow History is a record of execution. My work ledger is where operators inspect and repair task facts. Those are different jobs.
@@ -132,7 +136,7 @@ formula/{root}/{step}/g{generation}
 
 Temporal Web can then answer which formula step caused the execution without reading mutable formula state. Parent and child executions retain typed links, so an operator can move from a maintenance cycle to the exact agent work it started.
 
-<AnnotatedCode />
+<AnnotatedCode mode="after" />
 
 ## Activities still need application-level idempotency
 

@@ -4,12 +4,24 @@ import path from "node:path";
 import { codeToHtml } from "shiki";
 
 import {
+  preTemporalAgentOrchestrationCodeSamples,
   temporalAgentOrchestrationCodeSamples,
   validateTemporalAgentOrchestrationCodeSamples,
 } from "@/data/temporal-agent-orchestration-code-samples";
 
+interface Props {
+  mode?: "before" | "after";
+}
+
+const { mode = "after" } = Astro.props;
+const isBefore = mode === "before";
+const codeSamples = isBefore
+  ? preTemporalAgentOrchestrationCodeSamples
+  : temporalAgentOrchestrationCodeSamples;
+const readerId = `annotated-code-${mode}`;
+
 const preparedSamples = await Promise.all(
-  temporalAgentOrchestrationCodeSamples.map(async (sample) => {
+  codeSamples.map(async (sample) => {
     const source = readFileSync(path.join(process.cwd(), sample.sourcePath), "utf8")
       .replace(/\n$/, "");
     const lines = source.split("\n");
@@ -36,33 +48,60 @@ const preparedSamples = await Promise.all(
 );
 
 validateTemporalAgentOrchestrationCodeSamples(
+  codeSamples,
   Object.fromEntries(
     preparedSamples.map((sample) => [sample.filename, sample.lineCount]),
   ),
 );
 ---
 
-<section class="annotated-code" aria-labelledby="annotated-code-title">
+<section class="annotated-code" aria-labelledby={`${readerId}-title`}>
   <header class="annotated-code__header">
     <div>
-      <p class="annotated-code__kicker">The implementation</p>
-      <h2 id="annotated-code-title">Read the boundary in the code</h2>
+      <p class="annotated-code__kicker">
+        {isBefore ? "Before Temporal" : "After Temporal"}
+      </p>
+      <h2 id={`${readerId}-title`}>
+        {
+          isBefore
+            ? "The procedure was split across controller and repair code"
+            : "Read the new boundary in the code"
+        }
+      </h2>
     </div>
     <p>
-      Each file opens as a short preview. Show the full file, then click any
-      line section to open its explanation directly below it.
+      {
+        isBefore
+          ? "These are selected excerpts, not standalone Go files. They are abridged for reading and linked to the complete source at the exact pre-Temporal revision."
+          : "Each file opens as a short preview. Show the full file, then select any line section to open its explanation beside the code window."
+      }
     </p>
   </header>
 
-  <div class="annotated-code__tabs" role="tablist" aria-label="Go source files">
+  {
+    isBefore && (
+      <p class="annotated-code__provenance">
+        <strong>Versioned before code.</strong> Both excerpts come from Gas City
+        revision <code>b78058917</code>, before the Temporal service was added.
+        The source links open the original files and line ranges.
+      </p>
+    )
+  }
+
+  <div
+    class="annotated-code__tabs"
+    role="tablist"
+    aria-label={`${isBefore ? "Pre-Temporal" : "Temporal"} Go source files`}
+    style={`--tab-count: ${preparedSamples.length}`}
+  >
     {
       preparedSamples.map((sample, index) => (
         <button
-          id={`code-tab-${sample.slug}`}
+          id={`${readerId}-tab-${sample.slug}`}
           type="button"
           role="tab"
           aria-selected={index === 0 ? "true" : "false"}
-          aria-controls={`code-panel-${sample.slug}`}
+          aria-controls={`${readerId}-panel-${sample.slug}`}
           tabindex={index === 0 ? "0" : "-1"}
           data-code-tab={sample.slug}
         >
@@ -76,10 +115,10 @@ validateTemporalAgentOrchestrationCodeSamples(
   {
     preparedSamples.map((sample, sampleIndex) => (
       <section
-        id={`code-panel-${sample.slug}`}
+        id={`${readerId}-panel-${sample.slug}`}
         class="annotated-code__panel"
         role="tabpanel"
-        aria-labelledby={`code-tab-${sample.slug}`}
+        aria-labelledby={`${readerId}-tab-${sample.slug}`}
         data-code-file={sample.slug}
         data-file-expanded="false"
         hidden={sampleIndex !== 0}
@@ -88,13 +127,24 @@ validateTemporalAgentOrchestrationCodeSamples(
           <div>
             <h3>{sample.label}</h3>
             <p>{sample.summary}</p>
+            {sample.sourceUrl && (
+              <a
+                class="annotated-code__source-link"
+                href={sample.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View original source: {sample.sourceLabel}
+                <span aria-hidden="true"> ↗</span>
+              </a>
+            )}
           </div>
           <div class="annotated-code__file-actions">
             <button
               type="button"
               data-file-toggle
               aria-expanded="false"
-              aria-controls={`${sample.slug}-full-source`}
+              aria-controls={`${readerId}-${sample.slug}-full-source`}
             >
               <span class="annotated-code__show-label">Show full file</span>
               <span class="annotated-code__hide-label">Collapse file</span>
@@ -106,86 +156,117 @@ validateTemporalAgentOrchestrationCodeSamples(
           </div>
         </header>
 
-        <div
-          id={`${sample.slug}-full-source`}
-          class="annotated-code__file-frame"
-        >
-          <div class="annotated-code__file">
-            {sample.sections.map((section) => (
-              <section
-                class="annotated-code__segment"
-                data-code-section
-                data-expanded="false"
-              >
-                <div
-                  class="annotated-code__source-trigger"
-                  role="button"
-                  tabindex="0"
-                  aria-expanded="false"
-                  aria-controls={`${sample.slug}-explanation-${section.start}`}
-                  aria-label={`Lines ${section.start} through ${section.end}: ${section.title}. Toggle explanation.`}
-                >
-                  <div
-                    class="annotated-code__source"
-                    style={`--start-line: ${section.start}`}
-                    set:html={section.html}
-                  />
-                  <span class="annotated-code__section-cue" aria-hidden="true">
-                    <span>Lines {section.start}–{section.end}</span>
-                    <span class="annotated-code__cue-action">
-                      <span class="annotated-code__cue-open">Explain</span>
-                      <span class="annotated-code__cue-close">Close</span>
-                      <span class="annotated-code__chevron">⌄</span>
-                    </span>
-                  </span>
-                </div>
+        <div class="annotated-code__stage" data-inspector-open="false">
+          <div class="annotated-code__code-window">
+            <div
+              id={`${readerId}-${sample.slug}-full-source`}
+              class="annotated-code__file-frame"
+            >
+              <div class="annotated-code__file">
+                {sample.sections.map((section) => (
+                  <section
+                    class="annotated-code__segment"
+                    data-code-section={section.start}
+                    data-expanded="false"
+                  >
+                    <div
+                      class="annotated-code__source-trigger"
+                      role="button"
+                      tabindex="0"
+                      aria-expanded="false"
+                      aria-controls={`${readerId}-${sample.slug}-explanation-${section.start}`}
+                      aria-label={`Lines ${section.start} through ${section.end}: ${section.title}. Toggle explanation.`}
+                    >
+                      <div
+                        class="annotated-code__source"
+                        style={`--start-line: ${section.start}`}
+                        set:html={section.html}
+                      />
+                      <span
+                        class="annotated-code__section-cue"
+                        aria-hidden="true"
+                      >
+                        <span>Lines {section.start}–{section.end}</span>
+                        <span class="annotated-code__cue-action">
+                          <span class="annotated-code__cue-open">Explain</span>
+                          <span class="annotated-code__cue-close">Close</span>
+                          <span class="annotated-code__chevron">›</span>
+                        </span>
+                      </span>
+                    </div>
+                  </section>
+                ))}
+              </div>
+              <div
+                class="annotated-code__preview-fade"
+                aria-hidden="true"
+              ></div>
+            </div>
 
-                <div
-                  class="annotated-code__explanation"
-                  id={`${sample.slug}-explanation-${section.start}`}
-                  role="region"
-                  aria-labelledby={`${sample.slug}-section-${section.start}`}
-                  hidden
-                >
-                  <header>
+            <button
+              class="annotated-code__collapse"
+              type="button"
+              data-file-toggle
+              aria-expanded="false"
+              aria-controls={`${readerId}-${sample.slug}-full-source`}
+            >
+              Collapse file <span aria-hidden="true">↑</span>
+            </button>
+          </div>
+
+          <aside
+            class="annotated-code__inspector"
+            data-code-inspector
+            aria-label={`Explanation for ${sample.label}`}
+            hidden
+          >
+            {sample.sections.map((section) => (
+              <article
+                class="annotated-code__explanation"
+                id={`${readerId}-${sample.slug}-explanation-${section.start}`}
+                data-code-explanation={section.start}
+                role="region"
+                aria-labelledby={`${readerId}-${sample.slug}-section-${section.start}`}
+                hidden
+              >
+                <header>
+                  <div>
                     <p class="annotated-code__line-range">
                       Lines {section.start}–{section.end}
                     </p>
-                    <h3 id={`${sample.slug}-section-${section.start}`}>
+                    <h3 id={`${readerId}-${sample.slug}-section-${section.start}`}>
                       {section.title}
                     </h3>
-                  </header>
-                  <div class="annotated-code__explanation-body">
-                    <dl>
-                      <div>
-                        <dt>What this section does</dt>
-                        <dd>{section.purpose}</dd>
-                      </div>
-                      <div>
-                        <dt>Why it matters for Temporal</dt>
-                        <dd>{section.whyTemporal}</dd>
-                      </div>
-                    </dl>
-                    <ul aria-label="Section concepts">
-                      {section.details.map((detail) => <li>{detail}</li>)}
-                    </ul>
                   </div>
+                  <button type="button" data-inspector-close>
+                    Close <span aria-hidden="true">×</span>
+                  </button>
+                </header>
+                <div class="annotated-code__explanation-body">
+                  <dl>
+                    <div>
+                      <dt>What this section does</dt>
+                      <dd>{section.purpose}</dd>
+                    </div>
+                    <div>
+                      <dt>
+                        {
+                          isBefore
+                            ? "What this boundary exposed"
+                            : "Why it matters for Temporal"
+                        }
+                      </dt>
+                      <dd>{section.whyTemporal}</dd>
+                    </div>
+                  </dl>
+                  <ul aria-label="Section concepts">
+                    {section.details.map((detail) => <li>{detail}</li>)}
+                  </ul>
                 </div>
-              </section>
+              </article>
             ))}
-          </div>
-          <div class="annotated-code__preview-fade" aria-hidden="true"></div>
+          </aside>
         </div>
-
-        <button
-          class="annotated-code__collapse"
-          type="button"
-          data-file-toggle
-          aria-expanded="false"
-          aria-controls={`${sample.slug}-full-source`}
-        >
-          Collapse file <span aria-hidden="true">↑</span>
-        </button>
       </section>
     ))
   }
@@ -245,21 +326,43 @@ validateTemporalAgentOrchestrationCodeSamples(
     });
 
     for (const panel of panels) {
+      const stage = panel.querySelector<HTMLElement>(
+        ".annotated-code__stage",
+      );
+      const inspector = panel.querySelector<HTMLElement>(
+        "[data-code-inspector]",
+      );
       const sections = Array.from(
         panel.querySelectorAll<HTMLElement>("[data-code-section]"),
+      );
+      const explanations = Array.from(
+        panel.querySelectorAll<HTMLElement>("[data-code-explanation]"),
       );
       const setExpanded = (current: HTMLElement, expanded: boolean) => {
         const trigger = current.querySelector<HTMLElement>(
           ".annotated-code__source-trigger",
         );
-        const explanation = current.querySelector<HTMLElement>(
-          ".annotated-code__explanation",
-        );
-        if (!trigger || !explanation) return;
+        if (!trigger || !stage || !inspector) return;
 
-        current.dataset.expanded = String(expanded);
-        trigger.setAttribute("aria-expanded", String(expanded));
-        explanation.hidden = !expanded;
+        const selected = expanded
+          ? explanations.find(
+              (explanation) =>
+                explanation.dataset.codeExplanation ===
+                current.dataset.codeSection,
+            )
+          : undefined;
+        for (const section of sections) {
+          const active = section === current && expanded;
+          section.dataset.expanded = String(active);
+          section
+            .querySelector<HTMLElement>(".annotated-code__source-trigger")
+            ?.setAttribute("aria-expanded", String(active));
+        }
+        for (const explanation of explanations) {
+          explanation.hidden = explanation !== selected;
+        }
+        inspector.hidden = !selected;
+        stage.dataset.inspectorOpen = String(Boolean(selected));
       };
 
       for (const toggle of panel.querySelectorAll<HTMLButtonElement>(
@@ -288,9 +391,6 @@ validateTemporalAgentOrchestrationCodeSamples(
           if (selection && !selection.isCollapsed) return;
 
           const shouldOpen = current.dataset.expanded !== "true";
-          if (panel.dataset.fileExpanded !== "true") {
-            setFileExpanded(panel, true);
-          }
           for (const section of sections) {
             if (section !== current) setExpanded(section, false);
           }
@@ -305,6 +405,17 @@ validateTemporalAgentOrchestrationCodeSamples(
           }
         });
       }
+
+      for (const close of panel.querySelectorAll<HTMLButtonElement>(
+        "[data-inspector-close]",
+      )) {
+        close.addEventListener("click", () => {
+          const selected = sections.find(
+            (section) => section.dataset.expanded === "true",
+          );
+          if (selected) setExpanded(selected, false);
+        });
+      }
     }
   }
 </script>
@@ -313,7 +424,7 @@ validateTemporalAgentOrchestrationCodeSamples(
   .annotated-code {
     --reader-rule: color-mix(in srgb, var(--color-text) 18%, transparent);
     width: 100%;
-    max-width: 68rem;
+    max-width: 78rem;
     min-width: 0;
     margin-block: clamp(var(--space-xl), 7vw, var(--space-3xl));
     margin-inline: auto;
@@ -346,9 +457,23 @@ validateTemporalAgentOrchestrationCodeSamples(
     line-height: var(--leading-relaxed);
   }
 
+  .annotated-code__provenance {
+    margin: 0 0 var(--space-m);
+    padding: var(--space-s) var(--space-m);
+    border-inline-start: 2px solid var(--color-accent);
+    background: var(--color-bg-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__provenance code {
+    color: var(--color-text);
+    font-size: 0.92em;
+  }
+
   .annotated-code__tabs {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--tab-count), minmax(0, 1fr));
     min-width: 0;
     border: 1px solid var(--reader-rule);
   }
@@ -425,6 +550,14 @@ validateTemporalAgentOrchestrationCodeSamples(
     margin: 0;
   }
 
+  .annotated-code__source-link {
+    display: inline-block;
+    margin-block-start: 0.45rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
   .annotated-code__file-header h3 {
     font-size: var(--step-1);
   }
@@ -493,6 +626,23 @@ validateTemporalAgentOrchestrationCodeSamples(
     min-width: 0;
   }
 
+  .annotated-code__stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    align-items: start;
+    transition: grid-template-columns 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .annotated-code__stage[data-inspector-open="true"] {
+    grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.8fr);
+    gap: var(--space-m);
+  }
+
+  .annotated-code__code-window {
+    min-width: 0;
+  }
+
   .annotated-code__panel[data-file-expanded="false"]
     .annotated-code__file-frame {
     max-height: 24rem;
@@ -539,7 +689,7 @@ validateTemporalAgentOrchestrationCodeSamples(
   .annotated-code__source-trigger {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 7.75rem;
+    grid-template-columns: minmax(0, 1fr) 5.5rem;
     width: 100%;
     min-width: 0;
     padding: 0;
@@ -567,8 +717,8 @@ validateTemporalAgentOrchestrationCodeSamples(
 
   .annotated-code__section-cue {
     display: grid;
-    padding: 0.45rem var(--space-xs);
-    align-content: center;
+    padding: 0.65rem 0.4rem;
+    align-content: start;
     align-items: center;
     border-inline-start: 1px solid var(--reader-rule);
     color: var(--color-text-muted);
@@ -608,21 +758,45 @@ validateTemporalAgentOrchestrationCodeSamples(
     transform: rotate(180deg);
   }
 
-  .annotated-code__explanation {
-    display: grid;
-    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 2fr);
-    padding: clamp(var(--space-m), 3vw, var(--space-xl));
-    gap: clamp(var(--space-m), 4vw, var(--space-xl));
-    border-block: 1px solid var(--reader-rule);
+  .annotated-code__inspector {
+    position: sticky;
+    top: 5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+    border: 1px solid var(--reader-rule);
     background: var(--color-bg-subtle);
   }
 
+  .annotated-code__inspector[hidden],
   .annotated-code__explanation[hidden] {
     display: none;
   }
 
+  .annotated-code__explanation {
+    padding: clamp(var(--space-m), 2.5vw, var(--space-l));
+  }
+
   .annotated-code__explanation header {
-    align-self: start;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+
+  .annotated-code__explanation header button {
+    flex: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+
+  .annotated-code__explanation header button:hover,
+  .annotated-code__explanation header button:focus-visible {
+    color: var(--color-accent);
   }
 
   .annotated-code__line-range {
@@ -639,9 +813,9 @@ validateTemporalAgentOrchestrationCodeSamples(
 
   .annotated-code__explanation dl {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin: 0;
-    gap: var(--space-l);
+    grid-template-columns: minmax(0, 1fr);
+    margin: var(--space-l) 0 0;
+    gap: var(--space-m);
   }
 
   .annotated-code__explanation dt {
@@ -725,6 +899,18 @@ validateTemporalAgentOrchestrationCodeSamples(
     font-style: var(--shiki-dark-font-style, inherit);
   }
 
+  @media (max-width: 900px) {
+    .annotated-code__stage[data-inspector-open="true"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .annotated-code__inspector {
+      position: static;
+      max-height: none;
+      margin-block-start: var(--space-s);
+    }
+  }
+
   @media (max-width: 800px) {
     .annotated-code__header {
       grid-template-columns: 1fr;
@@ -747,10 +933,6 @@ validateTemporalAgentOrchestrationCodeSamples(
       border-block-end: 0;
     }
 
-    .annotated-code__explanation {
-      grid-template-columns: 1fr;
-      gap: var(--space-m);
-    }
   }
 
   @media (max-width: 520px) {

@@ -22,6 +22,10 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     padding-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-3xl);
   }
 
+  .temporal-agent-article__body {
+    max-width: none;
+  }
+
   :global(.temporal-agent-article__body > :not(.annotated-code, .concept-figure)) {
     max-width: var(--measure);
     margin-inline: auto;
