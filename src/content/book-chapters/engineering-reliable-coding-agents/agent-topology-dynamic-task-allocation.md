@@ -1,6 +1,6 @@
 ---
 title: "Agent topology selection and dynamic task allocation"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 17
 part: 6
 kind: chapter

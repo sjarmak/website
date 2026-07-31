@@ -8,7 +8,7 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 const FIGURE_PREFIX = "/book-figures/";
 const FIGURE_DIR = path.join(
   REPO_ROOT,
-  "src/assets/books/the-system-around-the-model",
+  "src/assets/books/engineering-reliable-coding-agents",
 );
 
 function inlineFigure(node) {

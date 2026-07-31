@@ -1,6 +1,6 @@
 ---
 title: "Autonomy calibration, provenance, effective gates, and accountability"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 16
 part: 5
 kind: chapter

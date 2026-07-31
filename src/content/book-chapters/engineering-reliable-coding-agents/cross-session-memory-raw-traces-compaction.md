@@ -1,6 +1,6 @@
 ---
 title: "Cross-session memory, raw traces, and compaction policies"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 14
 part: 4
 kind: chapter

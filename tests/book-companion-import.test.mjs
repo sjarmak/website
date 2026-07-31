@@ -48,7 +48,7 @@ test("companion transform removes only its page H1 and renders authored math", (
 
 test("companion importer writes one generated entry without touching chapter output", () => {
   const temp = mkdtempSync(path.join(os.tmpdir(), "book-companion-"));
-  const outputPath = path.join(temp, "the-system-around-the-model.md");
+  const outputPath = path.join(temp, "engineering-reliable-coding-agents.md");
 
   try {
     const result = importCompanion({ outputPath });
@@ -61,7 +61,7 @@ test("companion importer writes one generated entry without touching chapter out
       untaughtCount: 137,
     });
     assert.match(output, /^---\ntitle: "Companion catalog"/);
-    assert.match(output, /\nbook: the-system-around-the-model\n/);
+    assert.match(output, /\nbook: engineering-reliable-coding-agents\n/);
     assert.match(output, /\npracticeCount: 192\n/);
     assert.match(output, /\nchapters:\n  - number: 1\n/);
     assert.match(output, /## Chapter 18:/);

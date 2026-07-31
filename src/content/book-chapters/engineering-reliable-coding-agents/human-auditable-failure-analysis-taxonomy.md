@@ -1,6 +1,6 @@
 ---
 title: "Human-auditable failure analysis and taxonomy development"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 10
 part: 3
 kind: chapter

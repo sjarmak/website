@@ -1,6 +1,6 @@
 ---
 title: "Closing: each part decides what the next one can claim"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 19
 part: 7
 kind: closing

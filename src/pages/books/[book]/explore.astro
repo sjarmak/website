@@ -1,0 +1,389 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BookGraphFallback from "@/components/books/BookGraphFallback.astro";
+import { bookChapterSlug } from "@/lib/books";
+import { buildBookGraph } from "@/lib/books/bookGraph.mjs";
+
+export async function getStaticPaths() {
+  const [books, chapters, companions] = await Promise.all([
+    getCollection("books"),
+    getCollection("bookChapters"),
+    getCollection("bookCompanions"),
+  ]);
+
+  return books.map((book) => {
+    const companion = companions.find((entry) => entry.data.book.id === book.id);
+    if (!companion) throw new Error(`Missing companion for ${book.id}`);
+    return {
+      params: { book: book.id },
+      props: {
+        book,
+        companion,
+        chapters: chapters.filter((chapter) => chapter.data.book.id === book.id),
+      },
+    };
+  });
+}
+
+interface Props {
+  book: CollectionEntry<"books">;
+  companion: CollectionEntry<"bookCompanions">;
+  chapters: CollectionEntry<"bookChapters">[];
+}
+
+const { book, companion, chapters } = Astro.props;
+const graph = buildBookGraph({
+  book: {
+    id: book.id,
+    title: book.data.title,
+    subtitle: book.data.subtitle,
+    description: book.data.description,
+    parts: book.data.parts,
+  },
+  chapters: chapters.map((chapter) => ({
+    id: bookChapterSlug(chapter.id),
+    title: chapter.data.title,
+    kind: chapter.data.kind,
+    number: chapter.data.number,
+    part: chapter.data.part,
+  })),
+  companionSource: companion.body ?? "",
+});
+const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
+---
+
+<BaseLayout
+  title={`Explore ${book.data.title}`}
+  description={`An explorable map of the parts, chapters, and ${graph.counts.practices} practices in ${book.data.title}.`}
+>
+  <main class="book-explorer container">
+    <header class="book-explorer__head">
+      <nav class="book-explorer__context" aria-label="Breadcrumb">
+        <a href="/writing">Writing</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/books/${book.id}`}>{book.data.title}</a>
+      </nav>
+      <div class="book-explorer__title">
+        <p class="kicker">Knowledge graph</p>
+        <h1>Explore the book</h1>
+        <p class="lead">
+          Browse by part and chapter, then compare the 55 practices taught in the book with the 137 carried in the companion.
+        </p>
+      </div>
+      <dl class="book-explorer__counts" aria-label="Graph contents">
+        <div><dt>Parts</dt><dd>{graph.counts.parts}</dd></div>
+        <div><dt>Chapters</dt><dd>{graph.counts.chapters}</dd></div>
+        <div><dt>Practices</dt><dd>{graph.counts.practices}</dd></div>
+        <div><dt>Taught</dt><dd>{graph.counts.taught}</dd></div>
+        <div><dt>Companion</dt><dd>{graph.counts.untaught}</dd></div>
+      </dl>
+    </header>
+
+    <section class="book-graph" data-book-graph-explorer aria-labelledby="graph-heading">
+      <h2 id="graph-heading" class="visually-hidden">Book graph</h2>
+      <div class="book-graph__toolbar">
+        <label class="book-graph__search">
+          <span>Search</span>
+          <input type="search" data-book-graph-search placeholder="Chapter or practice" />
+        </label>
+
+        <label class="book-graph__part">
+          <span>Part</span>
+          <select data-part-filter>
+            <option value="all">All parts</option>
+            {book.data.parts.map((part) => <option value={part.number}>Part {part.number}</option>)}
+          </select>
+        </label>
+
+        <div class="book-graph__filters" role="group" aria-label="Practice type">
+          <button type="button" data-practice-filter="taught" aria-pressed="true">Taught</button>
+          <button type="button" data-practice-filter="untaught" aria-pressed="true">Companion</button>
+        </div>
+
+        <button type="button" class="book-graph__view" data-book-graph-view aria-pressed="false">
+          Graph view
+        </button>
+      </div>
+
+      <p class="book-graph__key" aria-label="Relationship key">
+        <span><i class="book-graph__line"></i>Taught in chapter</span>
+        <span><i class="book-graph__line book-graph__line--carried"></i>Carried in companion</span>
+      </p>
+
+      <div class="book-graph__stage" data-book-graph-stage hidden>
+        <div
+          class="book-graph__canvas"
+          data-book-graph-canvas
+          role="img"
+          aria-label="Interactive structural map of the book. Use list view for keyboard navigation."
+        ></div>
+        <aside class="book-graph__detail" data-book-graph-detail hidden aria-live="polite">
+          <button type="button" data-book-graph-detail-close aria-label="Close details">×</button>
+          <p data-book-graph-detail-kind></p>
+          <h2 data-book-graph-detail-title></h2>
+          <p data-book-graph-detail-summary></p>
+          <a data-book-graph-detail-link href="">Open source <span aria-hidden="true">→</span></a>
+        </aside>
+      </div>
+
+      <div data-book-graph-fallback>
+        <BookGraphFallback nodes={graph.nodes} parts={book.data.parts} />
+      </div>
+    </section>
+  </main>
+
+  <script type="application/json" data-book-graph-data set:html={payload} is:inline></script>
+  <script>
+    import "@/scripts/book-graph-explorer";
+  </script>
+</BaseLayout>
+
+<style>
+  .book-explorer {
+    padding-block-end: clamp(var(--space-xl), 8vw, var(--space-3xl));
+  }
+
+  .book-explorer__head {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+    gap: var(--space-m) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block: clamp(var(--space-l), 7vw, var(--space-2xl));
+    border-bottom: var(--border-hairline);
+  }
+
+  .book-explorer__context {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: baseline;
+    min-width: 0;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .book-explorer__context a:last-child {
+    overflow-wrap: anywhere;
+  }
+
+  .book-explorer__title h1 {
+    max-width: 16ch;
+  }
+
+  .book-explorer__title .lead {
+    max-width: 42rem;
+    margin-block-start: var(--space-s);
+  }
+
+  .book-explorer__counts {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s) var(--space-l);
+    margin: 0;
+  }
+
+  .book-explorer__counts div {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: baseline;
+  }
+
+  .book-explorer__counts dt {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .book-explorer__counts dd {
+    order: -1;
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .book-graph {
+    padding-block-start: var(--space-l);
+  }
+
+  .book-graph__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    align-items: end;
+    padding-block-end: var(--space-s);
+  }
+
+  .book-graph__search,
+  .book-graph__part {
+    display: grid;
+    gap: var(--space-3xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
+  .book-graph__search {
+    flex: 1 1 18rem;
+  }
+
+  .book-graph__search input,
+  .book-graph__part select {
+    min-height: 2.75rem;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: var(--weight-normal);
+  }
+
+  .book-graph__filters {
+    display: flex;
+    gap: var(--space-2xs);
+  }
+
+  .book-graph__filters button,
+  .book-graph__view {
+    min-height: 2.75rem;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .book-graph__filters button[aria-pressed="true"] {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .book-graph__view {
+    margin-inline-start: auto;
+  }
+
+  .book-graph__key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
+    padding-block: var(--space-xs) var(--space-m);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .book-graph__key span {
+    display: inline-flex;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+
+  .book-graph__line {
+    width: 2rem;
+    border-top: 2px solid var(--color-accent);
+  }
+
+  .book-graph__line--carried {
+    border-top-style: dashed;
+    border-color: var(--color-text-muted);
+  }
+
+  .book-graph__stage {
+    position: relative;
+  }
+
+  .book-graph__canvas {
+    width: 100%;
+    height: min(72vh, 720px);
+    min-height: 30rem;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--graph-bg);
+  }
+
+  .book-graph__detail {
+    position: absolute;
+    inset-block-start: var(--space-s);
+    inset-inline-end: var(--space-s);
+    width: min(24rem, calc(100% - 2 * var(--space-s)));
+    max-height: calc(100% - 2 * var(--space-s));
+    overflow-y: auto;
+    padding: var(--space-l);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+  }
+
+  .book-graph__detail button {
+    position: absolute;
+    inset-block-start: var(--space-xs);
+    inset-inline-end: var(--space-s);
+    color: var(--color-text-muted);
+    font-size: var(--step-2);
+  }
+
+  .book-graph__detail > p:first-of-type {
+    color: var(--color-accent);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
+  }
+
+  .book-graph__detail h2 {
+    margin-block: var(--space-2xs) var(--space-s);
+    padding-inline-end: var(--space-l);
+    font-size: var(--step-2);
+  }
+
+  .book-graph__detail > p:last-of-type {
+    color: var(--color-text-secondary);
+  }
+
+  .book-graph__detail a {
+    display: inline-flex;
+    margin-block-start: var(--space-m);
+    font-weight: var(--weight-semibold);
+  }
+
+  .book-graph[data-canvas-active="true"] [data-book-graph-fallback] {
+    display: none;
+  }
+
+  @media (max-width: 48rem) {
+    .book-explorer__head {
+      grid-template-columns: 1fr;
+    }
+
+    .book-explorer__counts {
+      grid-column: 1;
+    }
+
+    .book-graph__view {
+      margin-inline-start: 0;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .book-graph__canvas {
+      min-height: 34rem;
+    }
+
+    .book-graph__detail {
+      inset-block: auto var(--space-s);
+      inset-inline: var(--space-s);
+      width: auto;
+      max-height: 48%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book-graph *,
+    .book-graph *::before,
+    .book-graph *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0s !important;
+      animation-duration: 0s !important;
+    }
+  }
+</style>

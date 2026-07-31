@@ -15,7 +15,8 @@ export default defineConfig({
       // Keep direct-link-only presentation pages out of the sitemap.
       filter: (page) =>
         !page.includes("/durable-podcast-render") &&
-        !page.includes("/temporal-research-agent"),
+        !page.includes("/temporal-research-agent") &&
+        !page.includes("/books/the-system-around-the-model"),
     }),
   ],
   markdown: {

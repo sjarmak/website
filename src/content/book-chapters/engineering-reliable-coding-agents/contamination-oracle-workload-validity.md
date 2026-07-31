@@ -1,6 +1,6 @@
 ---
 title: "Benchmark contamination, oracle strength, and workload validity"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 3
 part: 1
 kind: chapter

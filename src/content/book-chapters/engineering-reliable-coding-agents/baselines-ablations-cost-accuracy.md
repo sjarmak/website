@@ -1,6 +1,6 @@
 ---
 title: "Baselines, ablations, and cost-accuracy tradeoffs"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 2
 part: 1
 kind: chapter

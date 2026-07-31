@@ -1,6 +1,6 @@
 ---
 title: "Cost-aware fleet scheduling and model routing"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 18
 part: 6
 kind: chapter

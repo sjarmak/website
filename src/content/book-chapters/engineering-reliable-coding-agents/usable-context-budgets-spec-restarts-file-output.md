@@ -1,6 +1,6 @@
 ---
 title: "Usable context budgets, consolidated-spec restarts, and file-based tool output"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 13
 part: 4
 kind: chapter

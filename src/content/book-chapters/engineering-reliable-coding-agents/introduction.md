@@ -1,6 +1,6 @@
 ---
 title: "Engineering Reliable Coding Agents"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 0
 part: 0
 kind: introduction

@@ -6,6 +6,10 @@ export function bookCompanionHref(bookId: string): string {
   return `/books/${bookId}/companion`;
 }
 
+export function bookExploreHref(bookId: string): string {
+  return `/books/${bookId}/explore`;
+}
+
 export function bookChapterSlug(entryId: string): string {
   return entryId.slice(entryId.lastIndexOf("/") + 1);
 }

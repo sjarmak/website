@@ -2,7 +2,7 @@ export const BOOK_SOURCE =
   process.env.AGENT_RELIABILITY_MANUSCRIPT ?? "/home/ds/agent_reliability/manuscript";
 
 export const BOOK = {
-  slug: "the-system-around-the-model",
+  slug: "engineering-reliable-coding-agents",
   title: "Engineering Reliable Coding Agents",
   subtitle: "Evaluation, Recovery, Context, and Control Beyond the Model",
   author: "Stephanie Jarmak",

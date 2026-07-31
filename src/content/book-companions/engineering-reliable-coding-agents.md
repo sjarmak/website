@@ -1,7 +1,7 @@
 ---
 title: "Companion catalog"
 introTitle: "How to use this catalog"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 practiceCount: 192
 taughtCount: 55
 untaughtCount: 137

@@ -1,6 +1,6 @@
 ---
 title: "Replayable traces and fault-injection recovery testing"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 9
 part: 3
 kind: chapter

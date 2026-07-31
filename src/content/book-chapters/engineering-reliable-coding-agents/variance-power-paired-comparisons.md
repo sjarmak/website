@@ -1,6 +1,6 @@
 ---
 title: "Run-to-run variance, statistical power, and paired comparisons"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 1
 part: 1
 kind: chapter

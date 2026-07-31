@@ -22,7 +22,7 @@ import { bookChapterHref, prepareBookFigure } from "../src/lib/books.ts";
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 test("book manifest covers the approved 20 entries in a stable reading order", () => {
-  assert.equal(BOOK.slug, "the-system-around-the-model");
+  assert.equal(BOOK.slug, "engineering-reliable-coding-agents");
   assert.equal(BOOK.title, "Engineering Reliable Coding Agents");
   assert.equal(
     BOOK.subtitle,
@@ -202,7 +202,7 @@ test("book figure preparation makes the canvas transparent and binds its palette
 test("all 19 imported SVGs render with transparent canvases and the semantic palette", () => {
   const figureDir = path.join(
     REPO_ROOT,
-    "src/assets/books/the-system-around-the-model",
+    "src/assets/books/engineering-reliable-coding-agents",
   );
   const names = readdirSync(figureDir).filter((name) => name.endsWith(".svg"));
   assert.equal(names.length, 19);
@@ -254,7 +254,7 @@ test("book figure preparation rejects executable SVG content before inlining", (
 
 test("chapter hrefs encode the approved stable route shape", () => {
   assert.equal(
-    bookChapterHref("the-system-around-the-model", "variance-power-paired-comparisons"),
-    "/books/the-system-around-the-model/variance-power-paired-comparisons",
+    bookChapterHref("engineering-reliable-coding-agents", "variance-power-paired-comparisons"),
+    "/books/engineering-reliable-coding-agents/variance-power-paired-comparisons",
   );
 });

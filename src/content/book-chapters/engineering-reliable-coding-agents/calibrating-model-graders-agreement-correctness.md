@@ -1,6 +1,6 @@
 ---
 title: "Calibrating model graders and separating agreement from correctness"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 5
 part: 2
 kind: chapter

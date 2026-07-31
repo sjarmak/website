@@ -5,6 +5,7 @@ import {
   type CollectionEntry,
 } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { bookExploreHref } from "@/lib/books";
 
 export async function getStaticPaths() {
   const [books, companions] = await Promise.all([
@@ -61,6 +62,9 @@ const { Content } = await render(companion);
           <span>{companion.data.untaughtCount} untaught</span>
         </p>
         <a href={`/books/${book.id}`}>Return to the book <span aria-hidden="true">→</span></a>
+        <a class="catalog-head__explore" href={bookExploreHref(book.id)}>
+          Explore as a graph <span aria-hidden="true">→</span>
+        </a>
       </div>
     </header>
 
@@ -160,6 +164,11 @@ const { Content } = await render(companion);
 
   .catalog-head__details > * + * {
     margin-block-start: var(--space-s);
+  }
+
+  .catalog-head__explore {
+    display: inline-flex;
+    margin-inline-start: var(--space-m);
   }
 
   .catalog-head__counts {
@@ -325,6 +334,10 @@ const { Content } = await render(companion);
       background: var(--color-bg);
       color: var(--color-text);
       font: inherit;
+    }
+
+    .catalog-head__explore {
+      margin-inline-start: 0;
     }
   }
 

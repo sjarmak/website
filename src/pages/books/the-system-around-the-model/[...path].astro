@@ -1,0 +1,18 @@
+---
+import LegacyBookRedirect from "@/components/books/LegacyBookRedirect.astro";
+import { CHAPTERS } from "../../../../scripts/content/import-agent-reliability-book.mjs";
+
+export function getStaticPaths() {
+  const routes = ["companion", "explore", ...CHAPTERS.map((chapter) => chapter.slug)];
+  return routes.map((path) => ({ params: { path }, props: { path } }));
+}
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+const target = `/books/engineering-reliable-coding-agents/${path}`;
+---
+
+<LegacyBookRedirect {target} />

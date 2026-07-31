@@ -1,6 +1,6 @@
 ---
 title: "Execution-based evaluation, correction gates, and release tests"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 4
 part: 2
 kind: chapter

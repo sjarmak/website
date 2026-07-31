@@ -1,6 +1,6 @@
 ---
 title: "Agent isolation, injection defenses, and independent verification"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 7
 part: 3
 kind: chapter

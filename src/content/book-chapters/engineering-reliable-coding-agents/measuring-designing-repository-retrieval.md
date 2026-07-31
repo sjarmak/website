@@ -1,6 +1,6 @@
 ---
 title: "Measuring and designing repository retrieval"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 11
 part: 4
 kind: chapter

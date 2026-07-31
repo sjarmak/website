@@ -1,6 +1,6 @@
 ---
 title: "Persistent agent state, durable workflows, and idempotent retries"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 8
 part: 3
 kind: chapter

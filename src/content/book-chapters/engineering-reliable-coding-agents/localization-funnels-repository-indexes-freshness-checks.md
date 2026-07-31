@@ -1,6 +1,6 @@
 ---
 title: "Localization funnels, repository indexes, and freshness checks"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 12
 part: 4
 kind: chapter

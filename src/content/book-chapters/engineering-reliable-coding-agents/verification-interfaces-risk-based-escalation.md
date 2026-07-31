@@ -1,6 +1,6 @@
 ---
 title: "Efficient verification interfaces and risk-based human escalation"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 15
 part: 5
 kind: chapter

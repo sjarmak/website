@@ -1,6 +1,6 @@
 ---
 title: "Proxy metric gaming and layered evaluation signals"
-book: the-system-around-the-model
+book: engineering-reliable-coding-agents
 order: 6
 part: 2
 kind: chapter
