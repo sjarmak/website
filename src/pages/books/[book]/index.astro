@@ -63,7 +63,7 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
         <p class="book-head__author">By {book.data.author}</p>
         <p class="lead">{book.data.description}</p>
         <p class="muted">
-          18 chapters · {book.data.parts.length} parts · {book.data.wordCount.toLocaleString("en-US")} words
+          18 chapters · {book.data.parts.length} parts · approximately {book.data.pageCount.toLocaleString("en-US")} pages
         </p>
         {
           introduction && (

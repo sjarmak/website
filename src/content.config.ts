@@ -197,7 +197,7 @@ const books = defineCollection({
     subtitle: z.string(),
     author: z.string(),
     description: z.string(),
-    wordCount: z.number().int().positive(),
+    pageCount: z.number().int().positive(),
     parts: z.array(
       z.object({
         number: z.number().int().positive(),

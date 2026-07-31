@@ -46,6 +46,8 @@ test("book landing lists every entry once in reading order", () => {
   const html = page("books", BOOK.slug);
   assert.match(html, /<h1[^>]*>Engineering Reliable Coding Agents<\/h1>/);
   assert.match(html, />Evaluation, Recovery, Context, and Control Beyond the Model<\/p>/);
+  assert.match(html, />\s*18 chapters · 6 parts · approximately 356 pages\s*<\/p>/);
+  assert.doesNotMatch(html, /89,005 words/);
   const contents = html.slice(html.indexOf('<section class="contents'));
   let lastIndex = -1;
   for (const chapter of CHAPTERS) {
