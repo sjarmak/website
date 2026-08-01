@@ -122,7 +122,7 @@ test("the essay opens with the sourced personal path from Beads to Temporal", ()
     "Introducing Beads",
     "January 1, 2026",
     "Welcome to Gas Town",
-    "Around March",
+    "In March 2026",
     "Julian Knutsen",
     "over two hundred pull requests",
     "little more determinism",
@@ -191,7 +191,7 @@ test("the narrative illustrations sit with the passages they illustrate", () => 
     {
       figure: "<ConspiracyFigure />",
       after: "a collection of clues spread across controller ticks",
-      before: "those clues become increasingly useless",
+      before: "reconstructing the procedure from those clues",
     },
     {
       figure: "<CanaryFigure />",
