@@ -88,7 +88,7 @@ func (w *ActivityWorker) ExecuteBead(
 			SessionID:    resume.SessionID,
 			Outcome:      OutcomeCompleted,
 			ArtifactRefs: cloneArtifacts(resume.ArtifactRefs),
-		}, resume.Sequence, false)
+		}, resume.Sequence, false, resume.ArtifactRefsTruncated)
 	}
 
 	execution, err := w.runAgent(ctx, input.Event, lease, resume)
@@ -102,6 +102,7 @@ func (w *ActivityWorker) ExecuteBead(
 		execution.result,
 		execution.lastSequence,
 		true,
+		false,
 	)
 }
 
@@ -261,6 +262,7 @@ func (w *ActivityWorker) complete(
 	result AgentExecutionResult,
 	lastSequence int64,
 	recordFinalHeartbeat bool,
+	artifactRefsTruncated bool,
 ) (ActivityResult, error) {
 	if result.Outcome != OutcomeCompleted || result.SessionID == "" {
 		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
@@ -270,7 +272,34 @@ func (w *ActivityWorker) complete(
 		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
 			"agent returned an invalid session identity", "InvalidAgentResult", err)
 	}
-	for _, artifact := range result.ArtifactRefs {
+	workflowExecution := activity.GetInfo(ctx).WorkflowExecution
+	if err := validateWorkflowID(
+		"source workflow id",
+		workflowExecution.ID,
+	); err != nil {
+		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
+			"Temporal Activity has no valid source workflow identity",
+			"InvalidSourceWorkflow",
+			err,
+		)
+	}
+	if err := validateSegment(
+		"source workflow run id",
+		workflowExecution.RunID,
+	); err != nil {
+		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
+			"Temporal Activity has no valid source workflow run identity",
+			"InvalidSourceWorkflow",
+			err,
+		)
+	}
+	artifactRefs := result.ArtifactRefs
+	artifactOverflow := artifactRefsTruncated
+	if len(artifactRefs) > MaxOutcomeEvidenceReferences {
+		artifactOverflow = true
+		artifactRefs = artifactRefs[:MaxOutcomeEvidenceReferences]
+	}
+	for _, artifact := range artifactRefs {
 		if err := artifact.Validate(); err != nil {
 			return ActivityResult{}, temporal.NewNonRetryableApplicationError(
 				"agent returned an invalid artifact reference", "InvalidArtifactRef", err)
@@ -281,7 +310,8 @@ func (w *ActivityWorker) complete(
 			BeadID: event.BeadID, Generation: event.Generation,
 			ClaimToken: lease.Token, SessionID: result.SessionID,
 			Sequence: lastSequence + 1, Phase: CheckpointPhaseComplete,
-			ArtifactRefs: cloneArtifacts(result.ArtifactRefs),
+			ArtifactRefs:          cloneArtifacts(artifactRefs),
+			ArtifactRefsTruncated: artifactOverflow,
 		}
 		if err := checkpoint.validatePayload(); err != nil {
 			return ActivityResult{}, temporal.NewNonRetryableApplicationError(
@@ -292,14 +322,19 @@ func (w *ActivityWorker) complete(
 	err := w.Beads.Complete(ctx, Completion{
 		BeadID: event.BeadID, Generation: event.Generation, ClaimToken: lease.Token,
 		SessionID: result.SessionID, Outcome: result.Outcome,
-		ArtifactRefs: cloneArtifacts(result.ArtifactRefs),
+		SourceWorkflowID:    workflowExecution.ID,
+		SourceWorkflowRunID: workflowExecution.RunID,
+		ArtifactRefs:        cloneArtifacts(artifactRefs),
 	})
 	if err != nil {
 		return ActivityResult{}, fmt.Errorf("write fenced completion: %w", err)
 	}
 	return ActivityResult{
-		EventID: event.EventID, Outcome: string(result.Outcome),
-		SessionID: result.SessionID, ArtifactRefs: cloneArtifacts(result.ArtifactRefs),
+		EventID:               event.EventID,
+		Outcome:               string(result.Outcome),
+		SessionID:             result.SessionID,
+		ArtifactRefs:          cloneArtifacts(artifactRefs),
+		ArtifactRefsTruncated: artifactOverflow,
 	}, nil
 }
 

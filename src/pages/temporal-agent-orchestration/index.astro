@@ -4,8 +4,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-  title="An agent started. The coordinator died. Now what?"
-  description="What changed when I moved the procedure of a production multi-agent coding system into Temporal Workflows and Activities with the Go SDK."
+  title="I added Temporal to my city of coding agents"
+  description="A firsthand account of Beads, Gas City, orchestration failures, and a production durability experiment with Temporal."
   type="article"
   noindex={true}
 >
@@ -26,7 +26,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     max-width: none;
   }
 
-  :global(.temporal-agent-article__body > :not(.annotated-code, .concept-figure)) {
+  :global(.temporal-agent-article__body > :not(.annotated-code, .concept-figure, .opening-figure)) {
     max-width: var(--measure);
     margin-inline: auto;
   }

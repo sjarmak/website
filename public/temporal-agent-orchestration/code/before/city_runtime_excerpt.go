@@ -1,7 +1,7 @@
-// Selected production excerpt from cmd/gc/city_runtime.go.
+// Abridged from cmd/gc/city_runtime.go for reading; not the exact source.
+// Tracing, logging, and guards are removed, and every omission is marked.
+// Identifiers match the original so the linked source stays navigable.
 // Source revision: b78058917bc65846db89e1c3b25dc17269822483.
-// Unrelated tracing, safety checks, and demand calculations are marked where omitted.
-// This excerpt is for reading and is not a standalone Go file.
 
 package main
 
@@ -12,11 +12,14 @@ func (cr *CityRuntime) beadReconcileTick(
 	trace *sessionReconcilerTraceCycle,
 	bootReconcile bool,
 ) {
+	desiredState := result.State
 	store := cr.cityBeadStore()
 	if store == nil {
 		return
 	}
 	sessStore := cr.sessionsBeadStore()
+
+	// Omitted: the recordPhase trace helper, called after each phase below.
 
 	if sessionBeads == nil {
 		var sessionQueryPartial bool
@@ -28,6 +31,7 @@ func (cr *CityRuntime) beadReconcileTick(
 	rigStores := cr.rigBeadStores()
 	assignedWorkBeads := result.AssignedWorkBeads
 	assignedWorkStoreRefs := result.AssignedWorkStoreRefs
+
 	released := releaseOrphanedPoolAssignmentsWhenSnapshotsComplete(
 		store,
 		cr.cfg,
@@ -51,36 +55,81 @@ func (cr *CityRuntime) beadReconcileTick(
 			)
 	}
 
-	// Demand calculation, scale-down guards, and trace recording omitted.
+	// Omitted: the store-identity "squatter" hold and the undesired-pool-session
+	// sweep, which can reload sessionBeads before the reconcile below.
+	openInfos := sessionBeads.OpenInfos()
+	cityName := cr.cityName
+	cfgNames := configuredSessionNamesWithSnapshot(cr.cfg, cityName, sessionBeads)
 
-	awakeWork, awakeStoreRefs := filterAssignedWorkBeadsForSessionWake(
-		cr.cfg,
-		cr.cityPath,
-		sessionBeads.OpenInfos(),
-		assignedWorkBeads,
-		assignedWorkStoreRefs,
+	// poolDesired is how many sessions should be awake. Its full computation
+	// (pool-demand filter, partial retain, named-demand merge) is omitted.
+	poolDesired := result.PoolDesiredCounts
+
+	readyWaitSet, err := prepareWaitWakeStateWithSnapshot(
+		sessionpkg.NewStore(sessStore),
+		newWaitDependencyStoreSet(store, rigStores),
+		cr.nudgesBeadStore(),
+		time.Now(),
+		sessionBeads,
 	)
+	if err != nil {
+		readyWaitSet = nil // the original logs the error here
+	}
+
+	// Controller wake demand comes from assigned-work scans and scale_check, so
+	// the per-template work_query set stays empty on this path.
+	workSet := make(map[string]bool)
+
+	awakeAssignedWorkBeads, awakeAssignedStoreRefs :=
+		filterAssignedWorkBeadsForSessionWake(
+			cr.cfg,
+			cr.cityPath,
+			openInfos,
+			assignedWorkBeads,
+			assignedWorkStoreRefs,
+		)
+
+	reconcileStartOptions := []startExecutionOption{
+		withAsyncStartExecution(),
+		withAsyncStartFollowUp(cr.requestAsyncStartFollowUpTick),
+		withAsyncStartLimiter(cr.ensureAsyncStartLimiter()),
+		withAsyncStartTracker(&cr.asyncStarts),
+		withAsyncDrainAckStopTracker(&cr.asyncStops),
+		withMaxSessionAgeTracker(cr.mat),
+		withReadyAssignedFlags(readyAssignedFlagsForBeads(
+			result.ReadyAssigned,
+			awakeAssignedWorkBeads,
+			awakeAssignedStoreRefs,
+		)),
+	}
+	if bootReconcile {
+		reconcileStartOptions = append(
+			reconcileStartOptions,
+			withDeferSessionClosesOnBoot(),
+		)
+	}
+
 	reconcileSessionBeadsTracedWithNamedDemand(
 		ctx,
 		cr.cityPath,
 		sessionBeads.OpenForReconcile(),
 		sessionBeads,
-		result.State,
-		configuredSessionNamesWithSnapshot(cr.cfg, cr.cityName, sessionBeads),
+		desiredState,
+		cfgNames,
 		cr.cfg,
 		cr.sp,
 		sessStore,
 		cr.dops,
-		awakeWork,
+		awakeAssignedWorkBeads,
 		rigStores,
-		nil,
+		readyWaitSet,
 		cr.sessionDrains,
 		cr.providerHealthGate,
-		result.PoolDesiredCounts,
+		poolDesired,
 		result.NamedSessionDemand,
 		result.snapshotQueryPartial(),
-		map[string]bool{},
-		cr.cityName,
+		workSet,
+		cityName,
 		cr.it,
 		clock.Real{},
 		cr.rec,
@@ -89,18 +138,12 @@ func (cr *CityRuntime) beadReconcileTick(
 		cr.stdout,
 		cr.stderr,
 		trace,
-		withReadyAssignedFlags(
-			readyAssignedFlagsForBeads(
-				result.ReadyAssigned,
-				awakeWork,
-				awakeStoreRefs,
-			),
-		),
+		reconcileStartOptions...,
 	)
 
-	// Post-reconcile trace recording omitted.
+	// Omitted: deferred drain follow-up and post-tick trace recording.
 
-	dispatchSessions, err := loadSessionBeadSnapshot(sessStore.Store)
+	dispatchSessionBeads, err := loadSessionBeadSnapshot(sessStore.Store)
 	if err == nil {
 		_ = dispatchReadyWaitNudgesWithSnapshot(
 			cr.cityPath,
@@ -108,7 +151,7 @@ func (cr *CityRuntime) beadReconcileTick(
 			sessionpkg.NewStore(sessStore),
 			cr.nudgesBeadStore(),
 			time.Now(),
-			dispatchSessions,
+			dispatchSessionBeads,
 		)
 	}
 
@@ -116,12 +159,12 @@ func (cr *CityRuntime) beadReconcileTick(
 	cr.nudgeDispatchTick(ctx)
 
 	// A separate backstop wakes live sessions that never claimed their bead.
-	if stalled, err := loadSessionBeads(sessStore.Store); err == nil {
+	if stalledPoolBeads, err := loadSessionBeads(sessStore.Store); err == nil {
 		nudgeStalledPoolClaims(
 			cr.sp,
 			cr.cfg,
 			sessStore,
-			stalled,
+			stalledPoolBeads,
 			assignedWorkBeads,
 			time.Now(),
 			cr.stdout,

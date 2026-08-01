@@ -72,7 +72,7 @@ validateTemporalAgentOrchestrationCodeSamples(
     <p>
       {
         isBefore
-          ? "These are selected excerpts, not standalone Go files. They are abridged for reading and linked to the complete source at the exact pre-Temporal revision."
+          ? "These selected excerpts are abridged for reading and linked to the complete source at the exact pre-Temporal revision."
           : "Each file opens as a short preview. Show the full file, then select any line section to open its explanation beside the code window."
       }
     </p>
@@ -84,6 +84,16 @@ validateTemporalAgentOrchestrationCodeSamples(
         <strong>Versioned before code.</strong> Both excerpts come from Gas City
         revision <code>b78058917</code>, before the Temporal service was added.
         The source links open the original files and line ranges.
+      </p>
+    )
+  }
+  {
+    !isBefore && (
+      <p class="annotated-code__provenance">
+        <strong>Versioned implementation code.</strong> Each file names the exact
+        reviewed revision it came from. Source review and production activation
+        have separate evidence; the status under each filename records what the
+        corresponding live canary actually proved.
       </p>
     )
   }
@@ -127,6 +137,35 @@ validateTemporalAgentOrchestrationCodeSamples(
           <div>
             <h3>{sample.label}</h3>
             <p>{sample.summary}</p>
+            {(sample.revision || sample.promotionStatus) && (
+              <p class="annotated-code__status">
+                {sample.revision && (
+                  <>
+                    <strong>Revision:</strong> <code>{sample.revision}</code>
+                  </>
+                )}
+                {sample.promotionStatus && (
+                  <>
+                    {sample.revision && <br />}
+                    <strong>Promotion:</strong> {sample.promotionStatus}
+                  </>
+                )}
+              </p>
+            )}
+            {sample.evidenceTrail && (
+              <ol
+                class="annotated-code__evidence"
+                aria-label="Canary evidence trail"
+              >
+                {sample.evidenceTrail.map((step) => (
+                  <li>
+                    <strong>{step.label}</strong>
+                    <span>{step.detail}</span>
+                    {step.revision && <code>{step.revision}</code>}
+                  </li>
+                ))}
+              </ol>
+            )}
             {sample.sourceUrl && (
               <a
                 class="annotated-code__source-link"
@@ -548,6 +587,60 @@ validateTemporalAgentOrchestrationCodeSamples(
   .annotated-code__file-header h3,
   .annotated-code__file-header p {
     margin: 0;
+  }
+
+  .annotated-code__file-header .annotated-code__status {
+    margin-block-start: 0.55rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.55;
+  }
+
+  .annotated-code__status code {
+    color: var(--color-text);
+    font-size: 0.94em;
+    overflow-wrap: anywhere;
+  }
+
+  .annotated-code__evidence {
+    max-width: var(--measure);
+    margin: var(--space-s) 0 0;
+    padding: var(--space-s) var(--space-m) var(--space-s) 2.1rem;
+    border: 1px solid var(--reader-rule);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .annotated-code__evidence li {
+    padding-inline-start: 0.2rem;
+  }
+
+  .annotated-code__evidence li + li {
+    margin-block-start: 0.65rem;
+  }
+
+  .annotated-code__evidence strong,
+  .annotated-code__evidence span,
+  .annotated-code__evidence code {
+    display: block;
+  }
+
+  .annotated-code__evidence strong {
+    color: var(--color-text);
+  }
+
+  .annotated-code__evidence span {
+    margin-block-start: 0.1rem;
+  }
+
+  .annotated-code__evidence code {
+    margin-block-start: 0.2rem;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    overflow-wrap: anywhere;
   }
 
   .annotated-code__source-link {

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -21,6 +21,35 @@ const FIGURES = path.join(
   ROOT,
   "src/components/temporal-agent-orchestration/ConceptFigure.astro",
 );
+const OPENING_FIGURE = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/OpeningFigure.astro",
+);
+const OPENING_ILLUSTRATION = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/img/cabo-dinner-terminal-wall.png",
+);
+const ILLUSTRATION = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/Illustration.astro",
+);
+const CONSPIRACY_FIGURE = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/ConspiracyFigure.astro",
+);
+const CANARY_FIGURE = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/CanaryFigure.astro",
+);
+const WORKSHOP_FIGURE = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/WorkshopFigure.astro",
+);
+const WORKSHOP_ILLUSTRATION = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/img/workshop-job-board-checklist.png",
+);
+const TOKENS = path.join(ROOT, "src/styles/tokens.css");
 const SAMPLES = path.join(
   ROOT,
   "src/data/temporal-agent-orchestration-code-samples.ts",
@@ -40,16 +69,352 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
   assert.match(page, /<Article \/>/);
   assert.match(page, /noindex=\{true\}/);
   assert.match(page, /type="article"/);
-  assert.match(article, /An agent started\. The coordinator died\./);
   assert.match(article, /<AnnotatedCode mode="before" \/>/);
   assert.match(article, /<AnnotatedCode mode="after" \/>/);
-  assert.ok(
+  assert.match(article, /Nondeterministic Idempotence/);
+  assert.match(article, /Put the unpredictable agent inside an Activity/);
+  assert.match(article, /Gas City supplies the orchestration primitives/);
+  assert.match(article, /Gas Town was one specific city design/);
+  assert.match(article, /Temporal does not replace Beads/i);
+  assert.match(article, /took the primitives behind Gas Town/i);
+  assert.match(
+    article,
+    /I did not add Temporal to make coding agents deterministic/i,
+    "the essay must not imply Temporal made agent behavior deterministic",
+  );
+  // The determinism ban covers page metadata, not just the body. <title> is the
+  // browser tab AND the link-preview text, and it once read "tried to make agent
+  // work deterministic" — the exact opposite of what the piece argues.
+  assert.doesNotMatch(
+    page,
+    /determinis/i,
+    "page metadata must not imply Temporal made agent behavior deterministic",
+  );
+  assert.match(article, /Activities contain nondeterministic effects/i);
+  assert.match(article, /failed promotion gate/i);
+  assert.match(article, /named a Workflow that did not exist/i);
+  assert.match(article, /formula step/i);
+  assert.match(article, /source task/i);
+  assert.match(
+    article,
+    /legitimate completion paths closed real work without producing an `OutcomeReady` envelope at all/i,
+  );
+    assert.ok(
     article.indexOf('<AnnotatedCode mode="before" />') <
       article.indexOf('<AnnotatedCode mode="after" />'),
     "the before source must appear before the Temporal implementation",
   );
-  assert.doesNotMatch(article, /assignment|homework|evaluation criteria/i);
+  assert.doesNotMatch(article, /\bhomework\b|\bevaluation criteria\b|\bthis assignment\b/i);
   assert.doesNotMatch(header, /temporal-agent-orchestration/);
+});
+
+test("the essay opens with the sourced personal path from Beads to Temporal", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+
+  const narrative = [
+    "Sourcegraph offsite in Cabo",
+    "Roughly eight",
+    "A few weeks later",
+    // Beads published 2025-10-13; the date belongs to the publication, not the
+    // dinner, which the sources place in September. See the "September 2025"
+    // guard below: the article must carry a true date without naming that month.
+    "October 2025",
+    "Introducing Beads",
+    "January 1, 2026",
+    "Welcome to Gas Town",
+    "Around March",
+    "Julian Knutsen",
+    "over two hundred pull requests",
+    "little more determinism",
+    "how to run coding agents reliably in large codebases",
+    "Kubernetes",
+    "distributed-systems toolbox",
+  ];
+  let previous = -1;
+  for (const marker of narrative) {
+    const current = article.indexOf(marker);
+    assert.ok(current > previous, `${marker} must appear in narrative order`);
+    previous = current;
+  }
+
+  for (const link of [
+    "https://steve-yegge.medium.com/introducing-beads-a-coding-agent-memory-system-637d7d92514a",
+    "https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04",
+    "https://github.com/gastownhall/gascity",
+    "https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged",
+    "https://sourcegraph.com/webinars/building-a-software-factory",
+    "https://github.com/sjarmak/agent-diagnostics",
+    "https://github.com/sourcegraph/CodeScaleBench",
+    "https://docs.temporal.io/temporal",
+    "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/",
+    "https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/",
+    "https://docs.temporal.io/workflows",
+    "https://docs.temporal.io/activities",
+    "https://docs.temporal.io/workers",
+    "https://docs.temporal.io/workflow-execution",
+    "https://docs.temporal.io/develop/go/activities/timeouts#activity-heartbeats",
+    "https://github.com/dolthub/dolt",
+  ]) {
+    assert.ok(article.includes(link), `missing source link: ${link}`);
+  }
+
+  assert.match(article, /memory outside the chat/i);
+  assert.match(article, /invited me to become[^.]*maintainer/i);
+  assert.match(article, /the city builds and repairs the software that operates the city/i);
+  assert.match(article, /Nondeterministic Idempotence/);
+  assert.match(article, /not a replacement for Temporal/i);
+  assert.match(article, /Steve described NDI[\s\S]{0,200}completely different machinery/i);
+  assert.ok(
+    article.indexOf("Sourcegraph offsite in Cabo") <
+      article.indexOf('<ConceptFigure kind="orchestrator" />'),
+    "the human opening must lead into the SDK map",
+  );
+  assert.match(article, /I remember[^.]*something along the lines of[^.]*big/i);
+  assert.match(
+    article,
+    /So the thing on the laptop at dinner really did become big/i,
+  );
+  assert.doesNotMatch(
+    article,
+    /remains of an agent orchestrator and the beginning of Beads/i,
+  );
+  assert.doesNotMatch(article, /September 2025/i);
+  assert.doesNotMatch(article, /building-a-software-factory-06032026/);
+});
+
+test("the narrative illustrations sit with the passages they illustrate", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+
+  // Each illustration earns its place by landing on a specific beat, so pin the
+  // beat rather than just the presence of the component.
+  const placements = [
+    {
+      figure: "<ConspiracyFigure />",
+      after: "a collection of clues spread across controller ticks",
+      before: "those clues become increasingly useless",
+    },
+    {
+      figure: "<CanaryFigure />",
+      after: "without producing an `OutcomeReady` envelope",
+      before: "rolled the integration back",
+    },
+  ];
+  for (const { figure, after, before } of placements) {
+    const at = article.indexOf(figure);
+    assert.ok(at > -1, `${figure} must be rendered`);
+    assert.ok(
+      article.indexOf(after) < at,
+      `${figure} must follow the passage it illustrates`,
+    );
+    assert.ok(
+      at < article.indexOf(before),
+      `${figure} must precede what comes after that passage`,
+    );
+  }
+
+  // Every illustration goes through the one shared component, so the blend and
+  // caption treatment cannot drift apart between figures.
+  for (const file of [OPENING_FIGURE, WORKSHOP_FIGURE, CONSPIRACY_FIGURE, CANARY_FIGURE]) {
+    const source = readFileSync(file, "utf8");
+    assert.match(source, /import Illustration from "\.\/Illustration\.astro"/);
+    assert.match(source, /<Illustration\b/);
+    assert.doesNotMatch(
+      source,
+      /mix-blend-mode|<style/,
+      `${file} must inherit the shared compositing treatment`,
+    );
+    const alt = source.match(/alt="([^"]+)"/);
+    assert.ok(alt && alt[1].length >= 80, `${file} needs descriptive alt text`);
+  }
+
+  for (const image of [
+    "img/reconstructing-the-procedure.png",
+    "img/canary-gate-stays-shut.png",
+  ]) {
+    assert.ok(
+      existsSync(path.join(ROOT, "src/components/temporal-agent-orchestration", image)),
+      `missing committed illustration: ${image}`,
+    );
+  }
+});
+
+test("the workshop illustration follows the metaphor and blends into both themes", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+  const workshop = readFileSync(WORKSHOP_FIGURE, "utf8");
+
+  assert.match(article, /import WorkshopFigure from "\.\/WorkshopFigure\.astro"/);
+  assert.match(article, /<WorkshopFigure \/>/);
+
+  // It illustrates the workshop metaphor, so it must follow the prose that sets
+  // that metaphor up and precede the technical acknowledgement diagram.
+  assert.ok(
+    article.indexOf("Temporal is the checklist recorder") <
+      article.indexOf("<WorkshopFigure />"),
+    "the illustration must follow the metaphor it illustrates",
+  );
+  assert.ok(
+    article.indexOf("<WorkshopFigure />") <
+      article.indexOf('<ConceptFigure kind="workshop" />'),
+    "the metaphor illustration must precede the technical acknowledgement diagram",
+  );
+
+  assert.ok(
+    existsSync(WORKSHOP_ILLUSTRATION),
+    `the committed illustration must exist at ${WORKSHOP_ILLUSTRATION}`,
+  );
+  assert.match(workshop, /import Illustration from "\.\/Illustration\.astro"/);
+  assert.match(workshop, /<Illustration\b/);
+  assert.doesNotMatch(workshop, /<svg/);
+
+  const alt = workshop.match(/alt="([^"]+)"/);
+  assert.ok(alt, "the illustration needs alt text");
+  assert.ok(alt[1].length >= 80, "alt text must describe the scene");
+  for (const concept of [/job board/i, /bench|worker/i, /checklist/i]) {
+    assert.match(alt[1], concept);
+  }
+
+  // Compositing is inherited from the shared Illustration component, so a figure
+  // must not redefine it locally and drift from the others.
+  assert.doesNotMatch(
+    workshop,
+    /mix-blend-mode|<style/,
+    "illustrations must inherit the shared compositing treatment",
+  );
+});
+
+test("the opening illustration is a committed generated image, accessible, and precedes the SDK map", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+  const page = readFileSync(PAGE, "utf8");
+  const opening = readFileSync(OPENING_FIGURE, "utf8");
+
+  assert.match(article, /import OpeningFigure from "\.\/OpeningFigure\.astro"/);
+  assert.match(article, /<OpeningFigure \/>/);
+  assert.ok(
+    article.indexOf("<OpeningFigure />") <
+      article.indexOf('<ConceptFigure kind="orchestrator" />'),
+    "the opening illustration must precede the technical SDK map",
+  );
+
+  // The narrative illustrations are generated rasters committed to the repo and
+  // served through Astro's asset pipeline, matching the approach used by the
+  // published illustrated essays. The technical diagrams stay inline SVG.
+  assert.match(opening, /import Illustration from "\.\/Illustration\.astro"/);
+  assert.match(opening, /import illustration from "\.\/img\/[\w-]+\.png"/);
+  assert.match(opening, /<Illustration\b/);
+  assert.match(opening, /src=\{illustration\}/);
+  assert.match(opening, /loading="eager"/, "the opening illustration is above the fold");
+  assert.ok(
+    existsSync(OPENING_ILLUSTRATION),
+    `the committed illustration must exist at ${OPENING_ILLUSTRATION}`,
+  );
+  assert.doesNotMatch(
+    opening,
+    /<svg/,
+    "the opening illustration must not reintroduce the rejected hand-authored SVG",
+  );
+
+  const alt = opening.match(/alt="([^"]+)"/);
+  assert.ok(alt, "the illustration needs alt text");
+  assert.ok(
+    alt[1].length >= 80,
+    "alt text must describe the scene, not just name it",
+  );
+  assert.match(alt[1], /terminal/i);
+  assert.match(alt[1], /dependency|task card/i);
+
+  assert.equal(
+    (article.match(/https:\/\/github\.com\/helloianneo\/ian-xiaohei-illustrations/g) ?? [])
+      .length,
+    1,
+    "the article must carry one bottom credit",
+  );
+  assert.match(article, /Ian 小黑 illustrations[^\n]*MIT/i);
+  assert.doesNotMatch(page, /An agent started\. The coordinator died\. Now what\?/);
+  assert.doesNotMatch(article, /\bthe coordinator\b/i);
+});
+
+test("the workshop model teaches the live OutcomeReady loop before implementation detail", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+  const figures = readFileSync(FIGURES, "utf8");
+
+  const teachingOrder = [
+    "canonical record for mutable work facts",
+    "Temporal owns durable procedure",
+    "Gas City is the workshop",
+    "Beads is the job board",
+    "agents are the workers",
+    "Temporal is the checklist recorder",
+    '<ConceptFigure kind="workshop" />',
+    "## What's running now",
+  ];
+  let previous = -1;
+  for (const marker of teachingOrder) {
+    const current = article.indexOf(marker);
+    assert.ok(current > previous, `${marker} must appear in teaching order`);
+    previous = current;
+  }
+
+  for (const marker of [
+    "Agents, formulas, and orders",
+    "Beads work record",
+    "Verified result",
+    "OutcomeReady outbox",
+    "Temporal Outcome Workflow",
+    "Mayor verifies evidence",
+    "Exact acknowledgement",
+    "Beads acknowledged receipt",
+  ]) {
+    assert.match(figures, new RegExp(marker.replaceAll("/", "\\/"), "i"));
+  }
+  assert.match(figures, /durable completed-result record awaiting acknowledgement/i);
+  assert.match(figures, /aria-label="OutcomeReady workshop flow"/);
+  // The live result path is enumerated end to end, from the terminal
+  // transition through to the acknowledgement receipt that closes it.
+  assert.match(article, /The live result path is:/);
+  for (const step of [
+    /Work reaches an end state in Beads/i,
+    /`OutcomeReady` outbox record is written against that work item/i,
+    /A stable Temporal Workflow starts for that result/i,
+    /waits durably and redelivers while acknowledgement is missing/i,
+    /Beads stores the exact acknowledgement receipt/i,
+  ]) {
+    assert.match(article, step);
+  }
+  // Only the paths Temporal owns get the same-transaction guarantee. Stating it
+  // unconditionally would claim full completion coverage with no reconciliation
+  // boundary, which the technical handoff lists under "claims not yet supported".
+  assert.match(
+    article,
+    /When Temporal closes the work itself, the close and the record are one transaction/i,
+  );
+  assert.match(article, /a reconciler notices the end state afterward/i);
+  assert.match(
+    article,
+    /reconciliation boundary, not a same-transaction guarantee/i,
+  );
+  assert.match(article, /Results remain pending until that final receipt exists/i);
+  // The scan covers terminal OR verified work; "finalized" reads narrower than
+  // the code, since "verified" deliberately leaves the source root open.
+  assert.match(
+    article,
+    /watchdog also scans for finished or verified work with no outcome/i,
+  );
+  assert.match(article, /watchdog[^.]*outside Temporal/i);
+  assert.match(
+    article,
+    /Temporal can't yet claim production work or start a coding agent/i,
+    "the live boundary must stay narrow enough to not read as a general rollout",
+  );
+  assert.match(article, /agent mutation remains in shadow mode/i);
+
+  assert.doesNotMatch(article, /\b[0-9a-f]{40}\b/i);
+  assert.doesNotMatch(
+    article,
+    /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i,
+  );
+  assert.doesNotMatch(article, /\b(?:dr|sjai|gc)-[a-z0-9.]+\b/i);
+  assert.doesNotMatch(article, /\boutcome-[a-f0-9]+\b|\bcycle-[0-9]+\b/i);
+  assert.doesNotMatch(article, /\/home\/|src\/|public\/|\.go#L/i);
 });
 
 test("the essay shows versioned pre-Temporal code excerpts with provenance", () => {
@@ -82,7 +447,7 @@ test("the essay shows versioned pre-Temporal code excerpts with provenance", () 
   assert.match(reader, /Versioned before code/);
   assert.match(reader, /sample\.sourceUrl/);
   assert.match(reader, /View original source/);
-  assert.match(reader, /These are selected excerpts, not standalone Go files/);
+  assert.match(reader, /These selected excerpts are abridged for reading/);
 });
 
 test("the essay embeds syntax-colored Go source with selectable explanations", () => {
@@ -97,6 +462,7 @@ test("the essay embeds syntax-colored Go source with selectable explanations", (
     "workflow.go",
     "activity.go",
     "command_agent_executor.go",
+    "outcome_workflow.go",
     "workers.go",
   ]) {
     assert.match(samples, new RegExp(filename.replaceAll(".", "\\.")));
@@ -131,6 +497,139 @@ test("the essay embeds syntax-colored Go source with selectable explanations", (
   assert.match(reader, /explanation\.hidden = explanation !== selected/);
   assert.match(reader, /href=\{sample\.rawPath\}/);
   assert.match(reader, /download=\{sample\.filename\}/);
+});
+
+test("the after-code reader distinguishes reviewed source from live promotion", () => {
+  const reader = readFileSync(READER, "utf8");
+  const samples = readFileSync(SAMPLES, "utf8");
+
+  // Provenance is described in prose, not pinned to commit hashes: the
+  // implementation repo has no public remote, so those hashes rendered as
+  // citations no reader could resolve. See the leakage guard at end of file.
+  assert.match(samples, /bounded bead-to-agent canary/i);
+  assert.match(samples, /promotionStatus:/);
+  assert.match(samples, /full-integration canary[^.]*failed/i);
+  assert.match(reader, /sample\.revision/);
+  assert.match(reader, /sample\.promotionStatus/);
+  assert.match(
+    reader,
+    /Source review and production activation\s+have separate evidence/,
+  );
+});
+
+test("the article keeps the failure, the repair, and the containment boundary", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+  const reader = readFileSync(READER, "utf8");
+  const samples = readFileSync(SAMPLES, "utf8");
+
+  // The article is a talk, not an incident report, so per-canary chronology
+  // (counts, cycles, rollback timers, finalization receipts) lives with the
+  // code samples and the engineering record rather than the reader-facing
+  // prose. What must survive here is the shape of the evidence: the promotion
+  // gate FAILED, it was repaired, the rerun succeeded, and the live boundary is
+  // stated narrowly enough that nobody reads it as a general rollout.
+  const articleStages = ["failed promotion gate", "repaired the delivery path"];
+  let previous = -1;
+  for (const stage of articleStages) {
+    const current = article.toLowerCase().indexOf(stage);
+    assert.ok(current > previous, `${stage} must appear in evidence order`);
+    previous = current;
+  }
+
+  // The per-canary chronology moved out of the prose but must still be
+  // recoverable: it lives in the code samples' evidence trail, where a reader
+  // who wants the receipts can follow them without the talk carrying them.
+  const stages = [
+    "Failed promotion gate",
+    "Notifier repair",
+    "Successful bounded canary",
+    "Nine outcomes acknowledged",
+    "Returned to shadow",
+  ];
+
+  // The four findings from the failed gate. The technical handoff is explicit
+  // that this failure is part of the result and may not be softened.
+  assert.match(article, /contended on a shared mail store/i);
+  assert.match(article, /named a Workflow that did not exist/i);
+  assert.match(article, /formula step with its still-running source task/i);
+  assert.match(
+    article,
+    /legitimate completion paths closed real work without producing an `OutcomeReady` envelope at all/i,
+  );
+
+  assert.match(
+    article,
+    /durable delivery and acknowledgement of finished results/i,
+  );
+  assert.match(
+    article,
+    /Temporal can't yet claim production work or start a coding agent/i,
+    "the live boundary must stay narrow enough to not read as a general rollout",
+  );
+  assert.match(article, /agent mutation remains in shadow mode/i);
+  assert.match(
+    article,
+    /It does not make external effects exactly once/i,
+    "the article must not imply Activities run exactly once",
+  );
+  assert.doesNotMatch(article, /general production activation remains off/i);
+  assert.doesNotMatch(article, /General activation still requires separate approval/i);
+  assert.doesNotMatch(
+    article,
+    /Production activation still requires[^.]*structured inspection/i,
+  );
+  assert.doesNotMatch(
+    article,
+    /temporal-ops/i,
+    "the essay no longer describes the undeployed operator CLI; if it returns, it must be labelled undeployed",
+  );
+  assert.doesNotMatch(article, /c7343188740c9d5f9ada2aa73ab9ef339d1dd927/);
+  assert.doesNotMatch(article, /history-limit=0/);
+  assert.doesNotMatch(article, /reject closed exact runs/i);
+  assert.doesNotMatch(article, /two P2 findings/i);
+  assert.doesNotMatch(article, /2c35746ab1b520a1d949cd2b73891a8500510332/);
+  assert.doesNotMatch(article, /test-first review and repair cycle continues/i);
+  assert.doesNotMatch(
+    article,
+    /remaining repair work[\s\S]*canary must run again before activation/i,
+  );
+
+  assert.match(samples, /evidenceTrail\?:/);
+  for (const stage of stages) {
+    assert.match(samples, new RegExp(stage));
+  }
+  assert.match(samples, /Bounded finalization/);
+  const finalStages = [
+    "Bounded finalization",
+    "Exact-five producer canary",
+    "Atomic finalization",
+    "Continuous OutcomeReady activation",
+    "Production receipts verified",
+    "Postconditions held",
+  ];
+  previous = -1;
+  for (const stage of finalStages) {
+    const current = samples.indexOf(stage);
+    assert.ok(current > previous, `${stage} must appear in evidence order`);
+    previous = current;
+  }
+  // Each stage must still carry its substance. These assertions used to pin the
+  // bead IDs, outcome IDs, PID and commit hashes instead, which is how the
+  // evidence trail leaked all of them onto the rendered page while the prose
+  // stayed clean. Assert what the stage SAYS, never the identifiers it names.
+  assert.match(samples, /atomic receipt while preserving its acknowledged outbox/i);
+  assert.match(samples, /five authorized transitions/i);
+  assert.match(samples, /without creating another outcome generation/i);
+  assert.match(samples, /agent mutation still in shadow/i);
+  assert.match(
+    samples,
+    /acknowledged on their first cycle under a single coordinator fence/i,
+  );
+  assert.match(samples, /durably excluded as a non-outcome/i);
+  assert.match(samples, /all-store health surface stayed empty/i);
+  assert.match(reader, /sample\.evidenceTrail/);
+  assert.match(reader, /aria-label="Canary evidence trail"/);
+  assert.match(reader, /annotated-code__evidence/);
 });
 
 test("selected code explanations open in a right-hand inspector on wide screens", () => {
@@ -215,16 +714,310 @@ test("the essay teaches the orchestrator, ownership boundary, and recovery path 
   const figures = readFileSync(FIGURES, "utf8");
 
   assert.match(article, /import ConceptFigure from "\.\/ConceptFigure\.astro"/);
-  assert.match(article, /<ConceptFigure kind="orchestrator"/);
-  assert.match(article, /<ConceptFigure kind="ownership"/);
-  assert.match(article, /<ConceptFigure kind="recovery"/);
+  const readingOrder = [
+    "siblings",
+    "orchestrator",
+    "ownership",
+    "handoff",
+    "recovery",
+    "workshop",
+    "boundary",
+  ];
+  let seen = -1;
+  for (const kind of readingOrder) {
+    const at = article.indexOf(`<ConceptFigure kind="${kind}"`);
+    assert.ok(at > -1, `<ConceptFigure kind="${kind}" /> must be rendered`);
+    assert.ok(at > seen, `${kind} must appear in reading order`);
+    seen = at;
+  }
 
-  assert.match(figures, /The existing multi-agent orchestrator/);
-  assert.match(figures, /Who owns what after the move/);
+  for (const primitive of [
+    /\*\*Beads\*\* records the work/,
+    /\*\*Rigs\*\* isolate projects/,
+    /\*\*Formulas\*\* describe linked steps/,
+    /\*\*Sweeps and health patrol\*\* inspect stale claims/,
+  ]) {
+    assert.match(article, primitive);
+  }
+  assert.match(
+    article,
+    /Each project has a Project Lead responsible for evidence, gates, and handoffs\./,
+  );
+  assert.match(figures, /Gas City SDK: one operating system for agent work/);
+  for (const component of [
+    "Rigs",
+    "Agent templates",
+    "Named sessions",
+    "Formula",
+    "Work record",
+    "Dispatchers and hooks",
+    "Session pools",
+    "Agent sessions",
+    "reviews and gates",
+    "Repair + reapers",
+  ]) {
+    assert.match(figures, new RegExp(component.replace("+", "\\+")));
+  }
+  const coreMap = figures.slice(
+    figures.indexOf('kind === "orchestrator"'),
+    figures.indexOf('kind === "workshop"'),
+  );
+  assert.doesNotMatch(coreMap, /Project Leads?|Mayor/);
+  assert.match(figures, /aria-label="Gas City SDK components"/);
+  assert.match(figures, /Who owns what/);
   assert.match(figures, /One agent session survives Worker loss/);
-  assert.match(figures, /<figcaption>/);
+  // Every diagram carries the same accessibility scaffolding, so assert parity
+  // against the number of diagrams rather than a number that goes stale each
+  // time one is added.
+  const diagramCount = (figures.match(/kind === "/g) ?? []).length;
+  assert.ok(diagramCount >= 7, `expected at least 7 diagrams, found ${diagramCount}`);
+  for (const [what, pattern] of [
+    ["figcaption", /<figcaption class="figure-caption">/g],
+    ["svg", /<svg/g],
+    ["title", /<title id=/g],
+    ["desc", /<desc id=/g],
+    ["viewBox", /viewBox=/g],
+  ]) {
+    assert.equal(
+      (figures.match(pattern) ?? []).length,
+      diagramCount,
+      `every diagram needs exactly one ${what}`,
+    );
+  }
+  assert.doesNotMatch(figures, /<figcaption>/);
   assert.match(figures, /aria-labelledby=\{titleId\}/);
+  assert.match(figures, /currentColor/);
+  assert.match(figures, /var\(--color-accent\)/);
+  assert.match(figures, /concept-figure__svg/);
   assert.match(figures, /@media \(max-width: 720px\)/);
+  assert.match(figures, /@media \(max-width: 720px\)[\s\S]*\.concept-figure__fallback/);
   assert.match(figures, /min-width: 0/);
   assert.doesNotMatch(figures, /overflow-x: auto/);
+  assert.doesNotMatch(figures, /<div class="(?:orchestrator|ownership|recovery)-map/);
+});
+
+test("every figure uses the shared, theme-aware semantic caption treatment", () => {
+  const illustration = readFileSync(ILLUSTRATION, "utf8");
+  const figures = readFileSync(FIGURES, "utf8");
+  const tokens = readFileSync(TOKENS, "utf8");
+
+  // The caption contract is shared by every figure, raster or vector. Rasters
+  // get it from the one Illustration component; the SVG diagrams define it.
+  for (const source of [illustration, figures]) {
+    assert.match(source, /<figcaption class="figure-caption">/);
+    assert.match(
+      source,
+      /\.figure-caption\s*\{[\s\S]*font-size:\s*(?:var\(--step--1\)|0\.9rem)/,
+    );
+    assert.match(source, /\.figure-caption\s*\{[\s\S]*color:\s*var\(--color-text-(?:muted|secondary)\)/);
+    assert.match(source, /\.figure-caption\s*\{[\s\S]*line-height:\s*(?:1\.[34]|var\(--leading-tight\))/);
+    assert.match(source, /\.figure-caption\s*\{[\s\S]*max-width:\s*var\(--measure\)/);
+    assert.match(source, /\.figure-caption\s*\{[\s\S]*margin-(?:block-start|top):/);
+    assert.match(source, /\.figure-caption\s*\{[\s\S]*text-align:/);
+  }
+
+  // The inline SVG diagrams follow the theme through currentColor. The raster
+  // illustration cannot, so it is composited into the page instead: multiply
+  // drops its white paper in the light theme, and invert + screen drops the
+  // paper and lifts the ink in the dark theme. Neither may hardcode a colour.
+  assert.match(figures, /currentColor/);
+  for (const source of [illustration, figures]) {
+    assert.doesNotMatch(source, /#(?:fff(?:fff)?|000(?:000)?)(?:\b|;)/i);
+  }
+  const shared = readFileSync(ILLUSTRATION, "utf8");
+  assert.match(shared, /mix-blend-mode:\s*multiply/);
+  assert.match(
+    shared,
+    /\[data-theme="dark"\][\s\S]*filter:\s*invert\(1\)\s*hue-rotate\(180deg\)/,
+    "the dark theme must invert the illustration so its ink stays visible",
+  );
+  assert.match(
+    shared,
+    /\[data-theme="dark"\][\s\S]*mix-blend-mode:\s*screen/,
+    "the dark theme must screen away the illustration's baked white paper",
+  );
+  assert.doesNotMatch(
+    shared,
+    /\.illustration__image\s*\{[^}]*background:/,
+    "the illustration must blend into the page, not sit on its own plate",
+  );
+  assert.match(shared, /<figcaption class="figure-caption">/);
+  assert.match(shared, /widths=\{/, "illustrations need responsive widths");
+  assert.match(shared, /sizes="/, "illustrations need a sizes hint");
+
+  assert.match(tokens, /\[data-theme="dark"\]/);
+  assert.match(tokens, /\[data-theme="dark"\][\s\S]*--color-bg:/);
+  assert.match(tokens, /\[data-theme="dark"\][\s\S]*--color-text:/);
+});
+
+test("the SDK diagram gives every long label a measured box and accessible contrast", () => {
+  const figures = readFileSync(FIGURES, "utf8");
+  const coreMap = figures.slice(
+    figures.indexOf('kind === "orchestrator"'),
+    figures.indexOf('kind === "workshop"'),
+  );
+
+  for (const label of ["Route", "Run", "Verify + record", "Repair + reapers"]) {
+    assert.match(
+      coreMap,
+      new RegExp(`class="svg-labelled-box" data-label="${label.replaceAll("+", "\\+")}"`),
+    );
+  }
+  assert.match(coreMap, /class="svg-label svg-label--wrapped"/);
+  assert.match(figures, /\.svg-label\s*\{[\s\S]*font-size:\s*18px/);
+  assert.match(
+    figures,
+    /\.svg-eyebrow\s*\{[^}]*fill:\s*var\(--color-text-secondary\)/,
+  );
+  assert.doesNotMatch(
+    figures,
+    /\.svg-eyebrow\s*\{[^}]*fill:\s*var\(--color-accent\)/,
+  );
+});
+
+test("the essay ends with builder guidance and the proposed pack boundary", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+
+  assert.match(article, /could be a Gas City pack/i);
+  for (const item of [
+    "Worker configuration",
+    "Workflow and Activity contracts",
+    "Beads adapters",
+    "generation fences",
+    "outcome-delivery tools",
+    "canary and rollback gates",
+    "diagnostics, and user runbooks",
+  ]) {
+    assert.match(article, new RegExp(item));
+  }
+  assert.match(
+    article,
+    /not something I needed to wire in as a core dependency/i,
+    "the pack must stay optional rather than a Gas City core dependency",
+  );
+  assert.match(article, /Use NDI where any route to an acceptable outcome is valid/i);
+  assert.match(
+    article,
+    /Use deterministic durable replay where the procedure is part of the promise/i,
+  );
+  assert.match(
+    article,
+    /A single multi-agent system can \(and arguably, should\) use both/i,
+  );
+});
+
+// The reader-facing surface must never carry internal provenance: commit hashes,
+// bead IDs, outcome/cycle/mail IDs, or host process details. This guard covers
+// every input that reaches the rendered page, not just Article.mdx — the evidence
+// trail in the code-samples data leaked all of the above while the prose was clean.
+test("no internal identifiers reach the reader-facing surface", () => {
+  // The one hash allowed to appear: a real public gastownhall/gascity commit that
+  // the "before" excerpts cite and link to, so a reader can actually resolve it.
+  const PUBLIC_UPSTREAM_COMMIT = "b78058917bc65846db89e1c3b25dc17269822483";
+
+  const forbidden = [
+    { name: "40-char commit hash", re: /\b[0-9a-f]{40}\b/g },
+    { name: "bead ID", re: /\b(?:dr|sjai|gc)-[0-9a-z]{3,}(?:\.[0-9]+)?\b/g },
+    { name: "outcome ID", re: /\boutcome-[0-9a-f]{32}\b/g },
+    { name: "cycle ID", re: /\bcycle-[0-9]{3,}\b/g },
+    { name: "process detail", re: /\bPID\s+[0-9]{4,}|\bNRestarts=/g },
+  ];
+
+  const codeDir = path.join(ROOT, "public/temporal-agent-orchestration/code");
+  const goSamples = existsSync(codeDir)
+    ? readdirSync(codeDir, { recursive: true, withFileTypes: true })
+        .filter((e) => e.isFile() && e.name.endsWith(".go"))
+        .map((e) => path.join(e.parentPath ?? e.path, e.name))
+    : [];
+  // The built page is the authoritative surface; checked only when a build exists
+  // so this still runs standalone, and it always runs in CI where build precedes test.
+  const builtPage = path.join(
+    ROOT,
+    "dist/temporal-agent-orchestration/index.html",
+  );
+
+  const surfaces = [
+    ARTICLE,
+    FIGURES,
+    READER,
+    SAMPLES,
+    CANARY_FIGURE,
+    CONSPIRACY_FIGURE,
+    OPENING_FIGURE,
+    WORKSHOP_FIGURE,
+    ILLUSTRATION,
+    ...goSamples,
+    ...(existsSync(builtPage) ? [builtPage] : []),
+  ];
+
+  const findings = [];
+  for (const file of surfaces) {
+    const text = readFileSync(file, "utf8");
+    for (const { name, re } of forbidden) {
+      for (const hit of text.match(re) ?? []) {
+        if (hit === PUBLIC_UPSTREAM_COMMIT) continue;
+        findings.push(`${path.relative(ROOT, file)}: ${name} "${hit}"`);
+      }
+    }
+  }
+  assert.deepEqual(
+    [...new Set(findings)],
+    [],
+    "internal identifiers must not reach the reader",
+  );
+});
+
+// The before/after code is the article's evidence, so the annotations must stay
+// pinned to the code they describe. Section ranges are line numbers: rewriting an
+// excerpt silently slides every annotation onto the wrong lines, and nothing else
+// in the suite would notice.
+test("before-code excerpts are honestly labelled and fully annotated", () => {
+  const samples = readFileSync(SAMPLES, "utf8");
+  const beforeDir = path.join(
+    ROOT,
+    "public/temporal-agent-orchestration/code/before",
+  );
+
+  for (const [, filename, body] of samples.matchAll(
+    /filename:\s*"([^"]+\.go)"[\s\S]*?sections:\s*\[([\s\S]*?)\n {6}\],/g,
+  )) {
+    const file = path.join(beforeDir, filename);
+    if (!existsSync(file)) continue;
+    const text = readFileSync(file, "utf8");
+    const lineCount = text.split("\n").length - 1;
+
+    // An abridged excerpt must say so. "Selected production excerpt" once sat
+    // atop code with substituted arguments and renamed locals.
+    assert.match(
+      text,
+      /^\/\/ Abridged from cmd\/gc\/\S+ for reading; not the exact source\./m,
+      `${filename} must declare that it is abridged, not exact`,
+    );
+    assert.match(
+      text,
+      /every omission\s+\/\/ is marked|and every omission is marked/,
+      `${filename} must promise that omissions are marked`,
+    );
+
+    const ranges = [...body.matchAll(/start:\s*(\d+),\s*end:\s*(\d+)/g)].map(
+      (m) => [Number(m[1]), Number(m[2])],
+    );
+    assert.ok(ranges.length > 0, `${filename} must have annotated sections`);
+
+    let previousEnd = 0;
+    for (const [start, end] of ranges) {
+      assert.equal(
+        start,
+        previousEnd + 1,
+        `${filename}: sections must tile without gaps or overlaps`,
+      );
+      assert.ok(end >= start, `${filename}: section end must follow its start`);
+      previousEnd = end;
+    }
+    assert.equal(
+      previousEnd,
+      lineCount,
+      `${filename}: sections must cover the file through its last line`,
+    );
+  }
 });

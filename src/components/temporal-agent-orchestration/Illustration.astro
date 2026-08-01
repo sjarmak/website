@@ -1,0 +1,82 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** The opening illustration is above the fold; later ones can wait. */
+  loading?: "eager" | "lazy";
+}
+
+const { src, alt, loading = "lazy" } = Astro.props;
+---
+
+<figure class="illustration">
+  <Image
+    src={src}
+    alt={alt}
+    widths={[640, 960, 1360, src.width]}
+    sizes="(max-width: 720px) 100vw, min(100vw, 68rem)"
+    loading={loading}
+    class="illustration__image"
+  />
+
+  <figcaption class="figure-caption">
+    <slot />
+  </figcaption>
+</figure>
+
+<style>
+  .illustration {
+    width: min(100%, 68rem);
+    margin: clamp(var(--space-l), 5vw, var(--space-2xl)) auto;
+  }
+
+  /*
+    The narrative illustrations are rasters with a baked white background. Rather
+    than sitting on the page as bright plates, they are composited into whatever
+    the theme background is.
+
+    Light: multiply leaves white untouched (white x backdrop = backdrop), so the
+    paper drops out and only the ink prints onto the page.
+
+    Dark: invert flips the sheet to light-ink-on-black and the hue rotation puts
+    the red/orange/blue accents back near their original hues; screen then drops
+    the now-black paper (black + backdrop = backdrop).
+  */
+  .illustration__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+  }
+
+  :global([data-theme="dark"]) .illustration__image {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-contrast: more) {
+    .illustration__image,
+    :global([data-theme="dark"]) .illustration__image {
+      mix-blend-mode: normal;
+    }
+  }
+
+  .figure-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    margin-inline: auto;
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .illustration {
+      margin-block: var(--space-l);
+    }
+  }
+</style>

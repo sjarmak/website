@@ -1,61 +1,214 @@
 ---
 interface Props {
-  kind: "orchestrator" | "ownership" | "recovery";
+  kind:
+    | "siblings"
+    | "orchestrator"
+    | "ownership"
+    | "handoff"
+    | "recovery"
+    | "workshop"
+    | "boundary";
 }
 
 const { kind } = Astro.props;
 const titleId = `concept-figure-${kind}`;
+const svgTitleId = `${titleId}-svg-title`;
+const svgDescId = `${titleId}-svg-desc`;
 ---
 
 {
   kind === "orchestrator" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">01 / Existing system</p>
-        <h3 id={titleId}>The existing multi-agent orchestrator</h3>
+        <p class="concept-figure__index">02 / Gas City SDK</p>
+        <h3 id={titleId}>Gas City SDK: one operating system for agent work</h3>
       </header>
 
-      <div class="orchestrator-map" aria-hidden="true">
-        <div class="orchestrator-map__stage">
-          <span class="concept-figure__eyebrow">Describe</span>
-          <strong>Formula</strong>
-          <small>steps + dependencies</small>
-        </div>
-        <span class="concept-figure__arrow">→</span>
-        <div class="orchestrator-map__stage orchestrator-map__ledger">
-          <span class="concept-figure__eyebrow">Remember facts</span>
-          <strong>Work ledger</strong>
-          <small>ready · claimed · complete</small>
-        </div>
-        <span class="concept-figure__arrow">→</span>
-        <div class="orchestrator-map__stage">
-          <span class="concept-figure__eyebrow">Route</span>
-          <strong>Dispatcher</strong>
-          <small>find eligible work</small>
-        </div>
-        <span class="concept-figure__arrow concept-figure__arrow--fan">⇢</span>
-        <div class="orchestrator-map__agents">
-          <span>agent session A</span>
-          <span>agent session B</span>
-          <span>agent session C</span>
-        </div>
-        <span class="concept-figure__arrow concept-figure__arrow--join">⇢</span>
-        <div class="orchestrator-map__stage">
-          <span class="concept-figure__eyebrow">Verify + record</span>
-          <strong>Review and receipt</strong>
-          <small>artifacts · tests · outcome</small>
-        </div>
-        <div class="orchestrator-map__repair">
-          <span>repair scans</span>
-          <span class="orchestrator-map__repair-line"></span>
-          <span>infer a missing handoff from surviving facts</span>
-        </div>
-      </div>
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 620"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Gas City SDK component map</title>
+        <desc id={svgDescId}>
+          Rigs, agent templates, and named sessions feed a flow from formulas
+          through the Beads work record, dispatch, session pools, and receipts.
+          Repair and reaper controls inspect the entire flow.
+        </desc>
 
-      <figcaption>
-        The ledger preserves task facts. Dispatch, agent sessions, and repair
-        loops collectively advance the procedure, so a crash can leave the next
-        safe action ambiguous.
+        <g class="svg-primitives">
+          <rect class="svg-box" x="60" y="50" width="250" height="88" rx="10" />
+          <text class="svg-eyebrow" x="82" y="82">Isolate projects</text>
+          <text class="svg-label" x="82" y="112">Rigs</text>
+          <rect class="svg-box" x="425" y="50" width="250" height="88" rx="10" />
+          <text class="svg-eyebrow" x="447" y="82">Define worker roles</text>
+          <text class="svg-label" x="447" y="112">Agent templates</text>
+          <rect class="svg-box" x="790" y="50" width="250" height="88" rx="10" />
+          <text class="svg-eyebrow" x="812" y="82">Address workers</text>
+          <text class="svg-label" x="812" y="112">Named sessions</text>
+          <path class="svg-link" d="M310 94 H425 M675 94 H790" />
+        </g>
+
+        <g class="svg-pipeline">
+          <g class="svg-labelled-box" data-label="Describe">
+            <rect class="svg-box" x="20" y="225" width="190" height="110" rx="10" />
+            <text class="svg-eyebrow" x="42" y="258">Describe</text>
+            <text class="svg-label" x="42" y="295">Formula</text>
+          </g>
+          <g class="svg-labelled-box" data-label="Remember facts">
+            <rect class="svg-box" x="235" y="225" width="190" height="110" rx="10" />
+            <text class="svg-eyebrow" x="257" y="258">Remember facts</text>
+            <text class="svg-label" x="257" y="293">Work record</text>
+            <text class="svg-small" x="257" y="317">Beads</text>
+          </g>
+          <g class="svg-labelled-box" data-label="Route">
+            <rect class="svg-box" x="450" y="225" width="190" height="110" rx="10" />
+            <text class="svg-eyebrow" x="472" y="258">Route</text>
+            <text class="svg-label svg-label--wrapped" x="472" y="288">
+              <tspan x="472" dy="0">Dispatcher +</tspan>
+              <tspan x="472" dy="23">hooks</tspan>
+            </text>
+          </g>
+          <g class="svg-labelled-box" data-label="Run">
+            <rect class="svg-box" x="665" y="225" width="190" height="110" rx="10" />
+            <text class="svg-eyebrow" x="687" y="258">Run</text>
+            <text class="svg-label" x="687" y="293">Session pools</text>
+            <text class="svg-small" x="687" y="317">named sessions</text>
+          </g>
+          <g class="svg-labelled-box" data-label="Verify + record">
+            <rect class="svg-box" x="880" y="225" width="190" height="110" rx="10" />
+            <text class="svg-eyebrow" x="902" y="258">Verify + record</text>
+            <text class="svg-label svg-label--wrapped" x="902" y="288">
+              <tspan x="902" dy="0">Review +</tspan>
+              <tspan x="902" dy="23">receipts</tspan>
+            </text>
+          </g>
+          <path class="svg-link" d="M210 280 H235 M425 280 H450 M640 280 H665 M855 280 H880" />
+        </g>
+
+        <g class="svg-repair">
+          <path class="svg-link svg-link--dashed" d="M115 385 V420 H985 V385" />
+          <g class="svg-labelled-box" data-label="Repair + reapers">
+            <rect class="svg-box" x="300" y="455" width="500" height="100" rx="10" />
+            <text class="svg-label" x="328" y="495">Repair + reapers</text>
+            <text class="svg-small" x="328" y="526">stale claims · sessions · branches · handoffs</text>
+          </g>
+        </g>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Gas City SDK components">
+        <li>Rigs isolate repositories and their agent worker pools.</li>
+        <li>Agent templates define generic worker roles.</li>
+        <li>Named sessions give running workers stable addresses.</li>
+        <li>Formulas describe steps and dependencies in the Beads work record.</li>
+        <li>Dispatchers and hooks claim eligible work and wake session pools.</li>
+        <li>Agent sessions execute work, then reviews and gates record outcomes.</li>
+        <li>Repair and reaper controls inspect stale claims, sessions, branches, and handoffs.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Gas City connects durable work facts, execution, evidence, and repair.
+        Packs and installations can add their own coordinating roles around it.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "workshop" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">06 / Live result loop</p>
+        <h3 id={titleId}>How finished work reaches an exact acknowledgement</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1120 640"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>OutcomeReady workshop flow</title>
+        <desc id={svgDescId}>
+          Agents, formulas, and orders write canonical work facts to the
+          Beads work record. A verified result enters an OutcomeReady outbox, a
+          durable completed-result record awaiting acknowledgement. A Temporal
+          Outcome Workflow delivers and redelivers it until the mayor verifies
+          evidence, records an exact acknowledgement, and Beads stores the
+          acknowledged receipt.
+        </desc>
+
+        <g class="svg-flow">
+          <rect class="svg-box" x="31" y="65" width="232" height="130" rx="10" />
+          <text class="svg-label" x="49" y="120">Agents, formulas,</text>
+          <text class="svg-label" x="49" y="147">and orders</text>
+
+          <rect class="svg-box svg-box--accent" x="313" y="65" width="219" height="130" rx="10" />
+          <text class="svg-label" x="331" y="123">Beads work record</text>
+          <text class="svg-small" x="331" y="153">canonical work record</text>
+
+          <rect class="svg-box" x="582" y="65" width="221" height="130" rx="10" />
+          <text class="svg-label" x="600" y="123">Verified result</text>
+          <text class="svg-small" x="600" y="153">tests + evidence agree</text>
+
+          <rect class="svg-box" x="853" y="65" width="236" height="130" rx="10" />
+          <text class="svg-label svg-label--wrapped" x="871" y="112">
+            <tspan x="871" dy="0">OutcomeReady</tspan>
+            <tspan x="871" dy="23">outbox</tspan>
+          </text>
+          <text class="svg-small" x="871" y="164">pending acknowledgement</text>
+
+          <path class="svg-link" d="M263 130 H313 M532 130 H582 M803 130 H853" />
+
+          <rect class="svg-box svg-box--accent" x="853" y="300" width="236" height="130" rx="10" />
+          <text class="svg-label" x="871" y="355">Temporal Outcome</text>
+          <text class="svg-label" x="871" y="382">Workflow</text>
+
+          <rect class="svg-box" x="582" y="300" width="221" height="130" rx="10" />
+          <text class="svg-label svg-label--wrapped" x="600" y="340">
+            <tspan x="600" dy="0">Mayor verifies</tspan>
+            <tspan x="600" dy="23">evidence</tspan>
+          </text>
+          <text class="svg-small svg-small--wrapped" x="600" y="392">
+            <tspan x="600" dy="0">human handoff</tspan>
+            <tspan x="600" dy="19">remains visible</tspan>
+          </text>
+
+          <rect class="svg-box" x="313" y="300" width="219" height="130" rx="10" />
+          <text class="svg-label svg-label--wrapped" x="331" y="340">
+            <tspan x="331" dy="0">Exact</tspan>
+            <tspan x="331" dy="23">acknowledgement</tspan>
+          </text>
+          <text class="svg-small svg-small--wrapped" x="331" y="392">
+            <tspan x="331" dy="0">generation +</tspan>
+            <tspan x="331" dy="19">session fence</tspan>
+          </text>
+
+          <rect class="svg-box" x="31" y="300" width="232" height="130" rx="10" />
+          <text class="svg-label" x="49" y="355">Beads acknowledged</text>
+          <text class="svg-label" x="49" y="382">receipt</text>
+
+          <path class="svg-link" d="M971 195 V300 M853 365 H803 M582 365 H532 M313 365 H263" />
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M971 430 V515 H692 V430" />
+          <text class="svg-small" x="671" y="548">wait durably · redeliver while pending</text>
+        </g>
+      </svg>
+
+      <ol class="concept-figure__fallback" aria-label="OutcomeReady workshop flow">
+        <li>Agents, formulas, and orders update work.</li>
+        <li>Beads stores the canonical work record.</li>
+        <li>A verified result is ready for delivery.</li>
+        <li>The OutcomeReady outbox stores a durable completed-result record awaiting acknowledgement.</li>
+        <li>The Temporal Outcome Workflow delivers, waits durably, and redelivers while pending.</li>
+        <li>The current mayor verifies evidence.</li>
+        <li>An exact acknowledgement binds the result generation and agent session.</li>
+        <li>The Beads acknowledged receipt becomes canonical.</li>
+      </ol>
+
+      <figcaption class="figure-caption">
+        Beads records what happened to the work. Temporal records the procedure
+        that keeps a finished result pending until someone acknowledges it.
       </figcaption>
     </figure>
   )
@@ -65,59 +218,54 @@ const titleId = `concept-figure-${kind}`;
   kind === "ownership" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">02 / New boundary</p>
-        <h3 id={titleId}>Who owns what after the move</h3>
+        <p class="concept-figure__index">03 / New boundary</p>
+        <h3 id={titleId}>Who owns what</h3>
       </header>
 
-      <div class="ownership-map">
-        <section>
-          <div class="ownership-map__owner">
-            <span class="concept-figure__eyebrow">Application record</span>
-            <strong>Work ledger</strong>
-          </div>
-          <p>Mutable task facts, claims, dependencies, artifacts, and outcomes</p>
-          <ul aria-label="Work ledger examples">
-            <li>ready</li>
-            <li>generation</li>
-            <li>receipt</li>
-          </ul>
-        </section>
-        <section class="ownership-map__temporal">
-          <div class="ownership-map__owner">
-            <span class="concept-figure__eyebrow">Durable procedure</span>
-            <strong>Temporal Workflow</strong>
-          </div>
-          <p>Deterministic decisions, waits, retries, cancellation, and progress</p>
-          <ul aria-label="Temporal Workflow examples">
-            <li>Event History</li>
-            <li>timers</li>
-            <li>signals</li>
-          </ul>
-        </section>
-        <section>
-          <div class="ownership-map__owner">
-            <span class="concept-figure__eyebrow">Nondeterministic work</span>
-            <strong>Temporal Activities</strong>
-          </div>
-          <p>Ledger I/O, agent processes, tests, reviews, and external calls</p>
-          <ul aria-label="Temporal Activity examples">
-            <li>heartbeat</li>
-            <li>fence</li>
-            <li>idempotency</li>
-          </ul>
-        </section>
-      </div>
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1000 440"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Ownership after the Temporal integration</title>
+        <desc id={svgDescId}>
+          The Beads work record owns mutable task facts, the Temporal Workflow owns
+          durable procedure, and Temporal Activities contain nondeterministic
+          work and external calls.
+        </desc>
+        <rect class="svg-box" x="45" y="70" width="270" height="245" rx="10" />
+        <text class="svg-eyebrow" x="70" y="110">Application record</text>
+        <text class="svg-label" x="70" y="145">Work record: Beads</text>
+        <text class="svg-small" x="70" y="188">task facts · claims</text>
+        <text class="svg-small" x="70" y="218">dependencies · artifacts</text>
+        <text class="svg-small" x="70" y="248">outcomes · receipts</text>
 
-      <p class="ownership-map__service">
-        <span>Temporal service</span>
-        persists Workflow Event History and coordinates Task Queues. Workers can
-        disappear without taking the recorded procedure with them.
-      </p>
+        <rect class="svg-box svg-box--accent" x="365" y="70" width="270" height="245" rx="10" />
+        <text class="svg-eyebrow" x="390" y="110">Durable procedure</text>
+        <text class="svg-label" x="390" y="145">Temporal Workflow</text>
+        <text class="svg-small" x="390" y="188">Event History · waits</text>
+        <text class="svg-small" x="390" y="218">retries · cancellation</text>
+        <text class="svg-small" x="390" y="248">signals · progress</text>
 
-      <figcaption>
-        The work ledger remains the source for task facts. Temporal gives the
-        procedure a durable owner and routes side effects through retryable
-        Activities.
+        <rect class="svg-box" x="685" y="70" width="270" height="245" rx="10" />
+        <text class="svg-eyebrow" x="710" y="110">Nondeterministic work</text>
+        <text class="svg-label" x="710" y="145">Temporal Activities</text>
+        <text class="svg-small" x="710" y="188">agent processes · tests</text>
+        <text class="svg-small" x="710" y="218">reviews · external calls</text>
+        <text class="svg-small" x="710" y="248">heartbeats · fences</text>
+        <path class="svg-link" d="M315 192 H365 M635 192 H685" />
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Ownership boundaries">
+        <li>The Beads work record owns mutable task facts, claims, dependencies, artifacts, outcomes, and receipts.</li>
+        <li>The Temporal Workflow owns Event History, deterministic decisions, waits, retries, cancellation, signals, and progress.</li>
+        <li>Temporal Activities contain agent processes, tests, reviews, external calls, heartbeats, and fences.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Beads remains the source for task facts. Temporal gives the
+        procedure a durable owner and routes side effects through Activities.
       </figcaption>
     </figure>
   )
@@ -127,50 +275,251 @@ const titleId = `concept-figure-${kind}`;
   kind === "recovery" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">03 / Recovery invariant</p>
+        <p class="concept-figure__index">05 / Recovery invariant</p>
         <h3 id={titleId}>One agent session survives Worker loss</h3>
       </header>
 
-      <div class="recovery-map">
-        <ol class="recovery-map__events">
-          <li>
-            <span class="recovery-map__number">1</span>
-            <strong>Worker A schedules the Activity</strong>
-            <small>stable Activity ID + claim token</small>
-          </li>
-          <li>
-            <span class="recovery-map__number">2</span>
-            <strong>The Activity binds an agent</strong>
-            <small>progress is heartbeated</small>
-          </li>
-          <li class="recovery-map__failure">
-            <span class="recovery-map__number">×</span>
-            <strong>Worker A dies</strong>
-            <small>the agent session keeps running</small>
-          </li>
-          <li>
-            <span class="recovery-map__number">3</span>
-            <strong>Worker B resumes</strong>
-            <small>replay + heartbeat recovery</small>
-          </li>
-          <li>
-            <span class="recovery-map__number">4</span>
-            <strong>The retry reattaches</strong>
-            <small>one fenced terminal receipt</small>
-          </li>
-        </ol>
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1000 440"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>One agent session across a Worker restart</title>
+        <desc id={svgDescId}>
+          One Worker schedules an Activity and binds an agent. After that Worker
+          dies, another Worker replays history, reads the heartbeat, and
+          reattaches to the same generation-fenced agent session.
+        </desc>
+        <path class="svg-link" d="M100 210 H900" />
+        <g>
+          <circle class="svg-step" cx="100" cy="210" r="36" />
+          <text class="svg-step-number" x="100" y="217">1</text>
+          <text class="svg-label svg-label--center" x="100" y="285">Schedule Activity</text>
+          <text class="svg-small svg-label--center" x="100" y="313">stable identity</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="300" cy="210" r="36" />
+          <text class="svg-step-number" x="300" y="217">2</text>
+          <text class="svg-label svg-label--center" x="300" y="285">Bind one agent</text>
+          <text class="svg-small svg-label--center" x="300" y="313">heartbeat progress</text>
+        </g>
+        <g>
+          <circle class="svg-step svg-step--failure" cx="500" cy="210" r="36" />
+          <text class="svg-step-number" x="500" y="217">×</text>
+          <text class="svg-label svg-label--center" x="500" y="285">Worker dies</text>
+          <text class="svg-small svg-label--center" x="500" y="313">agent keeps running</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="700" cy="210" r="36" />
+          <text class="svg-step-number" x="700" y="217">3</text>
+          <text class="svg-label svg-label--center" x="700" y="285">Replay + recover</text>
+          <text class="svg-small svg-label--center" x="700" y="313">read heartbeat</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="900" cy="210" r="36" />
+          <text class="svg-step-number" x="900" y="217">4</text>
+          <text class="svg-label svg-label--center" x="900" y="285">Reattach</text>
+          <text class="svg-small svg-label--center" x="900" y="313">one fenced receipt</text>
+        </g>
+      </svg>
 
-        <div class="recovery-map__session" aria-hidden="true">
-          <span>one session</span>
-          <i></i>
-          <span>one generation</span>
-        </div>
-      </div>
+      <ol class="concept-figure__fallback" aria-label="Agent recovery sequence">
+        <li>A Worker schedules the Activity with stable identity.</li>
+        <li>The Activity binds one agent and heartbeats progress.</li>
+        <li>The Worker dies while the agent session keeps running.</li>
+        <li>A replacement Worker replays history and reads the heartbeat.</li>
+        <li>The retry reattaches and accepts one generation-fenced receipt.</li>
+      </ol>
 
-      <figcaption>
-        Workflow replay recovers orchestration state. The application’s
-        start-or-attach protocol and generation fence keep Activity retry from
-        creating a second agent or accepting a stale result.
+      <figcaption class="figure-caption">
+        Workflow replay recovers orchestration state. Start-or-attach and a
+        generation fence prevent a duplicate agent or stale completion.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "siblings" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">01 / Two instantiations</p>
+        <h3 id={titleId}>One SDK, two ways to survive a crash</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1000 470"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Gas Town and the Temporal-backed city as siblings</title>
+        <desc id={svgDescId}>
+          The same Gas City primitives support two separate arrangements. Gas
+          Town recovers by letting a fresh agent infer another valid path from
+          the durable work record. The Temporal-backed city recovers by replaying
+          a recorded procedure. Neither was added to the other.
+        </desc>
+
+        <rect class="svg-box" x="215" y="330" width="570" height="106" rx="10" />
+        <text class="svg-eyebrow" x="245" y="368">Shared foundation</text>
+        <text class="svg-label" x="245" y="400">Gas City primitives</text>
+        <text class="svg-small" x="245" y="424">work record · agents · sessions · formulas · dispatch</text>
+
+        <path class="svg-link" d="M400 330 V295 H255 V250" />
+        <path class="svg-link" d="M600 330 V295 H745 V250" />
+
+        <rect class="svg-box" x="60" y="120" width="390" height="130" rx="10" />
+        <text class="svg-eyebrow" x="88" y="158">Gas Town</text>
+        <text class="svg-label" x="88" y="192">Nondeterministic Idempotence</text>
+        <text class="svg-small" x="88" y="220">a fresh agent infers another valid path</text>
+
+        <rect class="svg-box svg-box--accent" x="550" y="120" width="390" height="130" rx="10" />
+        <text class="svg-eyebrow" x="578" y="158">This city</text>
+        <text class="svg-label" x="578" y="192">Durable replay</text>
+        <text class="svg-small" x="578" y="220">the recorded procedure is replayed</text>
+
+        <text class="svg-small svg-label--center" x="500" y="70">siblings, not layers</text>
+        <path class="svg-link" d="M450 185 H550" />
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Two instantiations">
+        <li>Gas City supplies the shared primitives: the work record, agents, sessions, formulas, and dispatch.</li>
+        <li>Gas Town is one arrangement of them, recovering through Nondeterministic Idempotence, where a fresh agent infers another valid path.</li>
+        <li>The Temporal-backed city is a sibling arrangement, recovering by replaying a recorded procedure.</li>
+        <li>Neither was added to the other.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Both arrangements are built from the same primitives. They differ only in
+        what they promise will survive a crash.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "handoff" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">04 / Durable handoff</p>
+        <h3 id={titleId}>A crash between claim and launch is survivable</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1000 440"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Transactional outbox into Signal-With-Start</title>
+        <desc id={svgDescId}>
+          One Beads transaction writes both the ready transition and its delivery
+          event. A bridge reads the pending event and calls Signal-With-Start
+          under a stable Workflow ID. If the bridge dies before acknowledging the
+          outbox, the event is delivered again and the Workflow ignores an event
+          ID it has already processed.
+        </desc>
+
+        <path class="svg-link" d="M120 150 H880" />
+        <g>
+          <circle class="svg-step" cx="120" cy="150" r="36" />
+          <text class="svg-step-number" x="120" y="157">1</text>
+          <text class="svg-label svg-label--center" x="120" y="225">One transaction</text>
+          <text class="svg-small svg-label--center" x="120" y="253">state + event together</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="373" cy="150" r="36" />
+          <text class="svg-step-number" x="373" y="157">2</text>
+          <text class="svg-label svg-label--center" x="373" y="225">Bridge reads event</text>
+          <text class="svg-small svg-label--center" x="373" y="253">from the outbox</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="627" cy="150" r="36" />
+          <text class="svg-step-number" x="627" y="157">3</text>
+          <text class="svg-label svg-label--center" x="627" y="225">Signal-With-Start</text>
+          <text class="svg-small svg-label--center" x="627" y="253">stable Workflow ID</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="880" cy="150" r="36" />
+          <text class="svg-step-number" x="880" y="157">4</text>
+          <text class="svg-label svg-label--center" x="880" y="225">Signal or start</text>
+          <text class="svg-small svg-label--center" x="880" y="253">one operation</text>
+        </g>
+
+        <rect class="svg-box svg-box--accent" x="230" y="312" width="540" height="112" rx="10" />
+        <text class="svg-eyebrow" x="258" y="348">If the bridge dies here</text>
+        <text class="svg-small" x="258" y="380">the event arrives again and the</text>
+        <text class="svg-small" x="258" y="406">Workflow ignores an ID it has seen</text>
+      </svg>
+
+      <ol class="concept-figure__fallback" aria-label="Durable handoff sequence">
+        <li>One Beads transaction writes the ready transition and its delivery event together.</li>
+        <li>A bridge reads the pending event out of the outbox.</li>
+        <li>The bridge calls Signal-With-Start under a stable Workflow ID derived from the city, run, and work item.</li>
+        <li>Temporal signals the existing Workflow or starts it with the signal, in one operation.</li>
+        <li>If the bridge dies before acknowledging the outbox, the event is delivered again and the Workflow ignores an event ID it has already processed.</li>
+      </ol>
+
+      <figcaption class="figure-caption">
+        The crash window is not closed, it is made boring. Stable identity turns
+        redelivery into expected behaviour instead of a duplicate launch.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "boundary" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">07 / Remaining work</p>
+        <h3 id={titleId}>What Temporal owns, and what it leaves behind</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1000 460"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>The boundary of Temporal's guarantee</title>
+        <desc id={svgDescId}>
+          Temporal owns the durable procedure, waits and timers, retry
+          scheduling, cancellation, and acknowledgement state. The application
+          still owns exactly-once external effects, whether the code is correct,
+          repair of a corrupt work record, worktrees and disk, and approval
+          policy for external actions.
+        </desc>
+
+        <rect class="svg-box svg-box--accent" x="40" y="60" width="440" height="360" rx="10" />
+        <text class="svg-eyebrow" x="70" y="102">Inside the guarantee</text>
+        <text class="svg-label" x="70" y="136">Temporal owns</text>
+        <text class="svg-small" x="70" y="188">durable procedure and its history</text>
+        <text class="svg-small" x="70" y="228">waits and timers</text>
+        <text class="svg-small" x="70" y="268">retry scheduling</text>
+        <text class="svg-small" x="70" y="308">cancellation</text>
+        <text class="svg-small" x="70" y="348">acknowledgement state</text>
+
+        <rect class="svg-box" x="520" y="60" width="440" height="360" rx="10" />
+        <text class="svg-eyebrow" x="550" y="102">Still application work</text>
+        <text class="svg-label" x="550" y="136">You own</text>
+        <text class="svg-small" x="550" y="188">exactly-once external effects</text>
+        <text class="svg-small" x="550" y="228">whether the code is correct</text>
+        <text class="svg-small" x="550" y="268">repairing a corrupt work record</text>
+        <text class="svg-small" x="550" y="308">worktrees and disk</text>
+        <text class="svg-small" x="550" y="348">approval policy for external actions</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Temporal's boundary">
+        <li>Temporal owns durable procedure and its history, waits and timers, retry scheduling, cancellation, and acknowledgement state.</li>
+        <li>The application still owns exactly-once external effects, whether the code is correct, repairing a corrupt work record, worktrees and disk, and approval policy for external actions.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Temporal remembers the procedure. Everything on the right is still yours
+        to get right.
       </figcaption>
     </figure>
   )
@@ -206,302 +555,125 @@ const titleId = `concept-figure-${kind}`;
     line-height: var(--leading-tight);
   }
 
-  .concept-figure__index,
-  .concept-figure__eyebrow {
+  .concept-figure__index {
     color: var(--color-text-muted);
     font-family: var(--font-mono);
     font-size: var(--step--1);
   }
 
-  .concept-figure__eyebrow {
+  .concept-figure__svg {
     display: block;
-    margin-block-end: 0.2rem;
-    color: var(--color-accent);
+    width: 100%;
+    height: auto;
+    margin-block-start: var(--space-m);
+    color: var(--color-text);
   }
 
-  .concept-figure figcaption {
+  .concept-figure__svg :global(path),
+  .concept-figure__svg :global(rect),
+  .concept-figure__svg :global(circle) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .svg-box {
+    fill: var(--color-bg-subtle);
+    stroke: currentColor;
+    stroke-width: 1.25;
+  }
+
+  .svg-box--accent {
+    fill: color-mix(in srgb, var(--color-accent) 9%, var(--color-bg));
+    stroke: var(--color-accent);
+  }
+
+  .svg-link {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .svg-link--dashed {
+    stroke: var(--color-accent);
+    stroke-dasharray: 7 6;
+  }
+
+  .svg-link--flow {
+    animation: svg-flow-dash 2.4s linear infinite;
+  }
+
+  @keyframes svg-flow-dash {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svg-link--flow {
+      animation: none;
+    }
+  }
+
+  .svg-eyebrow,
+  .svg-small {
+    fill: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  .svg-eyebrow {
+    fill: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .svg-label {
+    fill: currentColor;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .svg-label--center {
+    text-anchor: middle;
+  }
+
+  .svg-step {
+    fill: var(--color-bg);
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+
+  .svg-step--failure {
+    fill: var(--color-accent);
+  }
+
+  .svg-step-number {
+    fill: currentColor;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    text-anchor: middle;
+  }
+
+  .figure-caption {
     max-width: var(--measure);
     margin-block-start: var(--space-s);
+    margin-inline: auto;
     color: var(--color-text-muted);
     font-size: var(--step--1);
-    line-height: var(--leading-relaxed);
+    line-height: 1.4;
+    text-align: center;
   }
 
-  .orchestrator-map {
-    display: grid;
-    grid-template-columns:
-      minmax(0, 0.8fr) auto minmax(0, 1fr) auto minmax(0, 0.8fr) auto
-      minmax(0, 1fr) auto minmax(0, 1fr);
-    min-width: 0;
-    padding-block: var(--space-l);
-    align-items: center;
-    gap: var(--space-xs);
-  }
-
-  .orchestrator-map__stage {
-    min-width: 0;
-  }
-
-  .orchestrator-map__stage strong,
-  .orchestrator-map__agents span {
-    display: block;
-    font-family: var(--font-display);
-    line-height: var(--leading-snug);
-  }
-
-  .orchestrator-map__stage small {
-    display: block;
-    margin-block-start: 0.3rem;
-    color: var(--color-text-muted);
-    font-size: 0.72rem;
-    line-height: var(--leading-normal);
-  }
-
-  .orchestrator-map__ledger {
-    padding: var(--space-s);
-    border: 1px solid var(--color-accent);
-    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
-  }
-
-  .orchestrator-map__agents {
-    display: grid;
-    min-width: 0;
-    gap: var(--space-xs);
-  }
-
-  .orchestrator-map__agents span {
-    padding-block: 0.35rem;
-    border-block-end: 1px solid var(--figure-rule);
-    font-size: var(--step--1);
-  }
-
-  .concept-figure__arrow {
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-  }
-
-  .concept-figure__arrow--fan,
-  .concept-figure__arrow--join {
-    color: var(--color-accent);
-  }
-
-  .orchestrator-map__repair {
-    display: grid;
-    grid-column: 2 / 9;
-    grid-template-columns: auto minmax(2rem, 1fr) minmax(0, auto);
-    margin-block-start: var(--space-s);
-    align-items: center;
-    gap: var(--space-s);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-  }
-
-  .orchestrator-map__repair-line {
-    border-block-start: 1px dashed var(--color-accent);
-  }
-
-  .ownership-map {
-    min-width: 0;
-    margin-block: var(--space-m) 0;
-    border-block: 1px solid var(--figure-rule);
-  }
-
-  .ownership-map section {
-    display: grid;
-    grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.5fr) minmax(12rem, 1fr);
-    min-width: 0;
-    padding-block: var(--space-m);
-    align-items: center;
-    gap: var(--space-l);
-    border-block-end: 1px solid var(--figure-rule);
-  }
-
-  .ownership-map section:last-child {
-    border-block-end: 0;
-  }
-
-  .ownership-map__temporal {
-    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
-  }
-
-  .ownership-map__owner {
-    padding-inline-start: var(--space-s);
-  }
-
-  .ownership-map__owner strong {
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-  }
-
-  .ownership-map p,
-  .ownership-map ul {
-    margin: 0;
-  }
-
-  .ownership-map p {
-    color: var(--color-text-secondary);
-    font-size: var(--step--1);
-    line-height: var(--leading-relaxed);
-  }
-
-  .ownership-map ul {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-    gap: 0.3rem;
-    list-style: none;
-  }
-
-  .ownership-map li {
-    padding: 0.2rem 0.45rem;
-    border: 1px solid var(--figure-rule);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-  }
-
-  .ownership-map__service {
-    display: grid;
-    grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 2.5fr);
-    margin: 0;
-    padding: var(--space-s);
-    gap: var(--space-l);
-    color: var(--color-text-secondary);
-    font-size: var(--step--1);
-    line-height: var(--leading-relaxed);
-    border-block-end: 1px solid var(--figure-rule);
-  }
-
-  .ownership-map__service span {
-    color: var(--color-text);
-    font-family: var(--font-display);
-    font-weight: 700;
-  }
-
-  .recovery-map {
-    min-width: 0;
-    padding-block: var(--space-l) var(--space-m);
-  }
-
-  .recovery-map__events {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-    list-style: none;
-  }
-
-  .recovery-map__events li {
-    position: relative;
-    min-width: 0;
-    padding: 2.2rem var(--space-s) var(--space-s);
-    border-block-start: 1px solid var(--figure-rule);
-  }
-
-  .recovery-map__events li::after {
+  .concept-figure__fallback {
     position: absolute;
-    inset: -0.28rem calc(-0.28rem - 1px) auto auto;
-    width: 0.5rem;
-    height: 0.5rem;
-    background: var(--color-text-muted);
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
-    content: "";
-  }
-
-  .recovery-map__events li:last-child::after {
-    display: none;
-  }
-
-  .recovery-map__number {
-    position: absolute;
-    inset: -0.8rem auto auto var(--space-s);
-    display: grid;
-    width: 1.55rem;
-    height: 1.55rem;
-    place-items: center;
-    border: 1px solid var(--color-accent);
-    border-radius: 50%;
-    background: var(--color-bg);
-    color: var(--color-accent);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
-
-  .recovery-map__events strong,
-  .recovery-map__events small {
-    display: block;
-  }
-
-  .recovery-map__events strong {
-    font-family: var(--font-display);
-    font-size: var(--step--1);
-    line-height: var(--leading-snug);
-  }
-
-  .recovery-map__events small {
-    margin-block-start: 0.35rem;
-    color: var(--color-text-muted);
-    font-size: 0.7rem;
-    line-height: var(--leading-normal);
-  }
-
-  .recovery-map__failure {
-    background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
-  }
-
-  .recovery-map__failure .recovery-map__number {
-    background: var(--color-accent);
-    color: var(--color-bg);
-  }
-
-  .recovery-map__session {
-    display: grid;
-    grid-template-columns: auto minmax(2rem, 1fr) auto;
-    padding: var(--space-s);
-    align-items: center;
-    gap: var(--space-s);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-  }
-
-  .recovery-map__session i {
-    height: 2px;
-    background: var(--color-accent);
-  }
-
-  @media (max-width: 900px) {
-    .orchestrator-map {
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    }
-
-    .orchestrator-map__agents,
-    .orchestrator-map__stage {
-      min-height: 5.5rem;
-    }
-
-    .orchestrator-map > :nth-child(7) {
-      grid-column: 1;
-      grid-row: 3;
-    }
-
-    .orchestrator-map > :nth-child(8) {
-      grid-column: 2;
-      grid-row: 3;
-    }
-
-    .orchestrator-map > :nth-child(9) {
-      grid-column: 3;
-      grid-row: 3;
-    }
-
-    .orchestrator-map__repair {
-      grid-column: 1 / -1;
-    }
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   @media (max-width: 720px) {
@@ -510,70 +682,23 @@ const titleId = `concept-figure-${kind}`;
       gap: var(--space-xs);
     }
 
-    .orchestrator-map {
-      grid-template-columns: minmax(0, 1fr);
-      padding-block: var(--space-m);
-    }
-
-    .orchestrator-map__stage,
-    .orchestrator-map__agents {
-      min-height: 0;
-    }
-
-    .orchestrator-map > :nth-child(n) {
-      grid-column: 1;
-      grid-row: auto;
-    }
-
-    .concept-figure__arrow {
-      transform: rotate(90deg);
-      justify-self: start;
-    }
-
-    .orchestrator-map__repair {
-      grid-template-columns: 1fr;
-      margin-block-start: var(--space-m);
-      padding-block-start: var(--space-s);
-      border-block-start: 1px dashed var(--color-accent);
-    }
-
-    .orchestrator-map__repair-line {
+    .concept-figure__svg {
       display: none;
     }
 
-    .ownership-map section,
-    .ownership-map__service {
-      grid-template-columns: 1fr;
-      padding: var(--space-m) var(--space-s);
+    .concept-figure__fallback {
+      position: static;
+      display: grid;
+      width: auto;
+      height: auto;
+      margin: var(--space-m) 0 0;
+      padding-inline-start: 1.25rem;
+      overflow: visible;
+      clip: auto;
       gap: var(--space-xs);
-    }
-
-    .ownership-map__owner {
-      padding-inline-start: 0;
-    }
-
-    .recovery-map__events {
-      grid-template-columns: 1fr;
-      padding-inline-start: 0.8rem;
-    }
-
-    .recovery-map__events li {
-      padding: var(--space-s) var(--space-s) var(--space-m) 2.4rem;
-      border-block-start: 0;
-      border-inline-start: 1px solid var(--figure-rule);
-    }
-
-    .recovery-map__events li::after {
-      inset: auto auto -0.25rem -0.28rem;
-      transform: rotate(90deg);
-    }
-
-    .recovery-map__number {
-      inset: var(--space-s) auto auto -0.8rem;
-    }
-
-    .recovery-map__session {
-      padding-inline: 2.4rem var(--space-s);
+      white-space: normal;
+      color: var(--color-text-secondary);
+      font-size: var(--step--1);
     }
   }
 </style>
