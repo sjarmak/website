@@ -270,7 +270,16 @@ test("the companion carries diagrams that agree with its prose", () => {
     "utf8",
   );
 
-  const reading = ["ownership", "recovery", "boundary"];
+  const reading = [
+    "scattered",
+    "shadow",
+    "handoff",
+    "ownership",
+    "recovery",
+    "workshop",
+    "wrongness",
+    "boundary",
+  ];
   let previous = -1;
   for (const kind of reading) {
     const at = companion.indexOf(`<ConceptFigure kind="${kind}" />`);
@@ -278,6 +287,31 @@ test("the companion carries diagrams that agree with its prose", () => {
     assert.ok(at > previous, `${kind} must appear in reading order`);
     previous = at;
   }
+
+  // The new figures also land in the sections whose prose argues them.
+  const scatteredAt = companion.indexOf('<ConceptFigure kind="scattered" />');
+  assert.ok(
+    companion.indexOf("A crash loses the procedure, not the task") <
+      scatteredAt && scatteredAt < companion.indexOf("What was converted"),
+    "the scattered figure opens the problem section",
+  );
+  const shadowAt = companion.indexOf('<ConceptFigure kind="shadow" />');
+  assert.ok(
+    companion.indexOf("The status has two halves") < shadowAt &&
+      shadowAt < companion.indexOf("Before and after"),
+    "the shadow figure belongs beside the two-halves status",
+  );
+  const workshopAt = companion.indexOf('<ConceptFigure kind="workshop" />');
+  assert.ok(
+    companion.indexOf("What the evidence proves") < workshopAt &&
+      workshopAt < companion.indexOf("What it did not fix"),
+    "the workshop figure belongs in the evidence section",
+  );
+  const wrongnessAt = companion.indexOf('<ConceptFigure kind="wrongness" />');
+  assert.ok(
+    companion.indexOf("faithfully retried the wrong envelope") < wrongnessAt,
+    "the wrongness figure follows the canary paragraph it draws",
+  );
 
   // Each figure lands in the section it illustrates, not merely somewhere.
   const recoveryAt = companion.indexOf('<ConceptFigure kind="recovery" />');

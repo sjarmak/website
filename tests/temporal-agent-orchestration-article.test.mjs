@@ -721,6 +721,7 @@ test("the essay teaches the orchestrator, ownership boundary, and recovery path 
     "handoff",
     "recovery",
     "workshop",
+    "shadow",
     "boundary",
   ];
   let seen = -1;
