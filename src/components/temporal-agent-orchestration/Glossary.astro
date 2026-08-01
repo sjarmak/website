@@ -1,0 +1,306 @@
+---
+// The terms this case study leans on, grouped by where they come from and
+// written for a reader who knows software but not these systems. Each group
+// is a native details/summary disclosure, collapsed by default so the
+// glossary reads as an offer, not an assignment. Entries connect to each
+// other on purpose: the fastest way to place a new term is through one the
+// reader already holds.
+
+interface Entry {
+  term: string;
+  definition: string;
+}
+
+interface Group {
+  title: string;
+  intro: string;
+  entries: Entry[];
+}
+
+const groups: Group[] = [
+  {
+    title: "Gas City terms",
+    intro: "The agent-orchestration system this case study happened in.",
+    entries: [
+      {
+        term: "Gas City",
+        definition:
+          "The system that hands tracked work to coding agents and keeps a durable record of what happened to each item. Everything on this page is about making one of its procedures survive a crash.",
+      },
+      {
+        term: "Beads",
+        definition:
+          "The durable store of work facts: tasks, claims, artifacts, and receipts. It is why a crash never loses the task itself; what a crash used to lose was everything in flight around the task.",
+      },
+      {
+        term: "Bead (work item)",
+        definition:
+          "One tracked piece of work, like a ticket in an issue tracker. The name comes from Beads, the store that holds them.",
+      },
+      {
+        term: "Mayor",
+        definition:
+          "The coordinating agent. When work finishes, the Mayor verifies the evidence and sends the acknowledgement that lets a result count as delivered.",
+      },
+      {
+        term: "Session",
+        definition:
+          "One live agent working on one work item. A session can outlive the process that launched it, which is the fact the whole demo turns on.",
+      },
+      {
+        term: "Generation",
+        definition:
+          "The attempt number for a work item. Retry the work and the generation goes up; anything still running from an earlier generation is stale.",
+      },
+      {
+        term: "Generation fence",
+        definition:
+          "The guard that makes staleness harmless: a receipt only lands if it carries the current generation. Without it a slow old attempt can overwrite the new one, which is exactly what the before-Temporal recording shows happening.",
+      },
+      {
+        term: "Claim token",
+        definition:
+          "Proof that one attempt owns a task right now. A completion carrying an old token is refused, the way a hotel key stops working once the desk reissues the room.",
+      },
+      {
+        term: "Formula",
+        definition:
+          "A reusable recipe for a kind of work. The demo's work item runs a single formula step so the procedure around it stays small enough to watch.",
+      },
+      {
+        term: "OutcomeReady",
+        definition:
+          "The record that a finished result is owed to someone. It stays open, and delivery repeats, until an acknowledgement matching the exact outcome closes it. See outbox.",
+      },
+      {
+        term: "Shadow mode",
+        definition:
+          "Everything wired for real, nothing allowed to change canonical state. The Temporal side runs and is watched while a fail-closed guard blocks every mutation; one gate is opened separately so result delivery runs for real.",
+      },
+      {
+        term: "Canary",
+        definition:
+          "A bounded, separately authorized live run used to prove one path, then rolled back. Every canary here ended by returning the worker to shadow.",
+      },
+    ],
+  },
+  {
+    title: "Temporal terms",
+    intro: "The durable-execution system the procedure now lives in.",
+    entries: [
+      {
+        term: "Temporal",
+        definition:
+          "A durable-execution system. It records every decision a procedure makes, so when the process running that procedure dies, another process picks it up exactly where it stopped.",
+      },
+      {
+        term: "Workflow",
+        definition:
+          "The procedure, written as code that must be deterministic. Every step it takes is recorded to the Event History, and that record is what survives a crash.",
+      },
+      {
+        term: "Activity",
+        definition:
+          "A step that touches the unpredictable world: launching a process, calling a network, writing a file. Activities are retried rather than replayed, so they have to be safe to run more than once. See at-least-once.",
+      },
+      {
+        term: "Worker",
+        definition:
+          "The process that executes Workflow and Activity code. It is deliberately disposable: the demo kills one twice and nothing durable is lost.",
+      },
+      {
+        term: "Event History",
+        definition:
+          "The append-only record of everything the Workflow decided and observed. It lives on the Temporal server, not in the Worker, which is why the Worker is allowed to die.",
+      },
+      {
+        term: "Replay",
+        definition:
+          "How a replacement Worker catches up: it re-runs the Workflow code against the recorded history and arrives at the same state without redoing any real-world work.",
+      },
+      {
+        term: "Task Queue",
+        definition:
+          "A named queue Workers poll for work. Separate queues let different kinds of work be isolated or scaled independently later.",
+      },
+      {
+        term: "Heartbeat",
+        definition:
+          "An Activity's periodic sign of life, which can carry a small checkpoint. It speeds up noticing a dead Worker; it is not what prevents a duplicate agent, because a Worker can die before the first heartbeat ever lands.",
+      },
+      {
+        term: "Durable timer",
+        definition:
+          "A wait that survives crashes. Redeliver in fifteen minutes holds even if every process restarts in between; the hourglass in the diagrams marks one.",
+      },
+      {
+        term: "Signal-With-Start",
+        definition:
+          "One message that reaches a Workflow if it exists and starts it first if it does not. With a stable Workflow ID, delivering the same message again is safe.",
+      },
+    ],
+  },
+  {
+    title: "Distributed-systems terms",
+    intro: "The general ideas both systems are built from.",
+    entries: [
+      {
+        term: "Durable",
+        definition:
+          "Written somewhere that outlives the process: a database, a file, a server-side history. The task state was already durable before Temporal; the procedure around it was not.",
+      },
+      {
+        term: "At-least-once",
+        definition:
+          "The delivery promise real systems can keep: a step happens, and after a crash it may happen again. The repeats are the price of never losing the step; the boundary work is what makes the repeats safe.",
+      },
+      {
+        term: "Exactly-once",
+        definition:
+          "The promise nobody can keep for external effects. A process can die after an external call succeeds and before recording that it did, so the call may run again. Systems approximate exactly-once by pairing at-least-once with idempotency and fences.",
+      },
+      {
+        term: "Idempotency",
+        definition:
+          "Doing a thing twice has the same effect as doing it once. An idempotency key is how a second attempt gets recognized as a repeat instead of a new request.",
+      },
+      {
+        term: "Fencing",
+        definition:
+          "Refusing actions from stale actors. A fencing value goes up with every new attempt, and the store rejects anything carrying an older value; the generation fence is this idea applied to receipts.",
+      },
+      {
+        term: "Determinism",
+        definition:
+          "Same inputs, same decisions, every time. Replay only works because the Workflow is deterministic: fed the same history, it must make the same choices.",
+      },
+      {
+        term: "Orphaned process",
+        definition:
+          "A child process that keeps running after its parent dies. The coding agent orphaned by a dead Worker is not a defect here; it is the property the boundary is designed around.",
+      },
+      {
+        term: "Outbox",
+        definition:
+          "Record that a message is owed in the same durable store as the work itself, then deliver from that record. Delivery can crash and repeat without the promise being lost; OutcomeReady is an outbox.",
+      },
+      {
+        term: "Watchdog",
+        definition:
+          "An independent checker that looks for work the main path forgot. It matters because a delivery pipeline that died silently looks identical to one with nothing to deliver.",
+      },
+    ],
+  },
+];
+---
+
+<section class="glossary" aria-labelledby="glossary-title">
+  <header class="glossary__head">
+    <h2 id="glossary-title">Glossary</h2>
+    <p>
+      The vocabulary this page leans on, grouped by where it comes from. Open
+      the group you need.
+    </p>
+  </header>
+  {
+    groups.map((group) => (
+      <details class="glossary__group">
+        <summary>
+          <span>{group.title}</span>
+          <span class="glossary__group-intro">{group.intro}</span>
+        </summary>
+        <dl>
+          {group.entries.map((entry) => (
+            <div class="glossary__entry">
+              <dt>{entry.term}</dt>
+              <dd>{entry.definition}</dd>
+            </div>
+          ))}
+        </dl>
+      </details>
+    ))
+  }
+</section>
+
+<style>
+  .glossary {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .glossary__head {
+    max-width: var(--measure);
+  }
+
+  .glossary__head h2 {
+    margin: 0;
+  }
+
+  .glossary__head p {
+    margin: var(--space-s) 0 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .glossary__group {
+    border-block: var(--border-hairline);
+  }
+
+  .glossary__group + .glossary__group {
+    border-block-start: 0;
+  }
+
+  .glossary__group summary {
+    display: flex;
+    padding-block: var(--space-s);
+    align-items: baseline;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    cursor: pointer;
+  }
+
+  .glossary__group summary:hover {
+    color: var(--color-accent);
+  }
+
+  .glossary__group-intro {
+    color: var(--color-text-muted);
+    font-family: var(--font-body, inherit);
+    font-size: var(--step--1);
+  }
+
+  .glossary__group dl {
+    margin: 0;
+    padding-block: var(--space-xs) var(--space-m);
+  }
+
+  .glossary__entry {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+    gap: var(--space-s);
+    max-width: 60rem;
+    padding-block: var(--space-xs);
+  }
+
+  .glossary__entry dt {
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .glossary__entry dd {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  @media (max-width: 640px) {
+    .glossary__entry {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+</style>

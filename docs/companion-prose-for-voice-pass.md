@@ -518,6 +518,92 @@ Fallback list:
 
 ---
 
+## Glossary (new 2026-08-01; renders on the companion before Go deeper and at the article's end)
+
+Head:
+
+> Glossary
+
+> The vocabulary this page leans on, grouped by where it comes from. Open the group you need.
+
+Group titles and intros:
+
+> Gas City terms: The agent-orchestration system this case study happened in.
+
+> Temporal terms: The durable-execution system the procedure now lives in.
+
+> Distributed-systems terms: The general ideas both systems are built from.
+
+Gas City entries:
+
+> Gas City: The system that hands tracked work to coding agents and keeps a durable record of what happened to each item. Everything on this page is about making one of its procedures survive a crash.
+
+> Beads: The durable store of work facts: tasks, claims, artifacts, and receipts. It is why a crash never loses the task itself; what a crash used to lose was everything in flight around the task.
+
+> Bead (work item): One tracked piece of work, like a ticket in an issue tracker. The name comes from Beads, the store that holds them.
+
+> Mayor: The coordinating agent. When work finishes, the Mayor verifies the evidence and sends the acknowledgement that lets a result count as delivered.
+
+> Session: One live agent working on one work item. A session can outlive the process that launched it, which is the fact the whole demo turns on.
+
+> Generation: The attempt number for a work item. Retry the work and the generation goes up; anything still running from an earlier generation is stale.
+
+> Generation fence: The guard that makes staleness harmless: a receipt only lands if it carries the current generation. Without it a slow old attempt can overwrite the new one, which is exactly what the before-Temporal recording shows happening.
+
+> Claim token: Proof that one attempt owns a task right now. A completion carrying an old token is refused, the way a hotel key stops working once the desk reissues the room.
+
+> Formula: A reusable recipe for a kind of work. The demo's work item runs a single formula step so the procedure around it stays small enough to watch.
+
+> OutcomeReady: The record that a finished result is owed to someone. It stays open, and delivery repeats, until an acknowledgement matching the exact outcome closes it. See outbox.
+
+> Shadow mode: Everything wired for real, nothing allowed to change canonical state. The Temporal side runs and is watched while a fail-closed guard blocks every mutation; one gate is opened separately so result delivery runs for real.
+
+> Canary: A bounded, separately authorized live run used to prove one path, then rolled back. Every canary here ended by returning the worker to shadow.
+
+Temporal entries:
+
+> Temporal: A durable-execution system. It records every decision a procedure makes, so when the process running that procedure dies, another process picks it up exactly where it stopped.
+
+> Workflow: The procedure, written as code that must be deterministic. Every step it takes is recorded to the Event History, and that record is what survives a crash.
+
+> Activity: A step that touches the unpredictable world: launching a process, calling a network, writing a file. Activities are retried rather than replayed, so they have to be safe to run more than once. See at-least-once.
+
+> Worker: The process that executes Workflow and Activity code. It is deliberately disposable: the demo kills one twice and nothing durable is lost.
+
+> Event History: The append-only record of everything the Workflow decided and observed. It lives on the Temporal server, not in the Worker, which is why the Worker is allowed to die.
+
+> Replay: How a replacement Worker catches up: it re-runs the Workflow code against the recorded history and arrives at the same state without redoing any real-world work.
+
+> Task Queue: A named queue Workers poll for work. Separate queues let different kinds of work be isolated or scaled independently later.
+
+> Heartbeat: An Activity's periodic sign of life, which can carry a small checkpoint. It speeds up noticing a dead Worker; it is not what prevents a duplicate agent, because a Worker can die before the first heartbeat ever lands.
+
+> Durable timer: A wait that survives crashes. Redeliver in fifteen minutes holds even if every process restarts in between; the hourglass in the diagrams marks one.
+
+> Signal-With-Start: One message that reaches a Workflow if it exists and starts it first if it does not. With a stable Workflow ID, delivering the same message again is safe.
+
+Distributed-systems entries:
+
+> Durable: Written somewhere that outlives the process: a database, a file, a server-side history. The task state was already durable before Temporal; the procedure around it was not.
+
+> At-least-once: The delivery promise real systems can keep: a step happens, and after a crash it may happen again. The repeats are the price of never losing the step; the boundary work is what makes the repeats safe.
+
+> Exactly-once: The promise nobody can keep for external effects. A process can die after an external call succeeds and before recording that it did, so the call may run again. Systems approximate exactly-once by pairing at-least-once with idempotency and fences.
+
+> Idempotency: Doing a thing twice has the same effect as doing it once. An idempotency key is how a second attempt gets recognized as a repeat instead of a new request.
+
+> Fencing: Refusing actions from stale actors. A fencing value goes up with every new attempt, and the store rejects anything carrying an older value; the generation fence is this idea applied to receipts.
+
+> Determinism: Same inputs, same decisions, every time. Replay only works because the Workflow is deterministic: fed the same history, it must make the same choices.
+
+> Orphaned process: A child process that keeps running after its parent dies. The coding agent orphaned by a dead Worker is not a defect here; it is the property the boundary is designed around.
+
+> Outbox: Record that a message is owed in the same durable store as the work itself, then deliver from that record. Delivery can crash and repeat without the promise being lost; OutcomeReady is an outbox.
+
+> Watchdog: An independent checker that looks for work the main path forgot. It matters because a delivery pipeline that died silently looks identical to one with nothing to deliver.
+
+---
+
 ## Go deeper
 
 > The full article

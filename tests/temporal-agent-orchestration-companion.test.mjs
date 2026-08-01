@@ -37,6 +37,10 @@ const EVIDENCE_DIR = path.join(
   ROOT,
   "public/temporal-agent-orchestration/demo/artifacts",
 );
+const GLOSSARY = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/Glossary.astro",
+);
 
 test("the companion page is the route's front door and the article moved beside it", () => {
   assert.equal(existsSync(COMPANION), true);
@@ -292,8 +296,48 @@ test("the code browser renders every sample from the shared data module", () => 
   assert.match(codeReader, /download=\{sample\.filename\}/);
 });
 
+test("the glossary groups the vocabulary and both pages render it", () => {
+  const glossary = readFileSync(GLOSSARY, "utf8");
+  const companion = readFileSync(COMPANION, "utf8");
+  const article = readFileSync(
+    path.join(ROOT, "src/components/temporal-agent-orchestration/Article.mdx"),
+    "utf8",
+  );
+
+  for (const group of [
+    "Gas City terms",
+    "Temporal terms",
+    "Distributed-systems terms",
+  ]) {
+    assert.ok(glossary.includes(group), `the glossary must group ${group}`);
+  }
+  // Groups are native disclosures, collapsed by default: an offer, not an
+  // assignment.
+  assert.match(glossary, /<details class="glossary__group">/);
+  assert.doesNotMatch(glossary, /<details class="glossary__group" open/);
+
+  // A few load-bearing terms, one per register, must stay defined.
+  for (const term of [
+    "Generation fence",
+    "Event History",
+    "Idempotency",
+    "At-least-once",
+    "Mayor",
+  ]) {
+    assert.ok(glossary.includes(`term: "${term}"`), `${term} must be defined`);
+  }
+  // The heartbeat correction holds in the glossary too.
+  assert.doesNotMatch(
+    glossary,
+    /heartbeat (?:is what |)(?:keeps|prevents|stops)[^.]*second agent/i,
+  );
+
+  assert.match(companion, /<Glossary \/>/);
+  assert.match(article, /<Glossary \/>/);
+});
+
 test("companion prose carries no em dashes and no self-narration", () => {
-  for (const file of [COMPANION, CODE_INDEX, CODE_READER]) {
+  for (const file of [COMPANION, CODE_INDEX, CODE_READER, GLOSSARY]) {
     const source = readFileSync(file, "utf8");
     assert.doesNotMatch(
       source,

@@ -4,6 +4,7 @@ import path from "node:path";
 import { codeToHtml } from "shiki";
 
 import ConceptFigure from "@/components/temporal-agent-orchestration/ConceptFigure.astro";
+import Glossary from "@/components/temporal-agent-orchestration/Glossary.astro";
 import PageLayout from "@/layouts/PageLayout.astro";
 
 import "asciinema-player/dist/bundle/asciinema-player.css";
@@ -441,6 +442,8 @@ both   one session, one receipt, stale claim token rejected,
       </div>
       <ConceptFigure kind="boundary" />
     </section>
+
+    <Glossary />
 
     <section class="tco__section">
       <header class="tco__section-head">
