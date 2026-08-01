@@ -382,7 +382,10 @@ both   one session, one receipt, stale claim token rejected,
       cols: 120,
       rows: 38,
       preload: true,
-      poster: "npt:8.0",
+      // The still frame is the finished invariant report rather than an early
+      // beat: at 8s the screen is three lines of output over an empty terminal,
+      // which reads as a large black void before anyone presses play.
+      poster: "npt:41.74",
       fit: "width",
       markers: [
         [3.2, "Arm 1 starts"],
@@ -591,11 +594,21 @@ both   one session, one receipt, stale claim token rejected,
     box-shadow: inset 0 3px var(--color-accent);
   }
 
+  /* A 120x38 terminal keeps its aspect ratio, so bounding the width is what
+     bounds the height. At full container width the recording is over 800px
+     tall and swamps the section it belongs to. */
   .tco__player {
+    width: 100%;
+    /* A grid item defaults to min-width: auto, and the player's terminal has a
+       min-content width wider than a narrow viewport, so it blows the column
+       out sideways without this. */
+    min-width: 0;
+    max-width: 52rem;
     margin: 0;
   }
 
   .tco__player :global(.ap-player) {
+    max-width: 100%;
     border: var(--border-hairline);
     border-radius: var(--radius-l);
   }
