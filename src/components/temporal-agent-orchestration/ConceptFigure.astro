@@ -190,7 +190,7 @@ const svgDescId = `${titleId}-svg-desc`;
           </text>
 
           <rect class="svg-box" x="313" y="300" width="219" height="130" rx="10" />
-          <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(557 351)" />
+          <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(506 324)" />
           <text class="svg-label svg-label--wrapped" x="331" y="340">
             <tspan x="331" dy="0">Exact</tspan>
             <tspan x="331" dy="23">acknowledgement</tspan>
@@ -305,7 +305,7 @@ const svgDescId = `${titleId}-svg-desc`;
 
         <path class="svg-link" d="M315 192 H365 M635 192 H685" />
 
-        <path class="svg-link svg-link--dashed" d="M820 315 V395 H180 V315" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M820 315 V395 H180 V315" />
         <text class="svg-small svg-label--center" x="500" y="380">Activities report fenced completions</text>
 
         <path class="svg-link" d="M110 315 V470 H890 V315" />
@@ -407,7 +407,7 @@ const svgDescId = `${titleId}-svg-desc`;
 
           <path class="svg-link" d="M150 190 V260" />
           <text class="svg-small" x="163" y="232">schedule</text>
-          <path class="svg-link svg-link--dashed" d="M760 190 V260" />
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M760 260 V190" />
           <text class="svg-small" x="773" y="232">replay</text>
 
           <path class="svg-link" d="M84 190 V225 H34 V545 H60" />
@@ -650,7 +650,7 @@ const svgDescId = `${titleId}-svg-desc`;
           <text class="svg-small" x="690" y="161">acknowledgement state</text>
         </g>
 
-        <path class="svg-link svg-link--dashed" d="M550 190 V250" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M550 190 V250" />
         <text class="svg-small" x="575" y="226">at-least-once Activity attempts</text>
 
         <g class="svg-tier-boundary">
@@ -752,7 +752,7 @@ const svgDescId = `${titleId}-svg-desc`;
           <tspan x="822" dy="0">OutcomeReady</tspan>
           <tspan x="822" dy="23">delivery</tspan>
         </text>
-        <path class="svg-link svg-link--dashed" d="M940 208 V386" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M940 208 V386" />
         <path class="svg-hourglass" d="M-6 -9 H6 L-6 9 H6 Z" transform="translate(918 252)" />
         <text class="svg-small" x="958" y="271">separately</text>
         <text class="svg-small" x="958" y="290">opened gate</text>
@@ -774,7 +774,7 @@ const svgDescId = `${titleId}-svg-desc`;
         <rect class="svg-box" x="800" y="386" width="280" height="112" rx="10" />
         <text class="svg-eyebrow" x="822" y="418">through the gate</text>
         <text class="svg-label" x="822" y="448">Acknowledgement</text>
-        <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(1080 442)" />
+        <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(1044 418)" />
         <text class="svg-small" x="822" y="478">Mayor verifies evidence</text>
 
         <rect class="svg-box" x="40" y="580" width="1040" height="94" rx="10" />
@@ -961,7 +961,7 @@ const svgDescId = `${titleId}-svg-desc`;
           <path class="svg-link" d="M695 374 V474 H720" />
           <path class="svg-link" d="M850 474 H880" />
           <path class="svg-link" d="M947 450 V160 H1000 V126" />
-          <path class="svg-link svg-link--dashed" d="M790 450 V88 H970" />
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M790 450 V88 H970" />
           <path class="svg-link" d="M1060 126 V545 H820 V574" />
           <path class="svg-link" d="M883 598 H980" />
         </g>
@@ -1128,7 +1128,16 @@ const svgDescId = `${titleId}-svg-desc`;
   /* Visual grammar: one legend across every diagram. A durable record wears a
      double outline, a crash window is a bolt on the edge it interrupts, a
      failed integration contract is a broken edge between systems (the
-     components stay healthy), shadow mode is a translucent barrier. */
+     components stay healthy), shadow mode is a translucent barrier.
+
+     Edges: a solid link is a structural connection; a dashed accent link is a
+     message crossing a boundary. When that message's motion is repeatable
+     (delivery, redelivery, retry, an at-least-once attempt) the edge also
+     carries --flow, and its path MUST be drawn in the direction of travel,
+     because the dash animation marches from path start to path end. A dashed
+     edge without --flow is inspection or reconstruction the reader should see
+     as a relationship, not traffic. The acknowledgement check sits inside the
+     box it seals, clear of the border. */
   .svg-box--durable {
     stroke-width: 1.5;
   }
