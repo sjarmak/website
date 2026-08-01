@@ -796,6 +796,35 @@ test("the essay teaches the orchestrator, ownership boundary, and recovery path 
   assert.doesNotMatch(figures, /<div class="(?:orchestrator|ownership|recovery)-map/);
 });
 
+test("the diagrams share one visual-grammar legend", () => {
+  const figures = readFileSync(FIGURES, "utf8");
+  // The brief's legend: double outline = durable record, bolt on an edge =
+  // crash window, translucent barrier = shadow mode, broken edge = failed
+  // integration contract, hourglass = durable wait, lock = identity fence.
+  for (const cls of [
+    "svg-box--durable",
+    "svg-durable-inner",
+    "svg-box--muted",
+    "svg-lane",
+    "svg-bolt",
+    "svg-barrier",
+    "svg-hourglass",
+    "svg-fence",
+    "svg-link--broken",
+    "svg-ack",
+  ]) {
+    assert.match(
+      figures,
+      new RegExp(`\\.${cls}\\s*\\{`),
+      `the visual grammar must style .${cls}`,
+    );
+  }
+  // The failure grammar colors edges, never fills a component with a
+  // hardcoded red; everything routes through the theme's accent.
+  assert.match(figures, /\.svg-link--broken\s*\{[\s\S]*?var\(--color-accent\)/);
+  assert.match(figures, /\.svg-bolt\s*\{[\s\S]*?var\(--color-accent\)/);
+});
+
 test("every figure uses the shared, theme-aware semantic caption treatment", () => {
   const illustration = readFileSync(ILLUSTRATION, "utf8");
   const figures = readFileSync(FIGURES, "utf8");
