@@ -78,25 +78,46 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     margin-block-end: 0;
   }
 
-  /* Tables carry long test identifiers, so they scroll inside their own column
-     rather than widening the page. */
+  /* Tables carry Go test identifiers up to 73 characters with no break
+     opportunity inside them. An earlier revision made the table its own
+     scroll container, which turned that into a horizontal scrollbar and hid
+     the right-hand column until the reader dragged it.
+
+     Fixed layout binds the columns to the container instead of to the
+     content, and overflow-wrap lets a long identifier break rather than
+     push. The identifiers stay fully readable; they just wrap. */
   :global(.temporal-agent-article__body > table) {
-    display: block;
     width: 100%;
-    overflow-x: auto;
+    table-layout: fixed;
     border: var(--border-hairline);
     border-collapse: collapse;
     font-size: var(--step--1);
     line-height: 1.45;
   }
 
+  :global(.temporal-agent-article__body > table th:first-child),
+  :global(.temporal-agent-article__body > table td:first-child) {
+    width: 30%;
+  }
+
   :global(.temporal-agent-article__body > table th),
   :global(.temporal-agent-article__body > table td) {
-    min-width: 12rem;
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
     text-align: start;
     vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  /* The rule that actually does the work: without it the inline code element
+     keeps its own intrinsic width and the cell setting is moot.
+     box-decoration-break gives each wrapped fragment its own padding and
+     rounded ends, instead of one box sliced raggedly across the line break. */
+  :global(.temporal-agent-article__body > table code) {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   :global(.temporal-agent-article__body > table th) {

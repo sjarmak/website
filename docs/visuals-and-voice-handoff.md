@@ -1,4 +1,4 @@
-# Handoff: companion-page visuals, voice pass, and the table overflow
+# Handoff: companion-page visuals and voice pass
 
 ## Start here
 
@@ -12,9 +12,17 @@ That directory is a **git worktree** of `/home/ds/projects/website`, not a
 separate clone. Sitting in `/home/ds/projects/website` puts you on `main` where
 none of this exists. Change directory first.
 
-**Written** 2026-08-01 at `5992ad4`. Three tasks, in priority order:
-visualizations, voice pass, table overflow. The first is the reason this handoff
-exists: the topic is hard and the page currently explains it mostly in prose.
+**Written** 2026-08-01. Two tasks, in priority order: visualizations, then
+voice pass. The first is the reason this handoff exists: the topic is hard and
+the page currently explains it mostly in prose.
+
+The table-overflow issue that was originally task 3 is **fixed and verified**,
+at `article.astro`. The test table used to be its own scroll container, so the
+73-character Go identifiers in its right column pushed it into a horizontal
+scrollbar. It is now `table-layout: fixed` with `overflow-wrap: anywhere` on
+the cells and on the inline `code` inside them. Measured in a real browser at
+six viewport widths across both themes: zero table overflow, zero page
+overflow, nothing clipped, longest identifier wraps intact over two lines.
 
 ---
 
@@ -166,53 +174,6 @@ already had to fix once each:
 - **No sentence that narrates the document's own structure.** "Read back to
   back, the last few sections make Temporal look like…" was cut for the same
   reason. State the claim.
-
----
-
-## Task 3: the test table scrolls horizontally. It should not.
-
-**Where:** the "What the tests hold down" table in
-`src/components/temporal-agent-orchestration/Article.mdx`, rendered at
-`/temporal-agent-orchestration/article`.
-
-**Cause, diagnosed:** `src/pages/temporal-agent-orchestration/article.astro`
-lines 83 to 100:
-
-```css
-:global(.temporal-agent-article__body > table) {
-  display: block;
-  overflow-x: auto;      /* makes the table its own scroll container */
-}
-:global(.temporal-agent-article__body > table th),
-:global(.temporal-agent-article__body > table td) {
-  min-width: 12rem;
-}
-```
-
-The right column holds inline-code Go test identifiers with no break
-opportunities in them. The longest is 73 characters
-(`TestCoordinatorOutcomeWorkflowDoesNotLoseAcknowledgementAtHistoryBoundary`),
-with three more over 64. A single unbreakable token wider than the column forces
-intrinsic width past the container, and `overflow-x: auto` then turns that into a
-scrollbar instead of wrapping.
-
-**Fix direction:** make the content wrap so the scroll never triggers.
-
-- Drop `display: block` and use `display: table` with `table-layout: fixed` and
-  `width: 100%`, so columns are bound by the container rather than by content.
-- Set explicit column widths (roughly 30/70 suits this table's two columns).
-- Add `overflow-wrap: anywhere` to the cells **and** to inline `code` inside
-  them. This is the part that actually fixes it; the long identifiers cannot wrap
-  without it.
-- Drop `min-width: 12rem` on cells, which fights fixed layout.
-- Keep an `overflow-x: auto` wrapper only as a safety net if you want one, but
-  with fixed layout plus wrapping it should never engage.
-
-**Verify by looking, not by reasoning.** A dev server is already running on
-port 4332, or start your own. Check at desktop width and at 720px, in both
-themes, and confirm no horizontal scrollbar and no clipped identifier. The
-identifiers must stay readable; wrapping mid-token is acceptable here, truncation
-is not.
 
 ---
 
