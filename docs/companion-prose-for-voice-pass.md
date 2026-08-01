@@ -77,6 +77,52 @@ Links **(new labels; replace the old two-tab nav)**:
 
 > The task state was already durable. What was missing was a durable owner for the procedure.
 
+### Figure: legend (new 2026-08-01, reviewer follow-up; renders on both pages before the first diagram)
+
+Heading:
+
+> How to read these diagrams
+
+Swatch labels:
+
+> structural connection
+
+> a message crosses a boundary
+
+> repeatable motion, direction of travel
+
+> broken integration contract
+
+> crash window on the edge it hits
+
+> durable record
+
+> identity fence
+
+> durable wait
+
+> shadow wall
+
+> acknowledgement
+
+Fallback list:
+
+> A solid edge is a structural connection; a dashed edge is a message crossing a boundary.
+
+> Moving dashes mark repeatable motion, and they travel in the direction the message moves.
+
+> A broken edge is a failed integration contract between healthy components.
+
+> A bolt is a crash window on the edge it interrupts.
+
+> A double outline is a durable record; a lock is an identity fence; an hourglass is a durable wait.
+
+> A translucent wall is shadow mode, and a check is an acknowledgement.
+
+Caption:
+
+> One grammar across every diagram. Anything moving is repeatable; still dashed edges are inspection, not traffic.
+
 ### Figure: scattered (new 2026-08-01)
 
 Heading:

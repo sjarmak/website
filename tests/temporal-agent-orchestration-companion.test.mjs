@@ -379,6 +379,7 @@ test("the companion carries diagrams that agree with its prose", () => {
   );
 
   const reading = [
+    "legend",
     "scattered",
     "handoff",
     "ownership",
