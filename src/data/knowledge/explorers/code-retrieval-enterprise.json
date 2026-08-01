@@ -1824,6 +1824,69 @@
           "why": "This branch reads the field as an additive ladder where cascades put each technique where its cost is justified. This contribution is orthogonal to the ladder and worth separating from it: allocation is a distinct decision from retrieval, it is settled by provenance rather than text similarity, and the familiar diversity knobs are the wrong instrument for it. The control table is the useful evidence — four standard redundancy and coverage methods, each removing a different kind of repetition, all landing within 0.2 points of each other at the model input. That says the bottleneck is not diversity at all, but who owns a slot and how much text they get."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728587W",
+      "title": "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks",
+      "firstAuthor": "Wang, Manyi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28587",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728587W/abstract",
+      "branches": [
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "enterprise",
+          "takeaway": "PaiChecker treats misalignment detection as a semantic comparison over textual artifacts first and code second, on the argument that intent read off a diff is ambiguous when the intended behavior spans hundreds or thousands of lines, while PR descriptions and discussions summarize changes at the same abstraction level as issues. Phase I runs three specialized subagents, each over a focused artifact subset with its own workflow; Phase II has a coordinator synthesize cross-subagent evidence to catch misalignments outside the taxonomy and re-verify each label against its own textual reasoning; Phase III validates the label against the code. On SWE-Gym it reaches 92.12% binary accuracy and 84.66% exact match, beating the strongest of three prompting and four agent-framework baselines by 5.13-12.39 accuracy points and 9.02-17.76 exact-match points, and 91.67% on SWE-bench Multilingual, holding across GPT-5.3 Codex, Qwen-3.5 Plus, Gemini-3.1-Pro Preview and Claude-Sonnet-4.6 backbones.",
+          "why": "This branch names an evaluation crisis where ground truth is contaminated or tautological. Here that crisis has a number and a scrubber. The same PR-to-issue pipeline also builds training sets for code LLMs and software agents, so a misaligned pair is not merely a bad test case, it is supervision teaching a model to produce incomplete, unrelated, or defective patches. A checker that runs at construction time is the difference between a corpus that can be grown and one that degrades as it scales."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260728591Q",
+      "title": "Change2Task: From Repository Changes to Executable Coding Agent Tasks and Environments",
+      "firstAuthor": "Qi, Haomin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28591",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728591Q/abstract",
+      "branches": [
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "enterprise",
+          "takeaway": "The paper's framing is that executable environments, not task ideas, are the scarce resource. It cites daVinci-Env at 45,320 Docker environments across more than 12.8K repositories for roughly $891K in construction cost, and SWE-Universe at 807,693 verifiable environments on specialized distributed infrastructure, with per-task snapshots further multiplying images, storage, registry traffic and cold starts. Change2Task sits downstream of the setup problem EnvBench, SetupBench, Repo2Run and RepoLaunch attack: it starts once a base is runnable and asks how many verified, developer-grounded tasks one prepared base can carry. Reusing 388 modern bases cuts environment time 58.4%, storage 71.2% and end-to-end expenditure 10.8%. Construction escalates only as repository drift demands it - Level 1 reverses the source patch when it still applies, Level 2 locates the historical post-change block in the modern file and swaps in its reindented pre-change form under the same scope and executable gates, and Level 3 hands PR evidence and modern context to a construction agent for at most four attempts, ranking survivors by source change profile fidelity and edit complexity.",
+          "why": "Enterprise-scale code work hits build complexity and a contaminated evaluation base at the same time, and this addresses both with one move. Binding a task to its original historical revision is what makes a benchmark go stale and what forces a fresh environment per task; rebuilding the same maintenance event on a maintained head keeps the developer's intent while inheriting a working build. The three-level escalation doubles as a measurement of repository drift itself - which historical changes still replay verbatim, which need structural mapping, and which need a model to reconstruct at all."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260727249Z",
+      "title": "OwlPath: Lossless Knowledge Compression for LLM Bug Repair",
+      "firstAuthor": "Zhang, Bo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27249",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727249Z/abstract",
+      "branches": [
+        "techniques",
+        "repo-scale"
+      ],
+      "notes": [
+        {
+          "branch": "techniques",
+          "takeaway": "OwlPath projects a tree-sitter code graph into an OWL2 ontology and answers structural queries with SPARQL 1.1 property paths. Every edge maps to one axiom: extends becomes rdfs:subClassOf, implements, calls and imports become transitive object properties, contains stays non-transitive, and the projection is a bijection, one axiom per source tuple, which is the sense in which nothing structural is lost. The payoff is complexity: the transitive closure materializes once at O(n+m) and serves from cache at O(1) amortized, against a recursive SQL CTE at O(n^k) for k hops - 4.7 measured minutes of single-threaded extract-and-project on a 1.4M-symbol repository. On 18 matched SWE-bench Pro instances holding agent (Hermes), model (DeepSeek-V4-Flash), 70-turn cap and prompt template constant, strict-apply is comparable at 68.4% against 66.7%, while tokens fall 28.8% (1,416K vs 1,989K) and wall clock 39.5% (648s vs 1,071s). Offline on 67 instances the separation is larger: recall 0.464 against 0.226 for string-match codegraph and an 88.1% hit rate against 59.7%; on a 37-question structural benchmark recall@all rises from 4.4% to 28.8%, scoring 69-80% on transitive-caller and interface-implementation questions.",
+          "why": "The branch's claim is that the ladder is additive and graph methods own behavior - the queries whose answer is structurally connected to the question but shares no string with it: a subclass chain, a transitive caller path, an interface hierarchy. This measures that case cleanly, and what moves is retrieval quality and cost, not the repair rate. It also supplies the cascade's cost discipline in an unusually direct experiment: forcing the knowledge-map advisory and closure results into every prompt doubles token consumption, 2,835K against 1,416K, and leaves strict-apply flat at 68.8% versus 68.4%, while keeping the tool optional buys the same success for half the tokens."
+        },
+        {
+          "branch": "repo-scale",
+          "takeaway": "The setup is the repository-scale bind stated as arithmetic: roughly 100K tokens of context against a repository of millions of lines, so the agent must retrieve a structurally relevant subset before it can reason about the bug at all. OwlPath sits on the query-a-structured-model side of the fork but adds an orientation aid for the first move. The OWL Software Knowledge Map is a 3KB summary emitted once, on the agent's first search call, in two layers: a module directory tree with each module scored log(symbols)*0.5 + log(files)*0.3 + log(symbols per file)*0.2, and an issue map built from 4-8 identifiers extracted from the problem statement and test patch, each resolved to candidate symbols. The stated aim is compressing the initial search space from thousands of files to one advisory, replacing a baseline loop of grep, read, grep, read over five to ten iterations. Evaluation seals each repository's git history first - branches and tags deleted, reflogs expired, gc prune - so the agent cannot recover the gold fix from history.",
+          "why": "The fork this branch names is between retrieving better snippets and querying a structured model of the repository, with agentic navigation walking between them. OwlPath is a clean instance of the second that leaves the agent in charge of when to walk, since closure is opt-in per query rather than always-on context. The 3KB map is the more portable idea in it: the expensive failure at repository scale is rarely a bad ranking, it is spending the first several turns in the wrong module, and a one-time orientation is cheap insurance against that."
+        }
+      ]
     }
   ],
   "sections": [

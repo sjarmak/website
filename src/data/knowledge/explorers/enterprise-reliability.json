@@ -1958,6 +1958,63 @@
           "why": "This branch's claim is that a transcript is not observability and that a trace has to let you correlate stated intent with executed action. The paper is a direct demonstration of the payoff. A disclosure checkbox is the only signal a maintainer normally sees, and the paper shows it is filled falsely often enough that a naive check passes runs that are violations. Every finding separating a compliant run from a plausible-looking one comes from cross-referencing the agent's prose against the command log, which means the command log has to be captured and kept rather than summarized."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728587W",
+      "title": "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks",
+      "firstAuthor": "Wang, Manyi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28587",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728587W/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "SWE-bench-like benchmarks pair each PR with an issue by regex-extracting issue references from the PR description, then use the issue text as the problem statement and the PR patch as the test oracle. Manual open coding of all 500 SWE-bench Verified instances finds 13.6% where that pairing does not hold, across five patterns and eleven fine-grained scenarios: PRs that deliver functionality the issue never requested (the test patch then validates requirements absent from the problem statement, penalizing an agent that correctly solved the stated problem), follow-ups to an earlier incomplete fix, PRs that introduce new defects alongside the intended one, and issues whose necessary detail appears only in later discussion. The distortion concentrates exactly where scoring is read hardest: among the 34 instances no leaderboard agent ever resolved, 41.2% are misaligned, against 5.7% among widely solved instances, and the misalignment rate falls monotonically as more of the 131 leaderboard agents resolve an instance.",
+          "why": "The branch's rule is to ground evaluation in execution and an honest baseline. This measures how honest the most-cited baseline actually is: a hidden test oracle is only as good as the assumption that it tests the stated problem, and on a human-validated benchmark that assumption fails on roughly one instance in seven. The unresolved tail is normally read as remaining model capability, and it is precisely where the corrupted instances cluster, so part of the reported headroom is unsolvable as stated rather than hard."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260727250K",
+      "title": "Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories",
+      "firstAuthor": "Khatri, Prakhar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27250",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727250K/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A three-way ablation of context-injection strategy - NONE, ALWAYS ON (the full AGENTS.md in the system prompt every turn), SELECTIVE (topic-organized wiki files the agent reads on demand) - across Claude Code (claude-sonnet-4-6) and Codex CLI (gpt-5.5), on tasks mined from merged PRs in pdm, firebase-admin-python and opshin, scored by the PR's own test files applied after the agent finishes and never shown to it. Pass rates barely move: Claude 53.3 / 55.6 / 55.6% with an omnibus permutation p of 1.000, Codex 58.8 / 56.9 / 52.9% at p=0.66. The paper then argues against its own headline test: most tasks sit at 0 or 1, leaving almost no marginal variance to permute, so p=1.000 is close to mechanical. The substantive load is carried by a borderline subset with real dynamic range - four Codex tasks at 17-67% baseline pass rate, where NONE scores 58% against 42% for both context conditions - and by TOST bounds under 10pp for Claude and 15pp for Codex, which the authors label descriptive rather than a powered equivalence claim at 15-17 task clusters against a minimum detectable effect above 30pp.",
+          "why": "This is what an honest baseline looks like when the finding is a null. The design anticipates the artifact that would fake one, screens 84 candidate tasks to locate a borderline band with power to register an effect, states plainly that its own omnibus p-value is uninformative, and declines to convert a bounded interval into an equivalence claim the sample cannot support. It also shows the eval design deciding the answer: the borderline band was calibrated on Codex and does not transfer to Claude, reported as agent-specific task difficulty at Spearman rho=0.75, which the authors offer as the reason two prior single-agent studies reached opposite conclusions about the same practice."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260728591Q",
+      "title": "Change2Task: From Repository Changes to Executable Coding Agent Tasks and Environments",
+      "firstAuthor": "Qi, Haomin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28591",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728591Q/abstract",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Change2Task builds coding-agent tasks by replaying a merged PR onto a healthy modern descendant of the same repository, then proves the task is real by executing it in three states. Writing H for the modern base, D for the task patch, C = apply(H, D) for the task state and G for a recorded restoration patch: target checks must pass on H, fail on C, and pass again on the restored state after G, while regression checks pass throughout, and unstable cases are rejected on repeat runs. A scope gate permits only artifacts the task specification allows, blocking edits to protected checks or metadata that would manufacture validity. A fidelity gate rejects both scope collapse, where a substantial source change becomes trivial, and scope inflation, where a narrow change demands broad unrelated edits. From 1,130 eligible source changes it finalizes 900 paired tasks at a 79.6% verified construction rate with 0.894 task-weighted fidelity to the source change profile, and on 621 matched Bug Fix candidates recovers 500 verified tasks against 387 for SWE-smith's PR Mirror.",
+          "why": "The branch's standard is evaluation grounded in execution rather than in a plausible-looking artifact, and the three-state lifecycle is the concrete form of it: a task that never fails on C was never a task, and one that cannot be restored was never scoped. The more transferable number is the agreement check - historical and reconstructed cases reach up to 98.0% matched outcome agreement under agent evaluation while preserving the agent ranking. That is the question to ask of any generated corpus and the one most do not answer: does it order systems the way the human-authored instances did."
+        }
+      ]
     }
   ],
   "sections": [

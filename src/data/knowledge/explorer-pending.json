@@ -22,9 +22,9 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-31",
-      "attempts": 12,
-      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-07-31. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
+      "lastAttempt": "2026-08-01",
+      "attempts": 13,
+      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-08-01. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
     },
     {
       "bibcode": "2026arXiv260714275B",
@@ -41,8 +41,8 @@
         }
       ],
       "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-07-31",
-      "attempts": 12
+      "lastAttempt": "2026-08-01",
+      "attempts": 13
     },
     {
       "bibcode": "2026arXiv260715524L",
@@ -63,8 +63,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-31",
-      "attempts": 11
+      "lastAttempt": "2026-08-01",
+      "attempts": 12
     },
     {
       "bibcode": "2026arXiv260715388Y",
@@ -86,8 +86,8 @@
         }
       ],
       "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-07-31",
-      "attempts": 11
+      "lastAttempt": "2026-08-01",
+      "attempts": 12
     },
     {
       "bibcode": "2026arXiv260326667S",
@@ -102,8 +102,8 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-07-31",
-      "attempts": 7
+      "lastAttempt": "2026-08-01",
+      "attempts": 8
     },
     {
       "bibcode": "2026arXiv260401527J",
@@ -124,32 +124,27 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-07-31",
-      "attempts": 2,
+      "lastAttempt": "2026-08-01",
+      "attempts": 3,
       "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-07-31."
     },
     {
-      "bibcode": "2026arXiv260728587W",
-      "arxiv": "2607.28587",
-      "title": "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks",
+      "bibcode": "2026arXiv260727294Z",
+      "arxiv": "2607.27294",
+      "title": "AgentS4D: Benchmarking Runtime Risks across the Execution Lifecycle of LLM-Based Workspace Agents",
       "targets": [
         {
           "explorerId": "enterprise-reliability",
           "branches": [
+            "security",
             "eval"
-          ]
-        },
-        {
-          "explorerId": "code-retrieval-enterprise",
-          "branches": [
-            "enterprise"
           ]
         }
       ],
-      "firstSeen": "2026-07-31",
-      "lastAttempt": "2026-07-31",
+      "firstSeen": "2026-08-01",
+      "lastAttempt": "2026-08-01",
       "attempts": 1,
-      "note": "read_paper returns 'Paper not found' on 2026-07-31; ADS has the bibcode but SciX has not ingested the body yet."
+      "note": "read_paper returns 'Paper not found' on 2026-08-01; ADS has the bibcode but SciX has not ingested the body yet."
     }
   ]
 }

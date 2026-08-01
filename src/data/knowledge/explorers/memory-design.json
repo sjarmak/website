@@ -1489,6 +1489,25 @@
           "why": "Direct evidence for the branch's core claims: context load itself, not semantic interference, drives the degradation (relevant and irrelevant were indistinguishable), and the mitigation that works is an external requirement source independent of the agent's current summary - selective construction of the working set beats a bigger window."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260727250K",
+      "title": "Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories",
+      "firstAuthor": "Khatri, Prakhar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27250",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727250K/abstract",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "The three arms deliver repository context three ways, and the study separates delivery from content. ALWAYS ON re-presents the whole AGENTS.md in the system prompt on every turn; SELECTIVE keeps only a short retrieval hint there and lets the agent read wiki files with its Read tool; in all conditions the workspace AGENTS.md is removed so the injection channel is the only context. The single surviving efficiency signal is a footprint one: on Claude, SELECTIVE creates significantly fewer cache-creation tokens than NONE, lower on 11 of 11 tasks (p=0.001, Holm-corrected 0.012), with cache-read and duration trending the same way without surviving correction. The authors read it mechanically - it follows from re-presenting the file each turn, not from the agent using the context better. A failure-mode triage supports that: agents fail on implementation skill, feature design, pattern selection and exact wiring, not on missing repository knowledge, and a manipulation probe found the real AGENTS.md never converting a near-miss into a pass on either agent. The SELECTIVE corpus is a declared confound - content-matched to the AGENTS.md only for opshin, roughly 10x and 18x its word count for pdm and firebase - but the larger corpus only strengthens the null, since strictly more material still did not raise pass rates.",
+          "why": "The working-memory question is whether a persistent, always-resident document earns its slot in the context window. On these tasks it costs cache tokens and returns nothing measurable on correctness, which is the shape the lost-in-the-middle result the paper cites would predict: material parked mid-prompt every turn is not necessarily material the model uses. It also sharpens what this branch should argue about. If the binding constraint is implementation skill rather than retrievable repository knowledge, then better selection of what the model sees each step has a ceiling on work like this, and the interesting variable shifts to which tasks fall inside a given agent's informative band at all."
+        }
+      ]
     }
   ],
   "sections": [
