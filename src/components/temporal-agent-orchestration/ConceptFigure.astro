@@ -128,18 +128,24 @@ const svgDescId = `${titleId}-svg-desc`;
 
       <svg
         class="concept-figure__svg"
-        viewBox="0 0 1120 640"
+        viewBox="0 0 1120 700"
         role="img"
         aria-labelledby={`${svgTitleId} ${svgDescId}`}
       >
         <title id={svgTitleId}>OutcomeReady workshop flow</title>
         <desc id={svgDescId}>
           Agents, formulas, and orders write canonical work facts to the
-          Beads work record. A verified result enters an OutcomeReady outbox, a
-          durable completed-result record awaiting acknowledgement. A Temporal
-          Outcome Workflow delivers and redelivers it until the mayor verifies
-          evidence, records an exact acknowledgement, and Beads stores the
-          acknowledged receipt.
+          Beads work record, a durable record. A verified result enters
+          the OutcomeReady outbox, a durable completed-result record
+          awaiting acknowledgement. The Temporal Outcome Workflow delivers
+          the result to the Mayor and waits on a durable timer; redelivery
+          loops only between the delivery step and that durable wait. The
+          Mayor verifies evidence and records an exact acknowledgement,
+          and Beads stores the acknowledged receipt as a durable record.
+          An independent all-store watchdog sits outside the Temporal
+          path, scanning every store for terminal or verified work with no
+          outcome, so it can report even when this delivery loop goes
+          silent.
         </desc>
 
         <g class="svg-flow">
@@ -147,20 +153,25 @@ const svgDescId = `${titleId}-svg-desc`;
           <text class="svg-label" x="49" y="120">Agents, formulas,</text>
           <text class="svg-label" x="49" y="147">and orders</text>
 
-          <rect class="svg-box svg-box--accent" x="313" y="65" width="219" height="130" rx="10" />
+          <rect class="svg-box svg-box--accent svg-box--durable" x="313" y="65" width="219" height="130" rx="10" />
+          <rect class="svg-durable-inner" x="318" y="70" width="209" height="120" rx="6" />
           <text class="svg-label" x="331" y="123">Beads work record</text>
-          <text class="svg-small" x="331" y="153">canonical work record</text>
+          <text class="svg-small svg-small--wrapped" x="331" y="153"><tspan x="331" dy="0">canonical</tspan><tspan x="331" dy="19">work record</tspan></text>
 
           <rect class="svg-box" x="582" y="65" width="221" height="130" rx="10" />
           <text class="svg-label" x="600" y="123">Verified result</text>
           <text class="svg-small" x="600" y="153">tests + evidence agree</text>
 
-          <rect class="svg-box" x="853" y="65" width="236" height="130" rx="10" />
+          <rect class="svg-box svg-box--durable" x="853" y="65" width="236" height="130" rx="10" />
+          <rect class="svg-durable-inner" x="858" y="70" width="226" height="120" rx="6" />
           <text class="svg-label svg-label--wrapped" x="871" y="112">
             <tspan x="871" dy="0">OutcomeReady</tspan>
             <tspan x="871" dy="23">outbox</tspan>
           </text>
-          <text class="svg-small" x="871" y="164">pending acknowledgement</text>
+          <text class="svg-small svg-small--wrapped" x="871" y="157">
+            <tspan x="871" dy="0">pending</tspan>
+            <tspan x="871" dy="19">acknowledgement</tspan>
+          </text>
 
           <path class="svg-link" d="M263 130 H313 M532 130 H582 M803 130 H853" />
 
@@ -179,6 +190,7 @@ const svgDescId = `${titleId}-svg-desc`;
           </text>
 
           <rect class="svg-box" x="313" y="300" width="219" height="130" rx="10" />
+          <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(557 351)" />
           <text class="svg-label svg-label--wrapped" x="331" y="340">
             <tspan x="331" dy="0">Exact</tspan>
             <tspan x="331" dy="23">acknowledgement</tspan>
@@ -188,30 +200,54 @@ const svgDescId = `${titleId}-svg-desc`;
             <tspan x="331" dy="19">session fence</tspan>
           </text>
 
-          <rect class="svg-box" x="31" y="300" width="232" height="130" rx="10" />
+          <rect class="svg-box svg-box--durable" x="31" y="300" width="232" height="130" rx="10" />
+          <rect class="svg-durable-inner" x="36" y="305" width="222" height="120" rx="6" />
           <text class="svg-label" x="49" y="355">Beads acknowledged</text>
           <text class="svg-label" x="49" y="382">receipt</text>
 
           <path class="svg-link" d="M971 195 V300 M853 365 H803 M582 365 H532 M313 365 H263" />
-          <path class="svg-link svg-link--dashed svg-link--flow" d="M971 430 V515 H692 V430" />
-          <text class="svg-small" x="671" y="548">wait durably · redeliver while pending</text>
+
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M1000 430 V512 H828 V365" />
+          <path class="svg-hourglass" d="M-6 -9 H6 L-6 9 H6 Z" transform="translate(914 512)" />
+          <text class="svg-small svg-label--center" x="914" y="555">
+            <tspan x="914" dy="0">wait durably</tspan>
+            <tspan x="914" dy="19">redeliver while pending</tspan>
+          </text>
+        </g>
+
+        <g>
+          <path class="svg-link svg-link--dashed" d="M147 520 V430" />
+          <text class="svg-small" x="165" y="465">
+            <tspan x="165" dy="0">terminal work</tspan>
+            <tspan x="165" dy="19">with no outcome?</tspan>
+          </text>
+          <rect class="svg-box" x="31" y="520" width="270" height="130" rx="10" />
+          <text class="svg-eyebrow" x="55" y="553">Outside Temporal</text>
+          <text class="svg-label" x="55" y="585">All-store watchdog</text>
+          <text class="svg-small svg-small--wrapped" x="55" y="612">
+            <tspan x="55" dy="0">reports when this loop</tspan>
+            <tspan x="55" dy="19">goes silent</tspan>
+          </text>
         </g>
       </svg>
 
       <ol class="concept-figure__fallback" aria-label="OutcomeReady workshop flow">
         <li>Agents, formulas, and orders update work.</li>
-        <li>Beads stores the canonical work record.</li>
+        <li>The Beads work record stores canonical work facts as a durable record.</li>
         <li>A verified result is ready for delivery.</li>
         <li>The OutcomeReady outbox stores a durable completed-result record awaiting acknowledgement.</li>
-        <li>The Temporal Outcome Workflow delivers, waits durably, and redelivers while pending.</li>
-        <li>The current mayor verifies evidence.</li>
+        <li>The Temporal Outcome Workflow delivers the result, waits on a durable timer, and redelivers only between delivery and that wait while acknowledgement is missing.</li>
+        <li>The Mayor verifies evidence.</li>
         <li>An exact acknowledgement binds the result generation and agent session.</li>
-        <li>The Beads acknowledged receipt becomes canonical.</li>
+        <li>The Beads acknowledged receipt becomes the canonical durable record.</li>
+        <li>An independent all-store watchdog outside Temporal scans every store for terminal or verified work with no outcome, so it reports even when the delivery path itself goes silent.</li>
       </ol>
 
       <figcaption class="figure-caption">
-        Beads records what happened to the work. Temporal records the procedure
-        that keeps a finished result pending until someone acknowledges it.
+        Delivery may repeat; the outcome identity does not. Completion
+        requires an exact acknowledged receipt, and an independent
+        watchdog outside Temporal reports finished work that never
+        produced an outcome.
       </figcaption>
     </figure>
   )
@@ -227,24 +263,33 @@ const svgDescId = `${titleId}-svg-desc`;
 
       <svg
         class="concept-figure__svg"
-        viewBox="0 0 1000 440"
+        viewBox="0 0 1000 560"
         role="img"
         aria-labelledby={`${svgTitleId} ${svgDescId}`}
       >
         <title id={svgTitleId}>Ownership after the Temporal integration</title>
         <desc id={svgDescId}>
-          The Beads work record owns mutable task facts, the Temporal Workflow owns
-          durable procedure, and Temporal Activities contain nondeterministic
-          work and external calls.
+          Three columns divide ownership. The Beads work record, a durable
+          record, owns mutable task facts. The Temporal Workflow, a
+          durable record, owns the procedure; its Event History stays
+          separate from task facts. Temporal Activities hold
+          nondeterministic work and external calls and are not a durable
+          record. Fenced completion checks flow both ways between Beads
+          and Activities: Activities report completions carrying the
+          generation and claim token, and Beads accepts only a completion
+          that still matches the canonical claim.
         </desc>
-        <rect class="svg-box" x="45" y="70" width="270" height="245" rx="10" />
+
+        <rect class="svg-box svg-box--durable" x="45" y="70" width="270" height="245" rx="10" />
+        <rect class="svg-durable-inner" x="50" y="75" width="260" height="235" rx="6" />
         <text class="svg-eyebrow" x="70" y="110">Application record</text>
         <text class="svg-label" x="70" y="145">Work record: Beads</text>
         <text class="svg-small" x="70" y="188">task facts · claims</text>
         <text class="svg-small" x="70" y="218">dependencies · artifacts</text>
         <text class="svg-small" x="70" y="248">outcomes · receipts</text>
 
-        <rect class="svg-box svg-box--accent" x="365" y="70" width="270" height="245" rx="10" />
+        <rect class="svg-box svg-box--accent svg-box--durable" x="365" y="70" width="270" height="245" rx="10" />
+        <rect class="svg-durable-inner" x="370" y="75" width="260" height="235" rx="6" />
         <text class="svg-eyebrow" x="390" y="110">Durable procedure</text>
         <text class="svg-label" x="390" y="145">Temporal Workflow</text>
         <text class="svg-small" x="390" y="188">Event History · waits</text>
@@ -257,18 +302,28 @@ const svgDescId = `${titleId}-svg-desc`;
         <text class="svg-small" x="710" y="188">agent processes · tests</text>
         <text class="svg-small" x="710" y="218">reviews · external calls</text>
         <text class="svg-small" x="710" y="248">heartbeats · fences</text>
+
         <path class="svg-link" d="M315 192 H365 M635 192 H685" />
+
+        <path class="svg-link svg-link--dashed" d="M820 315 V395 H180 V315" />
+        <text class="svg-small svg-label--center" x="500" y="380">Activities report fenced completions</text>
+
+        <path class="svg-link" d="M110 315 V470 H890 V315" />
+        <g class="svg-fence" transform="translate(500 470)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+        <text class="svg-small svg-label--center" x="500" y="505">Beads accepts only a completion that matches the canonical claim</text>
       </svg>
 
       <ul class="concept-figure__fallback" aria-label="Ownership boundaries">
-        <li>The Beads work record owns mutable task facts, claims, dependencies, artifacts, outcomes, and receipts.</li>
-        <li>The Temporal Workflow owns Event History, deterministic decisions, waits, retries, cancellation, signals, and progress.</li>
-        <li>Temporal Activities contain agent processes, tests, reviews, external calls, heartbeats, and fences.</li>
+        <li>The Beads work record is a durable record owning mutable task facts, claims, dependencies, artifacts, outcomes, and receipts.</li>
+        <li>The Temporal Workflow is a durable record owning Event History, deterministic decisions, waits, retries, cancellation, signals, and progress; Event History stays separate from task facts.</li>
+        <li>Temporal Activities contain agent processes, tests, reviews, external calls, heartbeats, and fences, and are not a durable record.</li>
+        <li>Fenced completion checks flow both ways between Beads and Activities: Activities report completions carrying the generation and claim token, and Beads accepts only a completion that still matches the canonical claim.</li>
       </ul>
 
       <figcaption class="figure-caption">
-        Beads remains the source for task facts. Temporal gives the
-        procedure a durable owner and routes side effects through Activities.
+        Beads says what is true about the work. Temporal says where the
+        procedure is. Activities touch the unpredictable world. Fenced
+        completion checks travel both ways between Beads and Activities.
       </figcaption>
     </figure>
   )
@@ -284,63 +339,101 @@ const svgDescId = `${titleId}-svg-desc`;
 
       <svg
         class="concept-figure__svg"
-        viewBox="0 0 1000 440"
+        viewBox="0 0 1100 620"
         role="img"
         aria-labelledby={`${svgTitleId} ${svgDescId}`}
       >
-        <title id={svgTitleId}>One agent session across a Worker restart</title>
+        <title id={svgTitleId}>One agent session across a Worker crash and replacement</title>
         <desc id={svgDescId}>
-          One Worker schedules an Activity and binds an agent. After that Worker
-          dies, another Worker replays the Workflow state and resolves the same
-          agent session by its stable identity and claim token, then reattaches
-          to that generation-fenced session. The heartbeat carries progress, not
-          the identity, so this holds even when the Worker died before the first
-          heartbeat landed.
+          A timeline with three rows that continue unbroken across the
+          full width: the Temporal Event History, a durable procedure
+          record; the Beads claim and generation fence, a durable work
+          record; and the live agent session. Worker A, a temporary
+          process above the rows, schedules the Activity and attaches the
+          agent session, then dies at a crash marker in the gap between
+          Workers. All three rows continue under that gap: the Event
+          History persists, the claim token persists, and the agent
+          session keeps running as its own live process; the agent is
+          never replayed. Worker B, the replacement process, replays only
+          the deterministic Workflow state from the Event History,
+          resolves the same session by stable identity and claim token, a
+          step that holds even if no heartbeat was ever recorded,
+          reattaches to the running session, and records one
+          generation-fenced completion in Beads, marked with a fence at
+          the completion edge.
         </desc>
-        <path class="svg-link" d="M100 210 H900" />
+
         <g>
-          <circle class="svg-step" cx="100" cy="210" r="36" />
-          <text class="svg-step-number" x="100" y="217">1</text>
-          <text class="svg-label svg-label--center" x="100" y="285">Schedule Activity</text>
-          <text class="svg-small svg-label--center" x="100" y="313">stable identity</text>
+          <rect class="svg-box" x="60" y="40" width="390" height="150" rx="10" />
+          <text class="svg-eyebrow" x="88" y="72">Temporary process</text>
+          <text class="svg-label" x="88" y="100">Worker A</text>
+          <text class="svg-small" x="88" y="128">schedules the Activity</text>
+          <text class="svg-small" x="88" y="147">attaches the agent session</text>
+
+          <rect class="svg-box" x="650" y="40" width="390" height="150" rx="10" />
+          <text class="svg-eyebrow" x="678" y="72">Replacement process</text>
+          <text class="svg-label" x="678" y="100">Worker B</text>
+          <text class="svg-small" x="678" y="128">replays Workflow state</text>
+          <text class="svg-small" x="678" y="147">resolves the same session by</text>
+          <text class="svg-small" x="678" y="166">stable identity + claim token</text>
         </g>
+
         <g>
-          <circle class="svg-step" cx="300" cy="210" r="36" />
-          <text class="svg-step-number" x="300" y="217">2</text>
-          <text class="svg-label svg-label--center" x="300" y="285">Bind one agent</text>
-          <text class="svg-small svg-label--center" x="300" y="313">heartbeat progress</text>
+          <rect class="svg-box svg-box--accent svg-box--durable" x="60" y="260" width="980" height="90" rx="10" />
+          <rect class="svg-durable-inner" x="65" y="265" width="970" height="80" rx="6" />
+          <text class="svg-eyebrow" x="88" y="292">Durable procedure record</text>
+          <text class="svg-label" x="88" y="322">Temporal Event History</text>
+          <text class="svg-small svg-label--center" x="550" y="322">persists across the crash</text>
+
+          <rect class="svg-box svg-box--durable" x="60" y="370" width="980" height="90" rx="10" />
+          <rect class="svg-durable-inner" x="65" y="375" width="970" height="80" rx="6" />
+          <text class="svg-eyebrow" x="88" y="402">Durable work record</text>
+          <text class="svg-label" x="88" y="432">Beads claim + generation fence</text>
+          <text class="svg-small svg-label--center" x="550" y="432">claim token persists</text>
+          <text class="svg-small" x="800" y="432">one fenced completion</text>
+
+          <rect class="svg-lane" x="60" y="500" width="980" height="90" />
+          <text class="svg-eyebrow" x="88" y="532">Live process · not replayed</text>
+          <text class="svg-label" x="88" y="562">Agent session</text>
+          <text class="svg-small svg-label--center" x="550" y="562">keeps running under the Worker gap</text>
+          <text class="svg-small" x="770" y="562">same session, reattached</text>
         </g>
+
         <g>
-          <circle class="svg-step svg-step--failure" cx="500" cy="210" r="36" />
-          <text class="svg-step-number" x="500" y="217">×</text>
-          <text class="svg-label svg-label--center" x="500" y="285">Worker dies</text>
-          <text class="svg-small svg-label--center" x="500" y="313">agent keeps running</text>
-        </g>
-        <g>
-          <circle class="svg-step" cx="700" cy="210" r="36" />
-          <text class="svg-step-number" x="700" y="217">3</text>
-          <text class="svg-label svg-label--center" x="700" y="285">Replay + resolve</text>
-          <text class="svg-small svg-label--center" x="700" y="313">by stable identity</text>
-        </g>
-        <g>
-          <circle class="svg-step" cx="900" cy="210" r="36" />
-          <text class="svg-step-number" x="900" y="217">4</text>
-          <text class="svg-label svg-label--center" x="900" y="285">Reattach</text>
-          <text class="svg-small svg-label--center" x="900" y="313">one fenced receipt</text>
+          <path class="svg-link" d="M450 115 H484" />
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(491 115)" />
+          <text class="svg-small" x="512" y="120">Worker A dies</text>
+
+          <path class="svg-link" d="M150 190 V260" />
+          <text class="svg-small" x="163" y="232">schedule</text>
+          <path class="svg-link svg-link--dashed" d="M760 190 V260" />
+          <text class="svg-small" x="773" y="232">replay</text>
+
+          <path class="svg-link" d="M84 190 V225 H34 V545 H60" />
+          <path class="svg-link" d="M1006 190 V225 H1066 V545 H1040" />
+
+          <path class="svg-link" d="M980 460 V469 M980 493 V500" />
+          <g class="svg-fence" transform="translate(980 481)">
+            <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+            <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+          </g>
         </g>
       </svg>
 
       <ol class="concept-figure__fallback" aria-label="Agent recovery sequence">
-        <li>A Worker schedules the Activity with stable identity.</li>
-        <li>The Activity binds one agent and heartbeats progress.</li>
-        <li>The Worker dies while the agent session keeps running.</li>
-        <li>A replacement Worker replays the Workflow state and resolves the existing session by its stable identity and claim token, which holds even if no heartbeat was ever recorded.</li>
-        <li>The retry reattaches, picks up progress from any recorded heartbeat, and accepts one generation-fenced receipt.</li>
+        <li>Three rows run unbroken across the timeline: the durable Temporal Event History, the durable Beads claim and generation fence, and the live agent session.</li>
+        <li>Worker A, a temporary process, schedules the Activity and attaches the agent session.</li>
+        <li>Worker A dies. The agent session keeps running under the Worker gap; it is never replayed, and both durable rows persist.</li>
+        <li>Worker B replays only the deterministic Workflow state from the Event History.</li>
+        <li>Worker B resolves the same session by stable identity and claim token, which holds even if no heartbeat was ever recorded.</li>
+        <li>Worker B reattaches, and Beads accepts one generation-fenced completion.</li>
       </ol>
 
       <figcaption class="figure-caption">
-        Workflow replay recovers orchestration state. Start-or-attach and a
-        generation fence prevent a duplicate agent or stale completion.
+        Replay restores deterministic Workflow state only; stable identity
+        finds the running session, and the generation fence admits one
+        completion. A bounded canary proved this path, and the converted
+        bead-to-agent unit runs in shadow.
       </figcaption>
     </figure>
   )
@@ -415,62 +508,97 @@ const svgDescId = `${titleId}-svg-desc`;
 
       <svg
         class="concept-figure__svg"
-        viewBox="0 0 1000 440"
+        viewBox="0 0 1100 540"
         role="img"
         aria-labelledby={`${svgTitleId} ${svgDescId}`}
       >
-        <title id={svgTitleId}>Transactional outbox into Signal-With-Start</title>
+        <title id={svgTitleId}>Two crash windows between ready and first heartbeat</title>
         <desc id={svgDescId}>
-          One Beads transaction writes both the ready transition and its delivery
-          event. A bridge reads the pending event and calls Signal-With-Start
-          under a stable Workflow ID. If the bridge dies before acknowledging the
-          outbox, the event is delivered again and the Workflow ignores an event
-          ID it has already processed.
+          A five-step path runs from a ready transition in Beads through
+          Workflow start, a generation-fenced claim, start-or-attach, and
+          the first heartbeat. Two crash windows interrupt the gaps. In
+          the first, the bridge dies after Temporal accepts the ready
+          event but before the outbox is acknowledged; the event is
+          delivered again, and the stable Workflow ID with event-ID
+          deduplication makes redelivery safe. In the second, the Worker
+          dies after the agent session is created but before the first
+          heartbeat; the retry re-enters start-or-attach and the session
+          resolver finds the already-created session by its stable
+          identity. Heartbeats carry progress only after attachment.
         </desc>
 
-        <path class="svg-link" d="M120 150 H880" />
+        <path class="svg-link" d="M110 190 H990" />
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M110 154 C110 84 330 84 330 154" />
+        <text class="svg-small svg-label--center" x="220" y="76">delivered again · same event ID</text>
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M880 166 C880 96 770 96 770 154" />
+        <text class="svg-small svg-label--center" x="825" y="76">retry attaches · same session</text>
+
         <g>
-          <circle class="svg-step" cx="120" cy="150" r="36" />
-          <text class="svg-step-number" x="120" y="157">1</text>
-          <text class="svg-label svg-label--center" x="120" y="225">One transaction</text>
-          <text class="svg-small svg-label--center" x="120" y="253">state + event together</text>
+          <circle class="svg-step" cx="110" cy="190" r="36" />
+          <text class="svg-step-number" x="110" y="197">1</text>
+          <text class="svg-label svg-label--center" x="110" y="265">Ready transition</text>
+          <text class="svg-small svg-label--center" x="110" y="293">one Beads transaction</text>
         </g>
         <g>
-          <circle class="svg-step" cx="373" cy="150" r="36" />
-          <text class="svg-step-number" x="373" y="157">2</text>
-          <text class="svg-label svg-label--center" x="373" y="225">Bridge reads event</text>
-          <text class="svg-small svg-label--center" x="373" y="253">from the outbox</text>
+          <circle class="svg-step" cx="330" cy="190" r="36" />
+          <text class="svg-step-number" x="330" y="197">2</text>
+          <text class="svg-label svg-label--center" x="330" y="265">Workflow start</text>
+          <text class="svg-small svg-label--center" x="330" y="293">Signal-With-Start</text>
         </g>
         <g>
-          <circle class="svg-step" cx="627" cy="150" r="36" />
-          <text class="svg-step-number" x="627" y="157">3</text>
-          <text class="svg-label svg-label--center" x="627" y="225">Signal-With-Start</text>
-          <text class="svg-small svg-label--center" x="627" y="253">stable Workflow ID</text>
+          <circle class="svg-step" cx="550" cy="190" r="36" />
+          <text class="svg-step-number" x="550" y="197">3</text>
+          <text class="svg-label svg-label--center" x="550" y="265">Fenced claim</text>
+          <text class="svg-small svg-label--center" x="550" y="293">generation + claim token</text>
         </g>
         <g>
-          <circle class="svg-step" cx="880" cy="150" r="36" />
-          <text class="svg-step-number" x="880" y="157">4</text>
-          <text class="svg-label svg-label--center" x="880" y="225">Signal or start</text>
-          <text class="svg-small svg-label--center" x="880" y="253">one operation</text>
+          <circle class="svg-step" cx="770" cy="190" r="36" />
+          <text class="svg-step-number" x="770" y="197">4</text>
+          <text class="svg-label svg-label--center" x="770" y="265">Start-or-attach</text>
+          <text class="svg-small svg-label--center" x="770" y="293">same identity on retry</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="990" cy="190" r="36" />
+          <text class="svg-step-number" x="990" y="197">5</text>
+          <text class="svg-label svg-label--center" x="990" y="265">Heartbeat</text>
+          <text class="svg-small svg-label--center" x="990" y="293">progress after attach</text>
         </g>
 
-        <rect class="svg-box svg-box--accent" x="230" y="312" width="540" height="112" rx="10" />
-        <text class="svg-eyebrow" x="258" y="348">If the bridge dies here</text>
-        <text class="svg-small" x="258" y="380">the event arrives again and the</text>
-        <text class="svg-small" x="258" y="406">Workflow ignores an ID it has seen</text>
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(220 190)" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(880 190)" />
+
+        <g>
+          <rect class="svg-box svg-box--accent" x="40" y="370" width="490" height="150" rx="10" />
+          <text class="svg-eyebrow" x="68" y="406">If the bridge dies before the outbox ack</text>
+          <text class="svg-small" x="68" y="438">the event is delivered again under the</text>
+          <text class="svg-small" x="68" y="464">stable Workflow ID; the Workflow ignores</text>
+          <text class="svg-small" x="68" y="490">an event ID it has already processed</text>
+        </g>
+        <g>
+          <rect class="svg-box svg-box--accent" x="570" y="370" width="490" height="150" rx="10" />
+          <g class="svg-fence" transform="translate(1030 400) scale(1.5)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+          <text class="svg-eyebrow" x="598" y="406">If the Worker dies before the first heartbeat</text>
+          <text class="svg-small" x="598" y="438">the retry re-enters start-or-attach and</text>
+          <text class="svg-small" x="598" y="464">the resolver finds the existing session</text>
+          <text class="svg-small" x="598" y="490">by stable identity, not by heartbeat</text>
+        </g>
       </svg>
 
-      <ol class="concept-figure__fallback" aria-label="Durable handoff sequence">
+      <ol class="concept-figure__fallback" aria-label="Two crash windows on the durable handoff path">
         <li>One Beads transaction writes the ready transition and its delivery event together.</li>
-        <li>A bridge reads the pending event out of the outbox.</li>
-        <li>The bridge calls Signal-With-Start under a stable Workflow ID derived from the city, run, and work item.</li>
-        <li>Temporal signals the existing Workflow or starts it with the signal, in one operation.</li>
-        <li>If the bridge dies before acknowledging the outbox, the event is delivered again and the Workflow ignores an event ID it has already processed.</li>
+        <li>Signal-With-Start opens or signals the Workflow under a stable Workflow ID.</li>
+        <li>Crash window one sits before the outbox acknowledgement: if the bridge dies after Temporal accepts the event, the event is delivered again and the Workflow ignores an event ID it has already processed.</li>
+        <li>The Workflow records a generation-fenced Beads claim carrying a claim token.</li>
+        <li>Start-or-attach creates the agent session or finds the existing one by stable identity.</li>
+        <li>Crash window two sits before the first heartbeat: if the Worker dies after the session is created, the retry re-enters start-or-attach and the resolver finds the already-created session by identity.</li>
+        <li>Heartbeats carry progress after attachment; the duplicate-launch guard is the stable identity, not the heartbeat.</li>
       </ol>
 
       <figcaption class="figure-caption">
-        The crash window is not closed, it is made boring. Stable identity turns
-        redelivery into expected behavior instead of a duplicate launch.
+        Neither crash window closes; both become boring. Redelivery lands
+        on the same stable Workflow ID, and the retried attach finds the
+        same session by identity instead of launching a second agent.
       </figcaption>
     </figure>
   )
