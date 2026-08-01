@@ -474,7 +474,11 @@ both   one session, one receipt, stale claim token rejected,
   // rather than an early beat: the opening frames are a few lines over an
   // empty terminal, which reads as a large black void before anyone presses
   // play. Marker times are re-measured from each recording's event stream.
-  const players = [
+  const players: {
+    id: string;
+    poster: string;
+    markers: [number, string][];
+  }[] = [
     {
       id: "before-temporal-player",
       poster: "npt:30.5",
