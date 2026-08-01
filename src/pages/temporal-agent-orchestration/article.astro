@@ -1,0 +1,119 @@
+---
+import Article from "@/components/temporal-agent-orchestration/Article.mdx";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="I put Temporal around my coding agents"
+  description="A firsthand account of Beads, Gas City, orchestration failures, and a production durability experiment with Temporal."
+  type="article"
+  noindex={true}
+>
+  <article class="container temporal-agent-article">
+    <div class="prose temporal-agent-article__body">
+      <Article />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .temporal-agent-article {
+    width: min(100% - 2 * var(--space-m), 78rem);
+    padding-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-3xl);
+  }
+
+  .temporal-agent-article__body {
+    max-width: none;
+  }
+
+  :global(.temporal-agent-article__body > :not(.annotated-code, .concept-figure, .opening-figure)) {
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  :global(.temporal-agent-article__body > h1) {
+    max-width: 17ch;
+    margin-block: 0 var(--space-s);
+    font-size: var(--step-5);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  :global(.temporal-agent-article__body > h1 + p) {
+    margin-block: 0 clamp(var(--space-l), 5vw, var(--space-2xl));
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-snug);
+  }
+
+  :global(.temporal-agent-article__body > h2) {
+    margin-block-start: clamp(var(--space-xl), 7vw, var(--space-3xl));
+  }
+
+  :global(.temporal-agent-article__body > pre) {
+    width: min(100%, 68rem);
+    max-width: none;
+    margin-block: var(--space-l);
+    padding: var(--space-m);
+    overflow-x: auto;
+    border: 1px solid var(--night-700);
+    border-radius: var(--radius);
+    background: var(--night-900);
+    color: var(--night-100);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  /* The standfirst under the deck and the ownership pull quote share this
+     treatment: a rule in the margin, no plate, no italics. */
+  :global(.temporal-agent-article__body > blockquote) {
+    margin-block: var(--space-l);
+    padding-inline-start: var(--space-m);
+    border-inline-start: 2px solid var(--color-accent);
+    color: var(--color-text-secondary);
+  }
+
+  :global(.temporal-agent-article__body > blockquote > :last-child) {
+    margin-block-end: 0;
+  }
+
+  /* Tables carry long test identifiers, so they scroll inside their own column
+     rather than widening the page. */
+  :global(.temporal-agent-article__body > table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border: var(--border-hairline);
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  :global(.temporal-agent-article__body > table th),
+  :global(.temporal-agent-article__body > table td) {
+    min-width: 12rem;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  :global(.temporal-agent-article__body > table th) {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
+  @media (max-width: 720px) {
+    .temporal-agent-article {
+      width: min(100% - 2 * var(--space-s), 78rem);
+    }
+
+    :global(.temporal-agent-article__body > h1) {
+      max-width: none;
+    }
+  }
+</style>

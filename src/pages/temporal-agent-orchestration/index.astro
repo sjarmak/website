@@ -1,119 +1,708 @@
 ---
-import Article from "@/components/temporal-agent-orchestration/Article.mdx";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { codeToHtml } from "shiki";
+
+import ConceptFigure from "@/components/temporal-agent-orchestration/ConceptFigure.astro";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+import "asciinema-player/dist/bundle/asciinema-player.css";
+
+const root = "/temporal-agent-orchestration";
+const cast = `${root}/demo/worker-kill.cast`;
+
+const codeThemes = {
+  light: "one-light",
+  dark: "one-dark-pro",
+} as const;
+
+const readLines = (relPath: string, start: number, end: number) =>
+  readFileSync(path.join(process.cwd(), relPath), "utf8")
+    .split("\n")
+    .slice(start - 1, end)
+    .join("\n");
+
+const beforeCode = await codeToHtml(
+  readLines(
+    "public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go",
+    8,
+    22,
+  ),
+  { lang: "go", themes: codeThemes },
+);
+const afterCode = await codeToHtml(
+  readLines("public/temporal-agent-orchestration/code/workflow.go", 18, 33),
+  { lang: "go", themes: codeThemes },
+);
 ---
 
-<BaseLayout
-  title="I put Temporal around my coding agents"
-  description="A firsthand account of Beads, Gas City, orchestration failures, and a production durability experiment with Temporal."
-  type="article"
+<PageLayout
+  title="The procedure survives the process"
+  kicker="Temporal case study"
+  intro="A coding-agent orchestration system, rebuilt so its promises survive a crash: the unit converted, a recorded Worker kill, and the limits that remain."
+  description="A companion to the Gas City Temporal case study: what was converted, a recorded Worker-kill demonstration, what the evidence proves, and what it cost."
   noindex={true}
 >
-  <article class="container temporal-agent-article">
-    <div class="prose temporal-agent-article__body">
-      <Article />
-    </div>
+  <article class="tco">
+    <nav class="tco__tabs" aria-label="Case study materials">
+      <a href={`${root}/article`}><span>01</span> Full article</a>
+      <a href={`${root}/code`}><span>02</span> Annotated code</a>
+    </nav>
+
+    <section class="tco__section tco__summary">
+      <header class="tco__section-head">
+        <p class="kicker">The problem</p>
+        <h2>A crash loses the procedure, not the task</h2>
+      </header>
+      <blockquote class="tco__lede">
+        <p>
+          An agent is editing code. Its coordinator crashes before recording
+          the handoff. The task record survives. The procedure does not.
+          Temporal makes that procedure durable without making the agent
+          deterministic.
+        </p>
+      </blockquote>
+      <div class="tco__copy prose">
+        <p>
+          I run a system that hands tracked work to coding agents. Work items
+          live in a durable store, so a crash never loses the task. What a
+          crash used to lose was everything around the task: three questions a
+          restart could not answer.
+        </p>
+        <ul>
+          <li>Did this claim already start an agent?</li>
+          <li>Does this result belong to the current attempt or a stale one?</li>
+          <li>Has anyone acknowledged this exact outcome?</li>
+        </ul>
+        <p>
+          The fix fits in two sentences. Put the unpredictable agent inside an
+          Activity. Put the promises around it in a Workflow.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">01</p>
+        <h2>What was converted</h2>
+      </header>
+      <div class="tco__copy prose">
+        <p>
+          The unit converted is one ready work item becoming one agent
+          execution and one fenced receipt.
+        </p>
+        <p>
+          Before, that unit was a controller tick,
+          <code>CityRuntime.beadReconcileTick</code>, plus a separate recovery
+          scan that inferred what a dead session had been doing. After,
+          <code>BeadOrchestrationWorkflow</code> owns the procedure and
+          <code>ExecuteBeadActivity</code> owns the fenced claim,
+          start-or-attach, heartbeat, and completion, split across two task
+          queues: <code>gascity-bead-orchestration</code> for the procedure and
+          <code>gascity-agent-work</code> for the agent itself.
+        </p>
+        <p>
+          The status has two halves and they belong together. This
+          work-item-to-agent unit is proved by a bounded canary and runs in
+          shadow. The part running continuously in production is result
+          delivery and acknowledgement, the same boundary applied a second
+          time.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">02</p>
+        <h2>Before and after</h2>
+        <p>
+          The excerpts below are the entry points of each side, rendered from
+          the same versioned files the code browser annotates in full.
+        </p>
+      </header>
+      <div class="tco__code">
+        <section>
+          <h3>Before: one process-owned tick</h3>
+          <div class="tco__code-render" set:html={beforeCode} />
+          <p>
+            One process owned the call stack. When it died, the next process
+            could only run another tick against persisted facts.
+          </p>
+          <a href={`${root}/code/before-controller`}>Open the annotated before code</a>
+        </section>
+        <section>
+          <h3>After: one durable owner</h3>
+          <div class="tco__code-render" set:html={afterCode} />
+          <p>
+            The procedure has one durable owner. A replacement Worker replays
+            the recorded history and continues from the boundary.
+          </p>
+          <a href={`${root}/code`}>Open all annotated files</a>
+        </section>
+      </div>
+      <div class="tco__architecture">
+        <article>
+          <h3>Work store</h3>
+          <p>
+            The canonical record for tasks, claims, artifacts, and receipts.
+            Inspectable and repairable without Temporal.
+          </p>
+        </article>
+        <article>
+          <h3>Workflow</h3>
+          <p>
+            Owns ordering, durable waits, retries, cancellation, and which safe
+            step comes next.
+          </p>
+        </article>
+        <article>
+          <h3>Activity</h3>
+          <p>
+            Owns the agent process and every other nondeterministic effect,
+            behind a fenced claim.
+          </p>
+        </article>
+        <article>
+          <h3>Worker</h3>
+          <p>
+            Polls both task queues and executes the registered code. The one
+            process allowed to die.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">03</p>
+        <h2>Who owns what</h2>
+        <p>
+          Three tiers, and the middle one is the interesting one: it is where
+          at-least-once execution becomes a safe operation.
+        </p>
+      </header>
+      <ConceptFigure kind="ownership" />
+      <div class="tco__tiers">
+        <article>
+          <h3>Temporal owns</h3>
+          <p>
+            Event History, deterministic ordering, durable waits and timers,
+            retry scheduling, cancellation delivery, and acknowledgement state.
+          </p>
+        </article>
+        <article class="tco__tier-boundary">
+          <h3>The boundary owns</h3>
+          <p>
+            Stable identity, idempotency keys, claim fences, and typed
+            receipts. None of these are Temporal guarantees, and all of them
+            are required for Temporal's guarantees to be useful.
+          </p>
+        </article>
+        <article>
+          <h3>The application owns</h3>
+          <p>
+            Whether the agent's work is correct, external side effects, review,
+            store integrity, human authorization, and the independent watchdog.
+          </p>
+        </article>
+      </div>
+      <div class="tco__copy prose">
+        <p>
+          The one-sentence version: Temporal faithfully retries whatever it was
+          told to do, so everything about making that retry safe belongs to the
+          application.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">04</p>
+        <h2>The Worker dies on camera</h2>
+        <p>
+          A real run, start to finish, nothing staged: a real kill signal to a
+          real Worker process, twice, at two different points.
+        </p>
+      </header>
+      <figure class="tco__player">
+        <div id="worker-kill-player" data-cast-src={cast}></div>
+        <figcaption>
+          The full recording keeps real timing, including the pause where
+          Temporal notices the dead Worker.
+          <a href={cast} download="worker-kill.cast">Download the recording</a>.
+        </figcaption>
+      </figure>
+      <div class="tco__copy prose">
+        <p>
+          At eight seconds the first Worker dies mid-execution, and one line
+          matters more than the rest: the agent it started is still alive. The
+          long pause that follows is not dead air. It is Temporal noticing that
+          the Worker is gone, and it lasts eighteen seconds because detection
+          takes real time.
+        </p>
+        <p>
+          The second kill lands before any checkpoint exists, and it is the
+          decisive arm: the retry has to ask the session resolver again, and
+          the resolver returns the session that already exists instead of
+          creating a second one. The first arm resumes from its checkpoint and
+          never asks again, so it cannot demonstrate duplicate prevention on
+          its own.
+        </p>
+        <p>
+          What prevents a second agent is not the heartbeat. A Worker can die
+          before the first heartbeat ever lands. The resolver finds the
+          existing session by stable identity, and the heartbeat only lets the
+          retry resume progress.
+        </p>
+      </div>
+      <pre class="tco__numbers"><code>arm 1  mid-execute      resolver calls = 1   session creations = 1   final attempt = 2
+arm 2  pre-checkpoint   resolver calls = 2   session creations = 1   final attempt = 2
+both   one session, one receipt, stale claim token rejected,
+       same Activity identity across attempts</code></pre>
+      <div class="tco__copy prose">
+        <p>
+          The demo runs on one host against a local dev server, with a
+          file-backed store and a fixture process in place of a coding agent.
+          What it proves is the boundary, on real Temporal, with a real signal.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">05</p>
+        <h2>What the evidence proves</h2>
+      </header>
+      <div class="tco__evidence-tiers">
+        <article>
+          <p class="kicker">Continuous in production</p>
+          <p>
+            Result delivery and acknowledgement. Finished outcomes are
+            delivered, redelivered while unacknowledged, and closed only by an
+            exact acknowledgement receipt.
+          </p>
+        </article>
+        <article>
+          <p class="kicker">Bounded canary only</p>
+          <p>
+            Work-item-to-agent execution: one claim, one agent execution, one
+            fenced receipt, and recovery from a mid-episode Worker
+            interruption. Every canary ended by returning the worker to
+            shadow.
+          </p>
+        </article>
+        <article>
+          <p class="kicker">Design hypothesis</p>
+          <p>
+            Cross-host recovery, the reusable pack boundary, and any claim
+            that this generalizes beyond a single-node deployment.
+          </p>
+        </article>
+      </div>
+      <div class="tco__copy prose">
+        <p>
+          The full test map, forty-five Go test files and a replay gate that
+          has to fail when it should, is in
+          <a href={`${root}/article`}>the article</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">06</p>
+        <h2>What it did not fix, and what it cost</h2>
+      </header>
+      <div class="tco__copy prose">
+        <p>
+          Temporal gives the procedure a durable owner. It does not make
+          external effects exactly once. A Worker can die after an external
+          call succeeds and before the completion is recorded, and the
+          Activity may run again.
+        </p>
+        <p>
+          The sharpest limit showed up in the latest canary. Two steps
+          executed exactly once, survived a deliberate mid-episode Worker
+          interruption, and then failed at the outcome boundary: an
+          application adapter derived the wrong store identity, and Temporal
+          faithfully retried the wrong envelope every fifteen minutes. The
+          failure marker belongs on the adapter. Temporal preserved exactly
+          what it was given, which is the job.
+        </p>
+        <p>
+          The cost is real. A contributor now has to hold determinism rules,
+          replay compatibility, fencing, and idempotency in their head to
+          change orchestration code safely, and the deployment gains a server,
+          a Worker, and a versioning discipline on every Workflow change.
+        </p>
+        <p>
+          A maintenance job that does forty-four seconds of synchronous work
+          every two hours did not justify any of that, and it stayed cron plus
+          a lock. If a crash mid-operation leaves a question your own database
+          cannot answer, the procedure deserves a durable owner. If a crash
+          just means running it again next tick, it does not.
+        </p>
+      </div>
+    </section>
+
+    <section class="tco__section tco__numbered">
+      <header class="tco__section-head">
+        <p class="kicker">07</p>
+        <h2>Go deeper</h2>
+      </header>
+      <div class="tco__links">
+        <a href={`${root}/article`}>
+          <span>
+            <strong>The full article</strong>
+            The history, the failed canary, the test map, and how the boundary
+            was chosen.
+          </span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href={`${root}/code`}>
+          <span>
+            <strong>The annotated code</strong>
+            The complete before and after source, annotated section by
+            section, with linked upstream provenance.
+          </span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
   </article>
-</BaseLayout>
+</PageLayout>
+
+<script>
+  import * as AsciinemaPlayer from "asciinema-player";
+
+  const mountPoint = document.getElementById("worker-kill-player");
+  const src = mountPoint?.dataset.castSrc;
+  if (mountPoint && src) {
+    AsciinemaPlayer.create(src, mountPoint, {
+      cols: 120,
+      rows: 38,
+      preload: true,
+      poster: "npt:8.0",
+      fit: "width",
+      markers: [
+        [3.2, "Arm 1 starts"],
+        [8.0, "kill -9: Worker one is gone"],
+        [26.2, "Temporal retries; workflow completed"],
+        [27.2, "Arm 2 starts"],
+        [30.6, "kill -9 before any checkpoint"],
+        [40.7, "Retry re-resolves; workflow completed"],
+      ],
+    });
+  }
+</script>
 
 <style>
-  .temporal-agent-article {
-    width: min(100% - 2 * var(--space-m), 78rem);
-    padding-block: clamp(var(--space-l), 5vw, var(--space-2xl)) var(--space-3xl);
+  .tco {
+    padding-block-end: var(--space-3xl);
   }
 
-  .temporal-agent-article__body {
-    max-width: none;
+  .tco > * + * {
+    margin-block-start: clamp(var(--space-xl), 8vw, var(--space-3xl));
   }
 
-  :global(.temporal-agent-article__body > :not(.annotated-code, .concept-figure, .opening-figure)) {
+  .tco__tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-block: var(--border-hairline);
+  }
+
+  .tco__tabs a {
+    display: flex;
+    min-height: 4.5rem;
+    padding: var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    border-inline-end: var(--border-hairline);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    text-decoration: none;
+  }
+
+  .tco__tabs a:last-child {
+    border-inline-end: 0;
+  }
+
+  .tco__tabs a span {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .tco__tabs a:hover {
+    color: var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .tco__section {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .tco__section-head {
+    width: 100%;
+    min-width: 0;
     max-width: var(--measure);
-    margin-inline: auto;
   }
 
-  :global(.temporal-agent-article__body > h1) {
-    max-width: 17ch;
-    margin-block: 0 var(--space-s);
-    font-size: var(--step-5);
-    line-height: var(--leading-tight);
-    letter-spacing: var(--tracking-tight);
+  .tco__section-head .kicker {
+    margin: 0 0 var(--space-xs);
   }
 
-  :global(.temporal-agent-article__body > h1 + p) {
-    margin-block: 0 clamp(var(--space-l), 5vw, var(--space-2xl));
+  .tco__section-head h2 {
+    margin: 0;
+  }
+
+  .tco__section-head > p:last-child {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tco__lede {
+    max-width: var(--measure);
+    margin: 0;
+    padding-inline-start: var(--space-m);
+    border-inline-start: 2px solid var(--color-accent);
     color: var(--color-text-secondary);
     font-family: var(--font-display);
-    font-size: var(--step-2);
+    font-size: var(--step-1);
     line-height: var(--leading-snug);
   }
 
-  :global(.temporal-agent-article__body > h2) {
-    margin-block-start: clamp(var(--space-xl), 7vw, var(--space-3xl));
+  .tco__lede p {
+    margin: 0;
   }
 
-  :global(.temporal-agent-article__body > pre) {
-    width: min(100%, 68rem);
-    max-width: none;
-    margin-block: var(--space-l);
-    padding: var(--space-m);
-    overflow-x: auto;
-    border: 1px solid var(--night-700);
+  .tco__copy {
+    max-width: var(--measure);
+  }
+
+  .tco__summary .tco__copy {
+    font-size: var(--step-1);
+  }
+
+  .tco__code {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-l);
+  }
+
+  .tco__code section {
+    min-width: 0;
+    padding-block-start: var(--space-s);
+    border-top: var(--border-hairline);
+  }
+
+  .tco__code h3 {
+    margin: 0 0 var(--space-s);
+    font-size: var(--step-1);
+  }
+
+  .tco__code-render {
+    min-height: 15rem;
+    margin: 0 0 var(--space-s);
+    overflow: auto;
+    border: var(--border-hairline);
     border-radius: var(--radius);
-    background: var(--night-900);
-    color: var(--night-100);
+    background: var(--color-surface);
+  }
+
+  .tco__code-render :global(.shiki) {
+    min-width: max-content;
+    min-height: 15rem;
+    margin: 0;
+    padding: var(--space-m);
+    background: transparent !important;
     font-size: var(--step--1);
     line-height: 1.55;
   }
 
-  /* The standfirst under the deck and the ownership pull quote share this
-     treatment: a rule in the margin, no plate, no italics. */
-  :global(.temporal-agent-article__body > blockquote) {
-    margin-block: var(--space-l);
-    padding-inline-start: var(--space-m);
-    border-inline-start: 2px solid var(--color-accent);
+  .tco__code-render :global(.shiki span) {
+    color: var(--shiki-light) !important;
+  }
+
+  :global([data-theme="dark"]) .tco__code-render :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+  }
+
+  .tco__architecture,
+  .tco__evidence-tiers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-block: var(--border-hairline);
+  }
+
+  .tco__architecture article {
+    padding: var(--space-m);
+    border-inline-end: var(--border-hairline);
+    border-block-end: var(--border-hairline);
+  }
+
+  .tco__architecture article:nth-child(2n) {
+    border-inline-end: 0;
+  }
+
+  .tco__architecture article:nth-last-child(-n + 2) {
+    border-block-end: 0;
+  }
+
+  .tco__architecture h3 {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--step-0);
+  }
+
+  .tco__architecture p,
+  .tco__tiers p,
+  .tco__evidence-tiers p:not(.kicker) {
+    margin: 0;
     color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
   }
 
-  :global(.temporal-agent-article__body > blockquote > :last-child) {
-    margin-block-end: 0;
+  .tco__tiers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: var(--border-hairline);
   }
 
-  /* Tables carry long test identifiers, so they scroll inside their own column
-     rather than widening the page. */
-  :global(.temporal-agent-article__body > table) {
-    display: block;
-    width: 100%;
+  .tco__tiers article {
+    padding: var(--space-m);
+    border-inline-end: var(--border-hairline);
+  }
+
+  .tco__tiers article:last-child {
+    border-inline-end: 0;
+  }
+
+  .tco__tiers h3 {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--step-0);
+  }
+
+  .tco__tier-boundary {
+    background: var(--color-bg-subtle);
+    box-shadow: inset 0 3px var(--color-accent);
+  }
+
+  .tco__player {
+    margin: 0;
+  }
+
+  .tco__player :global(.ap-player) {
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+  }
+
+  .tco__player figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .tco__numbers {
+    max-width: 100%;
+    margin: 0;
+    padding: var(--space-m);
     overflow-x: auto;
     border: var(--border-hairline);
-    border-collapse: collapse;
-    font-size: var(--step--1);
-    line-height: 1.45;
-  }
-
-  :global(.temporal-agent-article__body > table th),
-  :global(.temporal-agent-article__body > table td) {
-    min-width: 12rem;
-    padding: var(--space-xs) var(--space-s);
-    border: var(--border-hairline);
-    text-align: start;
-    vertical-align: top;
-  }
-
-  :global(.temporal-agent-article__body > table th) {
-    background: var(--color-bg-subtle);
+    border-radius: var(--radius);
+    background: var(--color-surface);
     color: var(--color-text);
-    font-family: var(--font-mono);
     font-size: var(--step--1);
-    font-weight: var(--weight-semibold);
+    line-height: 1.7;
   }
 
-  @media (max-width: 720px) {
-    .temporal-agent-article {
-      width: min(100% - 2 * var(--space-s), 78rem);
+  .tco__evidence-tiers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tco__evidence-tiers article {
+    padding: var(--space-m);
+    border-inline-end: var(--border-hairline);
+  }
+
+  .tco__evidence-tiers article:last-child {
+    border-inline-end: 0;
+  }
+
+  .tco__evidence-tiers .kicker {
+    margin: 0 0 var(--space-s);
+  }
+
+  .tco__links {
+    display: grid;
+    border-top: var(--border-hairline);
+  }
+
+  .tco__links a {
+    display: flex;
+    padding: var(--space-m) var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-l);
+    border-bottom: var(--border-hairline);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .tco__links a:hover {
+    color: var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .tco__links strong {
+    display: block;
+    margin-block-end: var(--space-2xs);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .tco__links span:first-child {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tco__links span:first-child strong {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 760px) {
+    .tco__tabs,
+    .tco__code,
+    .tco__architecture,
+    .tco__tiers,
+    .tco__evidence-tiers {
+      grid-template-columns: 1fr;
     }
 
-    :global(.temporal-agent-article__body > h1) {
-      max-width: none;
+    .tco__tabs a {
+      border-inline-end: 0;
+      border-bottom: var(--border-hairline);
+    }
+
+    .tco__tabs a:last-child {
+      border-bottom: 0;
+    }
+
+    .tco__architecture article,
+    .tco__tiers article,
+    .tco__evidence-tiers article {
+      border-inline-end: 0;
+      border-block-end: var(--border-hairline);
+    }
+
+    .tco__architecture article:last-child,
+    .tco__tiers article:last-child,
+    .tco__evidence-tiers article:last-child {
+      border-block-end: 0;
     }
   }
 </style>

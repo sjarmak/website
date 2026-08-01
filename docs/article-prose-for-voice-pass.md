@@ -210,3 +210,175 @@ causality in three places: its `<desc>`, the step-3 sublabel "read heartbeat",
 and the fourth fallback list item. Figure work was parked for this pass, so the
 prose and the diagram now disagree. That is the first thing to fix when figures
 reopen.
+
+---
+
+## 6. Companion page (all visitor-facing text, added when the page was built)
+
+The companion page at the route root. The article moved to `/article` unchanged.
+The reviewer's four lines are quoted close to verbatim per the split plan and
+are marked as such; they are included for completeness but originate with the
+reviewer, not this pass.
+
+### Metadata
+
+> The procedure survives the process
+
+> A coding-agent orchestration system, rebuilt so its promises survive a crash: the unit converted, a recorded Worker kill, and the limits that remain.
+
+> A companion to the Gas City Temporal case study: what was converted, a recorded Worker-kill demonstration, what the evidence proves, and what it cost.
+
+### Tabs
+
+> Full article
+
+> Annotated code
+
+### The problem
+
+> A crash loses the procedure, not the task
+
+(Reviewer's four lines, close to verbatim:)
+
+> An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic.
+
+> I run a system that hands tracked work to coding agents. Work items live in a durable store, so a crash never loses the task. What a crash used to lose was everything around the task: three questions a restart could not answer.
+
+> Did this claim already start an agent?
+
+> Does this result belong to the current attempt or a stale one?
+
+> Has anyone acknowledged this exact outcome?
+
+> The fix fits in two sentences. Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
+
+### 01 What was converted
+
+> The unit converted is one ready work item becoming one agent execution and one fenced receipt.
+
+> Before, that unit was a controller tick, `CityRuntime.beadReconcileTick`, plus a separate recovery scan that inferred what a dead session had been doing.
+
+> After, `BeadOrchestrationWorkflow` owns the procedure and `ExecuteBeadActivity` owns the fenced claim, start-or-attach, heartbeat, and completion, split across two task queues: `gascity-bead-orchestration` for the procedure and `gascity-agent-work` for the agent itself.
+
+> The status has two halves and they belong together. This work-item-to-agent unit is proved by a bounded canary and runs in shadow. The part running continuously in production is result delivery and acknowledgement, the same boundary applied a second time.
+
+### 02 Before and after
+
+> The excerpts below are the entry points of each side, rendered from the same versioned files the code browser annotates in full.
+
+> Before: one process-owned tick
+
+> After: one durable owner
+
+> One process owned the call stack. When it died, the next process could only run another tick against persisted facts.
+
+> The procedure has one durable owner. A replacement Worker replays the recorded history and continues from the boundary.
+
+> Open the annotated before code
+
+> Open all annotated files
+
+> The canonical record for tasks, claims, artifacts, and receipts. Inspectable and repairable without Temporal.
+
+> Owns ordering, durable waits, retries, cancellation, and which safe step comes next.
+
+> Owns the agent process and every other nondeterministic effect, behind a fenced claim.
+
+> Polls both task queues and executes the registered code. The one process allowed to die.
+
+### 03 Who owns what
+
+> Three tiers, and the middle one is the interesting one: it is where at-least-once execution becomes a safe operation.
+
+> Temporal owns: Event History, deterministic ordering, durable waits and timers, retry scheduling, cancellation delivery, and acknowledgement state.
+
+> The boundary owns: stable identity, idempotency keys, claim fences, and typed receipts. None of these are Temporal guarantees, and all of them are required for Temporal's guarantees to be useful.
+
+> The application owns: whether the agent's work is correct, external side effects, review, store integrity, human authorization, and the independent watchdog.
+
+> The one-sentence version: Temporal faithfully retries whatever it was told to do, so everything about making that retry safe belongs to the application.
+
+### 04 The Worker dies on camera
+
+> A real run, start to finish, nothing staged: a real kill signal to a real Worker process, twice, at two different points.
+
+> The full recording keeps real timing, including the pause where Temporal notices the dead Worker.
+
+> Download the recording
+
+> At eight seconds the first Worker dies mid-execution, and one line matters more than the rest: the agent it started is still alive. The long pause that follows is not dead air. It is Temporal noticing that the Worker is gone, and it lasts eighteen seconds because detection takes real time.
+
+> The second kill lands before any checkpoint exists, and it is the decisive arm: the retry has to ask the session resolver again, and the resolver returns the session that already exists instead of creating a second one. The first arm resumes from its checkpoint and never asks again, so it cannot demonstrate duplicate prevention on its own.
+
+> What prevents a second agent is not the heartbeat. A Worker can die before the first heartbeat ever lands. The resolver finds the existing session by stable identity, and the heartbeat only lets the retry resume progress.
+
+> The demo runs on one host against a local dev server, with a file-backed store and a fixture process in place of a coding agent. What it proves is the boundary, on real Temporal, with a real signal.
+
+(Player marker labels:)
+
+> Arm 1 starts
+
+> kill -9: Worker one is gone
+
+> Temporal retries; workflow completed
+
+> Arm 2 starts
+
+> kill -9 before any checkpoint
+
+> Retry re-resolves; workflow completed
+
+### 05 What the evidence proves
+
+> Continuous in production
+
+> Result delivery and acknowledgement. Finished outcomes are delivered, redelivered while unacknowledged, and closed only by an exact acknowledgement receipt.
+
+> Bounded canary only
+
+> Work-item-to-agent execution: one claim, one agent execution, one fenced receipt, and recovery from a mid-episode Worker interruption. Every canary ended by returning the worker to shadow.
+
+> Design hypothesis
+
+> Cross-host recovery, the reusable pack boundary, and any claim that this generalizes beyond a single-node deployment.
+
+> The full test map, forty-five Go test files and a replay gate that has to fail when it should, is in the article.
+
+### 06 What it did not fix, and what it cost
+
+> Temporal gives the procedure a durable owner. It does not make external effects exactly once. A Worker can die after an external call succeeds and before the completion is recorded, and the Activity may run again.
+
+> The sharpest limit showed up in the latest canary. Two steps executed exactly once, survived a deliberate mid-episode Worker interruption, and then failed at the outcome boundary: an application adapter derived the wrong store identity, and Temporal faithfully retried the wrong envelope every fifteen minutes. The failure marker belongs on the adapter. Temporal preserved exactly what it was given, which is the job.
+
+> The cost is real. A contributor now has to hold determinism rules, replay compatibility, fencing, and idempotency in their head to change orchestration code safely, and the deployment gains a server, a Worker, and a versioning discipline on every Workflow change.
+
+> A maintenance job that does forty-four seconds of synchronous work every two hours did not justify any of that, and it stayed cron plus a lock. If a crash mid-operation leaves a question your own database cannot answer, the procedure deserves a durable owner. If a crash just means running it again next tick, it does not.
+
+### 07 Go deeper
+
+> The full article
+
+> The history, the failed canary, the test map, and how the boundary was chosen.
+
+> The annotated code
+
+> The complete before and after source, annotated section by section, with linked upstream provenance.
+
+### Code browser index
+
+> Complete annotated source
+
+> Eight full files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them.
+
+> The complete before and after source for a coding-agent orchestration boundary rebuilt with Temporal's Go SDK.
+
+> Each reader renders the complete source with IDE-style syntax colors. Select a line section to open its explanation directly beneath the code, or download the raw file from the reader. The before excerpts cite and link the exact public upstream revision they abridge.
+
+### Code reader (per-file)
+
+> Versioned before code: [source label]. These selected excerpts are abridged for reading; every omission is marked in the source.
+
+(The guide copy, "How to read this file" / "Follow the execution boundary" /
+"Click any line section to open its explanation...", and the footer copy are
+reused verbatim from the existing research-agent code reader, not newly
+authored.)

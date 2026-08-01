@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = path.join(
   ROOT,
-  "src/pages/temporal-agent-orchestration/index.astro",
+  "src/pages/temporal-agent-orchestration/article.astro",
 );
 const ARTICLE = path.join(
   ROOT,
@@ -929,13 +929,21 @@ test("no internal identifiers reach the reader-facing surface", () => {
         .filter((e) => e.isFile() && e.name.endsWith(".go"))
         .map((e) => path.join(e.parentPath ?? e.path, e.name))
     : [];
-  // The built page is the authoritative surface; checked only when a build exists
-  // so this still runs standalone, and it always runs in CI where build precedes test.
-  const builtPage = path.join(
-    ROOT,
-    "dist/temporal-agent-orchestration/index.html",
-  );
+  // The built pages are the authoritative surface; checked only when a build
+  // exists so this still runs standalone, and it always runs in CI where build
+  // precedes test. Every page in the route family is scanned: the companion
+  // page, the article, and the code browser.
+  const builtRouteDir = path.join(ROOT, "dist/temporal-agent-orchestration");
+  const builtPages = existsSync(builtRouteDir)
+    ? readdirSync(builtRouteDir, { recursive: true, withFileTypes: true })
+        .filter((e) => e.isFile() && e.name.endsWith(".html"))
+        .map((e) => path.join(e.parentPath ?? e.path, e.name))
+    : [];
 
+  const companionPage = path.join(
+    ROOT,
+    "src/pages/temporal-agent-orchestration/index.astro",
+  );
   const surfaces = [
     ARTICLE,
     FIGURES,
@@ -946,8 +954,10 @@ test("no internal identifiers reach the reader-facing surface", () => {
     OPENING_FIGURE,
     WORKSHOP_FIGURE,
     ILLUSTRATION,
+    companionPage,
+    path.join(ROOT, "public/temporal-agent-orchestration/demo/worker-kill.cast"),
     ...goSamples,
-    ...(existsSync(builtPage) ? [builtPage] : []),
+    ...builtPages,
   ];
 
   const findings = [];

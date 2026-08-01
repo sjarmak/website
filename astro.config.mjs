@@ -16,6 +16,7 @@ export default defineConfig({
       filter: (page) =>
         !page.includes("/durable-podcast-render") &&
         !page.includes("/temporal-research-agent") &&
+        !page.includes("/temporal-agent-orchestration") &&
         !page.includes("/books/the-system-around-the-model"),
     }),
   ],

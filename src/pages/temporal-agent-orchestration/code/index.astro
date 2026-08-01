@@ -1,0 +1,170 @@
+---
+import {
+  preTemporalAgentOrchestrationCodeSamples,
+  temporalAgentOrchestrationCodeSamples,
+} from "@/data/temporal-agent-orchestration-code-samples";
+import PageLayout from "@/layouts/PageLayout.astro";
+
+const root = "/temporal-agent-orchestration";
+const samples = [
+  ...preTemporalAgentOrchestrationCodeSamples.map((sample) => ({
+    ...sample,
+    side: "Before Temporal",
+  })),
+  ...temporalAgentOrchestrationCodeSamples.map((sample) => ({
+    ...sample,
+    side: "After Temporal",
+  })),
+];
+---
+
+<PageLayout
+  title="Complete annotated source"
+  kicker="Temporal case study · Code"
+  intro="Eight full files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them."
+  description="The complete before and after source for a coding-agent orchestration boundary rebuilt with Temporal's Go SDK."
+  noindex={true}
+>
+  <article class="code-index">
+    <nav class="code-index__tabs" aria-label="Case study materials">
+      <a href={`${root}/`}>Companion</a>
+      <a href={`${root}/code`} aria-current="page">Code</a>
+      <a href={`${root}/article`}>Article</a>
+    </nav>
+
+    <div class="code-index__guide">
+      <p>
+        Each reader renders the complete source with IDE-style syntax colors.
+        Select a line section to open its explanation directly beneath the
+        code, or download the raw file from the reader. The before excerpts
+        cite and link the exact public upstream revision they abridge.
+      </p>
+    </div>
+
+    <ol class="code-index__files">
+      {
+        samples.map((sample, index) => (
+          <li>
+            <div class="code-index__number">
+              {String(index + 1).padStart(2, "0")}
+            </div>
+            <div>
+              <p class="kicker">{sample.side}</p>
+              <h2>{sample.filename}</h2>
+              <p>{sample.summary}</p>
+            </div>
+            <a href={`${root}/code/${sample.slug}`}>
+              Open annotated source <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </article>
+</PageLayout>
+
+<style>
+  .code-index {
+    padding-block-end: var(--space-3xl);
+  }
+
+  .code-index > * + * {
+    margin-block-start: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+
+  .code-index__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    padding-block: var(--space-s);
+    border-block: var(--border-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .code-index__tabs a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .code-index__tabs a:hover,
+  .code-index__tabs a[aria-current="page"] {
+    color: var(--color-accent);
+  }
+
+  .code-index__guide {
+    max-width: var(--measure);
+    color: var(--color-text-secondary);
+    font-size: var(--step-1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .code-index__guide p {
+    margin: 0;
+  }
+
+  .code-index__files {
+    margin: 0;
+    padding: 0;
+    border-top: var(--border-hairline);
+    list-style: none;
+  }
+
+  .code-index__files li {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) minmax(11rem, auto);
+    gap: var(--space-l);
+    padding-block: var(--space-l);
+    align-items: start;
+    border-bottom: var(--border-hairline);
+  }
+
+  .code-index__number {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .code-index__files .kicker {
+    margin: 0 0 var(--space-xs);
+  }
+
+  .code-index__files h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+  }
+
+  .code-index__files p:not(.kicker) {
+    max-width: var(--measure);
+    margin: var(--space-xs) 0 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .code-index__files a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    text-decoration: none;
+  }
+
+  .code-index__files a:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 720px) {
+    .code-index__files li {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--space-s);
+    }
+
+    .code-index__files a {
+      grid-column: 2;
+      margin-block-start: var(--space-s);
+    }
+  }
+</style>

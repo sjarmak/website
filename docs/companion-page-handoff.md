@@ -22,6 +22,23 @@ This file exists in two places, deliberately:
 **For** the next agent picking this up cold.
 **Priority** critical. This is the assignment's front door.
 
+> **Status 2026-08-01, later the same day: built.** Stephanie answered the
+> three open questions: the companion page takes `/temporal-agent-orchestration/`
+> and the article moved unchanged to `/temporal-agent-orchestration/article`
+> (mirroring `blog.astro`); full shape confirmed, page plus code browser; the
+> whole route family stays `noindex` and is now also excluded from the sitemap
+> like `/temporal-research-agent`. Delivered: companion `index.astro` (eight
+> sections), `code/index.astro` + `code/[slug].astro` over the existing samples
+> data, the faithful cast copied to `public/temporal-agent-orchestration/demo/`
+> and embedded with `asciinema-player` (npm dependency, bundled, no network at
+> play time, no idle compression), the article pin suite repointed at
+> `article.astro` with the dist scan widened to every built page in the route
+> family plus the cast, and a new
+> `tests/temporal-agent-orchestration-companion.test.mjs`. All companion prose
+> is logged in `docs/article-prose-for-voice-pass.md` §6 and awaits the voice
+> pass. Still open from this handoff: nothing structural; the voice pass and
+> the parked figure work remain elsewhere.
+
 ## The mission in one paragraph
 
 Build a companion page at `/temporal-agent-orchestration/` that becomes the
