@@ -486,46 +486,84 @@ const svgDescId = `${titleId}-svg-desc`;
 
       <svg
         class="concept-figure__svg"
-        viewBox="0 0 1000 460"
+        viewBox="0 0 1100 640"
         role="img"
         aria-labelledby={`${svgTitleId} ${svgDescId}`}
       >
         <title id={svgTitleId}>The boundary of Temporal's guarantee</title>
         <desc id={svgDescId}>
-          Temporal owns the durable procedure, waits and timers, retry
-          scheduling, cancellation, and acknowledgement state. The application
-          still owns exactly-once external effects, whether the code is correct,
-          repair of a corrupt work record, worktrees and disk, and approval
-          policy for external actions.
+          Three stacked tiers with the boundary tier highlighted between
+          the other two. The top tier, inside Temporal, wears the double
+          durable outline and owns Event History, deterministic ordering,
+          durable waits and timers, retry scheduling, cancellation, and
+          acknowledgement state. A dashed connector labeled at-least-once
+          Activity attempts drops into the middle tier. That boundary tier
+          owns Activities, stable identity, idempotency keys, generation
+          fences, and typed receipts, with lock marks on stable identity
+          and generation fences. A solid connector labeled effects
+          converge to one result drops into the bottom tier. The bottom
+          tier, outside Temporal, is application responsibility: agent
+          correctness, GitHub, mail, and filesystem behavior, acceptance
+          tests and review, Beads integrity, human authorization, and
+          independent watchdogs.
         </desc>
 
-        <rect class="svg-box svg-box--accent" x="40" y="60" width="440" height="360" rx="10" />
-        <text class="svg-eyebrow" x="70" y="102">Inside the guarantee</text>
-        <text class="svg-label" x="70" y="136">Temporal owns</text>
-        <text class="svg-small" x="70" y="188">durable procedure and its history</text>
-        <text class="svg-small" x="70" y="228">waits and timers</text>
-        <text class="svg-small" x="70" y="268">retry scheduling</text>
-        <text class="svg-small" x="70" y="308">cancellation</text>
-        <text class="svg-small" x="70" y="348">acknowledgement state</text>
+        <g class="svg-tier-inside">
+          <rect class="svg-box svg-box--durable" x="40" y="40" width="1020" height="150" rx="10" />
+          <rect class="svg-durable-inner" x="45" y="45" width="1010" height="140" rx="6" />
+          <text class="svg-eyebrow" x="68" y="98">Inside Temporal</text>
+          <text class="svg-label" x="68" y="132">Temporal owns</text>
+          <text class="svg-small" x="340" y="85">Event History</text>
+          <path class="svg-hourglass" d="M-6 -9 H6 L-6 9 H6 Z" transform="translate(322 118)" />
+          <text class="svg-small" x="340" y="123">durable waits and timers</text>
+          <text class="svg-small" x="340" y="161">cancellation</text>
+          <text class="svg-small" x="690" y="85">deterministic ordering</text>
+          <text class="svg-small" x="690" y="123">retry scheduling</text>
+          <text class="svg-small" x="690" y="161">acknowledgement state</text>
+        </g>
 
-        <rect class="svg-box" x="520" y="60" width="440" height="360" rx="10" />
-        <text class="svg-eyebrow" x="550" y="102">Still application work</text>
-        <text class="svg-label" x="550" y="136">You own</text>
-        <text class="svg-small" x="550" y="188">exactly-once external effects</text>
-        <text class="svg-small" x="550" y="228">whether the code is correct</text>
-        <text class="svg-small" x="550" y="268">repairing a corrupt work record</text>
-        <text class="svg-small" x="550" y="308">worktrees and disk</text>
-        <text class="svg-small" x="550" y="348">approval policy for external actions</text>
+        <path class="svg-link svg-link--dashed" d="M550 190 V250" />
+        <text class="svg-small" x="575" y="226">at-least-once Activity attempts</text>
+
+        <g class="svg-tier-boundary">
+          <rect class="svg-box svg-box--accent" x="40" y="250" width="1020" height="150" rx="10" />
+          <text class="svg-eyebrow" x="68" y="308">At the boundary</text>
+          <text class="svg-label" x="68" y="342">The boundary owns</text>
+          <text class="svg-small" x="340" y="295">Activities</text>
+          <text class="svg-small" x="340" y="333">idempotency keys</text>
+          <text class="svg-small" x="340" y="371">typed receipts</text>
+          <g class="svg-fence" transform="translate(672 290)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+          <text class="svg-small" x="690" y="295">stable identity</text>
+          <g class="svg-fence" transform="translate(672 328)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+          <text class="svg-small" x="690" y="333">generation fences</text>
+        </g>
+
+        <path class="svg-link" d="M550 400 V460" />
+        <text class="svg-small" x="575" y="436">effects converge to one result</text>
+
+        <g class="svg-tier-outside">
+          <rect class="svg-box" x="40" y="460" width="1020" height="150" rx="10" />
+          <text class="svg-eyebrow" x="68" y="518">Outside Temporal</text>
+          <text class="svg-label" x="68" y="552">The application owns</text>
+          <text class="svg-small" x="340" y="505">agent correctness</text>
+          <text class="svg-small" x="340" y="543">acceptance tests and review</text>
+          <text class="svg-small" x="340" y="581">human authorization</text>
+          <text class="svg-small" x="690" y="505">GitHub, mail, filesystem behavior</text>
+          <text class="svg-small" x="690" y="543">Beads integrity</text>
+          <text class="svg-small" x="690" y="581">independent watchdogs</text>
+        </g>
       </svg>
 
       <ul class="concept-figure__fallback" aria-label="Temporal's boundary">
-        <li>Temporal owns durable procedure and its history, waits and timers, retry scheduling, cancellation, and acknowledgement state.</li>
-        <li>The application still owns exactly-once external effects, whether the code is correct, repairing a corrupt work record, worktrees and disk, and approval policy for external actions.</li>
+        <li>Temporal owns Event History, deterministic ordering, durable waits and timers, retry scheduling, cancellation, and acknowledgement state.</li>
+        <li>The boundary owns Activities, stable identity, idempotency keys, generation fences, and typed receipts; this is where at-least-once Activity attempts converge to one result.</li>
+        <li>The application owns agent correctness, GitHub, mail, and filesystem behavior, acceptance tests and review, Beads integrity, human authorization, and independent watchdogs.</li>
       </ul>
 
       <figcaption class="figure-caption">
-        Temporal remembers the procedure. Everything on the right is still yours
-        to get right.
+        Idempotency keys and fences are not Temporal guarantees. They are
+        the boundary work that turns at-least-once execution into one safe
+        result.
       </figcaption>
     </figure>
   )
