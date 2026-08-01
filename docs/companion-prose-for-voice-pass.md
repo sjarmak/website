@@ -17,11 +17,13 @@ places.
 
 ## Metadata
 
-> The procedure survives the process
+**Retitled 2026-08-01** (superseded the line below it was extracted from):
 
-> A coding-agent orchestration system, rebuilt so its promises survive a crash: the unit converted, a recorded Worker kill, and the limits that remain.
+> How I made Gas City's agent orchestration durable with Temporal
 
-> A companion to the Gas City Temporal case study: what was converted, a recorded Worker-kill demonstration, what the evidence proves, and what it cost.
+> A short walkthrough of what I Temporalized, how the system recovers from Worker failure, and where Temporal's guarantees stop.
+
+> A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop.
 
 ## Tabs
 

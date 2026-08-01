@@ -37,10 +37,10 @@ const afterCode = await codeToHtml(
 ---
 
 <PageLayout
-  title="The procedure survives the process"
+  title="How I made Gas City's agent orchestration durable with Temporal"
   kicker="Temporal case study"
-  intro="A coding-agent orchestration system, rebuilt so its promises survive a crash: the unit converted, a recorded Worker kill, and the limits that remain."
-  description="A companion to the Gas City Temporal case study: what was converted, a recorded Worker-kill demonstration, what the evidence proves, and what it cost."
+  intro="A short walkthrough of what I Temporalized, how the system recovers from Worker failure, and where Temporal's guarantees stop."
+  description="A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop."
   noindex={true}
 >
   <article class="tco">
@@ -89,7 +89,7 @@ const afterCode = await codeToHtml(
       </header>
       <div class="tco__copy prose">
         <p>
-          The unit converted is one ready work item becoming one agent
+          I converted one unit: one ready work item becoming one agent
           execution and one fenced receipt.
         </p>
         <p>

@@ -246,11 +246,7 @@ reviewer, not this pass.
 
 ### Metadata
 
-> The procedure survives the process
-
-> A coding-agent orchestration system, rebuilt so its promises survive a crash: the unit converted, a recorded Worker kill, and the limits that remain.
-
-> A companion to the Gas City Temporal case study: what was converted, a recorded Worker-kill demonstration, what the evidence proves, and what it cost.
+**Retitled 2026-08-01**; see `companion-prose-for-voice-pass.md` for the current title, subtitle, and description.
 
 ### Tabs
 
