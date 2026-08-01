@@ -8,7 +8,8 @@ interface Props {
     | "recovery"
     | "workshop"
     | "boundary"
-    | "shadow";
+    | "shadow"
+    | "wrongness";
 }
 
 const { kind } = Astro.props;
@@ -628,6 +629,114 @@ const svgDescId = `${titleId}-svg-desc`;
         canonical mutation at the wall, and opens one separate gate so
         result delivery and acknowledgement run continuously in
         production.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "wrongness" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">09 / Durable wrongness</p>
+        <h3 id={titleId}>A wrong identity is preserved as durably as a right one</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 680"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Durable retry of a wrong store identity</title>
+        <desc id={svgDescId}>
+          The bounded canary's Step 1 Workflow and Step 2 Workflow both
+          complete, and the Beads work record accepts two
+          generation-fenced completions. The outcome adapter then builds
+          the OutcomeReady envelope with the runtime city identity where
+          the canonical store identity is expected. The delivery contract
+          into the Temporal Outcome Workflow breaks on that mismatch,
+          every delivery attempt is rejected, and a durable timer retries
+          the same wrong envelope on schedule. The Temporal machinery
+          stays healthy throughout and preserves the mistake exactly as it
+          was given. The canary was rolled back and contained, and its
+          evidence remains preserved rather than rewritten into a success.
+        </desc>
+
+<g class="svg-episode">
+          <rect class="svg-box svg-box--durable" x="70" y="40" width="260" height="110" rx="10" />
+          <rect class="svg-durable-inner" x="75" y="45" width="250" height="100" rx="6" />
+          <text class="svg-eyebrow" x="92" y="72">Canary step one</text>
+          <text class="svg-label" x="92" y="104">Step 1 Workflow</text>
+          <text class="svg-small" x="92" y="130">ran exactly once</text>
+
+          <rect class="svg-box svg-box--durable" x="70" y="190" width="260" height="110" rx="10" />
+          <rect class="svg-durable-inner" x="75" y="195" width="250" height="100" rx="6" />
+          <text class="svg-eyebrow" x="92" y="222">Canary step two</text>
+          <text class="svg-label" x="92" y="254">Step 2 Workflow</text>
+          <text class="svg-small" x="92" y="280">started after step one</text>
+
+          <rect class="svg-box svg-box--accent svg-box--durable" x="430" y="65" width="320" height="210" rx="10" />
+          <rect class="svg-durable-inner" x="435" y="70" width="310" height="200" rx="6" />
+          <text class="svg-eyebrow" x="452" y="118">Durable work facts</text>
+          <text class="svg-label" x="452" y="154">Beads work record</text>
+          <text class="svg-small" x="452" y="186">two fenced completions</text>
+          <text class="svg-small" x="452" y="210">both completions accepted</text>
+
+          <path class="svg-link" d="M330 95 H364 M396 95 H430 M330 245 H364 M396 245 H430" />
+          <g class="svg-fence" transform="translate(380 95)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+          <g class="svg-fence" transform="translate(380 245)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+        </g>
+
+        <g class="svg-mismatch">
+          <path class="svg-link" d="M590 275 V330 H240 V380" />
+
+          <rect class="svg-box" x="70" y="380" width="360" height="170" rx="10" />
+          <text class="svg-eyebrow" x="94" y="414">Application adapter</text>
+          <text class="svg-label" x="94" y="448">Outcome adapter</text>
+          <text class="svg-small" x="94" y="480">builds the OutcomeReady envelope</text>
+          <text class="svg-small" x="94" y="504">derives the store identity</text>
+
+          <rect class="svg-box svg-box--accent svg-box--durable" x="820" y="380" width="250" height="170" rx="10" />
+          <rect class="svg-durable-inner" x="825" y="385" width="240" height="160" rx="6" />
+          <text class="svg-eyebrow" x="844" y="414">Durable procedure</text>
+          <text class="svg-label svg-label--wrapped" x="844" y="448">
+            <tspan x="844" dy="0">Temporal Outcome</tspan>
+            <tspan x="844" dy="23">Workflow</tspan>
+          </text>
+          <text class="svg-small" x="844" y="505">preserves the envelope</text>
+          <text class="svg-small" x="844" y="529">retries on schedule</text>
+
+          <text class="svg-small svg-label--center" x="625" y="414">runtime city identity in the envelope</text>
+          <text class="svg-small svg-label--center" x="625" y="433">canonical store identity expected</text>
+          <path class="svg-link svg-link--broken" d="M430 465 H605 M645 465 H820" />
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(625 465)" />
+          <text class="svg-small svg-label--center" x="527" y="500">delivery rejected</text>
+        </g>
+
+        <g class="svg-retry">
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M945 550 V615 H786 M754 615 H625 V490" />
+          <path class="svg-hourglass" d="M-6 -9 H6 L-6 9 H6 Z" transform="translate(770 615)" />
+          <text class="svg-small svg-label--center" x="785" y="650">durable timer · same envelope every retry</text>
+        </g>
+      </svg>
+
+      <ol class="concept-figure__fallback" aria-label="Durable wrongness sequence">
+        <li>Step 1 Workflow and Step 2 Workflow both complete in the bounded canary.</li>
+        <li>The Beads work record accepts two generation-fenced completions.</li>
+        <li>The outcome adapter builds the OutcomeReady envelope with the runtime city identity instead of the canonical store identity.</li>
+        <li>The delivery contract into the Temporal Outcome Workflow breaks on the mismatch, and every delivery attempt is rejected.</li>
+        <li>A durable timer retries the same wrong envelope on schedule; Temporal preserves the mistake exactly as it was given.</li>
+        <li>The canary was rolled back and contained; its evidence stays preserved instead of being rewritten into a success.</li>
+        <li>The converted bead-to-agent unit is proved by a bounded canary and runs in shadow; result delivery and acknowledgement are the part running continuously in production.</li>
+      </ol>
+
+      <figcaption class="figure-caption">
+        Temporal preserves and retries the procedure it is given; a wrong
+        identity inside the procedure is preserved just as durably. The
+        canary was rolled back with its evidence intact, not rewritten
+        into a success. The converted unit runs in shadow; result delivery
+        and acknowledgement run continuously in production.
       </figcaption>
     </figure>
   )
