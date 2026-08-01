@@ -231,6 +231,7 @@ const afterCode = await codeToHtml(
           <a href={cast} download="worker-kill.cast">Download the recording</a>.
         </figcaption>
       </figure>
+      <ConceptFigure kind="recovery" />
       <div class="tco__copy prose">
         <p>
           At eight seconds the first Worker dies mid-execution, and the agent
@@ -343,6 +344,7 @@ both   one session, one receipt, stale claim token rejected,
           just means running it again next tick, it does not.
         </p>
       </div>
+      <ConceptFigure kind="boundary" />
     </section>
 
     <section class="tco__section tco__numbered">
@@ -597,6 +599,15 @@ both   one session, one receipt, stale claim token rejected,
   /* A 120x38 terminal keeps its aspect ratio, so bounding the width is what
      bounds the height. At full container width the recording is over 800px
      tall and swamps the section it belongs to. */
+  /* The shared figures carry the article's own ordering (03, 05, 07), which
+     collides with this page's section numbers: section 04 would display a
+     figure labelled 05. The section kickers number this page, so the figure's
+     article-relative index is dropped here rather than renumbered in the
+     component, which the article still needs as it stands. */
+  .tco :global(.concept-figure__index) {
+    display: none;
+  }
+
   .tco__player {
     width: 100%;
     /* A grid item defaults to min-width: auto, and the player's terminal has a

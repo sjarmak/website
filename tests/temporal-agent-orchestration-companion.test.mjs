@@ -206,9 +206,25 @@ test("companion prose carries no em dashes and no self-narration", () => {
       `${path.relative(ROOT, file)} must not contain em dashes`,
     );
   }
-  const companion = readFileSync(COMPANION, "utf8");
-  assert.doesNotMatch(companion, /\bin eight (?:short )?sections\b/i);
-  assert.doesNotMatch(companion, /\bthis page\b[^.]*\b(?:structure|section)/i);
+  // Self-narration is a prose defect, so scan the rendered page rather than the
+  // source: a code comment may legitimately talk about the page's own sections,
+  // and scanning source made an implementation note fail a prose rule.
+  const builtCompanion = path.join(
+    ROOT,
+    "dist/temporal-agent-orchestration/index.html",
+  );
+  if (!existsSync(builtCompanion)) return;
+  const rendered = readFileSync(builtCompanion, "utf8")
+    .replace(/<script[\s\S]*?<\/script>/g, "")
+    .replace(/<style[\s\S]*?<\/style>/g, "")
+    .replace(/<[^>]+>/g, " ");
+  assert.doesNotMatch(rendered, /\bin eight (?:short )?sections\b/i);
+  assert.doesNotMatch(rendered, /\bthis page\b[^.]*\b(?:structure|section)/i);
+  assert.doesNotMatch(
+    rendered,
+    /\bas (?:described|explained) (?:above|below)\b/i,
+    "the page must not narrate its own structure",
+  );
 });
 
 test("the built companion page keeps the quote, the recording, and the faithful timing", () => {
@@ -238,4 +254,55 @@ test("the built companion page keeps the quote, the recording, and the faithful 
     "dist/temporal-agent-orchestration/demo/worker-kill.cast",
   );
   assert.equal(existsSync(builtCast), true, "the cast must reach dist");
+});
+
+// The companion reuses the article's diagrams rather than shipping its own set.
+// Reuse is only safe while each figure still says what the companion's prose
+// says: the recovery figure sat next to the wrong heartbeat causality once, and
+// this page's corrected paragraph is directly beneath it.
+test("the companion carries diagrams that agree with its prose", () => {
+  const companion = readFileSync(COMPANION, "utf8");
+  const figures = readFileSync(
+    path.join(
+      ROOT,
+      "src/components/temporal-agent-orchestration/ConceptFigure.astro",
+    ),
+    "utf8",
+  );
+
+  const reading = ["ownership", "recovery", "boundary"];
+  let previous = -1;
+  for (const kind of reading) {
+    const at = companion.indexOf(`<ConceptFigure kind="${kind}" />`);
+    assert.ok(at > -1, `<ConceptFigure kind="${kind}" /> must be rendered`);
+    assert.ok(at > previous, `${kind} must appear in reading order`);
+    previous = at;
+  }
+
+  // Each figure lands in the section it illustrates, not merely somewhere.
+  const recoveryAt = companion.indexOf('<ConceptFigure kind="recovery" />');
+  assert.ok(
+    companion.indexOf("The Worker dies on camera") < recoveryAt &&
+      recoveryAt < companion.indexOf("At eight seconds the first Worker dies"),
+    "the recovery figure belongs between the kill heading and its narration",
+  );
+  const boundaryAt = companion.indexOf('<ConceptFigure kind="boundary" />');
+  assert.ok(
+    companion.indexOf("What it did not fix") < boundaryAt,
+    "the boundary figure belongs in the limits section",
+  );
+
+  // The recovery diagram must keep the corrected causality: identity resolves
+  // the session, the heartbeat only carries progress.
+  const recovery = figures.slice(
+    figures.indexOf('kind === "recovery"'),
+    figures.indexOf('kind === "siblings"'),
+  );
+  assert.match(recovery, /heartbeat carries progress, not\s+the identity/i);
+  assert.match(recovery, /even if no heartbeat was ever recorded/i);
+  assert.doesNotMatch(recovery, /read heartbeat/i);
+
+  // The figures number themselves against the article, so the companion drops
+  // that index rather than showing a figure "05" inside its section 04.
+  assert.match(companion, /\.tco :global\(\.concept-figure__index\)[\s\S]*display: none/);
 });

@@ -205,11 +205,20 @@ uses the banned form.
 
 ## Still open
 
-The recovery diagram in `ConceptFigure.astro` still carries the old heartbeat
-causality in three places: its `<desc>`, the step-3 sublabel "read heartbeat",
-and the fourth fallback list item. Figure work was parked for this pass, so the
-prose and the diagram now disagree. That is the first thing to fix when figures
-reopen.
+~~The recovery diagram carries the old heartbeat causality.~~ **Resolved.**
+Checked against `ConceptFigure.astro` on 2026-08-01: the `<desc>` now reads "the
+heartbeat carries progress, not the identity", the step-3 sublabel reads "by
+stable identity", and the fourth fallback item reads "which holds even if no
+heartbeat was ever recorded". The phrase "read heartbeat" appears nowhere in
+`src/components/`. The prose and the diagram agree, which is what made the
+figure safe to reuse on the companion page.
+
+**Open, and deliberately not fixed here.** The recovery figure's ink occupies
+y 174 to 316 of a `0 0 1000 440` viewBox, so roughly a third of its rendered
+height is empty band above and below the diagram. Measured in a browser at 1280
+wide: the SVG renders 1024x451 on both the article and the companion, identically,
+so this is a property of the shared component and predates the companion page.
+Tightening the viewBox is figure work, which is parked.
 
 ---
 
