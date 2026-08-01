@@ -53,38 +53,50 @@ Epic bead: `sjai-zmj`
 
 ## Acceptance criteria
 
-- [ ] A1 `node --test tests/temporal-agent-orchestration-article.test.mjs`
-      passes against source, with kinds `shadow`, `wrongness`, `scattered`
-      present (≥10 kinds counted, five pinned elements each).
-- [ ] A2 `grep -c 'svg-box--durable\|svg-bolt\|svg-barrier'
-      ConceptFigure.astro` > 0 and each new/amended figure uses the grammar
-      classes its semantics call for; no hardcoded `#fff`/`#000`; no
-      `overflow-x: auto` (pin test).
-- [ ] A3 `boundary` renders three tiers (inside / at the boundary / outside).
-- [ ] A4 `recovery` is a timeline: three persistent rows + two temporary
-      Worker boxes; desc + fallback state the agent is not replayed.
-- [ ] A5 `handoff` draws two adjacent crash windows with separate
-      protections; heartbeat not presented as duplicate-launch protection.
-- [ ] A6 `workshop` places the all-store watchdog outside the delivery loop.
-- [ ] A7 `ownership` draws bidirectional Beads↔Activities verification.
-- [ ] A8 Companion §1 renders `scattered`; `shadow` + `wrongness` placed on
-      companion; article renders `shadow` (see decision 8); readingOrder pin
-      updated and passing.
-- [ ] A9 `npm run check` passes.
-- [ ] A10 `npm run build` passes and pin test re-passes against fresh dist.
-- [ ] A11 Real-browser walk of both pages: 6 viewport widths × 2 themes,
-      zero horizontal overflow, fallback lists render below 720px. Evidence
-      artifact saved.
-- [ ] A12 `docs/companion-prose-for-voice-pass.md` exists, same format as
-      the article extraction, covering all visitor-facing companion prose
-      including new figure captions/fallbacks.
-- [ ] A13 no-ai-slop pass applied: zero hard-ban violations (em dash,
-      agreement openers, hedging stacks, honesty-signaling, self-history,
-      structure-narration) in companion prose + new figure text; article
-      only where a sentence violated a hard ban.
-- [ ] A14 One local commit per deliverable on
-      `feature/temporal-research-walkthrough`; working tree clean; nothing
-      pushed.
+- [x] A1 `node --test tests/temporal-agent-orchestration-article.test.mjs`:
+      23/23 pass. `grep -c 'kind === "'` = 10 (added shadow, wrongness,
+      scattered), five pinned elements each (parity test scales by count).
+- [x] A2 Grammar classes styled and used: durable 16, bolt 12, barrier 3,
+      fence 8, hourglass 5, ack 3, lane 6, broken-link 2, muted 5
+      occurrences; legend pin test asserts all 10 class definitions;
+      hardcoded-color and overflow-x pins pass.
+- [x] A3 `boundary` renders "Inside Temporal / At the boundary / Outside
+      Temporal" tiers, middle tier accent + fence glyphs (screenshot
+      boundary-dark.png).
+- [x] A4 `recovery` timeline: three full-width persistent rows + Worker A/B
+      boxes; desc and fallback state the agent is never replayed and
+      resolution holds with no heartbeat recorded (companion pin suite
+      asserts the corrected causality).
+- [x] A5 `handoff` draws bolts at both gaps (outbox ack, pre-heartbeat) with
+      dedup arc + fence glyph protections; heartbeat step reads "progress
+      after attach"; fallback item 7 states the guard is identity.
+- [x] A6 `workshop` watchdog sits outside the loop, dashed inspection edge
+      only; redelivery loop connects delivery and the durable wait only.
+- [x] A7 `ownership` draws the dashed report path and the solid fenced
+      acceptance path between Beads and Activities, lock on the acceptance.
+- [x] A8 Companion renders all 8 kinds in section order (companion pin test
+      asserts order + placements); article renders shadow at "What's
+      running now"; readingOrder pin updated, passing.
+- [x] A9 `npm run check`: 0 errors (warnings pre-date this goal, in
+      unrelated scripts).
+- [x] A10 `npm run build` passes; article + companion suites re-pass
+      against fresh dist (31/31).
+- [x] A11 Browser walk: 24/24 page x width x theme combinations, zero page
+      or figure overflow, SVG/fallback swap correct at 720px both sides.
+      Evidence: `docs/figure-browser-walk.json`. Re-run:
+      `python3 -m http.server 4173 -d dist & node figure-walk.mjs`
+      (script in the session scratchpad; walks 360/480/719/768/1024/1440
+      in light and dark).
+- [x] A12 `docs/companion-prose-for-voice-pass.md` exists; carries all
+      visitor-facing companion prose + new/amended figure text; supersedes
+      article-doc §6 for the companion (pointer added there).
+- [x] A13 Slop pass: zero em dashes and zero banned words in companion +
+      figure text (mechanical scan); one article hard-ban cut ("Two lists,
+      and the first one is the short one", structure narration); caption
+      status-line trims per the both-halves rule.
+- [x] A14 Commits 873107f, 85a139c, d9fa68b, 3471f05, 556aecb, c2f0a49,
+      db94324, 8231609, 1442e73 + final close-out; working tree clean;
+      branch never pushed.
 
 8. **(2026-08-01, mid-execution) Article insert is `shadow` only.** The
    article's canary section tells the earlier four-defect canary
@@ -128,3 +140,8 @@ Epic bead: `sjai-zmj`
   full status). Companion page prose itself needed nothing beyond the
   earlier 7f5532c de-slop pass. Stephanie's personal voice pass remains
   owed on the diff, from docs/companion-prose-for-voice-pass.md.
+- 2026-08-01: Final verification (bead .9). Browser matrix 24/24 clean
+  (evidence docs/figure-browser-walk.json); screenshots of scattered,
+  shadow, wrongness, boundary reviewed in both themes. All acceptance
+  criteria ticked with evidence above. Goal complete pending Stephanie's
+  voice pass and push approval; nothing pushed.
