@@ -68,7 +68,7 @@ Epic bead: `sjai-zmj`
 - [ ] A6 `workshop` places the all-store watchdog outside the delivery loop.
 - [ ] A7 `ownership` draws bidirectional Beads↔Activities verification.
 - [ ] A8 Companion §1 renders `scattered`; `shadow` + `wrongness` placed on
-      companion; article renders `shadow` + `wrongness`; readingOrder pin
+      companion; article renders `shadow` (see decision 8); readingOrder pin
       updated and passing.
 - [ ] A9 `npm run check` passes.
 - [ ] A10 `npm run build` passes and pin test re-passes against fresh dist.
@@ -85,6 +85,22 @@ Epic bead: `sjai-zmj`
 - [ ] A14 One local commit per deliverable on
       `feature/temporal-research-walkthrough`; working tree clean; nothing
       pushed.
+
+8. **(2026-08-01, mid-execution) Article insert is `shadow` only.** The
+   article's canary section tells the earlier four-defect canary
+   (CanaryFigure); the latest two-step store-identity canary appears nowhere
+   in its prose. Inserting `wrongness` there would assert a story the
+   article never tells, forcing a prose rewrite, which the handoff bans.
+   `wrongness` is companion-only (§06, where the prose describes it).
+   `shadow` inserts after the "What's running now" opening paragraph, whose
+   text is the glass-wall statement. Amends decision 2.
+9. **(2026-08-01) Companion placement map (decision 7 resolved):**
+   §problem → `scattered`; §01 converted → `shadow`; §02 before/after →
+   `handoff` (after the architecture cards); §03 who-owns → `ownership`;
+   §04 worker-dies → `recovery`; §05 evidence → `workshop`; §06 didn't-fix →
+   `wrongness` (copy split after the canary paragraph) + `boundary`.
+   Article readingOrder pin becomes [siblings, orchestrator, ownership,
+   handoff, recovery, workshop, shadow, boundary].
 
 ## Status log
 

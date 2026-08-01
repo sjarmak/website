@@ -7,7 +7,8 @@ interface Props {
     | "handoff"
     | "recovery"
     | "workshop"
-    | "boundary";
+    | "boundary"
+    | "shadow";
 }
 
 const { kind } = Astro.props;
@@ -523,6 +524,110 @@ const svgDescId = `${titleId}-svg-desc`;
       <figcaption class="figure-caption">
         Temporal remembers the procedure. Everything on the right is still yours
         to get right.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "shadow" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">08 / Shadow boundary</p>
+        <h3 id={titleId}>Shadow is a glass wall with one opened gate</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1120 690"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Shadow barrier with a separately opened delivery gate</title>
+        <desc id={svgDescId}>
+          The Temporal server and Worker run above a translucent shadow
+          barrier: task queues are polled, Workflow definitions are
+          registered, and replay and deployment wiring is exercised. Below
+          the barrier, the Beads claim, agent launch, canonical Beads
+          completion, and external mutation sit muted, blocked by the
+          fail-closed shadow worker. One gate in the barrier is separately
+          opened: OutcomeReady delivery crosses it, waits durably, and
+          redelivers until the mayor verifies evidence and records an
+          acknowledgement, the part that runs continuously in production.
+          A panel shows the two independent switches: Beads mode is
+          shadow, Outcome mode is canary, and setting both to canary is
+          reserved for a bounded, separately authorized run.
+        </desc>
+
+        <text class="svg-eyebrow" x="40" y="44">Temporal infrastructure: alive</text>
+        <rect class="svg-box" x="40" y="60" width="350" height="92" rx="10" />
+        <text class="svg-eyebrow" x="62" y="92">running</text>
+        <text class="svg-label" x="62" y="122">Temporal server + Worker</text>
+        <rect class="svg-box" x="410" y="60" width="350" height="92" rx="10" />
+        <text class="svg-eyebrow" x="432" y="92">polled</text>
+        <text class="svg-label" x="432" y="122">Task queues</text>
+        <rect class="svg-box" x="40" y="176" width="350" height="92" rx="10" />
+        <text class="svg-eyebrow" x="62" y="208">registered</text>
+        <text class="svg-label" x="62" y="238">Workflow definitions</text>
+        <rect class="svg-box" x="410" y="176" width="350" height="92" rx="10" />
+        <text class="svg-eyebrow" x="432" y="208">exercised</text>
+        <text class="svg-label" x="432" y="238">Replay + deployment wiring</text>
+        <path class="svg-link" d="M215 268 V300 M585 268 V300" />
+
+        <rect class="svg-barrier" x="30" y="300" width="850" height="46" />
+        <rect class="svg-barrier" x="1000" y="300" width="90" height="46" />
+        <text class="svg-small" x="54" y="328">shadow barrier · fail-closed · no canonical mutation</text>
+
+        <rect class="svg-box svg-box--accent" x="800" y="96" width="280" height="112" rx="10" />
+        <text class="svg-eyebrow" x="822" y="128">live in production</text>
+        <text class="svg-label svg-label--wrapped" x="822" y="158">
+          <tspan x="822" dy="0">OutcomeReady</tspan>
+          <tspan x="822" dy="23">delivery</tspan>
+        </text>
+        <path class="svg-link svg-link--dashed" d="M940 208 V386" />
+        <path class="svg-hourglass" d="M-6 -9 H6 L-6 9 H6 Z" transform="translate(918 252)" />
+        <text class="svg-small" x="958" y="271">separately</text>
+        <text class="svg-small" x="958" y="290">opened gate</text>
+
+        <text class="svg-eyebrow" x="40" y="374">Mutation bridge: physically blocked</text>
+        <rect class="svg-box svg-box--muted" x="40" y="386" width="350" height="80" rx="10" />
+        <text class="svg-small" x="62" y="420">Beads claim</text>
+        <text class="svg-small" x="62" y="444">blocked</text>
+        <rect class="svg-box svg-box--muted" x="410" y="386" width="350" height="80" rx="10" />
+        <text class="svg-small" x="432" y="420">Agent launch</text>
+        <text class="svg-small" x="432" y="444">blocked</text>
+        <rect class="svg-box svg-box--muted" x="40" y="482" width="350" height="80" rx="10" />
+        <text class="svg-small" x="62" y="516">Canonical Beads completion</text>
+        <text class="svg-small" x="62" y="540">blocked</text>
+        <rect class="svg-box svg-box--muted" x="410" y="482" width="350" height="80" rx="10" />
+        <text class="svg-small" x="432" y="516">External mutation</text>
+        <text class="svg-small" x="432" y="540">blocked</text>
+
+        <rect class="svg-box" x="800" y="386" width="280" height="112" rx="10" />
+        <text class="svg-eyebrow" x="822" y="418">through the gate</text>
+        <text class="svg-label" x="822" y="448">Acknowledgement</text>
+        <path class="svg-ack" d="M-7 0 L-2 5 L7 -6" transform="translate(1080 442)" />
+        <text class="svg-small" x="822" y="478">Mayor verifies evidence</text>
+
+        <rect class="svg-box" x="40" y="580" width="1040" height="94" rx="10" />
+        <text class="svg-eyebrow" x="68" y="612">Two independent switches</text>
+        <text class="svg-small" x="68" y="640">Beads mode: shadow · Outcome mode: canary = the current boundary</text>
+        <text class="svg-small" x="68" y="664">canary + canary is reserved for a bounded, separately authorized run</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Shadow boundary">
+        <li>Above the wall, the Temporal server and Worker run, task queues are polled, Workflow definitions are registered, and replay and deployment wiring is exercised.</li>
+        <li>Below the wall, the Beads claim, agent launch, canonical Beads completion, and external mutation are blocked by the fail-closed shadow worker.</li>
+        <li>One gate in the wall is separately opened: OutcomeReady delivery crosses it, waits durably, and redelivers until the mayor verifies evidence and acknowledges.</li>
+        <li>Beads mode and Outcome mode are independent switches; Beads shadow with Outcome canary is the current boundary.</li>
+        <li>Setting both switches to canary is reserved for a bounded, separately authorized run, never general activation.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Shadow proves the Temporal wiring, physically blocks every
+        canonical mutation at the wall, and opens one separate gate so
+        result delivery and acknowledgement run continuously in
+        production.
       </figcaption>
     </figure>
   )
