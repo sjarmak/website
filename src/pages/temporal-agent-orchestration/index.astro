@@ -65,9 +65,9 @@ const afterCode = await codeToHtml(
       <div class="tco__copy prose">
         <p>
           I run a system that hands tracked work to coding agents. Work items
-          live in a durable store, so a crash never loses the task. What a
-          crash used to lose was everything around the task: three questions a
-          restart could not answer.
+          live in a durable store, so a crash never loses the task. A crash
+          used to lose everything around the task, starting with three
+          questions a restart could not answer.
         </p>
         <ul>
           <li>Did this claim already start an agent?</li>
@@ -75,8 +75,8 @@ const afterCode = await codeToHtml(
           <li>Has anyone acknowledged this exact outcome?</li>
         </ul>
         <p>
-          The fix fits in two sentences. Put the unpredictable agent inside an
-          Activity. Put the promises around it in a Workflow.
+          Put the unpredictable agent inside an Activity. Put the promises
+          around it in a Workflow.
         </p>
       </div>
     </section>
@@ -177,8 +177,8 @@ const afterCode = await codeToHtml(
         <p class="kicker">03</p>
         <h2>Who owns what</h2>
         <p>
-          Three tiers, and the middle one is the interesting one: it is where
-          at-least-once execution becomes a safe operation.
+          Three tiers. The middle one is where at-least-once execution becomes
+          a safe operation.
         </p>
       </header>
       <ConceptFigure kind="ownership" />
@@ -208,9 +208,8 @@ const afterCode = await codeToHtml(
       </div>
       <div class="tco__copy prose">
         <p>
-          The one-sentence version: Temporal faithfully retries whatever it was
-          told to do, so everything about making that retry safe belongs to the
-          application.
+          Temporal faithfully retries whatever it was told to do, so everything
+          about making that retry safe belongs to the application.
         </p>
       </div>
     </section>
@@ -220,8 +219,8 @@ const afterCode = await codeToHtml(
         <p class="kicker">04</p>
         <h2>The Worker dies on camera</h2>
         <p>
-          A real run, start to finish, nothing staged: a real kill signal to a
-          real Worker process, twice, at two different points.
+          One run, start to finish, with nothing staged. The kill signal is
+          real and it lands twice, at two different points.
         </p>
       </header>
       <figure class="tco__player">
@@ -234,25 +233,25 @@ const afterCode = await codeToHtml(
       </figure>
       <div class="tco__copy prose">
         <p>
-          At eight seconds the first Worker dies mid-execution, and one line
-          matters more than the rest: the agent it started is still alive. The
-          long pause that follows is not dead air. It is Temporal noticing that
-          the Worker is gone, and it lasts eighteen seconds because detection
-          takes real time.
+          At eight seconds the first Worker dies mid-execution, and the agent
+          it started is still alive. That line is the whole reason the boundary
+          is shaped this way. The eighteen seconds that follow are Temporal
+          working out that the Worker is gone. Detection takes real time, and
+          the recording keeps all of it.
         </p>
         <p>
-          The second kill lands before any checkpoint exists, and it is the
-          decisive arm: the retry has to ask the session resolver again, and
-          the resolver returns the session that already exists instead of
+          The second kill lands before any checkpoint exists, which makes it
+          the decisive arm. The retry has to ask the session resolver again,
+          and the resolver returns the session that already exists instead of
           creating a second one. The first arm resumes from its checkpoint and
           never asks again, so it cannot demonstrate duplicate prevention on
           its own.
         </p>
         <p>
-          What prevents a second agent is not the heartbeat. A Worker can die
-          before the first heartbeat ever lands. The resolver finds the
-          existing session by stable identity, and the heartbeat only lets the
-          retry resume progress.
+          A heartbeat does not keep a retry from becoming a second agent. A
+          Worker can die before the first heartbeat ever lands. The resolver
+          finds the existing session by stable identity, and the heartbeat only
+          lets the retry resume progress.
         </p>
       </div>
       <pre class="tco__numbers"><code>arm 1  mid-execute      resolver calls = 1   session creations = 1   final attempt = 2
@@ -263,7 +262,7 @@ both   one session, one receipt, stale claim token rejected,
         <p>
           The demo runs on one host against a local dev server, with a
           file-backed store and a fixture process in place of a coding agent.
-          What it proves is the boundary, on real Temporal, with a real signal.
+          It proves the boundary, on real Temporal, with a real signal.
         </p>
       </div>
     </section>
@@ -323,17 +322,18 @@ both   one session, one receipt, stale claim token rejected,
         <p>
           The sharpest limit showed up in the latest canary. Two steps
           executed exactly once, survived a deliberate mid-episode Worker
-          interruption, and then failed at the outcome boundary: an
-          application adapter derived the wrong store identity, and Temporal
+          interruption, and then failed at the outcome boundary, where an
+          application adapter derived the wrong store identity and Temporal
           faithfully retried the wrong envelope every fifteen minutes. The
           failure marker belongs on the adapter. Temporal preserved exactly
           what it was given, which is the job.
         </p>
         <p>
-          The cost is real. A contributor now has to hold determinism rules,
-          replay compatibility, fencing, and idempotency in their head to
-          change orchestration code safely, and the deployment gains a server,
-          a Worker, and a versioning discipline on every Workflow change.
+          A contributor now has to hold determinism rules, replay
+          compatibility, fencing, and idempotency in their head to change
+          orchestration code safely, and the deployment gains a server, a
+          Worker, and a versioning discipline on every Workflow change. That
+          is the real cost, and it is larger than the infrastructure.
         </p>
         <p>
           A maintenance job that does forty-four seconds of synchronous work

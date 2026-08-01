@@ -215,6 +215,16 @@ reopen.
 
 ## 6. Companion page (all visitor-facing text, added when the page was built)
 
+**De-slop pass applied 2026-08-01**, so the text below matches what the page
+ships. Eleven patterns were removed: four colon reveals, two clefts ("what a
+crash used to lose was", "what it proves is"), two binary contrasts ("is not
+dead air", "what prevents a second agent is not the heartbeat"), two
+throat-clearing openers ("the fix fits in two sentences", "the cost is real"),
+and one faux-insight setup ("the middle one is the interesting one"). The
+heartbeat correction survived as a plain negation because the denial is the
+content, not a rhetorical contrast. No em dashes, no banned words. This is a
+slop pass, not the voice pass; the voice pass is still owed.
+
 The companion page at the route root. The article moved to `/article` unchanged.
 The reviewer's four lines are quoted close to verbatim per the split plan and
 are marked as such; they are included for completeness but originate with the
@@ -242,7 +252,7 @@ reviewer, not this pass.
 
 > An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic.
 
-> I run a system that hands tracked work to coding agents. Work items live in a durable store, so a crash never loses the task. What a crash used to lose was everything around the task: three questions a restart could not answer.
+> I run a system that hands tracked work to coding agents. Work items live in a durable store, so a crash never loses the task. A crash used to lose everything around the task, starting with three questions a restart could not answer.
 
 > Did this claim already start an agent?
 
@@ -250,7 +260,7 @@ reviewer, not this pass.
 
 > Has anyone acknowledged this exact outcome?
 
-> The fix fits in two sentences. Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
+> Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
 
 ### 01 What was converted
 
@@ -288,7 +298,7 @@ reviewer, not this pass.
 
 ### 03 Who owns what
 
-> Three tiers, and the middle one is the interesting one: it is where at-least-once execution becomes a safe operation.
+> Three tiers. The middle one is where at-least-once execution becomes a safe operation.
 
 > Temporal owns: Event History, deterministic ordering, durable waits and timers, retry scheduling, cancellation delivery, and acknowledgement state.
 
@@ -296,23 +306,23 @@ reviewer, not this pass.
 
 > The application owns: whether the agent's work is correct, external side effects, review, store integrity, human authorization, and the independent watchdog.
 
-> The one-sentence version: Temporal faithfully retries whatever it was told to do, so everything about making that retry safe belongs to the application.
+> Temporal faithfully retries whatever it was told to do, so everything about making that retry safe belongs to the application.
 
 ### 04 The Worker dies on camera
 
-> A real run, start to finish, nothing staged: a real kill signal to a real Worker process, twice, at two different points.
+> One run, start to finish, with nothing staged. The kill signal is real and it lands twice, at two different points.
 
 > The full recording keeps real timing, including the pause where Temporal notices the dead Worker.
 
 > Download the recording
 
-> At eight seconds the first Worker dies mid-execution, and one line matters more than the rest: the agent it started is still alive. The long pause that follows is not dead air. It is Temporal noticing that the Worker is gone, and it lasts eighteen seconds because detection takes real time.
+> At eight seconds the first Worker dies mid-execution, and the agent it started is still alive. That line is the whole reason the boundary is shaped this way. The eighteen seconds that follow are Temporal working out that the Worker is gone. Detection takes real time, and the recording keeps all of it.
 
-> The second kill lands before any checkpoint exists, and it is the decisive arm: the retry has to ask the session resolver again, and the resolver returns the session that already exists instead of creating a second one. The first arm resumes from its checkpoint and never asks again, so it cannot demonstrate duplicate prevention on its own.
+> The second kill lands before any checkpoint exists, which makes it the decisive arm. The retry has to ask the session resolver again, and the resolver returns the session that already exists instead of creating a second one. The first arm resumes from its checkpoint and never asks again, so it cannot demonstrate duplicate prevention on its own.
 
-> What prevents a second agent is not the heartbeat. A Worker can die before the first heartbeat ever lands. The resolver finds the existing session by stable identity, and the heartbeat only lets the retry resume progress.
+> A heartbeat does not keep a retry from becoming a second agent. A Worker can die before the first heartbeat ever lands. The resolver finds the existing session by stable identity, and the heartbeat only lets the retry resume progress.
 
-> The demo runs on one host against a local dev server, with a file-backed store and a fixture process in place of a coding agent. What it proves is the boundary, on real Temporal, with a real signal.
+> The demo runs on one host against a local dev server, with a file-backed store and a fixture process in place of a coding agent. It proves the boundary, on real Temporal, with a real signal.
 
 (Player marker labels:)
 
@@ -348,9 +358,9 @@ reviewer, not this pass.
 
 > Temporal gives the procedure a durable owner. It does not make external effects exactly once. A Worker can die after an external call succeeds and before the completion is recorded, and the Activity may run again.
 
-> The sharpest limit showed up in the latest canary. Two steps executed exactly once, survived a deliberate mid-episode Worker interruption, and then failed at the outcome boundary: an application adapter derived the wrong store identity, and Temporal faithfully retried the wrong envelope every fifteen minutes. The failure marker belongs on the adapter. Temporal preserved exactly what it was given, which is the job.
+> The sharpest limit showed up in the latest canary. Two steps executed exactly once, survived a deliberate mid-episode Worker interruption, and then failed at the outcome boundary, where an application adapter derived the wrong store identity and Temporal faithfully retried the wrong envelope every fifteen minutes. The failure marker belongs on the adapter. Temporal preserved exactly what it was given, which is the job.
 
-> The cost is real. A contributor now has to hold determinism rules, replay compatibility, fencing, and idempotency in their head to change orchestration code safely, and the deployment gains a server, a Worker, and a versioning discipline on every Workflow change.
+> A contributor now has to hold determinism rules, replay compatibility, fencing, and idempotency in their head to change orchestration code safely, and the deployment gains a server, a Worker, and a versioning discipline on every Workflow change. That is the real cost, and it is larger than the infrastructure.
 
 > A maintenance job that does forty-four seconds of synchronous work every two hours did not justify any of that, and it stayed cron plus a lock. If a crash mid-operation leaves a question your own database cannot answer, the procedure deserves a durable owner. If a crash just means running it again next tick, it does not.
 

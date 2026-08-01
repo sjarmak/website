@@ -62,7 +62,7 @@ test("the companion opens with the reviewer's four-line problem and the boundary
   }
 
   assert.match(companion, /Put the unpredictable agent inside an\s+Activity/);
-  assert.match(companion, /Put the promises around it in a Workflow/);
+  assert.match(companion, /Put the promises\s+around it in a Workflow/);
 
   // The three questions a restart could not answer.
   assert.match(companion, /Did this claim already start an agent\?/);
@@ -121,10 +121,21 @@ test("the worker-kill recording is embedded faithfully, with arm 2 carrying the 
   assert.match(companion, /same Activity identity across attempts/);
 
   // The heartbeat correction: the resolver, not the heartbeat, prevents a
-  // second agent. A Worker can die before the first heartbeat lands.
-  assert.match(companion, /not the heartbeat/);
+  // second agent. A Worker can die before the first heartbeat lands. Pin the
+  // claim rather than one phrasing of it, so a wording change cannot silently
+  // reintroduce the wrong causality that this sentence exists to deny.
+  assert.match(
+    companion,
+    /A heartbeat does not keep a retry from becoming a second agent/,
+  );
   assert.match(companion, /before the first heartbeat ever lands/);
-  assert.match(companion, /stable identity/);
+  assert.match(companion, /resolver\s+finds the existing session by stable identity/);
+  assert.match(companion, /heartbeat only\s+lets the retry resume progress/);
+  assert.doesNotMatch(
+    companion,
+    /heartbeat (?:is what |)(?:keeps|prevents|stops)[^.]*second agent/i,
+    "the heartbeat must never be described as what prevents the second launch",
+  );
 
   // The demo's scope is stated rather than implied.
   assert.match(companion, /one host/);
