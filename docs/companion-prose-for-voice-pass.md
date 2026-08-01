@@ -9,6 +9,15 @@ doc supersedes that section for the companion page and adds the figure text
 that landed with the 2026-08-01 visual-brief build. A slop pass ran over all
 of it. The voice pass is still owed on all of it.
 
+**Amended 2026-08-01, reviewer compression pass.** The page was restructured
+to five sections (problem, What I Temporalized, demo, evidence, limits) with
+a ledger-and-links first viewport, the demo moved ahead of the boundary
+explanation, and four figures moved behind detail disclosures. Lines marked
+**(new)** were authored in that pass and have had a slop pass but no voice
+pass. Lines marked **(amended)** changed wording in that pass. Everything
+else is carried over unchanged. Figure text did not change; two figures
+render in a new page position.
+
 Figure text appears on both pages wherever a figure is shared with the
 article, so an edit to a heading, caption, or fallback item lands in both
 places.
@@ -17,29 +26,44 @@ places.
 
 ## Metadata
 
-**Retitled 2026-08-01** (superseded the line below it was extracted from):
-
 > How I made Gas City's agent orchestration durable with Temporal
 
-> A short walkthrough of what I Temporalized, how the system recovers from Worker failure, and where Temporal's guarantees stop.
+Intro **(amended)** — the reviewer's four lines moved up from the problem
+section into the first viewport:
+
+> An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic.
 
 > A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop.
 
-## Tabs
+## First viewport: lede, ledger, links
 
-> Full article
+Lede (carried over from the problem section):
 
-> Annotated code
+> Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
+
+Ledger **(new; labels and shape are the reviewer's recommended top)**:
+
+> Temporalized: One ready task → one agent execution → one fenced receipt.
+
+> Proved: Recovery from a real Worker kill without starting a second agent.
+
+> Running today: Durable result delivery and acknowledgement.
+
+> Not proved: Cross-host recovery.
+
+Links **(new labels; replace the old two-tab nav)**:
+
+> Watch the Worker-kill demo
+
+> Read the full article
+
+> Inspect the annotated code
 
 ---
 
 ## The problem
 
 > A crash loses the procedure, not the task
-
-(Reviewer's four lines, close to verbatim:)
-
-> An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic.
 
 > I run a system that hands tracked work to coding agents. Work items live in a durable store, so a crash never loses the task. A crash used to lose everything around the task, starting with three questions a restart could not answer.
 
@@ -49,7 +73,9 @@ places.
 
 > Has anyone acknowledged this exact outcome?
 
-> Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
+**(new; the reviewer's core-judgment line, close to verbatim)**:
+
+> The task state was already durable. What was missing was a durable owner for the procedure.
 
 ### Figure: scattered (new 2026-08-01)
 
@@ -81,43 +107,22 @@ Fallback list:
 
 ---
 
-## 01 What was converted
+## 01 What I Temporalized
 
-> The unit converted is one ready work item becoming one agent execution and one fenced receipt.
+Heading **(amended; was "What was converted")**:
 
-> Before, that unit was a controller tick, `CityRuntime.beadReconcileTick`, plus a separate recovery scan that inferred what a dead session had been doing.
+> What I Temporalized
 
-> After, `BeadOrchestrationWorkflow` owns the procedure and `ExecuteBeadActivity` owns the fenced claim, start-or-attach, heartbeat, and completion, split across two task queues: `gascity-bead-orchestration` for the procedure and `gascity-agent-work` for the agent itself.
+Unit declaration **(amended; translated before named, per the reviewer)**:
 
-> The status has two halves and they belong together. This work-item-to-agent unit is proved by a bounded canary and runs in shadow. The part running continuously in production is result delivery and acknowledgement, the same boundary applied a second time.
+> I converted one unit: one ready task becoming one agent execution and one receipt that only the current attempt can submit. The guard on that receipt is called a generation fence, and it is what keeps a stale attempt from overwriting the current one.
 
-### Figure: shadow (new 2026-08-01, also on the article)
+Before/after paragraph **(amended; the Task Queue sentence now claims later
+isolation, not current independent scaling)**:
 
-Heading:
+> Before, that unit was a controller tick, `CityRuntime.beadReconcileTick`, plus a separate recovery scan that inferred what a dead session had been doing. After, `BeadOrchestrationWorkflow` owns the procedure and `ExecuteBeadActivity` owns the fenced claim, start-or-attach, heartbeat, and completion. The two run on separate Task Queues, `gascity-bead-orchestration` for the procedure and `gascity-agent-work` for the agent, so orchestration and agent execution can later be isolated or scaled independently.
 
-> Shadow is a glass wall with one opened gate
-
-Caption:
-
-> Shadow proves the Temporal wiring, physically blocks every canonical mutation at the wall, and opens one separate gate so result delivery and acknowledgement run continuously in production.
-
-Fallback list:
-
-> Above the wall, the Temporal server and Worker run, task queues are polled, Workflow definitions are registered, and replay and deployment wiring is exercised.
-
-> Below the wall, the Beads claim, agent launch, canonical Beads completion, and external mutation are blocked by the fail-closed shadow worker.
-
-> One gate in the wall is separately opened: OutcomeReady delivery crosses it, waits durably, and redelivers until the mayor verifies evidence and acknowledges.
-
-> Beads mode and Outcome mode are independent switches; Beads shadow with Outcome canary is the current boundary.
-
-> Setting both switches to canary is reserved for a bounded, separately authorized run, never general activation.
-
----
-
-## 02 Before and after
-
-> The excerpts below are the entry points of each side, rendered from the same versioned files the code browser annotates in full.
+Code panes (carried over):
 
 > Before: one process-owned tick
 
@@ -131,6 +136,8 @@ Fallback list:
 
 > Open all annotated files
 
+Architecture cards (carried over):
+
 > The canonical record for tasks, claims, artifacts, and receipts. Inspectable and repairable without Temporal.
 
 > Owns ordering, durable waits, retries, cancellation, and which safe step comes next.
@@ -138,6 +145,22 @@ Fallback list:
 > Owns the agent process and every other nondeterministic effect, behind a fenced claim.
 
 > Polls both task queues and executes the registered code. The one process allowed to die.
+
+Tiers intro and tiers (carried over from the old "Who owns what" section):
+
+> Three tiers. The middle one is where at-least-once execution becomes a safe operation.
+
+> Temporal owns: Event History, deterministic ordering, durable waits and timers, retry scheduling, cancellation delivery, and acknowledgement state.
+
+> The boundary owns: stable identity, idempotency keys, claim fences, and typed receipts. None of these are Temporal guarantees, and all of them are required for Temporal's guarantees to be useful.
+
+> The application owns: whether the agent's work is correct, external side effects, review, store integrity, human authorization, and the independent watchdog.
+
+> Temporal faithfully retries whatever it was told to do. It will not make a badly identified or non-idempotent operation safe on its own.
+
+Disclosure summary **(new)**:
+
+> The full ownership diagram
 
 ### Figure: handoff (amended 2026-08-01, also on the article)
 
@@ -165,21 +188,7 @@ Fallback list:
 
 > Heartbeats carry progress after attachment; the duplicate-launch guard is the stable identity, not the heartbeat.
 
----
-
-## 03 Who owns what
-
-> Three tiers. The middle one is where at-least-once execution becomes a safe operation.
-
-> Temporal owns: Event History, deterministic ordering, durable waits and timers, retry scheduling, cancellation delivery, and acknowledgement state.
-
-> The boundary owns: stable identity, idempotency keys, claim fences, and typed receipts. None of these are Temporal guarantees, and all of them are required for Temporal's guarantees to be useful.
-
-> The application owns: whether the agent's work is correct, external side effects, review, store integrity, human authorization, and the independent watchdog.
-
-> Temporal faithfully retries whatever it was told to do, so everything about making that retry safe belongs to the application.
-
-### Figure: ownership (amended 2026-08-01, also on the article)
+### Figure: ownership (amended 2026-08-01, also on the article; now behind a disclosure)
 
 Heading (unchanged):
 
@@ -201,7 +210,7 @@ Fallback list:
 
 ---
 
-## 04 The Worker dies on camera
+## 02 The Worker dies on camera
 
 > One run, start to finish, with nothing staged. The kill signal is real and it lands twice, at two different points.
 
@@ -257,11 +266,13 @@ Fallback list:
 
 ---
 
-## 05 What the evidence proves
+## 03 What the evidence proves
 
 > Continuous in production
 
-> Result delivery and acknowledgement. Finished outcomes are delivered, redelivered while unacknowledged, and closed only by an exact acknowledgement receipt.
+**(amended; "an exact acknowledgement receipt" read as an exactly-once claim)**:
+
+> Result delivery and acknowledgement. Finished outcomes are delivered, redelivered while unacknowledged, and closed only by an acknowledgement matched to the exact outcome generation and agent session.
 
 > Bounded canary only
 
@@ -271,9 +282,45 @@ Fallback list:
 
 > Cross-host recovery, the reusable pack boundary, and any claim that this generalizes beyond a single-node deployment.
 
+Sub-heading **(new; replaces the glass-wall headline, which stays inside the
+shadow figure)**:
+
+> What runs today
+
+Status paragraph **(amended; "This" became "The" after the move, and the
+independent-controls sentence is new)**:
+
+> The status has two halves and they belong together. The work-item-to-agent unit is proved by a bounded canary and runs in shadow. The part running continuously in production is result delivery and acknowledgement, the same boundary applied a second time. Both have independent rollout controls.
+
+Disclosure summary **(new)**:
+
+> The full delivery flow
+
 > The full test map, forty-five Go test files and a replay gate that has to fail when it should, is in the article.
 
-### Figure: workshop (amended 2026-08-01, also on the article)
+### Figure: shadow (new 2026-08-01, also on the article; now beside the evidence)
+
+Heading:
+
+> Shadow is a glass wall with one opened gate
+
+Caption:
+
+> Shadow proves the Temporal wiring, physically blocks every canonical mutation at the wall, and opens one separate gate so result delivery and acknowledgement run continuously in production.
+
+Fallback list:
+
+> Above the wall, the Temporal server and Worker run, task queues are polled, Workflow definitions are registered, and replay and deployment wiring is exercised.
+
+> Below the wall, the Beads claim, agent launch, canonical Beads completion, and external mutation are blocked by the fail-closed shadow worker.
+
+> One gate in the wall is separately opened: OutcomeReady delivery crosses it, waits durably, and redelivers until the mayor verifies evidence and acknowledges.
+
+> Beads mode and Outcome mode are independent switches; Beads shadow with Outcome canary is the current boundary.
+
+> Setting both switches to canary is reserved for a bounded, separately authorized run, never general activation.
+
+### Figure: workshop (amended 2026-08-01, also on the article; now behind a disclosure)
 
 Heading (unchanged):
 
@@ -305,17 +352,24 @@ Fallback list:
 
 ---
 
-## 06 What it did not fix, and what it cost
+## 04 What it did not fix, and what it cost
 
 > Temporal gives the procedure a durable owner. It does not make external effects exactly once. A Worker can die after an external call succeeds and before the completion is recorded, and the Activity may run again.
 
-> The sharpest limit showed up in the latest canary. Two steps executed exactly once, survived a deliberate mid-episode Worker interruption, and then failed at the outcome boundary, where an application adapter derived the wrong store identity and Temporal faithfully retried the wrong envelope every fifteen minutes. The failure marker belongs on the adapter. Temporal preserved exactly what it was given, which is the job.
+Canary paragraph **(amended; compressed per the reviewer, step-by-step moved
+to the wrongness figure)**:
+
+> The sharpest limit showed up in the latest canary. The agent work completed correctly, but an application adapter placed the wrong store identity in the outcome envelope, and Temporal faithfully retried the wrong envelope every fifteen minutes. The failure marker belongs on the adapter. Temporal preserved exactly what it was given, which is the job. I rolled the canary back with the failure evidence intact.
+
+Disclosure summary **(new)**:
+
+> The failure, step by step
 
 > A contributor now has to hold determinism rules, replay compatibility, fencing, and idempotency in their head to change orchestration code safely, and the deployment gains a server, a Worker, and a versioning discipline on every Workflow change. That is the real cost, and it is larger than the infrastructure.
 
 > A maintenance job that does forty-four seconds of synchronous work every two hours did not justify any of that, and it stayed cron plus a lock. If a crash mid-operation leaves a question your own database cannot answer, the procedure deserves a durable owner. If a crash just means running it again next tick, it does not.
 
-### Figure: wrongness (new 2026-08-01, companion only)
+### Figure: wrongness (new 2026-08-01, companion only; now behind a disclosure)
 
 Heading:
 
@@ -359,7 +413,7 @@ Fallback list:
 
 ---
 
-## 07 Go deeper
+## Go deeper
 
 > The full article
 

@@ -72,18 +72,38 @@ test("the companion opens with the reviewer's four-line problem and the boundary
 
 test("the companion declares the canonical unit with both halves of the status adjacent", () => {
   const companion = readFileSync(COMPANION, "utf8");
+  const flat = companion.replace(/\s+/g, " ");
 
-  assert.match(companion, /one ready work item becoming one agent\s+execution and one fenced receipt/);
+  // The unit is translated before it is named: plain words first, then the
+  // generation fence as the technical name for the receipt guard.
+  assert.ok(
+    flat.includes(
+      "one ready task becoming one agent execution and one receipt that only the current attempt can submit",
+    ),
+    "the unit must be stated in translated form",
+  );
+  assert.ok(
+    flat.includes("The guard on that receipt is called a generation fence"),
+    "the generation fence must be named after the translation, not before",
+  );
   assert.match(companion, /CityRuntime\.beadReconcileTick/);
   assert.match(companion, /BeadOrchestrationWorkflow/);
   assert.match(companion, /ExecuteBeadActivity/);
   assert.match(companion, /gascity-bead-orchestration/);
   assert.match(companion, /gascity-agent-work/);
 
+  // Separate Task Queues permit later isolation; they do not prove the current
+  // deployment scales the workloads independently.
+  assert.ok(
+    flat.includes(
+      "so orchestration and agent execution can later be isolated or scaled independently",
+    ),
+    "the Task Queue claim must stay a later-capability claim, not a deployed one",
+  );
+
   // Status precision: the canary/shadow half and the continuous-production
   // half must sit together. Stating either alone is the diffuseness the
   // reviewer flagged.
-  const flat = companion.replace(/\s+/g, " ");
   const canaryHalf = flat.indexOf("proved by a bounded canary");
   const continuousHalf = flat.indexOf(
     "running continuously in production is result delivery and acknowledgement",
@@ -144,6 +164,7 @@ test("the worker-kill recording is embedded faithfully, with arm 2 carrying the 
 
 test("the companion splits the evidence three ways and keeps the failure visible", () => {
   const companion = readFileSync(COMPANION, "utf8");
+  const flat = companion.replace(/\s+/g, " ");
 
   const tiers = [
     "Continuous in production",
@@ -159,12 +180,29 @@ test("the companion splits the evidence three ways and keeps the failure visible
   assert.match(companion, /returning the worker to\s+shadow/);
   assert.match(companion, /Cross-host recovery/);
 
+  // "Exact acknowledgement" reads as an exactly-once claim the page later
+  // denies; the acknowledgement is matched, not the delivery made exact.
+  assert.ok(
+    flat.includes(
+      "an acknowledgement matched to the exact outcome generation and agent session",
+    ),
+    "the acknowledgement must be described as matched, not exact",
+  );
+  assert.doesNotMatch(companion, /exact acknowledgement receipt/);
+
+  // The operational status is stated directly, with both rollout switches.
+  assert.match(companion, /What runs today/);
+  assert.ok(
+    flat.includes("Both have independent rollout controls."),
+    "the two rollout switches must be stated as independent",
+  );
+
   // Durable wrongness: Temporal retried the wrong envelope; the failure
   // marker sits on the application adapter, never on the Temporal server.
-  assert.match(companion, /wrong store identity/);
-  assert.match(companion, /every fifteen minutes/);
-  assert.match(companion, /failure marker belongs on the adapter/);
-  assert.match(companion, /forty-four seconds of synchronous work/);
+  assert.ok(flat.includes("wrong store identity"));
+  assert.ok(flat.includes("every fifteen minutes"));
+  assert.ok(flat.includes("failure marker belongs on the adapter"));
+  assert.ok(flat.includes("forty-four seconds of synchronous work"));
 });
 
 test("the code browser renders every sample from the shared data module", () => {
@@ -272,10 +310,10 @@ test("the companion carries diagrams that agree with its prose", () => {
 
   const reading = [
     "scattered",
-    "shadow",
     "handoff",
     "ownership",
     "recovery",
+    "shadow",
     "workshop",
     "wrongness",
     "boundary",
@@ -292,13 +330,13 @@ test("the companion carries diagrams that agree with its prose", () => {
   const scatteredAt = companion.indexOf('<ConceptFigure kind="scattered" />');
   assert.ok(
     companion.indexOf("A crash loses the procedure, not the task") <
-      scatteredAt && scatteredAt < companion.indexOf("What was converted"),
-    "the scattered figure opens the problem section",
+      scatteredAt && scatteredAt < companion.indexOf("What I Temporalized"),
+    "the scattered figure closes the problem section",
   );
   const shadowAt = companion.indexOf('<ConceptFigure kind="shadow" />');
   assert.ok(
     companion.indexOf("The status has two halves") < shadowAt &&
-      shadowAt < companion.indexOf("Before and after"),
+      shadowAt < companion.indexOf('<ConceptFigure kind="workshop" />'),
     "the shadow figure belongs beside the two-halves status",
   );
   const workshopAt = companion.indexOf('<ConceptFigure kind="workshop" />');

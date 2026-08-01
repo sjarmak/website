@@ -39,29 +39,48 @@ const afterCode = await codeToHtml(
 <PageLayout
   title="How I made Gas City's agent orchestration durable with Temporal"
   kicker="Temporal case study"
-  intro="A short walkthrough of what I Temporalized, how the system recovers from Worker failure, and where Temporal's guarantees stop."
+  intro="An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic."
   description="A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop."
   noindex={true}
 >
   <article class="tco">
-    <nav class="tco__tabs" aria-label="Case study materials">
-      <a href={`${root}/article`}><span>01</span> Full article</a>
-      <a href={`${root}/code`}><span>02</span> Annotated code</a>
-    </nav>
-
     <section class="tco__section tco__summary">
+      <blockquote class="tco__lede">
+        <p>
+          Put the unpredictable agent inside an Activity. Put the promises
+          around it in a Workflow.
+        </p>
+      </blockquote>
+      <dl class="tco__ledger">
+        <div>
+          <dt>Temporalized</dt>
+          <dd>One ready task → one agent execution → one fenced receipt.</dd>
+        </div>
+        <div>
+          <dt>Proved</dt>
+          <dd>Recovery from a real Worker kill without starting a second agent.</dd>
+        </div>
+        <div>
+          <dt>Running today</dt>
+          <dd>Durable result delivery and acknowledgement.</dd>
+        </div>
+        <div>
+          <dt>Not proved</dt>
+          <dd>Cross-host recovery.</dd>
+        </div>
+      </dl>
+      <nav class="tco__tabs" aria-label="Case study materials">
+        <a href="#worker-kill"><span>01</span> Watch the Worker-kill demo</a>
+        <a href={`${root}/article`}><span>02</span> Read the full article</a>
+        <a href={`${root}/code`}><span>03</span> Inspect the annotated code</a>
+      </nav>
+    </section>
+
+    <section class="tco__section">
       <header class="tco__section-head">
         <p class="kicker">The problem</p>
         <h2>A crash loses the procedure, not the task</h2>
       </header>
-      <blockquote class="tco__lede">
-        <p>
-          An agent is editing code. Its coordinator crashes before recording
-          the handoff. The task record survives. The procedure does not.
-          Temporal makes that procedure durable without making the agent
-          deterministic.
-        </p>
-      </blockquote>
       <div class="tco__copy prose">
         <p>
           I run a system that hands tracked work to coding agents. Work items
@@ -75,8 +94,8 @@ const afterCode = await codeToHtml(
           <li>Has anyone acknowledged this exact outcome?</li>
         </ul>
         <p>
-          Put the unpredictable agent inside an Activity. Put the promises
-          around it in a Workflow.
+          The task state was already durable. What was missing was a durable
+          owner for the procedure.
         </p>
       </div>
       <ConceptFigure kind="scattered" />
@@ -85,12 +104,14 @@ const afterCode = await codeToHtml(
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
         <p class="kicker">01</p>
-        <h2>What was converted</h2>
+        <h2>What I Temporalized</h2>
       </header>
       <div class="tco__copy prose">
         <p>
-          I converted one unit: one ready work item becoming one agent
-          execution and one fenced receipt.
+          I converted one unit: one ready task becoming one agent execution
+          and one receipt that only the current attempt can submit. The guard
+          on that receipt is called a generation fence, and it is what keeps a
+          stale attempt from overwriting the current one.
         </p>
         <p>
           Before, that unit was a controller tick,
@@ -98,30 +119,13 @@ const afterCode = await codeToHtml(
           scan that inferred what a dead session had been doing. After,
           <code>BeadOrchestrationWorkflow</code> owns the procedure and
           <code>ExecuteBeadActivity</code> owns the fenced claim,
-          start-or-attach, heartbeat, and completion, split across two task
-          queues: <code>gascity-bead-orchestration</code> for the procedure and
-          <code>gascity-agent-work</code> for the agent itself.
-        </p>
-        <p>
-          The status has two halves and they belong together. This
-          work-item-to-agent unit is proved by a bounded canary and runs in
-          shadow. The part running continuously in production is result
-          delivery and acknowledgement, the same boundary applied a second
-          time.
+          start-or-attach, heartbeat, and completion. The two run on separate
+          Task Queues, <code>gascity-bead-orchestration</code> for the
+          procedure and <code>gascity-agent-work</code> for the agent, so
+          orchestration and agent execution can later be isolated or scaled
+          independently.
         </p>
       </div>
-      <ConceptFigure kind="shadow" />
-    </section>
-
-    <section class="tco__section tco__numbered">
-      <header class="tco__section-head">
-        <p class="kicker">02</p>
-        <h2>Before and after</h2>
-        <p>
-          The excerpts below are the entry points of each side, rendered from
-          the same versioned files the code browser annotates in full.
-        </p>
-      </header>
       <div class="tco__code">
         <section>
           <h3>Before: one process-owned tick</h3>
@@ -173,18 +177,12 @@ const afterCode = await codeToHtml(
         </article>
       </div>
       <ConceptFigure kind="handoff" />
-    </section>
-
-    <section class="tco__section tco__numbered">
-      <header class="tco__section-head">
-        <p class="kicker">03</p>
-        <h2>Who owns what</h2>
+      <div class="tco__copy prose">
         <p>
           Three tiers. The middle one is where at-least-once execution becomes
           a safe operation.
         </p>
-      </header>
-      <ConceptFigure kind="ownership" />
+      </div>
       <div class="tco__tiers">
         <article>
           <h3>Temporal owns</h3>
@@ -215,11 +213,15 @@ const afterCode = await codeToHtml(
           make a badly identified or non-idempotent operation safe on its own.
         </p>
       </div>
+      <details class="tco__details">
+        <summary>The full ownership diagram</summary>
+        <ConceptFigure kind="ownership" />
+      </details>
     </section>
 
-    <section class="tco__section tco__numbered">
+    <section class="tco__section tco__numbered" id="worker-kill">
       <header class="tco__section-head">
-        <p class="kicker">04</p>
+        <p class="kicker">02</p>
         <h2>The Worker dies on camera</h2>
         <p>
           One run, start to finish, with nothing staged. The kill signal is
@@ -273,7 +275,7 @@ both   one session, one receipt, stale claim token rejected,
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
-        <p class="kicker">05</p>
+        <p class="kicker">03</p>
         <h2>What the evidence proves</h2>
       </header>
       <div class="tco__evidence-tiers">
@@ -282,7 +284,8 @@ both   one session, one receipt, stale claim token rejected,
           <p>
             Result delivery and acknowledgement. Finished outcomes are
             delivered, redelivered while unacknowledged, and closed only by an
-            exact acknowledgement receipt.
+            acknowledgement matched to the exact outcome generation and agent
+            session.
           </p>
         </article>
         <article>
@@ -302,7 +305,21 @@ both   one session, one receipt, stale claim token rejected,
           </p>
         </article>
       </div>
-      <ConceptFigure kind="workshop" />
+      <div class="tco__copy prose">
+        <h3>What runs today</h3>
+        <p>
+          The status has two halves and they belong together. The
+          work-item-to-agent unit is proved by a bounded canary and runs in
+          shadow. The part running continuously in production is result
+          delivery and acknowledgement, the same boundary applied a second
+          time. Both have independent rollout controls.
+        </p>
+      </div>
+      <ConceptFigure kind="shadow" />
+      <details class="tco__details">
+        <summary>The full delivery flow</summary>
+        <ConceptFigure kind="workshop" />
+      </details>
       <div class="tco__copy prose">
         <p>
           The full test map, forty-five Go test files and a replay gate that
@@ -314,7 +331,7 @@ both   one session, one receipt, stale claim token rejected,
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
-        <p class="kicker">06</p>
+        <p class="kicker">04</p>
         <h2>What it did not fix, and what it cost</h2>
       </header>
       <div class="tco__copy prose">
@@ -325,16 +342,19 @@ both   one session, one receipt, stale claim token rejected,
           Activity may run again.
         </p>
         <p>
-          The sharpest limit showed up in the latest canary. Two steps
-          executed exactly once, survived a deliberate mid-episode Worker
-          interruption, and then failed at the outcome boundary, where an
-          application adapter derived the wrong store identity and Temporal
-          faithfully retried the wrong envelope every fifteen minutes. The
-          failure marker belongs on the adapter. Temporal preserved exactly
-          what it was given, which is the job.
+          The sharpest limit showed up in the latest canary. The agent work
+          completed correctly, but an application adapter placed the wrong
+          store identity in the outcome envelope, and Temporal faithfully
+          retried the wrong envelope every fifteen minutes. The failure
+          marker belongs on the adapter. Temporal
+          preserved exactly what it was given, which is the job. I rolled the
+          canary back with the failure evidence intact.
         </p>
       </div>
-      <ConceptFigure kind="wrongness" />
+      <details class="tco__details">
+        <summary>The failure, step by step</summary>
+        <ConceptFigure kind="wrongness" />
+      </details>
       <div class="tco__copy prose">
         <p>
           A contributor now has to hold determinism rules, replay
@@ -354,9 +374,8 @@ both   one session, one receipt, stale claim token rejected,
       <ConceptFigure kind="boundary" />
     </section>
 
-    <section class="tco__section tco__numbered">
+    <section class="tco__section">
       <header class="tco__section-head">
-        <p class="kicker">07</p>
         <h2>Go deeper</h2>
       </header>
       <div class="tco__links">
@@ -417,9 +436,40 @@ both   one session, one receipt, stale claim token rejected,
     margin-block-start: clamp(var(--space-xl), 8vw, var(--space-3xl));
   }
 
+  .tco__ledger {
+    max-width: var(--measure);
+    margin: 0;
+    border-block: var(--border-hairline);
+  }
+
+  .tco__ledger > div {
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) 1fr;
+    gap: var(--space-s);
+    padding-block: var(--space-xs);
+    border-block-end: var(--border-hairline);
+  }
+
+  .tco__ledger > div:last-child {
+    border-block-end: 0;
+  }
+
+  .tco__ledger dt {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tco__ledger dd {
+    margin: 0;
+    line-height: var(--leading-relaxed);
+  }
+
   .tco__tabs {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     border-block: var(--border-hairline);
   }
 
@@ -496,8 +546,33 @@ both   one session, one receipt, stale claim token rejected,
     max-width: var(--measure);
   }
 
-  .tco__summary .tco__copy {
+  .tco__copy h3 {
+    margin: 0 0 var(--space-s);
     font-size: var(--step-1);
+  }
+
+  .tco__details {
+    max-width: 100%;
+    border-block: var(--border-hairline);
+  }
+
+  .tco__details summary {
+    padding-block: var(--space-s);
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    cursor: pointer;
+  }
+
+  .tco__details summary:hover {
+    color: var(--color-accent);
+  }
+
+  .tco__details[open] summary {
+    border-block-end: var(--border-hairline);
+  }
+
+  .tco__details > :global(figure) {
+    margin-block-start: var(--space-m);
   }
 
   .tco__code {
@@ -607,7 +682,7 @@ both   one session, one receipt, stale claim token rejected,
      bounds the height. At full container width the recording is over 800px
      tall and swamps the section it belongs to. */
   /* The shared figures carry the article's own ordering (03, 05, 07), which
-     collides with this page's section numbers: section 04 would display a
+     collides with this page's section numbers: section 02 would display a
      figure labelled 05. The section kickers number this page, so the figure's
      article-relative index is dropped here rather than renumbered in the
      component, which the article still needs as it stands. */
@@ -712,6 +787,11 @@ both   one session, one receipt, stale claim token rejected,
     .tco__tiers,
     .tco__evidence-tiers {
       grid-template-columns: 1fr;
+    }
+
+    .tco__ledger > div {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
     }
 
     .tco__tabs a {
