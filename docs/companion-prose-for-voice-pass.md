@@ -212,19 +212,78 @@ Fallback list:
 
 ## 02 The Worker dies on camera
 
-> One run, start to finish, with nothing staged. The kill signal is real and it lands twice, at two different points.
+Sub-head **(amended; superseded "One run, start to finish, with nothing
+staged. The kill signal is real and it lands twice, at two different
+points.")**:
+
+> Two recordings, and nothing in either is staged. Each is a split screen: the run on the left, and on the right independent panes that measure for themselves rather than trusting the run's own narration.
+
+Before-world block **(new; sub-head, intro, figcaption, numbers)**:
+
+> First, without Temporal
+
+> The coordinator here is the before-world's reconcile loop: it claims the work, launches the agent, and holds the procedure in process memory. The kill lands mid-wait. The restart can only infer.
+
+> The right panes are where it goes wrong: two agent processes for one work item, then a stale receipt over the current one. Download the recording.
+
+> kill -9 the coordinator: the agent survives and keeps editing. restart the coordinator: the claim looks stale; a second agent launches, two for one task. first agent finishes: its late receipt overwrites the current one; nothing fences it.
+
+(Before-cast player marker labels:)
+
+> The coordinator claims; the agent starts
+
+> kill -9: the coordinator is gone
+
+> Restart, with an empty memory
+
+> A second agent for the same task
+
+> The stale receipt lands on top
+
+> The same kill, with Temporal
 
 > The full recording keeps real timing, including the pause where Temporal notices the dead Worker.
 
 > Download the recording
 
-> At eight seconds the first Worker dies mid-execution, and the agent it started is still alive. That line is the whole reason the boundary is shaped this way. The eighteen seconds that follow are Temporal working out that the Worker is gone. Detection takes real time, and the recording keeps all of it.
+**(amended; the processes-pane sentence is new, the rest carried over)**:
+
+> At eight seconds the first Worker dies mid-execution, and the agent it started is still alive. The processes pane measures it as it happens: the Worker count drops to zero and the agent count does not. That line is the whole reason the boundary is shaped this way. The eighteen seconds that follow are Temporal working out that the Worker is gone. Detection takes real time, and the recording keeps all of it.
 
 > The second kill lands before any checkpoint exists, which makes it the decisive arm. The retry has to ask the session resolver again, and the resolver returns the session that already exists instead of creating a second one. The first arm resumes from its checkpoint and never asks again, so it cannot demonstrate duplicate prevention on its own.
 
 > A heartbeat does not keep a retry from becoming a second agent. A Worker can die before the first heartbeat ever lands. The resolver finds the existing session by stable identity, and the heartbeat only lets the retry resume progress.
 
-> The demo runs on one host against a local dev server, with a file-backed store and a fixture process in place of a coding agent. It proves the boundary, on real Temporal, with a real signal.
+Evidence disclosures **(new; summaries, image caption and alt, evidence
+intro, link labels)**:
+
+> Temporal's own record of the retry
+
+> The Event History the run left behind, read from the dev server's database: the Activity's second attempt starts after the Worker dies, and the workflow completes on that attempt. Worker identity and queue names are the only edits, masked before capture.
+
+> Temporal Web UI event history for the pre-checkpoint arm: nineteen events from Workflow Execution Started through Activity Task Started with attempt 2 to Workflow Execution Completed.
+
+> The run evidence, downloadable
+
+> Both gates write their evidence before anything quotes it. The reports, Temporal's between-attempt samples, the store receipts, and the agent worklogs are all here.
+
+> The invariant report, both arms
+
+> Retry-gap samples from the decisive arm
+
+> Agent session events: one created, then attached
+
+> The before-world gate report
+
+> The before-world store, stale receipt on top
+
+> One worktree file, edited by two sessions
+
+> Run provenance
+
+**(amended; the final sentence is new)**:
+
+> The demo runs on one host against a local dev server, with a file-backed store and a fixture process in place of a coding agent. It proves the boundary, on real Temporal, with a real signal. The before-world arm drives the same fixture agent over the same protocol; only the coordinator differs.
 
 (Player marker labels:)
 

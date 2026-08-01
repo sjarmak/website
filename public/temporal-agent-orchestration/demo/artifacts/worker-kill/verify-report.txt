@@ -1,0 +1,79 @@
+=== worker-kill demo: invariant report ===
+
+  What this proves: a local fixture reproduction of the boundary.
+  What it does not prove: production rollout. The unit converted here
+  is proved by a bounded canary and runs in shadow; the part running
+  continuously in production is result delivery and acknowledgement.
+
+  Both arms are one result. Arm 1 passes even against a resolver that
+  mints a duplicate session on every call, because its retry resumes
+  from a checkpoint and never re-resolves. Only arm 2 shows that a
+  duplicate launch was prevented. Do not present arm 1 on its own.
+
+--- arm: mid-execute ---
+    Worker killed mid-work; retry resumed from the checkpoint
+    workflow : bead-orchestration/demo-city/worker-kill-demo/work-item-1
+    activity : formula/demo-root/edit-file.author/g1
+    session  : agent-session-5a0dffbd
+    receipt  : status=completed outcome=completed
+
+    [PASS] proof 1: the bound session identity did not change across attempts
+           distinct session identities seen by the agent adapter = 1
+    [PASS] proof 1: the work store recorded that same session
+           store session matches the one the agent bound = True
+    [PASS] proof 2: exactly one session was created for this work item and generation
+           session creations = 1
+    [PASS] proof 2: exactly one session record exists on disk for that pair
+           session records = 1
+    [PASS] proof 3: exactly one terminal receipt was written to the work store
+           receipts = 1, status = completed
+    [PASS] proof 3: the agent session produced one terminal record, not two
+           agent terminal records = 1
+    [PASS] proof 3: a completion carrying the stale claim token failed closed
+           rejection = 'stale bead generation or claim token'
+    [PASS] the retry ran under the same Activity identity
+           activity identities in history = ['formula/demo-root/edit-file.author/g1']
+    [PASS] Temporal really did retry (attempt two or later finished the work)
+           final attempt = 2
+    [PASS] the workflow closed on its own terms
+           status = Completed
+    [PASS] arm fact: the retry resumed from the checkpoint and never re-resolved
+           resolver calls = 1
+    [PASS] arm fact: the agent kept working after its Worker was killed
+           work entries written after the kill = 37, of which after the pipe broke = 36
+    [PASS] arm fact: exactly one agent process did the work
+           processes that wrote work = 1
+
+--- arm: pre-checkpoint ---
+    Worker killed before any checkpoint; retry resolved again
+    workflow : bead-orchestration/demo-city/worker-kill-demo-resolve/work-item-1
+    activity : formula/demo-root/edit-file.author/g1
+    session  : agent-session-50e0e51c
+    receipt  : status=completed outcome=completed
+
+    [PASS] proof 1: the bound session identity did not change across attempts
+           distinct session identities seen by the agent adapter = 1
+    [PASS] proof 1: the work store recorded that same session
+           store session matches the one the agent bound = True
+    [PASS] proof 2: exactly one session was created for this work item and generation
+           session creations = 1
+    [PASS] proof 2: exactly one session record exists on disk for that pair
+           session records = 1
+    [PASS] proof 3: exactly one terminal receipt was written to the work store
+           receipts = 1, status = completed
+    [PASS] proof 3: the agent session produced one terminal record, not two
+           agent terminal records = 1
+    [PASS] proof 3: a completion carrying the stale claim token failed closed
+           rejection = 'stale bead generation or claim token'
+    [PASS] the retry ran under the same Activity identity
+           activity identities in history = ['formula/demo-root/edit-file.author/g1']
+    [PASS] Temporal really did retry (attempt two or later finished the work)
+           final attempt = 2
+    [PASS] the workflow closed on its own terms
+           status = Completed
+    [PASS] arm fact: no checkpoint survived, so the retry had to ask the resolver again
+           resolver calls = 2
+    [PASS] arm fact: the second resolve returned the existing session, it did not mint one
+           resolver calls = 2, session creations = 1
+
+ALL INVARIANTS HOLD, BOTH ARMS.

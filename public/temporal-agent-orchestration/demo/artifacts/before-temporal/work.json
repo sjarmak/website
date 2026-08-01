@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "work_item": "work-item-1",
+  "status": "completed",
+  "claim": {
+    "generation": 2,
+    "claimed_at": "2026-08-01T22:11:43.066151664Z"
+  },
+  "completion": {
+    "generation": 1,
+    "session_id": "agent-session-86d8d22a",
+    "outcome": "completed",
+    "recorded_at": "2026-08-01T22:11:55.078136482Z",
+    "recorded_by": "recovery-scan"
+  },
+  "history": [
+    {
+      "ts": "2026-08-01T22:11:33.523700111Z",
+      "kind": "claimed",
+      "detail": "generation 1 claimed; procedure held in process memory"
+    },
+    {
+      "ts": "2026-08-01T22:11:43.066150351Z",
+      "kind": "claim-declared-stale",
+      "detail": "generation 1 declared stale after 9s; the running agent, if any, is invisible to this inference"
+    },
+    {
+      "ts": "2026-08-01T22:11:43.066152134Z",
+      "kind": "claimed",
+      "detail": "generation 2 claimed; procedure held in process memory"
+    },
+    {
+      "ts": "2026-08-01T22:11:47.072454808Z",
+      "kind": "completion-recorded",
+      "detail": "inline wait recorded generation 2 session agent-session-6520b845"
+    },
+    {
+      "ts": "2026-08-01T22:11:55.078139157Z",
+      "kind": "completion-recorded",
+      "detail": "recovery scan recorded generation 1 session agent-session-86d8d22a over previous generation 2 by agent-session-6520b845"
+    }
+  ]
+}

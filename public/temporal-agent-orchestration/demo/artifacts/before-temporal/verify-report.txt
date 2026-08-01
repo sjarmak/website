@@ -1,0 +1,19 @@
+before-Temporal gate: the kill must reproduce the failure
+
+  PASS  the agent outlived the coordinator that launched it
+        agent processes alive after the kill = 1
+  PASS  failure 1: the restart launched a second agent for the same work item
+        sessions created = ['work-item-1-g1', 'work-item-1-g2']
+  PASS  failure 1: both agents were alive at the same time
+        most agent processes observed at once = 2
+  PASS  failure 1: both sessions edited the same worktree file
+        distinct sessions in the worktree = 2
+  PASS  failure 2: the final receipt is a stale generation's
+        receipt generation = 1, current claim generation = 2
+  PASS  failure 2: the recovery scan wrote it, not the current procedure
+        recorded by = 'recovery-scan'
+  PASS  failure 2: the store history shows the overwrite explicitly
+        overwrite events = 1
+
+Reproduced: one kill, two agents for one task, and the current
+receipt overwritten by a stale generation. This is the before-world.

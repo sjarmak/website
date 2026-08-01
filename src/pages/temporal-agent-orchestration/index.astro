@@ -10,6 +10,9 @@ import "asciinema-player/dist/bundle/asciinema-player.css";
 
 const root = "/temporal-agent-orchestration";
 const cast = `${root}/demo/worker-kill.cast`;
+const beforeCast = `${root}/demo/before-temporal.cast`;
+const uiRecord = `${root}/demo/ui-event-history-pre-checkpoint.webp`;
+const evidence = `${root}/demo/artifacts`;
 
 const codeThemes = {
   light: "one-light",
@@ -224,10 +227,33 @@ const afterCode = await codeToHtml(
         <p class="kicker">02</p>
         <h2>The Worker dies on camera</h2>
         <p>
-          One run, start to finish, with nothing staged. The kill signal is
-          real and it lands twice, at two different points.
+          Two recordings, and nothing in either is staged. Each is a split
+          screen: the run on the left, and on the right independent panes
+          that measure for themselves rather than trusting the run's own
+          narration.
         </p>
       </header>
+      <h3 class="tco__demo-subhead">First, without Temporal</h3>
+      <div class="tco__copy prose">
+        <p>
+          The coordinator here is the before-world's reconcile loop: it
+          claims the work, launches the agent, and holds the procedure in
+          process memory. The kill lands mid-wait. The restart can only
+          infer.
+        </p>
+      </div>
+      <figure class="tco__player">
+        <div id="before-temporal-player" data-cast-src={beforeCast}></div>
+        <figcaption>
+          The right panes are where it goes wrong: two agent processes for
+          one work item, then a stale receipt over the current one.
+          <a href={beforeCast} download="before-temporal.cast">Download the recording</a>.
+        </figcaption>
+      </figure>
+      <pre class="tco__numbers"><code>kill -9 the coordinator   the agent survives and keeps editing
+restart the coordinator   the claim looks stale; a second agent launches, two for one task
+first agent finishes      its late receipt overwrites the current one; nothing fences it</code></pre>
+      <h3 class="tco__demo-subhead">The same kill, with Temporal</h3>
       <figure class="tco__player">
         <div id="worker-kill-player" data-cast-src={cast}></div>
         <figcaption>
@@ -240,10 +266,12 @@ const afterCode = await codeToHtml(
       <div class="tco__copy prose">
         <p>
           At eight seconds the first Worker dies mid-execution, and the agent
-          it started is still alive. That line is the whole reason the boundary
-          is shaped this way. The eighteen seconds that follow are Temporal
-          working out that the Worker is gone. Detection takes real time, and
-          the recording keeps all of it.
+          it started is still alive. The processes pane measures it as it
+          happens: the Worker count drops to zero and the agent count does
+          not. That line is the whole reason the boundary is shaped this way.
+          The eighteen seconds that follow are Temporal working out that the
+          Worker is gone. Detection takes real time, and the recording keeps
+          all of it.
         </p>
         <p>
           The second kill lands before any checkpoint exists, which makes it
@@ -264,11 +292,50 @@ const afterCode = await codeToHtml(
 arm 2  pre-checkpoint   resolver calls = 2   session creations = 1   final attempt = 2
 both   one session, one receipt, stale claim token rejected,
        same Activity identity across attempts</code></pre>
+      <details class="tco__details">
+        <summary>Temporal's own record of the retry</summary>
+        <figure class="tco__ui-record">
+          <img
+            src={uiRecord}
+            alt="Temporal Web UI event history for the pre-checkpoint arm: nineteen events from Workflow Execution Started through Activity Task Started with attempt 2 to Workflow Execution Completed."
+            width="1440"
+            height="1500"
+            loading="lazy"
+          />
+          <figcaption>
+            The Event History the run left behind, read from the dev server's
+            database: the Activity's second attempt starts after the Worker
+            dies, and the workflow completes on that attempt. Worker identity
+            and queue names are the only edits, masked before capture.
+          </figcaption>
+        </figure>
+      </details>
+      <details class="tco__details">
+        <summary>The run evidence, downloadable</summary>
+        <div class="tco__copy prose">
+          <p>
+            Both gates write their evidence before anything quotes it. The
+            reports, Temporal's between-attempt samples, the store receipts,
+            and the agent worklogs are all here.
+          </p>
+          <ul>
+            <li><a href={`${evidence}/worker-kill/verify-report.txt`}>The invariant report, both arms</a></li>
+            <li><a href={`${evidence}/worker-kill/pre-checkpoint/retry-gap.jsonl`}>Retry-gap samples from the decisive arm</a></li>
+            <li><a href={`${evidence}/worker-kill/pre-checkpoint/agent-events.jsonl`}>Agent session events: one created, then attached</a></li>
+            <li><a href={`${evidence}/before-temporal/verify-report.txt`}>The before-world gate report</a></li>
+            <li><a href={`${evidence}/before-temporal/work.json`}>The before-world store, stale receipt on top</a></li>
+            <li><a href={`${evidence}/before-temporal/worktree-work-item-1.txt`}>One worktree file, edited by two sessions</a></li>
+            <li><a href={`${evidence}/provenance.json`}>Run provenance</a></li>
+          </ul>
+        </div>
+      </details>
       <div class="tco__copy prose">
         <p>
           The demo runs on one host against a local dev server, with a
           file-backed store and a fixture process in place of a coding agent.
-          It proves the boundary, on real Temporal, with a real signal.
+          It proves the boundary, on real Temporal, with a real signal. The
+          before-world arm drives the same fixture agent over the same
+          protocol; only the coordinator differs.
         </p>
       </div>
     </section>
@@ -403,27 +470,48 @@ both   one session, one receipt, stale claim token rejected,
 <script>
   import * as AsciinemaPlayer from "asciinema-player";
 
-  const mountPoint = document.getElementById("worker-kill-player");
-  const src = mountPoint?.dataset.castSrc;
-  if (mountPoint && src) {
-    AsciinemaPlayer.create(src, mountPoint, {
-      cols: 120,
-      rows: 38,
-      preload: true,
-      // The still frame is the finished invariant report rather than an early
-      // beat: at 8s the screen is three lines of output over an empty terminal,
-      // which reads as a large black void before anyone presses play.
-      poster: "npt:41.74",
-      fit: "width",
+  // Both casts are 120x38 tmux sessions. Posters sit on the finished report
+  // rather than an early beat: the opening frames are a few lines over an
+  // empty terminal, which reads as a large black void before anyone presses
+  // play. Marker times are re-measured from each recording's event stream.
+  const players = [
+    {
+      id: "before-temporal-player",
+      poster: "npt:30.5",
       markers: [
-        [3.2, "Arm 1 starts"],
-        [8.0, "kill -9: Worker one is gone"],
-        [26.2, "Temporal retries; workflow completed"],
-        [27.2, "Arm 2 starts"],
-        [30.6, "kill -9 before any checkpoint"],
-        [40.7, "Retry re-resolves; workflow completed"],
+        [2.1, "The coordinator claims; the agent starts"],
+        [4.6, "kill -9: the coordinator is gone"],
+        [7.6, "Restart, with an empty memory"],
+        [12.2, "A second agent for the same task"],
+        [23.7, "The stale receipt lands on top"],
       ],
-    });
+    },
+    {
+      id: "worker-kill-player",
+      poster: "npt:48.0",
+      markers: [
+        [3.5, "Arm 1 starts"],
+        [8.4, "kill -9: Worker one is gone"],
+        [26.6, "Temporal retries; workflow completed"],
+        [27.7, "Arm 2 starts"],
+        [31.0, "kill -9 before any checkpoint"],
+        [41.1, "Retry re-resolves; workflow completed"],
+      ],
+    },
+  ];
+  for (const { id, poster, markers } of players) {
+    const mountPoint = document.getElementById(id);
+    const src = mountPoint?.dataset.castSrc;
+    if (mountPoint && src) {
+      AsciinemaPlayer.create(src, mountPoint, {
+        cols: 120,
+        rows: 38,
+        preload: true,
+        poster,
+        fit: "width",
+        markers,
+      });
+    }
   }
 </script>
 
@@ -573,6 +661,31 @@ both   one session, one receipt, stale claim token rejected,
 
   .tco__details > :global(figure) {
     margin-block-start: var(--space-m);
+  }
+
+  .tco__demo-subhead {
+    margin: 0;
+    padding-block-start: var(--space-s);
+    border-top: var(--border-hairline);
+    font-size: var(--step-1);
+  }
+
+  .tco__ui-record {
+    max-width: 52rem;
+    margin: 0;
+  }
+
+  .tco__ui-record img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+  }
+
+  .tco__ui-record figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
   }
 
   .tco__code {

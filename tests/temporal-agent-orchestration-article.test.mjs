@@ -970,6 +970,18 @@ test("no internal identifiers reach the reader-facing surface", () => {
         .map((e) => path.join(e.parentPath ?? e.path, e.name))
     : [];
 
+  // The published run evidence is a reader-facing surface like any page:
+  // downloadable text and JSON, scanned in full.
+  const evidenceDir = path.join(
+    ROOT,
+    "public/temporal-agent-orchestration/demo/artifacts",
+  );
+  const publishedEvidence = existsSync(evidenceDir)
+    ? readdirSync(evidenceDir, { recursive: true, withFileTypes: true })
+        .filter((e) => e.isFile())
+        .map((e) => path.join(e.parentPath ?? e.path, e.name))
+    : [];
+
   const companionPage = path.join(
     ROOT,
     "src/pages/temporal-agent-orchestration/index.astro",
@@ -986,6 +998,11 @@ test("no internal identifiers reach the reader-facing surface", () => {
     ILLUSTRATION,
     companionPage,
     path.join(ROOT, "public/temporal-agent-orchestration/demo/worker-kill.cast"),
+    path.join(
+      ROOT,
+      "public/temporal-agent-orchestration/demo/before-temporal.cast",
+    ),
+    ...publishedEvidence,
     ...goSamples,
     ...builtPages,
   ];

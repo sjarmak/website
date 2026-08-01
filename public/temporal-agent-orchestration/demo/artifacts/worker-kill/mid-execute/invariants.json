@@ -1,0 +1,34 @@
+{
+  "arm": "mid-execute",
+  "description": "Worker killed while the agent is working; the retry resumes from the checkpoint",
+  "work_item_id": "work-item-1",
+  "generation": 1,
+  "workflow_id": "bead-orchestration/demo-city/worker-kill-demo/work-item-1",
+  "workflow_status": "Completed",
+  "activity_ids_in_history": [
+    "formula/demo-root/edit-file.author/g1"
+  ],
+  "activity_attempts": 2,
+  "resolve_calls": 1,
+  "sessions_created": 1,
+  "sessions_bound": [
+    "agent-session-5a0dffbd"
+  ],
+  "session_records_on_disk": 1,
+  "agent_terminal_records": 1,
+  "store_status": "completed",
+  "store_session_id": "agent-session-5a0dffbd",
+  "store_outcome": "completed",
+  "store_terminal_receipts": 1,
+  "stale_token_rejected": true,
+  "stale_token_error": "stale bead generation or claim token",
+  "orphan_evidence": {
+    "kill_recorded": true,
+    "work_entries_total": 40,
+    "work_entries_after_kill": 37,
+    "work_entries_after_pipe_break": 36,
+    "distinct_working_processes": 1,
+    "first_agent_process_kept_working_after_kill": true
+  },
+  "built_against_revision": "2b5df98"
+}

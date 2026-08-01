@@ -25,6 +25,18 @@ const CAST = path.join(
   ROOT,
   "public/temporal-agent-orchestration/demo/worker-kill.cast",
 );
+const BEFORE_CAST = path.join(
+  ROOT,
+  "public/temporal-agent-orchestration/demo/before-temporal.cast",
+);
+const UI_RECORD = path.join(
+  ROOT,
+  "public/temporal-agent-orchestration/demo/ui-event-history-pre-checkpoint.webp",
+);
+const EVIDENCE_DIR = path.join(
+  ROOT,
+  "public/temporal-agent-orchestration/demo/artifacts",
+);
 
 test("the companion page is the route's front door and the article moved beside it", () => {
   assert.equal(existsSync(COMPANION), true);
@@ -124,6 +136,51 @@ test("the worker-kill recording is embedded faithfully, with arm 2 carrying the 
 
   assert.match(companion, /asciinema-player/);
   assert.match(companion, /worker-kill\.cast/);
+
+  // The demo carries its own falsifiability: the before-world recording, the
+  // Web UI's event history, and the downloadable evidence both gates wrote.
+  assert.equal(
+    existsSync(BEFORE_CAST),
+    true,
+    "the before-Temporal cast must ship with the site",
+  );
+  assert.equal(
+    existsSync(UI_RECORD),
+    true,
+    "the masked Web UI record must ship with the site",
+  );
+  assert.match(companion, /before-temporal\.cast/);
+  assert.match(companion, /before-temporal-player/);
+  assert.match(companion, /ui-event-history-pre-checkpoint\.webp/);
+  assert.match(companion, /masked before capture/);
+  for (const artifact of [
+    "provenance.json",
+    "worker-kill/verify-report.txt",
+    "worker-kill/pre-checkpoint/retry-gap.jsonl",
+    "before-temporal/verify-report.txt",
+    "before-temporal/work.json",
+  ]) {
+    assert.equal(
+      existsSync(path.join(EVIDENCE_DIR, artifact)),
+      true,
+      `${artifact} must ship with the site`,
+    );
+    assert.ok(
+      companion.includes(artifact),
+      `the companion must link ${artifact}`,
+    );
+  }
+
+  // The before-world numbers block states both reproduced failures.
+  const flat = companion.replace(/\s+/g, " ");
+  assert.ok(
+    flat.includes("a second agent launches, two for one task"),
+    "the duplicate-launch failure must be stated",
+  );
+  assert.ok(
+    flat.includes("its late receipt overwrites the current one"),
+    "the stale-overwrite failure must be stated",
+  );
 
   // The talk cut compresses the 18.2-second detection pause; the page must
   // embed the faithful cast and must not re-compress it in player options.
@@ -292,6 +349,19 @@ test("the built companion page keeps the quote, the recording, and the faithful 
     "dist/temporal-agent-orchestration/demo/worker-kill.cast",
   );
   assert.equal(existsSync(builtCast), true, "the cast must reach dist");
+  for (const relative of [
+    "demo/before-temporal.cast",
+    "demo/ui-event-history-pre-checkpoint.webp",
+    "demo/artifacts/provenance.json",
+    "demo/artifacts/worker-kill/verify-report.txt",
+    "demo/artifacts/before-temporal/verify-report.txt",
+  ]) {
+    assert.equal(
+      existsSync(path.join(ROOT, "dist/temporal-agent-orchestration", relative)),
+      true,
+      `${relative} must reach dist`,
+    );
+  }
 });
 
 // The companion reuses the article's diagrams rather than shipping its own set.
