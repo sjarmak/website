@@ -65,6 +65,48 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     line-height: 1.55;
   }
 
+  /* The standfirst under the deck and the ownership pull quote share this
+     treatment: a rule in the margin, no plate, no italics. */
+  :global(.temporal-agent-article__body > blockquote) {
+    margin-block: var(--space-l);
+    padding-inline-start: var(--space-m);
+    border-inline-start: 2px solid var(--color-accent);
+    color: var(--color-text-secondary);
+  }
+
+  :global(.temporal-agent-article__body > blockquote > :last-child) {
+    margin-block-end: 0;
+  }
+
+  /* Tables carry long test identifiers, so they scroll inside their own column
+     rather than widening the page. */
+  :global(.temporal-agent-article__body > table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border: var(--border-hairline);
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  :global(.temporal-agent-article__body > table th),
+  :global(.temporal-agent-article__body > table td) {
+    min-width: 12rem;
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  :global(.temporal-agent-article__body > table th) {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
   @media (max-width: 720px) {
     .temporal-agent-article {
       width: min(100% - 2 * var(--space-s), 78rem);

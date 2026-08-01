@@ -1,0 +1,118 @@
+{
+ "workflowType": "MaintenanceCycleWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_COMPLETED",
+ "key": "gd4ced831",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-08-01T14:00:00.034853958Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-08-01T14:00:00.034906617Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-08-01T14:00:00.063272248Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-08-01T14:00:00.081633149Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-08-01T14:00:00.081668245Z",
+   "eventType": "EVENT_TYPE_MARKER_RECORDED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-08-01T14:00:00.082004631Z",
+   "eventType": "EVENT_TYPE_UPSERT_WORKFLOW_SEARCH_ATTRIBUTES"
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-08-01T14:00:00.082046761Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "DispatchSelection",
+    "taskQueue": "temporal-maintenance-shadow"
+   }
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-08-01T14:00:00.088829197Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "gbc7da340"
+   }
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-08-01T14:00:00.097686056Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-08-01T14:00:00.097694632Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-08-01T14:00:00.105687617Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-08-01T14:00:00.113995598Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "13",
+   "eventTime": "2026-08-01T14:00:00.114030694Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "DispatchSelection",
+    "taskQueue": "temporal-maintenance-shadow"
+   }
+  },
+  {
+   "eventId": "14",
+   "eventTime": "2026-08-01T14:00:00.121922638Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "gbc7da340"
+   }
+  },
+  {
+   "eventId": "15",
+   "eventTime": "2026-08-01T14:00:00.126477581Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "16",
+   "eventTime": "2026-08-01T14:00:00.126484434Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "17",
+   "eventTime": "2026-08-01T14:00:00.132370405Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "18",
+   "eventTime": "2026-08-01T14:00:00.146117421Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "19",
+   "eventTime": "2026-08-01T14:00:00.146146586Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED"
+  }
+ ]
+}

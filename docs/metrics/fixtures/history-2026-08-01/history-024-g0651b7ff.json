@@ -1,0 +1,90 @@
+{
+ "workflowType": "BeadOrchestrationWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_RUNNING",
+ "key": "g0651b7ff",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-08-01T04:17:35.673634827Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-08-01T04:17:35.673728194Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-08-01T04:17:35.673732131Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-08-01T04:17:35.683851221Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-08-01T04:17:35.697816967Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-08-01T04:17:35.697853146Z",
+   "eventType": "EVENT_TYPE_MARKER_RECORDED"
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-08-01T04:17:35.698147312Z",
+   "eventType": "EVENT_TYPE_UPSERT_WORKFLOW_SEARCH_ATTRIBUTES"
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-08-01T04:17:35.698183621Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_PROPERTIES_MODIFIED"
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-08-01T04:17:35.698388588Z",
+   "eventType": "EVENT_TYPE_UPSERT_WORKFLOW_SEARCH_ATTRIBUTES"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-08-01T04:17:35.698419407Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "ExecuteBeadActivity",
+    "taskQueue": "gascity-agent-work"
+   }
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-08-01T04:17:59.969961909Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 2,
+    "identity": "ge3893150"
+   }
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-08-01T04:18:00.160769027Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "13",
+   "eventTime": "2026-08-01T04:18:00.160776661Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "14",
+   "eventTime": "2026-08-01T04:18:00.240520094Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "15",
+   "eventTime": "2026-08-01T04:18:00.362947763Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  }
+ ]
+}

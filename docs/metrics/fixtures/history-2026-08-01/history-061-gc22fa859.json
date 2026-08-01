@@ -1,0 +1,153 @@
+{
+ "workflowType": "CoordinatorOutcomeWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_COMPLETED",
+ "key": "gc22fa859",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-07-31T18:02:16.317193970Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-07-31T18:02:16.317241490Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-07-31T18:02:16.317244105Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-07-31T18:02:16.350596705Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-07-31T18:02:16.365510482Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-07-31T18:02:16.365546059Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "DeliverCoordinatorOutcomeActivity",
+    "taskQueue": "gascity-coordinator-outcomes-36980288d8a1"
+   }
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-07-31T18:02:16.371035321Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "gaa3ddc97"
+   }
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-07-31T18:02:25.051516958Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-07-31T18:02:25.051525634Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-07-31T18:02:25.059994782Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-07-31T18:02:25.067419594Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-07-31T18:02:25.067446445Z",
+   "eventType": "EVENT_TYPE_TIMER_STARTED"
+  },
+  {
+   "eventId": "13",
+   "eventTime": "2026-07-31T18:08:05.025529814Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "14",
+   "eventTime": "2026-07-31T18:08:05.025533130Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "15",
+   "eventTime": "2026-07-31T18:08:10.027854499Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_TIMED_OUT"
+  },
+  {
+   "eventId": "16",
+   "eventTime": "2026-07-31T18:08:10.027859849Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "17",
+   "eventTime": "2026-07-31T18:09:23.943175315Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "18",
+   "eventTime": "2026-07-31T18:09:23.993315737Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "19",
+   "eventTime": "2026-07-31T18:09:23.993338891Z",
+   "eventType": "EVENT_TYPE_TIMER_CANCELED"
+  },
+  {
+   "eventId": "20",
+   "eventTime": "2026-07-31T18:09:23.993353960Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "AcknowledgeCoordinatorOutcomeActivity",
+    "taskQueue": "gascity-coordinator-outcomes-36980288d8a1"
+   }
+  },
+  {
+   "eventId": "21",
+   "eventTime": "2026-07-31T18:09:23.999754135Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "g501a7af6"
+   }
+  },
+  {
+   "eventId": "22",
+   "eventTime": "2026-07-31T18:09:24.015152258Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "23",
+   "eventTime": "2026-07-31T18:09:24.015160133Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "24",
+   "eventTime": "2026-07-31T18:09:24.023869746Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "25",
+   "eventTime": "2026-07-31T18:09:24.032141480Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "26",
+   "eventTime": "2026-07-31T18:09:24.032173922Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "workflowType": "CoordinatorOutcomeWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_RUNNING",
+ "key": "g9c1fe357",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-08-01T15:14:39.718758687Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-08-01T15:14:39.718805696Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-08-01T15:14:39.718808442Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-08-01T15:14:40.025340490Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-08-01T15:14:40.203498851Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-08-01T15:14:40.203551019Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "DeliverCoordinatorOutcomeActivity",
+    "taskQueue": "gascity-coordinator-outcomes-ff5f6e88269d"
+   }
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-08-01T15:16:04.005616168Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 4,
+    "identity": "gbc7da340"
+   }
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-08-01T15:16:32.215991821Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_FAILED",
+   "activityTaskFailedEventAttributes": {
+    "failure": {
+     "message": "deliver coordinator outcome locally: local coordinator outcome notifier failed: exit status 1: coordinator-outcome-notify: gc session nudge timed out after 15s",
+     "type": "wrapError",
+     "cause": {
+      "message": "local coordinator outcome notifier failed: exit status 1: coordinator-outcome-notify: gc session nudge timed out after 15s",
+      "type": "wrapError",
+      "cause": {
+       "message": "exit status 1",
+       "type": "ExitError",
+       "cause": null
+      }
+     }
+    },
+    "retryState": "RETRY_STATE_TIMEOUT",
+    "identity": "gbc7da340"
+   }
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-08-01T15:16:32.216000988Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-08-01T15:16:32.223394290Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-08-01T15:16:32.236811905Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-08-01T15:16:32.236837724Z",
+   "eventType": "EVENT_TYPE_TIMER_STARTED"
+  }
+ ]
+}

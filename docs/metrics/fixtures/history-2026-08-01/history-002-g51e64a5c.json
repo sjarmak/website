@@ -1,0 +1,94 @@
+{
+ "workflowType": "CoordinatorOutcomeWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_RUNNING",
+ "key": "g51e64a5c",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-08-01T15:14:39.000982891Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-08-01T15:14:39.001043055Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-08-01T15:14:39.001045459Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-08-01T15:14:39.774416156Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-08-01T15:14:39.918843184Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-08-01T15:14:39.918879743Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "DeliverCoordinatorOutcomeActivity",
+    "taskQueue": "gascity-coordinator-outcomes-ff5f6e88269d"
+   }
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-08-01T15:16:37.953019837Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 5,
+    "identity": "gbc7da340"
+   }
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-08-01T15:16:39.920569958Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_TIMED_OUT",
+   "activityTaskTimedOutEventAttributes": {
+    "failure": {
+     "message": "Not enough time to schedule next retry before activity ScheduleToClose timeout, giving up retrying",
+     "type": null,
+     "cause": {
+      "message": "deliver coordinator outcome locally: local coordinator outcome notifier failed: exit status 1: coordinator-outcome-notify: gc session nudge timed out after 15s",
+      "type": "wrapError",
+      "cause": {
+       "message": "local coordinator outcome notifier failed: exit status 1: coordinator-outcome-notify: gc session nudge timed out after 15s",
+       "type": "wrapError",
+       "cause": {
+        "message": "exit status 1",
+        "type": "ExitError",
+        "cause": null
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-08-01T15:16:39.920575579Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-08-01T15:16:42.050859619Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-08-01T15:16:42.062688028Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-08-01T15:16:42.062700702Z",
+   "eventType": "EVENT_TYPE_TIMER_STARTED"
+  }
+ ]
+}

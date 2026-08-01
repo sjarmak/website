@@ -1,0 +1,141 @@
+{
+ "workflowType": "DoltRecoveryWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_RUNNING",
+ "key": "g6db43899",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-07-25T15:02:37.384205734Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-07-25T15:02:37.384871203Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-07-25T15:02:37.409072692Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-07-25T15:02:37.444579421Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-07-25T15:02:37.444789738Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "Inspect",
+    "taskQueue": "temporal-maintenance-shadow"
+   }
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-07-25T15:02:40.507021555Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 3,
+    "identity": "ge92a00fb"
+   }
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-07-25T15:02:40.528895400Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_FAILED",
+   "activityTaskFailedEventAttributes": {
+    "failure": {
+     "message": "open canonical Dolt data directory: permission denied",
+     "type": "wrapError",
+     "cause": {
+      "message": "permission denied",
+      "type": "Errno",
+      "cause": null
+     }
+    },
+    "retryState": "RETRY_STATE_MAXIMUM_ATTEMPTS_REACHED",
+    "identity": "ge92a00fb"
+   }
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-07-25T15:02:40.528912733Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-07-25T15:02:40.562996420Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-07-25T15:02:40.590255494Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-07-25T15:15:24.076891396Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-07-25T15:15:24.082590708Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "13",
+   "eventTime": "2026-07-25T15:15:24.086431815Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "14",
+   "eventTime": "2026-07-25T15:15:24.086477090Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_UPDATE_ACCEPTED"
+  },
+  {
+   "eventId": "15",
+   "eventTime": "2026-07-25T15:15:24.086499994Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_UPDATE_COMPLETED"
+  },
+  {
+   "eventId": "16",
+   "eventTime": "2026-07-25T15:15:24.086514681Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "Inspect",
+    "taskQueue": "temporal-maintenance-shadow"
+   }
+  },
+  {
+   "eventId": "17",
+   "eventTime": "2026-07-25T15:15:24.094421059Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "g60425f7e"
+   }
+  },
+  {
+   "eventId": "18",
+   "eventTime": "2026-07-25T15:15:24.122806409Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "19",
+   "eventTime": "2026-07-25T15:15:24.122814024Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "20",
+   "eventTime": "2026-07-25T15:15:24.129121306Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "21",
+   "eventTime": "2026-07-25T15:15:24.136397381Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  }
+ ]
+}

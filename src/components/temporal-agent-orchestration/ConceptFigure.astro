@@ -288,8 +288,11 @@ const svgDescId = `${titleId}-svg-desc`;
         <title id={svgTitleId}>One agent session across a Worker restart</title>
         <desc id={svgDescId}>
           One Worker schedules an Activity and binds an agent. After that Worker
-          dies, another Worker replays history, reads the heartbeat, and
-          reattaches to the same generation-fenced agent session.
+          dies, another Worker replays the Workflow state and resolves the same
+          agent session by its stable identity and claim token, then reattaches
+          to that generation-fenced session. The heartbeat carries progress, not
+          the identity, so this holds even when the Worker died before the first
+          heartbeat landed.
         </desc>
         <path class="svg-link" d="M100 210 H900" />
         <g>
@@ -313,8 +316,8 @@ const svgDescId = `${titleId}-svg-desc`;
         <g>
           <circle class="svg-step" cx="700" cy="210" r="36" />
           <text class="svg-step-number" x="700" y="217">3</text>
-          <text class="svg-label svg-label--center" x="700" y="285">Replay + recover</text>
-          <text class="svg-small svg-label--center" x="700" y="313">read heartbeat</text>
+          <text class="svg-label svg-label--center" x="700" y="285">Replay + resolve</text>
+          <text class="svg-small svg-label--center" x="700" y="313">by stable identity</text>
         </g>
         <g>
           <circle class="svg-step" cx="900" cy="210" r="36" />
@@ -328,8 +331,8 @@ const svgDescId = `${titleId}-svg-desc`;
         <li>A Worker schedules the Activity with stable identity.</li>
         <li>The Activity binds one agent and heartbeats progress.</li>
         <li>The Worker dies while the agent session keeps running.</li>
-        <li>A replacement Worker replays history and reads the heartbeat.</li>
-        <li>The retry reattaches and accepts one generation-fenced receipt.</li>
+        <li>A replacement Worker replays the Workflow state and resolves the existing session by its stable identity and claim token, which holds even if no heartbeat was ever recorded.</li>
+        <li>The retry reattaches, picks up progress from any recorded heartbeat, and accepts one generation-fenced receipt.</li>
       </ol>
 
       <figcaption class="figure-caption">

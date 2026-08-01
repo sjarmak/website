@@ -1,0 +1,115 @@
+{
+ "workflowType": "BeadOrchestrationWorkflow",
+ "status": "WORKFLOW_EXECUTION_STATUS_COMPLETED",
+ "key": "g5a79af1a",
+ "events": [
+  {
+   "eventId": "1",
+   "eventTime": "2026-07-31T16:12:27.161451518Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED"
+  },
+  {
+   "eventId": "2",
+   "eventTime": "2026-07-31T16:12:27.161523995Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "3",
+   "eventTime": "2026-07-31T16:12:27.161526901Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "4",
+   "eventTime": "2026-07-31T16:12:27.183094564Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "5",
+   "eventTime": "2026-07-31T16:12:27.217007656Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "6",
+   "eventTime": "2026-07-31T16:12:27.217052982Z",
+   "eventType": "EVENT_TYPE_MARKER_RECORDED"
+  },
+  {
+   "eventId": "7",
+   "eventTime": "2026-07-31T16:12:27.227204122Z",
+   "eventType": "EVENT_TYPE_UPSERT_WORKFLOW_SEARCH_ATTRIBUTES"
+  },
+  {
+   "eventId": "8",
+   "eventTime": "2026-07-31T16:12:27.227255208Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_PROPERTIES_MODIFIED"
+  },
+  {
+   "eventId": "9",
+   "eventTime": "2026-07-31T16:12:27.227462010Z",
+   "eventType": "EVENT_TYPE_UPSERT_WORKFLOW_SEARCH_ATTRIBUTES"
+  },
+  {
+   "eventId": "10",
+   "eventTime": "2026-07-31T16:12:27.227496294Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+   "activityTaskScheduledEventAttributes": {
+    "activityType": "ExecuteBeadActivity",
+    "taskQueue": "gascity-agent-work"
+   }
+  },
+  {
+   "eventId": "11",
+   "eventTime": "2026-07-31T16:12:27.246151789Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+   "activityTaskStartedEventAttributes": {
+    "attempt": 1,
+    "identity": "g10e6c4e3"
+   }
+  },
+  {
+   "eventId": "12",
+   "eventTime": "2026-07-31T16:12:27.306788897Z",
+   "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED"
+  },
+  {
+   "eventId": "13",
+   "eventTime": "2026-07-31T16:12:27.306797824Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "14",
+   "eventTime": "2026-07-31T16:12:27.324106431Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "15",
+   "eventTime": "2026-07-31T16:12:27.358841348Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "16",
+   "eventTime": "2026-07-31T16:13:36.643701320Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED"
+  },
+  {
+   "eventId": "17",
+   "eventTime": "2026-07-31T16:13:36.643706320Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED"
+  },
+  {
+   "eventId": "18",
+   "eventTime": "2026-07-31T16:13:36.664972873Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED"
+  },
+  {
+   "eventId": "19",
+   "eventTime": "2026-07-31T16:13:36.687926036Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED"
+  },
+  {
+   "eventId": "20",
+   "eventTime": "2026-07-31T16:13:36.687960771Z",
+   "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED"
+  }
+ ]
+}
