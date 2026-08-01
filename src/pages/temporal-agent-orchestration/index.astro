@@ -211,8 +211,8 @@ const afterCode = await codeToHtml(
       </div>
       <div class="tco__copy prose">
         <p>
-          Temporal faithfully retries whatever it was told to do, so everything
-          about making that retry safe belongs to the application.
+          Temporal faithfully retries whatever it was told to do. It will not
+          make a badly identified or non-idempotent operation safe on its own.
         </p>
       </div>
     </section>
