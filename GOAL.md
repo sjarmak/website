@@ -102,8 +102,29 @@ Epic bead: `sjai-zmj`
    Article readingOrder pin becomes [siblings, orchestrator, ownership,
    handoff, recovery, workshop, shadow, boundary].
 
+10. **(2026-08-01) Companion extraction supersedes article doc §6.** After
+    the handoff was written, `article-prose-for-voice-pass.md` gained a §6
+    carrying the companion prose. The new
+    `docs/companion-prose-for-voice-pass.md` carries that prose plus all
+    new/amended figure text; §6 now points forward to it.
+
 ## Status log
 
 - 2026-08-01: Goal opened. Grill-me decisions 1–4 taken by Stephanie;
   5–7 derived from repo. Beads sjai-zmj.1–.9 created with dependency chain
   (.1 → .2–.6 → .7 → .8 → .9).
+- 2026-08-01: Beads .1–.7 closed. 14-agent design workflow (7 designers, 7
+  adversarial critics) produced all blocks; every critique fix applied at
+  integration. One escaped defect caught and fixed: the recovery amendment
+  broke the companion pin `/heartbeat carries progress, not the identity/`
+  (gate had only run the article suite; all four temporal suites gate every
+  commit from db94324 on).
+- 2026-08-01: Voice pass (bead .8). Mechanical scans: zero em dashes, zero
+  banned words in companion + figures. Fixes: cut the article's "Two lists,
+  and the first one is the short one" (structure narration, the one
+  hard-ban touch); trimmed the wrongness and recovery captions' status
+  sentences and the wrongness fallback status item (each stated one half of
+  the two-half status rule, and the adjacent page prose already carries the
+  full status). Companion page prose itself needed nothing beyond the
+  earlier 7f5532c de-slop pass. Stephanie's personal voice pass remains
+  owed on the diff, from docs/companion-prose-for-voice-pass.md.

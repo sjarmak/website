@@ -224,6 +224,11 @@ Tightening the viewBox is figure work, which is parked.
 
 ## 6. Companion page (all visitor-facing text, added when the page was built)
 
+**Superseded for the companion page** by
+`docs/companion-prose-for-voice-pass.md` (2026-08-01), which carries the same
+page prose plus the figure text added by the visual-brief build. Run the
+companion voice pass from that doc, not this section.
+
 **De-slop pass applied 2026-08-01**, so the text below matches what the page
 ships. Eleven patterns were removed: four colon reveals, two clefts ("what a
 crash used to lose was", "what it proves is"), two binary contrasts ("is not

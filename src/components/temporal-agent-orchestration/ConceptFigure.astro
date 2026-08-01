@@ -433,8 +433,7 @@ const svgDescId = `${titleId}-svg-desc`;
       <figcaption class="figure-caption">
         Replay restores deterministic Workflow state only; stable identity
         finds the running session, and the generation fence admits one
-        completion. A bounded canary proved this path, and the converted
-        bead-to-agent unit runs in shadow.
+        completion.
       </figcaption>
     </figure>
   )
@@ -896,15 +895,13 @@ const svgDescId = `${titleId}-svg-desc`;
         <li>The delivery contract into the Temporal Outcome Workflow breaks on the mismatch, and every delivery attempt is rejected.</li>
         <li>A durable timer retries the same wrong envelope on schedule; Temporal preserves the mistake exactly as it was given.</li>
         <li>The canary was rolled back and contained; its evidence stays preserved instead of being rewritten into a success.</li>
-        <li>The converted bead-to-agent unit is proved by a bounded canary and runs in shadow; result delivery and acknowledgement are the part running continuously in production.</li>
       </ol>
 
       <figcaption class="figure-caption">
         Temporal preserves and retries the procedure it is given; a wrong
         identity inside the procedure is preserved just as durably. The
         canary was rolled back with its evidence intact, not rewritten
-        into a success. The converted unit runs in shadow; result delivery
-        and acknowledgement run continuously in production.
+        into a success.
       </figcaption>
     </figure>
   )
