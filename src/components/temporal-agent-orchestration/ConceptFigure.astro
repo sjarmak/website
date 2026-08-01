@@ -9,7 +9,8 @@ interface Props {
     | "workshop"
     | "boundary"
     | "shadow"
-    | "wrongness";
+    | "wrongness"
+    | "scattered";
 }
 
 const { kind } = Astro.props;
@@ -737,6 +738,152 @@ const svgDescId = `${titleId}-svg-desc`;
         canary was rolled back with its evidence intact, not rewritten
         into a success. The converted unit runs in shadow; result delivery
         and acknowledgement run continuously in production.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "scattered" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">01 / Before Temporal</p>
+        <h3 id={titleId}>One task, five owners, seven crash windows</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1120 700"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Pre-Temporal flow with seven crash windows</title>
+        <desc id={svgDescId}>
+          A task travels across five swimlanes: the Beads ledger;
+          controller, orders, and reapers; dispatcher and sessions; agent,
+          Git, and filesystem; mail and the Mayor. A step becomes ready in
+          Beads, a controller scan tick discovers it, a claim is recorded
+          back in Beads, the dispatcher wakes a session, the agent runs
+          and pushes a branch, completion returns to the Beads ledger, and
+          a mail nudge reaches the Mayor, who verifies the result. Seven
+          lightning bolts sit on the connecting edges, never on the
+          components, marking the crash windows: ready but not delivered,
+          claim with no agent, agent with no recorded session, push with
+          no completion, a stale completion arriving from an old
+          generation, completion with no notification, and notification
+          with no acknowledgement. Only the three Beads boxes wear the
+          double outline of a durable record; every other box, and every
+          arrow, lived in process memory.
+        </desc>
+
+<g class="svg-lanes">
+          <rect class="svg-lane" x="15" y="40" width="1090" height="124" />
+          <rect class="svg-lane" x="15" y="288" width="1090" height="124" />
+          <rect class="svg-lane" x="15" y="536" width="1090" height="124" />
+          <text class="svg-eyebrow" x="30" y="107">Beads ledger</text>
+          <text class="svg-eyebrow" x="30" y="216">Controller, orders,</text>
+          <text class="svg-eyebrow" x="30" y="235">reapers</text>
+          <text class="svg-eyebrow" x="30" y="340">Dispatcher and</text>
+          <text class="svg-eyebrow" x="30" y="359">sessions</text>
+          <text class="svg-eyebrow" x="30" y="464">Agent, Git,</text>
+          <text class="svg-eyebrow" x="30" y="483">filesystem</text>
+          <text class="svg-eyebrow" x="30" y="602">Mail and Mayor</text>
+        </g>
+
+        <g class="svg-edges">
+          <path class="svg-link" d="M315 102 H405 V202" />
+          <path class="svg-link" d="M465 226 H530 V126" />
+          <path class="svg-link" d="M590 102 H695 V326" />
+          <path class="svg-link" d="M695 374 V474 H720" />
+          <path class="svg-link" d="M850 474 H880" />
+          <path class="svg-link" d="M947 450 V160 H1000 V126" />
+          <path class="svg-link svg-link--dashed" d="M790 450 V88 H970" />
+          <path class="svg-link" d="M1060 126 V545 H820 V574" />
+          <path class="svg-link" d="M883 598 H980" />
+        </g>
+
+        <g class="svg-nodes">
+          <rect class="svg-box svg-box--durable" x="190" y="78" width="125" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="195" y="83" width="115" height="38" rx="6" />
+          <text class="svg-small" x="208" y="107">Step ready</text>
+
+          <rect class="svg-box" x="345" y="202" width="120" height="48" rx="10" />
+          <text class="svg-small" x="363" y="231">Scan tick</text>
+
+          <rect class="svg-box svg-box--durable" x="470" y="78" width="120" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="475" y="83" width="110" height="38" rx="6" />
+          <text class="svg-small" x="488" y="107">Claim</text>
+
+          <rect class="svg-box" x="620" y="326" width="150" height="48" rx="10" />
+          <text class="svg-small" x="638" y="355">Wake session</text>
+
+          <rect class="svg-box" x="720" y="450" width="130" height="48" rx="10" />
+          <text class="svg-small" x="738" y="479">Agent runs</text>
+
+          <rect class="svg-box" x="880" y="450" width="134" height="48" rx="10" />
+          <text class="svg-small" x="898" y="479">Push branch</text>
+
+          <rect class="svg-box svg-box--durable" x="970" y="78" width="130" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="975" y="83" width="120" height="38" rx="6" />
+          <text class="svg-small" x="988" y="107">Completion</text>
+
+          <rect class="svg-box" x="757" y="574" width="126" height="48" rx="10" />
+          <text class="svg-small" x="775" y="603">Mail nudge</text>
+
+          <rect class="svg-box" x="980" y="574" width="110" height="48" rx="10" />
+          <text class="svg-small svg-small--wrapped" x="998" y="592">
+            <tspan x="998" dy="0">Mayor</tspan>
+            <tspan x="998" dy="19">verifies</tspan>
+          </text>
+        </g>
+
+        <g class="svg-fractures">
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(360 102)" />
+          <text class="svg-small svg-small--wrapped" x="420" y="144">
+            <tspan x="420" dy="0">ready, not</tspan>
+            <tspan x="420" dy="19">delivered</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(695 230)" />
+          <text class="svg-small" x="552" y="235">claim, no agent</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(695 428)" />
+          <text class="svg-small" x="535" y="433">agent, no session</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(947 300)" />
+          <text class="svg-small svg-small--wrapped" x="965" y="294">
+            <tspan x="965" dy="0">push, no</tspan>
+            <tspan x="965" dy="19">completion</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(790 220)" />
+          <text class="svg-small svg-small--wrapped" x="808" y="214">
+            <tspan x="808" dy="0">stale</tspan>
+            <tspan x="808" dy="19">generation</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(1010 545)" />
+          <text class="svg-small" x="860" y="530">no notification</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(931 598)" />
+          <text class="svg-small" x="845" y="645">no acknowledgement</text>
+        </g>
+      </svg>
+
+      <ol class="concept-figure__fallback" aria-label="Pre-Temporal flow and its seven crash windows">
+        <li>A step becomes ready in the Beads ledger, but delivery depends on a later scan; a crash here leaves the ready work with no durable owner.</li>
+        <li>A controller scan tick finds the step and records a claim back in Beads; a crash after the claim strands a claim with no agent.</li>
+        <li>The dispatcher wakes a session and the agent starts; a crash before the session is recorded lets a retry launch a second agent.</li>
+        <li>The agent pushes a branch to Git; a crash before completion is recorded leaves pushed work invisible to the repair scans.</li>
+        <li>An agent from an old generation can report success late, and its stale completion can overwrite the current attempt.</li>
+        <li>Completion lands in the Beads ledger, but creating a notification is a separate step that can silently never happen.</li>
+        <li>A mail nudge reaches the Mayor, but nothing durable keeps the result owed until an acknowledgement is recorded.</li>
+        <li>Only the Beads boxes are durable records; every arrow between the subsystems lived in process memory.</li>
+      </ol>
+
+      <figcaption class="figure-caption">
+        The facts survived in several stores, but no single durable
+        execution owned the arrows between them.
       </figcaption>
     </figure>
   )
