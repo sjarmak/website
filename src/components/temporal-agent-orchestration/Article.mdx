@@ -213,7 +213,7 @@ I had treated mail and session nudges as if successful delivery meant successful
 
 ## The implementation underneath the boundary
 
-"I added Temporal to my agent system" is not a claim anyone can check. Here is the exact procedure I made durable: take one ready work item, assign it to one agent session, and accept one generation-fenced receipt. That unit is the one this article walks through in code, because it has an exact public predecessor that maps one to one onto its replacement. (Result delivery's "before" was mail plus attention plus hope; an absence is a weaker demonstration than a diff.)
+The procedure I made durable is one unit: take one ready work item, assign it to one agent session, and accept one generation-fenced receipt. Its predecessor is public code that maps one to one onto its replacement, so you can read the before and the after side by side.
 
 Before Temporal, that procedure had no single owner. Most of it lived in <TermTip term="bead-reconcile-tick" tip="The old orchestrator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip>, with [session recovery](https://github.com/gastownhall/gascity/blob/b78058917bc65846db89e1c3b25dc17269822483/cmd/gc/session_beads.go#L2923-L3027) and completion handled elsewhere. A single controller tick could load state, release orphaned assignments, reconcile active sessions, dispatch notifications, and run a secondary wake-up check. A separate close path searched for work abandoned by dead sessions.
 
