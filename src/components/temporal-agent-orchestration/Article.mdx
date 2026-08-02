@@ -4,25 +4,22 @@ import Glossary from "./Glossary.astro";
 import CanaryFigure from "./CanaryFigure.astro";
 import ConspiracyFigure from "./ConspiracyFigure.astro";
 import OpeningFigure from "./OpeningFigure.astro";
+import References from "./References.astro";
 import WorkshopFigure from "./WorkshopFigure.astro";
 
 # I put Temporal around my coding agents. Here's what it fixed, and what it didn't.
 
-*What I learned adding durable execution to a multi-agent coding system built on Beads*
-
-> I left the coding agent nondeterministic and put it inside an Activity, then moved the promises around it (did this claim already start an agent, does this result belong to the current generation, has anyone acknowledged it, which retry is next) into a Workflow. The unit I converted, one ready work item becoming one agent execution, is proved by a bounded canary and still runs in shadow mode. The part running continuously in production is result delivery and acknowledgement, which is the same boundary applied a second time.
+*What I learned adding durable execution to a software factory built on Beads*
 
 In the fall of 2025, I sat next to Steve Yegge at dinner during a Sourcegraph offsite in Cabo.
 
-Steve had brought his laptop to the table, because of course he had (I was running agents from my phone, so while more discreet, I couldn't judge). Roughly eight terminal windows were stacked across the screen, each in a different color, and he kept moving between them while everyone else was doing more normal dinner activities.
+Steve had brought his laptop to the table, because of course he had (I was just running mine on my phone instead so I couldn't judge). Terminals running agents were scattered across his screen in a rainbow of different colors, and he kept moving between them while everyone else was doing more normal dinner activities.
 
-I asked what he was building. I remember the answer being something along the lines of, "Something that's going to be big."
-
-This was believable because it was Steve, but I still had no idea what I was looking at.
+I asked what he was building, and I remember the answer being something like, "Something that's going to be big."
 
 A few weeks later, in October 2025, he published [Introducing Beads](https://steve-yegge.medium.com/introducing-beads-a-coding-agent-memory-system-637d7d92514a), a task and dependency system designed around how coding agents actually work.
 
-So the thing on the laptop at dinner really did become big. It was Beads.
+So the thing on the laptop at dinner really did become big. It was [Beads](https://github.com/gastownhall/beads).
 
 <OpeningFigure />
 
@@ -32,11 +29,11 @@ Every new coding-agent session starts with some degree of amnesia.
 
 The previous agent may have investigated the codebase, discovered three hidden dependencies, ruled out two approaches, found a broken test, and created a reasonable plan. Then its context fills up or the session ends, and the next agent wakes up knowing none of it.
 
-You can try to solve this with Markdown plans. I certainly did. But then the agent has to keep the plan current, distinguish durable findings from temporary notes, understand which tasks depend on which other tasks, and avoid creating a whole ecosystem of slightly different planning documents.
+You can try to solve this with Markdown files (certainly this was what the agents wanted to do without any other tools at the time). But then the agent has to keep the plan current, distinguish durable findings from temporary notes, understand which tasks depend on which other tasks, and avoid creating a whole ecosystem of slightly different planning documents (v1_final_FINAL_this-one-for-real.md).
 
 Beads gives agents a dependency-aware work record instead.
 
-An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also seem to understand how to use it. They file issues for problems they encounter and pick up the next unblocked task without much ceremony.
+An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also really like using it and use it pretty well. They file issues for problems they encounter and pick up the next unblocked task without much friction.
 
 I adopted Beads quickly. Then Steve built something much larger on top of it.
 
@@ -48,19 +45,19 @@ Gas Town was an opinionated coding-agent factory built on Beads. It added persis
 
 It also came with Polecats, a Deacon, a Witness, a Refinery, Rigs, Convoys, Molecules, Wisps, and enough Mad Max terminology that I understood each concept slightly less after learning the name of the next one.
 
-I installed it and dabbled for a bit. I could see the direction immediately: coding agents were becoming capable enough that manually operating each terminal was going to become the bottleneck. The next layer had to coordinate them. At the time I was managing 10+ Ghostty tabs.
+I installed it and dabbled for a bit. I forked it in early January with lofty goals of making it more vendor-agnostic and chatted with Steve about that (to which he responded "send PRs!"). I was really intrigued by the philosophy, I knew there had to be a better way to manage my projects beyond opening 10+ tabs in Ghostty, and that was the promise of Gas Town (along with a dose of whimsy).
 
-But I never quite got my first town working the way I wanted. I had a critical project I was working on at the time ([CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench)) that I couldn't really afford to stall on dropped queues and other random orchestrator nonsense. Gas Town expected a fair amount of operational context, and I was still trying to understand how all the parts related to one another. Eventually I backed out.
+But I never quite got my first town working the way I wanted. I had a critical project I was working on at the time ([CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench)) that I couldn't afford to stall on dropped queues and other random orchestrator nonsense. Turns out making a large coding agent benchmark from scratch is really hard and focus-requiring. Gas Town expected a fair amount of operational context, and I was still trying to understand how all the parts related to one another. I reluctantly abandoned my ghost town.
 
-I could run a bunch of coding agents, but I didn't know how to keep a town of them from catching fire.
+I could run a bunch of coding agents, but I didn't know how to keep a town of them from catching fire (or, more typically, have everyone sitting around doing nothing with half-baked work poorly translated like a horrible game of Agent Telephone).
 
-While experimenting with Gas Town, I kept returning to one of the ideas in Steve's post: **Nondeterministic Idempotence**, or NDI.
+Gas Town's answer to limiting the fires and taking advantage of the improving capabilities of agents centers on what Steve calls **Nondeterministic Idempotence**, or NDI.
 
 The basic idea is that the exact path through the work does not need to be reproducible. A session can crash. A new agent can inspect the durable work record (Beads store), infer what happened, and take a different route forward. As long as agents keep consulting the work record and eventually satisfy the acceptance criteria, the workflow can recover.
 
 This is a good fit for coding agents because coding itself is nondeterministic. Two agents can solve the same issue in very different ways, and either result may be acceptable (unless you're a [SWE-Bench verifier](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)).
 
-Gas Town sought to make the work durable without trying to make the agent deterministic.
+Gas Town sought to make the work durable while giving as much freedom as possible to agents to do their best work. 
 
 ## And then came Gas City
 
@@ -70,13 +67,21 @@ Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind 
 
 That separation immediately made sense to me and I was (and still am) super bought in.
 
-Instead of adopting one fixed hierarchy of roles, I could decide which agents existed, how work moved between them, which workflows should run, what evidence reviewers required, and where humans entered the loop.
+That design now is the current fashion in the agent bubble (move aside loop engineering): [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). LangChain describes it as modeling an agentic system through nodes that do work and edges that determine what happens next. Gas City already gave me that level of control. I could choose the agents, dependencies, branches, review gates, and handoffs instead of inheriting one fixed hierarchy.
 
-I began contributing heavily, eventually handling [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging. Julian invited me to become Gas City's first outside maintainer.
+But operating Gas City exposed a distinction that [the graph alone does not capture](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution). A graph describes which transitions are allowed. It does not necessarily say who owns a transition after the process attempting it dies.
 
-I now use Gas City to run work across my (many, too many) projects, including this website, and Gas City itself. It is a strange but useful test environment: the city builds and repairs the software that operates the city.
+The task graph could be perfectly intact while one traversal through it disappeared. Beads still knew that a step was ready, claimed, or complete. The system could still lose the procedure that launched its agent, waited for its result, delivered that result, or kept it owed until acknowledgement.
 
-A system that uses itself is also extremely good at finding orchestration bugs.
+The hard part of an agent graph is therefore not only designing the nodes and edges. It is defining the contract on every important edge: its stable identity, retry behavior, stale-work fence, acknowledgement, and durable owner. 
+
+> A durable graph is not the same thing as a durable traversal through it.
+
+I began contributing heavily to Gas City in early April, eventually handling [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging. Julian invited me to become Gas City's first outside maintainer.
+
+I now use Gas City to run work across my (many, too many) projects, including Gas City itself. It is a strange but useful test environment: the city builds and repairs the software that operates the city.
+
+A system that uses itself is also extremely good at finding bugs.
 
 <ConceptFigure kind="legend" />
 
@@ -416,19 +421,23 @@ The implementation is a standalone Go service using Gas City's canonical work st
 
 The eventual distribution boundary could be a Gas City pack containing the Worker configuration, Workflow and Activity contracts, Beads adapters, generation fences, outcome-delivery tools, canary and rollback gates, diagnostics, and user runbooks. An installation could then choose Temporal only at the workflow boundaries where its guarantees are useful.
 
-That optionality is important; I don't think every formula needs to become a Temporal Workflow. Doing so would add machinery without necessarily adding value.
+That optionality is important. This is also why I would not translate every Gas City formula directly into a Temporal Workflow. Doing so would add machinery without necessarily adding value.
+
+A graph is useful for expressing the topology of the work; [durable code is useful for procedures](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) whose exact progress must survive failure. The two representations answer different questions. The practical boundary is not whether something appears as a node or edge. It is whether losing its in-flight procedure would leave the system unable to say what happened.
 
 You can find the relevant boundaries by asking which guarantee needs to survive a crash. Sometimes that is only the work record, and Beads is enough. Sometimes it is the exact sequence of waits, retries, identities, gates, and acknowledgements, and that procedure needs a durable owner.
 
 ## What I learned
 
-I did not add Temporal to make coding agents deterministic. Their ability to explore, backtrack, and solve problems in ways I did not precompute is the whole reason to use them.
+Temporal doesn't somehow make coding agents deterministic. Their nondeterminism is the point: it lets them explore, backtrack, and solve problems along paths I did not precompute.
 
-I added it because I think some parts of the system really should not be improvising.
+But some parts of the system should not be improvising.
 
-I still expect the city to catch fire sometimes. Complex systems do, and agents surprise us all daily. What I do not want is for every fire to turn into a murder mystery where a new agent has to reconstruct the control plane from stale claims, half-delivered messages, and whatever process happens to still be alive.
+I still expect the city to have problems. It is a work in progress, and software factories are complex systems running other complex systems. Durability is necessary for reliability, but it is not sufficient. Agents can still make bad decisions, adapters can still carry the wrong identity, and external systems can still fail in ways Temporal cannot fix.
 
-That feels like the right split for the systems I want to build: let the agents be weird, but make the infrastructure keep its promises.
+The boundary I want is between freedom in the work and discipline in the machinery around it: let the agents be weird, but make the infrastructure keep its promises.
+
+<References />
 
 <Glossary />
 

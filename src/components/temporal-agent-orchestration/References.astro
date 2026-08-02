@@ -1,0 +1,304 @@
+---
+// Every external source the article cites, in one place, grouped by what kind
+// of source it is. Same disclosure pattern as the glossary that follows it, so
+// the two read as a pair at the foot of the page: collapsed by default, opened
+// by a reader who wants the trail rather than the argument. Each entry says
+// where it is used, because a bare URL list makes the reader re-find the
+// sentence it belonged to.
+
+interface Entry {
+  title: string;
+  href: string;
+  source: string;
+  note: string;
+}
+
+interface Group {
+  title: string;
+  intro: string;
+  entries: Entry[];
+}
+
+const groups: Group[] = [
+  {
+    title: "Beads, Gas Town, and Gas City",
+    intro: "The systems this account is about.",
+    entries: [
+      {
+        title: "Introducing Beads: a coding agent memory system",
+        href: "https://steve-yegge.medium.com/introducing-beads-a-coding-agent-memory-system-637d7d92514a",
+        source: "Steve Yegge, October 2025",
+        note: "The dependency-aware work record the rest of this stack sits on.",
+      },
+      {
+        title: "gastownhall/beads",
+        href: "https://github.com/gastownhall/beads",
+        source: "GitHub",
+        note: "The tracker itself: a distributed graph issue tracker for AI agents, backed by Dolt.",
+      },
+      {
+        title: "Welcome to Gas Town",
+        href: "https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04",
+        source: "Steve Yegge, January 2026",
+        note: "The coding-agent factory built on Beads, and where Nondeterministic Idempotence is introduced.",
+      },
+      {
+        title: "gastownhall/gascity",
+        href: "https://github.com/gastownhall/gascity",
+        source: "Julian Knutsen and Chris Sells",
+        note: "The composable orchestration SDK the integration described here runs on.",
+      },
+      {
+        title: "cmd/gc/city_runtime.go and cmd/gc/session_beads.go, pinned revision b780589",
+        href: "https://github.com/gastownhall/gascity/blob/b78058917bc65846db89e1c3b25dc17269822483/cmd/gc/city_runtime.go#L2140-L2384",
+        source: "GitHub",
+        note: "The controller tick and close path the excerpts quote, at the exact revision the before-and-after reader cites. Session recovery is in the sibling file, session_beads.go, lines 2923 to 3027.",
+      },
+      {
+        title: "My merged pull requests to Gas City",
+        href: "https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged",
+        source: "GitHub",
+        note: "Session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging.",
+      },
+      {
+        title: "dolthub/dolt",
+        href: "https://github.com/dolthub/dolt",
+        source: "DoltHub",
+        note: "The versioned SQL database my Beads store runs on.",
+      },
+    ],
+  },
+  {
+    title: "Temporal",
+    intro: "The durable-execution documentation the implementation follows.",
+    entries: [
+      {
+        title: "Temporal documentation",
+        href: "https://docs.temporal.io/temporal",
+        source: "Temporal",
+        note: "Entry point for the concepts below.",
+      },
+      {
+        title: "Workflows",
+        href: "https://docs.temporal.io/workflows",
+        source: "Temporal",
+        note: "The deterministic procedure that owns waits, retries, and cancellation.",
+      },
+      {
+        title: "Activities",
+        href: "https://docs.temporal.io/activities",
+        source: "Temporal",
+        note: "Where the nondeterministic work goes, including the coding agent.",
+      },
+      {
+        title: "Workers",
+        href: "https://docs.temporal.io/workers",
+        source: "Temporal",
+        note: "The disposable process the kill test targets twice.",
+      },
+      {
+        title: "Event History",
+        href: "https://docs.temporal.io/encyclopedia/event-history",
+        source: "Temporal",
+        note: "The server-side record that lets a replacement Worker replay and continue.",
+      },
+      {
+        title: "Signal-With-Start",
+        href: "https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start",
+        source: "Temporal",
+        note: "One operation that signals a running Workflow or starts it first; how the ready event is delivered.",
+      },
+      {
+        title: "Workflow ID and Run ID",
+        href: "https://docs.temporal.io/workflow-execution/workflowid-runid",
+        source: "Temporal",
+        note: "The stable identity that makes redelivery ordinary instead of dangerous, and the retention limit on it.",
+      },
+      {
+        title: "Activity heartbeats",
+        href: "https://docs.temporal.io/develop/go/activities/timeouts#activity-heartbeats",
+        source: "Temporal",
+        note: "How a long Activity reports progress and how a dead Worker is noticed sooner.",
+      },
+    ],
+  },
+  {
+    title: "Graphs, code, and durable execution",
+    intro: "The argument about what a graph does and does not carry.",
+    entries: [
+      {
+        title: "3 Years of Graph Engineering with LangGraph",
+        href: "https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph",
+        source: "LangChain",
+        note: "Nodes that do work, edges that determine what happens next; the vocabulary I borrow for Gas City's topology.",
+      },
+      {
+        title:
+          "LangGraph in production: Temporal's LangGraph Plugin adds Durable Execution",
+        href: "https://temporal.io/blog/temporal-langgraph-plugin-durable-execution",
+        source: "Temporal",
+        note: "Recovery, human review, and long-running work as the concerns a graph definition leaves to the rest of the stack.",
+      },
+      {
+        title:
+          "The fallacy of the graph: why your next agentic workflow should be code, not a diagram",
+        href: "https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram",
+        source: "Maxim Fateev, Temporal",
+        note: "The stronger version of the claim: procedural code over graph representation. I take the boundary rather than the whole argument.",
+      },
+      {
+        title: "Designing Distributed Systems",
+        href: "https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/",
+        source: "Brendan Burns, O'Reilly",
+        note: "Reconciliation, ownership, and placement patterns, read while looking at Gas City's controller.",
+      },
+    ],
+  },
+  {
+    title: "Agent reliability research",
+    intro: "The work that shaped which failures I went looking for.",
+    entries: [
+      {
+        title: "sjarmak/agent-diagnostics",
+        href: "https://github.com/sjarmak/agent-diagnostics",
+        source: "GitHub",
+        note: "Classifies why coding-agent runs succeed or fail instead of collapsing a run to pass or fail.",
+      },
+      {
+        title: "sourcegraph/CodeScaleBench",
+        href: "https://github.com/sourcegraph/CodeScaleBench",
+        source: "GitHub",
+        note: "Coding-agent evaluation on large repositories with deterministic verifiers.",
+      },
+      {
+        title: "Building a software factory",
+        href: "https://sourcegraph.com/webinars/building-a-software-factory",
+        source: "Sourcegraph webinar, June 2026",
+        note: "Running coding agents reliably in large codebases.",
+      },
+      {
+        title: "Why we no longer evaluate SWE-bench Verified",
+        href: "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/",
+        source: "OpenAI",
+        note: "Cited in passing on how much variation a benchmark will accept in a correct solution.",
+      },
+    ],
+  },
+];
+---
+
+<section class="references" aria-labelledby="references-title">
+  <header class="references__head">
+    <h2 id="references-title">References</h2>
+    <p>
+      Everything this page cites, grouped by what it is. Open the group you
+      need.
+    </p>
+  </header>
+  {
+    groups.map((group) => (
+      <details class="references__group">
+        <summary>
+          <span>{group.title}</span>
+          <span class="references__group-intro">{group.intro}</span>
+        </summary>
+        <ul>
+          {group.entries.map((entry) => (
+            <li class="references__entry">
+              <a href={entry.href} rel="noopener noreferrer" target="_blank">
+                {entry.title}
+              </a>
+              <span class="references__source">{entry.source}</span>
+              <p class="references__note">{entry.note}</p>
+            </li>
+          ))}
+        </ul>
+      </details>
+    ))
+  }
+</section>
+
+<style>
+  .references {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .references__head {
+    max-width: var(--measure);
+  }
+
+  .references__head h2 {
+    margin: 0;
+  }
+
+  .references__head p {
+    margin: var(--space-s) 0 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .references__group {
+    border-block: var(--border-hairline);
+  }
+
+  .references__group + .references__group {
+    border-block-start: 0;
+  }
+
+  .references__group summary {
+    display: flex;
+    padding-block: var(--space-s);
+    align-items: baseline;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    cursor: pointer;
+  }
+
+  .references__group summary:hover {
+    color: var(--color-accent);
+  }
+
+  .references__group-intro {
+    color: var(--color-text-muted);
+    font-family: var(--font-body, inherit);
+    font-size: var(--step--1);
+  }
+
+  .references__group ul {
+    margin: 0;
+    padding: var(--space-xs) 0 var(--space-m);
+    list-style: none;
+  }
+
+  .references__entry {
+    max-width: 60rem;
+    padding-block: var(--space-2xs);
+  }
+
+  .references__entry + .references__entry {
+    margin-block-start: var(--space-s);
+  }
+
+  .references__entry a {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    overflow-wrap: anywhere;
+  }
+
+  .references__source {
+    display: block;
+    margin-block-start: var(--space-3xs, 0.15rem);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .references__note {
+    margin: var(--space-2xs) 0 0;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+</style>
