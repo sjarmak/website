@@ -47,7 +47,7 @@ That work taught me how a city actually stays alive: patch by patch. A claim goe
 
 By mid-July, my orders directory held roughly 100 of these patrol and repair jobs, firing about 850 times an hour. When I later had my agents audit the city's own reliability, they flagged the cadence itself: the repair jobs were consuming the machine they were supposed to defend.
 
-The failures it was chasing were fairly consistent. The work record survived; some part of the procedure disappeared mid-flight.
+The failures it was chasing were fairly consistent.
 
 One night, the store file grew to 168 MB: 79,210 beads, 96 percent of them already closed. Because every dispatch reparsed the entire file under a lock, order firing froze. One wedged session claimed the same bead ten times over 5.6 hours. A maintenance order sat dormant for ten days before anyone noticed, because the thing responsible for checking whether orders fired was itself an order.
 
