@@ -52,6 +52,8 @@ The work record usually survived. The facts about the task were still there. But
 
 The problem was not that Beads had failed to preserve the work. It had done that part. The problem was that my many agents and I had hand-rolled a distributed procedure without giving that procedure one durable owner.
 
+This is a version of what the industry now calls [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph): modeling a system as nodes that do work and edges that decide what happens next. Gas City already gave me that control over agents, dependencies, and handoffs. But [a graph doesn't capture](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution) who owns a transition after the process attempting it dies.
+
 > A durable work record is not the same thing as a durable procedure.
 
 The rest of this article is what it took to act on that sentence. Here is where acting on it stands today:
@@ -82,7 +84,7 @@ Those are procedural questions. "A capable agent will inspect the clues and figu
 
 By this point, my research on how coding agents fail had already convinced me that reliability depends as much on the system around the model as on the model itself, so I went looking for systems that had solved adjacent problems.
 
-Because Gas Town is often described as "Kubernetes for agents," I started with Kubernetes controllers, reconciliation loops, leases, and ownership. Kubernetes can determine that a process disappeared and start another one. It does not inherently know whether a particular work claim already launched this particular coding-agent session, or whether a human acknowledged the exact outcome the system is waiting for. The broader distributed-systems toolbox gave me many necessary pieces (transactional outboxes, stable identities, idempotency keys, generation fencing, explicit acknowledgements, leases and heartbeats, retry-safe adapters), but no durable owner for the sequence connecting them.
+Because Gas Town is often described as "Kubernetes for agents," I started with Kubernetes controllers, reconciliation loops, leases, and ownership, using [Designing Distributed Systems](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/) as a guide. Kubernetes can determine that a process disappeared and start another one. It does not inherently know whether a particular work claim already launched this particular coding-agent session, or whether a human acknowledged the exact outcome the system is waiting for. The broader distributed-systems toolbox gave me many necessary pieces (transactional outboxes, stable identities, idempotency keys, generation fencing, explicit acknowledgements, leases and heartbeats, retry-safe adapters), but no durable owner for the sequence connecting them.
 
 Then I remembered Steve saying Gas Town looked like what you'd get if Kubernetes and [Temporal](https://docs.temporal.io/temporal) had a very ugly baby together. He had described NDI as similar to Temporal's deterministic durable replay, implemented through completely different machinery, and he was explicit that Gas Town was not a replacement for Temporal.
 
@@ -159,7 +161,7 @@ I had treated successful notification delivery as successful receipt. Mail and s
 
 "I added Temporal to my agent system" is too vague to evaluate. The procedure I made durable was narrower: take one ready work item, assign it to one agent session, and accept one generation-fenced receipt.
 
-Before Temporal, that procedure had no single owner. Most of it lived in <TermTip term="bead-reconcile-tick" tip="The old orchestrator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip>, with session recovery and completion handled elsewhere. A single controller tick could load state, release orphaned assignments, reconcile active sessions, dispatch notifications, and run a secondary wake-up check. A separate close path searched for work abandoned by dead sessions.
+Before Temporal, that procedure had no single owner. Most of it lived in <TermTip term="bead-reconcile-tick" tip="The old orchestrator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip>, with [session recovery](https://github.com/gastownhall/gascity/blob/b78058917bc65846db89e1c3b25dc17269822483/cmd/gc/session_beads.go#L2923-L3027) and completion handled elsewhere. A single controller tick could load state, release orphaned assignments, reconcile active sessions, dispatch notifications, and run a secondary wake-up check. A separate close path searched for work abandoned by dead sessions.
 
 Each part was reasonable in isolation. Together, however, they formed one procedure spread across multiple code paths and persistence boundaries. Every handoff between them created a window in which the process could die after performing an action but before recording what had happened.
 
@@ -210,7 +212,7 @@ The full suite runs with one command (`cd services/temporal-maintenance && make 
 
 The failing replay test matters more than the passing one. A replay gate that never rejects anything may not be wired into the code path it claims to protect. One local rule follows from that: replay fixtures are never regenerated merely to make a change pass. If a captured history stops replaying, the change is breaking until someone can explain why it is safe. The [complete test matrix](/temporal-agent-orchestration/code), with every named case, lives with the annotated source.
 
-Tests still provide weaker evidence than watching the process fail. The same repository includes a harness that runs the real Workflow and Activity against a local Temporal server and kills the Worker with a real operating-system signal, at two points: after the agent is running and a heartbeat checkpoint exists, and before the first heartbeat has been recorded.
+Tests still provide weaker evidence than watching the process fail. [The same repository](https://github.com/sjarmak/gas-city) includes a harness that runs the real Workflow and Activity against a local Temporal server and kills the Worker with a real operating-system signal, at two points: after the agent is running and a heartbeat checkpoint exists, and before the first heartbeat has been recorded.
 
 <CastPlayer
   src="/temporal-agent-orchestration/demo/worker-kill.cast"
@@ -294,7 +296,7 @@ The pattern that transfers to anyone:
 
 My additional hardening (generations and claim tokens, session attachment, exact coordinator acknowledgement, the independent watchdog) exists because of what my Activity starts: a process that can edit a Git worktree for an hour and continue running after the Worker that launched it has died. A short, idempotent job needs the first set of guarantees and none of the second.
 
-Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both. Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure; a future Gas City pack could make that last part something an installation adopts only at the boundaries where its guarantees earn their cost.
+Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both. Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure. [The stronger version of that claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) says durable code should replace the diagram entirely; I take the boundary rather than the whole argument, since Beads still needs to own the larger graph of work. A future Gas City pack could make that last part something an installation adopts only at the boundaries where its guarantees earn their cost.
 
 > Use Temporal when losing the in-flight procedure would leave the system unable to say what happened.
 
