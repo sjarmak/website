@@ -5,6 +5,7 @@ import CanaryFigure from "./CanaryFigure.astro";
 import ConspiracyFigure from "./ConspiracyFigure.astro";
 import OpeningFigure from "./OpeningFigure.astro";
 import References from "./References.astro";
+import TermTip from "./TermTip.astro";
 import WorkshopFigure from "./WorkshopFigure.astro";
 
 # I put Temporal around my coding agents. Here's what it fixed, and what it didn't.
@@ -83,10 +84,6 @@ I now use Gas City to run work across my (many, too many) projects, including Ga
 
 A system that uses itself is also extremely good at finding bugs.
 
-<ConceptFigure kind="legend" />
-
-<ConceptFigure kind="siblings" />
-
 ## What running a real city exposed
 
 A simplified Gas City setup looks something like this:
@@ -99,6 +96,10 @@ A simplified Gas City setup looks something like this:
 * **Dispatchers and hooks** assign eligible work and wake sessions.
 * **Reviews and gates** record whether the work was accepted.
 * **Sweeps and health patrol** inspect stale claims, dead sessions, branches, and handoffs.
+
+The diagrams that follow all use the same small set of symbols.
+
+<ConceptFigure kind="legend" />
 
 My installation also adds coordinating roles. Each project has a Project Lead responsible for evidence, gates, and handoffs. A Mayor coordinates work across the broader city.
 
@@ -193,6 +194,8 @@ I did not want to put the coding agent's reasoning inside deterministic replay. 
 
 > Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
 
+<ConceptFigure kind="siblings" />
+
 ## Adding Temporal to my city was mostly an exercise in deciding who owned what
 
 At first I thought I was adding a workflow engine. What I was actually doing was forcing myself to answer a series of ownership questions that the existing system had been allowed to leave fuzzy.
@@ -205,7 +208,7 @@ But...Every arrow between them was a place where the process could die.
 
 Being specific about it, because "I added Temporal to my agent system" is not a claim anyone can check. The unit is one ready work item becoming one agent execution and one fenced receipt.
 
-Before, that was a controller tick: `CityRuntime.beadReconcileTick` in `cmd/gc/city_runtime.go`, plus the session recovery and close path in `cmd/gc/session_beads.go`, at the public revision the excerpts below cite and link to. After, `BeadOrchestrationWorkflow` owns the procedure and `ExecuteBeadActivity` owns the fenced claim, start-or-attach, heartbeat, and generation-fenced completion, split across two task queues: `gascity-bead-orchestration` for the procedure and `gascity-agent-work` for the agent itself.
+Before, that was a controller tick: <TermTip term="bead-reconcile-tick" tip="The old coordinator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip> in `cmd/gc/city_runtime.go`, plus the session recovery and close path in `cmd/gc/session_beads.go`, at [the public revision](https://github.com/gastownhall/gascity/tree/b78058917bc65846db89e1c3b25dc17269822483) the excerpts below cite and link to. After, <TermTip term="bead-orchestration-workflow" tip="The Temporal Workflow that now owns one work item's procedure: claim, launch, wait, receipt, in that order, recorded durably.">BeadOrchestrationWorkflow</TermTip> owns the procedure and <TermTip term="execute-bead-activity" tip="The Temporal Activity that touches the real world for that item: it writes the fenced claim, starts the agent or finds the one already running, heartbeats, and reports the completion.">ExecuteBeadActivity</TermTip> owns the fenced claim, start-or-attach, heartbeat, and generation-fenced completion, split across two task queues: <TermTip term="queue-orchestration" tip="The Task Queue the orchestration Workflow is served from.">gascity-bead-orchestration</TermTip> for the procedure and <TermTip term="queue-agent-work" tip="The Task Queue the agent-facing Activity is served from.">gascity-agent-work</TermTip> for the agent itself.
 
 I chose that unit over result delivery because it has an exact predecessor in public code that maps one to one onto its replacement. Result delivery's "before" was mail plus attention plus hope, and an absence is a weaker demonstration than a diff.
 
@@ -289,7 +292,7 @@ Buuuuut, the Mayor never learned that the result existed.
 
 I had treated mail and session nudges as if successful delivery meant successful receipt (nope). A best-effort notification can wake an agent up, but it can't prove that the exact result was reviewed and acknowledged.
 
-So each verified result now gets an `OutcomeReady` outbox record and its own Temporal Workflow. That Workflow:
+So each verified result now gets an <TermTip term="outcome-ready" tip="The durable record that a finished result is owed to someone. It stays open, and delivery repeats, until an acknowledgement matching that exact outcome closes it.">OutcomeReady</TermTip> outbox record and its own Temporal Workflow. That Workflow:
 
 1. delivers a notification;
 2. waits durably;
