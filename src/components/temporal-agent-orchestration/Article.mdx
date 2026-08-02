@@ -185,6 +185,8 @@ The implementation focused on three concrete breakpoints. The first two run in s
 
 **What Temporal contributes.** The ready transition and its delivery event are written together in one Beads transaction. A bridge reads the pending event and uses Temporal's [Signal-With-Start](https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start) operation with a stable [Workflow ID](https://docs.temporal.io/workflow-execution/workflowid-runid) derived from the city, run, and work item. If a Workflow with that ID is already running, the event is signaled to it. Otherwise, Temporal starts it and delivers the signal as part of the same operation.
 
+<ConceptFigure kind="handoff" />
+
 **What stays the application's job.** There is still an unavoidable crash window: Temporal can accept the event, then the bridge can die before acknowledging the outbox record. The fix is not pretending that window disappeared. The event is delivered again, and the Workflow ignores an event ID it has already processed (so, deterministic idempotency? I guess we just call that idempotency?). Stable identity turns redelivery from a dangerous anomaly into normal, expected behavior. That guarantee is bounded by how long Temporal retains closed executions: past the retention window the ID can be reused, which is why the generation fence and the canonical work identity, not the Workflow ID, are what keep a late duplicate out.
 
 **How it's tested.** A test against a real Temporal dev server delivers the same ready event twice and requires exactly one scheduled Activity. The bounded canary exercised the path end to end, with a scripted stand-in answering the agent side of the adapter protocol.
@@ -220,6 +222,8 @@ The procedure I made durable is one unit: take one ready work item, assign it to
 Before Temporal, that procedure had no single owner. Most of it lived in <TermTip term="bead-reconcile-tick" tip="The old orchestrator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip>, with [session recovery](https://github.com/gastownhall/gascity/blob/b78058917bc65846db89e1c3b25dc17269822483/cmd/gc/session_beads.go#L2923-L3027) and completion handled elsewhere. A single controller tick could load state, release orphaned assignments, reconcile active sessions, dispatch notifications, and run a secondary wake-up check. A separate close path searched for work abandoned by dead sessions.
 
 Each part was reasonable in isolation. Together they formed one procedure spread across multiple code paths and persistence boundaries. Every arrow between them was a place where the process could die after performing an action but before recording what had happened.
+
+<ConceptFigure kind="scattered" />
 
 <CodeExcerpt
   sourcePath="public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go"
