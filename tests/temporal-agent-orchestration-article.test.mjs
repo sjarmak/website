@@ -183,7 +183,7 @@ test("the essay opens with the sourced personal path from Beads to Temporal", ()
   }
 
   assert.match(article, /invited me[^.]*maintainers/i);
-  assert.match(article, /the city builds and repairs the software that operates the city/i);
+  assert.match(article, /I use the city to build and repair Gas City itself/i);
   // The first NDI mention is connected on both sides: back to the abandoned
   // fork, forward to the recovery comparison it sets up.
   assert.match(article, /abandoned my ghost town/);
