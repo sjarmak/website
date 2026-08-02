@@ -1,10 +1,8 @@
 ---
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { codeToHtml } from "shiki";
 
 import ConceptFigure from "@/components/temporal-agent-orchestration/ConceptFigure.astro";
-import Glossary from "@/components/temporal-agent-orchestration/Glossary.astro";
 import TermTip from "@/components/temporal-agent-orchestration/TermTip.astro";
 import PageLayout from "@/layouts/PageLayout.astro";
 
@@ -13,7 +11,6 @@ import "asciinema-player/dist/bundle/asciinema-player.css";
 const root = "/temporal-agent-orchestration";
 const cast = `${root}/demo/worker-kill.cast`;
 const beforeCast = `${root}/demo/before-temporal.cast`;
-const uiRecord = `${root}/demo/ui-event-history-pre-checkpoint.webp`;
 const evidence = `${root}/demo/artifacts`;
 
 // Read at build time rather than transcribed: a hand-copied revision goes stale
@@ -28,39 +25,8 @@ const provenance = JSON.parse(
   ),
 ) as {
   service_revision_full: string;
-  service_module: string;
-  temporal_sdk: string;
-  temporal_cli: string;
-  go_toolchain: string;
-  host: string;
-  heartbeat_timeout_seconds: number;
-  run_command: string;
   published_files_sha256: Record<string, string>;
 };
-
-const codeThemes = {
-  light: "one-light",
-  dark: "one-dark-pro",
-} as const;
-
-const readLines = (relPath: string, start: number, end: number) =>
-  readFileSync(path.join(process.cwd(), relPath), "utf8")
-    .split("\n")
-    .slice(start - 1, end)
-    .join("\n");
-
-const beforeCode = await codeToHtml(
-  readLines(
-    "public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go",
-    8,
-    22,
-  ),
-  { lang: "go", themes: codeThemes },
-);
-const afterCode = await codeToHtml(
-  readLines("public/temporal-agent-orchestration/code/workflow.go", 18, 33),
-  { lang: "go", themes: codeThemes },
-);
 ---
 
 <PageLayout
@@ -111,22 +77,26 @@ const afterCode = await codeToHtml(
       <div class="tco__copy prose">
         <p>
           I run a system that hands tracked work to coding agents. Work items
-          live in a durable store, so a crash never loses the task. A crash
-          used to lose everything around the task, starting with three
-          questions a restart could not answer.
+          live in a durable store, <TermTip
+            term="beads"
+            tip="The durable store of work facts: tasks, claims, artifacts, and receipts. It is why a crash never loses the task itself; what a crash used to lose was everything in flight around the task."
+          >Beads</TermTip>, so a crash never loses the task. A crash used to
+          lose everything around the task. Three windows defined the problem:
         </p>
         <ul>
-          <li>Did this claim already start an agent?</li>
-          <li>Does this result belong to the current attempt or a stale one?</li>
-          <li>Has anyone acknowledged this exact outcome?</li>
+          <li>The process dies after claiming the work but before launching the agent.</li>
+          <li>The process dies after launching the agent but before recording the session.</li>
+          <li>An old attempt finishes late and overwrites the current result.</li>
         </ul>
+        <p>
+          Similar gaps existed between completion, delivery, and exact
+          acknowledgement.
+        </p>
         <p>
           The task state was already durable. What was missing was a durable
           owner for the procedure.
         </p>
       </div>
-      <ConceptFigure kind="legend" />
-      <ConceptFigure kind="scattered" />
     </section>
 
     <section class="tco__section tco__numbered">
@@ -136,130 +106,74 @@ const afterCode = await codeToHtml(
       </header>
       <div class="tco__copy prose">
         <p>
-          I converted one unit: one ready task becoming one agent session
-          and one receipt that only the current attempt can submit. The guard
-          on that receipt is called a generation fence, and it is what keeps a
-          stale attempt from overwriting the current one.
+          I made one procedure durable: assign one ready work item to one agent
+          session and accept a result only from the current attempt.
         </p>
         <p>
-          Before, that unit was a controller tick,
-          <TermTip
-            term="bead-reconcile-tick"
-            tip="The old coordinator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory."
-          >CityRuntime.beadReconcileTick</TermTip>, plus a separate recovery
-          scan that inferred what a dead session had been doing. After,
-          <TermTip
-            term="bead-orchestration-workflow"
-            tip="The Temporal Workflow that now owns one work item's procedure: claim, launch, wait, receipt, in that order, recorded durably."
-          >BeadOrchestrationWorkflow</TermTip> owns the procedure and
-          <TermTip
-            term="execute-bead-activity"
-            tip="The Temporal Activity that touches the real world for that item: it writes the fenced claim, starts the agent or finds the one already running, heartbeats, and reports the completion."
-          >ExecuteBeadActivity</TermTip> owns the fenced claim,
-          start-or-attach, heartbeat, and completion. The two run on separate
-          Task Queues, <TermTip
-            term="queue-orchestration"
-            tip="The Task Queue the orchestration Workflow is served from."
-          >gascity-bead-orchestration</TermTip> for the
-          procedure and <TermTip
-            term="queue-agent-work"
-            tip="The Task Queue the agent-facing Activity is served from."
-          >gascity-agent-work</TermTip> for the agent, so
-          orchestration and agent execution can later be isolated or scaled
-          independently.
+          The <TermTip
+            term="workflow"
+            tip="Temporal's deterministic procedure code. Every step is recorded in an Event History, so a replacement process can replay the history and continue from the recorded boundary."
+          >Workflow</TermTip> owns the order: claim, launch, wait, and receive.
+          An <TermTip
+            term="activity"
+            tip="Where Temporal runs nondeterministic and external work. Activities execute at least once, so retries must be made safe by the application."
+          >Activity</TermTip> performs the nondeterministic work: updating the
+          store, starting or finding the agent session, heartbeating, and
+          reporting completion.
+        </p>
+        <p>
+          A <TermTip
+            term="generation-fence"
+            tip="A work item's generation is its attempt number: retry the work and the generation goes up. The fence is the guard that makes staleness harmless, because a receipt only lands if it carries the current generation."
+          >generation fence</TermTip> prevents an older attempt from
+          overwriting the current one.
         </p>
       </div>
-      <div class="tco__code">
-        <section>
-          <h3>Before: one process-owned tick</h3>
-          <div class="tco__code-render" set:html={beforeCode} />
-          <p>
-            One process owned the call stack. When it died, the next process
-            could only run another tick against persisted facts.
-          </p>
-          <a href={`${root}/code/before-controller`}>Open the annotated before code</a>
-        </section>
-        <section>
-          <h3>After: one durable owner</h3>
-          <div class="tco__code-render" set:html={afterCode} />
-          <p>
-            The procedure has one durable owner. A replacement Worker replays
-            the recorded history and continues from the boundary.
-          </p>
-          <a href={`${root}/code`}>Open all annotated files</a>
-        </section>
+      <table class="tco__table">
+        <thead>
+          <tr>
+            <th scope="col">Before</th>
+            <th scope="col">After</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A process-owned reconcile tick</td>
+            <td>A durable Workflow</td>
+          </tr>
+          <tr>
+            <td>Recovery inferred from stored facts</td>
+            <td>Recovery replays recorded history</td>
+          </tr>
+          <tr>
+            <td>Launch identity was reconstructive</td>
+            <td>Launch identity is stable</td>
+          </tr>
+          <tr>
+            <td>Late results could overwrite current work</td>
+            <td>Generation-fenced receipts</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="tco__copy prose">
+        <ul>
+          <li>Beads owns work facts.</li>
+          <li>Temporal owns procedural progress.</li>
+          <li>Activities touch the nondeterministic world.</li>
+        </ul>
+        <p>
+          Temporal supplies at-least-once execution. The application boundary
+          makes repeated execution safe: stable identities, idempotency keys,
+          and generation fences remain application responsibilities.
+        </p>
       </div>
-      <div class="tco__architecture">
-        <article>
-          <h3>Work store</h3>
-          <p>
-            The canonical record for tasks, claims, artifacts, and receipts.
-            Inspectable and repairable without Temporal.
-          </p>
-        </article>
-        <article>
-          <h3>Workflow</h3>
-          <p>
-            Owns ordering, durable waits, retries, cancellation, and which safe
-            step comes next.
-          </p>
-        </article>
-        <article>
-          <h3>Activity</h3>
-          <p>
-            Owns the agent process and every other nondeterministic effect,
-            behind a fenced claim.
-          </p>
-        </article>
-        <article>
-          <h3>Worker</h3>
-          <p>
-            Polls both task queues and executes the registered code. The one
-            process allowed to die.
-          </p>
-        </article>
-      </div>
-      <ConceptFigure kind="handoff" />
+      <ConceptFigure kind="ownership" />
       <div class="tco__copy prose">
         <p>
-          Three tiers. The middle one is where at-least-once execution becomes
-          a safe operation.
+          The exact type and queue names, and every file at its pinned
+          revision, live in <a href={`${root}/code`}>the annotated code</a>.
         </p>
       </div>
-      <div class="tco__tiers">
-        <article>
-          <h3>Temporal owns</h3>
-          <p>
-            Event History, deterministic ordering, durable waits and timers,
-            retry scheduling, cancellation delivery, and acknowledgement state.
-          </p>
-        </article>
-        <article class="tco__tier-boundary">
-          <h3>The boundary owns</h3>
-          <p>
-            Stable identity, idempotency keys, claim fences, and typed
-            receipts. None of these are Temporal guarantees, and all of them
-            are required for Temporal's guarantees to be useful.
-          </p>
-        </article>
-        <article>
-          <h3>The application owns</h3>
-          <p>
-            Whether the agent's work is correct, external side effects, review,
-            store integrity, human authorization, and the independent watchdog.
-          </p>
-        </article>
-      </div>
-      <div class="tco__copy prose">
-        <p>
-          Temporal faithfully retries whatever it was told to do. It will not
-          make a badly identified or non-idempotent operation safe on its own.
-        </p>
-      </div>
-      <details class="tco__details">
-        <summary>The full ownership diagram</summary>
-        <ConceptFigure kind="ownership" />
-      </details>
     </section>
 
     <section class="tco__section tco__numbered" id="worker-kill">
@@ -268,10 +182,9 @@ const afterCode = await codeToHtml(
         <h2>The Worker dies on camera</h2>
         <p>
           Two recordings. Both are controlled runs of the same fixture; only
-          the coordinator changes. Each is a split
-          screen: the run on the left, and on the right independent panes
-          that measure for themselves rather than trusting the run's own
-          narration.
+          the orchestrator changes. Each is a split screen: the run on the
+          left, and on the right independent panes that measure for themselves
+          rather than trusting the run's own narration.
         </p>
       </header>
       <p class="tco__provenance">
@@ -285,12 +198,11 @@ const afterCode = await codeToHtml(
       <h3 class="tco__demo-subhead">First, without Temporal</h3>
       <div class="tco__copy prose">
         <p>
-          In the before state, the coordinator was the reconcile loop. It
+          In the before state, the orchestrator was the reconcile loop. It
           claimed the work, launched the agent, and kept the remaining
           procedure only in process memory. If the process died while waiting
           for the agent, the work record survived, but the handoff state did
-          not. After restarting, the coordinator could only infer whether the
-          agent had already started and what should happen next.
+          not.
         </p>
       </div>
       <figure class="tco__player">
@@ -301,159 +213,83 @@ const afterCode = await codeToHtml(
           <a href={beforeCast} download="before-temporal.cast">Download the recording</a>.
         </figcaption>
       </figure>
-      <pre class="tco__numbers"><code>kill -9 the coordinator   the agent survives and keeps editing
-restart the coordinator   the claim looks stale; a second agent launches, two for one task
-first agent finishes      its late receipt overwrites the current one; nothing fences it</code></pre>
       <h3 class="tco__demo-subhead">The same kill, with Temporal</h3>
       <figure class="tco__player">
         <div id="worker-kill-player" data-cast-src={cast}></div>
         <figcaption>
           The full recording keeps real timing, including the pause where
-          Temporal notices the dead Worker.
+          Temporal notices the dead <TermTip
+            term="worker"
+            tip="The process that polls Temporal's task queues and executes Workflow and Activity code. It is the one process this design allows to die."
+          >Worker</TermTip>.
           <a href={cast} download="worker-kill.cast">Download the recording</a>.
         </figcaption>
       </figure>
-      <ConceptFigure kind="recovery" />
       <div class="tco__copy prose">
         <p>
-          The demo kills the Worker at two different points. Each case tests a
-          different part of recovery.
+          The demo kills the Worker at two points. After a heartbeat, the
+          retry resumes from recorded progress. Before the first heartbeat,
+          stable identity finds the existing session rather than launching
+          another agent. Both runs end with one session and one fenced
+          receipt.
         </p>
-        <p>
-          In the first case, the agent has already sent a heartbeat before the
-          Worker dies. The process pane shows that the Worker count falls to
-          zero while the agent count remains at one: the Worker is gone, but
-          the coding-agent process it started is still running.
-        </p>
-        <p>
-          Temporal takes about seven seconds to detect the missed heartbeat
-          and schedule another Activity attempt. That new attempt reads the
-          checkpoint stored in the heartbeat and reconnects to the existing
-          agent session. This case proves that the Activity can resume from
-          recorded progress after Worker failure.
-        </p>
-        <p>
-          The second case is harder. The Worker dies after starting the agent
-          but before the first heartbeat is recorded. There is no checkpoint
-          containing the session information, so the retried Activity cannot
-          resume from heartbeat details.
-        </p>
-        <p>
-          Instead, it asks the session resolver whether a session already
-          exists for the same stable claim identity. The resolver finds the
-          agent that is still running and returns that session rather than
-          starting another one.
-        </p>
-        <p>
-          The two cases prove different things. Heartbeats let a retry recover
-          recorded progress. Stable identity prevents a retry from creating a
-          duplicate agent when no heartbeat was recorded.
-        </p>
-      </div>
-      <pre class="tco__numbers"><code>arm 1  mid-execute      resolver calls = 1   session creations = 1   final attempt = 2
-arm 2  pre-checkpoint   resolver calls = 2   session creations = 1   final attempt = 2
-both   one session, one receipt, stale claim token rejected,
-       same Activity identity across attempts</code></pre>
-      <details class="tco__details">
-        <summary>Temporal's own record of the retry</summary>
-        <figure class="tco__ui-record">
-          <img
-            src={uiRecord}
-            alt="Temporal Web UI event history for the pre-checkpoint arm: nineteen events from Workflow Execution Started through Activity Task Started with attempt 2 to Workflow Execution Completed."
-            width="1440"
-            height="1500"
-            loading="lazy"
-          />
-          <figcaption>
-            The Event History the run left behind, read from the dev server's
-            database: the Activity's second attempt starts after the Worker
-            dies, and the workflow completes on that attempt. Worker identity
-            and queue names are the only edits, masked before capture.
-          </figcaption>
-        </figure>
-      </details>
-      <details class="tco__details">
-        <summary>The run evidence, downloadable</summary>
-        <div class="tco__copy prose">
-          <p>
-            Both gates write their evidence before anything quotes it. The
-            reports, Temporal's between-attempt samples, the store receipts,
-            and the agent worklogs are all here.
-          </p>
-          <ul>
-            <li><a href={`${evidence}/worker-kill/verify-report.txt`}>The invariant report, both arms</a></li>
-            <li><a href={`${evidence}/worker-kill/pre-checkpoint/retry-gap.jsonl`}>Retry-gap samples from the decisive arm</a></li>
-            <li><a href={`${evidence}/worker-kill/pre-checkpoint/agent-events.jsonl`}>Agent session events: one created, then attached</a></li>
-            <li><a href={`${evidence}/before-temporal/verify-report.txt`}>The before-state gate report</a></li>
-            <li><a href={`${evidence}/before-temporal/work.json`}>The before-state store, stale receipt on top</a></li>
-            <li><a href={`${evidence}/before-temporal/worktree-work-item-1.txt`}>One worktree file, edited by two sessions</a></li>
-            <li><a href={`${evidence}/provenance.json`}>Run provenance</a></li>
-          </ul>
-        </div>
-      </details>
-      <div class="tco__copy prose">
         <p>
           The demo runs on one host against a local dev server, with a
           file-backed store and a fixture process in place of a coding agent.
           It proves the boundary, on real Temporal, with a real signal. The
           before-state arm drives the same fixture agent over the same
-          protocol; only the coordinator differs.
+          protocol; only the orchestrator differs.
         </p>
+        <ul>
+          <li><a href={`${evidence}/worker-kill/verify-report.txt`}>The invariant report, both arms</a></li>
+          <li><a href={`${evidence}/provenance.json`}>Run provenance</a></li>
+          <li><a href={`${root}/article#the-evidence-and-where-to-go-deeper`}>All run evidence, in the article appendix</a></li>
+        </ul>
       </div>
     </section>
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
         <p class="kicker">Section 03</p>
-        <h2>What the evidence proves</h2>
+        <h2>What is actually running</h2>
       </header>
-      <div class="tco__evidence-tiers">
-        <article>
-          <p class="kicker">Continuous in production</p>
-          <p>
-            Result delivery and acknowledgement. Finished outcomes are
-            delivered, redelivered while unacknowledged, and closed only by an
-            acknowledgement matched to the exact outcome generation and agent
-            session.
-          </p>
-        </article>
-        <article>
-          <p class="kicker">Bounded canary only</p>
-          <p>
-            Work-item-to-agent execution: one claim, one agent session, one
-            fenced receipt, and recovery from a mid-episode Worker
-            interruption. Every canary ended by returning the worker to
-            shadow.
-          </p>
-        </article>
-        <article>
-          <p class="kicker">Design hypothesis</p>
-          <p>
-            Cross-host recovery, the reusable pack boundary, and any claim
-            that this generalizes beyond a single-node deployment.
-          </p>
-        </article>
-      </div>
       <div class="tco__copy prose">
-        <h3>What runs today</h3>
-        <p>
-          The status has two halves and they belong together. The
-          work-item-to-agent unit is proved by a bounded canary and runs in
-          shadow. The part running continuously in my live Gas City installation is result
-          delivery and acknowledgement, the same boundary applied a second
-          time. Both have independent rollout controls.
-        </p>
+        <p>Two paths have different rollout status.</p>
       </div>
-      <ConceptFigure kind="shadow" />
-      <details class="tco__details">
-        <summary>The full delivery flow</summary>
-        <ConceptFigure kind="workshop" />
-      </details>
+      <table class="tco__table">
+        <thead>
+          <tr>
+            <th scope="col">Path</th>
+            <th scope="col">Status</th>
+            <th scope="col">Evidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Result delivery and acknowledgement</td>
+            <td>Continuous production</td>
+            <td>Exact receipts, redelivery until acknowledged, independent watchdog</td>
+          </tr>
+          <tr>
+            <td>Work item to agent execution</td>
+            <td>Shadow, after a bounded canary</td>
+            <td>Worker-kill recovery, one session, one fenced receipt</td>
+          </tr>
+          <tr>
+            <td>Cross-host recovery</td>
+            <td>Not demonstrated</td>
+            <td>Single-host fixture only</td>
+          </tr>
+        </tbody>
+      </table>
       <div class="tco__copy prose">
         <p>
-          The full test map, forty-five Go test files and a replay gate that
-          has to fail when it should, is in
-          <a href={`${root}/article`}>the article</a>.
+          The same pattern now runs continuously for result delivery. A
+          finished outcome remains owed until the coordinating agent
+          acknowledges the exact result generation and agent session. Delivery
+          may repeat; the identity of the result does not. The delivery path,
+          step by step, is in
+          <a href={`${root}/article#whats-running-now`}>the article</a>.
         </p>
       </div>
     </section>
@@ -472,23 +308,12 @@ both   one session, one receipt, stale claim token rejected,
           application work.
         </p>
         <p>
-          The latest canary exposed a different version of the same boundary.
-          The agent work completed correctly, but an adapter put the wrong
-          store identity into the outcome envelope. Temporal then retried that
-          same invalid envelope every fifteen minutes, exactly as instructed.
+          One canary completed the agent work correctly but placed the wrong
+          store identity in the outcome envelope. Temporal then retried that
+          invalid envelope every fifteen minutes, exactly as instructed.
+          Durability preserved the application mistake rather than correcting
+          it.
         </p>
-        <p>
-          That failure belongs to the adapter, not to Temporal. Durable
-          execution preserves mistakes as faithfully as it preserves correct
-          procedures. I rolled the canary back without discarding or rewriting
-          the evidence.
-        </p>
-      </div>
-      <details class="tco__details">
-        <summary>The failure, step by step</summary>
-        <ConceptFigure kind="wrongness" />
-      </details>
-      <div class="tco__copy prose">
         <p>
           Durability also adds real engineering cost. Contributors now need to
           understand determinism, replay compatibility, fencing, idempotency,
@@ -511,10 +336,20 @@ both   one session, one receipt, stale claim token rejected,
           procedure needs a durable owner.
         </p>
       </div>
-      <ConceptFigure kind="boundary" />
     </section>
 
-    <Glossary />
+    <section class="tco__section">
+      <header class="tco__section-head">
+        <p class="kicker">Go deeper</p>
+        <h2>The rest of the case study</h2>
+      </header>
+      <nav class="tco__tabs" aria-label="Complete case study materials">
+        <a href={`${root}/article`}><span>01</span> Read the complete article</a>
+        <a href={`${root}/code`}><span>02</span> Inspect annotated source</a>
+        <a href={`${root}/article#the-evidence-and-where-to-go-deeper`}><span>03</span> Browse the run evidence</a>
+        <a href={`${evidence}/provenance.json`}><span>04</span> View provenance</a>
+      </nav>
+    </section>
   </article>
 </PageLayout>
 
@@ -534,8 +369,8 @@ both   one session, one receipt, stale claim token rejected,
       id: "before-temporal-player",
       poster: "npt:30.5",
       markers: [
-        [2.1, "The coordinator claims; the agent starts"],
-        [4.6, "kill -9: the coordinator is gone"],
+        [2.1, "The orchestrator claims; the agent starts"],
+        [4.6, "kill -9: the orchestrator is gone"],
         [7.6, "Restart, with an empty memory"],
         [12.2, "A second agent for the same task"],
         [23.7, "The stale receipt lands on top"],
@@ -612,7 +447,7 @@ both   one session, one receipt, stale claim token rejected,
 
   .tco__tabs {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     border-block: var(--border-hairline);
   }
 
@@ -689,35 +524,6 @@ both   one session, one receipt, stale claim token rejected,
     max-width: var(--measure);
   }
 
-  .tco__copy h3 {
-    margin: 0 0 var(--space-s);
-    font-size: var(--step-1);
-  }
-
-  .tco__details {
-    max-width: 100%;
-    border-block: var(--border-hairline);
-  }
-
-  .tco__details summary {
-    padding-block: var(--space-s);
-    color: var(--color-text-secondary);
-    font-family: var(--font-display);
-    cursor: pointer;
-  }
-
-  .tco__details summary:hover {
-    color: var(--color-accent);
-  }
-
-  .tco__details[open] summary {
-    border-block-end: var(--border-hairline);
-  }
-
-  .tco__details > :global(figure) {
-    margin-block-start: var(--space-m);
-  }
-
   /* Apparatus, not argument: one secondary line under the section intro. The
      detail it used to print lives in the linked record instead. */
   .tco__provenance {
@@ -735,146 +541,39 @@ both   one session, one receipt, stale claim token rejected,
     font-size: var(--step-1);
   }
 
-  .tco__ui-record {
-    max-width: 52rem;
-    margin: 0;
-  }
-
-  .tco__ui-record img {
+  .tco__table {
     width: 100%;
-    height: auto;
+    max-width: 52rem;
+    table-layout: fixed;
     border: var(--border-hairline);
-    border-radius: var(--radius);
-  }
-
-  .tco__ui-record figcaption {
-    margin-block-start: var(--space-xs);
-    color: var(--color-text-muted);
+    border-collapse: collapse;
     font-size: var(--step--1);
+    line-height: 1.45;
   }
 
-  .tco__code {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-l);
-  }
-
-  .tco__code section {
-    min-width: 0;
-    padding-block-start: var(--space-s);
-    border-top: var(--border-hairline);
-  }
-
-  .tco__code h3 {
-    margin: 0 0 var(--space-s);
-    font-size: var(--step-1);
-  }
-
-  .tco__code-render {
-    min-height: 15rem;
-    margin: 0 0 var(--space-s);
+  .tco__table th,
+  .tco__table td {
+    padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
-    border-radius: var(--radius);
-    background: var(--color-surface);
-  }
-
-  /* Long lines wrap instead of scrolling sideways, matching the annotated
-     code reader's treatment. */
-  .tco__code-render :global(.shiki) {
-    min-width: 0;
-    min-height: 15rem;
-    margin: 0;
-    padding: var(--space-m);
-    background: transparent !important;
-    font-size: var(--step--1);
-    line-height: 1.55;
-    white-space: pre-wrap;
+    text-align: start;
+    vertical-align: top;
     overflow-wrap: anywhere;
   }
 
-  /* Shiki's dual-theme output carries the light color as the span's inline
-     color and the dark color as --shiki-dark; there is no --shiki-light
-     variable, so light mode must leave the inline color alone. */
-  :global([data-theme="dark"]) .tco__code-render :global(.shiki span) {
-    color: var(--shiki-dark) !important;
-  }
-
-  .tco__architecture,
-  .tco__evidence-tiers {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-block: var(--border-hairline);
-  }
-
-  .tco__architecture article {
-    padding: var(--space-m);
-    border-inline-end: var(--border-hairline);
-    border-block-end: var(--border-hairline);
-  }
-
-  .tco__architecture article:nth-child(2n) {
-    border-inline-end: 0;
-  }
-
-  .tco__architecture article:nth-last-child(-n + 2) {
-    border-block-end: 0;
-  }
-
-  .tco__architecture h3 {
-    margin: 0 0 var(--space-xs);
-    font-size: var(--step-0);
-  }
-
-  .tco__architecture p,
-  .tco__tiers p,
-  .tco__evidence-tiers p:not(.kicker) {
-    margin: 0;
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
-  }
-
-  .tco__tiers {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-block: var(--border-hairline);
-  }
-
-  .tco__tiers article {
-    padding: var(--space-m);
-    border-inline-end: var(--border-hairline);
-  }
-
-  .tco__tiers article:last-child {
-    border-inline-end: 0;
-  }
-
-  .tco__tiers h3 {
-    margin: 0 0 var(--space-xs);
-    font-size: var(--step-0);
-  }
-
-  .tco__tier-boundary {
+  .tco__table th {
     background: var(--color-bg-subtle);
-    box-shadow: inset 0 3px var(--color-accent);
-  }
-
-  /* A 120x38 terminal keeps its aspect ratio, so bounding the width is what
-     bounds the height. At full container width the recording is over 800px
-     tall and swamps the section it belongs to. */
-  /* The shared figures carry the article's own ordering (03, 05, 07), which
-     collides with this page's section numbers: section 02 would display a
-     figure labelled 05. The section kickers number this page, so the figure's
-     article-relative index is dropped here rather than renumbered in the
-     component, which the article still needs as it stands. */
-  .tco :global(.concept-figure__index) {
-    display: none;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
   }
 
   .tco__player {
     width: 100%;
     /* A grid item defaults to min-width: auto, and the player's terminal has a
        min-content width wider than a narrow viewport, so it blows the column
-       out sideways without this. */
+       out sideways without this. A 120x38 terminal keeps its aspect ratio, so
+       bounding the width is what bounds the height. */
     min-width: 0;
     max-width: 52rem;
     margin: 0;
@@ -892,42 +591,8 @@ both   one session, one receipt, stale claim token rejected,
     font-size: var(--step--1);
   }
 
-  .tco__numbers {
-    max-width: 100%;
-    margin: 0;
-    padding: var(--space-m);
-    overflow-x: auto;
-    border: var(--border-hairline);
-    border-radius: var(--radius);
-    background: var(--color-surface);
-    color: var(--color-text);
-    font-size: var(--step--1);
-    line-height: 1.7;
-  }
-
-  .tco__evidence-tiers {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .tco__evidence-tiers article {
-    padding: var(--space-m);
-    border-inline-end: var(--border-hairline);
-  }
-
-  .tco__evidence-tiers article:last-child {
-    border-inline-end: 0;
-  }
-
-  .tco__evidence-tiers .kicker {
-    margin: 0 0 var(--space-s);
-  }
-
   @media (max-width: 760px) {
-    .tco__tabs,
-    .tco__code,
-    .tco__architecture,
-    .tco__tiers,
-    .tco__evidence-tiers {
+    .tco__tabs {
       grid-template-columns: 1fr;
     }
 
@@ -943,19 +608,6 @@ both   one session, one receipt, stale claim token rejected,
 
     .tco__tabs a:last-child {
       border-bottom: 0;
-    }
-
-    .tco__architecture article,
-    .tco__tiers article,
-    .tco__evidence-tiers article {
-      border-inline-end: 0;
-      border-block-end: var(--border-hairline);
-    }
-
-    .tco__architecture article:last-child,
-    .tco__tiers article:last-child,
-    .tco__evidence-tiers article:last-child {
-      border-block-end: 0;
     }
   }
 </style>

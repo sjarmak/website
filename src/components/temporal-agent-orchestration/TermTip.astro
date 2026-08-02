@@ -47,7 +47,10 @@ const tipId = `termtip-${term}`;
      scrollable width even while hidden, so a term near the right edge of a
      narrow screen leaves the page scrollable sideways. The script below
      upgrades every tip to fixed positioning, which has no such effect and can
-     be clamped into the viewport. */
+     be clamped into the viewport. A wider cap than the previous 24rem wraps
+     the definition into fewer lines, which matters here: a floating tip has
+     no other way to avoid covering nearby prose, so a shorter box covers
+     less of it. */
   .termtip__tip {
     position: absolute;
     bottom: calc(100% + 0.6rem);
@@ -56,7 +59,7 @@ const tipId = `termtip-${term}`;
        the header must not have its explanation slide beneath it. */
     z-index: 60;
     width: max-content;
-    max-width: min(24rem, 82vw);
+    max-width: min(28rem, 90vw);
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
     border-radius: var(--radius);
@@ -85,6 +88,33 @@ const tipId = `termtip-${term}`;
     left: 0;
   }
 
+  /* A floating tip has to land on top of whatever prose is already there;
+     without a visible connector, that reads as a stray misplaced box rather
+     than an explanation of the specific term underneath the cursor. The
+     caret is a 45°-rotated square, half showing, sharing the tip's own
+     border and background so it reads as one continuous shape. */
+  .termtip__tip::after {
+    content: "";
+    position: absolute;
+    left: var(--termtip-caret-offset, 1rem);
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--color-surface);
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .termtip__tip[data-placement="above"]::after {
+    bottom: -0.34rem;
+    border-inline-end: var(--border-hairline);
+    border-block-end: var(--border-hairline);
+  }
+
+  .termtip__tip[data-placement="below"]::after {
+    top: -0.34rem;
+    border-inline-start: var(--border-hairline);
+    border-block-start: var(--border-hairline);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .termtip__tip {
       transition: none;
@@ -95,6 +125,7 @@ const tipId = `termtip-${term}`;
 <script>
   const GUTTER = 8;
   const OFFSET = 10;
+  const CARET_MARGIN = 14;
 
   for (const root of document.querySelectorAll(".termtip")) {
     const tip = root.querySelector(".termtip__tip");
@@ -113,10 +144,21 @@ const tipId = `termtip-${term}`;
       );
       // Above the term, unless the term is too close to the top to fit it.
       const above = anchor.top - box.height - OFFSET;
-      const top = above < GUTTER ? anchor.bottom + OFFSET : above;
+      const placeAbove = above >= GUTTER;
+      const top = placeAbove ? above : anchor.bottom + OFFSET;
 
       tip.style.left = `${left}px`;
       tip.style.top = `${top}px`;
+      tip.dataset.placement = placeAbove ? "above" : "below";
+
+      // Point the caret at the anchor's own horizontal center, clamped so it
+      // never lands past the tip's rounded corners.
+      const anchorCenter = anchor.left + anchor.width / 2 - left;
+      const caretOffset = Math.max(
+        CARET_MARGIN,
+        Math.min(anchorCenter, box.width - CARET_MARGIN),
+      );
+      tip.style.setProperty("--termtip-caret-offset", `${caretOffset}px`);
     };
 
     root.addEventListener("pointerenter", place);

@@ -1,4 +1,5 @@
 ---
+import TermTip from "@/components/temporal-agent-orchestration/TermTip.astro";
 import {
   preTemporalAgentOrchestrationCodeSamples,
   temporalAgentOrchestrationCodeSamples,
@@ -21,7 +22,7 @@ const samples = [
 <PageLayout
   title="Complete annotated source"
   kicker="Temporal case study · Code"
-  intro="Eight full files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them."
+  intro="Eight full files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them, with the complete test matrix beneath."
   description="The complete before and after source for a coding-agent orchestration boundary rebuilt with Temporal's Go SDK."
   noindex={true}
 >
@@ -60,6 +61,134 @@ const samples = [
         ))
       }
     </ol>
+
+    <section class="code-index__tests" aria-labelledby="test-matrix-title">
+      <h2 id="test-matrix-title">The full test matrix</h2>
+      <div class="code-index__guide">
+        <p>
+          The suite runs with one command: <code>cd
+          services/temporal-maintenance &amp;&amp; make test</code>, which is
+          <code>go test -race ./...</code>. The service contains 45 Go test
+          files, including 18 in the package that implements the Temporal and
+          Beads boundary. Every case below runs unconditionally; a small
+          number of heavier integration tests require a local Temporal
+          development server and skip themselves when the Temporal CLI is not
+          available. The article keeps the five invariants this table holds
+          down; the named cases are here.
+        </p>
+      </div>
+      <table class="code-index__matrix">
+        <thead>
+          <tr>
+            <th scope="col">What has to hold</th>
+            <th scope="col">Where it is asserted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Workflow behavior</td>
+            <td>
+              <code>workflow_test.go</code>: 12 cases covering duplicate ready
+              delivery, malformed events, event-limit rejection, and seal
+              enforcement
+            </td>
+          </tr>
+          <tr>
+            <td>Activity behavior</td>
+            <td>
+              <code>activity_test.go</code>: 13 cases covering fenced claims,
+              heartbeating, stale-generation rejection, and artifact bounds
+            </td>
+          </tr>
+          <tr>
+            <td>A duplicate Signal schedules only one Activity</td>
+            <td>
+              <TermTip
+                term="test-duplicate-ready"
+                tip="Delivers the same ready event twice and requires the Workflow to schedule the agent Activity once. Redelivery is expected on this path, so it has to be harmless."
+              >TestWorkflowDuplicateReadyDeliverySchedulesOneActivity</TermTip>
+              <br />
+              <TermTip
+                term="test-dedup-ready-signal"
+                tip="The same property on the delivery side: a repeated OutcomeReady signal must not open a second delivery loop for one result."
+              >TestCoordinatorOutcomeWorkflowDeduplicatesReadySignal</TermTip>
+            </td>
+          </tr>
+          <tr>
+            <td>A stale acknowledgement fails closed</td>
+            <td>
+              <TermTip
+                term="test-ack-fails-closed"
+                tip="An acknowledgement that no longer matches the current store, work item, outcome, generation, and session is refused rather than accepted."
+              >TestCoordinatorOutcomeActivityFailsClosedAtAcknowledgementBoundary</TermTip>
+              <br />
+              <TermTip
+                term="test-stale-completion"
+                tip="Cancels an Activity that already has an agent attached, then has that agent present a stale claim token. One terminal receipt is written and the stale completion fails closed."
+              >TestActivityCancellationReachesAttachedSessionAndStaleCompletionFails</TermTip>
+            </td>
+          </tr>
+          <tr>
+            <td>Cancellation reaches the agent without leaving the Workflow hanging</td>
+            <td>
+              <TermTip
+                term="test-cancel-no-hang"
+                tip="Cancellation while the agent is still stopping. The Workflow has to finish rather than wait on a process that is on its way out."
+              >TestWorkflowCancellationDoesNotHangWhileActivityStops</TermTip>
+              <br />
+              <TermTip
+                term="test-cancel-before-checkpoint"
+                tip="The harder arm: nothing has been checkpointed yet, so the Activity has to ask the resolver which session it owns instead of reading heartbeat details."
+              >TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession</TermTip>
+            </td>
+          </tr>
+          <tr>
+            <td>Continue-As-New preserves state and receipts</td>
+            <td>
+              <TermTip
+                term="test-can-state"
+                tip="Continue-As-New starts a fresh Event History for a long-running Workflow. Redelivery state and counters have to cross that boundary intact."
+              >TestCoordinatorOutcomeWorkflowContinuesAsNewWithStateAndCounters</TermTip>
+              <br />
+              <TermTip
+                term="test-ack-boundary"
+                tip="The failure that boundary invites: an acknowledgement arriving exactly as the history rolls over must not be dropped."
+              >TestCoordinatorOutcomeWorkflowDoesNotLoseAcknowledgementAtHistoryBoundary</TermTip>
+            </td>
+          </tr>
+          <tr>
+            <td>Captured histories still replay, and incompatible code fails the gate</td>
+            <td>
+              <TermTip
+                term="test-replay-persisted"
+                tip="Runs current Workflow code against captured histories and requires the same decisions. This is the check that catches a nondeterministic change before it ships."
+              >TestReplayPersistedWorkflowHistory</TermTip>
+              {" "}and{" "}
+              <TermTip
+                term="test-replay-rejects"
+                tip="The negative case. A deliberately nondeterministic Workflow is planted and replay must reject it, which is what proves the gate is wired up at all."
+              >TestReplayRejectsPlantedNondeterministicWorkflow</TermTip>
+              {" "}in <code>failure_matrix_test.go</code>
+            </td>
+          </tr>
+          <tr>
+            <td>A killed Worker resumes without creating a second agent session</td>
+            <td>
+              <TermTip
+                term="test-worker-crash"
+                tip="Kills the Worker after the agent is running and a heartbeat checkpoint exists, then requires the retry to resume from that checkpoint against the same session."
+              >TestActivityWorkerCrashResumesFromHeartbeatWithoutSecondSession</TermTip>
+              {" "}covers failure after the agent is running;{" "}
+              <TermTip
+                term="test-cancel-before-checkpoint-kill"
+                tip="The same case from the other side: with no checkpoint recorded, the retry must resolve the running session by identity rather than start a second one."
+              >TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession</TermTip>
+              {" "}covers failure before the first heartbeat
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </article>
 </PageLayout>
 
@@ -154,6 +283,56 @@ const samples = [
 
   .code-index__files a:hover {
     color: var(--color-accent);
+  }
+
+  .code-index__tests h2 {
+    margin: 0 0 var(--space-s);
+  }
+
+  .code-index__tests .code-index__guide {
+    margin-block-end: var(--space-l);
+    font-size: var(--step-0);
+  }
+
+  /* Go test identifiers run to 73 characters with no break opportunity.
+     Fixed layout binds the columns to the container instead of the content,
+     and overflow-wrap lets a long identifier break rather than push. */
+  .code-index__matrix {
+    width: 100%;
+    table-layout: fixed;
+    border: var(--border-hairline);
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  .code-index__matrix th:first-child,
+  .code-index__matrix td:first-child {
+    width: 30%;
+  }
+
+  .code-index__matrix th,
+  .code-index__matrix td {
+    padding: var(--space-xs) var(--space-s);
+    border: var(--border-hairline);
+    text-align: start;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  .code-index__matrix th {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+  }
+
+  .code-index__matrix code {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   @media (max-width: 720px) {

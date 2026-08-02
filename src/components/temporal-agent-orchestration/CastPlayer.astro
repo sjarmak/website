@@ -1,0 +1,75 @@
+---
+// An asciinema recording embedded in the article's reading path. The
+// companion page keeps its own inline player setup; this component exists so
+// the article can hold the Worker-kill recording without duplicating that
+// page's section machinery. Options ride on data attributes so one script
+// serves every instance on a page.
+import "asciinema-player/dist/bundle/asciinema-player.css";
+
+interface Props {
+  src: string;
+  poster: string;
+  markers: [number, string][];
+  cols?: number;
+  rows?: number;
+}
+
+const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
+---
+
+<figure class="cast-player">
+  <div
+    class="cast-player__mount"
+    data-cast-src={src}
+    data-cast-poster={poster}
+    data-cast-cols={cols}
+    data-cast-rows={rows}
+    data-cast-markers={JSON.stringify(markers)}
+  >
+  </div>
+  <figcaption><slot /></figcaption>
+</figure>
+
+<script>
+  import * as AsciinemaPlayer from "asciinema-player";
+
+  for (const mount of document.querySelectorAll<HTMLElement>(
+    ".cast-player__mount",
+  )) {
+    const { castSrc, castPoster, castCols, castRows, castMarkers } =
+      mount.dataset;
+    if (!castSrc) continue;
+    AsciinemaPlayer.create(castSrc, mount, {
+      cols: Number(castCols),
+      rows: Number(castRows),
+      preload: true,
+      poster: castPoster,
+      fit: "width",
+      markers: JSON.parse(castMarkers ?? "[]"),
+    });
+  }
+</script>
+
+<style>
+  /* A 120x38 terminal keeps its aspect ratio, so bounding the width is what
+     bounds the height. */
+  .cast-player {
+    width: 100%;
+    min-width: 0;
+    max-width: 52rem;
+    margin-block: var(--space-l);
+    margin-inline: auto;
+  }
+
+  .cast-player :global(.ap-player) {
+    max-width: 100%;
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+  }
+
+  .cast-player figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+</style>

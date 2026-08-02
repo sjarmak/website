@@ -1,0 +1,159 @@
+---
+// One short, contiguous read from a published source file, for the article's
+// main path. The complete annotated readers live at /temporal-agent-orchestration/code;
+// this component exists so the article can quote a boundary without hosting
+// the whole file. Ranges are read at build time from the same published files
+// the readers render, so an excerpt cannot drift from its source.
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { codeToHtml } from "shiki";
+
+interface Range {
+  start: number;
+  end: number;
+}
+
+interface Props {
+  sourcePath: string;
+  ranges: Range[];
+  title: string;
+  readerHref: string;
+  readerLabel: string;
+  sourceHref?: string;
+  sourceLabel?: string;
+}
+
+const {
+  sourcePath,
+  ranges,
+  title,
+  readerHref,
+  readerLabel,
+  sourceHref,
+  sourceLabel,
+} = Astro.props;
+
+const lines = readFileSync(path.join(process.cwd(), sourcePath), "utf8")
+  .replace(/\n$/, "")
+  .split("\n");
+
+for (const range of ranges) {
+  if (range.start < 1 || range.end > lines.length || range.start > range.end) {
+    throw new Error(
+      `CodeExcerpt range ${range.start}-${range.end} is outside ${sourcePath} (${lines.length} lines)`,
+    );
+  }
+}
+
+const rendered = await Promise.all(
+  ranges.map((range) =>
+    codeToHtml(lines.slice(range.start - 1, range.end).join("\n"), {
+      lang: "go",
+      themes: {
+        light: "one-light",
+        dark: "one-dark-pro",
+      },
+    }),
+  ),
+);
+
+const filename = path.basename(sourcePath);
+---
+
+<figure class="code-excerpt">
+  <figcaption class="code-excerpt__head">
+    <span class="code-excerpt__title">{title}</span>
+    <span class="code-excerpt__file">{filename}</span>
+  </figcaption>
+  {
+    rendered.map((html, index) => (
+      <>
+        {index > 0 && (
+          <p class="code-excerpt__gap">
+            {ranges[index].start - ranges[index - 1].end - 1} lines omitted
+          </p>
+        )}
+        <div class="code-excerpt__code" set:html={html} />
+      </>
+    ))
+  }
+  <p class="code-excerpt__links">
+    <a href={readerHref}>{readerLabel}</a>
+    {sourceHref && <a href={sourceHref}>{sourceLabel}</a>}
+  </p>
+</figure>
+
+<style>
+  .code-excerpt {
+    width: min(100%, 68rem);
+    margin-block: var(--space-l);
+    margin-inline: auto;
+  }
+
+  .code-excerpt__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-m);
+    margin-block-end: var(--space-xs);
+  }
+
+  .code-excerpt__title {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+  }
+
+  .code-excerpt__file {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .code-excerpt__code {
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .code-excerpt__code + .code-excerpt__code {
+    margin-block-start: 0;
+  }
+
+  /* Long lines wrap instead of scrolling sideways, matching the annotated
+     code reader's treatment. */
+  .code-excerpt__code :global(.shiki) {
+    min-width: 0;
+    margin: 0;
+    padding: var(--space-m);
+    background: transparent !important;
+    font-size: var(--step--1);
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* Shiki's dual-theme output carries the light color as the span's inline
+     color and the dark color as --shiki-dark; there is no --shiki-light
+     variable, so light mode must leave the inline color alone. */
+  :global([data-theme="dark"]) .code-excerpt__code :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+  }
+
+  .code-excerpt__gap {
+    margin-block: var(--space-2xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-align: center;
+  }
+
+  .code-excerpt__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-block-start: var(--space-xs);
+    font-size: var(--step--1);
+  }
+</style>
