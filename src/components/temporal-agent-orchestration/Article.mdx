@@ -126,19 +126,15 @@ I then wondered: could the setup I run with Gas City use both models at once?
 
 How I eventually integrated Temporal is not a story like "I saw the light, adopted durable execution, and everyone clapped."
 
-My infrastructure agent proposed and built the city’s first Temporal pilot. That is part of its role: investigate the city’s reliability failures and propose fixes for them.
+My infrastructure agent built the city's first pilot around a maintenance job that runs for forty-four seconds every two hours. Temporal added little beyond cron and a lockfile, and a Bash script still caught the failures it missed. The pilot showed me where not to use it.
 
-The pilot wrapped a small maintenance job, and mostly taught me what to leave alone. The job performs about forty-four seconds of synchronous work every two hours. Inside a Temporal Schedule, it behaved like cron plus a lockfile. Several cycles still failed, and a Bash script polling the results caught them, not Temporal. But the pilot narrowed the target.
+We tested other boundaries and rejected nearly all of them: the recurring-job scheduler, the formula engine, the dispatchers, and the watchdog. A systemd timer beat Temporal for the watchdog on every measure we took.
 
-I expanded the boundary exploration to look for other places where Temporal might close the leaks, and my agents voted against it almost everywhere. Do not replace the scheduler that fires my recurring jobs. Do not wrap the engine that runs formula steps. Do not supervise the processes that hand work to agents. Do not even build the watchdog on it, because a systemd timer beat it on every axis we measured.
+One boundary remained: claiming work, ensuring one agent session owns each claim, and getting its result acknowledged. If the process died mid-flight, the work record survived, but the system could no longer say what had happened or what still needed to happen. That was the problem Temporal solved.
 
-One boundary survived that gauntlet: claiming work, launching exactly one agent, and getting its result acknowledged. That is where losing the in-flight procedure left the system unable to say what had happened. Knowing everything Temporal would not fix, and understanding much more clearly what it would, was what made me comfortable adopting it there.
+My first ruling was: "Temporal watches, never owns." A later decision separated two kinds of ownership. Beads records the facts about the work. Temporal durably records the procedure moving it forward.
 
-My first ruling was: “Temporal watches, never owns.” I was wary of handing the city’s brain to a workflow engine. A later decision, which I directed and the Mayor drafted, separated two questions that ruling had conflated: which system records the facts about the work, and which system records the procedure moving that work forward?
-
-Beads owns the first. Temporal owns the second.
-
-Watching was never the problem. Ownership without a boundary was.
+Temporal does not own the city's source of truth. It owns one procedure the city could not reliably recover after a crash.
 
 That division of labor ran through the entire project. The agents wrote the code and the first drafts of every incident report, because operating this way is the point of the city. I set the direction, drew the boundary, and decided when each integration was allowed to take control in production.
 
