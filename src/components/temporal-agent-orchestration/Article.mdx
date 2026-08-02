@@ -177,15 +177,17 @@ So why not store the whole procedure in the database I already run? The city's o
 
 It fails when the store cannot tell the difference between two procedures that leave behind the same records.
 
-My clearest example was a twenty-hour stranding. Two work items completed, their branches were pushed, and the worker died before recording completion. The rows left behind looked identical to work that had never started. Both detectors missed them because both relied on the same empty field.
+My clearest example was a twenty-hour stranding. Two work items finished and pushed their branches, but the worker died before recording completion. The remaining rows looked exactly like work that had never started. Both detectors missed them because both checked the same empty field.
 
-Fixing that entirely in the store means recording every intermediate step, recovering partially completed transitions after a crash, and maintaining timers that survive the process that created them. We measured what that looked like once. A PR-state poller grew to 243 lines of Bash, required two duplicate-prevention mechanisms because neither was sufficient alone, and created 174 cache files to track eight open pull requests. It still contained a fire-and-forget defect that Bash could not solve without turning into a workflow engine.
+Solving that entirely in the store means recording every intermediate step, recovering partially completed transitions after a crash, and running timers that survive the process that created them. We had already seen where that leads. One PR-state poller grew to 243 lines of Bash, used two duplicate-prevention mechanisms because neither was enough alone, and created 174 cache files to track eight open pull requests. It still had a fire-and-forget failure that Bash could not fix without becoming something much larger.
 
-Building this yourself still means building a workflow engine. It just has fewer tests. I adopted one that already had them.
+I could build a durable workflow engine myself. The factory is capable of it. But that layer has many places to go wrong, and building it would leave me with another piece of infrastructure needing its own monitoring, debugging, and repair machinery.
 
-There is also an admission buried in my own before-state. A city with roughly 100 patrol jobs firing 850 times an hour does not prove that anyone needs durable execution. It proves I had accumulated overlapping repair jobs instead of building one system with clear ownership and duplicate protection. The audit said as much when it concluded that the patrol jobs were part of the problem.
+The point was to make the city easier to operate, not to add another system I would have to keep alive. Temporal gave me that layer without making it mine to maintain.
 
-My claim is narrower. A system grows this kind of repair machinery one incident at a time. Temporal gave me a way to replace it with one durable owner instead of building that owner myself.
+Roughly a hundred patrol jobs firing 850 times an hour do not prove that Gas City needed Temporal. They show how I had responded to failures one at a time, adding overlapping repair jobs instead of one system with clear ownership and duplicate protection.
+
+That is the narrower claim. Systems grow this kind of repair machinery one incident at a time. Temporal gave me a durable owner I could adopt instead of continuing to build one piecemeal.
 
 ## The three failures I wanted Temporal to stop
 

@@ -1147,8 +1147,8 @@ test("the article answers the evidence-scope review with verified claims", () =>
   assert.match(article, /The two layers solve different problems/);
   assert.match(article, /a query, not a memory/);
   assert.match(article, /243 lines of Bash/);
-  assert.match(article, /Building this yourself still means building a workflow engine/);
-  assert.match(article, /accumulated overlapping repair jobs/);
+  assert.match(article, /another piece of infrastructure needing its own monitoring, debugging, and repair machinery/);
+  assert.match(article, /adding overlapping repair jobs instead of one system with clear ownership/);
 
   // Evidence section: the live path's result is stated at its real size, the
   // repair jobs are reported as still in production, the comparison is
