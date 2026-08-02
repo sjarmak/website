@@ -13,6 +13,8 @@ import WorkshopFigure from "./WorkshopFigure.astro";
 
 *What I learned adding durable execution to a fleet of coding agents built on Gas City*
 
+> A durable work record is not the same thing as a durable procedure.
+
 ## Cabo and Beads
 
 In the fall of 2025, I sat next to Steve Yegge at dinner during a Sourcegraph offsite in Cabo.
@@ -27,7 +29,7 @@ A few weeks later, in October 2025, he published [Introducing Beads](https://ste
 
 <OpeningFigure />
 
-Beads became popular because it solved a common coding agent memory problem. Every new coding-agent session starts with some degree of amnesia. The previous agent may have investigated the codebase, discovered three hidden dependencies, ruled out two approaches, found a broken test, and created a reasonable plan. Then its context fills up or the session ends, and the next agent wakes up knowing none of it. You can try to solve this with Markdown files (at the time, many agent-driven directories including my own were littered with the things). But then the agent has to keep the plan current, understand which tasks depend on which other tasks, and avoid creating a whole ecosystem of slightly different planning documents (e.g., v1_final_FINAL_this-one-for-real.md).
+Every new coding-agent session starts with some degree of amnesia. The previous agent may have investigated the codebase, discovered three hidden dependencies, ruled out two approaches, found a broken test, and created a reasonable plan. Then its context fills up or the session ends, and the next agent wakes up knowing none of it. You can try to solve this with Markdown files (at the time, many agent-driven directories including my own were littered with the things), but then the agent has to keep the plan current, track which tasks depend on which, and avoid spawning an ecosystem of slightly different planning documents (e.g., v1_final_FINAL_this-one-for-real.md).
 
 Beads gives agents a dependency-aware work record instead. An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also really like using it and use it pretty well: they file issues for problems they encounter and pick up the next unblocked task without much friction. I adopted it quickly. Then Steve built something much larger on top of it.
 
@@ -39,7 +41,7 @@ I forked it in early January with lofty goals of making it more vendor-agnostic,
 
 Many of these issues were in theory resolved by a philosophy Steve called **Nondeterministic Idempotence**, or NDI: if a session dies, a fresh agent can inspect the durable work record and choose another valid route to the same outcome. NDI is one of the two kinds of recovery this article is about. But before I really understood it, I had to piece it together through a deconstructed version of the system.
 
-In March 2026, before its public launch, I found that deconstructed version of the system in [Gas City](https://github.com/gastownhall/gascity). Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind Gas Town and turned them into a composable orchestration SDK. Gas Town was one specific city design. Gas City gave you the building materials to create your own. That separation immediately made sense to me, and I wanted it (and by extension my own software factory) to succeed. I began contributing heavily in early April, and Julian invited me and a fellow avid contributor to become Gas City's first outside maintainers. I've since authored [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging, and reviewed many more. I also made a Slack integration and other custom [packs](https://github.com/gastownhall/gascity-packs), and contributed most of the commits to its revamped [dashboard](https://github.com/gastownhall/gascity-dashboard) (including a fun ["aquarium" view](https://x.com/sgjarmak/status/2078222508130508838)). 
+In March 2026, before its public launch, I found that deconstructed version of the system in [Gas City](https://github.com/gastownhall/gascity). Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind Gas Town and turned them into a composable orchestration SDK. Gas Town was one specific city design. Gas City gave you the building materials to create your own. That separation immediately made sense to me, and I wanted it (and by extension my own software factory) to succeed. I began contributing heavily in early April, and Julian invited me and a fellow avid contributor to become Gas City's first outside maintainers. I've since authored [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging, plus a Slack integration and most of the commits to its revamped [dashboard](https://github.com/gastownhall/gascity-dashboard).
 
 As a Gas City maintainer, I use the city to build and repair Gas City itself. That includes the queueing, dispatch, recovery, and orchestration paths I help maintain. It is a useful and slightly hostile test environment because every bug in the machinery eventually becomes a bug in the system trying to fix the machinery.
 
@@ -74,8 +76,6 @@ The procedure existed only as clues scattered across controller ticks, session r
 At enough scale, those clues become useless. I saw stranded claims, duplicate sessions after retries, stale completions arriving after a newer generation had started, lost notifications, and correlation metadata pointing at executions that did not exist.
 
 The work record survived. What the system lost was the procedure connecting one state to the next.
-
-> A durable work record is not the same thing as a durable procedure.
 
 Here is where the fix stands today:
 
@@ -169,6 +169,8 @@ Solving this entirely in the Beads work store would mean recording every interme
 
 My city could build its own durable workflow layer. But then I would own another reliability system, including its recovery rules, failure cases, monitoring, and debugging. The point was to make the city easier to operate, not to create another piece of infrastructure for it to repair.
 
+Two things it would not have by default are the two I use most. Temporal keeps a history I can replay against new code, so a change that would break a procedure already in flight fails a test instead of a production run. And the split between Workflow and Activity forces every nondeterministic call out of the recorded path, which is a constraint my own reconcile loop never imposed on me.
+
 The roughly one hundred patrol jobs firing 850 times an hour do not prove that my city needed Temporal. They show how it had grown one repair at a time, with nothing responsible for carrying a procedure through failure.
 
 At this boundary, I preferred adopting a durable workflow system to continuing to assemble one incident by incident.
@@ -179,7 +181,7 @@ The implementation focused on three concrete breakpoints. The first two run in s
 
 ### 1. A crash between claiming work and launching the agent
 
-**The failure.** The system could record that work was ready and then die while trying to deliver the event that launched its execution.
+**The failure.** The system could record that work was ready and then die while trying to deliver the event that launched its execution. The naive fix is a retry: if the launch never happened, send the event again. That is safe only if the second send cannot start a second execution, and nothing in the old path guaranteed that.
 
 **What Temporal contributes.** The ready transition and its delivery event are written together in one Beads transaction. A bridge reads the pending event and uses Temporal's [Signal-With-Start](https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start) operation with a stable [Workflow ID](https://docs.temporal.io/workflow-execution/workflowid-runid) derived from the city, run, and work item. If a Workflow with that ID is already running, the event is signaled to it. Otherwise, Temporal starts it and delivers the signal as part of the same operation.
 
