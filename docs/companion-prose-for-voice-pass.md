@@ -617,15 +617,11 @@ Distributed-systems entries:
 
 ---
 
-## Go deeper
+## Go deeper (removed 2026-08-01)
 
-> The full article
-
-> The history, the failed canary, the test map, and how the boundary was chosen.
-
-> The annotated code
-
-> The complete before and after source, annotated section by section, with linked upstream provenance.
+The section was removed as redundant: the first viewport's link row already
+carries "Read the full article" and "Inspect the annotated code". Its four
+lines are superseded.
 
 ---
 

@@ -573,10 +573,9 @@ const renderedSections = await Promise.all(
     user-select: none;
   }
 
-  .code-reader__source :global(.shiki span) {
-    color: var(--shiki-light) !important;
-  }
-
+  /* Shiki's dual-theme output carries the light color as the span's inline
+     color and the dark color as --shiki-dark; there is no --shiki-light
+     variable, so light mode must leave the inline color alone. */
   :global([data-theme="dark"]) .code-reader__source :global(.shiki span) {
     color: var(--shiki-dark) !important;
   }

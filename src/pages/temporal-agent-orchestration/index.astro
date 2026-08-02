@@ -460,30 +460,6 @@ both   one session, one receipt, stale claim token rejected,
     </section>
 
     <Glossary />
-
-    <section class="tco__section">
-      <header class="tco__section-head">
-        <h2>Go deeper</h2>
-      </header>
-      <div class="tco__links">
-        <a href={`${root}/article`}>
-          <span>
-            <strong>The full article</strong>
-            The history, the failed canary, the test map, and how the boundary
-            was chosen.
-          </span>
-          <span aria-hidden="true">→</span>
-        </a>
-        <a href={`${root}/code`}>
-          <span>
-            <strong>The annotated code</strong>
-            The complete before and after source, annotated section by
-            section, with linked upstream provenance.
-          </span>
-          <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </section>
   </article>
 </PageLayout>
 
@@ -732,26 +708,28 @@ both   one session, one receipt, stale claim token rejected,
   .tco__code-render {
     min-height: 15rem;
     margin: 0 0 var(--space-s);
-    overflow: auto;
     border: var(--border-hairline);
     border-radius: var(--radius);
     background: var(--color-surface);
   }
 
+  /* Long lines wrap instead of scrolling sideways, matching the annotated
+     code reader's treatment. */
   .tco__code-render :global(.shiki) {
-    min-width: max-content;
+    min-width: 0;
     min-height: 15rem;
     margin: 0;
     padding: var(--space-m);
     background: transparent !important;
     font-size: var(--step--1);
     line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
-  .tco__code-render :global(.shiki span) {
-    color: var(--shiki-light) !important;
-  }
-
+  /* Shiki's dual-theme output carries the light color as the span's inline
+     color and the dark color as --shiki-dark; there is no --shiki-light
+     variable, so light mode must leave the inline color alone. */
   :global([data-theme="dark"]) .tco__code-render :global(.shiki span) {
     color: var(--shiki-dark) !important;
   }
@@ -877,44 +855,6 @@ both   one session, one receipt, stale claim token rejected,
 
   .tco__evidence-tiers .kicker {
     margin: 0 0 var(--space-s);
-  }
-
-  .tco__links {
-    display: grid;
-    border-top: var(--border-hairline);
-  }
-
-  .tco__links a {
-    display: flex;
-    padding: var(--space-m) var(--space-s);
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-l);
-    border-bottom: var(--border-hairline);
-    color: var(--color-text);
-    text-decoration: none;
-  }
-
-  .tco__links a:hover {
-    color: var(--color-accent);
-    background: var(--color-bg-subtle);
-  }
-
-  .tco__links strong {
-    display: block;
-    margin-block-end: var(--space-2xs);
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-  }
-
-  .tco__links span:first-child {
-    max-width: var(--measure);
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
-  }
-
-  .tco__links span:first-child strong {
-    color: var(--color-text);
   }
 
   @media (max-width: 760px) {
