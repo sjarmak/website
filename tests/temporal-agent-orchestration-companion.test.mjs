@@ -68,11 +68,11 @@ test("the companion opens with the reviewer's four-line problem and the boundary
   const companion = readFileSync(COMPANION, "utf8");
 
   const opening = [
-    "An agent is editing code.",
+    "An agent in a software factory is editing code",
     "crashes before recording",
-    "The task record survives.",
-    "The procedure does not.",
-    "durable without making the agent",
+    "The task still exists",
+    "the steps needed to resume it are lost",
+    "durable without requiring the agent itself to be deterministic",
   ];
   let previous = -1;
   for (const marker of opening) {
@@ -419,7 +419,10 @@ test("the built companion page keeps the quote, the recording, and the faithful 
     "the article must build at its new route",
   );
   const html = readFileSync(builtCompanion, "utf8");
-  assert.match(html, /The task record survives\. The procedure does not\./);
+  assert.match(
+    html,
+    /The task still exists, but the steps needed to resume it are lost\./,
+  );
   assert.match(html, /worker-kill\.cast/);
   assert.doesNotMatch(html, /worker-kill-talk/);
   assert.match(html, /resolver calls = 2/);

@@ -28,10 +28,10 @@ places.
 
 > How I made Gas City's agent orchestration durable with Temporal
 
-Intro **(amended)** — the reviewer's four lines moved up from the problem
-section into the first viewport:
+Intro **(revised by Stephanie 2026-08-01; her wording verbatim, no voice
+pass owed; superseded the reviewer's four lines)**:
 
-> An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic.
+> An agent in a software factory is editing code when the orchestration process crashes before recording the handoff. The task still exists, but the steps needed to resume it are lost. Temporal makes those steps durable without requiring the agent itself to be deterministic.
 
 > A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop.
 

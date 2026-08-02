@@ -44,7 +44,7 @@ const afterCode = await codeToHtml(
 <PageLayout
   title="How I made Gas City's agent orchestration durable with Temporal"
   kicker="Temporal case study"
-  intro="An agent is editing code. Its coordinator crashes before recording the handoff. The task record survives. The procedure does not. Temporal makes that procedure durable without making the agent deterministic."
+  intro="An agent in a software factory is editing code when the orchestration process crashes before recording the handoff. The task still exists, but the steps needed to resume it are lost. Temporal makes those steps durable without requiring the agent itself to be deterministic."
   description="A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop."
   noindex={true}
 >
