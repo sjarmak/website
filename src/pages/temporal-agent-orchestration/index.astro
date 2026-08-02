@@ -275,22 +275,10 @@ const afterCode = await codeToHtml(
         </p>
       </header>
       <p class="tco__provenance">
-        <strong>Source used for these recorded runs:</strong>
-        <code>{provenance.service_revision_full}</code> of
-        <code>{provenance.service_module}</code>. The boundary and this
-        harness are published as a snapshot at
-        <a href="https://github.com/sjarmak/gas-city">sjarmak/gas-city</a>;
-        that snapshot is the same code with local paths, hostnames, and worker
-        identities replaced by neutral values, so it will not carry this
-        revision hash. {provenance.temporal_sdk} of the Go SDK,
-        {" "}{provenance.temporal_cli.replace("temporal version ", "CLI ")},
-        {" "}{provenance.go_toolchain.replace("go version ", "")}, on
-        {" "}{provenance.host}, with a {provenance.heartbeat_timeout_seconds}-second
-        Activity heartbeat timeout. Harness command
-        <code>{provenance.run_command}</code>, wrapped in
-        <code>asciinema rec --cols 120 --rows 38</code>.
-        <a href={`${evidence}/provenance.json`}>The provenance record</a>
-        carries those fields plus a SHA-256 for each of the
+        Source for these runs:
+        <a href="https://github.com/sjarmak/gas-city">sjarmak/gas-city</a>; the
+        <a href={`${evidence}/provenance.json`}>provenance record</a> names the
+        revision, SDK, server, and host, and hashes each of the
         {" "}{Object.keys(provenance.published_files_sha256).length} published
         evidence files.
       </p>
@@ -728,23 +716,14 @@ both   one session, one receipt, stale claim token rejected,
     margin-block-start: var(--space-m);
   }
 
-  /* Provenance reads as apparatus, not argument: set small and secondary so it
-     is available to a reviewer without competing with the recordings. */
+  /* Apparatus, not argument: one secondary line under the section intro. The
+     detail it used to print lives in the linked record instead. */
   .tco__provenance {
     max-width: var(--measure);
-    margin-block: var(--space-m) 0;
-    padding: var(--space-s);
-    border: var(--border-hairline);
-    border-radius: var(--radius);
-    background: var(--color-bg-subtle);
-    color: var(--color-text-secondary);
+    margin-block: var(--space-s) 0;
+    color: var(--color-text-muted);
     font-size: var(--step--1);
     line-height: var(--leading-relaxed);
-  }
-
-  .tco__provenance code {
-    overflow-wrap: anywhere;
-    font-size: 0.95em;
   }
 
   .tco__demo-subhead {
