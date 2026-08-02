@@ -277,9 +277,12 @@ const afterCode = await codeToHtml(
       <p class="tco__provenance">
         <strong>Source used for these recorded runs:</strong>
         <code>{provenance.service_revision_full}</code> of
-        <code>{provenance.service_module}</code>, which is not public yet, so
-        the revision is given for matching against the evidence rather than as
-        a link. {provenance.temporal_sdk} of the Go SDK,
+        <code>{provenance.service_module}</code>. The boundary and this
+        harness are published as a snapshot at
+        <a href="https://github.com/sjarmak/gas-city">sjarmak/gas-city</a>;
+        that snapshot is the same code with local paths, hostnames, and worker
+        identities replaced by neutral values, so it will not carry this
+        revision hash. {provenance.temporal_sdk} of the Go SDK,
         {" "}{provenance.temporal_cli.replace("temporal version ", "CLI ")},
         {" "}{provenance.go_toolchain.replace("go version ", "")}, on
         {" "}{provenance.host}, with a {provenance.heartbeat_timeout_seconds}-second
