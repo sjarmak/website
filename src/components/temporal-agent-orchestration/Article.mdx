@@ -113,7 +113,7 @@ Temporal's model works like this. A [Workflow](https://docs.temporal.io/workflow
 
 That gave me two recovery models to consider side by side. The nondeterminism in NDI is not the nondeterminism of an agent's inner loop. It describes the recovery: a fresh agent may reach an acceptable outcome by a different route than the one that died.
 
-| | Nondeterministic Idempotence | Deterministic durable replay |
+| | Nondeter&shy;ministic Idem&shy;potence | Deter&shy;ministic durable replay |
 |---|---|---|
 | After a crash | A new agent may find another valid route | Ordering and acknowledgement must remain exact |
 | Recovery | Inspect the durable work record | Replay the durable history |

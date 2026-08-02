@@ -622,13 +622,17 @@ const provenance = JSON.parse(
     line-height: 1.45;
   }
 
+  /* Prose cells break words only as a last resort, and with a hyphen; the
+     bare `anywhere` this used to carry broke ordinary words at arbitrary
+     characters on narrow phone columns. */
   .tco__table th,
   .tco__table td {
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
     text-align: start;
     vertical-align: top;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .tco__table th {
@@ -674,6 +678,12 @@ const provenance = JSON.parse(
   @media (max-width: 760px) {
     .tco__tabs {
       grid-template-columns: 1fr;
+    }
+
+    /* Narrow columns cannot spare two space-s gutters per cell. */
+    .tco__table th,
+    .tco__table td {
+      padding: var(--space-2xs) var(--space-xs);
     }
 
     .tco__ledger > div {

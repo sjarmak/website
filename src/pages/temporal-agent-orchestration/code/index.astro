@@ -311,13 +311,17 @@ const samples = [
     width: 30%;
   }
 
+  /* Prose cells break words only as a last resort, and with a hyphen; the
+     bare `anywhere` this used to share with code broke ordinary words at
+     arbitrary characters on narrow phone columns. */
   .code-index__matrix th,
   .code-index__matrix td {
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
     text-align: start;
     vertical-align: top;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .code-index__matrix th {
@@ -328,8 +332,12 @@ const samples = [
     font-weight: var(--weight-semibold);
   }
 
-  .code-index__matrix code {
+  /* :global because the identifiers render through TermTip, whose elements
+     carry that component's scope attribute, not this page's; a scoped
+     `code` selector here never matches them. */
+  .code-index__matrix :global(code) {
     overflow-wrap: anywhere;
+    hyphens: none;
     white-space: normal;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -344,6 +352,12 @@ const samples = [
     .code-index__files a {
       grid-column: 2;
       margin-block-start: var(--space-s);
+    }
+
+    /* Narrow columns cannot spare two space-s gutters per cell. */
+    .code-index__matrix th,
+    .code-index__matrix td {
+      padding: var(--space-2xs) var(--space-xs);
     }
   }
 </style>

@@ -100,13 +100,17 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     width: 30%;
   }
 
+  /* Prose cells break words only as a last resort, and with a hyphen; the
+     bare `anywhere` this used to share with code broke ordinary words at
+     arbitrary characters on narrow phone columns. */
   :global(.temporal-agent-article__body > table th),
   :global(.temporal-agent-article__body > table td) {
     padding: var(--space-xs) var(--space-s);
     border: var(--border-hairline);
     text-align: start;
     vertical-align: top;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   /* The rule that actually does the work: without it the inline code element
@@ -115,6 +119,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
      rounded ends, instead of one box sliced raggedly across the line break. */
   :global(.temporal-agent-article__body > table code) {
     overflow-wrap: anywhere;
+    hyphens: none;
     white-space: normal;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -135,6 +140,12 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
     :global(.temporal-agent-article__body > h1) {
       max-width: none;
+    }
+
+    /* Narrow columns cannot spare two space-s gutters per cell. */
+    :global(.temporal-agent-article__body > table th),
+    :global(.temporal-agent-article__body > table td) {
+      padding: var(--space-2xs) var(--space-xs);
     }
   }
 </style>
