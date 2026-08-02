@@ -186,7 +186,7 @@ test("the essay opens with the sourced personal path from Beads to Temporal", ()
   assert.match(article, /the city builds and repairs the software that operates the city/i);
   // The first NDI mention is connected on both sides: back to the abandoned
   // fork, forward to the recovery comparison it sets up.
-  assert.match(article, /survived my ghost town, though/);
+  assert.match(article, /abandoned my ghost town/);
   assert.match(article, /one of the two kinds of recovery this article is about/);
   assert.match(article, /not a replacement for Temporal/i);
   assert.match(article, /described NDI[\s\S]{0,200}completely different machinery/i);
@@ -212,7 +212,7 @@ test("the narrative illustrations sit with the passages they illustrate", () => 
     {
       figure: "<ConspiracyFigure />",
       after: "a collection of clues spread across controller ticks",
-      before: "reconstructing the procedure from those clues",
+      before: "those clues become increasingly useless",
     },
     {
       figure: "<CanaryFigure />",
