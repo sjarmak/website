@@ -88,9 +88,9 @@ Here is where the fix stands today:
 
 ## Two kinds of recovery
 
-The lesson is not "nondeterminism is bad, don't let the agents handle so much." The agent's nondeterministic actions are the work. The question is where to draw the line.
+The lesson is not "nondeterminism is bad, so agents should do less." The agent's nondeterministic actions are the work. The question is where to draw the boundary around them.
 
-NDI is one answer, and it is a good one where any reasonable path to an acceptable outcome is valid, which describes a lot of agent work. An agent can inspect a bug, choose a repair, run tests, realize it was wrong, backtrack, and try something else. I do not need, or want, a workflow engine replaying every thought and tool call in order. Coding itself is nondeterministic: two agents can solve the same issue in very different ways, and either result may be acceptable (unless you're a [SWE-Bench verifier](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)).
+NDI is one answer, and it is a good one where any reasonable path to an acceptable outcome is valid, which describes a lot of agent work. An agent can inspect a bug, choose a repair, run tests, realize it was wrong, backtrack, and try something else. I do not need or want a workflow engine replaying every thought and tool call. Coding itself is nondeterministic. Two agents can solve the same issue in very different ways, and either result may be acceptable (unless you're a [SWE-Bench verifier](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)).
 
 But some parts of an orchestration system are promises rather than work:
 
