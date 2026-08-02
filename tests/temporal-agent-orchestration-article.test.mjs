@@ -83,7 +83,7 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
   assert.match(article, /took the primitives behind Gas Town/i);
   assert.match(
     article,
-    /I did not want to put the coding agent's reasoning inside deterministic replay/i,
+    /The coding agent itself could not be replayed deterministically/i,
     "the essay must not imply Temporal made agent behavior deterministic",
   );
   // The determinism ban covers page metadata, not just the body. <title> is the
@@ -318,8 +318,8 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
   const article = readFileSync(ARTICLE, "utf8");
 
   const teachingOrder = [
-    "canonical record for mutable work facts",
-    "Temporal owns procedure",
+    "canonical record of mutable work facts",
+    "Temporal owns the procedure",
     "## What's running now",
     "The live result path:",
   ];
@@ -706,9 +706,9 @@ test("the essay teaches the orchestrator, ownership boundary, and recovery path 
   // Temporal primitive whose lifecycle Temporal owns, so naming it a peer of
   // Temporal would misstate the platform to the readers most likely to notice.
   for (const owner of [
-    /\*\*Beads owns work state\*\*/,
-    /\*\*Temporal owns procedure\*\*/,
-    /\*\*The application owns effects\*\*/,
+    /Beads owns the work state/,
+    /Temporal owns the procedure/,
+    /The application owns the effects/,
   ]) {
     assert.match(article, owner);
   }

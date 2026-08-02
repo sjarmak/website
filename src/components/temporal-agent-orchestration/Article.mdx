@@ -134,19 +134,21 @@ One boundary remained, covering the work from claim through agent session to ack
 
 ## The boundary I chose
 
-At first I thought I was adding a workflow engine. I was actually forcing myself to answer a series of ownership questions the existing system had kept fuzzy.
+At first, I thought I was adding a workflow engine. I was really forcing the system to answer ownership questions it had left fuzzy.
 
-I did not want to put the coding agent's reasoning inside deterministic replay. That would be both impractical and just plain wrong. I wanted to keep the agent nondeterministic while making selected promises around it durable. The boundary I arrived at:
+The coding agent itself could not be replayed deterministically. Only the procedure around it could be made durable.
 
-> Put the unpredictable agent inside an Activity. Put the promises around it in a Workflow.
+The boundary became simple.
+
+> Put the unpredictable agent inside an Activity. Put the durable promises around it in a Workflow.
 
 The integration settled on three owners.
 
-**Beads owns work state**: tasks, dependencies, claims, generations, artifacts, outcomes, and acknowledgement receipts. In my setup the Beads store (running on a [Dolt](https://github.com/dolthub/dolt) server) remains the canonical record for mutable work facts. Temporal does not replace it; a user or agent can still inspect the work independently of Temporal.
+Beads owns the work state, including tasks, dependencies, claims, generations, artifacts, outcomes, and acknowledgement receipts. In my setup, the Beads store runs on [Dolt](https://github.com/dolthub/dolt) and remains the canonical record of mutable work facts. Temporal does not replace it. A user or agent can inspect the work without going through Temporal.
 
-**Temporal owns procedure**: which orchestration steps occurred, which retry is active, what the system is waiting for, and what may safely happen next. Waits, retries, cancellation, signals, and acknowledgement progress.
+Temporal owns the procedure. It records which orchestration steps completed, which retry is active, what the system is waiting for, and what may safely happen next. That includes waits, retries, cancellation, signals, and acknowledgement progress.
 
-**The application owns effects**: agent processes, tests, reviews, database calls, and external messages. An Activity is where Temporal hands control back to me. Temporal schedules it, tracks its heartbeats, and decides what to do if the Worker disappears; what it touches, and whether touching it twice is safe, is mine.
+The application owns the effects, including agent processes, tests, reviews, database calls, and external messages. An Activity is where Temporal hands control back to my code. Temporal schedules it, records its heartbeats, and decides how to recover if the Worker disappears. What the Activity touches, and whether touching it twice is safe, remains my responsibility.
 
 <ConceptFigure kind="ownership" />
 
