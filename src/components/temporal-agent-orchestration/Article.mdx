@@ -163,7 +163,7 @@ So why not store the whole procedure in the database I already run? That is the 
 
 It fails when the store cannot tell the difference between two procedures that leave behind the same records.
 
-My clearest example was a twenty-hour stranding. Two work items finished and pushed their branches, but the worker died before recording completion. The remaining rows looked exactly like work that had never started. Both detectors missed them because both checked the same empty field.
+My clearest example was a twenty-hour stranding. Two work items finished and pushed their branches, but the worker died before recording completion or the next step. The proof of the work was sitting on origin; the store held an open item with an empty next-step field, which is exactly what work that never started looks like. Both watchers keyed on that field: the probe that decides whether to launch more agents, and the sweep that hunts abandoned claims. Neither saw anything wrong.
 
 Solving that entirely in the store means recording every intermediate step, recovering partially completed transitions after a crash, and running timers that survive the process that created them. I had already seen where that leads. One PR-state poller grew to 243 lines of Bash, used two duplicate-prevention mechanisms because neither was enough alone, and created 174 cache files to track eight open pull requests. It still had a fire-and-forget failure that Bash could not fix without becoming something much larger.
 
