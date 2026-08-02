@@ -1114,7 +1114,7 @@ test("the article's demo passage tells the viewer what dies and what to watch", 
   );
 
   // Arm 2 remains the decisive claim.
-  assert.match(article, /The second case is the more important test/);
+  assert.match(article, /That is the direct test of duplicate prevention/);
 });
 
 // The evidence-scope revision (2026-08-02): two external reviews agreed the
