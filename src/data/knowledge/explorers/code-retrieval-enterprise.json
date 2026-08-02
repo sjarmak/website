@@ -1887,6 +1887,50 @@
           "why": "The fork this branch names is between retrieving better snippets and querying a structured model of the repository, with agentic navigation walking between them. OwlPath is a clean instance of the second that leaves the agent in charge of when to walk, since closure is opt-in per query rather than always-on context. The 3KB map is the more portable idea in it: the expensive failure at repository scale is rarely a bad ranking, it is spending the first several turns in the wrong module, and a one-time orientation is cheap insurance against that."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728271F",
+      "title": "Agentic Method for Deterministic Validation of Legacy Code Migration",
+      "firstAuthor": "Ferenczi, Andras",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28271",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728271F",
+      "branches": [
+        "enterprise"
+      ],
+      "notes": [
+        {
+          "branch": "enterprise",
+          "takeaway": "American Express reports a validation loop for COBOL-to-Java migration that answers the ground-truth problem by refusing to author ground truth at all: the legacy program is the oracle. Both the COBOL source and the generated Java target are instrumented with mocks and run off-mainframe on commodity hardware, and a Parity Gate executes both on the same witness inputs and reports end-state discrepancies across three equivalence axes. A test case is accepted only if it increases branch coverage and both systems agree; a case that reaches a new branch but diverges between COBOL and Java is rejected. The authors first establish that input search alone is not enough: combinatorial interaction testing, adaptive random testing, search-based generation and its many-objective variants, fuzzing, and MAP-Elites all converge to similar coverage ceilings, which tells them the remaining branches are structurally unreachable without changing state that lives outside the input space. The Locksmith Loop runs Witness Search with six algorithms until two consecutive sweeps find no new branches, has a deterministic analyzer identify the Locked Paragraph blocking further exploration, has a supervisory Authoring Layer propose a parity-preserving mutation to both targets, then resumes search from the newly reachable region. Across three programs of 430 to 4,114 source lines it reaches near-complete coverage on two open-source programs and 91.90% branch coverage on an internal production-like one; on the production-shape run, 135 of 142 paragraphs (95.1%) and 101 of 146 static transitions (69.2%) from 166 test cases, with mutation contributing 47 of those transitions against 54 from search alone.",
+          "why": "This branch holds that enterprise scale changes which problems exist, and legacy is where that is most literal: the specification is gone, the behavior includes decades of broken-as-usual cases that became the product definition by accident, and the test data covers a handful of real scenarios with a long tail untested. The evaluation crisis the branch names, ground truth that is contaminated or tautological, is resolved here by differential execution rather than by better annotation, and that is the transferable move for any migration where 1:1 behavioral equivalence is feasible, which the authors extend to Java-to-Kotlin, C#-to-Java and C-to-Go. Worth carrying over as well is the honesty about the proxy: they state that branch coverage is an imperfect predictor of fault detection, anchor acceptance on parity instead of coverage, and decline to claim the resulting suite is sufficient for migration sign-off on its own."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260726805W",
+      "title": "MRCoder: An Efficient Context Selecting Approach for Repository-Level Code Generation",
+      "firstAuthor": "Wang, Peiding",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.26805",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260726805W",
+      "branches": [
+        "repo-scale",
+        "techniques"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "MRCoder attacks the recall-precision trap that repository-scale RAG walks into. Their motivating measurement, Qwen2.5-Coder-7B-Instruct on CoderEval with BM25, shows Pass@1 rising with Top-K and then falling while precision drops monotonically and both token count and latency climb: past a point, retrieving more of the repository makes the model worse and slower at once. The fix does not build a code graph and does not iterate retrieval. It writes a draft first. In the Map phase the retrieved blocks are partitioned into groups, each group is paired with the target query, and a lightweight draft model generates draft code per group independently. Structure-Aware Draft-Guided Selection then scores candidate contexts against those drafts from two perspectives: API consistency, using the call relationships in the draft to keep repository-specific APIs the implementation is likely to invoke plus reference patterns for external API usage, and logical similarity between draft and candidate. The Reduce phase aggregates the surviving contexts for final generation, with parallel verification accelerating decoding. On CoderEval and DevEval with Qwen2.5-Coder and DeepSeek-Coder backbones, accuracy improves over strong baselines while tokens fall 30-50% and inference time falls up to 52.1% on CoderEval and 48.6% on DevEval.",
+          "why": "This branch frames repository scale as a fork between retrieving better snippets and querying a structured model, and MRCoder is a third position worth naming: use a cheap generation to discover which structural relations matter, then select on them. The draft functions as a query rewrite in the target language, so API-call structure becomes usable as a relevance signal without an index or a graph over the repository. The comparison against the alternatives is the practically useful part. RepoFormer-style control tokens decide whether to retrieve but leave retrieval noise intact, and LongCodeZip's perplexity-based line selection needs multiple forward passes and pays for it in latency, so a method that improves quality and cost together is the exception rather than the norm here."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "The efficiency result is a cascade result. The expensive backbone never sees the raw candidate pool: a lightweight draft model runs first over partitioned groups in parallel, and its output is used only as a selection signal, not as the answer. Selection itself is structural rather than neural scoring, matching draft against candidate on API call relationships and logical similarity, so the second stage is cheap too. Only the filtered context reaches the backbone, and parallel verification then attacks autoregressive decoding latency directly. Measured against the RAG baseline the cascade cuts tokens 30-50% and inference time up to 52.1% for Qwen2.5-Coder and 38.0% for DeepSeek-Coder at k=3 on CoderEval, with 48.6% and 39.0% on DevEval, while raising accuracy. The contrast case in the paper is instructive: RepoFormer reaches the lowest token consumption of any method by aggressively deciding not to retrieve at all, needing only one token of inference, and pays for it in accuracy.",
+          "why": "The branch's claim is that a cascade earns its place by putting each technique where its cost is justified, and this is a clean instance with the cost accounted on both axes. The generalizable pattern is that a draft from a small model is a better query than the original request, because it is expressed in the vocabulary of the code being written rather than the vocabulary of the request, which is the query-code mismatch this explorer opens with. The RepoFormer comparison marks the boundary: skipping retrieval is always the cheapest option and the cost axis alone will always prefer it, so a cascade has to be judged on both numbers at once."
+        }
+      ]
     }
   ],
   "sections": [

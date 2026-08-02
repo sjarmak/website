@@ -2874,6 +2874,25 @@
           "why": "This branch is about scoring targets, failure attribution and statistical rigor rather than headline numbers. The paper is a worked example of all three: an aggregate improvement that is genuinely positive can still be dominated by breakage, an uncorrected sweep across eighteen cells manufactures significance that mostly evaporates under correction, and a grader that mis-scores a correct answer will otherwise be attributed to the treatment. Each mechanism claim is held to trajectory evidence rather than to the delta."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728271F",
+      "title": "Agentic Method for Deterministic Validation of Legacy Code Migration",
+      "firstAuthor": "Ferenczi, Andras",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28271",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728271F",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "The Locksmith Loop grows a skill library under a teacher-student split where the teacher never writes the program. The student is a set of deterministic tools handling migration, Witness Search, mutation and parity checking; the Authoring Layer, an AI agent, is invoked only when the student reaches a blocked execution path that input search cannot open, and it does not produce the migrated code. It selects an existing Mutation Skill or proposes a new one, the student applies that mutation symmetrically to both the COBOL mock and the generated Java target, and the Parity Gate accepts or rejects by compiling and executing both. A mutation is retained only when it increases branch coverage and preserves behavioral equivalence, and only a mutation that survives that gate is captured as a skill and stored in the Skill Catalog for reuse in later iterations. The loop ran unattended for hours, with the Authoring Layer also adjusting the migrator as new scenarios appeared. On the production-shape program, agentic mutation contributed 47 of 146 static transitions on top of the 54 that search alone reached, with 45 left uncovered.",
+          "why": "Most skill libraries in this branch admit an entry on the agent's own judgment that a trajectory went well, which is what makes them unreliable to reuse and hard to evaluate. Here admission is a deterministic execution gate, so the catalog can only accumulate mutations that provably preserved cross-language parity, and skill induction becomes a byproduct of a verification pipeline rather than a separate self-assessment step. That also puts a clean boundary on what the model is trusted to do: propose the move into unreachable state, never certify it. The separation is worth reading against the branch's Voyager lineage, where the same capture-and-reuse structure runs without an oracle behind it."
+        }
+      ]
     }
   ],
   "sections": [

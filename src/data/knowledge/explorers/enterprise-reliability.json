@@ -2015,6 +2015,31 @@
           "why": "The branch's standard is evaluation grounded in execution rather than in a plausible-looking artifact, and the three-state lifecycle is the concrete form of it: a task that never fails on C was never a task, and one that cannot be restored was never scoped. The more transferable number is the agreement check - historical and reconstructed cases reach up to 98.0% matched outcome agreement under agent evaluation while preserving the agent ranking. That is the question to ask of any generated corpus and the one most do not answer: does it order systems the way the human-authored instances did."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728609S",
+      "title": "OSReward: Instituting Standardized Evaluation for Cross-Platform Computer-Use Reward Models",
+      "firstAuthor": "Sun, Qiushi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28609",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728609S",
+      "branches": [
+        "eval",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "OSReward measures the judge rather than the agent, on 1,019 human-gold computer-use trajectories up to 100 steps across web, mobile, Ubuntu and Windows, built on the authors' own environments rather than reused benchmark runs so a wrong verdict is attributable to the judge and not to a flawed trajectory. Across 27 VLM judges the full set looks adequate and OSReward-Hard, drawn from the cases the human annotators themselves split on, does not: the best judge falls below 70% and the mean judge to 52% against a 50% coin flip. The error has one direction. Judges accept false successes, runs where the agent declares completion but the environment never reached the goal, far more often than they reject real successes, and the input ablations name the mechanism: dropping to screenshots only costs 7.29 points of binary accuracy on average, while cutting the visual evidence from five trailing frames to three, or to first-plus-last-two, moves the verdict by 0.07 and 0.24 points. The judge is reading the agent's narrative, not the screen, so a confident closing claim carries it. Graded judgment is weaker still: on OSReward-Multi the best judge drops from about 90% on the binary verdict to the low sixties on macro-recall, and the gap against its AUC says it ranks quality levels it cannot threshold. In a pilot, the best judges disagreed with existing benchmarks' own verifiers on roughly a quarter of desktop verdicts.",
+          "why": "The branch's rule is to calibrate the judge before trusting the score, and this is the measurement that shows why: a leniency bias is not random noise that averages out over a large eval, it is a directional error that inflates exactly the number an agent team is trying to move. A judge scoring an agent's self-report rather than the environment state is the automated form of accepting the agent's word for it, and the ablation gives a cheap diagnostic any team can run: strip the agent's reasoning text from the judge input and see whether the pass rate moves. The 27-model spread also kills the assumption that a frontier judge is a solved judge, and the quarter-of-verdicts disagreement with existing verifiers means published pass rates on those benchmarks carry an unpriced error bar."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "The paper prices reliability instead of assuming it. Plotting all 27 judges on cost against OSReward-Hard accuracy produces a frontier where the accurate judges are the expensive ones and the affordable open judges collapse toward the coin flip, leaving no point that is both. The authors then buy the corner: OS-Shepherd-100K is curated from more than 300K judge instances into nearly 100K reasoning-annotated samples with no new human annotation, each labeling choice fixed by a finding from the judge study, and OS-Shepherd-9B and 35B-A3B are trained on it with a two-stage recipe that first builds accurate judging and then targets the false-success error directly. OS-Shepherd-9B judges the full set for $1.36, roughly one thirtieth of frontier cost, matching commercial judges at 30-60x lower cost; no other sub-$2 judge comes close on OSReward-Hard, and its hard-set accuracy drop is a third smaller than its own base model's. Held-out evaluation confirms the de-biasing transfers to unseen benchmarks, and self-hosting moves the marginal cost to the lab's own GPU time.",
+          "why": "The branch says record the cost facts before optimizing routing and never treat unknown cost as zero, and reward-model calls are the clearest case of a cost that gets treated as zero: evaluation, data curation and RL each want millions of judgments, so a per-judgment price that is invisible at demo scale sets the ceiling on the training run. The useful structure here is that the cost-accuracy frontier is not fixed. A small distilled judge trained on the failure the evaluation exposed moved the frontier by more than any routing policy over the existing field could have, which is the argument for spending on a targeted small model before spending on a cascade over expensive ones."
+        }
+      ]
     }
   ],
   "sections": [

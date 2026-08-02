@@ -481,6 +481,31 @@
           "why": "This branch is about retrieval ceasing to be a fixed preprocessing step and becoming an action the model chooses. Surface routing is that choice one level above retriever selection: the agent picks a representation, and only then a retriever or query program inside it, which is why the paper distinguishes routing among information types from the tool and API routing that MetaTool, T-Eval and API-Bank measure, and from mmRAG, which covers the same three sources but flattens them into retrievable documents instead of keeping surface-native tools. Scoring the choice separately from the answer is what makes the loop debuggable, and it produces the branch's most load-bearing negative result: near-saturated routing sits alongside answers that are wrong 25 to 44% of the time, so the retrieval decision is no longer where the headroom is. The paper is careful that artifact-level Evidence does not prove correct semantic use, so high Route plus high Evidence with low Answer only points at downstream synthesis rather than proving it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728229S",
+      "title": "EMBL AI Librarian: Life-Sciences Knowledge Layer for AI Agents",
+      "firstAuthor": "Sigillo, Luigi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28229",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728229S",
+      "branches": [
+        "agentic-loops",
+        "test-time-compute"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Librarian puts the retrieve-reason loop inside the knowledge layer instead of leaving it to every agent that needs the literature. A single LLM controller takes a natural-language question, plans complementary keyword and fielded queries against Europe PMC's live search, retrieves the matching records, decomposes the selected papers into paragraphs, scores those paragraphs against the original question, and returns a compact ranked set of citable evidence with source metadata. The loop exists because of a specific property of the corpus: biological entities carry multiple aliases across gene symbols, protein names, disease synonyms and MeSH terms, so comprehensive retrieval requires several complementary searches rather than one good query, and Europe PMC's 11.9M full-text articles and 40.7M abstracts are returned as whole documents ranked lexically, of which only a fraction is relevant. Reading those documents is what consumes an agent's context window. On ScholarQA-Bench the layer improves Citation F1 by more than 16 points over strong recent baselines; used as the retrieval layer of an existing claim-verification pipeline it raises agreement with expert consensus; and on open-form LitQA2 a GPT-5.4 agent scores about 8 points higher grounded in Librarian than with web search. The system is model-agnostic, so a stronger controller upgrades the whole layer.",
+          "why": "The branch's thesis is that retrieval becomes an action the model chooses rather than a fixed preprocessing step, and this is that thesis packaged as shared infrastructure: the loop is factored out one level, so the calling agent asks a question and gets evidence, and every downstream agent stops reimplementing query planning against a syntax it has to learn. The evidence-not-documents contract is the load-bearing part. What the loop returns is bounded, citable and attributable, which is what makes it composable into a claim-verification pipeline that was not designed around it. It also makes the case that the interface, not the model, was the bottleneck: the same GPT-5.4 gains about 8 points on LitQA2 purely from what it is handed."
+        },
+        {
+          "branch": "test-time-compute",
+          "takeaway": "The paper is a direct argument against paying for a static embedding index when inference-time reasoning can do the ranking. Librarian maintains no index of its own; it queries Europe PMC's live search and spends LLM calls at request time on query planning and paragraph-level relevance scoring against the question. The authors give four reasons for refusing the dense datastore. It is expensive to build and serve, with OpenScholar's alone at roughly 744 GB. Its margin is narrowing, since a well-tuned BM25 backbone driven by a capable LLM issuing multiple keyword queries now matches or exceeds dense retrieval on scientific benchmarks. Embeddings flatten structured metadata, blocking direct queries over explicit fields such as gene, protein, organism and chemical annotations, which is exactly the structure Europe PMC exposes. And a nearest-neighbour lookup is not inspectable, where a fielded keyword query is. The trade lands: more than 16 points of Citation F1 over strong recent baselines on ScholarQA-Bench, higher expert-consensus agreement as a drop-in retrieval layer, and about 8 points on LitQA2 over web search.",
+          "why": "The branch collects the case for reasoning about relevance rather than embedding it, and this is that case argued on cost and on freshness rather than on accuracy alone. Because ranking happens at query time, the corpus is whatever the live search returns, so there is no index-refresh problem and no staleness window, and the operational commitment shrinks from hundreds of gigabytes of embeddings to LLM calls that scale with traffic instead of with corpus size. The inspectability point deserves carrying into any reranker discussion: a fielded query is a stated hypothesis about what would answer the question, which can be read and corrected, and a vector neighbourhood is not."
+        }
+      ]
     }
   ],
   "sections": [
