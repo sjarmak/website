@@ -4,17 +4,23 @@
 // the article can hold the Worker-kill recording without duplicating that
 // page's section machinery. Options ride on data attributes so one script
 // serves every instance on a page.
+//
+// `notes` maps a marker index to a status line shown under the player from
+// that marker until the next one fires. The recording keeps real timing, and
+// the longest stretch is Temporal waiting out the heartbeat timeout; without
+// a note that pause reads as the demo stalling.
 import "asciinema-player/dist/bundle/asciinema-player.css";
 
 interface Props {
   src: string;
   poster: string;
   markers: [number, string][];
+  notes?: Record<number, string>;
   cols?: number;
   rows?: number;
 }
 
-const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
+const { src, poster, markers, notes = {}, cols = 120, rows = 38 } = Astro.props;
 ---
 
 <figure class="cast-player">
@@ -25,8 +31,10 @@ const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
     data-cast-cols={cols}
     data-cast-rows={rows}
     data-cast-markers={JSON.stringify(markers)}
+    data-cast-notes={JSON.stringify(notes)}
   >
   </div>
+  <p class="cast-player__note" hidden></p>
   <figcaption><slot /></figcaption>
 </figure>
 
@@ -36,10 +44,10 @@ const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
   for (const mount of document.querySelectorAll<HTMLElement>(
     ".cast-player__mount",
   )) {
-    const { castSrc, castPoster, castCols, castRows, castMarkers } =
+    const { castSrc, castPoster, castCols, castRows, castMarkers, castNotes } =
       mount.dataset;
     if (!castSrc) continue;
-    AsciinemaPlayer.create(castSrc, mount, {
+    const player = AsciinemaPlayer.create(castSrc, mount, {
       cols: Number(castCols),
       rows: Number(castRows),
       preload: true,
@@ -47,6 +55,24 @@ const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
       fit: "width",
       markers: JSON.parse(castMarkers ?? "[]"),
     });
+    const notes: Record<number, string> = JSON.parse(castNotes ?? "{}");
+    const note = mount.parentElement?.querySelector<HTMLElement>(
+      ".cast-player__note",
+    );
+    if (note && Object.keys(notes).length > 0) {
+      player.addEventListener("marker", ({ index }: { index: number }) => {
+        const text = notes[index];
+        if (text) {
+          note.textContent = text;
+          note.hidden = false;
+        } else {
+          note.hidden = true;
+        }
+      });
+      player.addEventListener("ended", () => {
+        note.hidden = true;
+      });
+    }
   }
 </script>
 
@@ -65,6 +91,15 @@ const { src, poster, markers, cols = 120, rows = 38 } = Astro.props;
     max-width: 100%;
     border: var(--border-hairline);
     border-radius: var(--radius-l);
+  }
+
+  .cast-player__note {
+    margin-block: var(--space-xs) 0;
+    padding-inline-start: var(--space-s);
+    border-inline-start: 2px solid var(--color-accent);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
   }
 
   .cast-player figcaption {

@@ -159,13 +159,9 @@ const provenance = JSON.parse(
         <ul>
           <li>Beads owns work facts.</li>
           <li>Temporal owns procedural progress.</li>
-          <li>Activities touch the nondeterministic world.</li>
+          <li>Activities touch the external world.</li>
+          <li>The application owns identity, fencing, idempotency, and correctness.</li>
         </ul>
-        <p>
-          Temporal supplies at-least-once execution. The application boundary
-          makes repeated execution safe: stable identities, idempotency keys,
-          and generation fences remain application responsibilities.
-        </p>
       </div>
       <ConceptFigure kind="ownership" />
       <div class="tco__copy prose">
@@ -181,12 +177,23 @@ const provenance = JSON.parse(
         <p class="kicker">Section 02</p>
         <h2>The Worker dies on camera</h2>
         <p>
-          Two recordings. Both are controlled runs of the same fixture; only
-          the orchestrator changes. Each is a split screen: the run on the
-          left, and on the right independent panes that measure for themselves
+          Two recordings, three demonstrated executions: the before state
+          failing once, then Temporal surviving the same kill twice, once
+          after a heartbeat checkpoint and once before any checkpoint exists.
+          Both recordings are controlled runs of the same fixture; only the
+          orchestrator changes. Each is a split screen: the run on the left,
+          and on the right independent panes that measure for themselves
           rather than trusting the run's own narration.
         </p>
       </header>
+      <div class="tco__copy prose">
+        <p>
+          <strong>I kill the orchestration process, not the coding agent.</strong>
+          The agent continues working after its coordinator disappears. The
+          question is whether the restarted orchestration attaches to that
+          same agent or launches a competitor.
+        </p>
+      </div>
       <p class="tco__provenance">
         Source for these runs:
         <a href="https://github.com/sjarmak/gas-city">sjarmak/gas-city</a>; the
@@ -204,41 +211,68 @@ const provenance = JSON.parse(
           for the agent, the work record survived, but the handoff state did
           not.
         </p>
+        <p>
+          The duplicate is not a mystery once you see the recovery path's
+          view. After the kill, it sees claimed work with no recorded session
+          and starts a replacement. The original agent is still running, so
+          both agents complete, and the older attempt finishes last,
+          overwriting the current receipt.
+        </p>
       </div>
       <figure class="tco__player">
         <div id="before-temporal-player" data-cast-src={beforeCast}></div>
+        <p class="tco__player-note" hidden></p>
         <figcaption>
           The right panes are where it goes wrong: two agent processes for
           one work item, then a stale receipt over the current one.
-          <a href={beforeCast} download="before-temporal.cast">Download the recording</a>.
+          <a href={`${root}/demo/before-temporal.mp4`} download="before-temporal.mp4">Download the video</a>,
+          or the <a href={beforeCast} download="before-temporal.cast">raw asciinema event log</a>.
         </figcaption>
       </figure>
-      <h3 class="tco__demo-subhead">The same kill, with Temporal</h3>
+      <h3 class="tco__demo-subhead">With Temporal: the Worker dies, the agent does not</h3>
+      <div class="tco__copy prose">
+        <p>What to watch, per kill:</p>
+        <ul>
+          <li>
+            After a checkpoint: the replacement Worker resumes from heartbeat
+            details, and session creations stay at one.
+          </li>
+          <li>
+            Before any checkpoint: the resolver is called a second time and
+            returns the existing session instead of creating another one.
+          </li>
+        </ul>
+        <p>
+          The second kill is the decisive one. Surviving a kill after a
+          checkpoint does not by itself prove duplicate-launch prevention;
+          the invariant report draws the same distinction.
+        </p>
+      </div>
       <figure class="tco__player">
         <div id="worker-kill-player" data-cast-src={cast}></div>
+        <p class="tco__player-note" hidden></p>
         <figcaption>
           The full recording keeps real timing, including the pause where
           Temporal notices the dead <TermTip
             term="worker"
             tip="The process that polls Temporal's task queues and executes Workflow and Activity code. It is the one process this design allows to die."
           >Worker</TermTip>.
-          <a href={cast} download="worker-kill.cast">Download the recording</a>.
+          <a href={`${root}/demo/worker-kill.mp4`} download="worker-kill.mp4">Download the video</a>,
+          or the <a href={cast} download="worker-kill.cast">raw asciinema event log</a>.
         </figcaption>
       </figure>
       <div class="tco__copy prose">
         <p>
-          The demo kills the Worker at two points. After a heartbeat, the
-          retry resumes from recorded progress. Before the first heartbeat,
-          stable identity finds the existing session rather than launching
-          another agent. Both runs end with one session and one fenced
+          Both kills end the same way: one agent session and one fenced
           receipt.
         </p>
         <p>
           The demo runs on one host against a local dev server, with a
           file-backed store and a fixture process in place of a coding agent.
-          It proves the boundary, on real Temporal, with a real signal. The
-          before-state arm drives the same fixture agent over the same
-          protocol; only the orchestrator differs.
+          It proves the boundary, on real Temporal, with a real
+          operating-system kill signal. The before-state arm drives the same
+          fixture agent over the same protocol; only the orchestrator
+          differs.
         </p>
         <ul>
           <li><a href={`${evidence}/worker-kill/verify-report.txt`}>The invariant report, both arms</a></li>
@@ -254,7 +288,7 @@ const provenance = JSON.parse(
         <h2>What is actually running</h2>
       </header>
       <div class="tco__copy prose">
-        <p>Two paths have different rollout status.</p>
+        <p>Each path carries its own status and its own evidence.</p>
       </div>
       <table class="tco__table">
         <thead>
@@ -266,14 +300,19 @@ const provenance = JSON.parse(
         </thead>
         <tbody>
           <tr>
-            <td>Result delivery and acknowledgement</td>
-            <td>Continuous production</td>
+            <td>Result delivery and exact acknowledgement</td>
+            <td>Production</td>
             <td>Exact receipts, redelivery until acknowledged, independent watchdog</td>
           </tr>
           <tr>
-            <td>Work item to agent execution</td>
-            <td>Shadow, after a bounded canary</td>
-            <td>Worker-kill recovery, one session, one fenced receipt</td>
+            <td>Temporal-controlled claim and agent launch</td>
+            <td>Shadow; bounded canary completed</td>
+            <td>One claim, one agent session, one fenced receipt</td>
+          </tr>
+          <tr>
+            <td>Worker recovery on one host</td>
+            <td>Demonstrated</td>
+            <td>Recorded harness run; both kill positions end with one session</td>
           </tr>
           <tr>
             <td>Cross-host recovery</td>
@@ -360,10 +399,14 @@ const provenance = JSON.parse(
   // rather than an early beat: the opening frames are a few lines over an
   // empty terminal, which reads as a large black void before anyone presses
   // play. Marker times are re-measured from each recording's event stream.
+  // `notes` maps a marker index to a status line shown under the player from
+  // that marker until the next one fires; the recordings keep real timing,
+  // and the heartbeat-timeout pause reads as a stall without one.
   const players: {
     id: string;
     poster: string;
     markers: [number, string][];
+    notes: Record<number, string>;
   }[] = [
     {
       id: "before-temporal-player",
@@ -375,6 +418,10 @@ const provenance = JSON.parse(
         [12.2, "A second agent for the same task"],
         [23.7, "The stale receipt lands on top"],
       ],
+      notes: {
+        1: "The orchestrator is dead. The agent it launched is still running.",
+        2: "The restarted orchestrator sees claimed work with no recorded session, so it starts a replacement.",
+      },
     },
     {
       id: "worker-kill-player",
@@ -387,13 +434,17 @@ const provenance = JSON.parse(
         [31.0, "kill -9 before any checkpoint"],
         [41.1, "Retry re-resolves; workflow completed"],
       ],
+      notes: {
+        1: "The Worker is dead. The agent is still running. Temporal is waiting out the heartbeat timeout before it retries.",
+        4: "The second Worker is dead before any checkpoint exists. The retry has to ask the resolver again.",
+      },
     },
   ];
-  for (const { id, poster, markers } of players) {
+  for (const { id, poster, markers, notes } of players) {
     const mountPoint = document.getElementById(id);
     const src = mountPoint?.dataset.castSrc;
     if (mountPoint && src) {
-      AsciinemaPlayer.create(src, mountPoint, {
+      const player = AsciinemaPlayer.create(src, mountPoint, {
         cols: 120,
         rows: 38,
         preload: true,
@@ -401,6 +452,23 @@ const provenance = JSON.parse(
         fit: "width",
         markers,
       });
+      const note = mountPoint
+        .closest("figure")
+        ?.querySelector<HTMLElement>(".tco__player-note");
+      if (note) {
+        player.addEventListener("marker", ({ index }: { index: number }) => {
+          const text = notes[index];
+          if (text) {
+            note.textContent = text;
+            note.hidden = false;
+          } else {
+            note.hidden = true;
+          }
+        });
+        player.addEventListener("ended", () => {
+          note.hidden = true;
+        });
+      }
     }
   }
 </script>
@@ -583,6 +651,15 @@ const provenance = JSON.parse(
     max-width: 100%;
     border: var(--border-hairline);
     border-radius: var(--radius-l);
+  }
+
+  .tco__player-note {
+    margin-block: var(--space-xs) 0;
+    padding-inline-start: var(--space-s);
+    border-inline-start: 2px solid var(--color-accent);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
   }
 
   .tco__player figcaption {

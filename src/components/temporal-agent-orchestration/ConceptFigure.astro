@@ -396,9 +396,9 @@ const svgDescId = `${titleId}-svg-desc`;
       </ul>
 
       <figcaption class="figure-caption">
-        Beads says what is true about the work. Temporal says where the
-        procedure is. Activities touch the unpredictable world. Fenced
-        completion checks travel both ways between Beads and Activities.
+        Fenced completion checks travel both ways: Activities report
+        completions carrying the generation and claim token, and Beads
+        accepts only a completion that still matches the canonical claim.
       </figcaption>
     </figure>
   )
@@ -798,8 +798,8 @@ const svgDescId = `${titleId}-svg-desc`;
           redelivers until the mayor verifies evidence and records an
           acknowledgement, the part that runs continuously in production.
           A panel shows the two independent switches: Beads mode is
-          shadow, Outcome mode is canary, and setting both to canary is
-          reserved for a bounded, separately authorized run.
+          shadow, Outcome mode is enabled, and setting Beads mode to
+          canary is reserved for a bounded, separately authorized run.
         </desc>
 
         <text class="svg-eyebrow" x="40" y="44">Temporal infrastructure: alive</text>
@@ -854,16 +854,16 @@ const svgDescId = `${titleId}-svg-desc`;
 
         <rect class="svg-box" x="40" y="580" width="1040" height="106" rx="10" />
         <text class="svg-eyebrow" x="68" y="612">Two independent switches</text>
-        <text class="svg-small" x="68" y="640">Beads mode: shadow · Outcome mode: canary = the current boundary</text>
-        <text class="svg-small" x="68" y="664">canary + canary is reserved for a bounded, separately authorized run</text>
+        <text class="svg-small" x="68" y="640">Beads mode: shadow · Outcome mode: enabled = the current boundary</text>
+        <text class="svg-small" x="68" y="664">Beads mode: canary is reserved for a bounded, separately authorized run</text>
       </svg>
 
       <ul class="concept-figure__fallback" aria-label="Shadow boundary">
         <li>Above the wall, the Temporal server and Worker run, task queues are polled, Workflow definitions are registered, and replay and deployment wiring is exercised.</li>
         <li>Below the wall, the Beads claim, agent launch, canonical Beads completion, and external mutation are blocked by the fail-closed shadow worker.</li>
         <li>One gate in the wall is separately opened: OutcomeReady delivery crosses it, waits durably, and redelivers until the mayor verifies evidence and acknowledges.</li>
-        <li>Beads mode and Outcome mode are independent switches; Beads shadow with Outcome canary is the current boundary.</li>
-        <li>Setting both switches to canary is reserved for a bounded, separately authorized run, never general activation.</li>
+        <li>Beads mode and Outcome mode are independent switches; Beads shadow with Outcome enabled is the current boundary.</li>
+        <li>Setting Beads mode to canary is reserved for a bounded, separately authorized run, never general activation.</li>
       </ul>
 
       <figcaption class="figure-caption">

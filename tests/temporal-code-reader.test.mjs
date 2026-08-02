@@ -68,7 +68,9 @@ test("reader renders the full file as click-to-expand semantic sections", () => 
   assert.doesNotMatch(route, /<details/);
   assert.match(route, /github-light-high-contrast/);
   assert.match(route, /github-dark-high-contrast/);
-  assert.match(route, /color: var\(--shiki-light\) !important/);
+  // Shiki emits the light color as the default and only the dark color as a
+  // variable; there is no --shiki-light to assert on.
+  assert.match(route, /there is no --shiki-light/);
   assert.match(route, /color: var\(--shiki-dark\) !important/);
 });
 

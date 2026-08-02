@@ -13,6 +13,10 @@ const ARTICLE_PAGE = path.join(
   ROOT,
   "src/pages/temporal-agent-orchestration/article.astro",
 );
+const ARTICLE = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/Article.mdx",
+);
 const CODE_INDEX = path.join(
   ROOT,
   "src/pages/temporal-agent-orchestration/code/index.astro",
@@ -28,10 +32,6 @@ const CAST = path.join(
 const BEFORE_CAST = path.join(
   ROOT,
   "public/temporal-agent-orchestration/demo/before-temporal.cast",
-);
-const UI_RECORD = path.join(
-  ROOT,
-  "public/temporal-agent-orchestration/demo/ui-event-history-pre-checkpoint.webp",
 );
 const EVIDENCE_DIR = path.join(
   ROOT,
@@ -64,7 +64,7 @@ test("the companion page is the route's front door and the article moved beside 
   assert.match(companion, /\$\{root\}\/code/);
 });
 
-test("the companion opens with the reviewer's four-line problem and the boundary sentence", () => {
+test("the companion opens with the failure, the boundary sentence, and the bounded ledger", () => {
   const companion = readFileSync(COMPANION, "utf8");
 
   const opening = [
@@ -84,90 +84,172 @@ test("the companion opens with the reviewer's four-line problem and the boundary
   assert.match(companion, /Put the unpredictable agent inside an\s+Activity/);
   assert.match(companion, /Put the promises\s+around it in a Workflow/);
 
-  // The three questions a restart could not answer.
-  assert.match(companion, /Did this claim already start an agent\?/);
-  assert.match(companion, /current attempt or a stale one\?/);
-  assert.match(companion, /acknowledged this exact outcome\?/);
+  // The hero ledger bounds the claim in four lines before any detail.
+  assert.match(companion, /One ready task → one agent session → one fenced receipt\./);
+  assert.match(
+    companion,
+    /Recovery from a real Worker kill without starting a second agent\./,
+  );
+  assert.match(companion, /Durable result delivery and acknowledgement\./);
+  assert.match(companion, /Cross-host recovery\./);
+
+  // The three crash windows a restart could not answer.
+  assert.match(
+    companion,
+    /dies after claiming the work but before launching the agent/,
+  );
+  assert.match(
+    companion,
+    /dies after launching the agent but before recording the session/,
+  );
+  assert.match(companion, /finishes late and overwrites the current result/);
+  assert.match(
+    companion,
+    /What was missing was a durable\s+owner for the procedure/,
+  );
 });
 
-test("the companion declares the canonical unit with both halves of the status adjacent", () => {
+test("the companion declares the bounded unit and one ownership model", () => {
   const companion = readFileSync(COMPANION, "utf8");
   const flat = companion.replace(/\s+/g, " ");
 
-  // The unit is translated before it is named: plain words first, then the
-  // generation fence as the technical name for the receipt guard.
   assert.ok(
     flat.includes(
-      "one ready task becoming one agent execution and one receipt that only the current attempt can submit",
+      "I made one procedure durable: assign one ready work item to one agent session and accept a result only from the current attempt.",
     ),
-    "the unit must be stated in translated form",
-  );
-  assert.ok(
-    flat.includes("The guard on that receipt is called a generation fence"),
-    "the generation fence must be named after the translation, not before",
-  );
-  assert.match(companion, /CityRuntime\.beadReconcileTick/);
-  assert.match(companion, /BeadOrchestrationWorkflow/);
-  assert.match(companion, /ExecuteBeadActivity/);
-  assert.match(companion, /gascity-bead-orchestration/);
-  assert.match(companion, /gascity-agent-work/);
-
-  // Separate Task Queues permit later isolation; they do not prove the current
-  // deployment scales the workloads independently.
-  assert.ok(
-    flat.includes(
-      "so orchestration and agent execution can later be isolated or scaled independently",
-    ),
-    "the Task Queue claim must stay a later-capability claim, not a deployed one",
+    "the Temporalized unit must be stated in one bounded sentence",
   );
 
-  // Status precision: the canary/shadow half and the continuous-production
-  // half must sit together. Stating either alone is the diffuseness the
-  // reviewer flagged.
-  const canaryHalf = flat.indexOf("proved by a bounded canary");
-  const continuousHalf = flat.indexOf(
-    "running continuously in production is result delivery and acknowledgement",
+  // The before/after table carries the conversion.
+  assert.match(companion, /A process-owned reconcile tick/);
+  assert.match(companion, /Recovery replays recorded history/);
+  assert.match(companion, /Generation-fenced receipts/);
+
+  // One ownership model, four lines, application included; the second
+  // at-least-once restatement was cut by editorial decision.
+  assert.match(companion, /<li>Beads owns work facts\.<\/li>/);
+  assert.match(companion, /<li>Temporal owns procedural progress\.<\/li>/);
+  assert.match(companion, /<li>Activities touch the external world\.<\/li>/);
+  assert.match(
+    companion,
+    /<li>The application owns identity, fencing, idempotency, and correctness\.<\/li>/,
   );
-  assert.ok(canaryHalf > -1, "the canary/shadow half must be stated");
-  assert.ok(continuousHalf > -1, "the continuous-production half must be stated");
-  assert.ok(
-    Math.abs(continuousHalf - canaryHalf) < 400,
-    "the two status halves must be stated in the same breath",
-  );
+  assert.doesNotMatch(companion, /at-least-once execution/);
+
+  // One ownership diagram accompanies the list.
+  assert.match(companion, /<ConceptFigure kind="ownership" \/>/);
 
   assert.doesNotMatch(companion, /general rollout|exactly[- ]once Activities/i);
 });
 
-test("the worker-kill recording is embedded faithfully, with arm 2 carrying the claim", () => {
+test("the demo section tells the viewer what dies, what to watch, and why arm two decides", () => {
   assert.equal(existsSync(CAST), true, "the cast must ship with the site");
-  const companion = readFileSync(COMPANION, "utf8");
-
-  assert.match(companion, /asciinema-player/);
-  assert.match(companion, /worker-kill\.cast/);
-
-  // The demo carries its own falsifiability: the before-world recording, the
-  // Web UI's event history, and the downloadable evidence both gates wrote.
   assert.equal(
     existsSync(BEFORE_CAST),
     true,
     "the before-Temporal cast must ship with the site",
   );
-  assert.equal(
-    existsSync(UI_RECORD),
-    true,
-    "the masked Web UI record must ship with the site",
-  );
+  const companion = readFileSync(COMPANION, "utf8");
+  const flat = companion.replace(/\s+/g, " ");
+
+  assert.match(companion, /asciinema-player/);
+  assert.match(companion, /worker-kill\.cast/);
   assert.match(companion, /before-temporal\.cast/);
   assert.match(companion, /before-temporal-player/);
-  assert.match(companion, /ui-event-history-pre-checkpoint\.webp/);
-  assert.match(companion, /masked before capture/);
-  for (const artifact of [
-    "provenance.json",
-    "worker-kill/verify-report.txt",
-    "worker-kill/pre-checkpoint/retry-gap.jsonl",
-    "before-temporal/verify-report.txt",
-    "before-temporal/work.json",
-  ]) {
+
+  // Two recordings, three demonstrated executions, said in those words.
+  assert.ok(
+    flat.includes("Two recordings, three demonstrated executions"),
+    "the counting must be explicit: two recordings, three executions",
+  );
+
+  // Before playback the reader learns which process dies and which survives.
+  assert.ok(
+    flat.includes("I kill the orchestration process, not the coding agent."),
+    "the framing must state what dies before either player",
+  );
+  assert.ok(
+    flat.includes(
+      "whether the restarted orchestration attaches to that same agent or launches a competitor",
+    ),
+    "the framing must state the question the recordings answer",
+  );
+
+  // The before demo explains its failure causally, not just its counters.
+  assert.ok(
+    flat.includes("sees claimed work with no recorded session and starts a replacement"),
+    "the before demo must explain why a duplicate launches",
+  );
+  assert.ok(
+    flat.includes("the older attempt finishes last, overwriting the current receipt"),
+    "the before demo must explain the stale overwrite",
+  );
+
+  // The Temporal demo gives watch-for assertions per kill, and names arm two
+  // as the decisive case, mirroring the invariant report's own caveat.
+  assert.ok(flat.includes("What to watch, per kill:"));
+  assert.ok(
+    flat.includes(
+      "the replacement Worker resumes from heartbeat details, and session creations stay at one",
+    ),
+  );
+  assert.ok(
+    flat.includes(
+      "the resolver is called a second time and returns the existing session instead of creating another one",
+    ),
+  );
+  assert.ok(flat.includes("The second kill is the decisive one."));
+  assert.ok(
+    flat.includes(
+      "Surviving a kill after a checkpoint does not by itself prove duplicate-launch prevention",
+    ),
+  );
+
+  // The heartbeat must never be described as what prevents the second launch.
+  assert.doesNotMatch(
+    companion,
+    /heartbeat (?:is what |)(?:keeps|prevents|stops)[^.]*second agent/i,
+    "the heartbeat must never be described as what prevents the second launch",
+  );
+
+  // The label names the survivor, and the kill is an OS signal, not a
+  // Temporal Signal.
+  assert.match(
+    companion,
+    /With Temporal: the Worker dies, the agent does not/,
+  );
+  assert.match(companion, /operating-system kill signal/);
+  assert.doesNotMatch(companion, /with a real signal\./);
+
+  // The recordings stay faithful: no re-timing in player options, and the
+  // detection pause carries a status note so it reads as evidence.
+  assert.doesNotMatch(companion, /idleTimeLimit/);
+  assert.doesNotMatch(companion, /speed:/);
+  assert.match(companion, /tco__player-note/);
+  assert.match(companion, /waiting out the heartbeat timeout/i);
+  assert.match(companion, /The retry has to ask the resolver again/);
+
+  // Downloads offer a playable video; the .cast stays as the raw event log.
+  assert.match(companion, /worker-kill\.mp4/);
+  assert.match(companion, /before-temporal\.mp4/);
+  assert.match(companion, /raw asciinema event log/);
+  for (const rendered of ["worker-kill.mp4", "before-temporal.mp4"]) {
+    assert.equal(
+      existsSync(
+        path.join(ROOT, "public/temporal-agent-orchestration/demo", rendered),
+      ),
+      true,
+      `${rendered} must ship with the site`,
+    );
+  }
+
+  // The demo's scope is stated rather than implied.
+  assert.match(companion, /one host/);
+  assert.match(companion, /fixture process in place of a coding agent/);
+
+  // The companion links the summary evidence; the full bundle is linked from
+  // the article's appendix.
+  for (const artifact of ["provenance.json", "worker-kill/verify-report.txt"]) {
     assert.equal(
       existsSync(path.join(EVIDENCE_DIR, artifact)),
       true,
@@ -178,96 +260,58 @@ test("the worker-kill recording is embedded faithfully, with arm 2 carrying the 
       `the companion must link ${artifact}`,
     );
   }
-
-  // The before-world numbers block states both reproduced failures.
-  const flat = companion.replace(/\s+/g, " ");
-  assert.ok(
-    flat.includes("a second agent launches, two for one task"),
-    "the duplicate-launch failure must be stated",
-  );
-  assert.ok(
-    flat.includes("its late receipt overwrites the current one"),
-    "the stale-overwrite failure must be stated",
-  );
-
-  // The talk cut compresses the 18.2-second detection pause; the page must
-  // embed the faithful cast and must not re-compress it in player options.
-  assert.doesNotMatch(companion, /worker-kill-talk/);
-  assert.doesNotMatch(companion, /worker-kill-faithful\.mp4/);
-  assert.doesNotMatch(companion, /idleTimeLimit/);
-  assert.doesNotMatch(companion, /speed:/);
-  assert.match(companion, /eighteen seconds/);
-
-  // Arm 2 is the only arm that demonstrates duplicate-launch prevention.
-  assert.match(companion, /decisive arm/);
-  assert.match(companion, /cannot demonstrate duplicate prevention on\s+its own/);
-  assert.match(companion, /resolver calls = 2\s+session creations = 1/);
-  assert.match(companion, /stale claim token rejected/);
-  assert.match(companion, /same Activity identity across attempts/);
-
-  // The heartbeat correction: the resolver, not the heartbeat, prevents a
-  // second agent. A Worker can die before the first heartbeat lands. Pin the
-  // claim rather than one phrasing of it, so a wording change cannot silently
-  // reintroduce the wrong causality that this sentence exists to deny.
-  assert.match(
-    companion,
-    /A heartbeat does not keep a retry from becoming a second agent/,
-  );
-  assert.match(companion, /before the first heartbeat ever lands/);
-  assert.match(companion, /resolver\s+finds the existing session by stable identity/);
-  assert.match(companion, /heartbeat only\s+lets the retry resume progress/);
-  assert.doesNotMatch(
-    companion,
-    /heartbeat (?:is what |)(?:keeps|prevents|stops)[^.]*second agent/i,
-    "the heartbeat must never be described as what prevents the second launch",
-  );
-
-  // The demo's scope is stated rather than implied.
-  assert.match(companion, /one host/);
-  assert.match(companion, /fixture process in place of a coding agent/);
+  const article = readFileSync(ARTICLE, "utf8");
+  for (const artifact of [
+    "worker-kill/pre-checkpoint/retry-gap.jsonl",
+    "before-temporal/verify-report.txt",
+    "before-temporal/work.json",
+  ]) {
+    assert.equal(
+      existsSync(path.join(EVIDENCE_DIR, artifact)),
+      true,
+      `${artifact} must ship with the site`,
+    );
+    assert.ok(
+      article.includes(artifact),
+      `the article appendix must link ${artifact}`,
+    );
+  }
 });
 
-test("the companion splits the evidence three ways and keeps the failure visible", () => {
+test("the status table is the one definitive rollout statement", () => {
   const companion = readFileSync(COMPANION, "utf8");
   const flat = companion.replace(/\s+/g, " ");
 
-  const tiers = [
-    "Continuous in production",
-    "Bounded canary only",
-    "Design hypothesis",
+  assert.match(companion, /What is actually running/);
+
+  // Four rows, most-proven first, in the reviewer's terms. The scan starts at
+  // the section head because the hero ledger names cross-host recovery first.
+  const statusSection = companion.slice(
+    companion.indexOf("What is actually running"),
+  );
+  const rows = [
+    ["Result delivery and exact acknowledgement", "Production"],
+    ["Temporal-controlled claim and agent launch", "Shadow; bounded canary completed"],
+    ["Worker recovery on one host", "Demonstrated"],
+    ["Cross-host recovery", "Not demonstrated"],
   ];
   let previous = -1;
-  for (const tier of tiers) {
-    const current = companion.indexOf(tier);
-    assert.ok(current > previous, `${tier} must appear in evidence order`);
-    previous = current;
+  for (const [pathName, status] of rows) {
+    const at = statusSection.indexOf(pathName);
+    assert.ok(at > previous, `${pathName} must appear in evidence order`);
+    assert.ok(
+      flat.includes(status),
+      `${pathName} must carry the status "${status}"`,
+    );
+    previous = at;
   }
-  assert.match(companion, /returning the worker to\s+shadow/);
-  assert.match(companion, /Cross-host recovery/);
 
-  // "Exact acknowledgement" reads as an exactly-once claim the page later
-  // denies; the acknowledgement is matched, not the delivery made exact.
-  assert.ok(
-    flat.includes(
-      "an acknowledgement matched to the exact outcome generation and agent session",
-    ),
-    "the acknowledgement must be described as matched, not exact",
-  );
-  assert.doesNotMatch(companion, /exact acknowledgement receipt/);
-
-  // The operational status is stated directly, with both rollout switches.
-  assert.match(companion, /What runs today/);
-  assert.ok(
-    flat.includes("Both have independent rollout controls."),
-    "the two rollout switches must be stated as independent",
-  );
-
-  // Durable wrongness: Temporal retried the wrong envelope; the failure
-  // marker sits on the application adapter, never on the Temporal server.
+  // Limits stay on the page: durable wrongness, the retry cadence, and the
+  // job that stayed on cron.
   assert.ok(flat.includes("wrong store identity"));
   assert.ok(flat.includes("every fifteen minutes"));
-  assert.ok(flat.includes("failure marker belongs on the adapter"));
   assert.ok(flat.includes("forty-four seconds of synchronous work"));
+  assert.ok(flat.includes("what a crash leaves unresolved"));
 });
 
 test("the code browser renders every sample from the shared data module", () => {
@@ -300,13 +344,10 @@ test("the code browser renders every sample from the shared data module", () => 
   assert.match(codeReader, /download=\{sample\.filename\}/);
 });
 
-test("the glossary groups the vocabulary and both pages render it", () => {
+test("the glossary stays on the article, and its content holds the corrected causality", () => {
   const glossary = readFileSync(GLOSSARY, "utf8");
   const companion = readFileSync(COMPANION, "utf8");
-  const article = readFileSync(
-    path.join(ROOT, "src/components/temporal-agent-orchestration/Article.mdx"),
-    "utf8",
-  );
+  const article = readFileSync(ARTICLE, "utf8");
 
   for (const group of [
     "Gas City terms",
@@ -336,11 +377,13 @@ test("the glossary groups the vocabulary and both pages render it", () => {
     /heartbeat (?:is what |)(?:keeps|prevents|stops)[^.]*second agent/i,
   );
 
-  assert.match(companion, /<Glossary \/>/);
+  // The article owns the full glossary; the companion defines its handful of
+  // terms inline through TermTips instead of a second glossary.
   assert.match(article, /<Glossary \/>/);
+  assert.doesNotMatch(companion, /<Glossary \/>/);
 });
 
-test("the code identifiers carry hover explanations a keyboard can reach", () => {
+test("the companion's terms carry hover explanations a keyboard can reach", () => {
   const termtip = readFileSync(TERMTIP, "utf8");
   const companion = readFileSync(COMPANION, "utf8");
 
@@ -350,26 +393,20 @@ test("the code identifiers carry hover explanations a keyboard can reach", () =>
   assert.match(termtip, /role="tooltip"/);
   assert.match(termtip, /:focus-within/);
 
-  // Every code identifier in the conversion paragraph is explained.
-  for (const identifier of [
-    "CityRuntime.beadReconcileTick",
-    "BeadOrchestrationWorkflow",
-    "ExecuteBeadActivity",
-    "gascity-bead-orchestration",
-    "gascity-agent-work",
+  // Every specialist term the companion leans on is explained inline.
+  for (const term of [
+    "beads",
+    "workflow",
+    "activity",
+    "generation-fence",
+    "worker",
   ]) {
     assert.match(
       companion,
-      new RegExp(`<TermTip[\\s\\S]{0,400}?>${identifier.replace(/\./g, "\\.")}</TermTip>`),
-      `${identifier} must carry a TermTip explanation`,
+      new RegExp(`term="${term}"`),
+      `the companion must explain the ${term} term inline`,
     );
   }
-  // "Controller tick" is the phrase the tip exists to unpack.
-  const flat = companion.replace(/\s+/g, " ");
-  assert.ok(
-    flat.includes("every few seconds it woke (one tick)"),
-    "the tick tip must explain what a tick is",
-  );
 });
 
 test("companion prose carries no em dashes and no self-narration", () => {
@@ -402,7 +439,7 @@ test("companion prose carries no em dashes and no self-narration", () => {
   );
 });
 
-test("the built companion page keeps the quote, the recording, and the faithful timing", () => {
+test("the built companion page keeps the quote, the recordings, and the demo guidance", () => {
   const builtCompanion = path.join(
     ROOT,
     "dist/temporal-agent-orchestration/index.html",
@@ -416,7 +453,7 @@ test("the built companion page keeps the quote, the recording, and the faithful 
   assert.equal(
     existsSync(builtArticle),
     true,
-    "the article must build at its new route",
+    "the article must build at its route",
   );
   const html = readFileSync(builtCompanion, "utf8");
   assert.match(
@@ -424,17 +461,16 @@ test("the built companion page keeps the quote, the recording, and the faithful 
     /The task still exists, but the steps needed to resume it are lost\./,
   );
   assert.match(html, /worker-kill\.cast/);
+  assert.match(html, /I kill the orchestration process, not the coding agent\./);
+  assert.match(html, /What to watch, per kill:/);
+  assert.match(html, /With Temporal: the Worker dies, the agent does not/);
   assert.doesNotMatch(html, /worker-kill-talk/);
-  assert.match(html, /resolver calls = 2/);
 
-  const builtCast = path.join(
-    ROOT,
-    "dist/temporal-agent-orchestration/demo/worker-kill.cast",
-  );
-  assert.equal(existsSync(builtCast), true, "the cast must reach dist");
   for (const relative of [
+    "demo/worker-kill.cast",
     "demo/before-temporal.cast",
-    "demo/ui-event-history-pre-checkpoint.webp",
+    "demo/worker-kill.mp4",
+    "demo/before-temporal.mp4",
     "demo/artifacts/provenance.json",
     "demo/artifacts/worker-kill/verify-report.txt",
     "demo/artifacts/before-temporal/verify-report.txt",
@@ -447,11 +483,9 @@ test("the built companion page keeps the quote, the recording, and the faithful 
   }
 });
 
-// The companion reuses the article's diagrams rather than shipping its own set.
-// Reuse is only safe while each figure still says what the companion's prose
-// says: the recovery figure sat next to the wrong heartbeat causality once, and
-// this page's corrected paragraph is directly beneath it.
-test("the companion carries diagrams that agree with its prose", () => {
+// The companion reuses the article's ownership diagram rather than shipping its
+// own set. Reuse is only safe while the figure still says what the page says.
+test("the companion's diagram agrees with its prose", () => {
   const companion = readFileSync(COMPANION, "utf8");
   const figures = readFileSync(
     path.join(
@@ -461,65 +495,23 @@ test("the companion carries diagrams that agree with its prose", () => {
     "utf8",
   );
 
-  const reading = [
-    "legend",
-    "scattered",
-    "handoff",
-    "ownership",
-    "recovery",
-    "shadow",
-    "workshop",
-    "wrongness",
-    "boundary",
-  ];
-  let previous = -1;
-  for (const kind of reading) {
-    const at = companion.indexOf(`<ConceptFigure kind="${kind}" />`);
-    assert.ok(at > -1, `<ConceptFigure kind="${kind}" /> must be rendered`);
-    assert.ok(at > previous, `${kind} must appear in reading order`);
-    previous = at;
-  }
-
-  // The new figures also land in the sections whose prose argues them.
-  const scatteredAt = companion.indexOf('<ConceptFigure kind="scattered" />');
+  // One diagram: ownership, inside the "What I Temporalized" section.
+  const ownershipAt = companion.indexOf('<ConceptFigure kind="ownership" />');
+  assert.ok(ownershipAt > -1, "the ownership figure must be rendered");
   assert.ok(
-    companion.indexOf("A crash loses the procedure, not the task") <
-      scatteredAt && scatteredAt < companion.indexOf("What I Temporalized"),
-    "the scattered figure closes the problem section",
+    companion.indexOf("What I Temporalized") < ownershipAt &&
+      ownershipAt < companion.indexOf("The Worker dies on camera"),
+    "the ownership figure belongs in the Temporalized section",
   );
-  const shadowAt = companion.indexOf('<ConceptFigure kind="shadow" />');
-  assert.ok(
-    companion.indexOf("The status has two halves") < shadowAt &&
-      shadowAt < companion.indexOf('<ConceptFigure kind="workshop" />'),
-    "the shadow figure belongs beside the two-halves status",
-  );
-  const workshopAt = companion.indexOf('<ConceptFigure kind="workshop" />');
-  assert.ok(
-    companion.indexOf("What the evidence proves") < workshopAt &&
-      workshopAt < companion.indexOf("What it did not fix"),
-    "the workshop figure belongs in the evidence section",
-  );
-  const wrongnessAt = companion.indexOf('<ConceptFigure kind="wrongness" />');
-  assert.ok(
-    companion.indexOf("faithfully retried the wrong envelope") < wrongnessAt,
-    "the wrongness figure follows the canary paragraph it draws",
+  assert.equal(
+    (companion.match(/<ConceptFigure /g) ?? []).length,
+    1,
+    "the companion carries exactly one concept figure",
   );
 
-  // Each figure lands in the section it illustrates, not merely somewhere.
-  const recoveryAt = companion.indexOf('<ConceptFigure kind="recovery" />');
-  assert.ok(
-    companion.indexOf("The Worker dies on camera") < recoveryAt &&
-      recoveryAt < companion.indexOf("At eight seconds the first Worker dies"),
-    "the recovery figure belongs between the kill heading and its narration",
-  );
-  const boundaryAt = companion.indexOf('<ConceptFigure kind="boundary" />');
-  assert.ok(
-    companion.indexOf("What it did not fix") < boundaryAt,
-    "the boundary figure belongs in the limits section",
-  );
-
-  // The recovery diagram must keep the corrected causality: identity resolves
-  // the session, the heartbeat only carries progress.
+  // The recovery diagram in the shared component must keep the corrected
+  // causality: identity resolves the session, the heartbeat only carries
+  // progress. The companion's watch-for list states the same claim.
   const recovery = figures.slice(
     figures.indexOf('kind === "recovery"'),
     figures.indexOf('kind === "siblings"'),
@@ -527,8 +519,4 @@ test("the companion carries diagrams that agree with its prose", () => {
   assert.match(recovery, /heartbeat carries progress, not\s+the identity/i);
   assert.match(recovery, /even if no heartbeat was ever recorded/i);
   assert.doesNotMatch(recovery, /read heartbeat/i);
-
-  // The figures number themselves against the article, so the companion drops
-  // that index rather than showing a figure "05" inside its section 04.
-  assert.match(companion, /\.tco :global\(\.concept-figure__index\)[\s\S]*display: none/);
 });
