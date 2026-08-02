@@ -16,6 +16,28 @@ const beforeCast = `${root}/demo/before-temporal.cast`;
 const uiRecord = `${root}/demo/ui-event-history-pre-checkpoint.webp`;
 const evidence = `${root}/demo/artifacts`;
 
+// Read at build time rather than transcribed: a hand-copied revision goes stale
+// the first time the demo is re-recorded, and a stale one is worse than none.
+const provenance = JSON.parse(
+  readFileSync(
+    path.join(
+      process.cwd(),
+      "public/temporal-agent-orchestration/demo/artifacts/provenance.json",
+    ),
+    "utf8",
+  ),
+) as {
+  service_revision_full: string;
+  service_module: string;
+  temporal_sdk: string;
+  temporal_cli: string;
+  go_toolchain: string;
+  host: string;
+  heartbeat_timeout_seconds: number;
+  run_command: string;
+  published_files_sha256: Record<string, string>;
+};
+
 const codeThemes = {
   light: "one-light",
   dark: "one-dark-pro",
@@ -59,7 +81,7 @@ const afterCode = await codeToHtml(
       <dl class="tco__ledger">
         <div>
           <dt>Temporalized</dt>
-          <dd>One ready task → one agent execution → one fenced receipt.</dd>
+          <dd>One ready task → one agent session → one fenced receipt.</dd>
         </div>
         <div>
           <dt>Proved</dt>
@@ -109,12 +131,12 @@ const afterCode = await codeToHtml(
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
-        <p class="kicker">01</p>
+        <p class="kicker">Section 01</p>
         <h2>What I Temporalized</h2>
       </header>
       <div class="tco__copy prose">
         <p>
-          I converted one unit: one ready task becoming one agent execution
+          I converted one unit: one ready task becoming one agent session
           and one receipt that only the current attempt can submit. The guard
           on that receipt is called a generation fence, and it is what keeps a
           stale attempt from overwriting the current one.
@@ -242,15 +264,33 @@ const afterCode = await codeToHtml(
 
     <section class="tco__section tco__numbered" id="worker-kill">
       <header class="tco__section-head">
-        <p class="kicker">02</p>
+        <p class="kicker">Section 02</p>
         <h2>The Worker dies on camera</h2>
         <p>
-          Two recordings, and nothing in either is staged. Each is a split
+          Two recordings. Both are controlled runs of the same fixture; only
+          the coordinator changes. Each is a split
           screen: the run on the left, and on the right independent panes
           that measure for themselves rather than trusting the run's own
           narration.
         </p>
       </header>
+      <p class="tco__provenance">
+        <strong>Source used for these recorded runs:</strong>
+        <code>{provenance.service_revision_full}</code> of
+        <code>{provenance.service_module}</code>, which is not public yet, so
+        the revision is given for matching against the evidence rather than as
+        a link. {provenance.temporal_sdk} of the Go SDK,
+        {" "}{provenance.temporal_cli.replace("temporal version ", "CLI ")},
+        {" "}{provenance.go_toolchain.replace("go version ", "")}, on
+        {" "}{provenance.host}, with a {provenance.heartbeat_timeout_seconds}-second
+        Activity heartbeat timeout. Harness command
+        <code>{provenance.run_command}</code>, wrapped in
+        <code>asciinema rec --cols 120 --rows 38</code>.
+        <a href={`${evidence}/provenance.json`}>The provenance record</a>
+        carries those fields plus a SHA-256 for each of the
+        {" "}{Object.keys(provenance.published_files_sha256).length} published
+        evidence files.
+      </p>
       <h3 class="tco__demo-subhead">First, without Temporal</h3>
       <div class="tco__copy prose">
         <p>
@@ -371,7 +411,7 @@ both   one session, one receipt, stale claim token rejected,
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
-        <p class="kicker">03</p>
+        <p class="kicker">Section 03</p>
         <h2>What the evidence proves</h2>
       </header>
       <div class="tco__evidence-tiers">
@@ -387,7 +427,7 @@ both   one session, one receipt, stale claim token rejected,
         <article>
           <p class="kicker">Bounded canary only</p>
           <p>
-            Work-item-to-agent execution: one claim, one agent execution, one
+            Work-item-to-agent execution: one claim, one agent session, one
             fenced receipt, and recovery from a mid-episode Worker
             interruption. Every canary ended by returning the worker to
             shadow.
@@ -406,7 +446,7 @@ both   one session, one receipt, stale claim token rejected,
         <p>
           The status has two halves and they belong together. The
           work-item-to-agent unit is proved by a bounded canary and runs in
-          shadow. The part running continuously in production is result
+          shadow. The part running continuously in my live Gas City installation is result
           delivery and acknowledgement, the same boundary applied a second
           time. Both have independent rollout controls.
         </p>
@@ -427,7 +467,7 @@ both   one session, one receipt, stale claim token rejected,
 
     <section class="tco__section tco__numbered">
       <header class="tco__section-head">
-        <p class="kicker">04</p>
+        <p class="kicker">Section 04</p>
         <h2>What it did not fix, and what it cost</h2>
       </header>
       <div class="tco__copy prose">
@@ -683,6 +723,25 @@ both   one session, one receipt, stale claim token rejected,
 
   .tco__details > :global(figure) {
     margin-block-start: var(--space-m);
+  }
+
+  /* Provenance reads as apparatus, not argument: set small and secondary so it
+     is available to a reviewer without competing with the recordings. */
+  .tco__provenance {
+    max-width: var(--measure);
+    margin-block: var(--space-m) 0;
+    padding: var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
+  }
+
+  .tco__provenance code {
+    overflow-wrap: anywhere;
+    font-size: 0.95em;
   }
 
   .tco__demo-subhead {

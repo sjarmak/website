@@ -4,40 +4,40 @@
   "status": "completed",
   "claim": {
     "generation": 2,
-    "claimed_at": "2026-08-01T22:11:43.066151664Z"
+    "claimed_at": "2026-08-02T02:46:43.099155509Z"
   },
   "completion": {
     "generation": 1,
-    "session_id": "agent-session-86d8d22a",
+    "session_id": "agent-session-a410d394",
     "outcome": "completed",
-    "recorded_at": "2026-08-01T22:11:55.078136482Z",
+    "recorded_at": "2026-08-02T02:46:55.111114932Z",
     "recorded_by": "recovery-scan"
   },
   "history": [
     {
-      "ts": "2026-08-01T22:11:33.523700111Z",
+      "ts": "2026-08-02T02:46:33.562927312Z",
       "kind": "claimed",
       "detail": "generation 1 claimed; procedure held in process memory"
     },
     {
-      "ts": "2026-08-01T22:11:43.066150351Z",
+      "ts": "2026-08-02T02:46:43.099154367Z",
       "kind": "claim-declared-stale",
       "detail": "generation 1 declared stale after 9s; the running agent, if any, is invisible to this inference"
     },
     {
-      "ts": "2026-08-01T22:11:43.066152134Z",
+      "ts": "2026-08-02T02:46:43.09915592Z",
       "kind": "claimed",
       "detail": "generation 2 claimed; procedure held in process memory"
     },
     {
-      "ts": "2026-08-01T22:11:47.072454808Z",
+      "ts": "2026-08-02T02:46:47.105466439Z",
       "kind": "completion-recorded",
-      "detail": "inline wait recorded generation 2 session agent-session-6520b845"
+      "detail": "inline wait recorded generation 2 session agent-session-b90d0a33"
     },
     {
-      "ts": "2026-08-01T22:11:55.078139157Z",
+      "ts": "2026-08-02T02:46:55.111122346Z",
       "kind": "completion-recorded",
-      "detail": "recovery scan recorded generation 1 session agent-session-86d8d22a over previous generation 2 by agent-session-6520b845"
+      "detail": "recovery scan recorded generation 1 session agent-session-a410d394 over previous generation 2 by agent-session-b90d0a33"
     }
   ]
 }

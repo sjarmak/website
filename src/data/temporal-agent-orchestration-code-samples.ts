@@ -619,7 +619,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           purpose:
             "Keeps the orchestration Worker and the agent Activity Worker under one small lifecycle object.",
           whyTemporal:
-            "Separate Task Queues let deterministic Workflow tasks and resource-heavy agent work scale and fail independently.",
+            "Separate Task Queues allow the two workloads to be deployed and scaled independently, although this WorkerSet currently co-locates both pollers.",
           details: ["Two Task Queues", "Lifecycle state"],
         },
         {

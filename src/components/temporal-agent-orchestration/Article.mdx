@@ -206,13 +206,13 @@ But...Every arrow between them was a place where the process could die.
 
 ### The unit I converted
 
-Being specific about it, because "I added Temporal to my agent system" is not a claim anyone can check. The unit is one ready work item becoming one agent execution and one fenced receipt.
+Being specific about it, because "I added Temporal to my agent system" is not a claim anyone can check. The unit is one ready work item becoming one agent session and one fenced receipt.
 
 Before, that was a controller tick: <TermTip term="bead-reconcile-tick" tip="The old coordinator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip> in `cmd/gc/city_runtime.go`, plus the session recovery and close path in `cmd/gc/session_beads.go`, at [the public revision](https://github.com/gastownhall/gascity/tree/b78058917bc65846db89e1c3b25dc17269822483) the excerpts below cite and link to. After, <TermTip term="bead-orchestration-workflow" tip="The Temporal Workflow that now owns one work item's procedure: claim, launch, wait, receipt, in that order, recorded durably.">BeadOrchestrationWorkflow</TermTip> owns the procedure and <TermTip term="execute-bead-activity" tip="The Temporal Activity that touches the real world for that item: it writes the fenced claim, starts the agent or finds the one already running, heartbeats, and reports the completion.">ExecuteBeadActivity</TermTip> owns the fenced claim, start-or-attach, heartbeat, and generation-fenced completion, split across two task queues: <TermTip term="queue-orchestration" tip="The Task Queue the orchestration Workflow is served from.">gascity-bead-orchestration</TermTip> for the procedure and <TermTip term="queue-agent-work" tip="The Task Queue the agent-facing Activity is served from.">gascity-agent-work</TermTip> for the agent itself.
 
 I chose that unit over result delivery because it has an exact predecessor in public code that maps one to one onto its replacement. Result delivery's "before" was mail plus attention plus hope, and an absence is a weaker demonstration than a diff.
 
-The two halves of the status belong in the same breath, so both, every time: this bead-to-agent unit is proved by a bounded canary and runs in shadow. The part running continuously in production is result delivery and acknowledgement.
+The two halves of the status belong in the same breath, so both, every time: this bead-to-agent unit is proved by a bounded canary and runs in shadow. The part running continuously in my live Gas City installation is result delivery and acknowledgement.
 
 <AnnotatedCode mode="before" />
 

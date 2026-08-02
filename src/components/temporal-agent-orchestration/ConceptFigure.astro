@@ -24,7 +24,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "legend" && (
     <figure class="concept-figure concept-figure--legend" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">00 / Legend</p>
+        <p class="concept-figure__index">Figure 00 / Legend</p>
         <h3 id={titleId}>How to read these diagrams</h3>
       </header>
       <svg
@@ -98,7 +98,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "orchestrator" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">01 / Gas City SDK</p>
+        <p class="concept-figure__index">Figure 01 / Gas City SDK</p>
         <h3 id={titleId}>Gas City SDK: one operating system for agent work</h3>
       </header>
 
@@ -197,7 +197,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "workshop" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">06 / Live result loop</p>
+        <p class="concept-figure__index">Figure 06 / Live result loop</p>
         <h3 id={titleId}>How finished work reaches an exact acknowledgement</h3>
       </header>
 
@@ -332,7 +332,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "ownership" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">03 / New boundary</p>
+        <p class="concept-figure__index">Figure 03 / New boundary</p>
         <h3 id={titleId}>Who owns what</h3>
       </header>
 
@@ -408,7 +408,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "recovery" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">05 / Recovery invariant</p>
+        <p class="concept-figure__index">Figure 05 / Recovery invariant</p>
         <h3 id={titleId}>One agent session survives Worker loss</h3>
       </header>
 
@@ -518,7 +518,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "siblings" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">02 / Two instantiations</p>
+        <p class="concept-figure__index">Figure 02 / Two instantiations</p>
         <h3 id={titleId}>One SDK, two ways to survive a crash</h3>
       </header>
 
@@ -577,7 +577,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "handoff" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">04 / Durable handoff</p>
+        <p class="concept-figure__index">Figure 04 / Durable handoff</p>
         <h3 id={titleId}>A crash between claim and launch is survivable</h3>
       </header>
 
@@ -664,7 +664,7 @@ const svgDescId = `${titleId}-svg-desc`;
         <li>One Beads transaction writes the ready transition and its delivery event together.</li>
         <li>Signal-With-Start opens or signals the Workflow under a stable Workflow ID.</li>
         <li>Crash window one sits before the outbox acknowledgement: if the bridge dies after Temporal accepts the event, the event is delivered again and the Workflow ignores an event ID it has already processed.</li>
-        <li>The Workflow records a generation-fenced Beads claim carrying a claim token.</li>
+        <li>The Activity records a generation-fenced Beads claim carrying a claim token.</li>
         <li>Start-or-attach creates the agent session or finds the existing one by stable identity.</li>
         <li>Crash window two sits before the first heartbeat: if the Worker dies after the session is created, the retry re-enters start-or-attach and the resolver finds the already-created session by identity.</li>
         <li>Heartbeats carry progress after attachment; the duplicate-launch guard is the stable identity, not the heartbeat.</li>
@@ -683,7 +683,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "boundary" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">08 / Remaining work</p>
+        <p class="concept-figure__index">Figure 08 / Remaining work</p>
         <h3 id={titleId}>What Temporal owns, and what it leaves behind</h3>
       </header>
 
@@ -776,7 +776,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "shadow" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">07 / Shadow boundary</p>
+        <p class="concept-figure__index">Figure 07 / Shadow boundary</p>
         <h3 id={titleId}>Shadow is a glass wall with one opened gate</h3>
       </header>
 
@@ -880,7 +880,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "wrongness" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">09 / Durable wrongness</p>
+        <p class="concept-figure__index">Figure 09 / Durable wrongness</p>
         <h3 id={titleId}>A wrong identity is preserved as durably as a right one</h3>
       </header>
 
@@ -986,7 +986,7 @@ const svgDescId = `${titleId}-svg-desc`;
   kind === "scattered" && (
     <figure class="concept-figure" aria-labelledby={titleId}>
       <header class="concept-figure__header">
-        <p class="concept-figure__index">01 / Before Temporal</p>
+        <p class="concept-figure__index">Figure 01 / Before Temporal</p>
         <h3 id={titleId}>One task, five owners, seven crash windows</h3>
       </header>
 
@@ -998,12 +998,12 @@ const svgDescId = `${titleId}-svg-desc`;
       >
         <title id={svgTitleId}>Pre-Temporal flow with seven crash windows</title>
         <desc id={svgDescId}>
-          A task travels across five swimlanes: the Beads ledger;
+          A task travels across five swimlanes: the Beads work record;
           controller, orders, and reapers; dispatcher and sessions; agent,
           Git, and filesystem; mail and the Mayor. A step becomes ready in
           Beads, a controller scan tick discovers it, a claim is recorded
           back in Beads, the dispatcher wakes a session, the agent runs
-          and pushes a branch, completion returns to the Beads ledger, and
+          and pushes a branch, completion returns to the Beads work record, and
           a mail nudge reaches the Mayor, who verifies the result. Seven
           lightning bolts sit on the connecting edges, never on the
           components, marking the crash windows: ready but not delivered,
@@ -1019,7 +1019,7 @@ const svgDescId = `${titleId}-svg-desc`;
           <rect class="svg-lane" x="15" y="40" width="1090" height="124" />
           <rect class="svg-lane" x="15" y="288" width="1090" height="124" />
           <rect class="svg-lane" x="15" y="536" width="1090" height="124" />
-          <text class="svg-eyebrow" x="30" y="107">Beads ledger</text>
+          <text class="svg-eyebrow" x="30" y="107">Beads work record</text>
           <text class="svg-eyebrow" x="30" y="216">Controller, orders,</text>
           <text class="svg-eyebrow" x="30" y="235">reapers</text>
           <text class="svg-eyebrow" x="30" y="340">Dispatcher and</text>
@@ -1110,15 +1110,16 @@ const svgDescId = `${titleId}-svg-desc`;
       </svg>
 
       <ol class="concept-figure__fallback" aria-label="Pre-Temporal flow and its seven crash windows">
-        <li>A step becomes ready in the Beads ledger, but delivery depends on a later scan; a crash here leaves the ready work with no durable owner.</li>
+        <li>A step becomes ready in the Beads work record, but delivery depends on a later scan; a crash here leaves the ready work with no durable owner.</li>
         <li>A controller scan tick finds the step and records a claim back in Beads; a crash after the claim strands a claim with no agent.</li>
         <li>The dispatcher wakes a session and the agent starts; a crash before the session is recorded lets a retry launch a second agent.</li>
         <li>The agent pushes a branch to Git; a crash before completion is recorded leaves pushed work invisible to the repair scans.</li>
         <li>An agent from an old generation can report success late, and its stale completion can overwrite the current attempt.</li>
-        <li>Completion lands in the Beads ledger, but creating a notification is a separate step that can silently never happen.</li>
+        <li>Completion lands in the Beads work record, but creating a notification is a separate step that can silently never happen.</li>
         <li>A mail nudge reaches the Mayor, but nothing durable keeps the result owed until an acknowledgement is recorded.</li>
-        <li>Only the Beads boxes are durable records; every arrow between the subsystems lived in process memory.</li>
       </ol>
+
+      <p class="concept-figure__fallback-note">Only the Beads boxes are durable records; every arrow between the subsystems lived in process memory.</p>
 
       <figcaption class="figure-caption">
         The facts survived in several stores, but no single durable

@@ -136,7 +136,7 @@ const groups: Group[] = [
       {
         term: "Signal-With-Start",
         definition:
-          "One message that reaches a Workflow if it exists and starts it first if it does not. With a stable Workflow ID, delivering the same message again is safe.",
+          "Signal-With-Start atomically signals the existing Workflow or starts it first. The stable Workflow ID routes redelivery to the same execution, and application-level event-ID deduplication makes repeated delivery harmless.",
       },
     ],
   },
