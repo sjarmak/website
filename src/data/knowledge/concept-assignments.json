@@ -116,6 +116,42 @@
   "digest:daily-2026-07-18": {
     "concept": "agentic-coding"
   },
+  "digest:daily-2026-07-19": {
+    "concept": "information-retrieval"
+  },
+  "digest:daily-2026-07-20": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-21": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-22": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-23": {
+    "concept": "reliability"
+  },
+  "digest:daily-2026-07-24": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-25": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-26": {
+    "concept": "reliability"
+  },
+  "digest:daily-2026-07-27": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-07-28": {
+    "concept": "agentic-coding"
+  },
+  "digest:daily-2026-07-29": {
+    "concept": "reliability"
+  },
+  "digest:daily-2026-07-30": {
+    "concept": "evaluation"
+  },
   "digest:daily-general-2026-06-10": {
     "concept": "model-releases"
   },
@@ -227,6 +263,39 @@
   "digest:daily-general-2026-07-18": {
     "concept": "model-releases"
   },
+  "digest:daily-general-2026-07-19": {
+    "concept": "agent-tooling"
+  },
+  "digest:daily-general-2026-07-20": {
+    "concept": "evaluation"
+  },
+  "digest:daily-general-2026-07-22": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-23": {
+    "concept": "ai-security"
+  },
+  "digest:daily-general-2026-07-24": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-25": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-26": {
+    "concept": "code-review"
+  },
+  "digest:daily-general-2026-07-27": {
+    "concept": "agent-tooling"
+  },
+  "digest:daily-general-2026-07-28": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-07-29": {
+    "concept": "ai-security"
+  },
+  "digest:daily-general-2026-07-30": {
+    "concept": "model-releases"
+  },
   "digest:manual-enhancing-developer-productivity-with-google-colab-cli-and-agentic-observability": {
     "concept": "developer-productivity"
   },
@@ -251,6 +320,12 @@
   "digest:weekly-2026-07-13": {
     "concept": "agentic-coding"
   },
+  "digest:weekly-2026-07-20": {
+    "concept": "agentic-coding"
+  },
+  "digest:weekly-2026-07-27": {
+    "concept": "reliability"
+  },
   "digest:weekly-general-2026-06-15": {
     "concept": "model-releases"
   },
@@ -261,6 +336,12 @@
     "concept": "open-models"
   },
   "digest:weekly-general-2026-07-06": {
+    "concept": "model-releases"
+  },
+  "digest:weekly-general-2026-07-20": {
+    "concept": "model-releases"
+  },
+  "digest:weekly-general-2026-07-27": {
     "concept": "model-releases"
   },
   "paper:2022arXiv221003629Y": {
@@ -553,6 +634,10 @@
     "concept": "reliability",
     "takeaway": "Names a failure taxonomy for the lab-to-production gap — fragile fixes (patches pass tests but leave latent bugs), token waste (trial-and-error instead of a planned approach), false confidence (never abstaining on impossible/ambiguous tasks), and broken intermediates (codebase left broken between steps). Baseline ReAct agents fail badly against it: no baseline abstained on any of the 6 impossible tasks, and even disciplined agents abstained correctly only 62% of the time. Recovery is the hardest mode and the one scaffolding does NOT fix — smallest gain of all five pillars, token-waste cut only 34%, doom loops persist when root cause isn't in the error message; the authors conclude recovery may need architectural changes beyond configuration-level frameworks."
   },
+  "paper:2026arXiv260625449K": {
+    "concept": "evaluation",
+    "takeaway": "Separates two regimes that look identical from outside: anchoring (the source is still in context and a directed correction works) and information loss (the source is gone and reclaim is 0.00 by measurement, checkable as a token test on the carried note); the wall and the source-first fix replicate across three deployed memory systems and on MultiWOZ dialogue."
+  },
   "paper:2026arXiv260626511Y": {
     "concept": "memory-consolidation",
     "takeaway": "Across four marker-free evolving benchmarks (code mutation, config migration, dependency bumps, API evolution), plain RAG serves the superseded value 15-40% of the time when forced to answer; MemStrata drives this to ~0% via deterministic supersession rather than any decay or scoring-based forgetting heuristic."
@@ -588,6 +673,34 @@
   "paper:2026arXiv260710059L": {
     "concept": "reliability",
     "takeaway": "The paper gives an agent-native failure taxonomy of 8 abstention scenarios, organized by when a trigger becomes observable (pre-execution reasoning vs. runtime discovery) and where it resides (query, environment state, or tools). Across 17 frontier LLMs in 4 harnesses the best agent, Gemini 3.1 Pro, reaches only 59.5% Paired Accuracy and 13 of 17 stay below 50%, and abstention capability tracks largely independently of general task-solving skill. The signature failure is post-hoc abstention: an agent commits an irreversible action, such as cancelling a flight before checking rebooking availability, then verbally acknowledges the problem, leaving unrecoverable side effects."
+  },
+  "paper:2026arXiv260712893H": {
+    "concept": "evaluation",
+    "takeaway": "A controllably-generated long-horizon conversational-memory benchmark that reformulates memory as five lifecycle operations (remember, forget, update, reflect, and TrajectoryOps that compose events across time), each represented by a gold trace of trigger, target, scope, state transition, and verbatim evidence spans, with six operation-level probe categories evaluated under adjacent-evidence and long-context settings."
+  },
+  "paper:2026arXiv260713716W": {
+    "concept": "ai-security",
+    "takeaway": "A 96-seed, 384-variant benchmark shows raw-text and first-token approval binding are defeated by wrappers (env, sudo, bash -c, aliases, SDK indirection), while canonical fingerprinting resists wrapper bypass and approval drift; ablating the canonical fingerprint is the single most damaging removal tested, collapsing the retained score to 0.00 since there is no longer a stable object for approval to bind to."
+  },
+  "paper:2026arXiv260714890H": {
+    "concept": "reliability",
+    "takeaway": "Treats every agent-emitted lifecycle claim (reviewed, tested, done, ready-to-merge) as inadmissible until fresh, tracked-source-state-bound evidence satisfies a gate. In a 9,240-cell powered ablation, the pre-registered contrast between the gated loop and a compute-budgeted naive loop cut visible-pass/hidden-fail amplification from 31/1,800 injected cells to 2/1,800 (+1.6pp not-amplified, 95% CI [0.8, 2.5]); a near-compute contrast (14/1,800 vs 2/1,800) shows the gain tracks enforcing the review signal as a hard gate, not just adding a reviewer."
+  },
+  "paper:2026arXiv260716716S": {
+    "concept": "evaluation",
+    "takeaway": "A long-context memory benchmark of 24 investigative case files (criminal, medical, financial), each 50k-100k tokens, with 1,604 questions over six memory-intensive task families: chain reconstruction (locate and causally order 5-15 scattered evidence hops), cascade propagation (after an invalidation, decide which conclusions break and which survive on independent support), source-conflict resolution, counterfactual reasoning, temporal-constraint satisfaction, and temporal fact retrieval as a control. Ground truth is deterministic, built from a provenance DAG, with a fixed question matrix enforcing per-task and per-format quotas across cases."
+  },
+  "paper:2026arXiv260717044D": {
+    "concept": "reliability",
+    "takeaway": "Decomposes a production enterprise agent's uplift over its bare base model (+11.0 pp on SpreadsheetBench Verified, +7-10 pp on BullshitBench v2, ~+15 pp on GAIA validation) by architectural layer: scaffolding and prompting account for +9.5 of the +11.0 pp on SpreadsheetBench, while the verification loop's isolated contribution is +1.5 pp (6 rescued tasks) - small but concentrated at the top of the score distribution, where every competitive system has already exhausted scaffolding gains. A specialist-swap ablation shows the loop's value rides on observer independence: moving observe/compare from the small trained verifier back onto the frontier model that generated the artifact cuts SpreadsheetBench rescues from 6 tasks to 2 and drops BullshitBench correct rejection 4-5 pp."
+  },
+  "paper:2026arXiv260720759S": {
+    "concept": "ai-security",
+    "takeaway": "Six seed issues from SymPy and requests fan out into 696 adversarial artifacts - four attack categories (installing a disguised PyPI package, planting a hidden executable validation hook that phones an attacker endpoint, poisoning .cursorrules or CLAUDE.md so the agent stops asking for terminal confirmation, and spawning 10,000 worker threads), crossed with six delivery vectors and per-vector perturbations - executed across 6 agent-model configurations for 4,176 runs. 66.5% penetrate both agent- and LLM-level guardrails. Delivery vector is the dominant factor: payloads in ordinary text artifacts (issue bodies, PDFs) succeed in 72.2% of runs against 16.7% when confined to image alt-text, while cross-lingual translation and visual obfuscation show negligible effect. Of 1,400 resisted runs, 82.9% are blocked by the model explicitly refusing and 17.1% by the model classifying the source as untrusted metadata. Spotlighting-style boundary markers failed to stop payload execution."
+  },
+  "paper:2026arXiv260725152P": {
+    "concept": "reliability",
+    "takeaway": "The paper names the failure mode, the progress mirage, and defines it as a measurable rate rather than an anecdote: the fraction of evaluator-accepted cycles whose oracle-measured delta is zero or below. The definition was deliberately widened from the preregistered wording of exactly zero, because a delta of zero excludes the worse error of accepting an outright regression. Alongside it the paper reports a wasted-cycle ratio, acceptance rates conditioned separately on non-positive and positive deltas, and time-to-first-positive with right-censoring recorded, all computed mechanically from raw cycle logs with no human discretion. The oracle is a synthetic user simulator kept unreachable by container and network isolation, with a boundary proof run at every run and a canary scan at every cycle, so the ground truth cannot be quietly contaminated by the agent under test. The proposed architecture puts the evaluator in a separate process reading databases, version-control history, web analytics and append-only ledgers, and forces a rejected cycle to leave an artifact the next iteration must read first at boot. Four supporting mechanisms (append-only state, file-based handoff between sessions, periodic frame-adversarial self-review, a self-healing scheduler) are presented as field-derived design notes and are not individually validated."
   },
   "paper:ACRFence": {
     "concept": "ai-security"

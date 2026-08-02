@@ -4,7 +4,7 @@
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
@@ -29,10 +29,16 @@ function linkedCss(html) {
 }
 
 before(async () => {
-  await execFileP("npm", ["run", "build"], {
-    cwd: REPO_ROOT,
-    maxBuffer: 64 * 1024 * 1024,
-  });
+  // Build only when the artifact is missing: three dist suites once each ran
+  // an unconditional build, and node --test's parallel file execution let the
+  // concurrent Astro builds delete each other's in-flight dist modules. The
+  // ordered CI pipeline builds before testing, so dist normally exists.
+  if (!existsSync(path.join(DIST, "index.html"))) {
+    await execFileP("npm", ["run", "build"], {
+      cwd: REPO_ROOT,
+      maxBuffer: 64 * 1024 * 1024,
+    });
+  }
 });
 
 test("writing index links to the book exactly once", () => {

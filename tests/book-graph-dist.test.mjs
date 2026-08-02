@@ -1,7 +1,7 @@
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
@@ -16,7 +16,11 @@ function page(...segments) {
 }
 
 before(async () => {
-  await execFileP("npm", ["run", "build"], { cwd: ROOT, maxBuffer: 64 * 1024 * 1024 });
+  // Build only when the artifact is missing; an unconditional build here raced
+  // the other dist suites' builds under node --test's parallel execution.
+  if (!existsSync(path.join(DIST, "index.html"))) {
+    await execFileP("npm", ["run", "build"], { cwd: ROOT, maxBuffer: 64 * 1024 * 1024 });
+  }
 });
 
 test("the canonical explorer ships the complete graph and accessible controls", () => {
