@@ -155,6 +155,12 @@
   "digest:daily-2026-07-31": {
     "concept": "agentic-coding"
   },
+  "digest:daily-2026-08-01": {
+    "concept": "evaluation"
+  },
+  "digest:daily-2026-08-02": {
+    "concept": "evaluation"
+  },
   "digest:daily-general-2026-06-10": {
     "concept": "model-releases"
   },
@@ -301,6 +307,12 @@
   },
   "digest:daily-general-2026-07-31": {
     "concept": "ai-economics"
+  },
+  "digest:daily-general-2026-08-01": {
+    "concept": "model-releases"
+  },
+  "digest:daily-general-2026-08-02": {
+    "concept": "ai-governance"
   },
   "digest:manual-enhancing-developer-productivity-with-google-colab-cli-and-agentic-observability": {
     "concept": "developer-productivity"
@@ -707,6 +719,10 @@
   "paper:2026arXiv260725152P": {
     "concept": "reliability",
     "takeaway": "The paper names the failure mode, the progress mirage, and defines it as a measurable rate rather than an anecdote: the fraction of evaluator-accepted cycles whose oracle-measured delta is zero or below. The definition was deliberately widened from the preregistered wording of exactly zero, because a delta of zero excludes the worse error of accepting an outright regression. Alongside it the paper reports a wasted-cycle ratio, acceptance rates conditioned separately on non-positive and positive deltas, and time-to-first-positive with right-censoring recorded, all computed mechanically from raw cycle logs with no human discretion. The oracle is a synthetic user simulator kept unreachable by container and network isolation, with a boundary proof run at every run and a canary scan at every cycle, so the ground truth cannot be quietly contaminated by the agent under test. The proposed architecture puts the evaluator in a separate process reading databases, version-control history, web analytics and append-only ledgers, and forces a rejected cycle to leave an artifact the next iteration must read first at boot. Four supporting mechanisms (append-only state, file-based handoff between sessions, periodic frame-adversarial self-review, a self-healing scheduler) are presented as field-derived design notes and are not individually validated."
+  },
+  "paper:2026arXiv260728229S": {
+    "concept": "test-time-compute",
+    "takeaway": "The paper is a direct argument against paying for a static embedding index when inference-time reasoning can do the ranking. Librarian maintains no index of its own; it queries Europe PMC's live search and spends LLM calls at request time on query planning and paragraph-level relevance scoring against the question. The authors give four reasons for refusing the dense datastore. It is expensive to build and serve, with OpenScholar's alone at roughly 744 GB. Its margin is narrowing, since a well-tuned BM25 backbone driven by a capable LLM issuing multiple keyword queries now matches or exceeds dense retrieval on scientific benchmarks. Embeddings flatten structured metadata, blocking direct queries over explicit fields such as gene, protein, organism and chemical annotations, which is exactly the structure Europe PMC exposes. And a nearest-neighbour lookup is not inspectable, where a fielded keyword query is. The trade lands: more than 16 points of Citation F1 over strong recent baselines on ScholarQA-Bench, higher expert-consensus agreement as a drop-in retrieval layer, and about 8 points on LitQA2 over web search."
   },
   "paper:ACRFence": {
     "concept": "ai-security"
