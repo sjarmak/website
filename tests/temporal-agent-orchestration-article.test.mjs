@@ -211,7 +211,7 @@ test("the narrative illustrations sit with the passages they illustrate", () => 
   const placements = [
     {
       figure: "<ConspiracyFigure />",
-      after: "a collection of clues spread across controller ticks",
+      after: "clues scattered across controller ticks",
       before: "those clues become useless",
     },
     {

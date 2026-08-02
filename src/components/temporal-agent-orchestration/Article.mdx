@@ -63,11 +63,11 @@ I really wanted Gas City to just work. I wanted it to be foolproof for fools jus
 
 ## The task survived. The procedure did not.
 
-The failure that finally crystallized all of this was simple. A work item becomes ready, the Mayor claims it, then launches a coding agent. The agent gets a worktree, edits files, runs tests, and works for an hour. Then the Mayor's session dies before it records the handoff.
+The problem came into focus in one recurring failure. A work item becomes ready. The Mayor claims it and launches a coding agent. The agent gets a worktree, edits files, runs tests, and works for an hour. Then the Mayor's session dies before recording the handoff.
 
-On restart, the system has three "meh" options. It can launch another agent and accidentally leave two processes editing the same worktree. It can wait forever for a process it no longer knows how to contact. It can release the claim and ask a repair loop to infer what happened from whatever evidence the first process left behind. At various points, I operated versions of all three.
+After restart, the system has three bad options. It can launch another agent and leave two processes editing the same worktree. It can wait indefinitely for a process it no longer knows how to contact. Or it can release the claim and ask a repair loop to reconstruct what happened from whatever evidence the first process left behind. At different points, I ran versions of all three.
 
-The work procedure lived as a collection of clues spread across controller ticks, session records, mail, hooks, process state, and repair logic.
+The procedure existed only as clues scattered across controller ticks, session records, mail, hooks, process state, and repair logic.
 
 <ConspiracyFigure />
 
