@@ -307,7 +307,7 @@ const provenance = JSON.parse(
           <tr>
             <td>Temporal-controlled claim and agent launch</td>
             <td>Shadow; bounded canary completed</td>
-            <td>One claim, one agent session, one fenced receipt</td>
+            <td>One claim, one session, one fenced receipt; the agent side was a scripted stand-in</td>
           </tr>
           <tr>
             <td>Worker recovery on one host</td>
@@ -328,7 +328,10 @@ const provenance = JSON.parse(
           acknowledges the exact result generation and agent session. Delivery
           may repeat; the identity of the result does not. The delivery path,
           step by step, is in
-          <a href={`${root}/article#whats-running-now`}>the article</a>.
+          <a href={`${root}/article#whats-running-now`}>the article</a>, and
+          what the evidence shows so far, including the measured
+          infrastructure cost, is in
+          <a href={`${root}/article#what-the-evidence-shows-so-far`}>its numbers section</a>.
         </p>
       </div>
     </section>

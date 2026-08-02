@@ -108,7 +108,7 @@ func (w *ActivityWorker) ExecuteBead(
 
 func (w *ActivityWorker) validate(input ActivityInput) error {
 	if w.Beads == nil {
-		return invalidActivityConfiguration("Beads store is required")
+		return invalidActivityConfiguration("beads store is required")
 	}
 	if w.Agent == nil {
 		return invalidActivityConfiguration("agent executor is required")
@@ -201,7 +201,7 @@ func (w *ActivityWorker) runAgent(
 	result, runErr := w.Agent.Execute(ctx, request, tracker.Record)
 	close(executionDone)
 	<-cancellationWatchDone
-	if errors.Is(runErr, context.Canceled) || errors.Is(ctx.Err(), context.Canceled) {
+	if agentRunCanceled(runErr, ctx.Err()) {
 		if err := cancelAttached(); err != nil {
 			return agentExecution{}, err
 		}
@@ -228,6 +228,20 @@ func (w *ActivityWorker) runAgent(
 	}
 	return agentExecution{}, temporal.NewApplicationError(
 		"agent execution failed", "AgentExecutionFailed")
+}
+
+// agentRunCanceled reports whether a finished agent run must be reported as
+// canceled. A run that produced a result never is, even when cancellation
+// arrived while the agent was finishing: the work happened, and the generation
+// fence on the completion write, not this branch, decides whether the receipt
+// may still land. Classifying a finished run as canceled here would discard an
+// hour of real agent work that the fence would have accepted.
+func agentRunCanceled(runErr error, ctxErr error) bool {
+	if runErr == nil {
+		return false
+	}
+	return errors.Is(runErr, context.Canceled) ||
+		errors.Is(ctxErr, context.Canceled)
 }
 
 func (w *ActivityWorker) cancelAttachedSession(
@@ -278,7 +292,7 @@ func (w *ActivityWorker) complete(
 		workflowExecution.ID,
 	); err != nil {
 		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
-			"Temporal Activity has no valid source workflow identity",
+			"activity has no valid source workflow identity",
 			"InvalidSourceWorkflow",
 			err,
 		)
@@ -288,7 +302,7 @@ func (w *ActivityWorker) complete(
 		workflowExecution.RunID,
 	); err != nil {
 		return ActivityResult{}, temporal.NewNonRetryableApplicationError(
-			"Temporal Activity has no valid source workflow run identity",
+			"activity has no valid source workflow run identity",
 			"InvalidSourceWorkflow",
 			err,
 		)

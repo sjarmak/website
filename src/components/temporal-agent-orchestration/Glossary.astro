@@ -185,6 +185,16 @@ const groups: Group[] = [
           "Record that a message is owed in the same durable store as the work itself, then deliver from that record. Delivery can crash and repeat without the promise being lost; OutcomeReady is an outbox.",
       },
       {
+        term: "Order",
+        definition:
+          "A recurring job in a Gas City installation, fired on a schedule or a cooldown. Patrols, scans, and repair sweeps are all orders, which is why an order that dies quietly takes its cover with it.",
+      },
+      {
+        term: "Reaper",
+        definition:
+          "An order whose job is cleanup: find work stuck in one specific way and unstick it. Each one is written after the failure it addresses, which is how a city accumulates a hundred of them.",
+      },
+      {
         term: "Watchdog",
         definition:
           "An independent checker that looks for work the main path forgot. It matters because a delivery pipeline that died silently looks identical to one with nothing to deliver.",

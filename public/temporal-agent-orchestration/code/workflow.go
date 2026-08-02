@@ -334,7 +334,10 @@ func (r *workflowRun) scheduleParentResult(
 	r.parentSignals++
 	r.selector.AddFuture(future, func(completed workflow.Future) {
 		r.parentSignals--
-		if err := completed.Get(r.ctx, nil); err != nil {
+		// A signal issued as the run is being canceled fails because the run is
+		// being canceled. Recording that as the run's fault would overwrite the
+		// real cancellation code with a downstream symptom.
+		if err := completed.Get(r.ctx, nil); err != nil && r.cancelErr == nil {
 			r.fail("parent-signal-failed")
 		}
 	})
@@ -431,8 +434,8 @@ func (r *workflowRun) finish() (WorkflowState, error) {
 	}
 	if r.state.Phase == workflowPhaseFailed || len(r.state.FailedEventIDs) > 0 {
 		r.state.Phase = workflowPhaseFailed
-		return cloneWorkflowState(*r.state), fmt.Errorf(
-			"bead orchestration failed with code %s", r.state.LastErrorCode)
+		return cloneWorkflowState(*r.state), temporal.NewApplicationError(
+			"bead orchestration failed", r.state.LastErrorCode)
 	}
 	r.state.Phase = workflowPhaseCompleted
 	return cloneWorkflowState(*r.state), nil

@@ -17,7 +17,7 @@ import WorkshopFigure from "./WorkshopFigure.astro";
 
 In the fall of 2025, I sat next to Steve Yegge at dinner during a Sourcegraph offsite in Cabo.
 
-Steve had brought his laptop to the table, because of course he had (I was just running mine on my phone instead so I couldn't judge). Terminals running agents were scattered across his screen in a rainbow of different colors, and he kept moving between them while everyone else was doing more normal dinner activities.
+Steve had brought his laptop to the table to keep tabs on his agents, because of course he had (I was just running mine from my phone instead so I couldn't judge). Terminals running agents were scattered across his screen in a rainbow of different colors, and he kept moving between them while everyone else was doing more normal dinner activities.
 
 I asked what he was building, and I remember the answer being something like, "Something that's going to be big."
 
@@ -29,39 +29,37 @@ A few weeks later, in October 2025, he published [Introducing Beads](https://ste
 
 Beads became popular because it solved a common coding agent memory problem. Every new coding-agent session starts with some degree of amnesia. The previous agent may have investigated the codebase, discovered three hidden dependencies, ruled out two approaches, found a broken test, and created a reasonable plan. Then its context fills up or the session ends, and the next agent wakes up knowing none of it. You can try to solve this with Markdown files (at the time, many agent-driven directories including my own were littered with the things). But then the agent has to keep the plan current, understand which tasks depend on which other tasks, and avoid creating a whole ecosystem of slightly different planning documents (e.g., v1_final_FINAL_this-one-for-real.md).
 
-Beads gives agents a dependency-aware work record instead. An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also really like using it and use it pretty well: they file issues for problems they encounter and pick up the next unblocked task without much friction. I adopted it quickly, because it solved a real problem I already had: maintaining task information across sessions without asking each new agent to rediscover the project. Then Steve built something much larger on top of it.
+Beads gives agents a dependency-aware work record instead. An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also really like using it and use it pretty well: they file issues for problems they encounter and pick up the next unblocked task without much friction. I adopted it quickly. Then Steve built something much larger on top of it.
 
 On January 1, 2026, he published [Welcome to Gas Town](https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04): an opinionated coding-agent factory built on Beads, with persistent agent identities, disposable sessions, reusable workflows called formulas, coordination through mail and nudges, and a Mayor agent, the top-level coordinating agent and human handoff point.
 
 It also came with Polecats, a Deacon, a Witness, a Refinery, Rigs, Convoys, Molecules, Wisps, and enough Mad Max terminology that I understood each concept slightly less after learning the name of the next one.
 
-I forked it in early January with lofty goals of making it more vendor-agnostic, and chatted with Steve about that (to which he responded "send PRs!"). I was really intrigued by the philosophy, I knew there had to be a better way to manage my projects beyond opening 10+ tabs in Ghostty, and that was the promise of Gas Town. But I never quite got my first town working the way I wanted, and I had a critical project at the time ([CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench)) that couldn't afford to stall on dropped queues and other random orchestrator nonsense, and I reluctantly abandoned my ghost town. I could run a bunch of coding agents, but I didn't know how to keep a town of them from catching fire (or, more accurately, ending up with agents sitting around doing mostly nothing while occasionally passing around poorly translated tasks via some horrible game of Agent Telephone).
+I forked it in early January with lofty goals of making it more vendor-agnostic, and chatted with Steve about that (to which he responded "send PRs!"). There had to be a better way to manage my projects than opening 10+ tabs in Ghostty, and that was the promise of Gas Town. But I never quite got my first town working the way I wanted, and I had a critical project at the time ([CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench)) that couldn't afford to stall on dropped queues and other random orchestrator nonsense, so I reluctantly abandoned my ghost town. I could run a bunch of coding agents; I didn't know how to keep a town of them from catching fire (or, more accurately, from agents sitting around doing mostly nothing while passing around poorly translated tasks in some horrible game of Agent Telephone).
 
-Many of the issues I was facing were in theory supposed to be resolved through a philosophy of what Steve called **Nondeterministic Idempotence**, or NDI.  The promise of NDI is that if a session dies, a fresh agent can inspect the durable work record and choose another valid route to the same outcome. Gas Town sought to make the work durable while giving as much freedom as possible to agents to do their best work. NDI is one of the two kinds of recovery this article is about. But before I really understood any of that, I had to piece it together through a deconstructed version of the system.
+Many of these issues were in theory resolved by a philosophy Steve called **Nondeterministic Idempotence**, or NDI: if a session dies, a fresh agent can inspect the durable work record and choose another valid route to the same outcome. NDI is one of the two kinds of recovery this article is about. But before I really understood it, I had to piece it together through a deconstructed version of the system.
 
-In March 2026, before its public launch, I found that deconstructed version of the system in [Gas City](https://github.com/gastownhall/gascity). Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind Gas Town and turned them into a composable orchestration SDK. Gas Town was one specific city design. Gas City gave you the building materials to create your own. That separation immediately made sense to me (or, at least, I thought it seemed like a really good idea), and I was motivated to help make it (and by extension my own software factory) more successful. I began contributing heavily in early April, and Julian invited me and a fellow avid contributor to become Gas City's first outside maintainers. I've since authored [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging, and reviewed many more. I also made a Slack integration and other custom [packs](https://github.com/gastownhall/gascity-packs), and contributed most of the commits to its revamped [dashboard](https://github.com/gastownhall/gascity-dashboard) (including a fun ["aquarium" view](https://x.com/sgjarmak/status/2078222508130508838)). 
+In March 2026, before its public launch, I found that deconstructed version of the system in [Gas City](https://github.com/gastownhall/gascity). Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind Gas Town and turned them into a composable orchestration SDK. Gas Town was one specific city design. Gas City gave you the building materials to create your own. That separation immediately made sense to me, and I wanted it (and by extension my own software factory) to succeed. I began contributing heavily in early April, and Julian invited me and a fellow avid contributor to become Gas City's first outside maintainers. I've since authored [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging, and reviewed many more. I also made a Slack integration and other custom [packs](https://github.com/gastownhall/gascity-packs), and contributed most of the commits to its revamped [dashboard](https://github.com/gastownhall/gascity-dashboard) (including a fun ["aquarium" view](https://x.com/sgjarmak/status/2078222508130508838)). 
 
-I currently use Gas City to run work across my many, many, projects, including Gas City itself. It is a strange but useful test environment: the city builds and repairs the software that operates the city, which makes it exceptionally good at exposing its own bugs.
+I currently use Gas City to run work across my many, many projects, including Gas City itself. It is a strange but useful test environment: the city builds and repairs the software that operates the city, which makes it exceptionally good at exposing its own bugs.
 
 Running a real city taught me how one actually stays alive: patch by patch. A claim goes stale, so I add a stale-claim reaper. A workflow root stays open after all its steps finish, so I add an orphaned-molecule reaper. Sessions wedge on a provider error, so I toss in a scanner that checks every session every two minutes. Each patch is small, reasonable, and correct about the failure mode directly in front of it.
 
-By mid-July, my orders directory held 116 of these patrol and repair jobs. About 106 were live, firing roughly 850 times an hour. A later city audit concluded that the cadence was itself part of the problem: the patrol mesh was consuming the machine it was supposed to defend.
+By mid-July, my orders directory held roughly 100 of these patrol and repair jobs, firing about 850 times an hour. When I later had my agents audit the city's own reliability, they flagged the cadence itself: the repair jobs were consuming the machine they were supposed to defend.
 
-The failures it was chasing were fairly consistent. The work record survived, but what disappeared was some part of the procedure mid-flight.
+The failures it was chasing were fairly consistent. The work record survived; some part of the procedure disappeared mid-flight.
 
-One night, the store file grew to 168 MB: 79,210 beads, 96 percent of them already closed. Because every dispatch reparsed the entire file under a lock, order firing simply froze. One wedged session claimed the same bead ten times over 5.6 hours. A maintenance order sat dormant for ten days before anyone noticed, because the thing responsible for checking whether orders fired was itself an order.
+One night, the store file grew to 168 MB: 79,210 beads, 96 percent of them already closed. Because every dispatch reparsed the entire file under a lock, order firing froze. One wedged session claimed the same bead ten times over 5.6 hours. A maintenance order sat dormant for ten days before anyone noticed, because the thing responsible for checking whether orders fired was itself an order.
 
-A fun artifact from this era was a recovery flag written by one workflow so that “a reaper” could query it. No reaper ever did :). The session-recovery scanner ran every two minutes for two months, around forty thousand scans, and detected zero instances of the condition it existed to find.
+A fun artifact from this era was a recovery flag written by one workflow so that “a reaper” could query it. But no reaper ever did. The session-recovery scanner ran every two minutes for two months, around forty thousand scans, and detected zero instances of the condition it existed to find.
 
-Meanwhile, the actual repairs fell to the Mayor, the most expensive component I run. Its prompt slowly became a field manual for infrastructure archaeology: drain duplicate sessions every cycle, classify the stalled-delivery fault, bypass the broken delivery path, never let a dead nudge sit ahead of a P0. It got bad enough that I chartered a dedicated infrastructure agent whose founding document opens with its reason for existing: serve as the Tier-1 first responder for city infrastructure so the Mayor is no longer the single point of contact for mechanical breakage.
+Meanwhile, the actual repairs fell to the Mayor, who has better things to do than track down city infra issues. Its prompt slowly became a field manual for infrastructure archaeology: drain duplicate sessions every cycle, classify the stalled-delivery fault, bypass the broken delivery path, never let a dead nudge sit ahead of a P0. It got bad enough that I chartered a dedicated infrastructure agent to be the Tier-1 first responder, so the Mayor would stop being the single point of contact for mechanical breakage.
 
 Each new reaper fixed one failure mode. It also spread ownership of the procedure across another process. The patrols checked liveness: is the process still there? But the failures were about outcomes. Did this claim launch exactly one agent? Does this result belong to the current generation? Who owns the next transition?
 
 And every layer of protection was itself an order, watched byyyy... nothing.
 
-I really wanted Gas City to just work. I wanted it to be foolproof for fools just like me. I did not want to spend my time doing murder-scene detective work every time something stopped moving.
-
-You shouldn't need a perfect mental model of every controller race and recovery path to keep a city of agents alive. I definitely did not want to keep poking at my agents trying to determine whether ones that appeared dead were actually dead, temporarily unreachable, or still editing a branch that a second agent had now claimed.
+I really wanted Gas City to just work. I wanted it to be foolproof for fools just like me. I did not want to spend my time doing murder-scene detective work every time something stopped moving, poking at agents to determine whether the dead-looking ones were actually dead, temporarily unreachable, or still editing a branch a second agent had now claimed.
 
 ## The task survived. The procedure did not.
 
@@ -69,30 +67,30 @@ The failure that finally crystallized all of this was simple. A work item become
 
 On restart, the system has three "meh" options. It can launch another agent and accidentally leave two processes editing the same worktree. It can wait forever for a process it no longer knows how to contact. It can release the claim and ask a repair loop to infer what happened from whatever evidence the first process left behind. At various points, I operated versions of all three.
 
-The work procedure ended up existing as a collection of clues spread across controller ticks, session records, mail, hooks, process state, and repair logic.
+The work procedure lived as a collection of clues spread across controller ticks, session records, mail, hooks, process state, and repair logic.
 
 <ConspiracyFigure />
 
-At enough scale, those clues become increasingly useless. I saw stranded claims, duplicate sessions after retries, stale completions arriving after a newer generation had started, lost notifications, and correlation metadata pointing at executions that did not exist.
+At enough scale, those clues become useless. I saw stranded claims, duplicate sessions after retries, stale completions arriving after a newer generation had started, lost notifications, and correlation metadata pointing at executions that did not exist.
 
-The work record itself remained plenty durable. The problem was that my many agents and I had to deal with a fragile, distributed procedure without giving that procedure one durable owner.
+The work record itself remained plenty durable. The procedure had no owner.
 
 > A durable work record is not the same thing as a durable procedure.
 
-The rest of this article is what it took to fix that. Here is where the attempted solution stands today:
+Here is where the fix stands today:
 
 | Current status | What that means today |
 |---|---|
 | Production | Durable result delivery and exact acknowledgement run continuously in my live installation. |
-| Shadow | Temporal-controlled work claiming and agent launch is built and tested, but blocked from mutating production work. |
-| Proven, bounded | One live bounded canary ran one claim, one agent session, one fenced receipt. A recorded single-host harness run proves Worker-kill recovery without a second agent. |
+| Shadow | Temporal-controlled work claiming and agent launch is built and tested against the adapter contract, but blocked from mutating production work. |
+| Proven, bounded | One live bounded canary ran one claim, one session, one fenced receipt against the canonical store, with a scripted stand-in answering the agent side. A recorded single-host harness run proves Worker-kill recovery without a second agent. |
 | Not claimed | Unrestricted production rollout of Temporal-driven agent execution, and cross-host recovery. |
 
 ## Two kinds of recovery
 
-It would be easy to frame the issues as "nondeterminism is bad, don't let the agents handle so much," but it isn't black and white. We need nondeterminism: it is the agent's individual actions that culminate in produced work. We just need to find out where to draw the line for our work needs.
+The lesson is not "nondeterminism is bad, don't let the agents handle so much." The agent's nondeterministic actions are the work. The question is where to draw the line.
 
-NDI is one answer, and it is a good one where any reasonable path to an acceptable outcome is valid, which describes a lot of agent work. An agent can inspect a bug, choose a repair, run tests, realize it was wrong, backtrack, and try something else. I do not need a workflow engine to replay every thought or tool call in exactly the same order. I actively do not want that. Coding itself is nondeterministic: two agents can solve the same issue in very different ways, and either result may be acceptable (unless you're a [SWE-Bench verifier](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)).
+NDI is one answer, and it is a good one where any reasonable path to an acceptable outcome is valid, which describes a lot of agent work. An agent can inspect a bug, choose a repair, run tests, realize it was wrong, backtrack, and try something else. I do not need, or want, a workflow engine replaying every thought and tool call in order. Coding itself is nondeterministic: two agents can solve the same issue in very different ways, and either result may be acceptable (unless you're a [SWE-Bench verifier](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)).
 
 But some parts of an orchestration system are promises rather than work:
 
@@ -103,11 +101,11 @@ But some parts of an orchestration system are promises rather than work:
 * Which recovery action owns the next transition?
 * Should a late completion still be allowed to mutate the work record?
 
-Those are procedural questions. "A capable agent will inspect the clues and figure something out" is not always the guarantee I want around them. Turns out they aren't that capable or durable. The flaw was asking an NDI-style recovery model to own guarantees whose ordering, retries, waits, identities, and acknowledgements were themselves part of the contract. For those parts, I need a little more determinism.
+Those are procedural questions, and "a capable agent will inspect the clues and figure something out" is not the guarantee I want around them. The flaw was asking an NDI-style recovery model to own guarantees whose ordering, retries, waits, identities, and acknowledgements were themselves the contract. For those parts, I need more determinism.
 
 By this point, [my research on how coding agents fail](https://github.com/sjarmak/agent-diagnostics) had already convinced me that reliability depends as much on the system around the agent as on the agent itself. That lesson is the spine of a guidebook I'm drafting, [Engineering Reliable Coding Agents](/books/engineering-reliable-coding-agents), and this integration is one system's version of its recovery chapters. So I went looking for systems that had solved adjacent problems.
 
-Because Gas Town is often described as "Kubernetes for agents," I started with Kubernetes controller patterns. I picked up a [Designing Distributed Systems](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/) book and read it against Gas City's controller: reconciliation loops, leases, transactional outboxes, stable identities, generation fencing, explicit acknowledgements (I also took some pictures of various pages in the book and sent it to my agents and directed them to brainstorm with me how we could best integrate the patterns). Kubernetes could restart the process, but not the promise. It can determine that a process disappeared and start another one; it does not inherently know whether a particular claim already launched this particular agent session, whether a late result belongs to the current claim generation, or whether a human acknowledged the exact outcome the system is waiting for. The distributed-systems toolbox supplied necessary pieces, but no durable owner for the sequence connecting them.
+Because Gas Town is often described as "Kubernetes for agents," I started with Kubernetes controller patterns. I picked up a [Designing Distributed Systems](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/) book and read it against Gas City's controller: reconciliation loops, leases, transactional outboxes, stable identities, generation fencing, explicit acknowledgements (I also photographed pages and sent them to my agents to brainstorm with me). Kubernetes could restart the process, but not the promise. It can see that a process disappeared and start another one; it does not know whether a claim already launched this particular agent session, whether a late result belongs to the current generation, or whether a human acknowledged the exact outcome the system is waiting for. The distributed-systems toolbox supplied necessary pieces, but no durable owner for the sequence connecting them.
 
 Then I remembered Steve saying Gas Town looked like what you'd get if Kubernetes and [Temporal](https://docs.temporal.io/temporal) had a very ugly baby together, so there was some additional heritage to look into. He had described NDI as similar to Temporal's deterministic durable replay, implemented through completely different machinery, and he was explicit that Gas Town was not a replacement for Temporal.
 
@@ -122,25 +120,21 @@ That gave me two recovery models to consider side by side:
 | Recovery | Inspect the durable work record | Replay the durable history |
 | Owner | Beads and Gas City's NDI | A Temporal Workflow |
 
-I then wondered, could the setup I run with Gas City use both models at once?
+I then wondered: could the setup I run with Gas City use both models at once?
 
 ## My agents voted against Temporal almost everywhere
 
-How I got around to eventually integrating Temporal is not something like "I saw the light and bought durable execution and everyone clapped."
+How I eventually integrated Temporal is not a story like "I saw the light, adopted durable execution, and everyone clapped."
 
 My infrastructure agent proposed and built the city’s first Temporal pilot. That is part of its role: investigate the city’s reliability failures and propose fixes for them.
 
-The pilot wrapped a small maintenance job, and mostly taught me what to leave alone. The job performs about forty-four seconds of synchronous work every two hours. Inside a Temporal Schedule, it behaved like cron plus a lockfile. Several cycles still failed, and a Bash soak check caught the failures, not Temporal. But the pilot narrowed the target.
+The pilot wrapped a small maintenance job, and mostly taught me what to leave alone. The job performs about forty-four seconds of synchronous work every two hours. Inside a Temporal Schedule, it behaved like cron plus a lockfile. Several cycles still failed, and a Bash script polling the results caught them, not Temporal. But the pilot narrowed the target.
 
-I expanded the boundary exploration to look for other places where Temporal might close the leaks, and my agents voted against it almost everywhere. Do not replace the order floor. Do not wrap the workflow-step engine. Do not supervise the dispatchers with it. Do not even build the watchdog on it, because a systemd timer beat it on every axis we measured.
+I expanded the boundary exploration to look for other places where Temporal might close the leaks, and my agents voted against it almost everywhere. Do not replace the scheduler that fires my recurring jobs. Do not wrap the engine that runs formula steps. Do not supervise the processes that hand work to agents. Do not even build the watchdog on it, because a systemd timer beat it on every axis we measured.
 
-The city audit running alongside the pilot was blunter. My measured thirty-day incident record was dominated by memory exhaustion, database saturation, and silent order death. Durable execution structurally addresses none of those. My development machine was on fire in ways Temporal was not going to fix, and my agents were increasingly exasperated by my refusal to work through those P0s first.
+One boundary survived that gauntlet: claiming work, launching exactly one agent, and getting its result acknowledged. That is where losing the in-flight procedure left the system unable to say what had happened. Knowing everything Temporal would not fix, and understanding much more clearly what it would, was what made me comfortable adopting it there.
 
-We did fix them. I also pushed back on the agents, several tutorials later, once I understood what Temporal actually was.
-
-The first production integration wrapped the procedure around claiming work, launching exactly one agent, and getting its result acknowledged. That was the boundary where losing the in-flight procedure left the system unable to say what had happened. Knowing everything Temporal would not fix, and understanding much more clearly what it would, was what made me comfortable adopting it there.
-
-My first ruling was: “Temporal watches, never owns.” I was wary of handing the city’s brain to a workflow engine. A later decision, mine in direction and drafted with the Mayor, separated two questions that ruling had conflated: which system records the facts about the work, and which system records the procedure moving that work forward?
+My first ruling was: “Temporal watches, never owns.” I was wary of handing the city’s brain to a workflow engine. A later decision, which I directed and the Mayor drafted, separated two questions that ruling had conflated: which system records the facts about the work, and which system records the procedure moving that work forward?
 
 Beads owns the first. Temporal owns the second.
 
@@ -151,7 +145,7 @@ That division of labor ran through the entire project. The agents wrote the code
 
 ## The boundary I chose
 
-At first I thought I was adding a workflow engine. What I was actually doing was forcing myself to answer a series of ownership questions that the existing system had kept fuzzy.
+At first I thought I was adding a workflow engine. I was actually forcing myself to answer a series of ownership questions the existing system had kept fuzzy.
 
 I did not want to put the coding agent's reasoning inside deterministic replay. That would be both impractical and just plain wrong. I wanted to keep the agent nondeterministic while making selected promises around it durable. The boundary I arrived at:
 
@@ -167,11 +161,31 @@ The integration settled on three owners.
 
 <ConceptFigure kind="ownership" />
 
-You can think of it as a workshop. Gas City is the workshop itself. Beads is the job board: it records the work, who owns it, and what happened. Coding agents are the workers, and their path through the job may be creative, messy, or horribly weird. Temporal is the checklist recorder, remembering which procedural steps happened, which step is waiting, and which safe retry comes next after some inevitable mishap (complex systems have emergent behaviors, some of which are really annoying and destructive!).
+Think of Gas City as a workshop. Beads is the job board: it records the work, who owns it, what depends on what, and what happened. Coding agents are the workers. Their path through a job may be creative, messy, or horribly weird. Temporal records the procedure around them: which steps completed, which one is waiting, and which safe retry comes next after the inevitable mishap.
+
+Those are three separate jobs. Beads holds the work. The agents do it their own way. Temporal remembers the running checklist.
 
 <WorkshopFigure />
 
-Stable identities, idempotency keys, and generation fences are not Temporal features. They are application responsibilities, and Temporal's guarantees are only useful because of them.
+Stable identities, idempotency keys, and generation fences are not Temporal features. They remain application responsibilities, and I would need them under any architecture.
+
+The two layers solve different problems. A fence decides whether a write is allowed: whether this agent still owns the claim, whether this result belongs to the current attempt, and whether an operation has already been applied. Temporal preserves the procedure around those writes. It remembers that a delivery is still owed, that this is retry three of five, or that the system is waiting for an acknowledgement a human may take a day to provide.
+
+The fences prevent stale or duplicate effects. Temporal preserves the in-flight state my crashed processes kept taking with them.
+
+So why not store the whole procedure in the database I already run? The city's own reliability rule points in that direction: "a query, not a memory." Reconstruct the current state from the store each time the controller runs. That approach won almost everywhere because it is simpler and usually enough.
+
+It fails when the store cannot tell the difference between two procedures that leave behind the same records.
+
+My clearest example was a twenty-hour stranding. Two work items completed, their branches were pushed, and the worker died before recording completion. The rows left behind looked identical to work that had never started. Both detectors missed them because both relied on the same empty field.
+
+Fixing that entirely in the store means recording every intermediate step, recovering partially completed transitions after a crash, and maintaining timers that survive the process that created them. We measured what that looked like once. A PR-state poller grew to 243 lines of Bash, required two duplicate-prevention mechanisms because neither was sufficient alone, and created 174 cache files to track eight open pull requests. It still contained a fire-and-forget defect that Bash could not solve without turning into a workflow engine.
+
+Building this yourself still means building a workflow engine. It just has fewer tests. I adopted one that already had them.
+
+There is also an admission buried in my own before-state. A city with roughly 100 patrol jobs firing 850 times an hour does not prove that anyone needs durable execution. It proves I had accumulated overlapping repair jobs instead of building one system with clear ownership and duplicate protection. The audit said as much when it concluded that the patrol jobs were part of the problem.
+
+My claim is narrower. A system grows this kind of repair machinery one incident at a time. Temporal gave me a way to replace it with one durable owner instead of building that owner myself.
 
 ## The three failures I wanted Temporal to stop
 
@@ -185,7 +199,7 @@ The implementation focused on three concrete breakpoints. The status box above s
 
 **What stays the application's job.** There is still an unavoidable crash window: Temporal can accept the event, then the bridge can die before acknowledging the outbox record. The fix is not pretending that window disappeared. The event is delivered again, and the Workflow ignores an event ID it has already processed (so, deterministic idempotency? I guess we just call that idempotency?). Stable identity turns redelivery from a dangerous anomaly into normal, expected behavior. That guarantee is bounded by how long Temporal retains closed executions: past the retention window the ID can be reused, which is why the generation fence and the canonical work identity, not the Workflow ID, are what keep a late duplicate out.
 
-**The evidence.** A test against a real Temporal dev server delivers the same ready event twice and requires exactly one scheduled Activity. The bounded canary exercised the path end to end.
+**The evidence.** A test against a real Temporal dev server delivers the same ready event twice and requires exactly one scheduled Activity. The bounded canary exercised the path end to end, with a scripted stand-in answering the agent side of the adapter protocol.
 
 ### 2. A retry accidentally starts a second agent
 
@@ -193,7 +207,7 @@ The implementation focused on three concrete breakpoints. The status box above s
 
 **What Temporal contributes.** Retry scheduling, [heartbeats](https://docs.temporal.io/develop/go/activities/timeouts#activity-heartbeats), and cancellation delivery, all recorded durably.
 
-**What stays the application's job.** The Activity claims one exact work generation and receives a fencing token. A trusted adapter uses that token to resolve the agent session: it either starts the session once or returns the session already bound to that claim. What keeps a retry from becoming a second agent is not the heartbeat. A Worker can die before the first heartbeat ever lands. The retry presents the same claim token, and the resolver finds the session already bound to that claim by its stable identity, so there is no competitor to launch. The persisted heartbeat details are how the new attempt picks up progress from the last checkpoint, not how it avoids starting a second agent. Completion also goes through the fence: Beads accepts a receipt only when the work ID, generation, claim token, and the claiming Workflow identity still match. A stale agent can complete successfully and still be rejected, because it no longer owns the right to mutate the current work generation.
+**What stays the application's job.** The Activity claims one exact work generation and receives a fencing token. A trusted adapter uses that token to resolve the agent session: it either starts the session once or returns the session already bound to that claim. What keeps a retry from becoming a second agent is not the heartbeat. A Worker can die before the first heartbeat ever lands. The retry presents the same claim token, and the resolver finds the session already bound to that claim by its stable identity, so there is no competitor to launch. (More on what stands behind that resolver below.) The persisted heartbeat details are how the new attempt picks up progress from the last checkpoint, not how it avoids starting a second agent. Completion also goes through the fence: Beads accepts a receipt only when the work ID, generation, claim token, and the claiming Workflow identity still match. A stale agent can complete successfully and still be rejected, because it no longer owns the right to mutate the current work generation.
 
 <ConceptFigure kind="recovery" />
 
@@ -209,15 +223,15 @@ I had treated mail and session nudges as if successful delivery meant successful
 
 **What remains the application's job.** The Workflow closes only when it receives an acknowledgement bound to the exact store, work item, outcome, generation, and session fence. A queued notification or accepted signal proves only that delivery was attempted. The canonical acknowledgement receipt proves that the intended agent accepted the intended result.
 
-**The evidence.** This path failed its first canary, was repaired, and now runs continuously in production. The canary and production sections below explain both stages.
+**The evidence.** This path failed its first canary, was repaired, and now runs continuously in production.
 
 ## The implementation underneath the boundary
 
-"I added Temporal to my agent system" is not a claim anyone can check. The procedure I made durable was narrower: take one ready work item, assign it to one agent session, and accept one generation-fenced receipt. That unit is also the one this article walks through in code, because it has an exact predecessor in public code that maps one to one onto its replacement. Result delivery's "before" was mail plus attention plus hope, and an absence is a weaker demonstration than a diff.
+"I added Temporal to my agent system" is not a claim anyone can check. The procedure I made durable was narrower: take one ready work item, assign it to one agent session, and accept one generation-fenced receipt. That unit is the one this article walks through in code, because it has an exact public predecessor that maps one to one onto its replacement. (Result delivery's "before" was mail plus attention plus hope; an absence is a weaker demonstration than a diff.)
 
 Before Temporal, that procedure had no single owner. Most of it lived in <TermTip term="bead-reconcile-tick" tip="The old orchestrator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.">CityRuntime.beadReconcileTick</TermTip>, with [session recovery](https://github.com/gastownhall/gascity/blob/b78058917bc65846db89e1c3b25dc17269822483/cmd/gc/session_beads.go#L2923-L3027) and completion handled elsewhere. A single controller tick could load state, release orphaned assignments, reconcile active sessions, dispatch notifications, and run a secondary wake-up check. A separate close path searched for work abandoned by dead sessions.
 
-Each part was reasonable in isolation. Together, however, they formed one procedure spread across multiple code paths and persistence boundaries. Every arrow between them was a place where the process could die after performing an action but before recording what had happened.
+Each part was reasonable in isolation. Together they formed one procedure spread across multiple code paths and persistence boundaries. Every arrow between them was a place where the process could die after performing an action but before recording what had happened.
 
 <CodeExcerpt
   sourcePath="public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go"
@@ -254,9 +268,15 @@ And <TermTip term="execute-bead-activity" tip="The Temporal Activity that touche
 
 The complete files, each pinned to a reviewed revision and annotated section by section, are in the [annotated source reader](/temporal-agent-orchestration/code), alongside the full pre-Temporal controller and recovery paths.
 
+### The resolver: the part you will have to build
+
+The start-or-attach decision above leans on one interface, and if you adopt this pattern, that interface is yours to implement. ResolveSession is a call into a separate trusted executable over a newline-delimited JSON protocol: the Activity hands it the ready event, the claim token, and the generation, and the adapter must return exactly one session identity. On a retry that already has a heartbeat checkpoint, the resolver is never consulted; the session identity rides in the checkpoint Temporal persisted. The resolver is only asked on a cold attempt, which is precisely the case where it must answer "which session already owns this claim" from records that survived the crash.
+
+Temporal cannot supply that adapter, and neither can I, because it is the binding between the claim fence and your agent runtime. Mine will answer from Gas City's session records (the tmux session bound to the claim, its worktree, its process); yours will answer from whatever holds your sessions. In my integration it is still the open item: the client half is built and tested (absolute-path validation, no shell, payloads over stdin, exactly one terminal response), and everything that has answered the call so far is a fixture implementing the contract for the harness and the canary, which is why agent mutation is still in shadow. The contract also leaves you one decision no framework will make for you: what the resolver should return when the recorded session's process is dead. Decide it before your first crash does.
+
 ### What the tests hold down
 
-None of the above is worth much on its own, so here is the suite behind it. It runs from one command:
+None of that is worth much without the suite behind it. It runs from one command:
 
 ```bash
 cd services/temporal-maintenance && make test
@@ -270,11 +290,13 @@ That command runs `go test -race ./...`. Five invariants carry the design:
 4. Cancellation reaches the exact session that owns the claim without leaving the Workflow hanging.
 5. Captured Workflow histories continue to replay, while a deliberately nondeterministic Workflow fails the replay gate.
 
-The second replay case is the one I care about more than the passing one. A replay gate that never fails is a gate that is not wired up. That leads to one local rule: replay fixtures are never regenerated simply to make a change pass. If the fixture fails, the change is breaking.
+I care about the second replay case more than the passing one. A replay gate that never fails is a gate that is not wired up. That leads to one local rule: replay fixtures are never regenerated simply to make a change pass. If the fixture fails, the change is breaking.
+
+One data point about that gate: mine has never caught a real nondeterministic change. Its only red runs are against the planted control. The two real defects in this class were both caught by code review instead, including a set of recovery signals that could be stranded across a history rollover. `workflow.GetVersion` carries the in-history patches when a definition has to change while histories are open. So plan for both layers: reviews are what actually catch things, and the replay gate is the backstop for the change that gets past every reader.
 
 The [complete test matrix](/temporal-agent-orchestration/code), including every named case, lives with the annotated source.
 
-The gap here is not coverage. A green test name is a weaker thing to show than the kill itself, so [the repository](https://github.com/sjarmak/gas-city) also includes a harness that runs the real Workflow and Activity against a local Temporal server, then kills the orchestration Worker with a real operating-system signal at two points:
+The gap here is not coverage. A green test name shows less than the kill itself, so [the repository](https://github.com/sjarmak/gas-city) also includes a harness that runs the real Workflow and Activity against a local Temporal server, then kills the orchestration Worker with a real operating-system signal at two points:
 
 * After the agent is running and a heartbeat checkpoint exists.
 * Before the first heartbeat has been recorded.
@@ -305,11 +327,11 @@ The kill targets the orchestration Worker, not the coding agent. The agent keeps
 
 Both runs finish with one agent session and one accepted receipt.
 
-The second case is the more important test. In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of duplicate prevention.
+The second case is the more important test. In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of duplicate prevention. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green. The claim is earned by both arms together.
 
-The recording lasts forty-one seconds, most of which is the pause where Temporal works out that the Worker is gone. The recovery delay, the repeated session resolution, and the single surviving agent are stronger evidence than a green test name.
+The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. That is enough to justify bounded canaries while canonical mutation stays behind shadow mode. It is not evidence for unrestricted rollout.
 
-The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. These are assertions against a local test environment, which is what makes me willing to run bounded canaries while canonical mutation remains behind shadow mode. It is not evidence for unrestricted rollout.
+Cross-host recovery, the one row the status table does not claim, is unproven rather than architecturally out of reach, and the distinction matters if you run more than one host. Nothing pins work to a host. The agent queue is an ordinary shared Task Queue, the Workers carry no identity, and any Worker polling it may pick up a retry. What is host-local is the adapter answering the resolve call, and the only adapters that have ever answered it resolved host-local sessions. The contract is written to be host-independent, so the design admits a Worker on a second host reattaching, but making that true requires the production adapter to answer from the shared control plane, plus a two-host kill test that has never been run. Same-host Worker recovery is supported; cross-host recovery is not established.
 
 The [companion page](/temporal-agent-orchestration/) pairs this recording with the same failure against the pre-Temporal orchestrator. That run ends with two agents operating in one worktree and a stale receipt overwriting the current one.
 
@@ -330,7 +352,7 @@ This was annoying, but it's also why I put in explicit canaries and promotion ga
 
 ## What's running now
 
-A path through this integration is in one of three rollout states: **shadow**, built and exercised but blocked from touching production work; **canary**, a bounded live run someone explicitly authorized; and **enabled**, running continuously in production. Today, Beads mode is shadow and Outcome mode is enabled. The safest part of the integration is the part running continuously: durable delivery and acknowledgement of finished results. Temporal-driven agent mutation remains in shadow mode. Finished outcomes can be delivered, but Temporal can't yet claim production work or start a coding agent without an explicitly bounded canary.
+A path through this integration is in one of three rollout states: **shadow**, built and exercised but blocked from touching production work; **canary**, a bounded live run someone explicitly authorized; and **enabled**, running continuously in production. Today, Outcome mode is enabled (durable delivery and acknowledgement of finished results runs continuously) and Beads mode is shadow: Temporal cannot claim production work or start a coding agent without an explicitly bounded canary.
 
 <ConceptFigure kind="shadow" />
 
@@ -342,7 +364,23 @@ The live result path:
 4. The Mayor or a human verifies the evidence and records a disposition bound to the current generation and agent session.
 5. Beads stores the exact acknowledgement receipt, which is what allows the Workflow to complete.
 
-Results remain pending until that final receipt exists. The reconciler lane is a reconciliation boundary, not a same-transaction guarantee, which is why an independent watchdog also scans every store for finished or verified work with no outcome, and for store-read failures. The watchdog deliberately sits outside Temporal so that it can detect a silent gap in the system it is checking.
+Results remain pending until that final receipt exists. That second lane is a reconciliation boundary, not a same-transaction guarantee, which is why an independent watchdog also scans every store for finished or verified work with no outcome, and for store-read failures. The watchdog deliberately sits outside Temporal so that it can detect a silent gap in the system it is checking.
+
+Durable waiting has failure modes of its own, and two of them need answers before you build this. History growth is the boring one: the orchestration Workflow is scoped to one execution episode and completes, and the long-lived delivery Workflow rolls its history over every hundred delivery attempts (Continue-As-New, in Temporal's vocabulary), carrying a compact resume state. Test the case where an acknowledgement arrives exactly at the rollover boundary; that is the one that loses data quietly.
+
+The more interesting one is what happens to a result nobody ever acknowledges: it redelivers, indefinitely. That is a decision, not an oversight. The outcome path exists so an owed result cannot quietly expire, and a dead-letter queue is a mechanism for quiet expiry. If you adopt this shape, put the pressure valve outside Temporal; mine is the watchdog's five-minute scan and its mail to the Mayor, so an ignored outcome is a nagging line in a report rather than a silent immortal process. An automated escalation ladder, something that makes "unacknowledged for three days" louder than another redelivery, is the obvious next rung. Today that judgment belongs to the Mayor and to me.
+
+## What the evidence shows so far
+
+Temporal is live for outcome delivery. The larger path that claims work and binds it to an agent session is still in shadow, so the old reconciler and its repair jobs remain in production.
+
+The live path has delivered and acknowledged more than seventy outcomes, with no silent outcomes detected. That shows the integration works under its current load. It does not yet show that Temporal has reduced stranded claims or duplicate sessions.
+
+Those comparisons become valid only after the claim-to-session path takes production ownership. At that point, I will measure duplicate sessions, stranded claims, and time from agent completion to acknowledged receipt. The sample will need to grow substantially before any percentage is meaningful.
+
+The current cost is measurable: about 260 MB of memory for the Temporal server, 54 MB for the Worker, and an 80 MB SQLite file. I have not yet measured the added per-claim latency.
+
+I currently have a working production path with measured costs, but its broader reliability effect is not yet measurable.
 
 ## What Temporal did not solve, and what it cost
 
@@ -363,7 +401,7 @@ The engineering costs were substantial:
 * **Operators must reason about two durable records.** Beads is authoritative for work facts. Temporal Event History is authoritative for procedural progress. Debugging requires knowing which system answers which question.
 * **Retries amplify bad instructions too.** Temporal will reliably repeat an incorrect decision until the application changes the decision or stops the execution.
 
-Not every job justified those costs. The maintenance pilot from earlier stayed cron plus a lock, because a crash there does not leave behind an in-flight procedure that the database cannot explain. That selectivity applies inside the work graph too: I would not translate every Gas City formula, node, or transition into a Temporal Workflow. Doing so would add machinery without necessarily adding a guarantee the system needs.
+Not every job justified those costs. The maintenance pilot from earlier stayed cron plus a lock, because a crash there does not leave behind an in-flight procedure that the database cannot explain. That selectivity applies inside the work graph too: I would not translate every Gas City formula, node, or transition into a Temporal Workflow. Doing so would add machinery without adding a guarantee the system needs.
 
 ## What transfers, and what is just mine
 
@@ -376,9 +414,9 @@ The pattern that transfers to anyone:
 
 My additional hardening (generations and claim tokens, session attachment, exact Mayor acknowledgement, the independent watchdog) exists because of what my Activity starts: a process that can edit a Git worktree for an hour and continue running after the Worker that launched it has died. Anyone orchestrating a short, idempotent job needs the first list and none of the second. That is a property of the workload, not a tax Temporal charges.
 
-You can find the relevant boundaries by asking which guarantee needs to survive a crash. Sometimes the answer is only the work record, and Beads is enough. Sometimes the answer is that an agent eventually finds some acceptable route to completion; NDI is a good model. Sometimes the answer includes the exact sequence of waits, retries, identities, gates, and acknowledgements. That procedure needs a durable owner.
+You can find the boundaries by asking which guarantee needs to survive a crash. Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both.
 
-Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both. Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure. The graph side of that split is the current fashion in the agent bubble (move aside loop engineering): [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution), and [the stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) says durable code should replace the diagram entirely. I take the boundary rather than the whole argument, since Beads still needs to own the larger graph of work. The task graph can be perfectly intact while one traversal through it disappears.
+Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure. The graph side of that split is the current fashion in the agent bubble (move aside loop engineering): [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution), and [the stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) says durable code should replace the diagram entirely. I take the boundary rather than the whole argument, since Beads still needs to own the larger graph of work. The task graph can be perfectly intact while one traversal through it disappears.
 
 > A durable graph is not the same thing as a durable traversal through it.
 

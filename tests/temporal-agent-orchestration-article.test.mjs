@@ -212,7 +212,7 @@ test("the narrative illustrations sit with the passages they illustrate", () => 
     {
       figure: "<ConspiracyFigure />",
       after: "a collection of clues spread across controller ticks",
-      before: "those clues become increasingly useless",
+      before: "those clues become useless",
     },
     {
       figure: "<CanaryFigure />",
@@ -334,7 +334,8 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
   // is named in them; "canary" alone once did double duty for a continuously
   // enabled path, which made the boundary unreadable.
   assert.match(article, /three rollout states/);
-  assert.match(article, /Beads mode is shadow and Outcome mode is enabled/);
+  assert.match(article, /Outcome mode is enabled/);
+  assert.match(article, /Beads mode is shadow/);
 
   // The live result path is enumerated end to end, from the terminal
   // transition through to the acknowledgement receipt that closes it.
@@ -369,10 +370,10 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
   assert.match(article, /watchdog deliberately sits outside Temporal/i);
   assert.match(
     article,
-    /Temporal can't yet claim production work or start a coding agent/i,
+    /Temporal cannot claim production work or start a coding agent/i,
     "the live boundary must stay narrow enough to not read as a general rollout",
   );
-  assert.match(article, /agent mutation remains in shadow mode/i);
+  assert.match(article, /Beads mode is shadow/);
 
   // The one 40-char hash allowed in the prose surface is the public pinned
   // upstream commit the before excerpts cite; scrub it, then ban the rest.
@@ -536,10 +537,10 @@ test("the article keeps the failure, the repair, and the containment boundary", 
   );
   assert.match(
     article,
-    /Temporal can't yet claim production work or start a coding agent/i,
+    /Temporal cannot claim production work or start a coding agent/i,
     "the live boundary must stay narrow enough to not read as a general rollout",
   );
-  assert.match(article, /agent mutation remains in shadow mode/i);
+  assert.match(article, /Beads mode is shadow/);
   assert.match(
     article,
     /It does not make external effects happen exactly once/i,
@@ -1107,4 +1108,96 @@ test("the article's demo passage tells the viewer what dies and what to watch", 
 
   // Arm 2 remains the decisive claim.
   assert.match(article, /The second case is the more important test/);
+});
+
+// The evidence-scope revision (2026-08-02): two external reviews agreed the
+// reasoning held but pressed on evidence scope. These pins hold the answers in
+// place: the resolver's real status, the after-numbers
+// separated, the versioning record, workflow lifecycle, the counterfactual,
+// and cross-host recovery. Each anchor is a claim that was verified against
+// the gas-city tree and the metrics baseline before it was written; if one
+// fails, the prose has drifted from the evidence, not just from the wording.
+test("the article answers the evidence-scope review with verified claims", () => {
+  const article = readFileSync(ARTICLE, "utf8");
+
+  // The resolver's implementation status is stated as the reader's homework:
+  // the production adapter is unwritten, the contract is theirs to implement,
+  // and the claims rest on fence + protocol.
+  assert.match(article, /### The resolver: the part you will have to build/);
+  assert.match(article, /that interface is yours to implement/);
+  assert.match(article, /everything that has answered the call so far is a fixture/);
+  assert.match(article, /when the recorded session's process is dead/);
+  // The canary's agent side was a scripted stand-in — in the status table and
+  // in the failure-1 evidence line both.
+  assert.match(article, /scripted stand-in answering the agent side/);
+
+  // The demo's arm-1 blind spot is volunteered before a reader finds it.
+  assert.match(article, /only arm that can catch a broken resolver/);
+
+  // The counterfactual is confronted: fencing concession, the by-hand cost,
+  // and the fair-baseline answer.
+  assert.match(article, /The two layers solve different problems/);
+  assert.match(article, /a query, not a memory/);
+  assert.match(article, /243 lines of Bash/);
+  assert.match(article, /Building this yourself still means building a workflow engine/);
+  assert.match(article, /accumulated overlapping repair jobs/);
+
+  // Evidence section: the live path's result is stated at its real size, the
+  // repair jobs are reported as still in production, the comparison is
+  // withheld until the claim-to-session path owns production, and the
+  // infrastructure cost is given as measured while latency is not.
+  assert.match(article, /## What the evidence shows so far/);
+  assert.match(article, /old reconciler and its repair jobs remain in production/);
+  assert.match(article, /delivered and acknowledged more than seventy outcomes/);
+  assert.match(
+    article,
+    /It does not yet show that Temporal has reduced stranded claims or duplicate sessions/,
+  );
+  assert.match(
+    article,
+    /become valid only after the claim-to-session path takes production ownership/,
+  );
+  assert.match(article, /260 MB of memory for the Temporal server/);
+  assert.match(article, /have not yet measured the added per-claim latency/);
+  assert.match(
+    article,
+    /working production path with measured costs, but its broader reliability effect is not yet measurable/,
+  );
+
+  // Versioning: three GetVersion patches, unversioned Workers, and the gate's
+  // record stated exactly — no real catch yet, both real defects found by
+  // review.
+  assert.match(article, /caught by code review instead/);
+  assert.match(article, /never caught a real nondeterministic change/);
+  assert.match(article, /plan for both layers/);
+  assert.match(article, /stranded across a history rollover/);
+
+  // Lifecycle: bounded episode history, Continue-As-New with the boundary-ack
+  // pin, and the unacknowledged outcome answered head-on.
+  assert.match(article, /scoped to one execution episode/);
+  assert.match(article, /exactly at the rollover boundary/);
+  assert.match(article, /it redelivers, indefinitely/);
+  assert.match(article, /nagging line in a report rather than a silent immortal process/);
+
+  // Cross-host: unproven versus out of reach, answered in the design record's
+  // own sentence.
+  assert.match(article, /unproven rather than architecturally out of reach/);
+  assert.match(
+    article,
+    /Same-host Worker recovery is supported; cross-host recovery is not established/,
+  );
+
+  // The ordering that makes the argument land: the resolver status comes
+  // after the code excerpts it qualifies, and the numbers section sits between
+  // the rollout state and the costs discussion.
+  assert.ok(
+    article.indexOf("owns the fenced claim and the start-or-attach decision") <
+      article.indexOf("### The resolver: the part you will have to build"),
+    "the resolver status must follow the code it qualifies",
+  );
+  assert.ok(
+    article.indexOf("## What the evidence shows so far") <
+      article.indexOf("## What Temporal did not solve, and what it cost"),
+    "the evidence section must precede the costs section",
+  );
 });

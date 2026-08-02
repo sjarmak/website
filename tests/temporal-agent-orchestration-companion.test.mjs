@@ -520,3 +520,17 @@ test("the companion's diagram agrees with its prose", () => {
   assert.match(recovery, /even if no heartbeat was ever recorded/i);
   assert.doesNotMatch(recovery, /read heartbeat/i);
 });
+
+// Evidence-scope revision (2026-08-02): the companion must not outclaim the
+// article. The canary's agent side was a scripted stand-in, and the article's
+// numbers section is reachable from the status discussion.
+test("the companion's status table matches the article's evidence scope", () => {
+  const companion = readFileSync(COMPANION, "utf8");
+
+  assert.match(companion, /the agent side was a scripted stand-in/);
+  assert.match(
+    companion,
+    /article#what-the-evidence-shows-so-far/,
+    "the companion links the article's evidence section",
+  );
+});

@@ -30,7 +30,7 @@ func NewWorkerSet(
 		return nil, fmt.Errorf("temporal client is required")
 	}
 	if beads == nil {
-		return nil, fmt.Errorf("Beads store is required")
+		return nil, fmt.Errorf("beads store is required")
 	}
 	if agent == nil {
 		return nil, fmt.Errorf("agent executor is required")

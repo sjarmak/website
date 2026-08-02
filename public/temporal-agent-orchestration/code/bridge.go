@@ -90,7 +90,7 @@ func (b ReadyEventBridge) Deliver(
 		return WorkflowReceipt{}, fmt.Errorf("signal with start %s: %w", workflowID, err)
 	}
 	if receipt.WorkflowID != workflowID || receipt.EventID != event.EventID {
-		return WorkflowReceipt{}, fmt.Errorf("Temporal returned a mismatched workflow receipt")
+		return WorkflowReceipt{}, fmt.Errorf("temporal returned a mismatched workflow receipt")
 	}
 	if err := b.Acker.AcknowledgeReadyEvent(ctx, event.EventID); err != nil {
 		return WorkflowReceipt{}, fmt.Errorf("checkpoint ready event %s: %w", event.EventID, err)
@@ -158,7 +158,7 @@ func (g TemporalClientGateway) SignalWithStart(
 	request StartOrSignalRequest,
 ) (WorkflowReceipt, error) {
 	if g.Client == nil {
-		return WorkflowReceipt{}, fmt.Errorf("Temporal client is required")
+		return WorkflowReceipt{}, fmt.Errorf("temporal client is required")
 	}
 	input := request.Input
 	input.SearchAttributes = g.EnableFormulaSearchAttributes
@@ -222,7 +222,7 @@ func (g TemporalClientGateway) SignalClose(
 	request CloseRequest,
 ) error {
 	if g.Client == nil {
-		return fmt.Errorf("Temporal client is required")
+		return fmt.Errorf("temporal client is required")
 	}
 	return g.Client.SignalWorkflow(ctx, workflowID, "", SignalClose, request)
 }

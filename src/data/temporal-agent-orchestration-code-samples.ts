@@ -355,7 +355,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
         },
         {
           start: 255,
-          end: 342,
+          end: 345,
           title: "Accept only the matching terminal result",
           purpose:
             "Validates the Activity result, records success or failure, and signals the maintenance parent with the child outcome when one exists.",
@@ -364,8 +364,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Typed result", "Parent link", "Failure state"],
         },
         {
-          start: 343,
-          end: 427,
+          start: 346,
+          end: 430,
           title: "Wait until the run is genuinely drained",
           purpose:
             "Waits for cancellation delivery, all Activities, parent notifications, and every event named by the close seal.",
@@ -374,8 +374,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Durable wait", "Cancellation drain", "Set equality"],
         },
         {
-          start: 428,
-          end: 446,
+          start: 431,
+          end: 449,
           title: "Return a compact terminal state",
           purpose:
             "Returns a copied success state or a failure carrying the last domain error code.",
@@ -505,12 +505,12 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
         },
         {
           start: 233,
-          end: 345,
+          end: 359,
           title: "Cancel and complete through the fence",
           purpose:
-            "Targets the exact session during cancellation and writes the terminal receipt only when the generation, claim, session, outcome, artifact references, and the calling Workflow identity are all valid.",
+            "Keeps a result the agent actually produced even when cancellation lands while it finishes, targets the exact session when the run really was canceled, and writes the terminal receipt only when the generation, claim, session, outcome, artifact references, and the calling Workflow identity are all valid.",
           whyTemporal:
-            "Temporal delivers cancellation and retry semantics, while the application prevents stale or ambiguous completions from being accepted.",
+            "Temporal delivers cancellation and retry semantics, while the application decides what a late cancellation means and prevents stale or ambiguous completions from being accepted.",
           details: [
             "Exact-session cancellation",
             "Fenced receipt",
@@ -518,8 +518,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           ],
         },
         {
-          start: 346,
-          end: 371,
+          start: 360,
+          end: 385,
           title: "Recover the last durable checkpoint",
           purpose:
             "Reads Activity heartbeat details and verifies that the checkpoint belongs to the current bead generation and claim token.",
@@ -528,8 +528,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Heartbeat details", "Stale-checkpoint rejection"],
         },
         {
-          start: 372,
-          end: 507,
+          start: 386,
+          end: 521,
           title: "Keep progress alive and monotonic",
           purpose:
             "Runs a bounded heartbeat pump, records agent checkpoints, rejects changed session identity or reused sequence numbers, and copies resume state safely.",
@@ -552,7 +552,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
       sections: [
         {
           start: 1,
-          end: 48,
+          end: 50,
           title: "Make the process protocol explicit",
           purpose:
             "Defines bounded message sizes, trusted executable configuration, and the request and response envelopes for the adapter.",
@@ -561,8 +561,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["JSON protocol", "Bounded input", "Trusted executable"],
         },
         {
-          start: 49,
-          end: 113,
+          start: 51,
+          end: 118,
           title: "Validate the executable and resolve one session",
           purpose:
             "Requires absolute paths, an executable regular file, a real working directory, and exactly one valid resolved-session response.",
@@ -571,8 +571,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Absolute path", "Fail closed", "Stable session"],
         },
         {
-          start: 114,
-          end: 180,
+          start: 119,
+          end: 185,
           title: "Stream progress and target cancellation",
           purpose:
             "Consumes progress messages, accepts one terminal result, and sends cancellation with the bead, generation, claim token, and session ID.",
@@ -581,18 +581,18 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Streaming progress", "One terminal result", "Exact cancellation"],
         },
         {
-          start: 181,
-          end: 251,
+          start: 186,
+          end: 270,
           title: "Run without a shell",
           purpose:
-            "Starts the fixed executable directly, sends JSON over stdin, strictly decodes bounded output, and terminates on malformed protocol messages.",
+            "Starts the fixed executable directly in its own process group, sends JSON over stdin, strictly decodes bounded output, bounds the wait after a kill, and terminates on malformed protocol messages.",
           whyTemporal:
             "This keeps nondeterministic process I/O inside the Activity and narrows the command-injection surface.",
           details: ["No shell", "Strict JSON", "Message limits"],
         },
         {
-          start: 252,
-          end: 279,
+          start: 271,
+          end: 298,
           title: "Validate identity and filter secrets",
           purpose:
             "Rejects incomplete execution requests and removes the work-store password from the child process environment.",

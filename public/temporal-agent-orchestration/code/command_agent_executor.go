@@ -11,6 +11,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
+	"time"
 )
 
 const maxAgentProtocolLine = 1024 * 1024
@@ -69,8 +71,11 @@ func NewCommandAgentExecutor(
 	if !workInfo.IsDir() {
 		return nil, fmt.Errorf("agent working directory must be a directory")
 	}
+	// A nil Environment inherits the filtered parent environment; a non-nil
+	// (even empty) Environment is honored exactly as given so a caller can
+	// run the adapter with no inherited variables at all.
 	environment := append([]string(nil), config.Environment...)
-	if environment == nil {
+	if config.Environment == nil {
 		environment = filteredAgentEnvironment(os.Environ())
 	}
 	return &CommandAgentExecutor{
@@ -192,12 +197,26 @@ func (e *CommandAgentExecutor) run(
 	defer cancel()
 	command := exec.CommandContext(commandContext, e.executable, operation)
 	command.Dir = e.workingDirectory
-	command.Env = append([]string(nil), e.environment...)
+	// The copy stays non-nil even when empty: exec treats a nil Env as
+	// "inherit the parent environment", which is exactly what an isolated
+	// executor must not do.
+	command.Env = append(make([]string, 0, len(e.environment)), e.environment...)
 	command.Stdin = bytes.NewReader(append(payload, '\n'))
+	// The adapter runs in its own process group so cancellation reaches any
+	// children it spawns, and WaitDelay bounds Wait even if a grandchild
+	// keeps the stdout pipe open after the adapter itself is killed.
+	command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	command.Cancel = func() error {
+		return syscall.Kill(-command.Process.Pid, syscall.SIGKILL)
+	}
+	command.WaitDelay = 10 * time.Second
 	stdout, err := command.StdoutPipe()
 	if err != nil {
 		return nil, fmt.Errorf("open agent %s output: %w", operation, err)
 	}
+	// Stderr is deliberately discarded rather than persisted: adapter output
+	// is untrusted and unbounded, and it must never reach Workflow history.
+	// Failures surface through the typed protocol and the exit error.
 	command.Stderr = io.Discard
 	if err := command.Start(); err != nil {
 		return nil, fmt.Errorf("start agent %s adapter: %w", operation, err)
