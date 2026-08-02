@@ -1149,6 +1149,14 @@ test("the article answers the evidence-scope review with verified claims", () =>
   assert.match(article, /243 lines of Bash/);
   assert.match(article, /another piece of infrastructure needing its own monitoring, debugging, and repair machinery/);
   assert.match(article, /adding overlapping repair jobs instead of one system with clear ownership/);
+  // Standing editorial ban: the piece states its claims, it does not narrate
+  // how modest they are. "the narrower claim" / "my claim is narrower" kept
+  // creeping back across revisions.
+  assert.doesNotMatch(
+    article,
+    /narrower claim|claim is narrower|was narrower/i,
+    "state the claim directly instead of announcing that it is narrow",
+  );
 
   // Evidence section: the live path's result is stated at its real size, the
   // repair jobs are reported as still in production, the comparison is
