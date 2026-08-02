@@ -157,7 +157,7 @@ The integration settled on three owners.
 
 **Temporal owns procedure**: which orchestration steps occurred, which retry is active, what the system is waiting for, and what may safely happen next. Waits, retries, cancellation, signals, and acknowledgement progress.
 
-**Activities own effects**: agent processes, tests, reviews, database calls, and external messages. The coding agent remains unpredictable, and Temporal records that the Activity was scheduled, tracks its heartbeats, and decides what to do if the Worker disappears.
+**The application owns effects**: agent processes, tests, reviews, database calls, and external messages. An Activity is where Temporal hands control back to me. Temporal schedules it, tracks its heartbeats, and decides what to do if the Worker disappears; what it touches, and whether touching it twice is safe, is mine.
 
 <ConceptFigure kind="ownership" />
 

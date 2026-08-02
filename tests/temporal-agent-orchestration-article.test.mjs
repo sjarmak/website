@@ -702,13 +702,21 @@ test("the essay teaches the orchestrator, ownership boundary, and recovery path 
 
   // The ownership model is explained once, in prose; the diagram caption adds
   // only the bidirectional fencing detail rather than restating the owners.
+  // The third owner is the application, not Activities: an Activity is a
+  // Temporal primitive whose lifecycle Temporal owns, so naming it a peer of
+  // Temporal would misstate the platform to the readers most likely to notice.
   for (const owner of [
     /\*\*Beads owns work state\*\*/,
     /\*\*Temporal owns procedure\*\*/,
-    /\*\*Activities own effects\*\*/,
+    /\*\*The application owns effects\*\*/,
   ]) {
     assert.match(article, owner);
   }
+  assert.doesNotMatch(
+    article,
+    /\*\*Activities own effects\*\*/,
+    "Activities are a Temporal primitive, not a peer owner of Temporal",
+  );
   const ownershipCaption = figures.slice(
     figures.indexOf('kind === "ownership"'),
     figures.indexOf('kind === "recovery"'),

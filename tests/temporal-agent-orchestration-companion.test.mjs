@@ -129,10 +129,13 @@ test("the companion declares the bounded unit and one ownership model", () => {
   // at-least-once restatement was cut by editorial decision.
   assert.match(companion, /<li>Beads owns work facts\.<\/li>/);
   assert.match(companion, /<li>Temporal owns procedural progress\.<\/li>/);
-  assert.match(companion, /<li>Activities touch the external world\.<\/li>/);
   assert.match(
     companion,
-    /<li>The application owns identity, fencing, idempotency, and correctness\.<\/li>/,
+    /<li>An Activity is where Temporal hands off to the external world\.<\/li>/,
+  );
+  assert.match(
+    companion,
+    /<li>The application owns what that Activity touches: identity, fencing, idempotency, and correctness\.<\/li>/,
   );
   assert.doesNotMatch(companion, /at-least-once execution/);
 
