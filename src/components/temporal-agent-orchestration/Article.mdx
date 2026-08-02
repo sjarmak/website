@@ -115,7 +115,6 @@ That gave me two recovery models to consider side by side. The nondeterminism in
 
 | | Nondeterministic Idempotence | Deterministic durable replay |
 |---|---|---|
-| Character | Nondeterministic | Deterministic |
 | After a crash | A new agent may find another valid route | Ordering and acknowledgement must remain exact |
 | Recovery | Inspect the durable work record | Replay the durable history |
 | Owner | Beads and Gas City | A Temporal Workflow |
