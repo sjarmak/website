@@ -139,7 +139,7 @@ At first, I thought I was adding a workflow engine. I was really forcing the sys
 
 The integration settled on three owners.
 
-Beads owns the work state, including tasks, dependencies, claims, generations, artifacts, outcomes, and acknowledgement receipts. In my setup, the Beads store runs on [Dolt](https://github.com/dolthub/dolt) and remains the canonical record of mutable work facts. Temporal does not replace it. A user or agent can inspect the work without going through Temporal.
+Beads owns the work state, including tasks, dependencies, claims, generations, artifacts, outcomes, and acknowledgement receipts. It remains the canonical record of mutable work facts. Temporal does not replace it. A user or agent can inspect the work without going through Temporal.
 
 Temporal owns the procedure. It records which orchestration steps completed, which retry is active, what the system is waiting for, and what may safely happen next. That includes waits, retries, cancellation, signals, and acknowledgement progress.
 

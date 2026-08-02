@@ -164,7 +164,6 @@ test("the essay opens with the sourced personal path from Beads to Temporal", ()
     "https://docs.temporal.io/develop/go/workflows/message-passing#signal-with-start",
     "https://docs.temporal.io/workflow-execution",
     "https://docs.temporal.io/develop/go/activities/timeouts#activity-heartbeats",
-    "https://github.com/dolthub/dolt",
     "https://github.com/sjarmak/gas-city",
     "https://github.com/gastownhall/gascity-packs",
   ]) {
