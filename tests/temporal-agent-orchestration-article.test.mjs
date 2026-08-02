@@ -904,7 +904,7 @@ test("the essay ends with the decision rule, and the pack idea stays out of the 
   );
   assert.match(
     article,
-    /let the agents be weird, but make the infrastructure keep its promises/,
+    /Temporal can remember which promises are still outstanding and what must happen next/,
   );
 
   // The Gas City pack is a contributor note in the evidence section, not the
