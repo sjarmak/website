@@ -111,14 +111,14 @@ Then I remembered Steve saying Gas Town looked like what you'd get if Kubernetes
 
 Temporal's model works like this. A [Workflow](https://docs.temporal.io/workflows) records a deterministic procedure in an [Event History](https://docs.temporal.io/encyclopedia/event-history). When a [Worker](https://docs.temporal.io/workers), the process executing Workflow code, crashes, another Worker can replay that history, reconstruct the Workflow's state, and continue from the recorded boundary. External and nondeterministic effects run in [Activities](https://docs.temporal.io/activities).
 
-That gave me two recovery models to consider side by side:
+That gave me two recovery models to consider side by side. The nondeterminism in NDI is not the nondeterminism of an agent's inner loop. It describes the recovery: a fresh agent may reach an acceptable outcome by a different route than the one that died.
 
-| | Coding work | Procedural promises |
+| | Nondeterministic Idempotence | Deterministic durable replay |
 |---|---|---|
 | Character | Nondeterministic | Deterministic |
 | After a crash | A new agent may find another valid route | Ordering and acknowledgement must remain exact |
 | Recovery | Inspect the durable work record | Replay the durable history |
-| Owner | Beads and Gas City's NDI | A Temporal Workflow |
+| Owner | Beads and Gas City | A Temporal Workflow |
 
 I then wondered: could the setup I run with Gas City use both models at once?
 
