@@ -262,7 +262,7 @@ Temporal cannot supply that adapter, and neither can I, because it is the bindin
 
 ### What the tests hold down
 
-None of that is worth much without the suite behind it. It runs from one command:
+The tests run from one command:
 
 ```bash
 cd services/temporal-maintenance && make test
@@ -276,13 +276,13 @@ That command runs `go test -race ./...`. Five invariants carry the design:
 4. Cancellation reaches the exact session that owns the claim without leaving the Workflow hanging.
 5. Captured Workflow histories continue to replay, while a deliberately nondeterministic Workflow fails the replay gate.
 
-I care about the second replay case more than the passing one. A replay gate that never fails is a gate that is not wired up. That leads to one local rule: replay fixtures are never regenerated simply to make a change pass. If the fixture fails, the change is breaking.
+I care about the second replay case more than the passing one. A replay gate that never fails is a gate that is not wired up. So I never regenerate a replay fixture to make a change pass. If the fixture fails, the change is breaking.
 
-One data point about that gate: mine has never caught a real nondeterministic change. Its only red runs are against the planted control. The two real defects in this class were both caught by code review instead, including a set of recovery signals that could be stranded across a history rollover. `workflow.GetVersion` carries the in-history patches when a definition has to change while histories are open. So plan for both layers: reviews are what actually catch things, and the replay gate is the backstop for the change that gets past every reader.
+My replay gate has never caught a real nondeterministic change. Its only red runs are against the planted control. The two real defects in this class were both caught by code review instead, including a set of recovery signals that could be stranded across a history rollover. `workflow.GetVersion` carries the in-history patches when a definition has to change while histories are open. So plan for both layers: reviews are what actually catch things, and the replay gate is the backstop for the change that gets past every reader.
 
-The [complete test matrix](/temporal-agent-orchestration/code), including every named case, lives with the annotated source.
+The [complete test matrix](/temporal-agent-orchestration/code) lives with the annotated source.
 
-The gap here is not coverage. A green test name shows less than the kill itself, so [the repository](https://github.com/sjarmak/gas-city) also includes a harness that runs the real Workflow and Activity against a local Temporal server, then kills the orchestration Worker with a real operating-system signal at two points:
+Tests name the invariants; killing the process is what shows them holding. So [the repository](https://github.com/sjarmak/gas-city) also includes a harness that runs the real Workflow and Activity against a local Temporal server, then kills the orchestration Worker with a real operating-system signal at two points:
 
 * After the agent is running and a heartbeat checkpoint exists.
 * Before the first heartbeat has been recorded.
