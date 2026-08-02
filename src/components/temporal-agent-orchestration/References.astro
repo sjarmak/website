@@ -61,6 +61,12 @@ const groups: Group[] = [
         note: "The session recovery and close path from the same revision.",
       },
       {
+        title: "gastownhall/gascity-packs",
+        href: "https://github.com/gastownhall/gascity-packs",
+        source: "GitHub",
+        note: "Opt-in packs of agents, commands, services, and formulas an installation can import without forking. The distribution boundary a Temporal pack would use.",
+      },
+      {
         title: "My merged pull requests to Gas City",
         href: "https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged",
         source: "GitHub",
@@ -165,6 +171,12 @@ const groups: Group[] = [
     intro: "The work that shaped which failures I went looking for.",
     entries: [
       {
+        title: "Engineering Reliable Coding Agents",
+        href: "/books/engineering-reliable-coding-agents",
+        source: "This site",
+        note: "The book this case study sits inside. Part three is containment, durable execution, and recovery engineering, which is the boundary this page works out in one system.",
+      },
+      {
         title: "sjarmak/agent-diagnostics",
         href: "https://github.com/sjarmak/agent-diagnostics",
         source: "GitHub",
@@ -211,7 +223,12 @@ const groups: Group[] = [
         <ul>
           {group.entries.map((entry) => (
             <li class="references__entry">
-              <a href={entry.href} rel="noopener noreferrer" target="_blank">
+              {/* On-site entries stay in the tab; only outbound links open a new one. */}
+              <a
+                href={entry.href}
+                rel={entry.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                target={entry.href.startsWith("http") ? "_blank" : undefined}
+              >
                 {entry.title}
               </a>
               <span class="references__source">{entry.source}</span>

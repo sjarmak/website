@@ -42,6 +42,12 @@ const tipId = `termtip-${term}`;
     outline-offset: 2px;
   }
 
+  /* Default, and the no-JavaScript path: the tip is positioned against the
+     term. Correct, but an absolutely positioned box adds to the document's
+     scrollable width even while hidden, so a term near the right edge of a
+     narrow screen leaves the page scrollable sideways. The script below
+     upgrades every tip to fixed positioning, which has no such effect and can
+     be clamped into the viewport. */
   .termtip__tip {
     position: absolute;
     bottom: calc(100% + 0.6rem);
@@ -71,9 +77,49 @@ const tipId = `termtip-${term}`;
     visibility: visible;
   }
 
+  .termtip--floating .termtip__tip {
+    position: fixed;
+    bottom: auto;
+    /* Parked off-screen until the first hover measures and places it. */
+    top: -9999px;
+    left: 0;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .termtip__tip {
       transition: none;
     }
   }
 </style>
+
+<script>
+  const GUTTER = 8;
+  const OFFSET = 10;
+
+  for (const root of document.querySelectorAll(".termtip")) {
+    const tip = root.querySelector(".termtip__tip");
+    if (!(tip instanceof HTMLElement)) continue;
+
+    root.classList.add("termtip--floating");
+
+    const place = () => {
+      const anchor = root.getBoundingClientRect();
+      const box = tip.getBoundingClientRect();
+      const viewport = document.documentElement.clientWidth;
+
+      const left = Math.max(
+        GUTTER,
+        Math.min(anchor.left, viewport - GUTTER - box.width),
+      );
+      // Above the term, unless the term is too close to the top to fit it.
+      const above = anchor.top - box.height - OFFSET;
+      const top = above < GUTTER ? anchor.bottom + OFFSET : above;
+
+      tip.style.left = `${left}px`;
+      tip.style.top = `${top}px`;
+    };
+
+    root.addEventListener("pointerenter", place);
+    root.addEventListener("focusin", place);
+  }
+</script>

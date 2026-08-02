@@ -1362,8 +1362,18 @@ const svgDescId = `${titleId}-svg-desc`;
       gap: var(--space-xs);
     }
 
+    /* The diagram stays on the page at phone width instead of being replaced
+       by its text summary. Scaled to fit a 390px screen its 14px labels would
+       render near 5px, so the figure scrolls sideways and the diagram keeps a
+       legible floor width. The bullet summary below stays visible too: it
+       carries the same content for anyone who would rather read it than pan. */
+    .concept-figure {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+
     .concept-figure__svg {
-      display: none;
+      min-width: 48rem;
     }
 
     .concept-figure__fallback {

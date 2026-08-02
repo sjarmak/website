@@ -150,7 +150,7 @@ For those parts, I need a little more determinism.
 
 At the same time, I had been researching how coding agents fail and what it takes to run them reliably. [Agent Diagnostics](https://github.com/sjarmak/agent-diagnostics) classifies why coding-agent runs succeed or fail rather than reducing everything to one pass/fail score. [CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench) tests agents on large repositories with deterministic verifiers. In June, I gave a Sourcegraph webinar on [how to run coding agents reliably in large codebases](https://sourcegraph.com/webinars/building-a-software-factory).
 
-The recurring lesson was that retrieval, task state, tool behavior, review, recovery, and the rest of the system around the model often decide whether a long-running agent can be trusted.
+The recurring lesson was that retrieval, task state, tool behavior, review, recovery, and the rest of the system around the model often decide whether a long-running agent can be trusted. That is the argument of [Engineering Reliable Coding Agents](/books/engineering-reliable-coding-agents), whose third part is containment, durable execution, and recovery engineering. This page is one system's version of that part.
 
 I was studying those questions at Sourcegraph, but I also had a very practical open-source motivation: I reeeeally wanted Gas City to just work. I wanted it to be foolproof for fools like me and to not have to deal with murder scene detective work all the time. You really shouldn't need a perfect mental model of every controller race and recovery path to keep a city of agents alive.
 
@@ -326,28 +326,43 @@ Temporal did not make the first implementation magically correct. It made the pr
 
 ## What the tests hold down
 
-None of the above is worth much on its own, so here is the suite behind it. It runs from one command:
+The design is only as credible as the failure cases it can survive. The full suite runs with one command:
 
 ```bash
 cd services/temporal-maintenance && make test    # go test -race ./...
 ```
 
-That is 45 Go test files across the service, 18 of them in the package that holds the Temporal and Beads boundary. Everything in the table below runs unconditionally; a few heavier integration cases sit behind a local Temporal dev server and skip themselves when the CLI isn't on the path.
+The service contains 45 Go test files, including 18 in the package that implements the Temporal and Beads boundary. Every case listed below runs unconditionally. A small number of heavier integration tests require a local Temporal development server and skip themselves when the Temporal CLI is not available.
 
 | What has to hold | Where it is asserted |
 |---|---|
-| Workflow behavior | `workflow_test.go`, 12 cases covering duplicate ready delivery, malformed events, event-limit rejection, and seal enforcement |
-| Activity behavior | `activity_test.go`, 13 cases covering the fenced claim, heartbeating, stale-generation rejection, and artifact bounding |
-| A duplicate signal schedules one Activity | `TestWorkflowDuplicateReadyDeliverySchedulesOneActivity`, `TestCoordinatorOutcomeWorkflowDeduplicatesReadySignal` |
-| A stale acknowledgement fails closed | `TestCoordinatorOutcomeActivityFailsClosedAtAcknowledgementBoundary`, `TestActivityCancellationReachesAttachedSessionAndStaleCompletionFails` |
-| Cancellation reaches the agent and does not hang | `TestWorkflowCancellationDoesNotHangWhileActivityStops`, `TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession` |
-| Continue-As-New keeps its state and its receipts | `TestCoordinatorOutcomeWorkflowContinuesAsNewWithStateAndCounters`, `TestCoordinatorOutcomeWorkflowDoesNotLoseAcknowledgementAtHistoryBoundary` |
-| Replay against captured histories, and the gate failing when it should | `TestReplayPersistedWorkflowHistory` and `TestReplayRejectsPlantedNondeterministicWorkflow`, both in `failure_matrix_test.go` |
-| A killed Worker resumes without a second agent session | `TestActivityWorkerCrashResumesFromHeartbeatWithoutSecondSession` for a crash after the agent is running, and `TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession` for a crash before any heartbeat lands |
+| Workflow behavior | `workflow_test.go`: 12 cases covering duplicate ready delivery, malformed events, event-limit rejection, and seal enforcement |
+| Activity behavior | `activity_test.go`: 13 cases covering fenced claims, heartbeating, stale-generation rejection, and artifact bounds |
+| A duplicate Signal schedules only one Activity | <TermTip term="test-duplicate-ready" tip="Delivers the same ready event twice and requires the Workflow to schedule the agent Activity once. Redelivery is expected on this path, so it has to be harmless.">TestWorkflowDuplicateReadyDeliverySchedulesOneActivity</TermTip><br /><TermTip term="test-dedup-ready-signal" tip="The same property on the delivery side: a repeated OutcomeReady signal must not open a second delivery loop for one result.">TestCoordinatorOutcomeWorkflowDeduplicatesReadySignal</TermTip> |
+| A stale acknowledgement fails closed | <TermTip term="test-ack-fails-closed" tip="An acknowledgement that no longer matches the current store, work item, outcome, generation, and session is refused rather than accepted.">TestCoordinatorOutcomeActivityFailsClosedAtAcknowledgementBoundary</TermTip><br /><TermTip term="test-stale-completion" tip="Cancels an Activity that already has an agent attached, then has that agent present a stale claim token. One terminal receipt is written and the stale completion fails closed.">TestActivityCancellationReachesAttachedSessionAndStaleCompletionFails</TermTip> |
+| Cancellation reaches the agent without leaving the Workflow hanging | <TermTip term="test-cancel-no-hang" tip="Cancellation while the agent is still stopping. The Workflow has to finish rather than wait on a process that is on its way out.">TestWorkflowCancellationDoesNotHangWhileActivityStops</TermTip><br /><TermTip term="test-cancel-before-checkpoint" tip="The harder arm: nothing has been checkpointed yet, so the Activity has to ask the resolver which session it owns instead of reading heartbeat details.">TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession</TermTip> |
+| Continue-As-New preserves state and receipts | <TermTip term="test-can-state" tip="Continue-As-New starts a fresh Event History for a long-running Workflow. Redelivery state and counters have to cross that boundary intact.">TestCoordinatorOutcomeWorkflowContinuesAsNewWithStateAndCounters</TermTip><br /><TermTip term="test-ack-boundary" tip="The failure that boundary invites: an acknowledgement arriving exactly as the history rolls over must not be dropped.">TestCoordinatorOutcomeWorkflowDoesNotLoseAcknowledgementAtHistoryBoundary</TermTip> |
+| Captured histories still replay, and incompatible code fails the gate | <TermTip term="test-replay-persisted" tip="Runs current Workflow code against captured histories and requires the same decisions. This is the check that catches a nondeterministic change before it ships.">TestReplayPersistedWorkflowHistory</TermTip> and <TermTip term="test-replay-rejects" tip="The negative case. A deliberately nondeterministic Workflow is planted and replay must reject it, which is what proves the gate is wired up at all.">TestReplayRejectsPlantedNondeterministicWorkflow</TermTip> in `failure_matrix_test.go` |
+| A killed Worker resumes without creating a second agent session | <TermTip term="test-worker-crash" tip="Kills the Worker after the agent is running and a heartbeat checkpoint exists, then requires the retry to resume from that checkpoint against the same session.">TestActivityWorkerCrashResumesFromHeartbeatWithoutSecondSession</TermTip> covers failure after the agent is running; <TermTip term="test-cancel-before-checkpoint-kill" tip="The same case from the other side: with no checkpoint recorded, the retry must resolve the running session by identity rather than start a second one.">TestActivityCancellationBeforeFirstCheckpointUsesResolvedSession</TermTip> covers failure before the first heartbeat |
 
-The second replay case is the one I care about more than the passing one. A replay gate that never fails is a gate that is not wired up, so the suite plants a nondeterministic Workflow and requires the gate to reject it. A local rule goes with it: a replay fixture is never regenerated to make a change pass. If the fixture fails, the change is breaking.
+The failing replay test matters more than the passing one. A replay gate that never rejects anything may not be wired into the code path it claims to protect. The suite therefore includes a deliberately nondeterministic Workflow and requires replay to fail.
 
-The gap here is not coverage. A green test name is a weaker thing to show than the kill itself, so the suite is backed by a harness that runs the real Workflow and Activity against a local Temporal server and kills the Worker with a real signal at two points: once while the agent is mid-edit and a heartbeat checkpoint already exists, and once before any checkpoint lands. Both arms finish with one session and one receipt. The second is the one that matters, because it is the only one where the retry has to ask the resolver again, and the resolver hands back the session that already exists rather than minting a second. The run is recorded, forty-one seconds of it, most of which is the pause where Temporal works out that the Worker is gone. What this page still owes you is that recording, embedded here rather than described.
+One local rule follows from that: replay fixtures are never regenerated merely to make a change pass. If a captured history stops replaying, the change is breaking until someone can explain why it is safe.
+
+Tests still provide weaker evidence than watching the process fail. The same repository therefore includes a harness that runs the real Workflow and Activity against a local Temporal server and kills the Worker with a real operating-system signal.
+
+It kills the Worker at two points:
+
+1. After the agent is running and a heartbeat checkpoint exists.
+2. Before the first heartbeat has been recorded.
+
+Both runs finish with one agent session and one accepted receipt.
+
+The second case is the more important one. In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must return the session that is already running rather than create another one. That is the test of duplicate prevention.
+
+The recorded run lasts 41 seconds. Most of that time is the deliberate pause while Temporal detects that the Worker has disappeared and schedules another Activity attempt. The recording belongs on this page because the recovery delay, the repeated resolution, and the single surviving session are stronger evidence than a green test name.
+
+These results come from a local test environment. They are enough to justify bounded canaries of the bead-to-agent path while canonical mutation remains protected by shadow mode. They are not evidence for unrestricted production rollout. The path currently running continuously in production is the narrower result-delivery and acknowledgement Workflow.
 
 These are assertions against a local test environment, which is what makes me willing to run the bead-to-agent path as a bounded canary in shadow. The part they let run continuously in production is result delivery and acknowledgement.
 
@@ -406,7 +421,7 @@ My hardening, which exists because of what my Activity starts:
 * Exact coordinator acknowledgement.
 * The independent all-store watchdog.
 
-Anyone orchestrating a short idempotent job needs the first list and none of the second. I needed the second because my Activity spawns a process that edits a git worktree for an hour and can outlive the Worker that started it. That is a property of the workload, not a tax Temporal charges.
+A short, idempotent job needs the first set of guarantees and none of the second. My Activity is different: it starts a process that can edit a Git worktree for an hour and continue running after the Worker that launched it has died. The additional recovery machinery follows from that workload, not from Temporal itself.
 
 ## NDI and durable replay are complementary
 
@@ -420,15 +435,17 @@ Gas City supplies the orchestration primitives. Beads supplies the durable work 
 
 ## Toward a Temporal pack
 
-The implementation is a standalone Go service using Gas City's canonical work store and local command surfaces. It's not something I needed to wire in as a core dependency for Gas City (i.e., the SDK repo) itself.
+The implementation is a standalone Go service built against Gas City's canonical work store and local command surfaces. It did not need to become a core dependency of the Gas City SDK itself.
 
-The eventual distribution boundary could be a Gas City pack containing the Worker configuration, Workflow and Activity contracts, Beads adapters, generation fences, outcome-delivery tools, canary and rollback gates, diagnostics, and user runbooks. An installation could then choose Temporal only at the workflow boundaries where its guarantees are useful.
+The eventual distribution boundary could be a [Gas City pack](https://github.com/gastownhall/gascity-packs) containing the Worker configuration, Workflow and Activity contracts, Beads adapters, generation fences, outcome-delivery tools, canary and rollback gates, diagnostics, and runbooks. An installation could then adopt Temporal only at the workflow boundaries where its guarantees are useful.
 
-That optionality is important. This is also why I would not translate every Gas City formula directly into a Temporal Workflow. Doing so would add machinery without necessarily adding value.
+That selectivity applies inside the work graph too. I would not translate every Gas City formula, node, or transition directly into a Temporal Workflow. Doing so would add machinery without necessarily adding a guarantee the system needs.
 
-A graph is useful for expressing the topology of the work; [durable code is useful for procedures](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) whose exact progress must survive failure. The two representations answer different questions. The practical boundary is not whether something appears as a node or edge. It is whether losing its in-flight procedure would leave the system unable to say what happened.
+The graph describes the topology of the work: which agents exist, how tasks depend on one another, and where branches, reviews, and handoffs occur. [Durable code owns the smaller set of procedures](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) whose exact progress must survive failure. The two answer different questions.
 
-You can find the relevant boundaries by asking which guarantee needs to survive a crash. Sometimes that is only the work record, and Beads is enough. Sometimes it is the exact sequence of waits, retries, identities, gates, and acknowledgements, and that procedure needs a durable owner.
+The practical boundary is therefore not whether something appears as a node or edge. It is whether losing the procedure currently traversing that boundary would leave the system unable to say what happened.
+
+Sometimes only the work record needs to survive, and Beads is enough. Sometimes the promise includes a sequence of waits, retries, identities, gates, and acknowledgements. That procedure needs a durable owner.
 
 ## What I learned
 
