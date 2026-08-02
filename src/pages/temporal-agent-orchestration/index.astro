@@ -285,10 +285,12 @@ const afterCode = await codeToHtml(
       <h3 class="tco__demo-subhead">First, without Temporal</h3>
       <div class="tco__copy prose">
         <p>
-          The coordinator here is the before-world's reconcile loop: it
-          claims the work, launches the agent, and holds the procedure in
-          process memory. The kill lands mid-wait. The restart can only
-          infer.
+          In the before state, the coordinator was the reconcile loop. It
+          claimed the work, launched the agent, and kept the remaining
+          procedure only in process memory. If the process died while waiting
+          for the agent, the work record survived, but the handoff state did
+          not. After restarting, the coordinator could only infer whether the
+          agent had already started and what should happen next.
         </p>
       </div>
       <figure class="tco__player">
@@ -382,8 +384,8 @@ both   one session, one receipt, stale claim token rejected,
             <li><a href={`${evidence}/worker-kill/verify-report.txt`}>The invariant report, both arms</a></li>
             <li><a href={`${evidence}/worker-kill/pre-checkpoint/retry-gap.jsonl`}>Retry-gap samples from the decisive arm</a></li>
             <li><a href={`${evidence}/worker-kill/pre-checkpoint/agent-events.jsonl`}>Agent session events: one created, then attached</a></li>
-            <li><a href={`${evidence}/before-temporal/verify-report.txt`}>The before-world gate report</a></li>
-            <li><a href={`${evidence}/before-temporal/work.json`}>The before-world store, stale receipt on top</a></li>
+            <li><a href={`${evidence}/before-temporal/verify-report.txt`}>The before-state gate report</a></li>
+            <li><a href={`${evidence}/before-temporal/work.json`}>The before-state store, stale receipt on top</a></li>
             <li><a href={`${evidence}/before-temporal/worktree-work-item-1.txt`}>One worktree file, edited by two sessions</a></li>
             <li><a href={`${evidence}/provenance.json`}>Run provenance</a></li>
           </ul>
@@ -394,7 +396,7 @@ both   one session, one receipt, stale claim token rejected,
           The demo runs on one host against a local dev server, with a
           file-backed store and a fixture process in place of a coding agent.
           It proves the boundary, on real Temporal, with a real signal. The
-          before-world arm drives the same fixture agent over the same
+          before-state arm drives the same fixture agent over the same
           protocol; only the coordinator differs.
         </p>
       </div>
