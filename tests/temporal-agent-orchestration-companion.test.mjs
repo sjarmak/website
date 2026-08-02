@@ -41,6 +41,10 @@ const GLOSSARY = path.join(
   ROOT,
   "src/components/temporal-agent-orchestration/Glossary.astro",
 );
+const TERMTIP = path.join(
+  ROOT,
+  "src/components/temporal-agent-orchestration/TermTip.astro",
+);
 
 test("the companion page is the route's front door and the article moved beside it", () => {
   assert.equal(existsSync(COMPANION), true);
@@ -336,8 +340,40 @@ test("the glossary groups the vocabulary and both pages render it", () => {
   assert.match(article, /<Glossary \/>/);
 });
 
+test("the code identifiers carry hover explanations a keyboard can reach", () => {
+  const termtip = readFileSync(TERMTIP, "utf8");
+  const companion = readFileSync(COMPANION, "utf8");
+
+  // The tooltip is reachable without a mouse and announced with its term.
+  assert.match(termtip, /tabindex="0"/);
+  assert.match(termtip, /aria-describedby=\{tipId\}/);
+  assert.match(termtip, /role="tooltip"/);
+  assert.match(termtip, /:focus-within/);
+
+  // Every code identifier in the conversion paragraph is explained.
+  for (const identifier of [
+    "CityRuntime.beadReconcileTick",
+    "BeadOrchestrationWorkflow",
+    "ExecuteBeadActivity",
+    "gascity-bead-orchestration",
+    "gascity-agent-work",
+  ]) {
+    assert.match(
+      companion,
+      new RegExp(`<TermTip[\\s\\S]{0,400}?>${identifier.replace(/\./g, "\\.")}</TermTip>`),
+      `${identifier} must carry a TermTip explanation`,
+    );
+  }
+  // "Controller tick" is the phrase the tip exists to unpack.
+  const flat = companion.replace(/\s+/g, " ");
+  assert.ok(
+    flat.includes("every few seconds it woke (one tick)"),
+    "the tick tip must explain what a tick is",
+  );
+});
+
 test("companion prose carries no em dashes and no self-narration", () => {
-  for (const file of [COMPANION, CODE_INDEX, CODE_READER, GLOSSARY]) {
+  for (const file of [COMPANION, CODE_INDEX, CODE_READER, GLOSSARY, TERMTIP]) {
     const source = readFileSync(file, "utf8");
     assert.doesNotMatch(
       source,

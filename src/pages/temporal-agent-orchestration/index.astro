@@ -5,6 +5,7 @@ import { codeToHtml } from "shiki";
 
 import ConceptFigure from "@/components/temporal-agent-orchestration/ConceptFigure.astro";
 import Glossary from "@/components/temporal-agent-orchestration/Glossary.astro";
+import TermTip from "@/components/temporal-agent-orchestration/TermTip.astro";
 import PageLayout from "@/layouts/PageLayout.astro";
 
 import "asciinema-player/dist/bundle/asciinema-player.css";
@@ -120,13 +121,28 @@ const afterCode = await codeToHtml(
         </p>
         <p>
           Before, that unit was a controller tick,
-          <code>CityRuntime.beadReconcileTick</code>, plus a separate recovery
+          <TermTip
+            term="bead-reconcile-tick"
+            tip="The old coordinator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory."
+          >CityRuntime.beadReconcileTick</TermTip>, plus a separate recovery
           scan that inferred what a dead session had been doing. After,
-          <code>BeadOrchestrationWorkflow</code> owns the procedure and
-          <code>ExecuteBeadActivity</code> owns the fenced claim,
+          <TermTip
+            term="bead-orchestration-workflow"
+            tip="The Temporal Workflow that now owns one work item's procedure: claim, launch, wait, receipt, in that order, recorded durably."
+          >BeadOrchestrationWorkflow</TermTip> owns the procedure and
+          <TermTip
+            term="execute-bead-activity"
+            tip="The Temporal Activity that touches the real world for that item: it writes the fenced claim, starts the agent or finds the one already running, heartbeats, and reports the completion."
+          >ExecuteBeadActivity</TermTip> owns the fenced claim,
           start-or-attach, heartbeat, and completion. The two run on separate
-          Task Queues, <code>gascity-bead-orchestration</code> for the
-          procedure and <code>gascity-agent-work</code> for the agent, so
+          Task Queues, <TermTip
+            term="queue-orchestration"
+            tip="The Task Queue the orchestration Workflow is served from."
+          >gascity-bead-orchestration</TermTip> for the
+          procedure and <TermTip
+            term="queue-agent-work"
+            tip="The Task Queue the agent-facing Activity is served from."
+          >gascity-agent-work</TermTip> for the agent, so
           orchestration and agent execution can later be isolated or scaled
           independently.
         </p>

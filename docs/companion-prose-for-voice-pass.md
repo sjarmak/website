@@ -168,6 +168,19 @@ isolation, not current independent scaling)**:
 
 > Before, that unit was a controller tick, `CityRuntime.beadReconcileTick`, plus a separate recovery scan that inferred what a dead session had been doing. After, `BeadOrchestrationWorkflow` owns the procedure and `ExecuteBeadActivity` owns the fenced claim, start-or-attach, heartbeat, and completion. The two run on separate Task Queues, `gascity-bead-orchestration` for the procedure and `gascity-agent-work` for the agent, so orchestration and agent execution can later be isolated or scaled independently.
 
+Hover explanations on the code identifiers **(new 2026-08-01; TermTip
+tooltips, reachable by keyboard focus)**:
+
+> CityRuntime.beadReconcileTick: The old coordinator's loop step: every few seconds it woke (one tick), scanned the store for ready work, claimed it, and launched agents. Everything it knew between steps lived in process memory.
+
+> BeadOrchestrationWorkflow: The Temporal Workflow that now owns one work item's procedure: claim, launch, wait, receipt, in that order, recorded durably.
+
+> ExecuteBeadActivity: The Temporal Activity that touches the real world for that item: it writes the fenced claim, starts the agent or finds the one already running, heartbeats, and reports the completion.
+
+> gascity-bead-orchestration: The Task Queue the orchestration Workflow is served from.
+
+> gascity-agent-work: The Task Queue the agent-facing Activity is served from.
+
 Code panes (carried over):
 
 > Before: one process-owned tick
