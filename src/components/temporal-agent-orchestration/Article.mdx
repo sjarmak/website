@@ -132,9 +132,6 @@ We tested other boundaries and rejected nearly all of them: the recurring-job sc
 
 One boundary remained, covering the work from claim through agent session to acknowledged result. If the process died mid-flight, Beads still held the facts about the work, but the system lost what connected them, including what had happened, what was still waiting, and what should happen next. Temporal does not replace the city's source of truth. It preserves that procedure so the city can recover it after a crash.
 
-That division of labor ran through the entire project. The agents wrote the code and the first drafts of every incident report, because operating this way is the point of the city. I set the direction, drew the boundary, and decided when each integration was allowed to take control in production.
-
-
 ## The boundary I chose
 
 At first I thought I was adding a workflow engine. I was actually forcing myself to answer a series of ownership questions the existing system had kept fuzzy.
