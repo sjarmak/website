@@ -82,7 +82,7 @@ test("the companion opens with the failure, the boundary sentence, and the bound
   }
 
   assert.match(companion, /Put the unpredictable agent inside an\s+Activity/);
-  assert.match(companion, /Put the promises\s+around it in a Workflow/);
+  assert.match(companion, /Put the procedure\s+around it in a Workflow/);
 
   // The hero ledger bounds the claim in four lines before any detail.
   assert.match(companion, /One ready task → one agent session → one fenced receipt\./);
