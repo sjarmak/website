@@ -7,6 +7,7 @@ import {
   type AgentOrchestrationCodeSample,
   preTemporalAgentOrchestrationCodeSamples,
   temporalAgentOrchestrationCodeSamples,
+  validateTemporalAgentOrchestrationCodeSamples,
 } from "@/data/temporal-agent-orchestration-code-samples";
 import PageLayout from "@/layouts/PageLayout.astro";
 
@@ -39,18 +40,9 @@ const source = readFileSync(path.join(process.cwd(), sample.sourcePath), "utf8")
   .replace(/\n$/, "");
 const lines = source.split("\n");
 
-let expectedStart = 1;
-for (const section of sample.sections) {
-  if (section.start !== expectedStart || section.end < section.start) {
-    throw new Error(`Non-contiguous annotations in ${sample.filename}`);
-  }
-  expectedStart = section.end + 1;
-}
-if (expectedStart !== lines.length + 1) {
-  throw new Error(
-    `${sample.filename} has ${lines.length} lines but annotations end at ${expectedStart - 1}`,
-  );
-}
+validateTemporalAgentOrchestrationCodeSamples([sample], {
+  [sample.filename]: lines.length,
+});
 
 const renderedSections = await Promise.all(
   sample.sections.map(async (section) => ({
@@ -90,7 +82,7 @@ const renderedSections = await Promise.all(
     </nav>
 
     {
-      (sample.sourceUrl || sample.revision || sample.promotionStatus) && (
+      (sample.sourceUrl || sample.promotionStatus || sample.evidenceTrail) && (
         <section class="code-reader__provenance" aria-label="Provenance">
           {sample.sourceUrl && (
             <p>
@@ -102,8 +94,29 @@ const renderedSections = await Promise.all(
               omission is marked in the source.
             </p>
           )}
-          {sample.revision && <p>{sample.revision}</p>}
-          {sample.promotionStatus && <p>{sample.promotionStatus}</p>}
+          {sample.promotionStatus && (
+            <>
+              <p>
+                Source review and production activation have separate
+                evidence; the status here records what the corresponding live
+                canary actually proved.
+              </p>
+              <p>{sample.promotionStatus}</p>
+            </>
+          )}
+          {sample.evidenceTrail && (
+            <ol
+              class="code-reader__evidence"
+              aria-label="Canary evidence trail"
+            >
+              {sample.evidenceTrail.map((step) => (
+                <li>
+                  <strong>{step.label}</strong>
+                  <span>{step.detail}</span>
+                </li>
+              ))}
+            </ol>
+          )}
         </section>
       )
     }
@@ -318,6 +331,31 @@ const renderedSections = await Promise.all(
 
   .code-reader__provenance p:last-child {
     margin-block-end: 0;
+  }
+
+  .code-reader__evidence {
+    margin: var(--space-s) 0 0;
+    padding: var(--space-s) var(--space-m) var(--space-s) 2.1rem;
+    border: 1px solid var(--reader-rule);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+  }
+
+  .code-reader__evidence li + li {
+    margin-block-start: 0.65rem;
+  }
+
+  .code-reader__evidence strong,
+  .code-reader__evidence span {
+    display: block;
+  }
+
+  .code-reader__evidence strong {
+    color: var(--color-text);
+  }
+
+  .code-reader__evidence span {
+    margin-block-start: 0.1rem;
   }
 
   .code-reader__guide {
@@ -578,6 +616,7 @@ const renderedSections = await Promise.all(
      variable, so light mode must leave the inline color alone. */
   :global([data-theme="dark"]) .code-reader__source :global(.shiki span) {
     color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style, inherit);
   }
 
   .code-reader__footer {

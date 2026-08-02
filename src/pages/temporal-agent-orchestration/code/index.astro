@@ -22,7 +22,7 @@ const samples = [
 <PageLayout
   title="Complete annotated source"
   kicker="Temporal case study · Code"
-  intro="Eight full files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them, with the complete test matrix beneath."
+  intro="Eight annotated files show the pre-Temporal controller and recovery path, and the Workflow, Activity, bridge, and Worker code that replaced them, with the complete test matrix beneath."
   description="The complete before and after source for a coding-agent orchestration boundary rebuilt with Temporal's Go SDK."
   noindex={true}
 >
@@ -67,14 +67,14 @@ const samples = [
       <div class="code-index__guide">
         <p>
           The suite runs with one command: <code>cd
-          services/temporal-maintenance &amp;&amp; make test</code>, which is
-          <code>go test -race ./...</code>. The service contains 45 Go test
-          files, including 18 in the package that implements the Temporal and
-          Beads boundary. Every case below runs unconditionally; a small
-          number of heavier integration tests require a local Temporal
-          development server and skip themselves when the Temporal CLI is not
-          available. The article keeps the five invariants this table holds
-          down; the named cases are here.
+          services/temporal-maintenance &amp;&amp; go test -race ./...</code>.
+          The package that implements the
+          Temporal and Beads boundary carries 18 Go test files. Every case
+          below runs unconditionally; a small number of heavier integration
+          tests require a local Temporal development server and skip
+          themselves when the Temporal CLI is not available. The article
+          names five invariants; the table holds those down and adds the
+          Continue-As-New boundary. The named cases are here.
         </p>
       </div>
       <table class="code-index__matrix">
@@ -88,7 +88,7 @@ const samples = [
           <tr>
             <td>Workflow behavior</td>
             <td>
-              <code>workflow_test.go</code>: 12 cases covering duplicate ready
+              <code>workflow_test.go</code>: cases covering duplicate ready
               delivery, malformed events, event-limit rejection, and seal
               enforcement
             </td>
@@ -96,7 +96,7 @@ const samples = [
           <tr>
             <td>Activity behavior</td>
             <td>
-              <code>activity_test.go</code>: 13 cases covering fenced claims,
+              <code>activity_test.go</code>: cases covering fenced claims,
               heartbeating, stale-generation rejection, and artifact bounds
             </td>
           </tr>

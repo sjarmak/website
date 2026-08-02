@@ -10,6 +10,9 @@
   "host": "Linux 6.17.0-35-generic x86_64",
   "heartbeat_timeout_seconds": 8,
   "run_command": "HEARTBEAT=8 PORT=7244 ./run.sh",
+  "published_repo": "https://github.com/sjarmak/gas-city",
+  "published_revision": "d54696781eba",
+  "published_note": "The published repo is a squashed publication; its services/temporal-maintenance tree matches service_revision_full for the published files except two test fixtures (internal/temporalbeads/outcome_store_test.go and internal/temporalbeads/testdata/bead_orchestration_history.json) where machine-local paths and worker identities were replaced with neutral values.",
   "published_files_sha256": {
     "before-temporal/agent-events.jsonl": "1815f7948bcdf9ad8713bacd58d8f62797a4942fcd49f7761dcc83082e1e4bdb",
     "before-temporal/agents-live.jsonl": "1a67e1af6b0d286f2060009d77c0070dab536c3ead357a7f789616f0d91d6a5d",

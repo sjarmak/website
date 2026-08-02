@@ -12,12 +12,10 @@ export interface AgentOrchestrationCodeSample {
   filename: string;
   label: string;
   summary: string;
-  revision?: string;
   promotionStatus?: string;
   evidenceTrail?: Array<{
     label: string;
     detail: string;
-    revision?: string;
   }>;
   sourcePath: string;
   rawPath: string;
@@ -31,11 +29,11 @@ const beforeRevision = "b78058917bc65846db89e1c3b25dc17269822483";
 const upstreamSource = `https://github.com/gastownhall/gascity/blob/${beforeRevision}`;
 const passedAgentCanary = {
   promotionStatus:
-    "Passed the bounded bead-to-agent canary; the service returned to shadow mode after the run.",
+    "Passed the bounded bead-to-agent canary; the service returned to shadow mode after the run. Shown at the current implementation head rather than the canary revision.",
 };
 const failedOutcomeReadyCanary = {
   promotionStatus:
-    "The first full-integration canary for this historical source failed. Reviewed repairs later passed bounded gates, and OutcomeReady now runs continuously in production on the reviewed build.",
+    "The first full-integration canary for this historical source failed. Reviewed repairs later passed bounded gates, and OutcomeReady now runs continuously in production on the reviewed build. Shown at the current implementation head rather than the canary revision.",
   evidenceTrail: [
     {
       label: "Failed promotion gate",
@@ -183,7 +181,7 @@ export const preTemporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSam
       sections: [
         {
           start: 1,
-          end: 17,
+          end: 23,
           title: "Close only from persisted session facts",
           purpose:
             "Introduces the versioned source and begins the best-effort close path with a promise that a later reconciler tick can try again.",
@@ -192,7 +190,7 @@ export const preTemporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSam
           details: ["Best-effort close", "Future scan", "No execution history"],
         },
         {
-          start: 18,
+          start: 24,
           end: 55,
           title: "Commit metadata, close, then release",
           purpose:
@@ -398,7 +396,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
       sections: [
         {
           start: 1,
-          end: 61,
+          end: 63,
           title: "Give every result a stable execution",
           purpose:
             "Defines the OutcomeReady Workflow contract, queryable state, and stable Workflow ID derived from the immutable outcome ID.",
@@ -407,8 +405,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Stable Workflow ID", "Queryable phase", "Immutable outcome"],
         },
         {
-          start: 62,
-          end: 146,
+          start: 64,
+          end: 143,
           title: "Rebuild state without accepting stale evidence",
           purpose:
             "Validates the envelope, restores Continue-As-New state, drains buffered duplicate signals, and rejects acknowledgements for the wrong delivery fence.",
@@ -421,8 +419,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           ],
         },
         {
-          start: 147,
-          end: 211,
+          start: 144,
+          end: 215,
           title: "Redeliver until the coordinator proves receipt",
           purpose:
             "Runs the notification Activity, exposes needs-ack state, waits for the exact acknowledgement, and retries both delivery and canonical acknowledgement failures.",
@@ -431,18 +429,32 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Durable retry", "Needs-ack phase", "Explicit completion"],
         },
         {
-          start: 212,
-          end: 274,
+          start: 216,
+          end: 254,
+          title: "Patch the failed-delivery wait behind a version marker",
+          purpose:
+            "Uses workflow.GetVersion to gate a patched wait: when a redelivery fails after the outcome already reached needs-ack, the Workflow watches for the exact acknowledgement during the pause and commits it instead of only sleeping.",
+          whyTemporal:
+            "GetVersion records the branch in Event History, so executions started before the patch replay the original sleep while new ones take the acknowledgement-aware path without nondeterminism errors.",
+          details: [
+            "workflow.GetVersion",
+            "Ack during failure wait",
+            "Replay-safe patch",
+          ],
+        },
+        {
+          start: 255,
+          end: 328,
           title: "Bound history and identify each delivery cycle",
           purpose:
-            "Carries state through Continue-As-New and assigns a stable Activity ID to each logical redelivery cycle.",
+            "Records the acknowledged phase and timestamp, carries state through Continue-As-New, and assigns a stable Activity ID to each logical redelivery cycle.",
           whyTemporal:
             "Activity retries within one cycle can deduplicate their side effects, while a later cycle can create fresh attention without growing one history forever.",
           details: ["Cycle identity", "Activity retry", "Bounded history"],
         },
         {
-          start: 275,
-          end: 350,
+          start: 329,
+          end: 405,
           title: "Wait on signals and a durable timer",
           purpose:
             "Selects between duplicate outcome signals, exact acknowledgement, and the redelivery timer while counting stale or conflicting input.",
@@ -451,8 +463,8 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           details: ["Selector", "Durable timer", "Exact tuple matching"],
         },
         {
-          start: 351,
-          end: 376,
+          start: 406,
+          end: 431,
           title: "Commit acknowledgement through a separate Activity",
           purpose:
             "Writes the acknowledgement to the canonical store with a cycle-specific Activity ID and bounded retry policy.",
@@ -478,7 +490,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           end: 70,
           title: "Define compact Activity contracts",
           purpose:
-            "Models agent progress, execution, cancellation, and the adapter interfaces for the work store and external agent process.",
+            "Models agent progress, execution, and cancellation payloads, defines the AgentExecutor adapter for the external agent process, and binds it with the work store on the ActivityWorker.",
           whyTemporal:
             "Compact typed payloads keep large prompts, code changes, and artifacts out of Workflow History.",
           details: ["Typed payloads", "Artifact references", "Adapter boundary"],
@@ -532,7 +544,7 @@ export const temporalAgentOrchestrationCodeSamples: AgentOrchestrationCodeSample
           end: 521,
           title: "Keep progress alive and monotonic",
           purpose:
-            "Runs a bounded heartbeat pump, records agent checkpoints, rejects changed session identity or reused sequence numbers, and copies resume state safely.",
+            "Runs a bounded heartbeat pump, records agent checkpoints, rejects changed session identity or a reused sequence number carrying different content (an identical duplicate checkpoint is accepted), and copies resume state safely.",
           whyTemporal:
             "Heartbeat timeout detects Worker loss, and monotonic checkpoints give the retry a compact recovery cursor.",
           details: ["Heartbeat timeout", "Monotonic sequence", "Progress cursor"],

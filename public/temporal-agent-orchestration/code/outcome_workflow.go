@@ -12,11 +12,13 @@ const (
 	CoordinatorOutcomeTaskQueue    = "gascity-coordinator-outcomes"
 	CoordinatorOutcomeWorkflowName = "CoordinatorOutcomeWorkflow"
 
-	SignalOutcomeReady               = "coordinator.outcome-ready"
-	SignalCoordinatorAcknowledged    = "coordinator.acknowledged"
-	QueryCoordinatorOutcomeState     = "coordinator-outcome-state"
-	defaultOutcomeRedeliveryPeriod   = time.Minute
-	defaultOutcomeContinueAsNewAfter = 100
+	SignalOutcomeReady                     = "coordinator.outcome-ready"
+	SignalCoordinatorAcknowledged          = "coordinator.acknowledged"
+	QueryCoordinatorOutcomeState           = "coordinator-outcome-state"
+	defaultOutcomeRedeliveryPeriod         = time.Minute
+	defaultOutcomeContinueAsNewAfter       = 100
+	outcomeAckAfterDeliveryFailureChangeID = "coordinator-outcome-ack-after-delivery-failure"
+	outcomeAckAfterDeliveryFailureVersion  = 1
 )
 
 type CoordinatorOutcomeInput struct {
@@ -135,11 +137,7 @@ func CoordinatorOutcomeWorkflow(
 				state.LastDeliveryError = "canonical-acknowledgement-failed"
 				break
 			}
-			state.Phase = OutcomeCoordinatorAcknowledged
-			state.AcknowledgedAt = record.AcknowledgedAt
-			if state.AcknowledgedAt.IsZero() {
-				state.AcknowledgedAt = workflow.Now(ctx)
-			}
+			recordOutcomeAcknowledgement(ctx, &state, record)
 			return state, nil
 		}
 	}
@@ -154,8 +152,18 @@ func CoordinatorOutcomeWorkflow(
 		)
 		if err != nil {
 			state.LastDeliveryError = "local-delivery-failed"
-			if err := workflow.Sleep(ctx, input.RedeliveryInterval); err != nil {
+			acknowledged, err := awaitAcknowledgementAfterDeliveryFailure(
+				ctx,
+				readyCh,
+				ackCh,
+				input.RedeliveryInterval,
+				&state,
+			)
+			if err != nil {
 				return state, err
+			}
+			if acknowledged {
+				return state, nil
 			}
 			if runDeliveryAttempts >= input.ContinueAsNewAfter {
 				return continueCoordinatorOutcomeAsNew(ctx, input, state)
@@ -201,12 +209,59 @@ func CoordinatorOutcomeWorkflow(
 			}
 			continue
 		}
-		state.Phase = OutcomeCoordinatorAcknowledged
-		state.AcknowledgedAt = record.AcknowledgedAt
-		if state.AcknowledgedAt.IsZero() {
-			state.AcknowledgedAt = workflow.Now(ctx)
-		}
+		recordOutcomeAcknowledgement(ctx, &state, record)
 		return state, nil
+	}
+}
+
+func awaitAcknowledgementAfterDeliveryFailure(
+	ctx workflow.Context,
+	readyCh workflow.ReceiveChannel,
+	ackCh workflow.ReceiveChannel,
+	redeliveryInterval time.Duration,
+	state *CoordinatorOutcomeState,
+) (bool, error) {
+	patched := workflow.GetVersion(
+		ctx,
+		outcomeAckAfterDeliveryFailureChangeID,
+		workflow.DefaultVersion,
+		outcomeAckAfterDeliveryFailureVersion,
+	) != workflow.DefaultVersion
+	if !patched || state.Phase != OutcomeCoordinatorNeedsAck {
+		return false, workflow.Sleep(ctx, redeliveryInterval)
+	}
+	redeliver, acknowledgement, err := awaitOutcomeAcknowledgement(
+		ctx,
+		readyCh,
+		ackCh,
+		redeliveryInterval,
+		state,
+	)
+	if err != nil || redeliver {
+		return false, err
+	}
+	record, err := executeOutcomeAcknowledgement(
+		ctx,
+		acknowledgement,
+		state.DeliveryAttempts,
+	)
+	if err != nil {
+		state.LastDeliveryError = "canonical-acknowledgement-failed"
+		return false, workflow.Sleep(ctx, redeliveryInterval)
+	}
+	recordOutcomeAcknowledgement(ctx, state, record)
+	return true, nil
+}
+
+func recordOutcomeAcknowledgement(
+	ctx workflow.Context,
+	state *CoordinatorOutcomeState,
+	record OutcomeRecord,
+) {
+	state.Phase = OutcomeCoordinatorAcknowledged
+	state.AcknowledgedAt = record.AcknowledgedAt
+	if state.AcknowledgedAt.IsZero() {
+		state.AcknowledgedAt = workflow.Now(ctx)
 	}
 }
 

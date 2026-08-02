@@ -13,9 +13,12 @@ const ARTICLE = path.join(
   ROOT,
   "src/components/temporal-agent-orchestration/Article.mdx",
 );
+// The one code reader: the embedded AnnotatedCode component was deleted when
+// the complete annotated files moved to the /code pages, so the page route is
+// the surface these assertions pin.
 const READER = path.join(
   ROOT,
-  "src/components/temporal-agent-orchestration/AnnotatedCode.astro",
+  "src/pages/temporal-agent-orchestration/code/[slug].astro",
 );
 const FIGURES = path.join(
   ROOT,
@@ -415,8 +418,8 @@ test("the essay shows versioned pre-Temporal code excerpts with provenance", () 
   assert.match(samples, /b78058917bc65846db89e1c3b25dc17269822483/);
   assert.match(samples, /cmd\/gc\/city_runtime\.go/);
   assert.match(samples, /cmd\/gc\/session_beads\.go/);
-  assert.match(reader, /mode === "before"/);
-  assert.match(reader, /Before Temporal/);
+  assert.match(reader, /beforeSlugs\.has\(sample\.slug\)/);
+  assert.match(reader, /isBefore \? "Before" : "After"/);
   assert.match(reader, /Versioned before code/);
   assert.match(reader, /sample\.sourceUrl/);
   assert.match(reader, /View original source/);
@@ -456,7 +459,7 @@ test("the essay embeds syntax-colored Go source with selectable explanations", (
   assert.match(reader, /lang: "go"/);
   assert.match(reader, /one-light/);
   assert.match(reader, /one-dark-pro/);
-  assert.match(reader, /data-code-file/);
+  assert.match(reader, /data-code-reader/);
   assert.match(reader, /data-code-section/);
   assert.match(reader, /role="button"/);
   assert.match(reader, /tabindex="0"/);
@@ -465,9 +468,8 @@ test("the essay embeds syntax-colored Go source with selectable explanations", (
   assert.match(reader, /Why it matters for Temporal/);
   assert.match(reader, /event\.key === "Enter"/);
   assert.match(reader, /event\.key === " "/);
-  assert.match(reader, /data-code-inspector/);
-  assert.match(reader, /data-code-explanation/);
-  assert.match(reader, /explanation\.hidden = explanation !== selected/);
+  assert.match(reader, /code-reader__explanation/);
+  assert.match(reader, /explanation\.hidden = !expanded/);
   assert.match(reader, /href=\{sample\.rawPath\}/);
   assert.match(reader, /download=\{sample\.filename\}/);
 });
@@ -482,11 +484,14 @@ test("the after-code reader distinguishes reviewed source from live promotion", 
   assert.match(samples, /bounded bead-to-agent canary/i);
   assert.match(samples, /promotionStatus:/);
   assert.match(samples, /full-integration canary[^.]*failed/i);
-  assert.match(reader, /sample\.revision/);
+  // The revision field left the schema with the private hashes it carried;
+  // promotion status alone records what the live canary proved.
+  assert.doesNotMatch(samples, /revision\?:/);
+  assert.doesNotMatch(reader, /sample\.revision\b/);
   assert.match(reader, /sample\.promotionStatus/);
   assert.match(
     reader,
-    /Source review and production activation\s+have separate evidence/,
+    /Source review and production activation have separate\s+evidence/,
   );
 });
 
@@ -602,23 +607,18 @@ test("the article keeps the failure, the repair, and the containment boundary", 
   assert.match(samples, /all-store health surface stayed empty/i);
   assert.match(reader, /sample\.evidenceTrail/);
   assert.match(reader, /aria-label="Canary evidence trail"/);
-  assert.match(reader, /annotated-code__evidence/);
+  assert.match(reader, /code-reader__evidence/);
 });
 
-test("selected code explanations open in a right-hand inspector on wide screens", () => {
+test("selected code explanations open directly beneath the code they describe", () => {
   const reader = readFileSync(READER, "utf8");
 
-  assert.match(reader, /annotated-code__stage/);
+  assert.match(reader, /opens directly beneath the\s+code it describes/);
   assert.match(
     reader,
-    /\.annotated-code__stage\[data-inspector-open="true"\][\s\S]*grid-template-columns:[\s\S]*minmax\(18rem, 0\.8fr\)/,
+    /aria-controls=\{`\$\{sample\.slug\}-explanation-\$\{section\.start\}`\}/,
   );
-  assert.match(reader, /\.annotated-code__inspector[\s\S]*position: sticky/);
-  assert.match(reader, /dataset\.inspectorOpen = String/);
-  assert.match(
-    reader,
-    /@media \(max-width: 900px\)[\s\S]*\.annotated-code__stage\[data-inspector-open="true"\][\s\S]*grid-template-columns: minmax\(0, 1fr\)/,
-  );
+  assert.match(reader, /explanation\.hidden = !expanded/);
 });
 
 test("every embedded source file is completely and contiguously annotated", async () => {
@@ -627,11 +627,17 @@ test("every embedded source file is completely and contiguously annotated", asyn
   assert.match(moduleText, /annotations end at/);
 
   const reader = readFileSync(READER, "utf8");
+  assert.match(reader, /validateTemporalAgentOrchestrationCodeSamples\(/);
+  assert.doesNotMatch(
+    reader,
+    /Non-contiguous annotations/,
+    "the page must call the shared validator, not carry its own copy",
+  );
   assert.match(reader, /lines\.slice\(section\.start - 1, section\.end\)/);
   assert.match(reader, /set:html=\{section\.html\}/);
 });
 
-test("the embedded reader retains the established responsive and accessible treatment", () => {
+test("the code reader retains the established responsive and accessible treatment", () => {
   const reader = readFileSync(READER, "utf8");
   const page = readFileSync(PAGE, "utf8");
 
@@ -645,38 +651,21 @@ test("the embedded reader retains the established responsive and accessible trea
   assert.match(page, /max-width: var\(--measure\)/);
 });
 
-test("each full file starts as a bounded preview and can expand or collapse", () => {
+test("each code page renders the complete file without a preview clamp", () => {
   const reader = readFileSync(READER, "utf8");
 
-  assert.match(reader, /data-file-expanded="false"/);
-  assert.match(reader, /data-file-toggle/);
-  assert.match(reader, /Show full file/);
-  assert.match(reader, /Collapse file/);
-  assert.match(reader, /aria-expanded="false"/);
-  assert.match(reader, /panel\.dataset\.fileExpanded = String\(expanded\)/);
-  assert.doesNotMatch(reader, /setFileExpanded\(panel, true\)/);
-  assert.match(
-    reader,
-    /\.annotated-code__panel\[data-file-expanded="false"\][\s\S]*\.annotated-code__file-frame[\s\S]*max-height: 24rem[\s\S]*overflow: hidden/,
-  );
+  assert.match(reader, /The complete file\s+stays visible/);
+  assert.doesNotMatch(reader, /data-file-expanded/);
+  assert.doesNotMatch(reader, /Show full file/);
 });
 
-test("long source lines wrap inside the article instead of widening the page", () => {
+test("long source lines stay contained on the code page instead of widening it", () => {
   const reader = readFileSync(READER, "utf8");
   const page = readFileSync(PAGE, "utf8");
 
-  assert.match(
-    reader,
-    /\.annotated-code \{[\s\S]*width: 100%[\s\S]*max-width: 78rem/,
-  );
   assert.match(page, /\.temporal-agent-article__body \{[\s\S]*max-width: none/);
-  assert.match(reader, /\.annotated-code__panel[\s\S]*min-width: 0/);
-  assert.match(reader, /\.annotated-code__source[\s\S]*overflow-x: hidden/);
-  assert.match(
-    reader,
-    /\.annotated-code__source :global\(\.line\)[\s\S]*white-space: pre-wrap[\s\S]*overflow-wrap: anywhere/,
-  );
-  assert.doesNotMatch(reader, /min-width: max-content/);
+  assert.match(reader, /\.code-reader__source \{[^}]*min-width: 0/);
+  assert.match(reader, /\.code-reader__source \{[^}]*overflow-x: auto/);
   assert.doesNotMatch(reader, /translateX\(-50%\)/);
 });
 

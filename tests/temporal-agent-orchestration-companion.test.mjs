@@ -337,11 +337,10 @@ test("the code browser renders every sample from the shared data module", () => 
   assert.match(codeReader, /tabindex="0"/);
   assert.match(codeReader, /aria-expanded="false"/);
   assert.match(codeReader, /event\.key === "Enter"/);
-  assert.match(codeReader, /Non-contiguous annotations/);
-  assert.match(codeReader, /annotations end at/);
+  assert.match(codeReader, /validateTemporalAgentOrchestrationCodeSamples\(/);
   assert.match(codeReader, /sample\.sourceUrl/);
   assert.match(codeReader, /sample\.promotionStatus/);
-  assert.match(codeReader, /sample\.revision/);
+  assert.doesNotMatch(codeReader, /sample\.revision\b/);
   assert.match(codeReader, /What this section does/);
   assert.match(codeReader, /Why it matters for Temporal/);
   assert.match(codeReader, /download=\{sample\.filename\}/);

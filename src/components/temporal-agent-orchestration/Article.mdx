@@ -227,7 +227,13 @@ Each part was reasonable in isolation. Together they formed one procedure spread
 
 <CodeExcerpt
   sourcePath="public/temporal-agent-orchestration/code/before/city_runtime_excerpt.go"
-  ranges={[{ start: 8, end: 29 }]}
+  ranges={[
+    { start: 8, end: 16 },
+    { start: 35, end: 42 },
+    { start: 112, end: 116 },
+    { start: 146, end: 151 },
+    { start: 161, end: 166 },
+  ]}
   title="Before: one process-owned tick"
   readerHref="/temporal-agent-orchestration/code/before-controller"
   readerLabel="Open the annotated before code"
@@ -241,7 +247,7 @@ After, <TermTip term="bead-orchestration-workflow" tip="The Temporal Workflow th
   sourcePath="public/temporal-agent-orchestration/code/workflow.go"
   ranges={[
     { start: 201, end: 203 },
-    { start: 242, end: 246 },
+    { start: 229, end: 246 },
   ]}
   title="After: the Workflow schedules one stable Activity"
   readerHref="/temporal-agent-orchestration/code/workflow"
@@ -258,7 +264,7 @@ And <TermTip term="execute-bead-activity" tip="The Temporal Activity that touche
   readerLabel="Open the annotated Activity"
 />
 
-The complete files, each pinned to a reviewed revision and annotated section by section, are in the [annotated source reader](/temporal-agent-orchestration/code), alongside the full pre-Temporal controller and recovery paths.
+The complete files, each pinned to a reviewed revision and annotated section by section, are in the [annotated source reader](/temporal-agent-orchestration/code), alongside the pre-Temporal controller and recovery paths.
 
 ### The resolver: the part you will have to build
 
@@ -271,10 +277,10 @@ Temporal cannot supply that adapter, and neither can I, because it is the bindin
 The tests run from one command:
 
 ```bash
-cd services/temporal-maintenance && make test
+cd services/temporal-maintenance && go test -race ./...
 ```
 
-That command runs `go test -race ./...`. Five invariants carry the design:
+Five invariants carry the design:
 
 1. Duplicate delivery of the same ready event schedules one Activity, not two.
 2. A retry attaches to the existing agent session instead of launching a competitor.
