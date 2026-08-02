@@ -185,7 +185,7 @@ The implementation focused on three concrete breakpoints. The first two run in s
 
 **What stays the application's job.** There is still an unavoidable crash window: Temporal can accept the event, then the bridge can die before acknowledging the outbox record. The fix is not pretending that window disappeared. The event is delivered again, and the Workflow ignores an event ID it has already processed (so, deterministic idempotency? I guess we just call that idempotency?). Stable identity turns redelivery from a dangerous anomaly into normal, expected behavior. That guarantee is bounded by how long Temporal retains closed executions: past the retention window the ID can be reused, which is why the generation fence and the canonical work identity, not the Workflow ID, are what keep a late duplicate out.
 
-**The evidence.** A test against a real Temporal dev server delivers the same ready event twice and requires exactly one scheduled Activity. The bounded canary exercised the path end to end, with a scripted stand-in answering the agent side of the adapter protocol.
+**How it's tested.** A test against a real Temporal dev server delivers the same ready event twice and requires exactly one scheduled Activity. The bounded canary exercised the path end to end, with a scripted stand-in answering the agent side of the adapter protocol.
 
 ### 2. A retry accidentally starts a second agent
 
@@ -197,7 +197,7 @@ The implementation focused on three concrete breakpoints. The first two run in s
 
 <ConceptFigure kind="recovery" />
 
-**The evidence.** The Worker-kill recording below, plus the test pair that kills the Worker before and after the first checkpoint.
+**How it's tested.** The Worker-kill recording below, plus the test pair that kills the Worker before and after the first checkpoint.
 
 ### 3. A completed result is never acknowledged
 
@@ -209,7 +209,7 @@ I had treated mail and session nudges as if successful delivery meant successful
 
 **What remains the application's job.** The Workflow closes only when it receives an acknowledgement bound to the exact store, work item, outcome, generation, and session fence. A queued notification or accepted signal proves only that delivery was attempted. The canonical acknowledgement receipt proves that the intended agent accepted the intended result.
 
-**The evidence.** This path failed its first canary, was repaired, and now runs continuously in production.
+**How it's tested.** This path failed its first canary, was repaired, and now runs continuously in production.
 
 ## The implementation underneath the boundary
 
@@ -313,11 +313,11 @@ The kill targets the orchestration Worker, not the coding agent. The agent keeps
 
 Both runs finish with one agent session and one accepted receipt.
 
-The second case is the more important test. In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of duplicate prevention. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green. The claim is earned by both arms together.
+The second case is the more important test. In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of duplicate prevention. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green.
 
-The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. That is enough to justify bounded canaries while canonical mutation stays behind shadow mode. It is not evidence for unrestricted rollout.
+The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. That is enough for bounded canaries while canonical mutation stays behind shadow mode. Before unrestricted rollout you would want more than one host and real production load.
 
-Cross-host recovery, the one row the status table does not claim, is unproven rather than architecturally out of reach, and the distinction matters if you run more than one host. Nothing pins work to a host. The agent queue is an ordinary shared Task Queue, the Workers carry no identity, and any Worker polling it may pick up a retry. What is host-local is the adapter answering the resolve call, and the only adapters that have ever answered it resolved host-local sessions. The contract is written to be host-independent, so the design admits a Worker on a second host reattaching, but making that true requires the production adapter to answer from the shared control plane, plus a two-host kill test that has never been run. Same-host Worker recovery is supported; cross-host recovery is not established.
+Cross-host recovery is unproven rather than architecturally out of reach, and the distinction matters if you run more than one host. Nothing pins work to a host. The agent queue is an ordinary shared Task Queue, the Workers carry no identity, and any Worker polling it may pick up a retry. What is host-local is the adapter answering the resolve call, and the only adapters that have ever answered it resolved host-local sessions. The contract is written to be host-independent, so the design admits a Worker on a second host reattaching, but making that true requires the production adapter to answer from the shared control plane, plus a two-host kill test that has never been run. Same-host Worker recovery is supported; cross-host recovery is not established.
 
 The [companion page](/temporal-agent-orchestration/) pairs this recording with the same failure against the pre-Temporal orchestrator. That run ends with two agents operating in one worktree and a stale receipt overwriting the current one.
 
@@ -365,8 +365,6 @@ The live path has delivered and acknowledged more than seventy outcomes, with no
 Those comparisons become valid only after the claim-to-session path takes production ownership. At that point, I will measure duplicate sessions, stranded claims, and time from agent completion to acknowledged receipt. The sample will need to grow substantially before any percentage is meaningful.
 
 The current cost is measurable: about 260 MB of memory for the Temporal server, 54 MB for the Worker, and an 80 MB SQLite file. I have not yet measured the added per-claim latency.
-
-I currently have a working production path with measured costs, but its broader reliability effect is not yet measurable.
 
 ## What Temporal did not solve, and what it cost
 

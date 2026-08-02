@@ -1174,10 +1174,6 @@ test("the article answers the evidence-scope review with verified claims", () =>
   );
   assert.match(article, /260 MB of memory for the Temporal server/);
   assert.match(article, /have not yet measured the added per-claim latency/);
-  assert.match(
-    article,
-    /working production path with measured costs, but its broader reliability effect is not yet measurable/,
-  );
 
   // Versioning: three GetVersion patches, unversioned Workers, and the gate's
   // record stated exactly — no real catch yet, both real defects found by
