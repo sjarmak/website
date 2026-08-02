@@ -159,7 +159,7 @@ The two layers solve different problems. A fence decides whether a write is allo
 
 The fences prevent stale or duplicate effects. Temporal preserves the in-flight state my crashed processes kept taking with them.
 
-So why not store the whole procedure in the database I already run? The city's own reliability rule points in that direction: "a query, not a memory." Reconstruct the current state from the store each time the controller runs. That approach won almost everywhere because it is simpler and usually enough.
+So why not store the whole procedure in the database I already run? That is the standard controller answer: "a query, not a memory." Reconstruct the current state from the store each time the controller runs. Almost everywhere, it is simpler and it is enough.
 
 It fails when the store cannot tell the difference between two procedures that leave behind the same records.
 
