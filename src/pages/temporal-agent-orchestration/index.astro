@@ -283,27 +283,38 @@ first agent finishes      its late receipt overwrites the current one; nothing f
       <ConceptFigure kind="recovery" />
       <div class="tco__copy prose">
         <p>
-          At eight seconds the first Worker dies mid-execution, and the agent
-          it started is still alive. The processes pane measures it as it
-          happens: the Worker count drops to zero and the agent count does
-          not. That line is the whole reason the boundary is shaped this way.
-          The eighteen seconds that follow are Temporal working out that the
-          Worker is gone. Detection takes real time, and the recording keeps
-          all of it.
+          The demo kills the Worker at two different points. Each case tests a
+          different part of recovery.
         </p>
         <p>
-          The second kill lands before any checkpoint exists, which makes it
-          the decisive arm. The retry has to ask the session resolver again,
-          and the resolver returns the session that already exists instead of
-          creating a second one. The first arm resumes from its checkpoint and
-          never asks again, so it cannot demonstrate duplicate prevention on
-          its own.
+          In the first case, the agent has already sent a heartbeat before the
+          Worker dies. The process pane shows that the Worker count falls to
+          zero while the agent count remains at one: the Worker is gone, but
+          the coding-agent process it started is still running.
         </p>
         <p>
-          A heartbeat does not keep a retry from becoming a second agent. A
-          Worker can die before the first heartbeat ever lands. The resolver
-          finds the existing session by stable identity, and the heartbeat only
-          lets the retry resume progress.
+          Temporal takes about seven seconds to detect the missed heartbeat
+          and schedule another Activity attempt. That new attempt reads the
+          checkpoint stored in the heartbeat and reconnects to the existing
+          agent session. This case proves that the Activity can resume from
+          recorded progress after Worker failure.
+        </p>
+        <p>
+          The second case is harder. The Worker dies after starting the agent
+          but before the first heartbeat is recorded. There is no checkpoint
+          containing the session information, so the retried Activity cannot
+          resume from heartbeat details.
+        </p>
+        <p>
+          Instead, it asks the session resolver whether a session already
+          exists for the same stable claim identity. The resolver finds the
+          agent that is still running and returns that session rather than
+          starting another one.
+        </p>
+        <p>
+          The two cases prove different things. Heartbeats let a retry recover
+          recorded progress. Stable identity prevents a retry from creating a
+          duplicate agent when no heartbeat was recorded.
         </p>
       </div>
       <pre class="tco__numbers"><code>arm 1  mid-execute      resolver calls = 1   session creations = 1   final attempt = 2
@@ -422,18 +433,22 @@ both   one session, one receipt, stale claim token rejected,
       <div class="tco__copy prose">
         <p>
           Temporal gives the procedure a durable owner. It does not make
-          external effects exactly once. A Worker can die after an external
-          call succeeds and before the completion is recorded, and the
-          Activity may run again.
+          external effects exactly once. A Worker can still die after an
+          external call succeeds but before Activity completion is recorded,
+          causing the Activity to run again. Making that retry safe remains
+          application work.
         </p>
         <p>
-          The sharpest limit showed up in the latest canary. The agent work
-          completed correctly, but an application adapter placed the wrong
-          store identity in the outcome envelope, and Temporal faithfully
-          retried the wrong envelope every fifteen minutes. The failure
-          marker belongs on the adapter. Temporal
-          preserved exactly what it was given, which is the job. I rolled the
-          canary back with the failure evidence intact.
+          The latest canary exposed a different version of the same boundary.
+          The agent work completed correctly, but an adapter put the wrong
+          store identity into the outcome envelope. Temporal then retried that
+          same invalid envelope every fifteen minutes, exactly as instructed.
+        </p>
+        <p>
+          That failure belongs to the adapter, not to Temporal. Durable
+          execution preserves mistakes as faithfully as it preserves correct
+          procedures. I rolled the canary back without discarding or rewriting
+          the evidence.
         </p>
       </div>
       <details class="tco__details">
@@ -442,18 +457,25 @@ both   one session, one receipt, stale claim token rejected,
       </details>
       <div class="tco__copy prose">
         <p>
-          A contributor now has to hold determinism rules, replay
-          compatibility, fencing, and idempotency in their head to change
-          orchestration code safely, and the deployment gains a server, a
-          Worker, and a versioning discipline on every Workflow change. That
-          is the real cost, and it is larger than the infrastructure.
+          Durability also adds real engineering cost. Contributors now need to
+          understand determinism, replay compatibility, fencing, idempotency,
+          and Workflow versioning before changing the orchestration safely.
+          The deployment gains a Temporal server and Worker, but the larger
+          cost is the additional reasoning the system requires.
         </p>
         <p>
-          A maintenance job that does forty-four seconds of synchronous work
-          every two hours did not justify any of that, and it stayed cron plus
-          a lock. If a crash mid-operation leaves a question your own database
-          cannot answer, the procedure deserves a durable owner. If a crash
-          just means running it again next tick, it does not.
+          Not every job earns that complexity. One maintenance task performs
+          forty-four seconds of synchronous work every two hours. If it fails,
+          the next scheduled run can safely try again, so it remains cron plus
+          a lock.
+        </p>
+        <p>
+          The useful dividing line is what a crash leaves unresolved. If the
+          application's own durable state can tell the next process exactly
+          what to do, ordinary retry machinery may be enough. If the crash
+          leaves the system unable to say whether an operation started, which
+          attempt owns the result, or whether the result was acknowledged, the
+          procedure needs a durable owner.
         </p>
       </div>
       <ConceptFigure kind="boundary" />
