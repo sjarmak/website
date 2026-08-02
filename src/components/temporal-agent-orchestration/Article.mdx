@@ -86,7 +86,7 @@ But some parts of an orchestration system are promises rather than work:
 
 Those are procedural questions. "A capable agent will inspect the clues and figure something out" is not always the guarantee I want around them. The flaw was asking an NDI-style recovery model to own guarantees whose ordering, retries, waits, identities, and acknowledgements were themselves part of the contract.
 
-By this point, my research on how coding agents fail had already convinced me that reliability depends as much on the system around the model as on the model itself, so I went looking for systems that had solved adjacent problems.
+By this point, [my research on how coding agents fail](https://github.com/sjarmak/agent-diagnostics) had already convinced me that reliability depends as much on [the system around the agent](/books/engineering-reliable-coding-agents) as on the agent itself, so I went looking for systems that had solved adjacent problems.
 
 Because Gas Town is often described as "Kubernetes for agents," I started with Kubernetes controller patterns, reading [Designing Distributed Systems](https://www.oreilly.com/library/view/designing-distributed-systems/9781491983638/) against Gas City's controller: reconciliation loops, leases, transactional outboxes, stable identities, generation fencing, explicit acknowledgements. The distributed-systems toolbox supplied necessary pieces, but no durable owner for the sequence connecting them.
 
@@ -326,11 +326,11 @@ The pattern that transfers to anyone:
 
 My additional hardening (generations and claim tokens, session attachment, exact coordinator acknowledgement, the independent watchdog) exists because of what my Activity starts: a process that can edit a Git worktree for an hour and continue running after the Worker that launched it has died. A short, idempotent job needs the first set of guarantees and none of the second.
 
-Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both. Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure.
+Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both. Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure. The graph side of that split is what the industry now calls [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph), and Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution). [The stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) says durable code should replace the diagram entirely; I take the boundary rather than the whole argument, since Beads still needs to own the larger graph of work.
 
 > Use Temporal when losing the in-flight procedure would leave the system unable to say what happened.
 
-I still expect the city to have problems. It is a work in progress, and software factories are complex systems running other complex systems. Durability is necessary for reliability, but it is not sufficient. Agents can still make bad decisions, adapters can still carry the wrong identity, and external systems can still fail in ways Temporal cannot fix.
+I still expect the city to have problems. It is a work in progress, and [software factories](https://sourcegraph.com/webinars/building-a-software-factory) are complex systems running other complex systems. Durability is necessary for reliability, but it is not sufficient. Agents can still make bad decisions, adapters can still carry the wrong identity, and external systems can still fail in ways Temporal cannot fix.
 
 The boundary I want is between freedom in the work and discipline in the machinery around it: let the agents be weird, but make the infrastructure keep its promises.
 

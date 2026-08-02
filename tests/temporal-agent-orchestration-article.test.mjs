@@ -171,18 +171,15 @@ test("the essay opens with the sourced personal path from Beads to Temporal", ()
     assert.ok(article.includes(link), `missing source link: ${link}`);
   }
 
-  // The graph-engineering argument moved out of the body by editorial
-  // decision; its sources stay reachable through the reference section.
-  for (const link of [
-    "https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph",
-    "https://temporal.io/blog/temporal-langgraph-plugin-durable-execution",
-    "https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram",
-  ]) {
-    assert.ok(references.includes(link), `missing reference entry: ${link}`);
-    assert.ok(
-      !article.includes(link),
-      `graph link belongs in References only: ${link}`,
-    );
+  // No orphaned citations: every entry in the reference section is cited
+  // somewhere in the body. The section is a trail back to sentences, not a
+  // shelf; an uncited entry has drifted loose from the argument.
+  const referenceHrefs = [...references.matchAll(/href: "([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert.ok(referenceHrefs.length >= 20, "the reference list must parse");
+  for (const href of referenceHrefs) {
+    assert.ok(article.includes(href), `orphaned reference: ${href}`);
   }
 
   assert.match(article, /invited me[^.]*maintainers/i);
