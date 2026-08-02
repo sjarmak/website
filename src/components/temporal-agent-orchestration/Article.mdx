@@ -165,15 +165,13 @@ It fails when the store cannot tell the difference between two procedures that l
 
 My clearest example was a twenty-hour stranding. Two work items finished and pushed their branches, but the worker died before recording completion or the next step. The proof of the work was sitting on origin; the store held an open item with an empty next-step field, which is exactly what work that never started looks like. Both watchers keyed on that field: the probe that decides whether to launch more agents, and the sweep that hunts abandoned claims. Neither saw anything wrong.
 
-Solving that entirely in the store means recording every intermediate step, recovering partially completed transitions after a crash, and running timers that survive the process that created them. I had already seen where that leads. One PR-state poller grew to 243 lines of Bash, used two duplicate-prevention mechanisms because neither was enough alone, and created 174 cache files to track eight open pull requests. It still had a fire-and-forget failure that Bash could not fix without becoming something much larger.
+Solving this entirely in the Beads work store would mean recording every intermediate step, recovering partial transitions after a crash, and keeping timers alive across process failures. I had already seen what a homegrown version looked like. One PR-state poller grew to 243 lines of Bash, used two duplicate-prevention mechanisms, and created 174 cache files to track eight open pull requests. It still had a fire-and-forget failure that could not be fixed without turning the poller into something much larger.
 
-I could build a durable workflow engine myself. The factory is capable of it. But that layer has many places to go wrong, and building it would leave me with another piece of infrastructure needing its own monitoring, debugging, and repair machinery.
+My city could build its own durable workflow layer. But then I would own another reliability system, including its recovery rules, failure cases, monitoring, and debugging. The point was to make the city easier to operate, not to create another piece of infrastructure for it to repair.
 
-The point was to make the city easier to operate, not to add another system I would have to keep alive. Temporal gave me that layer without making it mine to maintain.
+The roughly one hundred patrol jobs firing 850 times an hour do not prove that my city needed Temporal. They show how it had grown one repair at a time, with nothing responsible for carrying a procedure through failure.
 
-Roughly a hundred patrol jobs firing 850 times an hour do not prove that Gas City needed Temporal. They show how I had responded to failures one at a time, adding overlapping repair jobs instead of one system with clear ownership and duplicate protection.
-
-Systems grow this kind of repair machinery one incident at a time. Temporal gave me a durable owner I could adopt instead of continuing to build one piecemeal.
+At this boundary, I preferred adopting a durable workflow system to continuing to assemble one incident by incident.
 
 ## The three failures I wanted Temporal to stop
 

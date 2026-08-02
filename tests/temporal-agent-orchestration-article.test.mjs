@@ -1146,8 +1146,8 @@ test("the article answers the evidence-scope review with verified claims", () =>
   assert.match(article, /The two layers solve different problems/);
   assert.match(article, /a query, not a memory/);
   assert.match(article, /243 lines of Bash/);
-  assert.match(article, /another piece of infrastructure needing its own monitoring, debugging, and repair machinery/);
-  assert.match(article, /adding overlapping repair jobs instead of one system with clear ownership/);
+  assert.match(article, /another reliability system, including its recovery rules, failure cases, monitoring, and debugging/);
+  assert.match(article, /grown one repair at a time/);
   // Standing editorial ban: the piece states its claims, it does not narrate
   // how modest they are. "the narrower claim" / "my claim is narrower" kept
   // creeping back across revisions.
