@@ -84,7 +84,7 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
     /Put the unpredictable agent inside an Activity/,
     "the essay must not imply Temporal made agent behavior deterministic",
   );
-  assert.match(article, /Gas City supplies the orchestration primitives/);
+  assert.match(article, /Beads owns the durable graph of work and Temporal owns one traversal through that graph/);
   assert.match(article, /Gas Town was one specific city design/);
   assert.match(article, /Temporal does not replace it/);
   assert.match(article, /took the primitives behind Gas Town/i);
@@ -877,18 +877,18 @@ test("the SDK diagram gives every long label a measured box and accessible contr
 test("the essay ends with the decision rule, and the pack idea stays out of the conclusion", () => {
   const article = readFileSync(ARTICLE, "utf8");
 
-  assert.match(article, /Use NDI where any route to an acceptable outcome is valid/i);
+  assert.match(article, /NDI fits the parts where any acceptable route to the result is valid/i);
   assert.match(
     article,
-    /Use deterministic durable replay where the procedure is part of the promise/i,
+    /Deterministic replay fits the parts where the procedure is part of the promise/i,
   );
   assert.match(
     article,
-    /A single multi-agent system can, and arguably should, use both/i,
+    /The same multi-agent system can use both without forcing one model onto the other/i,
   );
   assert.match(
     article,
-    /Use Temporal when losing the in-flight procedure would leave the system unable to say what happened/,
+    /Losing an in-flight procedure could leave the system unable to say whether an agent was still working/,
   );
   assert.match(
     article,
@@ -904,8 +904,8 @@ test("the essay ends with the decision rule, and the pack idea stays out of the 
     "the pack note belongs in the evidence section, after the conclusion",
   );
   assert.ok(
-    article.indexOf("Temporal supplies durable procedure.") <
-      article.indexOf("Use Temporal when losing the in-flight procedure"),
+    article.indexOf("Beads owns the durable graph of work and Temporal owns one traversal through that graph.") <
+      article.indexOf("Losing an in-flight procedure could leave the system unable to say whether an agent was still working"),
     "the conclusion must run straight from the division of labor to the rule",
   );
 });

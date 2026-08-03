@@ -429,30 +429,29 @@ The engineering costs:
 
 Not every job justifies those costs. The maintenance pilot from earlier stayed cron plus a lock, because a crash there does not leave behind an in-flight procedure that the database cannot explain. That selectivity applies inside the work graph too: I am not yet translating every Gas City formula, node, or transition into a Temporal Workflow. Doing so would add machinery without adding a guarantee the system needs, though it does warrant more investigation.
 
-## What transfers, and what is just mine
+## What transfers, and what is specific to this system
 
-The pattern that transfers to anyone:
+The transferable part is the division of responsibility.
 
-* A Workflow owns durable procedure.
-* An Activity owns nondeterministic work.
-* Stable identity makes a retry attach to the same logical operation instead of starting a new one.
-* External effects stay the application's responsibility.
+A Workflow owns the durable procedure. An Activity performs the nondeterministic work. Stable identity lets a retry continue the same logical operation instead of starting another one. External effects remain the application's responsibility.
 
-My additional hardening (generations and claim tokens, session attachment, exact Mayor acknowledgement, the independent watchdog) exists because of what my Activity starts: a process that can edit a Git worktree for an hour and continue running after the Worker that launched it has died. Anyone orchestrating a short, idempotent job needs the first list and none of the second. That is a property of the workload, not a tax Temporal charges.
+The rest follows from the kind of work my Activity starts. A Gas City agent may edit a Git worktree for an hour and continue running after the Worker that launched it has died. That requires generation and claim fencing, session reattachment, an exact acknowledgement from the Mayor, and an independent watchdog. A short, idempotent Activity would not need most of that. The extra machinery belongs to the workload, not to Temporal itself.
 
-You can find the boundaries by asking which guarantee needs to survive a crash. Use NDI where any route to an acceptable outcome is valid; that is often the right model for the coding work itself. Use deterministic durable replay where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. A single multi-agent system can, and arguably should, use both.
+The useful question is not which framework should own the system. It is which guarantees must survive a crash.
 
-Gas City supplies the orchestration primitives, Beads supplies the durable work record, and Temporal supplies durable procedure. The graph side of that split is the current fashion in the agent bubble (move aside loop engineering): [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution), and [the stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram) says durable code should replace the diagram entirely. I take the boundary rather than the whole argument, since Beads still needs to own the larger graph of work. The task graph can be perfectly intact while one traversal through it disappears.
+NDI fits the parts where any acceptable route to the result is valid. That is often the right model for the coding work itself. Deterministic replay fits the parts where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. The same multi-agent system can use both without forcing one model onto the other.
 
-Use Temporal when losing the in-flight procedure would leave the system unable to say what happened, or would result in expensive reconstruction costs.
+In Gas City, Beads owns the durable graph of work and Temporal owns one traversal through that graph. Those are different forms of continuity. The task graph may remain perfectly intact while the procedure moving one task through it disappears. That split follows a fashion already established in the agent bubble: [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution), and my boundary is narrower than [the stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram), which says durable code should replace the diagram entirely.
 
-I still expect the city to stall out and catch fire sometimes. Complex systems do, and coding agents will continue to make locally reasonable decisions that their infrastructure did not anticipate. But my goal is to build in more graceful degradation and management to minimize the need to repair a system with a brittle patch by patch approach. 
+That was the boundary I needed to repair. Losing an in-flight procedure could leave the system unable to say whether an agent was still working, whether its result had been delivered, or whether another agent could safely take over. Reconstructing the answer from claims, processes, worktrees, and partial messages was both expensive and unreliable.
 
-I don't want every failure to require forensic reconstruction from stale claims, half-delivered messages, and whatever process happens to remain alive. Nor do I want a temporarily unavailable coordinator to become an excuse to discard a session that is still working, erase its ownership, and launch a competitor against the same task.
+The city will still stall and catch fire. Coding agents will continue to make locally reasonable choices that the surrounding system did not anticipate. The goal is not to prevent every failure. It is to keep one failure from turning into a chain of repairs, each adding another brittle mechanism to infer what the previous one lost.
 
-The agent can choose its own route through the work. Beads can preserve what it learns and the identity responsible for it. Temporal can preserve the promises around that work: who owns it, what remains outstanding, when a handoff is complete, and what must happen next.
+A missing coordinator should not erase the ownership of a session that is still working. A delayed acknowledgement should not make a completed result disappear. A restarted Worker should not create a second agent against the same task because it cannot remember the first.
 
-The replaceable parts of the system should be replaceable. The continuity we care about should survive them.
+The agent can choose its route through the work. Beads can preserve the work record and the identity attached to it. Temporal can preserve the promises around that work: who owns it, what remains outstanding, when a handoff is complete, and what must happen next.
+
+The replaceable parts should be safe to replace. The continuity the system depends on should survive them.
 
 > Durable execution is not only about surviving process failure. It is about choosing which forms of continuity the system refuses to lose.
 
