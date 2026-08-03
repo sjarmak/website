@@ -1118,10 +1118,10 @@ test("the article answers the evidence-scope review with verified claims", () =>
   // The resolver's implementation status is stated as the reader's homework:
   // the production adapter is unwritten, the contract is theirs to implement,
   // and the claims rest on fence + protocol.
-  assert.match(article, /### The resolver: the part you will have to build/);
-  assert.match(article, /that interface is yours to implement/);
-  assert.match(article, /everything that has answered the call so far is a fixture/);
-  assert.match(article, /when the recorded session's process is dead/);
+  assert.match(article, /### The resolver: the part you have to build/);
+  assert.match(article, /This adapter is specific to your agent runtime/);
+  assert.match(article, /only test fixtures have implemented the resolver contract/);
+  assert.match(article, /the session record exists but its process is dead/);
   // The canary's agent side was a scripted stand-in — in the status table and
   // in the failure-1 evidence line both.
   assert.match(article, /scripted stand-in answering the agent side/);
@@ -1191,7 +1191,7 @@ test("the article answers the evidence-scope review with verified claims", () =>
   // the rollout state and the costs discussion.
   assert.ok(
     article.indexOf("owns the fenced claim and the start-or-attach decision") <
-      article.indexOf("### The resolver: the part you will have to build"),
+      article.indexOf("### The resolver: the part you have to build"),
     "the resolver status must follow the code it qualifies",
   );
   assert.ok(

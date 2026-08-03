@@ -274,11 +274,19 @@ And <TermTip term="execute-bead-activity" tip="The Temporal Activity that touche
 
 The complete files, each pinned to a reviewed revision and annotated section by section, are in the [annotated source reader](/temporal-agent-orchestration/code), alongside the pre-Temporal controller and recovery paths.
 
-### The resolver: the part you will have to build
+### The resolver: the part you have to build
 
-The start-or-attach decision above leans on one interface, and if you adopt this pattern, that interface is yours to implement. ResolveSession is a call into a separate trusted executable over a newline-delimited JSON protocol: the Activity hands it the ready event, the claim token, and the generation, and the adapter must return exactly one session identity. On a retry that already has a heartbeat checkpoint, the resolver is never consulted; the session identity rides in the checkpoint Temporal persisted. The resolver is only asked on a cold attempt, which is precisely the case where it must answer "which session already owns this claim" from records that survived the crash.
+The start-or-attach decision depends on one interface that Temporal cannot provide: <TermTip term="resolve-session" tip="The adapter that answers, on a cold attempt with no heartbeat checkpoint, which existing session already owns this claim. It is a call into a separate trusted executable, not a Temporal API.">ResolveSession</TermTip>.
 
-Temporal cannot supply that adapter, and neither can I, because it is the binding between the claim fence and your agent runtime. Mine will answer from Gas City's session records (the tmux session bound to the claim, its worktree, its process); yours will answer from whatever holds your sessions. In my integration it is still the open item: the client half is built and tested (absolute-path validation, no shell, payloads over stdin, exactly one terminal response), and everything that has answered the call so far is a fixture implementing the contract for the harness and the canary, which is why agent mutation is still in shadow. The contract also leaves you one decision no framework will make for you: what the resolver should return when the recorded session's process is dead. Decide it before your first crash does.
+ResolveSession calls a separate trusted executable using a newline-delimited JSON protocol. The Activity sends the ready event, claim token, and generation. The resolver must return exactly one session identity.
+
+The resolver runs only on a cold attempt. Once an Activity has recorded a session identity in its heartbeat checkpoint, retries reuse that identity and never call the resolver again. A cold attempt has no checkpoint, so the resolver must determine which existing session owns the claim from state that survived the crash.
+
+This adapter is specific to your agent runtime because it connects the claim fence to the system that manages sessions. In Gas City, it will look up the tmux session associated with the claim, along with its worktree and process. Another runtime may store that information somewhere else.
+
+This remains an open item in my integration. The client side is implemented and tested: it requires an absolute executable path, does not invoke a shell, sends payloads over standard input, and accepts exactly one terminal response. So far, only test fixtures have implemented the resolver contract for the harness and canary. That is why agent mutation remains in shadow mode.
+
+The contract also leaves one policy decision to you: what should happen when the session record exists but its process is dead? No framework can answer that for your runtime. Decide before the first crash forces the choice.
 
 ### What the tests hold down
 
