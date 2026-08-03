@@ -361,14 +361,14 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
     article,
     /reconciliation boundary, not a same-transaction guarantee/i,
   );
-  assert.match(article, /Results remain pending until that final receipt exists/i);
+  assert.match(article, /Results remain pending until the final receipt exists/i);
   // The scan covers terminal OR verified work; "finalized" reads narrower than
   // the code, since "verified" deliberately leaves the source root open.
   assert.match(
     article,
-    /watchdog also scans every store for finished or verified work with no outcome/i,
+    /watchdog scans every store for completed or verified work that has no outcome/i,
   );
-  assert.match(article, /watchdog deliberately sits outside Temporal/i);
+  assert.match(article, /It runs outside Temporal so it can detect a silent gap/i);
   assert.match(
     article,
     /Temporal cannot claim production work or start a coding agent/i,
@@ -1173,10 +1173,10 @@ test("the article answers the evidence-scope review with verified claims", () =>
 
   // Lifecycle: bounded episode history, Continue-As-New with the boundary-ack
   // pin, and the unacknowledged outcome answered head-on.
-  assert.match(article, /scoped to one execution episode/);
-  assert.match(article, /exactly at the rollover boundary/);
-  assert.match(article, /it redelivers, indefinitely/);
-  assert.match(article, /nagging line in a report rather than a silent immortal process/);
+  assert.match(article, /covers a single execution episode/);
+  assert.match(article, /an acknowledgement arrives at the rollover boundary/);
+  assert.match(article, /The delivery Workflow retries indefinitely/);
+  assert.match(article, /appears repeatedly in an operational report rather than persisting unnoticed/);
 
   // Cross-host: unproven versus out of reach, answered in the design record's
   // own sentence.

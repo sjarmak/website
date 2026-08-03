@@ -384,11 +384,19 @@ The live result path:
 4. The Mayor or a human verifies the evidence and records a disposition bound to the current generation and agent session.
 5. Beads stores the exact acknowledgement receipt, which is what allows the Workflow to complete.
 
-Results remain pending until that final receipt exists. That second lane is a reconciliation boundary, not a same-transaction guarantee, which is why an independent watchdog also scans every store for finished or verified work with no outcome, and for store-read failures. The watchdog deliberately sits outside Temporal so that it can detect a silent gap in the system it is checking.
+Results remain pending until the final receipt exists. Delivery therefore forms a reconciliation boundary, not a same-transaction guarantee.
 
-Durable waiting has failure modes of its own, and two of them need answers before you build this. The first is history growth: the orchestration Workflow is scoped to one execution episode and completes, and the long-lived delivery Workflow rolls its history over every hundred delivery attempts (Continue-As-New, in Temporal's vocabulary), carrying a compact resume state. Test the case where an acknowledgement arrives exactly at the rollover boundary; that is the one that loses data quietly.
+An independent watchdog scans every store for completed or verified work that has no outcome, as well as for failures reading the store. It runs outside Temporal so it can detect a silent gap in the system it is checking.
 
-The second is an unacknowledged result: it redelivers, indefinitely. The outcome path exists so an owed result cannot quietly expire, and a dead-letter queue is a mechanism for quiet expiry. If you adopt this shape, put the pressure valve outside Temporal; mine is the watchdog's five-minute scan and its mail to the Mayor, so an ignored outcome is a nagging line in a report rather than a silent immortal process. An automated escalation ladder, something that makes "unacknowledged for three days" louder than another redelivery, is the obvious next rung. Today that judgment belongs to the Mayor and to me.
+Durable waiting introduces two failure modes that need explicit handling.
+
+The first is Workflow history growth. The orchestration Workflow covers a single execution episode and then completes. The longer-lived delivery Workflow uses [Continue-As-New](https://docs.temporal.io/workflows#continue-as-new) after every hundred delivery attempts, carrying only the state needed to resume. Test what happens when an acknowledgement arrives at the rollover boundary. A mistake there can discard the acknowledgement without producing an obvious failure.
+
+The second is a result that is never acknowledged. The delivery Workflow retries indefinitely. That is intentional: the outcome path exists so an owed result cannot quietly expire, while moving it to a dead-letter queue would permit exactly that.
+
+The pressure valve should therefore sit outside Temporal. In my system, the watchdog scans every five minutes and reports unacknowledged outcomes to the Mayor. The result remains pending, but it also appears repeatedly in an operational report rather than persisting unnoticed.
+
+The next step is an escalation policy that distinguishes a newly missed acknowledgement from one that has remained unresolved for several days. For now, that escalation decision is manual and belongs to the Mayor and to me.
 
 ## What the evidence shows so far
 
