@@ -1102,7 +1102,7 @@ test("the article's demo passage tells the viewer what dies and what to watch", 
   );
 
   // Arm 2 remains the decisive claim.
-  assert.match(article, /That is the direct test of continuity-preserving recovery/);
+  assert.match(article, /The second run is the direct test of continuity across a Worker failure/);
 });
 
 // The evidence-scope revision (2026-08-02): two external reviews agreed the
@@ -1127,7 +1127,7 @@ test("the article answers the evidence-scope review with verified claims", () =>
   assert.match(article, /scripted stand-in answering the agent side/);
 
   // The demo's arm-1 blind spot is volunteered before a reader finds it.
-  assert.match(article, /only arm that can catch a broken resolver/);
+  assert.match(article, /only run that tests the resolver/);
 
   // The counterfactual is confronted: fencing concession, the by-hand cost,
   // and the fair-baseline answer.
@@ -1180,10 +1180,10 @@ test("the article answers the evidence-scope review with verified claims", () =>
 
   // Cross-host: unproven versus out of reach, answered in the design record's
   // own sentence.
-  assert.match(article, /unproven rather than architecturally out of reach/);
+  assert.match(article, /Cross-host recovery has not been demonstrated/);
   assert.match(
     article,
-    /Same-host Worker recovery is supported; cross-host recovery is not established/,
+    /Same-host Worker recovery is supported\. Cross-host recovery remains unproven/,
   );
 
   // The ordering that makes the argument land: the resolver status comes

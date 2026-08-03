@@ -341,15 +341,19 @@ The harness kills the orchestration Worker, not the coding agent. The agent cont
   or the <a href="/temporal-agent-orchestration/demo/worker-kill.cast" download="worker-kill.cast">raw asciinema event log</a> the video is rendered from.
 </CastPlayer>
 
-Both runs finish with one agent session and one accepted receipt.
+Both runs end with one agent session and one accepted receipt.
 
-In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of continuity-preserving recovery: the orchestration process is replaceable, but the agent session already doing the work is not replaced merely because its coordinator disappeared. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green.
+In the first run, the retry recovers the session identity from the heartbeat checkpoint. In the second, no checkpoint exists, so the retried Activity calls the resolver again. The resolver must return the session that already owns the claim rather than create another one.
 
-The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. That is enough for bounded canaries while canonical mutation stays behind shadow mode. Before unrestricted rollout you would want more than one host and real production load.
+The second run is the direct test of continuity across a Worker failure. The orchestration process can be replaced, but the agent session already doing the work should not be replaced with it. It is also the only run that tests the resolver. The first resumes from its checkpoint and never calls the resolver again. A resolver that creates a new session on every call would therefore leave the first run green and fail only the second.
 
-Cross-host recovery is unproven rather than architecturally out of reach. The agent queue is an ordinary shared Task Queue, the Workers carry no identity, and any Worker polling it may pick up a retry. What is host-local is the adapter answering the resolve call, and the only adapters that have ever answered it resolved host-local sessions. The contract is written to be host-independent, so the design admits a Worker on a second host reattaching, but making that true requires the production adapter to answer from the shared control plane, plus a two-host kill test that has never been run. Same-host Worker recovery is supported; cross-host recovery is not established.
+The demo runs on one host against a local Temporal development server, with a fixture process standing in for the coding agent. It uses a real Temporal server, a real operating-system kill signal, and a generation-fenced claim. That is sufficient for bounded canaries while canonical mutation remains in shadow mode. An unrestricted rollout would also need testing across multiple hosts under production load.
 
-The [companion page](/temporal-agent-orchestration/) pairs this recording with the same failure against the pre-Temporal orchestrator. That run ends with two agents operating in one worktree and a stale receipt overwriting the current one.
+Cross-host recovery has not been demonstrated. The agent Task Queue is shared, Workers have no persistent identity, and any Worker polling the queue may receive the retry. The host-local part is the resolver adapter. Every adapter tested so far has resolved sessions stored on the same host.
+
+The resolver contract itself does not require host-local state. A Worker on another host could reattach if the production adapter resolved session ownership from the shared control plane. That still needs to be implemented and verified with a two-host kill test. Same-host Worker recovery is supported. Cross-host recovery remains unproven.
+
+The [companion page](/temporal-agent-orchestration/) shows the same failure against the pre-Temporal orchestrator. That run ends with two agents working in the same worktree and a stale receipt overwriting the current one.
 
 ## The canary failed, but that's why we use canaries
 
