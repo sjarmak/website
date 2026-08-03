@@ -14,7 +14,7 @@
     Worker killed mid-work; retry resumed from the checkpoint
     workflow : bead-orchestration/demo-city/worker-kill-demo/work-item-1
     activity : formula/demo-root/edit-file.author/g1
-    session  : agent-session-1ecb4849
+    session  : agent-session-8eb871d6
     receipt  : status=completed outcome=completed
 
     [PASS] proof 1: the bound session identity did not change across attempts
@@ -48,7 +48,7 @@
     Worker killed before any checkpoint; retry resolved again
     workflow : bead-orchestration/demo-city/worker-kill-demo-resolve/work-item-1
     activity : formula/demo-root/edit-file.author/g1
-    session  : agent-session-d7ac2c15
+    session  : agent-session-f7012edf
     receipt  : status=completed outcome=completed
 
     [PASS] proof 1: the bound session identity did not change across attempts

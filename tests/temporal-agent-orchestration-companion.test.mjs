@@ -460,7 +460,7 @@ test("the built companion page keeps the quote, the recordings, and the demo gui
   const html = readFileSync(builtCompanion, "utf8");
   assert.match(
     html,
-    /The task still exists, but the steps needed to resume it are lost\./,
+    /A crash used to\s+lose everything around the task\./,
   );
   assert.match(html, /worker-kill\.cast/);
   assert.match(html, /I kill the orchestration process, not the coding agent\./);

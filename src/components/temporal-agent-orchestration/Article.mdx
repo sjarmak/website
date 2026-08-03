@@ -319,20 +319,26 @@ Tests define the invariants. The failure harness in [the repository](https://git
 
 The harness kills the orchestration Worker, not the coding agent. The agent continues working after its coordinator disappears. The test is whether the retried orchestration attaches to that same agent or launches a second one.
 
+The process pane on the right answers that question with two counters it measures for itself, once a second. `agent procs` counts operating-system processes and reads 2 during each retry window, when the surviving agent and the retry's new process run side by side. `sessions` counts distinct session identities that have written to the work item, and it stays at 1. Two processes over one session is the fix working. The before-state recording on the [companion page](/temporal-agent-orchestration/) shows the failure in the same two counters: there, both read 2.
+
 <CastPlayer
   src="/temporal-agent-orchestration/demo/worker-kill.cast"
-  poster="npt:48.0"
+  poster="npt:47.0"
   markers={[
-    [3.5, "Arm 1 starts"],
-    [8.4, "kill -9: Worker one is gone"],
-    [26.6, "Temporal retries; workflow completed"],
-    [27.7, "Arm 2 starts"],
-    [31.0, "kill -9 before any checkpoint"],
-    [41.1, "Retry re-resolves; workflow completed"],
+    [3.4, "Arm 1 starts"],
+    [8.3, "kill -9: Worker one is gone"],
+    [15.8, "Retry re-binds: two processes, one session"],
+    [26.1, "Workflow completed"],
+    [27.5, "Arm 2 starts"],
+    [30.9, "kill -9 before any checkpoint"],
+    [38.8, "Retry re-resolves: same session returned"],
+    [40.7, "Workflow completed"],
   ]}
   notes={{
     1: "The Worker is dead. The agent is still running. Temporal is waiting out the heartbeat timeout before it retries.",
-    4: "The second Worker is dead before any checkpoint exists. The retry has to ask the resolver again.",
+    2: "The process pane reads 2 because the retry runs alongside the agent that outlived the first Worker. Its sessions counter stays at 1: both processes carry the same session.",
+    5: "The second Worker is dead before any checkpoint exists. The retry has to ask the resolver again.",
+    6: "Two processes again, sessions still 1: the resolver returned the existing session instead of minting a second one.",
   }}
 >
   The full recording keeps real timing, including the pause where Temporal

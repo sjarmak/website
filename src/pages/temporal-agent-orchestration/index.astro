@@ -218,13 +218,22 @@ const provenance = JSON.parse(
           both agents complete, and the older attempt finishes last,
           overwriting the current receipt.
         </p>
+        <p>
+          The process pane carries two counters, both measured once a second
+          rather than taken from the run's logs: <code>agent procs</code>
+          counts processes, and <code>sessions</code> counts distinct session
+          identities that have written to the work item. Here both reach 2.
+          Keep that pair in mind for the Temporal recording below, where the
+          same pane tells the opposite story.
+        </p>
       </div>
       <figure class="tco__player">
         <div id="before-temporal-player" data-cast-src={beforeCast}></div>
         <p class="tco__player-note" hidden></p>
         <figcaption>
-          The right panes are where it goes wrong: two agent processes for
-          one work item, then a stale receipt over the current one.
+          The right panes are where it goes wrong: two processes and two
+          sessions for one work item, then a stale receipt over the current
+          one.
           <a href={`${root}/demo/before-temporal.mp4`} download="before-temporal.mp4">Download the video</a>,
           or the <a href={beforeCast} download="before-temporal.cast">raw asciinema event log</a>.
         </figcaption>
@@ -240,6 +249,13 @@ const provenance = JSON.parse(
           <li>
             Before any checkpoint: the resolver is called a second time and
             returns the existing session instead of creating another one.
+          </li>
+          <li>
+            In both: <code>agent procs</code> reads 2 during the retry
+            window, when the surviving agent and the retry's new process run
+            side by side, while <code>sessions</code> stays at 1. In the
+            before-state recording, both counters read 2. That pair is the
+            difference between a re-bind and a duplicate.
           </li>
         </ul>
         <p>
@@ -418,28 +434,33 @@ const provenance = JSON.parse(
         [2.1, "The orchestrator claims; the agent starts"],
         [4.6, "kill -9: the orchestrator is gone"],
         [7.6, "Restart, with an empty memory"],
-        [12.2, "A second agent for the same task"],
-        [23.7, "The stale receipt lands on top"],
+        [12.2, "A second session for the same task"],
+        [24.2, "The stale receipt lands on top"],
       ],
       notes: {
         1: "The orchestrator is dead. The agent it launched is still running.",
         2: "The restarted orchestrator sees claimed work with no recorded session, so it starts a replacement.",
+        3: "The process pane reads agent procs 2 and sessions 2: two distinct sessions are editing one work item. This is the duplicate.",
       },
     },
     {
       id: "worker-kill-player",
-      poster: "npt:48.0",
+      poster: "npt:47.0",
       markers: [
-        [3.5, "Arm 1 starts"],
-        [8.4, "kill -9: Worker one is gone"],
-        [26.6, "Temporal retries; workflow completed"],
-        [27.7, "Arm 2 starts"],
-        [31.0, "kill -9 before any checkpoint"],
-        [41.1, "Retry re-resolves; workflow completed"],
+        [3.4, "Arm 1 starts"],
+        [8.3, "kill -9: Worker one is gone"],
+        [15.8, "Retry re-binds: two processes, one session"],
+        [26.1, "Workflow completed"],
+        [27.5, "Arm 2 starts"],
+        [30.9, "kill -9 before any checkpoint"],
+        [38.8, "Retry re-resolves: same session returned"],
+        [40.7, "Workflow completed"],
       ],
       notes: {
         1: "The Worker is dead. The agent is still running. Temporal is waiting out the heartbeat timeout before it retries.",
-        4: "The second Worker is dead before any checkpoint exists. The retry has to ask the resolver again.",
+        2: "The process pane reads agent procs 2, sessions 1: the retry and the surviving agent carry the same session. Compare the before recording, where sessions reads 2.",
+        5: "The second Worker is dead before any checkpoint exists. The retry has to ask the resolver again.",
+        6: "Two processes again, sessions still 1: the resolver returned the existing session instead of minting a second one.",
       },
     },
   ];
