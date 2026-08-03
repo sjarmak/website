@@ -390,7 +390,7 @@ An independent watchdog scans every store for completed or verified work that ha
 
 Durable waiting introduces two failure modes that need explicit handling.
 
-The first is Workflow history growth. The orchestration Workflow covers a single execution episode and then completes. The longer-lived delivery Workflow uses [Continue-As-New](https://docs.temporal.io/workflows#continue-as-new) after every hundred delivery attempts, carrying only the state needed to resume. Test what happens when an acknowledgement arrives at the rollover boundary. A mistake there can discard the acknowledgement without producing an obvious failure.
+The first is Workflow history growth. The orchestration Workflow covers a single execution episode and then completes. The longer-lived delivery Workflow uses [Continue-As-New](https://docs.temporal.io/develop/go/workflows/continue-as-new) after every hundred delivery attempts, carrying only the state needed to resume. Test what happens when an acknowledgement arrives at the rollover boundary. A mistake there can discard the acknowledgement without producing an obvious failure.
 
 The second is a result that is never acknowledged. The delivery Workflow retries indefinitely. That is intentional: the outcome path exists so an owed result cannot quietly expire, while moving it to a dead-letter queue would permit exactly that.
 
