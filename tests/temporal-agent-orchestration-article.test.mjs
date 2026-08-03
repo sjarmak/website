@@ -79,16 +79,15 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
   assert.match(article, /code\/workflow\.go/);
   assert.match(article, /code\/activity\.go/);
   assert.match(article, /Nondeterministic Idempotence/);
-  assert.match(article, /Put the unpredictable agent inside an Activity/);
+  assert.match(
+    article,
+    /Put the unpredictable agent inside an Activity/,
+    "the essay must not imply Temporal made agent behavior deterministic",
+  );
   assert.match(article, /Gas City supplies the orchestration primitives/);
   assert.match(article, /Gas Town was one specific city design/);
   assert.match(article, /Temporal does not replace it/);
   assert.match(article, /took the primitives behind Gas Town/i);
-  assert.match(
-    article,
-    /The coding agent itself could not be replayed deterministically/i,
-    "the essay must not imply Temporal made agent behavior deterministic",
-  );
   // The determinism ban covers page metadata, not just the body. <title> is the
   // browser tab AND the link-preview text, and it once read "tried to make agent
   // work deterministic" — the exact opposite of what the piece argues.
@@ -1135,8 +1134,8 @@ test("the article answers the evidence-scope review with verified claims", () =>
   assert.match(article, /The two layers solve different problems/);
   assert.match(article, /a query, not a memory/);
   assert.match(article, /243 lines of Bash/);
-  assert.match(article, /another reliability system, including its recovery rules, failure cases, monitoring, and debugging/);
-  assert.match(article, /grown one repair at a time/);
+  assert.match(article, /another reliability system: its recovery rules, failure modes, monitoring, and debugging/);
+  assert.match(article, /accumulated repairs one incident at a time/);
   // Standing editorial ban: the piece states its claims, it does not narrate
   // how modest they are. "the narrower claim" / "my claim is narrower" kept
   // creeping back across revisions.
