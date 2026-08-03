@@ -70,9 +70,9 @@ test("the companion opens with the failure, the boundary sentence, and the bound
   const opening = [
     "An agent in a software factory is editing code",
     "crashes before recording",
-    "The task still exists",
-    "the steps needed to resume it are lost",
-    "durable without requiring the agent itself to be deterministic",
+    "The task survives",
+    "the procedure needed to continue it does not",
+    "Temporal gives that procedure a durable owner",
   ];
   let previous = -1;
   for (const marker of opening) {

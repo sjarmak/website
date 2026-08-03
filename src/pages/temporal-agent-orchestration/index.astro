@@ -32,7 +32,7 @@ const provenance = JSON.parse(
 <PageLayout
   title="How I made Gas City's agent orchestration durable with Temporal"
   kicker="Temporal case study"
-  intro="An agent in a software factory is editing code when the orchestration process crashes before recording the handoff. The task still exists, but the steps needed to resume it are lost. Temporal makes those steps durable without requiring the agent itself to be deterministic."
+  intro="An agent in a software factory is editing code when the orchestration process crashes before recording the handoff. The task survives, but the procedure needed to continue it does not. Temporal gives that procedure a durable owner."
   description="A short companion to the full Gas City case study: what I Temporalized, what the Worker-kill demo proves, and where the guarantees stop."
   noindex={true}
 >
