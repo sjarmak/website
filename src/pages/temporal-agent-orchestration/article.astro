@@ -111,6 +111,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     vertical-align: top;
     overflow-wrap: break-word;
     hyphens: auto;
+    -webkit-hyphenate-limit-before: 4;
+    -webkit-hyphenate-limit-after: 4;
+    hyphenate-limit-chars: 10 4 4;
   }
 
   /* The rule that actually does the work: without it the inline code element
@@ -142,10 +145,57 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       max-width: none;
     }
 
-    /* Narrow columns cannot spare two space-s gutters per cell. */
+    /* Narrow columns cannot spare two space-s gutters per cell, and the
+       mono header terms need the smaller step to fit without breaking. */
     :global(.temporal-agent-article__body > table th),
     :global(.temporal-agent-article__body > table td) {
       padding: var(--space-2xs) var(--space-xs);
+    }
+
+    :global(.temporal-agent-article__body > table th) {
+      padding-inline: var(--space-2xs);
+      font-size: var(--step--2);
+    }
+
+    /* The three-column comparison table is the tightest fit: shrink its
+       short-label first column so the two term columns can hold their
+       header words whole. */
+    /* At phone widths this table cannot hold its two mono header terms
+       whole (the terms alone outrun the columns), so the soft hyphens in
+       the header carry one deliberate break and everything else fits:
+       23% holds the widest row label, and 3xs gutters give the term
+       columns enough room for every word except the one that hyphenates. */
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) th:first-child),
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) td:first-child) {
+      width: 23%;
+    }
+
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) th),
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) td) {
+      padding-inline: var(--space-3xs);
+    }
+  }
+
+  /* The narrowest phones squeeze the label column below its longest word;
+     the smaller step plus a slightly wider column keeps the labels whole. */
+  @media (max-width: 360px) {
+    /* Fixed layout reads column widths from the header row, so the th
+       must carry the width even though only the td text needs the room. */
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) th:first-child),
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) td:first-child) {
+      width: 27%;
+    }
+
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) td:first-child) {
+      font-size: var(--step--2);
+    }
+
+    /* The term columns lose ~30px to the wider label column here; one
+       notch below the smallest step (which bottoms out at 0.83rem) keeps
+       every header word inside its soft-hyphen points instead of
+       bare-breaking. */
+    :global(.temporal-agent-article__body > table:has(th:nth-child(3)) th) {
+      font-size: 0.73rem;
     }
   }
 </style>
