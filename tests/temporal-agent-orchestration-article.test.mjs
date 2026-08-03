@@ -893,7 +893,7 @@ test("the essay ends with the decision rule, and the pack idea stays out of the 
   );
   assert.match(
     article,
-    /Temporal can remember which promises are still outstanding and what must happen next/,
+    /Temporal can preserve the promises around that work/,
   );
 
   // The Gas City pack is a contributor note in the evidence section, not the
@@ -1103,7 +1103,7 @@ test("the article's demo passage tells the viewer what dies and what to watch", 
   );
 
   // Arm 2 remains the decisive claim.
-  assert.match(article, /That is the direct test of duplicate prevention/);
+  assert.match(article, /That is the direct test of continuity-preserving recovery/);
 });
 
 // The evidence-scope revision (2026-08-02): two external reviews agreed the

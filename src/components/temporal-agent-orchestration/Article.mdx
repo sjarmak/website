@@ -29,17 +29,19 @@ A few weeks later, in October 2025, he published [Introducing Beads](https://ste
 
 <OpeningFigure />
 
-Every new coding-agent session starts with some degree of amnesia. The previous agent may have investigated the codebase, discovered three hidden dependencies, ruled out two approaches, found a broken test, and created a reasonable plan. Then its context fills up or the session ends, and the next agent wakes up knowing none of it. You can try to solve this with Markdown files (at the time, many agent-driven directories including my own were littered with the things), but then the agent has to keep the plan current, track which tasks depend on which, and avoid spawning an ecosystem of slightly different planning documents (e.g., v1_final_FINAL_this-one-for-real.md).
+Every new coding-agent context begins without episodic memory of the session before it. The earlier session may have investigated the codebase, discovered hidden dependencies, ruled out two approaches, found a broken test, and developed a reasonable plan. Unless the system restores that history, the next context begins by reconstructing it.
 
-Beads gives agents a dependency-aware work record instead. An agent can record what it discovered, connect related work, mark blockers, ask which tasks are ready, and return in another session without reconstructing the entire project from a transcript. Agents also really like using it and use it pretty well: they file issues for problems they encounter and pick up the next unblocked task without much friction. I adopted it quickly. Then Steve built something much larger on top of it.
+Beads gave me a dependency-aware work record that survives those boundaries. An agent can record what it discovered, connect related work, mark blockers, and resume without rebuilding the project from a transcript.
 
-On January 1, 2026, he published [Welcome to Gas Town](https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04): an opinionated coding-agent factory built on Beads, with persistent agent identities, disposable sessions, reusable workflows called formulas, coordination through mail and nudges, and a Mayor agent, the top-level coordinating agent and human handoff point.
+Gas Town added another distinction that I did not fully appreciate at first: the session can be bounded without making the identity around it disposable. A persistent agent role can retain its address, history, responsibilities, and work record across many model contexts. The session ends. The role and its unfinished commitments do not.
+
+On January 1, 2026, he published [Welcome to Gas Town](https://steve-yegge.medium.com/welcome-to-gas-town-4f25ee16dd04): an opinionated coding-agent factory built on Beads, with persistent agent identities, bounded sessions, reusable workflows called formulas, coordination through mail and nudges, and a Mayor agent, the top-level coordinating agent and human handoff point.
 
 It also came with Polecats, a Deacon, a Witness, a Refinery, Rigs, Convoys, Molecules, Wisps, and enough Mad Max terminology that I understood each concept slightly less after learning the name of the next one.
 
 I forked it in early January with lofty goals of making it more vendor-agnostic, and chatted with Steve about that (to which he responded "send PRs!"). There had to be a better way to manage my projects than opening 10+ tabs in Ghostty, and that was the promise of Gas Town. But I never quite got my first town working the way I wanted, and I had a critical project at the time ([CodeScaleBench](https://github.com/sourcegraph/CodeScaleBench)) that couldn't afford to stall on dropped queues and other random orchestrator nonsense, so I reluctantly abandoned my ghost town. I could run a bunch of coding agents; I didn't know how to keep a town of them from catching fire (or, more accurately, from agents sitting around doing mostly nothing while passing around poorly translated tasks in some horrible game of Agent Telephone).
 
-Many of these issues were in theory resolved by a philosophy Steve called **Nondeterministic Idempotence**, or NDI: if a session dies, a fresh agent can inspect the durable work record and choose another valid route to the same outcome. NDI is one of the two kinds of recovery this article is about. But before I really understood it, I had to piece it together through a deconstructed version of the system.
+Many of these issues were in theory resolved by a philosophy Steve called **Nondeterministic Idempotence**, or NDI: if a session ends, a later session, potentially continuing the same persistent role, can inspect the durable work record and choose another valid route to the same outcome. NDI is one of the two kinds of recovery this article is about. But before I really understood it, I had to piece it together through a deconstructed version of the system.
 
 In March 2026, before its public launch, I found that deconstructed version of the system in [Gas City](https://github.com/gastownhall/gascity). Gas City, created by Julian Knutsen and Chris Sells, took the primitives behind Gas Town and turned them into a composable orchestration SDK. Gas Town was one specific city design. Gas City gave you the building materials to create your own. That separation immediately made sense to me, and I wanted it (and by extension my own software factory) to succeed. I began contributing heavily in early April, and Julian invited me and a fellow avid contributor to become Gas City's first outside maintainers. I've since authored [over two hundred pull requests](https://github.com/gastownhall/gascity/pulls?q=is%3Apr+author%3Asjarmak+is%3Amerged) across session lifecycle, reconciliation, Beads integration, formulas, dispatch, the API, repair controls, and external messaging, plus a Slack integration and most of the commits to its revamped [dashboard](https://github.com/gastownhall/gascity-dashboard).
 
@@ -118,6 +120,16 @@ That gave me two recovery models to consider side by side. The nondeterminism in
 | After a crash | A new agent may find another valid route | Ordering and acknowledgement must remain exact |
 | Recovery | Inspect the durable work record | Replay the durable history |
 | Owner | Beads and Gas City | A Temporal Workflow |
+
+## Recovery is not the same thing as continuity
+
+A third question runs across both recovery models: what should survive?
+
+A durable work record preserves what was learned and what remains to be done. A durable procedure preserves the system's outstanding promises. Neither one, by itself, defines whether the next model context is a continuation of the same agent role or a replacement assigned to the same task.
+
+That identity belongs outside Temporal. In my system, Gas City owns the persistent agent role and Beads preserves its work history. Temporal preserves the obligation to return to the correct session when it still exists, or to make an explicit recovery decision when it does not.
+
+This changes how I describe start-or-attach: it is continuity-preserving recovery, not just duplicate prevention. The infrastructure first asks whether the session that owns the work is still available. It creates a replacement only when the system has deliberately decided that continuity is no longer possible or desirable. Context, attribution, and ownership are what make the handoff clean and the system legible.
 
 I then wondered: could the setup I run with Gas City use both models at once?
 
@@ -325,7 +337,7 @@ The kill targets the orchestration Worker, not the coding agent. The agent keeps
 
 Both runs finish with one agent session and one accepted receipt.
 
-In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of duplicate prevention. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green.
+In the first, the retry can recover the session identity from the heartbeat details. In the second, no checkpoint exists. The retried Activity must call the resolver again, and the resolver must hand back the session that already exists rather than minting a second. That is the direct test of continuity-preserving recovery: the orchestration process is replaceable, but the agent session already doing the work is not replaced merely because its coordinator disappeared. It is also the only arm that can catch a broken resolver: arm 1 resumes from its checkpoint and never asks again, so sabotage the resolver to mint a fresh session on every call and arm 1 stays green.
 
 The demo runs on one host against a local development server, with a fixture process standing in for the coding agent. It uses real Temporal, a real operating-system kill signal, and a generation-fenced claim. That is enough for bounded canaries while canonical mutation stays behind shadow mode. Before unrestricted rollout you would want more than one host and real production load.
 
@@ -416,11 +428,15 @@ Gas City supplies the orchestration primitives, Beads supplies the durable work 
 
 Use Temporal when losing the in-flight procedure would leave the system unable to say what happened.
 
-I still expect the city to catch fire sometimes. Complex systems do, and agents surprise us daily. What I do not want is for every fire to become a murder mystery where a new agent has to reconstruct the control plane from stale claims, half-delivered messages, and whatever process happens to still be alive.
+I still expect the city to catch fire sometimes. Complex systems do, and coding agents will continue to make locally reasonable decisions that their infrastructure did not anticipate.
 
-The agents can take whatever path they need inside the boundary. Beads can preserve what they learn. Temporal can remember which promises are still outstanding and what must happen next.
+What I do not want is for every failure to require forensic reconstruction from stale claims, half-delivered messages, and whatever process happens to remain alive. Nor do I want a dead coordinator to become an excuse to discard a session that is still working, erase its ownership, and launch a competitor against the same task.
 
-That arrangement is much easier to operate than another reaper trying to guess which step disappeared.
+The agent can choose its own route through the work. Beads can preserve what it learns and the identity responsible for it. Temporal can preserve the promises around that work: who owns it, what remains outstanding, when a handoff is complete, and what must happen next.
+
+The replaceable parts of the system should be replaceable. The continuity we care about should survive them.
+
+> Durable execution is not only about surviving process failure. It is about choosing which forms of continuity the system refuses to lose.
 
 ## The evidence, and where to go deeper
 
