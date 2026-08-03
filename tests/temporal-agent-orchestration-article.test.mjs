@@ -1076,9 +1076,9 @@ test("the article's demo passage tells the viewer what dies and what to watch", 
 
   assert.match(
     article,
-    /The kill targets the orchestration Worker, not the coding agent/,
+    /The harness kills the orchestration Worker, not the coding agent/,
   );
-  assert.match(article, /attaches to that same agent or launches another one/);
+  assert.match(article, /attaches to that same agent or launches a second one/);
   // "Signal" alone reads as a Temporal Signal; the kill is an OS signal.
   assert.match(article, /operating-system kill signal/);
   assert.doesNotMatch(article, /with a real signal[^-]/);
@@ -1166,10 +1166,10 @@ test("the article answers the evidence-scope review with verified claims", () =>
   // Versioning: three GetVersion patches, unversioned Workers, and the gate's
   // record stated exactly — no real catch yet, both real defects found by
   // review.
-  assert.match(article, /caught by code review instead/);
-  assert.match(article, /never caught a real nondeterministic change/);
-  assert.match(article, /plan for both layers/);
-  assert.match(article, /stranded across a history rollover/);
+  assert.match(article, /caught during code review/);
+  assert.match(article, /has not yet caught a real nondeterministic change/);
+  assert.match(article, /Both safeguards matter/);
+  assert.match(article, /stranded after a history rollover/);
 
   // Lifecycle: bounded episode history, Continue-As-New with the boundary-ack
   // pin, and the unacknowledged outcome answered head-on.
