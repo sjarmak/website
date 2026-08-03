@@ -51,9 +51,9 @@ The failures we wound up chasing were fairly consistent.
 
 One night, the store file grew to 168 MB: 79,210 beads, 96 percent of them already closed. Because every dispatch reparsed the entire file under a lock, order firing froze. One wedged session claimed the same bead ten times over 5.6 hours. A maintenance order sat dormant for ten days before anyone noticed, because the thing responsible for checking whether orders fired was itself an order.
 
-A fun artifact from this era was a recovery flag written by one workflow so that “a reaper” could query it. But no reaper ever did. The session-recovery scanner ran every two minutes for two months, around forty thousand scans, and detected zero instances of the condition it existed to find.
+Another artifact from this era was a recovery flag written by one workflow so that “a reaper” could query it. But no reaper ever did. The session-recovery scanner ran every two minutes for two months, around forty thousand scans, and detected zero instances of the condition it existed to find.
 
-Meanwhile, the actual repairs fell to the Mayor, who really is supposed to have better things to do than track down city infra issues. Its prompt slowly became a field manual for infrastructure archaeology: drain duplicate sessions every cycle, classify the stalled-delivery fault, bypass the broken delivery path, never let a dead nudge sit ahead of a P0. It got bad enough that I chartered a dedicated infrastructure agent to be the Tier-1 first responder, so the Mayor would stop being the single point of contact for mechanical breakage.
+Meanwhile, the actual repairs fell to the Mayor, who really is supposed to have better things to do than track down city infra issues. Their prompt slowly became a field manual for infrastructure archaeology: drain duplicate sessions every cycle, classify the stalled-delivery fault, bypass the broken delivery path, never let a dead nudge sit ahead of a P0. It got bad enough that I chartered a dedicated infrastructure agent to be the Tier-1 first responder, so the Mayor would stop being the single point of contact for mechanical breakage.
 
 Each new reaper fixed one failure mode. It also spread ownership of the procedure across another process. The patrols checked liveness: is the process still there? But the failures were about outcomes. Did this claim launch exactly one agent? Does this result belong to the current generation? Who owns the next transition?
 
@@ -63,7 +63,7 @@ I really wanted Gas City to just work. I did not want to spend my time doing det
 
 ## The task survived. The procedure did not.
 
-The problem became a bit clearer through one recurring failure. A work item becomes ready. The Mayor claims it and launches a coding agent. The agent gets a worktree, edits files, runs tests, and works for an hour. Then the Mayor's session dies before recording the handoff.
+The problem became a bit clearer through one recurring failure. A work item becomes ready. The Mayor claims it and launches a coding agent. The agent gets a worktree, edits files, runs tests, and works for an hour. Then the Mayor's session abruptly ends before recording the handoff.
 
 After restart, the system basically has three bad options. It can launch another agent and leave two processes editing the same worktree. It can wait indefinitely for a process it no longer knows how to contact. Or it can release the claim and ask a repair loop to reconstruct what happened from whatever evidence the first process left behind. At different points, I ran versions of all three.
 
