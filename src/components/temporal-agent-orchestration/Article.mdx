@@ -75,15 +75,6 @@ At enough scale, those clues become useless. I saw stranded claims, duplicate se
 
 The work record survived. What the system lost was the procedure connecting one state to the next.
 
-Here is where the fix stands today:
-
-| Current status | What that means today |
-|---|---|
-| Canary | A scoped activation continuously handles durable result delivery and exact acknowledgement in my live installation; it has not been promoted to enabled. |
-| Shadow | Temporal-controlled work claiming and agent launch is built and tested against the adapter contract, but blocked from mutating production work. |
-| Proven, bounded | One live bounded canary ran one claim, one session, one fenced receipt against the canonical store, with a scripted stand-in answering the agent side. A recorded single-host harness run proves Worker-kill recovery without a second agent. |
-| Not claimed | Unrestricted production rollout of Temporal-driven agent execution, and cross-host recovery. |
-
 ## Two kinds of recovery
 
 So how do we handle work transition and continuity in the face of inevitable failure and nondeterminism? We need to figure out where to draw the boundaries.
@@ -379,6 +370,15 @@ This was somewhat disappointing, but it's also why I put in explicit canaries an
 ## What's running now
 
 A path through this integration is in one of three rollout states: **shadow**, built and exercised but blocked from touching production work; **canary**, a bounded live activation someone explicitly authorized; and **enabled**, promoted for unrestricted production use. Today, Beads mode is shadow and Outcome mode is canary, activated only for the scoped result-delivery path. Delivery and acknowledgement run continuously inside that canary, but Outcome mode has not passed the rollout gate to enabled. Temporal cannot claim production work or start a coding agent without a separate, explicitly bounded canary.
+
+Here is where the fix stands today:
+
+| Current status | What that means today |
+|---|---|
+| Canary | A scoped activation continuously handles durable result delivery and exact acknowledgement in my live installation; it has not been promoted to enabled. |
+| Shadow | Temporal-controlled work claiming and agent launch is built and tested against the adapter contract, but blocked from mutating production work. |
+| Proven, bounded | One live bounded canary ran one claim, one session, one fenced receipt against the canonical store, with a scripted stand-in answering the agent side. A recorded single-host harness run proves Worker-kill recovery without a second agent. |
+| Not claimed | Unrestricted production rollout of Temporal-driven agent execution, and cross-host recovery. |
 
 <ConceptFigure kind="shadow" />
 
