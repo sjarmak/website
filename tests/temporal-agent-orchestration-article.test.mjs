@@ -84,7 +84,7 @@ test("the agent-orchestration essay is a direct off-navigation article", () => {
     /Put the unpredictable agent inside an Activity/,
     "the essay must not imply Temporal made agent behavior deterministic",
   );
-  assert.match(article, /Beads owns the durable graph of work and Temporal owns one traversal through that graph/);
+  assert.doesNotMatch(article, /graph engineering|LangGraph/i);
   assert.match(article, /Gas Town was one specific city design/);
   assert.match(article, /Temporal does not replace it/);
   assert.match(article, /took the primitives behind Gas Town/i);
@@ -322,7 +322,7 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
     "canonical record of mutable work facts",
     "Temporal owns the procedure",
     "## What's running now",
-    "The live result path:",
+    "The scoped Outcome canary:",
   ];
   let previous = -1;
   for (const marker of teachingOrder) {
@@ -332,11 +332,13 @@ test("the article teaches the live OutcomeReady loop and states the rollout boun
   }
 
   // The rollout vocabulary has exactly three states, and the current position
-  // is named in them; "canary" alone once did double duty for a continuously
-  // enabled path, which made the boundary unreadable.
+  // is named truthfully: continuous behavior inside a bounded activation does
+  // not promote the path to enabled.
   assert.match(article, /three rollout states/);
-  assert.match(article, /Outcome mode is enabled/);
+  assert.match(article, /Outcome mode is canary/);
   assert.match(article, /Beads mode is shadow/);
+  assert.match(article, /has not passed the rollout gate to enabled/);
+  assert.doesNotMatch(article, /Today, Outcome mode is enabled/);
 
   // The live result path is enumerated end to end, from the terminal
   // transition through to the acknowledgement receipt that closes it.
@@ -534,10 +536,8 @@ test("the article keeps the failure, the repair, and the containment boundary", 
     /legitimate completion paths closed real work without producing an[\s\S]{0,400}?OutcomeReady<\/TermTip> envelope at all/i,
   );
 
-  assert.match(
-    article,
-    /durable delivery and acknowledgement of finished results/i,
-  );
+  assert.match(article, /runs continuously within a scoped Outcome canary/i);
+  assert.match(article, /not the same as promotion to enabled/i);
   assert.match(
     article,
     /Temporal cannot claim production work or start a coding agent/i,
@@ -903,8 +903,13 @@ test("the essay ends with the decision rule, and the pack idea stays out of the 
     packAt > article.indexOf("## The evidence, and where to go deeper"),
     "the pack note belongs in the evidence section, after the conclusion",
   );
+  assert.doesNotMatch(
+    article,
+    /graph engineering|LangGraph/i,
+    "the graph-engineering detour must stay out of the conclusion",
+  );
   assert.ok(
-    article.indexOf("Beads owns the durable graph of work and Temporal owns one traversal through that graph.") <
+    article.indexOf("The same multi-agent system can use both without forcing one model onto the other.") <
       article.indexOf("Losing an in-flight procedure could leave the system unable to say whether an agent was still working"),
     "the conclusion must run straight from the division of labor to the rule",
   );

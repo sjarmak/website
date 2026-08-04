@@ -79,7 +79,7 @@ Here is where the fix stands today:
 
 | Current status | What that means today |
 |---|---|
-| Production | Durable result delivery and exact acknowledgement run continuously in my live installation. |
+| Canary | A scoped activation continuously handles durable result delivery and exact acknowledgement in my live installation; it has not been promoted to enabled. |
 | Shadow | Temporal-controlled work claiming and agent launch is built and tested against the adapter contract, but blocked from mutating production work. |
 | Proven, bounded | One live bounded canary ran one claim, one session, one fenced receipt against the canonical store, with a scripted stand-in answering the agent side. A recorded single-host harness run proves Worker-kill recovery without a second agent. |
 | Not claimed | Unrestricted production rollout of Temporal-driven agent execution, and cross-host recovery. |
@@ -185,7 +185,7 @@ Once those repairs had become an implicit workflow system, I preferred adopting 
 
 ## The three failures I wanted Temporal to stop
 
-The implementation focused on three concrete breakpoints. The first two run in shadow, blocked from touching production work; the third runs continuously in my live installation.
+The implementation focused on three concrete breakpoints. The first two run in shadow, blocked from touching production work; the third runs continuously within a scoped Outcome canary in my live installation.
 
 ### 1. A crash between claiming work and launching the agent
 
@@ -221,7 +221,7 @@ I had treated mail and session nudges as if successful delivery meant successful
 
 **What remains the application's job.** The Workflow closes only when it receives an acknowledgement bound to the exact store, work item, outcome, generation, and session fence. A queued notification or accepted signal proves only that delivery was attempted. The canonical acknowledgement receipt proves that the intended agent accepted the intended result.
 
-**How it's tested.** This path failed its first canary, was repaired, and now runs continuously in production.
+**How it's tested.** This path failed its first canary, was repaired, and now runs continuously within a scoped Outcome canary. That continuous behavior is not the same as promotion to enabled.
 
 ## The implementation underneath the boundary
 
@@ -378,11 +378,11 @@ This was somewhat disappointing, but it's also why I put in explicit canaries an
 
 ## What's running now
 
-A path through this integration is in one of three rollout states: **shadow**, built and exercised but blocked from touching production work; **canary**, a bounded live run someone explicitly authorized; and **enabled**, running continuously in production. Today, Outcome mode is enabled (durable delivery and acknowledgement of finished results runs continuously) and Beads mode is shadow: Temporal cannot claim production work or start a coding agent without an explicitly bounded canary.
+A path through this integration is in one of three rollout states: **shadow**, built and exercised but blocked from touching production work; **canary**, a bounded live activation someone explicitly authorized; and **enabled**, promoted for unrestricted production use. Today, Beads mode is shadow and Outcome mode is canary, activated only for the scoped result-delivery path. Delivery and acknowledgement run continuously inside that canary, but Outcome mode has not passed the rollout gate to enabled. Temporal cannot claim production work or start a coding agent without a separate, explicitly bounded canary.
 
 <ConceptFigure kind="shadow" />
 
-The live result path:
+The scoped Outcome canary:
 
 1. Work reaches an end state in Beads, and an <TermTip term="outcome-ready-record" tip="The durable record that a finished result is owed to someone. It stays open, and delivery repeats, until an acknowledgement matching that exact outcome closes it.">OutcomeReady</TermTip> outbox record is written against that work item. When Temporal closes the work itself, the close and the record are one transaction; for the completion paths Temporal doesn't own yet, a reconciler notices the end state afterward and writes the record then.
 2. A stable Workflow starts for that result, and a notification Activity tells the current Mayor that evidence is available.
@@ -406,9 +406,9 @@ The next step is an escalation policy that distinguishes a newly missed acknowle
 
 ## What the evidence shows so far
 
-Temporal is live for outcome delivery. The larger path that claims work and binds it to an agent session is still in shadow, so the old reconciler and its repair jobs remain in production.
+The scoped Outcome canary is live for result delivery, but Outcome mode has not been promoted to enabled. The larger path that claims work and binds it to an agent session is still in shadow, so the old reconciler and its repair jobs remain in production.
 
-The live path has delivered and acknowledged more than seventy outcomes, with no silent outcomes detected. That shows the integration works under its current load. It does not yet show that Temporal has reduced stranded claims or duplicate sessions.
+Within that bounded activation, the path has delivered and acknowledged more than seventy outcomes, with no silent outcomes detected. That shows the integration works under the canary's current load. It does not establish unrestricted production promotion. It does not yet show that Temporal has reduced stranded claims or duplicate sessions.
 
 Those comparisons become valid only after the claim-to-session path takes production ownership. At that point, I will measure duplicate sessions, stranded claims, and time from agent completion to acknowledged receipt. The sample will need to grow substantially before any percentage is meaningful.
 
@@ -446,8 +446,6 @@ The rest follows from the kind of work my Activity starts. A Gas City agent may 
 The useful question is not which framework should own the system. It is which guarantees must survive a crash.
 
 NDI fits the parts where any acceptable route to the result is valid. That is often the right model for the coding work itself. Deterministic replay fits the parts where the procedure is part of the promise: ordering, retries, waits, acknowledgements, cancellation, and gates. The same multi-agent system can use both without forcing one model onto the other.
-
-In Gas City, Beads owns the durable graph of work and Temporal owns one traversal through that graph. Those are different forms of continuity. The task graph may remain perfectly intact while the procedure moving one task through it disappears. That split follows a fashion already established in the agent bubble: [graph engineering](https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph). Temporal ships [the same pairing for LangGraph](https://temporal.io/blog/temporal-langgraph-plugin-durable-execution), and my boundary is narrower than [the stronger version of the claim](https://temporal.io/blog/the-fallacy-of-the-graph-why-your-next-workflow-should-be-code-not-a-diagram), which says durable code should replace the diagram entirely.
 
 That was the boundary I needed to repair. Losing an in-flight procedure could leave the system unable to say whether an agent was still working, whether its result had been delivered, or whether another agent could safely take over. Reconstructing the answer from claims, processes, worktrees, and partial messages was both expensive and unreliable.
 

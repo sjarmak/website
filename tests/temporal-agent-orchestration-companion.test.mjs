@@ -90,7 +90,7 @@ test("the companion opens with the failure, the boundary sentence, and the bound
     companion,
     /Recovery from a real Worker kill without starting a second agent\./,
   );
-  assert.match(companion, /Durable result delivery and acknowledgement\./);
+  assert.match(companion, /Beads mode is shadow; Outcome mode is a scoped canary\./);
   assert.match(companion, /Cross-host recovery\./);
 
   // The three crash windows a restart could not answer.
@@ -293,7 +293,7 @@ test("the status table is the one definitive rollout statement", () => {
     companion.indexOf("What is actually running"),
   );
   const rows = [
-    ["Result delivery and exact acknowledgement", "Production"],
+    ["Result delivery and exact acknowledgement", "Canary (scoped)"],
     ["Temporal-controlled claim and agent launch", "Shadow; bounded canary completed"],
     ["Worker recovery on one host", "Demonstrated"],
     ["Cross-host recovery", "Not demonstrated"],
@@ -308,6 +308,8 @@ test("the status table is the one definitive rollout statement", () => {
     );
     previous = at;
   }
+  assert.ok(flat.includes("Outcome mode is currently a scoped canary, not enabled"));
+  assert.ok(!flat.includes("Outcome mode is enabled"));
 
   // Limits stay on the page: durable wrongness, the retry cadence, and the
   // job that stayed on cron.
@@ -462,6 +464,8 @@ test("the built companion page keeps the quote, the recordings, and the demo gui
     html,
     /A crash used to\s+lose everything around the task\./,
   );
+  assert.match(html, /Outcome mode is currently a scoped canary, not enabled\./);
+  assert.doesNotMatch(html, /Outcome mode is enabled/);
   assert.match(html, /worker-kill\.cast/);
   assert.match(html, /I kill the orchestration process, not the coding agent\./);
   assert.match(html, /What to watch, per kill:/);

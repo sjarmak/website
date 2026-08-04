@@ -54,8 +54,8 @@ const provenance = JSON.parse(
           <dd>Recovery from a real Worker kill without starting a second agent.</dd>
         </div>
         <div>
-          <dt>Running today</dt>
-          <dd>Durable result delivery and acknowledgement.</dd>
+          <dt>Rollout today</dt>
+          <dd>Beads mode is shadow; Outcome mode is a scoped canary.</dd>
         </div>
         <div>
           <dt>Not proved</dt>
@@ -318,8 +318,8 @@ const provenance = JSON.parse(
         <tbody>
           <tr>
             <td>Result delivery and exact acknowledgement</td>
-            <td>Production</td>
-            <td>Exact receipts, redelivery until acknowledged, independent watchdog</td>
+            <td>Canary (scoped)</td>
+            <td>Continuous delivery inside the bounded activation; exact receipts, redelivery until acknowledged, independent watchdog</td>
           </tr>
           <tr>
             <td>Temporal-controlled claim and agent launch</td>
@@ -340,11 +340,11 @@ const provenance = JSON.parse(
       </table>
       <div class="tco__copy prose">
         <p>
-          The same pattern now runs continuously for result delivery. A
-          finished outcome remains owed until the coordinating agent
-          acknowledges the exact result generation and agent session. Delivery
-          may repeat; the identity of the result does not. The delivery path,
-          step by step, is in
+          Outcome mode is currently a scoped canary, not enabled. Inside that
+          bounded activation, result delivery runs continuously: a finished
+          outcome remains owed until the coordinating agent acknowledges the
+          exact result generation and agent session. Delivery may repeat; the
+          identity of the result does not. The delivery path, step by step, is in
           <a href={`${root}/article#whats-running-now`}>the article</a>, and
           what the evidence shows so far, including the measured
           infrastructure cost, is in
