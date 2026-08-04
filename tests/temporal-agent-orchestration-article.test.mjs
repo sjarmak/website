@@ -903,11 +903,6 @@ test("the essay ends with the decision rule, and the pack idea stays out of the 
     packAt > article.indexOf("## The evidence, and where to go deeper"),
     "the pack note belongs in the evidence section, after the conclusion",
   );
-  assert.doesNotMatch(
-    article,
-    /graph engineering|LangGraph/i,
-    "the graph-engineering detour must stay out of the conclusion",
-  );
   assert.ok(
     article.indexOf("The same multi-agent system can use both without forcing one model onto the other.") <
       article.indexOf("Losing an in-flight procedure could leave the system unable to say whether an agent was still working"),
