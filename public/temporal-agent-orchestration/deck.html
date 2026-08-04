@@ -563,6 +563,92 @@
       list-style: none;
     }
 
+
+    .diagram {
+      grid-column: 1 / 13;
+      min-height: 0;
+      align-self: start;
+    }
+
+    .diagram__svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+      color: var(--color-text);
+    }
+
+    .diagram__svg path,
+    .diagram__svg rect {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .svg-lane {
+      fill: color-mix(in srgb, var(--color-text) 4%, transparent);
+      stroke: none;
+    }
+
+    .svg-box {
+      fill: var(--color-bg-subtle);
+      stroke: currentColor;
+      stroke-width: 1.25;
+    }
+
+    .svg-box--durable {
+      stroke-width: 1.5;
+    }
+
+    .svg-durable-inner {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1;
+    }
+
+    .svg-link {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+    }
+
+    .svg-link--dashed {
+      stroke: var(--color-accent);
+      stroke-dasharray: 7 6;
+    }
+
+    .svg-link--flow {
+      animation: svg-flow-dash 2.4s linear infinite;
+    }
+
+    @keyframes svg-flow-dash {
+      to {
+        stroke-dashoffset: -26;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .svg-link--flow {
+        animation: none;
+      }
+    }
+
+    .svg-bolt {
+      fill: var(--color-accent);
+      stroke: var(--color-bg);
+      stroke-width: 1;
+    }
+
+    .svg-eyebrow,
+    .svg-small {
+      fill: var(--color-text-muted);
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+
+    .svg-eyebrow {
+      fill: var(--color-text-secondary);
+      font-size: 13px;
+    }
+
     .controls {
       position: fixed;
       right: 24px;
@@ -755,25 +841,130 @@
     <section class="slide" aria-label="Slide 3 of 13">
       <div class="marker">03 / the original problem</div>
       <div class="content">
-        <h2 class="slide-title">The task survived. The procedure did not.</h2>
-        <div class="pipeline">
-          <div class="pipeline-step"><b>Beads</b><span>Work item ready</span></div>
-          <div class="pipeline-arrow">→</div>
-          <div class="pipeline-step"><b>Mayor</b><span>Claims the work</span></div>
-          <div class="pipeline-arrow">→</div>
-          <div class="pipeline-step"><b>Agent</b><span>Edits for an hour</span></div>
-          <div class="pipeline-arrow">→</div>
-          <div class="pipeline-step"><b>Crash</b><span>Coordinator dies</span></div>
+        <h2 class="slide-title">One task, five owners, seven crash windows</h2>
+        <div class="diagram">
+<svg
+        class="diagram__svg"
+        viewBox="0 0 1120 700"
+        role="img"
+        
+      >
+        <title >Pre-Temporal flow with seven crash windows</title>
+        <desc >
+          A task travels across five swimlanes: the Beads work record;
+          controller, orders, and reapers; dispatcher and sessions; agent,
+          Git, and filesystem; mail and the Mayor. A step becomes ready in
+          Beads, a controller scan tick discovers it, a claim is recorded
+          back in Beads, the dispatcher wakes a session, the agent runs
+          and pushes a branch, completion returns to the Beads work record, and
+          a mail nudge reaches the Mayor, who verifies the result. Seven
+          lightning bolts sit on the connecting edges, never on the
+          components, marking the crash windows: ready but not delivered,
+          claim with no agent, agent with no recorded session, push with
+          no completion, a stale completion arriving from an old
+          generation, completion with no notification, and notification
+          with no acknowledgement. Only the three Beads boxes wear the
+          double outline of a durable record; every other box, and every
+          arrow, lived in process memory.
+        </desc>
+
+<g class="svg-lanes">
+          <rect class="svg-lane" x="15" y="40" width="1090" height="124" />
+          <rect class="svg-lane" x="15" y="288" width="1090" height="124" />
+          <rect class="svg-lane" x="15" y="536" width="1090" height="124" />
+          <text class="svg-eyebrow" x="30" y="107">Beads work record</text>
+          <text class="svg-eyebrow" x="30" y="216">Controller, orders,</text>
+          <text class="svg-eyebrow" x="30" y="235">reapers</text>
+          <text class="svg-eyebrow" x="30" y="340">Dispatcher and</text>
+          <text class="svg-eyebrow" x="30" y="359">sessions</text>
+          <text class="svg-eyebrow" x="30" y="464">Agent, Git,</text>
+          <text class="svg-eyebrow" x="30" y="483">filesystem</text>
+          <text class="svg-eyebrow" x="30" y="602">Mail and Mayor</text>
+        </g>
+
+        <g class="svg-edges">
+          <path class="svg-link" d="M315 102 H405 V202" />
+          <path class="svg-link" d="M465 226 H530 V126" />
+          <path class="svg-link" d="M590 102 H695 V326" />
+          <path class="svg-link" d="M695 374 V474 H720" />
+          <path class="svg-link" d="M850 474 H880" />
+          <path class="svg-link" d="M947 450 V160 H1000 V126" />
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M790 450 V88 H970" />
+          <path class="svg-link" d="M1060 126 V545 H820 V574" />
+          <path class="svg-link" d="M883 598 H980" />
+        </g>
+
+        <g class="svg-nodes">
+          <rect class="svg-box svg-box--durable" x="190" y="78" width="125" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="195" y="83" width="115" height="38" rx="6" />
+          <text class="svg-small" x="208" y="107">Step ready</text>
+
+          <rect class="svg-box" x="345" y="202" width="120" height="48" rx="10" />
+          <text class="svg-small" x="363" y="231">Scan tick</text>
+
+          <rect class="svg-box svg-box--durable" x="470" y="78" width="120" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="475" y="83" width="110" height="38" rx="6" />
+          <text class="svg-small" x="488" y="107">Claim</text>
+
+          <rect class="svg-box" x="620" y="326" width="150" height="48" rx="10" />
+          <text class="svg-small" x="638" y="355">Wake session</text>
+
+          <rect class="svg-box" x="720" y="450" width="130" height="48" rx="10" />
+          <text class="svg-small" x="738" y="479">Agent runs</text>
+
+          <rect class="svg-box" x="880" y="450" width="134" height="48" rx="10" />
+          <text class="svg-small" x="898" y="479">Push branch</text>
+
+          <rect class="svg-box svg-box--durable" x="970" y="78" width="130" height="48" rx="10" />
+          <rect class="svg-durable-inner" x="975" y="83" width="120" height="38" rx="6" />
+          <text class="svg-small" x="988" y="107">Completion</text>
+
+          <rect class="svg-box" x="757" y="574" width="126" height="48" rx="10" />
+          <text class="svg-small" x="775" y="603">Mail nudge</text>
+
+          <rect class="svg-box" x="980" y="574" width="110" height="48" rx="10" />
+          <text class="svg-small svg-small--wrapped" x="998" y="592">
+            <tspan x="998" dy="0">Mayor</tspan>
+            <tspan x="998" dy="19">verifies</tspan>
+          </text>
+        </g>
+
+        <g class="svg-fractures">
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(360 102)" />
+          <text class="svg-small svg-small--wrapped" x="420" y="144">
+            <tspan x="420" dy="0">ready, not</tspan>
+            <tspan x="420" dy="19">delivered</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(695 230)" />
+          <text class="svg-small" x="552" y="235">claim, no agent</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(695 428)" />
+          <text class="svg-small" x="535" y="433">agent, no session</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(947 300)" />
+          <text class="svg-small svg-small--wrapped" x="965" y="294">
+            <tspan x="965" dy="0">push, no</tspan>
+            <tspan x="965" dy="19">completion</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(790 220)" />
+          <text class="svg-small svg-small--wrapped" x="808" y="214">
+            <tspan x="808" dy="0">stale</tspan>
+            <tspan x="808" dy="19">generation</tspan>
+          </text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(1010 545)" />
+          <text class="svg-small" x="860" y="530">no notification</text>
+
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(931 598)" />
+          <text class="svg-small" x="845" y="645">no acknowledgement</text>
+        </g>
+      </svg>
         </div>
-        <div class="pipeline-facts">
-          <p><strong>3</strong> bad restart options</p>
-          <p><strong>2</strong> agents in one worktree</p>
-          <p><strong>0</strong> record of the handoff</p>
-        </div>
-        <p class="failure-note"><strong>The work record survived in Beads.</strong> The restart could launch a second agent, wait for a process it could no longer contact, or reconstruct the state from scattered clues. I ran versions of all three.</p>
       </div>
       <div class="footer">
-        <span>Stranded claims, duplicate sessions, stale completions, lost notifications</span>
+        <span>Only the Beads boxes are durable records; every arrow lived in process memory</span>
         <span>100 repair jobs firing 850×/hour · one PR poller: 243 lines of Bash, 174 cache files</span>
       </div>
     </section>
