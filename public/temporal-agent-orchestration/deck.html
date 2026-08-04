@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durable orchestration for a fleet of coding agents</title>
+  <style>
+    @font-face {
+      font-family: "Literata";
+      src: url("/fonts/literata-latin-wght-normal.woff2") format("woff2-variations");
+      font-weight: 200 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Hanken Grotesk";
+      src: url("/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: light;
+      --paper-50: oklch(98.5% 0.008 85);
+      --paper-100: oklch(96.5% 0.012 83);
+      --paper-200: oklch(93.5% 0.014 82);
+      --paper-300: oklch(88% 0.016 80);
+      --ink-900: oklch(23% 0.02 60);
+      --ink-700: oklch(38% 0.018 62);
+      --ink-500: oklch(52% 0.015 64);
+      --ember-300: oklch(82% 0.1 60);
+      --ember-500: oklch(60% 0.16 52);
+      --ember-600: oklch(53% 0.165 48);
+      --sage-500: oklch(62% 0.05 150);
+      --night-900: oklch(20% 0.012 70);
+      --night-800: oklch(24% 0.013 72);
+      --night-700: oklch(31% 0.014 72);
+      --night-cream-100: oklch(92% 0.015 85);
+      --night-cream-300: oklch(77% 0.013 80);
+
+      --color-bg: var(--paper-100);
+      --color-bg-subtle: var(--paper-50);
+      --color-surface: var(--paper-200);
+      --color-border: var(--paper-300);
+      --color-text: var(--ink-900);
+      --color-text-secondary: var(--ink-700);
+      --color-text-muted: var(--ink-500);
+      --color-accent: var(--ember-500);
+      --color-accent-hover: var(--ember-600);
+      --font-display: "Literata", Georgia, "Times New Roman", serif;
+      --font-body: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+      --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+
+      --syntax-text: var(--night-cream-100);
+      --syntax-keyword: oklch(80% 0.11 315);
+      --syntax-function: oklch(80% 0.10 235);
+      --syntax-string: oklch(82% 0.10 145);
+      --syntax-number: oklch(84% 0.12 78);
+      --syntax-class: oklch(84% 0.09 195);
+      --syntax-decorator: oklch(78% 0.15 45);
+      --syntax-comment: oklch(64% 0.02 78);
+      --syntax-operator: oklch(76% 0.09 255);
+      --syntax-parameter: oklch(86% 0.07 95);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+    }
+
+    body {
+      position: relative;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    ol,
+    ul,
+    dl,
+    dd,
+    figure,
+    pre {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-display);
+      font-weight: 620;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      column-gap: clamp(18px, 2.1vw, 34px);
+      row-gap: clamp(18px, 2.4vh, 30px);
+      padding: clamp(32px, 4.4vw, 70px);
+      opacity: 0;
+    }
+
+    .slide::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(to right, transparent calc(100% - 1px), color-mix(in oklch, var(--color-border) 42%, transparent) 1px);
+      background-size: calc(100% / 12) 100%;
+      content: "";
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .slide.active {
+      display: grid;
+      opacity: 1;
+      animation: reveal 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .marker {
+      grid-column: 1 / 13;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--color-text-muted);
+      font: 620 12px/1 var(--font-mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .marker::after {
+      height: 1px;
+      flex: 1;
+      background: var(--color-border);
+      content: "";
+    }
+
+    .content {
+      grid-column: 1 / 13;
+      align-self: center;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 2.1vw, 34px);
+      min-height: 0;
+    }
+
+    .footer {
+      grid-column: 1 / 13;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--color-text-muted);
+      font: 520 12px/1.35 var(--font-mono);
+    }
+
+    .footer a {
+      color: var(--color-accent);
+      text-underline-offset: 0.18em;
+    }
+
+    .cover-title {
+      grid-column: 1 / 11;
+      max-width: 15ch;
+      font-size: clamp(54px, 7.3vw, 104px);
+      line-height: 0.94;
+    }
+
+    .cover-promise {
+      grid-column: 2 / 9;
+      max-width: 62ch;
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.4;
+    }
+
+    .cover-promise strong {
+      color: var(--color-accent);
+      font-weight: 650;
+    }
+
+    .slide-title {
+      grid-column: 1 / 11;
+      font-size: clamp(40px, 5.2vw, 72px);
+      line-height: 1;
+    }
+
+    .walkthrough {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-self: end;
+      border-block: 1px solid var(--color-border);
+    }
+
+    .walkthrough-step {
+      min-height: 220px;
+      padding: clamp(22px, 2.5vw, 36px);
+      border-inline-end: 1px solid var(--color-border);
+    }
+
+    .walkthrough-step:last-child {
+      border-inline-end: 0;
+    }
+
+    .walkthrough-step b {
+      display: block;
+      margin-bottom: 22px;
+      color: var(--color-accent);
+      font: 620 13px/1.25 var(--font-mono);
+    }
+
+    .walkthrough-step h3 {
+      margin-bottom: 14px;
+      font-size: clamp(23px, 2.4vw, 35px);
+      line-height: 1.08;
+    }
+
+    .walkthrough-step p {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.45;
+    }
+
+    .pipeline {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: center;
+      border-block: 1px solid var(--color-border);
+    }
+
+    .pipeline-step {
+      min-height: 165px;
+      padding: clamp(18px, 2vw, 30px);
+    }
+
+    .pipeline-step b {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .pipeline-step span {
+      font-family: var(--font-display);
+      font-size: clamp(21px, 2vw, 30px);
+      line-height: 1.2;
+    }
+
+    .pipeline-arrow {
+      color: var(--color-text-muted);
+      font: 500 25px/1 var(--font-mono);
+    }
+
+    .pipeline-facts {
+      grid-column: 1 / 8;
+      display: flex;
+      gap: clamp(20px, 4vw, 56px);
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.7vw, 24px);
+      line-height: 1.35;
+    }
+
+    .pipeline-facts strong {
+      display: block;
+      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: 1.35em;
+    }
+
+    .failure-note {
+      grid-column: 9 / 13;
+      padding-top: 14px;
+      border-top: 2px solid var(--color-accent);
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.7vw, 24px);
+      line-height: 1.4;
+    }
+
+    .failure-note strong {
+      color: var(--color-text);
+    }
+
+    .code-comparison {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2vw, 30px);
+      min-height: 0;
+    }
+
+    .code-layout {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: minmax(0, 8fr) minmax(14rem, 4fr);
+      gap: clamp(22px, 3vw, 44px);
+      align-items: center;
+      min-height: 0;
+    }
+
+    .code-pair {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(18px, 2vw, 30px);
+      min-height: 0;
+    }
+
+    .code-pane {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--night-700);
+      background: var(--night-900);
+      color: var(--syntax-text);
+    }
+
+    .code-pane header {
+      display: flex;
+      min-height: 42px;
+      padding: 0 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--night-700);
+      background: var(--night-800);
+      color: var(--night-cream-300);
+      font: 540 11px/1 var(--font-mono);
+    }
+
+    .code-pane header span:last-child {
+      color: var(--syntax-comment);
+    }
+
+    .code-pane pre {
+      padding: clamp(16px, 1.8vw, 26px);
+      overflow: hidden;
+      color: var(--syntax-text);
+      font: 500 clamp(11px, 1.03vw, 15px)/1.55 var(--font-mono);
+      tab-size: 4;
+      white-space: pre-wrap;
+    }
+
+    .code-pane code {
+      font-family: inherit;
+    }
+
+    .tok-keyword { color: var(--syntax-keyword); }
+    .tok-function { color: var(--syntax-function); }
+    .tok-string { color: var(--syntax-string); }
+    .tok-number { color: var(--syntax-number); }
+    .tok-class { color: var(--syntax-class); }
+    .tok-decorator { color: var(--syntax-decorator); }
+    .tok-comment { color: var(--syntax-comment); font-style: italic; }
+    .tok-operator { color: var(--syntax-operator); }
+    .tok-parameter { color: var(--syntax-parameter); }
+
+    .code-notes {
+      display: grid;
+      gap: 22px;
+      align-self: center;
+    }
+
+    .code-note {
+      padding-top: 15px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .code-note b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .code-note p {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.4;
+    }
+
+    .contract {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-block: 1px solid var(--color-border);
+    }
+
+    .contract-step {
+      min-height: 165px;
+      padding: clamp(18px, 2.3vw, 32px);
+      border-inline-end: 1px solid var(--color-border);
+    }
+
+    .contract-step:last-child {
+      border-inline-end: 0;
+    }
+
+    .contract-step b {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--color-accent);
+      font: 620 12px/1.2 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .contract-step span {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.55vw, 23px);
+      line-height: 1.38;
+    }
+
+    .tradeoff {
+      grid-column: 2 / 11;
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.42;
+    }
+
+    .tradeoff strong {
+      color: var(--color-text);
+    }
+
+    .media-single {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: minmax(0, 9fr) minmax(13rem, 3fr);
+      gap: clamp(20px, 3vw, 42px);
+      align-items: center;
+      min-height: 0;
+    }
+
+    .proof {
+      min-width: 0;
+    }
+
+    .proof img,
+    .proof video {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--color-border);
+      background: var(--night-900);
+    }
+
+    .proof video {
+      aspect-ratio: 16 / 9;
+    }
+
+    .proof figcaption {
+      margin-top: 10px;
+      color: var(--color-text-muted);
+      font: 520 12px/1.4 var(--font-mono);
+    }
+
+    .demo-copy {
+      color: var(--color-text-secondary);
+      font-size: clamp(18px, 1.65vw, 24px);
+      line-height: 1.45;
+    }
+
+    .demo-copy strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--color-accent);
+      font-family: var(--font-display);
+      font-size: 1.3em;
+      line-height: 1.15;
+    }
+
+    .verification {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(15rem, 5fr);
+      gap: clamp(28px, 4vw, 58px);
+      align-items: center;
+    }
+
+    .verification-copy {
+      display: grid;
+      border-block: 1px solid var(--color-border);
+    }
+
+    .verification-row {
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.7fr) 2fr;
+      padding: 18px 0;
+      gap: 20px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .verification-row:last-child {
+      border-bottom: 0;
+    }
+
+    .verification-row b {
+      color: var(--color-accent);
+      font: 620 12px/1.3 var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .verification-row span {
+      color: var(--color-text-secondary);
+      font-size: clamp(17px, 1.45vw, 21px);
+      line-height: 1.35;
+    }
+
+    .summary-fields {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(34px, 7vw, 90px);
+    }
+
+    .summary-fields section {
+      padding-top: 18px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .summary-fields h3 {
+      margin-bottom: 22px;
+      color: var(--color-accent);
+      font-size: clamp(25px, 2.6vw, 38px);
+      line-height: 1.08;
+    }
+
+    .summary-fields ul {
+      padding: 0;
+      color: var(--color-text-secondary);
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.55;
+      list-style: none;
+    }
+
+    .controls {
+      position: fixed;
+      right: 24px;
+      bottom: 18px;
+      z-index: 10;
+      display: flex;
+      gap: 7px;
+    }
+
+    button {
+      width: 42px;
+      height: 36px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      background: color-mix(in oklch, var(--color-bg) 90%, transparent);
+      color: var(--color-text-muted);
+      font: 620 14px/1 var(--font-mono);
+      cursor: pointer;
+    }
+
+    button:hover,
+    button:focus-visible {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      outline: 2px solid transparent;
+    }
+
+    .progress {
+      position: fixed;
+      inset: auto 0 0;
+      height: 3px;
+      background: var(--color-border);
+    }
+
+    .progress span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--color-accent);
+      transform: scaleX(0.1);
+      transform-origin: left;
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (max-width: 800px) {
+      html,
+      body {
+        min-height: 100%;
+        overflow: auto;
+      }
+
+      .slide {
+        position: relative;
+        min-height: 100vh;
+        grid-template-rows: auto auto auto;
+        padding: 26px;
+      }
+
+      .slide.active {
+        display: grid;
+      }
+
+      .content {
+        align-self: start;
+      }
+
+      .walkthrough,
+      .pipeline,
+      .code-comparison,
+      .code-layout,
+      .code-pair,
+      .contract,
+      .media-single,
+      .verification,
+      .summary-fields {
+        grid-template-columns: 1fr;
+      }
+
+      .walkthrough-step,
+      .contract-step {
+        min-height: auto;
+        border-inline-end: 0;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .walkthrough-step:last-child,
+      .contract-step:last-child {
+        border-bottom: 0;
+      }
+
+      .pipeline-arrow {
+        display: none;
+      }
+
+      .pipeline-step {
+        min-height: auto;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .pipeline-facts,
+      .failure-note,
+      .tradeoff {
+        grid-column: 1 / 13;
+      }
+
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        padding-bottom: 44px;
+      }
+
+      .controls {
+        position: fixed;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide.active {
+        animation: none;
+      }
+
+      .progress span {
+        transition: none;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        overflow: visible;
+      }
+
+      .slide {
+        position: relative;
+        display: grid;
+        width: 1280px;
+        height: 720px;
+        break-after: page;
+        opacity: 1;
+      }
+
+      .controls,
+      .progress {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main aria-live="polite">
+    <section class="slide active" aria-label="Slide 1 of 13">
+      <div class="marker">01 / Gas City × Temporal</div>
+      <div class="content">
+        <h1 class="cover-title">I put Temporal around my software factory</h1>
+        <p class="cover-promise"><strong>I&rsquo;ll show</strong> the failure that kept recurring in my agent fleet, the boundary I drew between agent work and orchestration promises, and what it takes for a killed Worker to end in one agent session instead of two.</p>
+      </div>
+      <div class="footer">
+        <span>Gas City · Go SDK · shadow → canary → enabled</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 2 of 13">
+      <div class="marker">02 / what I will show</div>
+      <div class="content">
+        <h2 class="slide-title">The walkthrough has three parts</h2>
+        <div class="walkthrough">
+          <section class="walkthrough-step">
+            <b>01</b>
+            <h3>The recurring failure</h3>
+            <p>A coordinator dies mid-procedure. The work record survives; the procedure around it does not.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>02</b>
+            <h3>The boundary I chose</h3>
+            <p>A Temporal Workflow owns the promises. Activities own the nondeterministic work. Agents keep their freedom.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>03</b>
+            <h3>The recovery demo</h3>
+            <p>The same kill -9 against both orchestrators: a duplicate session before, a re-bound session after.</p>
+          </section>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The case study follows this same sequence</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 3 of 13">
+      <div class="marker">03 / the original problem</div>
+      <div class="content">
+        <h2 class="slide-title">The task survived. The procedure did not.</h2>
+        <div class="pipeline">
+          <div class="pipeline-step"><b>Beads</b><span>Work item ready</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Mayor</b><span>Claims the work</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Agent</b><span>Edits for an hour</span></div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-step"><b>Crash</b><span>Coordinator dies</span></div>
+        </div>
+        <div class="pipeline-facts">
+          <p><strong>3</strong> bad restart options</p>
+          <p><strong>2</strong> agents in one worktree</p>
+          <p><strong>0</strong> record of the handoff</p>
+        </div>
+        <p class="failure-note"><strong>The work record survived in Beads.</strong> The restart could launch a second agent, wait for a process it could no longer contact, or reconstruct the state from scattered clues. I ran versions of all three.</p>
+      </div>
+      <div class="footer">
+        <span>Stranded claims, duplicate sessions, stale completions, lost notifications</span>
+        <span>100 repair jobs firing 850×/hour · one PR poller: 243 lines of Bash, 174 cache files</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 4 of 13">
+      <div class="marker">04 / two kinds of recovery</div>
+      <div class="content">
+        <h2 class="slide-title">Two recovery models, one system</h2>
+        <div class="summary-fields">
+          <section>
+            <h3>Nondeterministic idempotence</h3>
+            <ul>
+              <li>A new agent may find another valid route</li>
+              <li>Right for the coding work itself</li>
+              <li>Stays with Beads and Gas City</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Deterministic durable replay</h3>
+            <ul>
+              <li>Ordering and acknowledgement stay exact</li>
+              <li>Right for claims, receipts, and handoffs</li>
+              <li>Becomes a Temporal Workflow</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The agent chooses its route through the work; the promises around it replay exactly</span>
+      </div>
+    </section>
+
+        <section class="slide" aria-label="Slide 5 of 13">
+      <div class="marker">05 / before and after</div>
+      <div class="content">
+        <div class="code-comparison">
+          <section class="code-pane">
+            <header><span>session_beads.go · excerpt</span><span>Before: repair by inference</span></header>
+            <pre><code class="language-go"><span class="tok-keyword">func</span> <span class="tok-function">closeBead</span>(store, id, reason, now, stderr) <span class="tok-parameter">bool</span> {
+    <span class="tok-comment">// Three reconciler paths reach closeBead, and each</span>
+    <span class="tok-comment">// would otherwise write a different terminal state.</span>
+    <span class="tok-parameter">snapshot</span>, snapshotErr := store.<span class="tok-function">Get</span>(id)
+    <span class="tok-keyword">if</span> snapshotErr == <span class="tok-parameter">nil</span> &amp;&amp; snapshot.Status == <span class="tok-string">"closed"</span> {
+        <span class="tok-keyword">return</span> <span class="tok-parameter">false</span>
+    }
+    <span class="tok-comment">// … close writes elided (setMetaBatch, CloseWithoutReason)</span>
+    <span class="tok-comment">// Cascade cleanup, or a pool respawn leaves zombie</span>
+    <span class="tok-comment">// memberships and the successor never re-binds.</span>
+    <span class="tok-function">cancelStateAssignedToRetiredSessionBead</span>(store, id, ...)
+    <span class="tok-function">releaseWorkFromClosedSessionBead</span>(store, snapshot, ...)
+}</code></pre>
+          </section>
+          <section class="code-pane">
+            <header><span>bridge.go · excerpt</span><span>After: one durable owner per work item</span></header>
+            <pre><code class="language-go"><span class="tok-parameter">workflowID</span>, err := <span class="tok-function">WorkflowID</span>(
+    event.CityID, event.RunID, event.BeadID,
+)
+
+options := client.<span class="tok-class">StartWorkflowOptions</span>{
+    ID:        request.<span class="tok-parameter">WorkflowID</span>,
+    TaskQueue: <span class="tok-parameter">OrchestrationTaskQueue</span>,
+    WorkflowIDConflictPolicy:
+        enumspb.<span class="tok-parameter">WORKFLOW_ID_CONFLICT_POLICY_USE_EXISTING</span>,
+}
+run, err := g.Client.<span class="tok-function">SignalWithStartWorkflow</span>(
+    ctx, request.WorkflowID, <span class="tok-parameter">SignalReady</span>,
+    request.Event, options,
+    <span class="tok-parameter">BeadOrchestrationWorkflowName</span>, input,
+)
+
+<span class="tok-comment">// Already running? The event is signaled to it.</span>
+<span class="tok-comment">// Not yet? Started and signaled in one atomic step.</span></code></pre>
+          </section>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Before: repair paths infer state after the fact, with the next tick as fallback</span>
+        <span>After: Signal-With-Start under a stable Workflow ID; a crashed handoff cannot double-launch</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 6 of 13">
+      <div class="marker">06 / the Workflow</div>
+      <div class="content">
+        <div class="code-layout">
+          <section class="code-pane">
+            <header><span>workflow.go · excerpt</span><span>Deterministic orchestration</span></header>
+            <pre><code class="language-go"><span class="tok-keyword">if</span> _, exists := r.seen[event.EventID]; exists {
+    <span class="tok-keyword">return</span> <span class="tok-parameter">nil</span> <span class="tok-comment">// duplicate ready event: one Activity, not two</span>
+}
+<span class="tok-parameter">activityID</span>, err = <span class="tok-function">FormulaActivityID</span>(
+    event.Formula, event.Generation,
+)
+
+activityCtx := workflow.<span class="tok-function">WithActivityOptions</span>(
+    r.activityCtx, workflow.<span class="tok-class">ActivityOptions</span>{
+        ActivityID:          <span class="tok-parameter">activityID</span>,
+        TaskQueue:           <span class="tok-parameter">AgentTaskQueue</span>,
+        StartToCloseTimeout: <span class="tok-number">24</span> * time.<span class="tok-parameter">Hour</span>,
+        HeartbeatTimeout:    r.input.<span class="tok-parameter">HeartbeatTimeout</span>,
+        WaitForCancellation: <span class="tok-parameter">true</span>,
+        RetryPolicy: &amp;temporal.<span class="tok-class">RetryPolicy</span>{
+            MaximumAttempts: <span class="tok-number">5</span>,
+            <span class="tok-comment">// … backoff fields elided</span>
+        },
+    })
+future := workflow.<span class="tok-function">ExecuteActivity</span>(
+    activityCtx, <span class="tok-parameter">ExecuteBeadActivityName</span>,
+    <span class="tok-class">ActivityInput</span>{Event: event},
+)</code></pre>
+          </section>
+          <div class="code-notes">
+            <div class="code-note">
+              <b>Owns</b>
+              <p>Event dedupe, Activity identity, cancellation, and the completion policy.</p>
+            </div>
+            <div class="code-note">
+              <b>Excludes</b>
+              <p>Process launch, file edits, model calls, clocks, and the store.</p>
+            </div>
+            <div class="code-note">
+              <b>Persists</b>
+              <p>Every decision lands in Event History, so a replacement Worker replays it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Stable identity lives in the claim token and session binding; the formula-derived Activity ID is for observability</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 7 of 13">
+      <div class="marker">07 / the Activity</div>
+      <div class="content">
+        <div class="code-layout">
+          <section class="code-pane">
+            <header><span>activity.go · excerpt</span><span>Start-or-attach</span></header>
+            <pre><code class="language-go"><span class="tok-keyword">if</span> resume != <span class="tok-parameter">nil</span> {
+    <span class="tok-comment">// A heartbeat checkpoint survived the dead Worker:</span>
+    <span class="tok-comment">// reuse the session it recorded.</span>
+    request.SessionID = resume.<span class="tok-parameter">SessionID</span>
+} <span class="tok-keyword">else</span> {
+    <span class="tok-parameter">sessionID</span>, err := w.Agent.<span class="tok-function">ResolveSession</span>(
+        ctx, request,
+    )
+    <span class="tok-keyword">if</span> err != <span class="tok-parameter">nil</span> {
+        <span class="tok-keyword">return</span> agentExecution{}, fmt.<span class="tok-function">Errorf</span>(
+            <span class="tok-string">"resolve agent session: %w"</span>, err)
+    }
+    request.SessionID = <span class="tok-parameter">sessionID</span>
+}
+tracker := <span class="tok-function">newHeartbeatTracker</span>(
+    ctx, event, lease, resume, request.SessionID,
+)
+stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, tracker)</code></pre>
+          </section>
+          <div class="code-notes">
+            <div class="code-note">
+              <b>Claim fence</b>
+              <p>The Activity claims the exact work generation; a stale token fails closed.</p>
+            </div>
+            <div class="code-note">
+              <b>Start-or-attach</b>
+              <p>The resolver returns the session that owns the claim instead of minting another.</p>
+            </div>
+            <div class="code-note">
+              <b>Checkpoint</b>
+              <p>Heartbeats carry a compact cursor, so the retry resumes instead of restarting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The agent process runs outside the Worker and survives it</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 8 of 13">
+      <div class="marker">08 / before Temporal</div>
+      <div class="content">
+        <div class="media-single">
+          <figure class="proof">
+            <video controls preload="metadata" poster="deck-assets/before-two-sessions.png">
+              <source src="demo/before-temporal.mp4" type="video/mp4">
+              Your browser does not support embedded video.
+            </video>
+            <figcaption>Play, pause, or open fullscreen · 35 seconds</figcaption>
+          </figure>
+          <p class="demo-copy"><strong>One kill, two sessions</strong>The coordinator dies; the agent keeps working. The restart sees claimed work with no recorded session and launches a replacement. The witness pane reads agent procs 2, sessions 2, and the older attempt lands a stale receipt over the current one.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Real kill -9 · the side panes measure with pgrep, jq, and the worktree file</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 9 of 13">
+      <div class="marker">09 / with Temporal</div>
+      <div class="content">
+        <div class="media-single">
+          <figure class="proof">
+            <video controls preload="metadata" poster="deck-assets/worker-kill-rebind.png">
+              <source src="demo/worker-kill.mp4" type="video/mp4">
+              Your browser does not support embedded video.
+            </video>
+            <figcaption>Play, pause, or open fullscreen · 53 seconds, real timing</figcaption>
+          </figure>
+          <p class="demo-copy"><strong>The Worker dies. The agent does not.</strong>Two kills: one after a heartbeat checkpoint, one before any checkpoint exists. Both retry windows read agent procs 2, sessions 1: the retry re-binds the session that is already working. Both arms end with one session and one fenced receipt.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The pause is Temporal waiting out the heartbeat timeout · same fixture, same kill, different orchestrator</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 10 of 13">
+      <div class="marker">10 / the invariants</div>
+      <div class="content">
+        <div class="verification">
+          <figure class="proof">
+            <img src="deck-assets/worker-kill-rebind.png" alt="Split-screen terminal during the retry window: the process pane reads agent procs 2, sessions 1, and Temporal's own view shows attempt 2 with the checkpoint surviving">
+            <figcaption>The retry window: procs 2, sessions 1, attempt 2, checkpoint survives</figcaption>
+          </figure>
+          <div class="verification-copy">
+            <div class="verification-row"><b>Sessions</b><span>Exactly one session created per arm, across two attempts.</span></div>
+            <div class="verification-row"><b>Receipts</b><span>One terminal receipt; a completion carrying the stale claim token failed closed.</span></div>
+            <div class="verification-row"><b>Resolver</b><span>Arm two called it twice; it returned the existing session instead of minting one.</span></div>
+            <div class="verification-row"><b>Retry</b><span>Attempt two finished the work, under the same Activity identity.</span></div>
+            <div class="verification-row"><b>Tests</b><span>Duplicate delivery against a real dev server schedules one Activity; the replay gate rejects a planted nondeterministic Workflow.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The invariant report and every evidence file ship with the page, hashed in provenance.json</span>
+        <span>Same-host recovery shown; cross-host needs a control-plane resolver and a two-host kill test</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 11 of 13">
+      <div class="marker">11 / the canary that failed</div>
+      <div class="content">
+        <h2 class="slide-title">The first result-delivery canary failed</h2>
+        <p class="tradeoff">The path under test delivers a finished result and waits durably until that exact outcome is acknowledged. Its first bounded live run hit the promotion gate and exposed four real defects.</p>
+        <div class="contract">
+          <div class="contract-step"><b>Contention</b><span>Concurrent notifications fought over a shared mail store.</span></div>
+          <div class="contract-step"><b>Phantom</b><span>Correlation metadata named a Workflow that did not exist.</span></div>
+          <div class="contract-step"><b>Confusion</b><span>An observer mistook a completed step for its still-running source task.</span></div>
+          <div class="contract-step"><b>Silence</b><span>Legitimate completions closed real work without an OutcomeReady envelope.</span></div>
+        </div>
+        <p class="tradeoff"><strong>The Mayor rolled back to shadow, repaired the path, and recovered the stranded results.</strong> Temporal made each failure specific and observable rather than silent. That is what the canary and the promotion gate were for.</p>
+      </div>
+      <div class="footer">
+        <span>The repaired path now runs continuously in production</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 12 of 13">
+      <div class="marker">12 / limits and cost</div>
+      <div class="content">
+        <h2 class="slide-title">What Temporal did not solve</h2>
+        <div class="walkthrough">
+          <section class="walkthrough-step">
+            <b>01</b>
+            <h3>Not exactly-once</h3>
+            <p>A Worker can die after an external call succeeds. Slack, GitHub, and the agent still need their own idempotency.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>02</b>
+            <h3>Not correctness</h3>
+            <p>One canary retried an invalid envelope every fifteen minutes, exactly as instructed, until I rolled it back.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>03</b>
+            <h3>Not free</h3>
+            <p>Replay discipline, compact histories, and two durable records to reason about. Not every job justifies that.</p>
+          </section>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The maintenance pilot stayed cron plus a lock; a crash there strands no procedure</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 13 of 13">
+      <div class="marker">13 / where it stands</div>
+      <div class="content">
+        <div class="walkthrough">
+          <section class="walkthrough-step">
+            <b>Running today</b>
+            <h3>Shadow to enabled</h3>
+            <p>Result delivery and exact acknowledgement run continuously. Work claiming and agent launch stay in shadow behind one bounded canary: one claim, one session, one fenced receipt.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>What transfers</b>
+            <h3>Promises vs work</h3>
+            <p>Workflows own promises; Activities own work. Stable identity turns a retry into a continuation. Choose which continuity the system refuses to lose.</p>
+          </section>
+          <section class="walkthrough-step">
+            <b>Teaching it</b>
+            <h3>Failure first</h3>
+            <p>Start from the failure, run the demo, then read the code. The case study, the annotated source reader pinned to real revisions, and the hashed evidence bundle follow that same order.</p>
+          </section>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Case study, annotated code reader, and demo evidence ship alongside this deck</span>
+      </div>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Slide controls">
+    <button id="previous" type="button" aria-label="Previous slide">←</button>
+    <button id="next" type="button" aria-label="Next slide">→</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const progress = document.querySelector("#progress");
+    let current = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, position) => {
+        const active = position === current;
+        slide.classList.toggle("active", active);
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+      progress.style.transform = `scaleX(${(current + 1) / slides.length})`;
+      document.title = `${current + 1}/${slides.length} · Durable orchestration for a fleet of coding agents`;
+    }
+
+    document.querySelector("#previous").addEventListener("click", () => show(current - 1));
+    document.querySelector("#next").addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        show(current + 1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        show(current - 1);
+      }
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+
+    const requestedSlide = Number(new URLSearchParams(location.search).get("slide"));
+    show(Number.isInteger(requestedSlide) && requestedSlide > 0 ? requestedSlide - 1 : 0);
+  </script>
+</body>
+</html>
