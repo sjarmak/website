@@ -649,6 +649,52 @@
       font-size: 13px;
     }
 
+
+    .proof--paper img {
+      background: var(--color-bg-subtle);
+    }
+
+    .svg-box--accent {
+      fill: color-mix(in srgb, var(--color-accent) 9%, var(--color-bg));
+      stroke: var(--color-accent);
+    }
+
+    .svg-fence {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linejoin: round;
+    }
+
+    .svg-label {
+      fill: currentColor;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .svg-label--center {
+      text-anchor: middle;
+    }
+
+    .svg-step {
+      fill: var(--color-bg);
+      stroke: var(--color-accent);
+      stroke-width: 2;
+    }
+
+    .svg-step--failure {
+      fill: var(--color-accent);
+    }
+
+    .svg-step-number {
+      fill: currentColor;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      text-anchor: middle;
+    }
+
     .controls {
       position: fixed;
       right: 24px;
@@ -800,7 +846,7 @@
 </head>
 <body>
   <main aria-live="polite">
-    <section class="slide active" aria-label="Slide 1 of 13">
+    <section class="slide active" aria-label="Slide 1 of 18">
       <div class="marker">01 / Gas City × Temporal</div>
       <div class="content">
         <h1 class="cover-title">I put Temporal around my software factory</h1>
@@ -811,7 +857,7 @@
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 2 of 13">
+    <section class="slide" aria-label="Slide 2 of 18">
       <div class="marker">02 / what I will show</div>
       <div class="content">
         <h2 class="slide-title">The walkthrough has three parts</h2>
@@ -838,8 +884,23 @@
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 3 of 13">
-      <div class="marker">03 / the original problem</div>
+        <section class="slide" aria-label="Slide 3 of 18">
+      <div class="marker">03 / the concepts</div>
+      <div class="content">
+        <div class="media-single">
+          <figure class="proof proof--paper">
+            <img src="deck-assets/workshop-job-board-checklist.jpg" alt="A workshop where three jobs belong to three different things: a job board labelled Beads with pinned, linked task cards; figures labelled agents working at cluttered benches; and a separate figure labelled Temporal marking off a numbered checklist with one retry arrow.">
+          </figure>
+          <p class="demo-copy"><strong>Three jobs, three owners</strong>Beads holds the work: a durable graph of tasks, claims, and receipts. Agents do the work their own way, at messy benches. Temporal keeps the running checklist of what already happened, and that checklist is what survives a crash.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Gas City: an orchestrator that hands tracked work to coding agents</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 4 of 18">
+      <div class="marker">04 / the original problem</div>
       <div class="content">
         <h2 class="slide-title">One task, five owners, seven crash windows</h2>
         <div class="diagram">
@@ -969,8 +1030,23 @@
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 4 of 13">
-      <div class="marker">04 / two kinds of recovery</div>
+        <section class="slide" aria-label="Slide 5 of 18">
+      <div class="marker">05 / after the crash</div>
+      <div class="content">
+        <div class="media-single">
+          <figure class="proof proof--paper">
+            <img src="deck-assets/reconstructing-the-procedure.jpg" alt="A figure at an evidence board strung with tangled red thread connecting a torn work ticket, a half-delivered envelope, a claim stub, a terminal printout, a clock face, and a cut cable end.">
+          </figure>
+          <p class="demo-copy"><strong>Recovery by conspiracy board</strong>After a crash, the restart could launch a second agent, wait for a process it could no longer contact, or reconstruct the procedure from stale claims, half-delivered mail, and whatever process happened to still be alive. I ran versions of all three.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The work record survived in Beads; the procedure existed only as clues</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 6 of 18">
+      <div class="marker">06 / two kinds of recovery</div>
       <div class="content">
         <h2 class="slide-title">Two recovery models, one system</h2>
         <div class="summary-fields">
@@ -997,8 +1073,71 @@
       </div>
     </section>
 
-        <section class="slide" aria-label="Slide 5 of 13">
-      <div class="marker">05 / before and after</div>
+            <section class="slide" aria-label="Slide 7 of 18">
+      <div class="marker">07 / who owns what</div>
+      <div class="content">
+        <h2 class="slide-title">Who owns what</h2>
+        <div class="diagram">
+<svg
+        class="diagram__svg"
+        viewBox="0 0 1000 560"
+        role="img"
+        
+      >
+        <title >Ownership after the Temporal integration</title>
+        <desc >
+          Three columns divide ownership. The Beads work record, a durable
+          record, owns mutable task facts. The Temporal Workflow, a
+          durable record, owns the procedure; its Event History stays
+          separate from task facts. Temporal Activities hold
+          nondeterministic work and external calls and are not a durable
+          record. Fenced completion checks flow both ways between Beads
+          and Activities: Activities report completions carrying the
+          generation and claim token, and Beads accepts only a completion
+          that still matches the canonical claim.
+        </desc>
+
+        <rect class="svg-box svg-box--durable" x="45" y="70" width="270" height="245" rx="10" />
+        <rect class="svg-durable-inner" x="50" y="75" width="260" height="235" rx="6" />
+        <text class="svg-eyebrow" x="70" y="110">Application record</text>
+        <text class="svg-label" x="70" y="145">Work record: Beads</text>
+        <text class="svg-small" x="70" y="188">task facts · claims</text>
+        <text class="svg-small" x="70" y="218">dependencies · artifacts</text>
+        <text class="svg-small" x="70" y="248">outcomes · receipts</text>
+
+        <rect class="svg-box svg-box--accent svg-box--durable" x="365" y="70" width="270" height="245" rx="10" />
+        <rect class="svg-durable-inner" x="370" y="75" width="260" height="235" rx="6" />
+        <text class="svg-eyebrow" x="390" y="110">Durable procedure</text>
+        <text class="svg-label" x="390" y="145">Temporal Workflow</text>
+        <text class="svg-small" x="390" y="188">Event History · waits</text>
+        <text class="svg-small" x="390" y="218">retries · cancellation</text>
+        <text class="svg-small" x="390" y="248">signals · progress</text>
+
+        <rect class="svg-box" x="685" y="70" width="270" height="245" rx="10" />
+        <text class="svg-eyebrow" x="710" y="110">Nondeterministic work</text>
+        <text class="svg-label" x="710" y="145">Temporal Activities</text>
+        <text class="svg-small" x="710" y="188">agent processes · tests</text>
+        <text class="svg-small" x="710" y="218">reviews · external calls</text>
+        <text class="svg-small" x="710" y="248">heartbeats · fences</text>
+
+        <path class="svg-link" d="M315 192 H365 M635 192 H685" />
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M820 315 V395 H180 V315" />
+        <text class="svg-small svg-label--center" x="500" y="380">Activities report fenced completions</text>
+
+        <path class="svg-link" d="M110 315 V470 H890 V315" />
+        <g class="svg-fence" transform="translate(500 470)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+        <text class="svg-small svg-label--center" x="500" y="505">Beads accepts only a completion that matches the canonical claim</text>
+      </svg>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The agent keeps its freedom; the promises around it get a durable owner</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 8 of 18">
+      <div class="marker">08 / before and after</div>
       <div class="content">
         <div class="code-comparison">
           <section class="code-pane">
@@ -1046,8 +1185,8 @@ run, err := g.Client.<span class="tok-function">SignalWithStartWorkflow</span>(
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 6 of 13">
-      <div class="marker">06 / the Workflow</div>
+    <section class="slide" aria-label="Slide 9 of 18">
+      <div class="marker">09 / the Workflow</div>
       <div class="content">
         <div class="code-layout">
           <section class="code-pane">
@@ -1097,8 +1236,8 @@ future := workflow.<span class="tok-function">ExecuteActivity</span>(
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 7 of 13">
-      <div class="marker">07 / the Activity</div>
+    <section class="slide" aria-label="Slide 10 of 18">
+      <div class="marker">10 / the Activity</div>
       <div class="content">
         <div class="code-layout">
           <section class="code-pane">
@@ -1143,8 +1282,193 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 8 of 13">
-      <div class="marker">08 / before Temporal</div>
+        <section class="slide" aria-label="Slide 11 of 18">
+      <div class="marker">11 / durable handoff</div>
+      <div class="content">
+        <h2 class="slide-title">A crash between claim and launch is survivable</h2>
+        <div class="diagram">
+<svg
+        class="diagram__svg"
+        viewBox="0 0 1100 540"
+        role="img"
+        
+      >
+        <title >Two crash windows between ready and first heartbeat</title>
+        <desc >
+          A five-step path runs from a ready transition in Beads through
+          Workflow start, a generation-fenced claim, start-or-attach, and
+          the first heartbeat. Two crash windows interrupt the gaps. In
+          the first, the bridge dies after Temporal accepts the ready
+          event but before the outbox is acknowledged; the event is
+          delivered again, and the stable Workflow ID with event-ID
+          deduplication makes redelivery safe. In the second, the Worker
+          dies after the agent session is created but before the first
+          heartbeat; the retry re-enters start-or-attach and the session
+          resolver finds the already-created session by its stable
+          identity. Heartbeats carry progress only after attachment.
+        </desc>
+
+        <path class="svg-link" d="M110 190 H990" />
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M110 154 C110 84 330 84 330 154" />
+        <text class="svg-small svg-label--center" x="220" y="76">delivered again · same event ID</text>
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M880 166 C880 96 770 96 770 154" />
+        <text class="svg-small svg-label--center" x="825" y="76">retry attaches · same session</text>
+
+        <g>
+          <circle class="svg-step" cx="110" cy="190" r="36" />
+          <text class="svg-step-number" x="110" y="197">1</text>
+          <text class="svg-label svg-label--center" x="110" y="265">Ready transition</text>
+          <text class="svg-small svg-label--center" x="110" y="293">one Beads transaction</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="330" cy="190" r="36" />
+          <text class="svg-step-number" x="330" y="197">2</text>
+          <text class="svg-label svg-label--center" x="330" y="265">Workflow start</text>
+          <text class="svg-small svg-label--center" x="330" y="293">Signal-With-Start</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="550" cy="190" r="36" />
+          <text class="svg-step-number" x="550" y="197">3</text>
+          <text class="svg-label svg-label--center" x="550" y="265">Fenced claim</text>
+          <text class="svg-small svg-label--center" x="550" y="293">generation + claim token</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="770" cy="190" r="36" />
+          <text class="svg-step-number" x="770" y="197">4</text>
+          <text class="svg-label svg-label--center" x="770" y="265">Start-or-attach</text>
+          <text class="svg-small svg-label--center" x="770" y="293">same identity on retry</text>
+        </g>
+        <g>
+          <circle class="svg-step" cx="990" cy="190" r="36" />
+          <text class="svg-step-number" x="990" y="197">5</text>
+          <text class="svg-label svg-label--center" x="990" y="265">Heartbeat</text>
+          <text class="svg-small svg-label--center" x="990" y="293">progress after attach</text>
+        </g>
+
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(220 190)" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(880 190)" />
+
+        <g>
+          <rect class="svg-box svg-box--accent" x="40" y="370" width="490" height="150" rx="10" />
+          <text class="svg-eyebrow" x="68" y="406">If the bridge dies before the outbox ack</text>
+          <text class="svg-small" x="68" y="438">the event is delivered again under the</text>
+          <text class="svg-small" x="68" y="464">stable Workflow ID; the Workflow ignores</text>
+          <text class="svg-small" x="68" y="490">an event ID it has already processed</text>
+        </g>
+        <g>
+          <rect class="svg-box svg-box--accent" x="570" y="370" width="490" height="150" rx="10" />
+          <g class="svg-fence" transform="translate(1030 400) scale(1.5)"><path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" /><rect x="-7.5" y="-3" width="15" height="11" rx="2" /></g>
+          <text class="svg-eyebrow" x="598" y="406">If the Worker dies before the first heartbeat</text>
+          <text class="svg-small" x="598" y="438">the retry re-enters start-or-attach and</text>
+          <text class="svg-small" x="598" y="464">the resolver finds the existing session</text>
+          <text class="svg-small" x="598" y="490">by stable identity, not by heartbeat</text>
+        </g>
+      </svg>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Signal-With-Start under the stable Workflow ID: the handoff is atomic, so a restart re-signals instead of re-launching</span>
+      </div>
+    </section>
+
+        <section class="slide" aria-label="Slide 12 of 18">
+      <div class="marker">12 / recovery invariant</div>
+      <div class="content">
+        <h2 class="slide-title">One agent session survives Worker loss</h2>
+        <div class="diagram">
+<svg
+        class="diagram__svg"
+        viewBox="0 0 1100 620"
+        role="img"
+        
+      >
+        <title >One agent session across a Worker crash and replacement</title>
+        <desc >
+          A timeline with three rows that continue unbroken across the
+          full width: the Temporal Event History, a durable procedure
+          record; the Beads claim and generation fence, a durable work
+          record; and the live agent session. Worker A, a temporary
+          process above the rows, schedules the Activity and attaches the
+          agent session, then dies at a crash marker in the gap between
+          Workers. All three rows continue under that gap: the Event
+          History persists, the claim token persists, and the agent
+          session keeps running as its own live process; the agent is
+          never replayed. Worker B, the replacement process, replays only
+          the deterministic Workflow state from the Event History,
+          resolves the same session by stable identity and claim token, a
+          step that holds even if no heartbeat was ever recorded,
+          reattaches to the running session, and records one
+          generation-fenced completion in Beads, marked with a fence at
+          the completion edge. The heartbeat carries progress, not
+          the identity.
+        </desc>
+
+        <g>
+          <rect class="svg-box" x="60" y="40" width="390" height="150" rx="10" />
+          <text class="svg-eyebrow" x="88" y="72">Temporary process</text>
+          <text class="svg-label" x="88" y="100">Worker A</text>
+          <text class="svg-small" x="88" y="128">schedules the Activity</text>
+          <text class="svg-small" x="88" y="147">attaches the agent session</text>
+
+          <rect class="svg-box" x="650" y="40" width="390" height="150" rx="10" />
+          <text class="svg-eyebrow" x="678" y="72">Replacement process</text>
+          <text class="svg-label" x="678" y="100">Worker B</text>
+          <text class="svg-small" x="678" y="128">replays Workflow state</text>
+          <text class="svg-small" x="678" y="147">resolves the same session by</text>
+          <text class="svg-small" x="678" y="166">stable identity + claim token</text>
+        </g>
+
+        <g>
+          <rect class="svg-box svg-box--accent svg-box--durable" x="60" y="260" width="980" height="90" rx="10" />
+          <rect class="svg-durable-inner" x="65" y="265" width="970" height="80" rx="6" />
+          <text class="svg-eyebrow" x="88" y="292">Durable procedure record</text>
+          <text class="svg-label" x="88" y="322">Temporal Event History</text>
+          <text class="svg-small svg-label--center" x="550" y="322">persists across the crash</text>
+
+          <rect class="svg-box svg-box--durable" x="60" y="370" width="980" height="90" rx="10" />
+          <rect class="svg-durable-inner" x="65" y="375" width="970" height="80" rx="6" />
+          <text class="svg-eyebrow" x="88" y="402">Durable work record</text>
+          <text class="svg-label" x="88" y="432">Beads claim + generation fence</text>
+          <text class="svg-small svg-label--center" x="550" y="432">claim token persists</text>
+          <text class="svg-small" x="800" y="432">one fenced completion</text>
+
+          <rect class="svg-lane" x="60" y="500" width="980" height="90" />
+          <text class="svg-eyebrow" x="88" y="532">Live process · not replayed</text>
+          <text class="svg-label" x="88" y="562">Agent session</text>
+          <text class="svg-small svg-label--center" x="550" y="562">keeps running under the Worker gap</text>
+          <text class="svg-small" x="770" y="562">same session, reattached</text>
+        </g>
+
+        <g>
+          <path class="svg-link" d="M450 115 H484" />
+          <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(491 115)" />
+          <text class="svg-small" x="512" y="120">Worker A dies</text>
+
+          <path class="svg-link" d="M150 190 V260" />
+          <text class="svg-small" x="163" y="232">schedule</text>
+          <path class="svg-link svg-link--dashed svg-link--flow" d="M760 260 V190" />
+          <text class="svg-small" x="773" y="232">replay</text>
+
+          <path class="svg-link" d="M84 190 V225 H34 V545 H60" />
+          <path class="svg-link" d="M1006 190 V225 H1066 V545 H1040" />
+
+          <path class="svg-link" d="M980 460 V469 M980 493 V500" />
+          <g class="svg-fence" transform="translate(980 481)">
+            <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+            <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+          </g>
+        </g>
+      </svg>
+        </div>
+      </div>
+      <div class="footer">
+        <span>The invariant the demos test next: a retry re-binds the running session instead of starting a competitor</span>
+      </div>
+    </section>
+
+    <section class="slide" aria-label="Slide 13 of 18">
+      <div class="marker">13 / before Temporal</div>
       <div class="content">
         <div class="media-single">
           <figure class="proof">
@@ -1162,8 +1486,8 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 9 of 13">
-      <div class="marker">09 / with Temporal</div>
+    <section class="slide" aria-label="Slide 14 of 18">
+      <div class="marker">14 / with Temporal</div>
       <div class="content">
         <div class="media-single">
           <figure class="proof">
@@ -1181,8 +1505,8 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 10 of 13">
-      <div class="marker">10 / the invariants</div>
+    <section class="slide" aria-label="Slide 15 of 18">
+      <div class="marker">15 / the invariants</div>
       <div class="content">
         <div class="verification">
           <figure class="proof">
@@ -1204,8 +1528,8 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 11 of 13">
-      <div class="marker">11 / the canary that failed</div>
+    <section class="slide" aria-label="Slide 16 of 18">
+      <div class="marker">16 / the canary that failed</div>
       <div class="content">
         <h2 class="slide-title">The first result-delivery canary failed</h2>
         <p class="tradeoff">The path under test delivers a finished result and waits durably until that exact outcome is acknowledged. Its first bounded live run hit the promotion gate and exposed four real defects.</p>
@@ -1222,8 +1546,8 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 12 of 13">
-      <div class="marker">12 / limits and cost</div>
+    <section class="slide" aria-label="Slide 17 of 18">
+      <div class="marker">17 / limits and cost</div>
       <div class="content">
         <h2 class="slide-title">What Temporal did not solve</h2>
         <div class="walkthrough">
@@ -1249,8 +1573,8 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 13 of 13">
-      <div class="marker">13 / where it stands</div>
+    <section class="slide" aria-label="Slide 18 of 18">
+      <div class="marker">18 / where it stands</div>
       <div class="content">
         <div class="walkthrough">
           <section class="walkthrough-step">
