@@ -1,95 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260622030S",
-      "arxiv": "2606.22030",
-      "title": "When Does Belief-Based Agent Memory Help? Reliability-Conditional Updating and Provenance-Capped Poisoning Defense",
-      "targets": [
-        {
-          "explorerId": "agentic-memory",
-          "branches": [
-            "architectures",
-            "security-governance",
-            "eval-methodology"
-          ]
-        },
-        {
-          "explorerId": "memory-design",
-          "branches": [
-            "temporal",
-            "evaluation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-08-02",
-      "attempts": 14,
-      "note": "SciX still serves the v1 body titled 'Nous: A Predictive World Model for Long-Term Agent Memory' (Singh, Pranav) under this bibcode, re-confirmed 2026-08-01. Defer until SciX re-ingests the matching version so the synthesis and the security-governance branch can be grounded in-body."
-    },
-    {
-      "bibcode": "2026arXiv260714275B",
-      "arxiv": "2607.14275",
-      "title": "AI Agents Do Not Fail Alone: The Context Fails First",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "eval",
-            "reliability",
-            "security"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-19",
-      "lastAttempt": "2026-08-02",
-      "attempts": 14
-    },
-    {
-      "bibcode": "2026arXiv260715524L",
-      "arxiv": "2607.15524",
-      "title": "Recursive Harness Self-Improvement",
-      "targets": [
-        {
-          "explorerId": "multiagent-orchestration",
-          "branches": [
-            "frontier"
-          ]
-        },
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "routing"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-08-02",
-      "attempts": 13
-    },
-    {
-      "bibcode": "2026arXiv260715388Y",
-      "arxiv": "2607.15388",
-      "title": "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning",
-      "targets": [
-        {
-          "explorerId": "multiagent-orchestration",
-          "branches": [
-            "foundations"
-          ]
-        },
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "reliability",
-            "eval"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-20",
-      "lastAttempt": "2026-08-02",
-      "attempts": 13
-    },
-    {
       "bibcode": "2026arXiv260326667S",
       "arxiv": "2603.26667",
       "title": "M-RAG: Semantic Key-Value Indexing for Retrieval-Augmented Generation",
@@ -102,8 +13,8 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-08-02",
-      "attempts": 9
+      "lastAttempt": "2026-08-04",
+      "attempts": 10
     },
     {
       "bibcode": "2026arXiv260401527J",
@@ -124,9 +35,9 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-08-02",
-      "attempts": 4,
-      "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-07-31."
+      "lastAttempt": "2026-08-04",
+      "attempts": 5,
+      "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-08-04."
     },
     {
       "bibcode": "2026arXiv260727294Z",
@@ -142,9 +53,9 @@
         }
       ],
       "firstSeen": "2026-08-01",
-      "lastAttempt": "2026-08-02",
-      "attempts": 2,
-      "note": "read_paper returns 'Paper not found' on 2026-08-01; ADS has the bibcode but SciX has not ingested the body yet."
+      "lastAttempt": "2026-08-04",
+      "attempts": 3,
+      "note": "read_paper returns 'Paper not found' as of 2026-08-04; ADS has the bibcode but SciX has not ingested the body yet."
     }
   ]
 }
