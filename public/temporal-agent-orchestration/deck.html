@@ -853,7 +853,7 @@
         <p class="cover-promise"><strong>I&rsquo;ll show</strong> the failure that kept recurring in my agent fleet, the boundary I drew between agent work and orchestration promises, and what it takes for a killed Worker to end in one agent session instead of two.</p>
       </div>
       <div class="footer">
-        <span>Gas City · Go SDK · shadow → canary → enabled</span>
+        <span>Gas City · Temporal Go SDK</span>
       </div>
     </section>
 
@@ -1529,25 +1529,7 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
     </section>
 
     <section class="slide" aria-label="Slide 16 of 18">
-      <div class="marker">16 / the canary that failed</div>
-      <div class="content">
-        <h2 class="slide-title">The first result-delivery canary failed</h2>
-        <p class="tradeoff">The path under test delivers a finished result and waits durably until that exact outcome is acknowledged. Its first bounded live run hit the promotion gate and exposed four real defects.</p>
-        <div class="contract">
-          <div class="contract-step"><b>Contention</b><span>Concurrent notifications fought over a shared mail store.</span></div>
-          <div class="contract-step"><b>Phantom</b><span>Correlation metadata named a Workflow that did not exist.</span></div>
-          <div class="contract-step"><b>Confusion</b><span>An observer mistook a completed step for its still-running source task.</span></div>
-          <div class="contract-step"><b>Silence</b><span>Legitimate completions closed real work without an OutcomeReady envelope.</span></div>
-        </div>
-        <p class="tradeoff"><strong>The Mayor rolled back to shadow, repaired the path, and recovered the stranded results.</strong> Temporal made each failure specific and observable rather than silent. That is what the canary and the promotion gate were for.</p>
-      </div>
-      <div class="footer">
-        <span>The repaired path now runs continuously in production</span>
-      </div>
-    </section>
-
-    <section class="slide" aria-label="Slide 17 of 18">
-      <div class="marker">17 / limits and cost</div>
+      <div class="marker">16 / limits and cost</div>
       <div class="content">
         <h2 class="slide-title">What Temporal did not solve</h2>
         <div class="walkthrough">
@@ -1559,7 +1541,7 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
           <section class="walkthrough-step">
             <b>02</b>
             <h3>Not correctness</h3>
-            <p>One canary retried an invalid envelope every fifteen minutes, exactly as instructed, until I rolled it back.</p>
+            <p>One live run retried an invalid envelope every fifteen minutes, exactly as instructed, until I rolled the change back.</p>
           </section>
           <section class="walkthrough-step">
             <b>03</b>
@@ -1573,15 +1555,17 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
       </div>
     </section>
 
-    <section class="slide" aria-label="Slide 18 of 18">
-      <div class="marker">18 / where it stands</div>
+    <section class="slide" aria-label="Slide 17 of 18">
+      <div class="marker">17 / where it stands</div>
       <div class="content">
         <div class="walkthrough">
           <section class="walkthrough-step">
             <b>Running today</b>
-            <h3>Shadow to enabled</h3>
-            <p>Result delivery and exact acknowledgement run continuously. Work claiming and agent launch stay in shadow behind one bounded canary: one claim, one session, one fenced receipt.</p>
+            <h3>In production</h3>
+            <p>Durable result delivery and exact acknowledgement run continuously in my live installation. The larger claim-and-launch path is built, tested against the adapter contract, and staged for rollout.</p>
           </section>
+
+
           <section class="walkthrough-step">
             <b>What transfers</b>
             <h3>Promises vs work</h3>
@@ -1595,7 +1579,18 @@ stopHeartbeats := <span class="tok-function">startHeartbeatPump</span>(ctx, trac
         </div>
       </div>
       <div class="footer">
+        <span>Same-host recovery proven; cross-host reattachment is the next milestone</span>
+      </div>
+    </section>
+      <section class="slide" aria-label="Slide 18 of 18">
+      <div class="marker">18 / the takeaway</div>
+      <div class="content">
+        <h1 class="cover-title">Choose which continuity the system refuses to lose</h1>
+        <p class="cover-promise">The agent keeps its freedom to find the route. The work record keeps the facts. <strong>Temporal keeps the promises:</strong> who owns the work, what remains outstanding, when a handoff is complete, and what must happen next.</p>
+      </div>
+      <div class="footer">
         <span>Case study, annotated code reader, and demo evidence ship alongside this deck</span>
+        <span>Thank you</span>
       </div>
     </section>
   </main>
