@@ -26,11 +26,13 @@ The six parts follow this order. It is not a progression from easy to difficult.
 
 ## Method, scope, and evidence classification
 
+This review treats source collection, evidence grading, practice derivation, and the treatment of author-system cases as separate methodological decisions. The following subsections describe each decision and the limits it places on the resulting claims.
+
 ### Search and source assembly
 
 The review was consolidated on July 26, 2026. The source collection contains 118 scholarly works organized into seven topic-specific threads, 91 practitioner records, 29 benchmark records, and 17 author-system case records. The seven scholarly threads cover benchmark validity, failure taxonomy, evaluation statistics, oversight and accountability, context and retrieval, durable execution, and scheduling with repository-scale scoping.
 
-Scholarly retrieval used hybrid keyword and semantic searches over a 32-million-record corpus containing NASA ADS and an arXiv mirror. Queries were scoped by topic, arXiv subject class, and year where appropriate. Each thread combined seminal work with recent agent-era research. Candidate records were checked through a metadata lookup, and full text was read when the corpus provided it and the claim required more than the abstract. A citation audit then added a seventh thread for scheduling and repository-scoping sources that had entered the draft through adjacent operations-research material rather than the original searches.
+Scholarly retrieval used hybrid keyword and semantic searches over a 32-million-record corpus derived from the [NASA Science Explorer (SciX) API](https://scixplorer.org/scixhelp/api-scix/) and an arXiv mirror. Queries were scoped by topic, arXiv subject class, and year where appropriate. Each thread combined seminal work with recent agent-era research. Candidate records were checked through a metadata lookup, and full text was read when the corpus provided it and the claim required more than the abstract. A citation audit then added a seventh thread for scheduling and repository-scoping sources that had entered the draft through adjacent operations-research material rather than the original searches.
 
 Practitioner retrieval used semantic search and full-text keyword search over the Code Intelligence Digest corpus, restricted to practitioner categories such as engineering blogs, newsletters, podcasts, community reports, and product or operations accounts. Search logs record the query text, hit count, records examined in full, useful yields, and dry holes. Research records returned by those searches, promotional pages without a bounded practice, tracking stubs without recoverable text, and repeated accounts of the same incident were excluded or retained only as provenance for the originating account.
 

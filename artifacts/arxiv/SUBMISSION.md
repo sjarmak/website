@@ -10,7 +10,7 @@ Prepared August 5, 2026 for the August 2026 edition of *Engineering Reliable Cod
 
 - `engineering-reliable-coding-agents-arxiv-source.zip`: LaTeX release candidate for arXiv.
 - `engineering-reliable-coding-agents-preview.pdf`: PDF compiled from that source.
-- `engineering-reliable-coding-agents-companion-1.0.0-rc.4.zip`: separate companion research artifact release candidate.
+- `engineering-reliable-coding-agents-companion-1.0.0-rc.5.zip`: separate companion research artifact release candidate.
 - `engineering-reliable-coding-agents-skills-0.1.0.zip`: reusable agent workflows derived from selected companion practices.
 - `reference-audit/README.md`: reference-audit summary.
 
@@ -34,7 +34,7 @@ AI coding agents are commonly evaluated as models but deployed as systems whose 
 
 ### Comments
 
-Technical review and engineering monograph, 262 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
+Technical review and engineering monograph, 263 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -62,7 +62,7 @@ The repository currently has a root Apache-2.0 license. Before adding the manusc
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
-3. Replace release-candidate version `1.0.0-rc.4` with `1.0.0` in the build script and citation metadata.
+3. Replace release-candidate version `1.0.0-rc.5` with `1.0.0` in the build script and citation metadata.
 4. Publish the exact package in the book repository and create a `v1.0.0` release.
 5. Connect that repository to Zenodo or another DOI-granting archive and archive the exact tag.
 6. Add the DOI to `CITATION.cff`, the companion README, the manuscript’s Data and materials availability statement, and the arXiv Comments field.
@@ -125,7 +125,7 @@ Identifier resolution verifies that the cited record exists and captures current
 ## Technical validation
 
 - Exact source ZIP compiled in a fresh temporary directory with Tectonic 0.15.0.
-- Output: 262 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
+- Output: 263 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
 - Figures: 19 of 19 included as PDF.
 - Chapter sources: 19 unnumbered chapter-end source blocks, excluded from the numbered section hierarchy and table of contents.
 - Full references: 185 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 20 audited web sources are represented, with additional named sources and author illustrations identified separately.

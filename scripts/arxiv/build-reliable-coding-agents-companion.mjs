@@ -18,12 +18,12 @@ const benchmarkRoot = path.join(researchRoot, "benchmarks");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const websiteCompanionPath = path.join(root, "src/content/book-companions/engineering-reliable-coding-agents.md");
 const outputRoot = path.join(root, "artifacts/arxiv/companion-release");
-const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.4.zip");
+const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.5.zip");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const websiteCompanionUrl = "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion";
 const skillsUrl = `${repositoryUrl}/tree/main/skills`;
 
-const version = "1.0.0-rc.4";
+const version = "1.0.0-rc.5";
 const sourceKinds = {
   lit: "scholarly",
   explorer: "synthesis",

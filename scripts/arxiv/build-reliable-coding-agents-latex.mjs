@@ -103,7 +103,17 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
     }
     output = `${output.slice(0, markerIndex)}\\section*{Sources and evidence}${sources}`;
   }
-  output = output.replace(/^### /gm, "## ").replace(/^## /gm, "# ");
+  if (introduction) {
+    // Preserve the introduction's hierarchy when shifting it beneath the
+    // unnumbered Introduction chapter. A sequential replacement collapses
+    // both H2 and H3 headings into peer LaTeX sections.
+    output = output
+      .replace(/^### /gm, "@@INTRO_SUBSECTION@@ ")
+      .replace(/^## /gm, "# ")
+      .replace(/^@@INTRO_SUBSECTION@@ /gm, "## ");
+  } else {
+    output = output.replace(/^### /gm, "## ").replace(/^## /gm, "# ");
+  }
   return output;
 }
 
