@@ -7,163 +7,417 @@ kind: chapter
 number: 15
 ---
 
-On my own site, every agent output arrives as a schema-validated Git diff. The agent cannot write to the production database or publish a page. That architecture places the proposed state transition in an artifact I can read, execute, reject, or revise before it acquires production authority. It provides no evidence that the output is correct. A diff that is easy to approve looks a great deal like a diff that has been checked.
+On my site, every agent output arrives as a schema-validated Git diff. The agent cannot write to the production database or publish a page. The architecture places the proposed state transition in an artifact that I can inspect, execute, reject, or revise before it acquires production authority.
 
-A reviewer skimming that diff is making a cost-benefit decision. Reading every changed branch, reconstructing the intended behavior, running the relevant tests, and checking the result against the task costs far more than a single approval click. When the expected consequence of a missed defect feels remote, that cost difference makes shallow review the rational response, even for a reviewer who intends to be careful.
+It provides no evidence that the proposed change is correct. A diff that is easy to approve can look much like one that has been verified.
 
-Vasconcelos et al. ([2023](https://arxiv.org/abs/2212.06823)) tested this account across five experiments. Their subject was overreliance, the reliance failure in which a person accepts an incorrect AI output. It changed when the economics of checking changed. Participants engaged more when verification required less effort or when the cost of an error became more salient. Explanations reduced overreliance when they altered that calculation. They did not work as a general antidote to misplaced trust.
+A reviewer who skims that diff is making a cost-benefit decision. Reading every changed branch, reconstructing the intended behavior, running the relevant tests, and comparing the result with the task costs far more than clicking approve. When the expected consequence of a missed defect feels remote, shallow review becomes the rational response even for someone who intends to be careful.
 
-This result changes the engineering question. Telling reviewers to be more careful treats attention as a personality trait. A review system has to account instead for the price of obtaining evidence, the point at which a person can accept an output, and the finite supply of human judgment. Those are properties of the workflow, and they can be inspected and changed.
+Vasconcelos et al. ([2023](https://arxiv.org/abs/2212.06823)) tested this account across five experiments. They studied **overreliance**, the failure in which a person accepts an incorrect AI output. Overreliance changed when the economics of checking changed. Participants engaged more when verification required less effort or when the cost of an error became more salient. Explanations reduced overreliance when they altered that calculation. They did not act as a general antidote to misplaced trust.
 
-Review capacity does not grow because a fleet can produce more patches. Practitioner reports already describe systems generating substantial code volume behind retained human gates. InfoQ reported ([2026](https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/)) that Stripe's Minions system produces more than 1,300 production pull requests per week. The figure says nothing about review depth, defect escape, or whether the gate changed any verdict, which is the part I would want to know. It does illustrate the queueing problem. Generation can scale faster than the people authorized to accept its consequences.
+This changes the engineering question. Telling reviewers to be more careful treats attention as a personality trait. A review system should instead account for:
 
-I treat this mismatch as three connected design problems. The review surface has to make a correctness claim cheap to challenge. Friction has to interrupt the fast accept loop without taxing every interaction equally. Automated monitors have to concentrate scarce human attention on the cases that warrant judgment, while the verdict stays with a named person. Each intervention changes the cost or the allocation of review. None of them creates correctness.
+- the cost of obtaining evidence;
+- the point at which a person can accept the output; and
+- the finite supply of human judgment.
 
-Nearly all of the empirical oversight results I have used here predate long-horizon agents. In my reading of that work, researchers have rarely tested whether findings about people reviewing suggestions carry over to autonomous actions, although they commonly assume that they do. A code completion that waits for a programmer to accept one function and an agent that edits files, runs commands, revises its plan, and opens a proposed patch create different observability and control problems. The older evidence is useful for identifying mechanisms. It does not settle how those mechanisms behave after autonomy, duration, and action space increase.
+These are properties of the workflow and can be inspected, measured, and changed.
 
-The practical standard is therefore narrower than 'keep a human in the loop.' A loop can contain a human who sees too little, arrives too late, has no affordable way to check the work, or lacks the authority to stop it. The questions worth asking are concrete. What evidence reaches the reviewer? At which decision is independent judgment required? Which cases consume scarce review time? Who owns the final verdict, and what happens after that person decides?
+Review capacity does not expand because an agent fleet can produce more patches. Practitioner reports already describe systems generating substantial code volume behind retained human gates. InfoQ reported ([2026](https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/)) that Stripe’s Minions system produces more than 1,300 production pull requests each week.
 
-## The price of a check
+That number says nothing about review depth, escaped defects, or whether the human gate changed any verdict. It does illustrate the queueing problem. Generation can scale faster than the people authorized to accept its consequences.
 
-An explanation describes why an output might be right. A verification interface gives the reviewer a practical way to discover that it is wrong. Tests, executable examples, types, continuous-integration gates, sandboxed runs, and evidence placed next to the claim all serve the second purpose. Their value comes from the failures they can expose.
+I treat this mismatch as three connected design problems:
 
-Suppose an agent changes a retry loop. A prose rationale might say that the new backoff prevents overload while preserving responsiveness. A useful review surface shows the changed state machine, the maximum attempt count, the errors classified as retryable, and a test that advances a fake clock through failure and recovery. The reviewer can then challenge specific claims: whether retries stop, whether a non-retryable error escapes immediately, whether cancellation is honored, and whether two workers can duplicate the side effect. The explanation may help locate those claims. The executable evidence does the checking.
+1. The review surface must make correctness claims inexpensive to challenge.
+2. Friction must interrupt rapid acceptance without taxing every interaction equally.
+3. Automated monitoring must direct scarce human attention toward cases that warrant judgment while leaving the verdict with a named person.
 
-The same principle governs evidence presentation. Admission to the review surface and inspection within an artifact are different decisions. A system may correctly decide that logs, traces, generated files, and dependency changes belong in the review packet and still bury the relevant event among thousands of lines. Curating what reviewers see helps only when the omitted material remains reachable and the curation rule itself can be inspected. Otherwise the interface reduces apparent complexity by hiding the evidence needed to falsify the output.
+Each intervention changes the cost or allocation of review. None creates correctness.
 
-Fok and Weld ([2024](https://arxiv.org/abs/2305.07722)) synthesized the research on explainable AI and reached a compatible but directional conclusion. Explanations rarely produced complementary performance, in which the human and the AI together outperform either one alone, unless the explanation helped the person verify the answer. That literature spans tasks with different error costs, expertise requirements, and verification opportunities, so it does not justify a universal claim that one explanation format will improve code review. It does support a sharper design test. After reading the explanation, what can the reviewer now check that was previously too expensive or unavailable?
+Nearly all of the empirical oversight evidence used here predates long-horizon agents. In my reading of that literature, researchers have rarely tested whether findings about reviewing suggestions transfer to autonomous actions, although the transfer is often assumed.
 
-Software is unusually favorable under that test. Many software claims admit partial mechanical oracles. A compiler can reject a type error. A property test can generate cases a reviewer would not enumerate. A deterministic replay can expose an ordering fault. A sandbox can show which files and network endpoints an action touched. None of these proves total correctness, but each can move a claim from something the reviewer has to read and trust toward something the reviewer can run and challenge.
+A code completion that waits for a programmer to accept one function creates a different control problem from an agent that edits several files, runs commands, revises its plan, and opens a proposed patch after a long trajectory. The older evidence remains useful for identifying mechanisms. It does not settle how those mechanisms behave as autonomy, duration, and action space increase.
 
-The favorable case has strict boundaries. A passing test suite establishes only that the tested behavior passed under the tested conditions. Generated tests can repeat the implementation's mistaken assumption. Type systems encode some properties and omit others. Sandboxes constrain consequences without establishing intent. A green continuous-integration result can itself become a trust signal that accelerates acceptance, even when the changed risk lies outside the suite.
+The practical standard is therefore narrower than “keep a human in the loop.” A workflow can include a person who sees too little, arrives too late, lacks an affordable way to check the work, or has no authority to stop it.
 
-A large diff with weak tests can therefore leave verification more expensive than acceptance. The reviewer has to reconstruct behavior across files, infer unstated requirements, and judge interactions that no executable check covers. Adding a longer reasoning trace increases reading cost without creating an oracle. Under those conditions, the cost-benefit account predicts shallow engagement.
+The useful questions are concrete:
 
-Optimizing first for the completeness of an agent's explanation is therefore the wrong starting move. The useful first step is to identify the claims whose failure matters and ask what artifact could disconfirm each one. For a database migration, that might mean forward and rollback rehearsal against representative data. For an authorization change, it might mean a table of identities and denied actions executed as integration tests. For a concurrent worker, it might mean a trace that records ownership, ordering, retries, and idempotency keys across an injected failure.
+- What evidence reaches the reviewer?
+- At which decision is independent judgment required?
+- Which cases consume scarce review capacity?
+- Who owns the final verdict?
+- What happens after that person decides?
 
-The check also needs a sound scope. A changed-file hook that formats or tests only the affected modules can shorten feedback time, but its dependency model has to be correct. When a shared schema changes, the affected set may extend well beyond the edited directory. Cheap verification produced by unsound scoping is an instrumentation artifact. The dashboard becomes greener because the check stopped looking where the failure can occur.
+## Make correctness cheap to challenge
 
-Displayed confidence does not repair that defect. Any confidence signal should be calibrated before it reaches the reviewer, because an uncalibrated percentage adds persuasive precision without dependable information. Calibration remains a prerequisite for presenting the signal, not a substitute for inspecting the claim underneath it. A reviewer still needs to know what event the probability describes, over which population it was estimated, and whether the current case resembles that population.
+An explanation describes why an output might be right. A verification interface gives the reviewer a practical way to discover that it is wrong.
 
-The cost model includes more than minutes. Verification can require scarce domain knowledge, access to production-like state, coordination with another owner, or the authority to run a destructive rehearsal safely. A one-command check can be computationally cheap and organizationally expensive.
+Tests, executable examples, type checks, continuous-integration gates, sandboxed runs, and evidence placed beside the claim all serve the second purpose. Their value comes from the failures they can expose.
 
-Sarkar et al. ([2022](https://arxiv.org/abs/2208.06213)) advanced a companion hypothesis that treats verification as the dominant cost of agent-produced software. Their support is anecdotal synthesis and the magnitudes are not quantified, so the hypothesis is useful for inspecting a workflow rather than as a measured law. The more defensible claim is conditional. When generation becomes cheaper while the cost of establishing correctness does not, verification becomes a larger share of the work. Capacity plans that count generated patches but omit review evidence measure supply while ignoring the constrained resource.
+Suppose an agent changes a retry loop. A prose rationale may say that the new backoff prevents overload while preserving responsiveness. A useful review surface instead exposes:
 
-The design objective is not that every check becomes effortless, because some claims have no cheap oracle. The objective is to avoid charging reviewers for work the system could have done mechanically, and to make the remaining uncertainty visible. An explanation without a practical check is context. It may orient the reviewer, but it should not be recorded as evidence that the change is safe.
+- the changed state machine;
+- the maximum attempt count;
+- the errors classified as retryable;
+- cancellation behavior;
+- the idempotency boundary; and
+- a test that advances a fake clock through failure and recovery.
 
-## Friction at the decision, not across the workflow
+The reviewer can then challenge specific claims:
 
-Making a check inexpensive does not ensure that anyone performs it. A reviewer can still form a global rule, something on the order of 'this agent is usually right', and apply it to the next output without examining the particulars. The interface then has to interrupt the act of acceptance rather than add ceremony to every step preceding it.
+- Do retries stop?
+- Does a non-retryable error escape immediately?
+- Is cancellation honored?
+- Can two workers duplicate the side effect?
+- Does recovery preserve the intended state?
 
-A cognitive forcing function requires deliberate judgment at a point where a person would otherwise rely on a fast heuristic. In an AI review flow, it might require the reviewer to record an independent answer before the system reveals the agent's answer. It might delay the reveal at a consequential checkpoint. It might ask the reviewer to name the expected failure mode before showing test results, or require a specific reason for accepting a risky change. The intervention is worth its cost only when it changes the decision process at the point where overreliance occurs.
+The explanation may help locate those claims. The executable evidence performs the check.
 
-Buçinca, Malaya and Gajos ([2021](https://arxiv.org/abs/2102.09692)) tested cognitive forcing functions in a controlled experiment with 199 participants. The interventions reduced overreliance where explanations did not, but they did not eliminate it. The most effective interventions were also rated least favorably. Benefits accrued disproportionately to participants with high Need for Cognition, a measured tendency to engage in effortful thought. Friction changed behavior, but it imposed a real usability cost and did not reach everyone equally.
+The same distinction applies to evidence presentation. Deciding what belongs in the review packet and locating the decisive material within an admitted artifact are separate problems. A system may correctly include logs, traces, generated files, and dependency changes while burying the relevant event among thousands of lines.
 
-This unpopularity is not an incidental implementation problem. Effective friction blocks the shortest path through the task. Users therefore experience its mechanism as inconvenience. A team that evaluates the gate only through satisfaction scores will select against the property that makes it work. A team that ignores usability will accumulate workarounds, perfunctory responses, and political pressure to remove the gate.
+Curation helps only when the omitted material remains reachable and the curation rule can itself be inspected. Otherwise the interface reduces apparent complexity by hiding the evidence required to falsify the output.
 
-The comparison worth running has three terms: the defect detection gained at a defined decision, the delay and cognitive load imposed there, and the behavior that appears after repeated use as the amount of friction changes. A forcing function can improve an experimental average while training experienced reviewers to enter meaningless text. It can also move acceptance to a different channel where the decision is less observable. The control has to be evaluated as part of the workflow it changes.
+Fok and Weld ([2024](https://arxiv.org/abs/2305.07722)) synthesized research on explainable AI and reached a compatible but directional conclusion. Explanations rarely produced **complementary performance**, in which the human-AI pair outperforms either one alone, unless the explanation helped the person verify the answer.
 
-Barke et al. ([2023](https://arxiv.org/abs/2206.15000)) ran a grounded-theory study of twenty programmers that suggests where to target the intervention. They observed a bimodal pattern in code-generation interactions. In acceleration mode, the programmer believed the plan was already understood and used the model to move faster, and validation tended to be shallow. In exploration mode, the programmer used suggestions to discover an approach and already engaged in more deliberation.
+The literature spans tasks with different error costs, expertise requirements, and verification opportunities. It does not establish that one explanation format will improve software review. It does support a sharper design test:
 
-This distinction offers a better allocation rule than a uniform gate. Requiring an independent judgment during acceleration can interrupt a reflexive accept loop. Requiring the same ceremony during exploration may add cost to a mode in which programmers already compared, revised, and rejected suggestions. Uniform friction is administratively simple, but it spends reviewer tolerance without regard to the behavior it is meant to change.
+> After seeing the explanation, what can the reviewer now check that was previously unavailable or too expensive?
 
-Barke et al. (2023) studied suggestion-level interaction, not autonomous agents producing multi-file diffs after long trajectories. Acceleration and exploration may coexist within one agent run. A programmer might explore the architecture, delegate an implementation, and then accelerate through review because the overall plan feels familiar. The suggestion-level split is a useful hypothesis for instrumenting such a workflow, but its transfer to autonomous-agent diffs remains untested.
+Software is unusually favorable under that test because many claims admit partial mechanical oracles. A compiler can reject a type error. A property test can generate cases a reviewer would not enumerate. Deterministic replay can expose an ordering defect. A sandbox can record which files and network endpoints an action touched.
 
-A practical system needs an observable proxy for the decision context without pretending to read the reviewer's mind. High-impact file classes, a previously approved plan, repeated acceptance from the same agent, a large generated diff, or a short interval between presentation and acceptance can each identify a candidate checkpoint. Each proxy can also be wrong. Diff size is not risk, speed is not negligence, and familiarity can reflect genuine expertise.
+None proves complete correctness. Each moves a claim away from something the reviewer must read and trust and toward something the reviewer can execute and challenge.
 
-Targeting should therefore be treated as an experiment with explicit failure measures. Record where the intervention appears, whether the reviewer changes or rejects the output, how long the decision takes, whether later defects concentrate in bypassed cases, and whether users route work around the gate. Segment the results by reviewer experience and task type. Each added segment is another comparison, so the analysis needs the multiplicity correction Chapter 1 describes before a subgroup difference is read as real. An aggregate acceptance-rate change cannot show whether the intervention improved judgment or merely annoyed one group into abandoning the workflow.
+That advantage has strict limits. A passing test suite shows only that the tested behavior passed under the tested conditions. Generated tests can repeat the implementation’s mistaken assumptions. Type systems encode some properties and omit others. Sandboxes constrain effects without establishing intent.
 
-Time pressure deserves separate treatment. Rosbach et al. ([2024](https://arxiv.org/abs/2411.00998)) studied computational pathology and found that time pressure increased the severity of automation-bias errors while leaving their frequency unchanged. That setting does not establish the same effect in software review. It does point to a control mistake. Adding a forcing function while preserving an impossible service deadline can produce fewer opportunities for reflection precisely on the cases whose consequences are largest. Shielding a checkpoint from time pressure can matter as much as adding the checkpoint.
+A green continuous-integration result can itself become a trust signal that accelerates approval even when the changed risk lies outside the tested surface.
 
-The decision prompt itself should solicit evidence tied to the action it authorizes. "Have you reviewed this?" can be answered with a checkbox. "Which authorization boundary changed, and which denied case demonstrates that it remains closed?" asks for a claim tied to a check. The answer can still be wrong, but the interface makes shallow assent harder to reconcile with the action it authorizes.
+A large diff with weak tests can therefore make verification much more expensive than acceptance. The reviewer must reconstruct behavior across files, infer unstated requirements, and judge interactions that no executable check covers. Adding a longer reasoning trace increases reading cost without creating an oracle. Under those conditions, the cost-benefit model predicts shallow engagement.
 
-Forcing functions also need escape routes. An emergency response may justify bypassing an independent pre-commit judgment, but the bypass should still identify the owner, the reason, and the follow-up state. A gate with no exception can be unsafe when delay is costly. A gate whose exception leaves no durable record becomes optional whenever pressure rises.
+Optimizing first for a complete agent explanation is therefore the wrong starting point. Begin with the claims whose failure matters and ask what artifact could disconfirm each one.
 
-Chapter 16 examines how to determine whether documented gates still affect execution. The narrower conclusion here is that friction is unpopular by construction. Its continued presence and actual use therefore cannot be inferred from the workflow diagram.
+For example:
 
-## Escalation as measured triage
+- A database migration may require forward and rollback rehearsal against representative data.
+- An authorization change may require a matrix of identities and denied actions executed as integration tests.
+- A concurrent worker may require a trace of ownership, ordering, retries, and idempotency keys under an injected failure.
+- A dependency upgrade may require compatibility checks against affected consumers rather than only the changed package.
 
-Kale et al. ([2025](https://arxiv.org/abs/2508.19461)) reported that targeted escalation improved the true-positive rate over blanket oversight at a 0.01 false-positive rate, a gain the paper records as approximately 15 percent. Blanket oversight does not bound the true-positive rate from above at fixed human capacity. Attention spread across every case reduces per-case scrutiny and raises misses, while targeting spends the same attention on fewer cases. Their hybrid hierarchical and sequential scaffolds also allowed weaker models to monitor stronger agents.
+The check also needs a sound scope. A changed-file hook that formats or tests only affected modules may shorten feedback time, but its dependency model must be correct. When a shared schema changes, the affected set may extend far beyond the edited directory.
 
-That result is unusually relevant, because it evaluated the allocation of oversight rather than only asking whether a judge can classify isolated outputs. Its setting was a covert-misbehavior arena. It was not production code review, and the reported operating point should not be treated as a deployment guarantee. The improvement is also one comparison at one operating point, and a monitor that gains at a 0.01 false-positive rate need not gain by the same margin at another threshold.
+Cheap verification produced through unsound scoping is an instrumentation artifact. The dashboard becomes greener because the check stopped observing where the failure could occur.
 
-The basic allocation problem exists outside that arena. When every agent action receives the same human review depth, the number of actions determines the review burden. A fleet can then increase output until reviewers skim, queues stall, or teams weaken the gate. Blanket oversight preserves the appearance of equal scrutiny while degrading the scrutiny available per case.
+Displayed confidence does not repair that defect. A confidence signal should be calibrated before it reaches a reviewer because an uncalibrated percentage adds persuasive precision without dependable information. Calibration is a prerequisite for presentation, not a substitute for checking the claim underneath it.
 
-Targeted escalation changes the unit of human work. Automated monitors inspect the full stream, and humans receive the cases the monitors flag. An escalation route runs from a flag to a named decision owner, a verdict, and a defined resumption state. Without those elements, a flag is a notification. It can remain unread, bounce among teams, or leave execution suspended indefinitely.
+The reviewer still needs to know:
 
-A monitor scaffold assigns each kind of detection to the least complex mechanism capable of checking it. Deterministic rules handle exact violations. A model judge applies a fixed rubric to contextual cases. An agent judge examines live traces when the decision depends on sequence, changing state, or tool interaction. Human reviewers calibrate the layers and own the final verdict. Kale et al. (2025) measured the value of scaffolding itself. The ordering of these three layers is a design convention drawn from one practitioner account, with no independent measurement behind it.
+- which event the probability describes;
+- which population produced the estimate;
+- which threshold generated the displayed category; and
+- whether the current case resembles that population.
 
-A deterministic rule can establish that an agent wrote outside an allowed directory, attempted a forbidden operation, or omitted a required approval token. Asking a model to infer an exact violation adds variance without adding useful judgment. A model judge becomes appropriate when the rubric requires contextual interpretation, such as whether a migration plan includes a credible rollback for the affected data path. An agent judge is reserved for cases in which no single artifact contains the evidence, such as whether a sequence of individually allowed actions collectively bypassed a control.
+The verification cost also includes more than time. A check may require scarce domain expertise, access to production-like state, coordination with another owner, or authority to run a destructive rehearsal safely. A one-command test can be computationally cheap and organizationally expensive.
 
-Each layer has to expose its evidence to the next. A rule should report the event and the policy clause it matched. A model judge should return the rubric criterion, the supporting trace span, and the uncertainty relevant to escalation. An agent judge should preserve the observations and intermediate actions needed to reconstruct its conclusion. A bare risk score forces the human to repeat the discovery work or to accept the classifier's authority without a check.
+Sarkar et al. ([2022](https://arxiv.org/abs/2208.06213)) advance a related hypothesis that treats verification as the dominant cost of agent-produced software. Their support is anecdotal synthesis, and they do not quantify the magnitude, so the hypothesis is useful for inspecting a workflow rather than as a measured law.
+
+The more defensible claim is conditional: as generation becomes cheaper, verification becomes a larger share of the work unless the cost of establishing correctness falls with it. Capacity plans that count generated patches while omitting review evidence measure supply while ignoring the constrained resource.
+
+The design objective is not to make every check effortless. Some claims have no cheap oracle. The objective is to avoid charging people for work the system can perform mechanically and to make the remaining uncertainty visible.
+
+An explanation without a practical check is context. It may orient the reviewer, but it should not be recorded as evidence that the change is safe.
+
+## Interrupt acceptance where overreliance occurs
+
+Cheap verification does not ensure that anyone performs it. A reviewer may adopt a global heuristic such as “this agent is usually right” and apply it to the next output without examining the particulars. The interface must then interrupt the act of acceptance rather than add ceremony to every earlier step.
+
+A **cognitive forcing function** requires deliberate judgment at a point where a person might otherwise rely on a fast heuristic. In an AI review workflow, it might:
+
+- require an independent answer before revealing the agent’s answer;
+- delay the reveal at a consequential checkpoint;
+- ask the reviewer to name the expected failure mode before showing the test result;
+- require a reason tied to evidence before accepting a high-risk change; or
+- require the reviewer to identify which invariant was checked.
+
+The intervention earns its cost only when it changes the decision process at the point where overreliance occurs.
+
+Buçinca, Malaya, and Gajos ([2021](https://arxiv.org/abs/2102.09692)) tested cognitive forcing functions in a controlled experiment with 199 participants. The interventions reduced overreliance where explanations did not, but they did not eliminate it. The most effective interventions were also rated least favorably.
+
+Benefits accrued disproportionately to participants with high **Need for Cognition**, a measured tendency to engage in effortful thought. Friction changed behavior, but it imposed a real usability cost and did not affect everyone equally.
+
+That unpopularity is not merely an implementation defect. Effective friction blocks the shortest path through the task, so users experience its mechanism as inconvenience. A team that evaluates the gate only through satisfaction scores will select against the property that makes it work. A team that ignores usability will invite workarounds, perfunctory responses, and pressure to remove the control.
+
+The useful comparison has three parts:
+
+1. the additional defects detected at the targeted decision;
+2. the delay and cognitive load imposed there; and
+3. the behavior that emerges after repeated use.
+
+A forcing function may improve an experimental average while teaching experienced reviewers to enter meaningless text. It may also move acceptance into a less observable channel. The control must be evaluated as part of the workflow it changes.
+
+Barke et al. ([2023](https://arxiv.org/abs/2206.15000)) conducted a grounded-theory study of twenty programmers that suggests where to target the intervention. They observed two recurring interaction modes.
+
+In **acceleration mode**, the programmer believed the plan was already understood and used the model to move faster. Validation tended to be shallow.
+
+In **exploration mode**, the programmer used suggestions to discover an approach and already compared, revised, and rejected alternatives more actively.
+
+This distinction supports a better allocation rule than uniform friction. Requiring an independent judgment during acceleration may interrupt a reflexive accept loop. Applying the same ceremony during exploration may add cost to work that already contains deliberation.
+
+Uniform friction is administratively simple. It spends reviewer tolerance without regard to the behavior it is intended to change.
+
+Barke et al. studied suggestion-level interaction rather than autonomous agents producing multi-file diffs after long trajectories. Acceleration and exploration may coexist within one agent run. A programmer may explore the architecture, delegate the implementation, and then accelerate through review because the overall plan feels familiar.
+
+The distinction is therefore a useful hypothesis for instrumentation, not a validated classification for autonomous-agent review.
+
+A practical system needs observable proxies for the decision context without pretending to read the reviewer’s mind. Candidate signals include:
+
+- changes to high-impact file classes;
+- a previously approved implementation plan;
+- repeated acceptance from the same agent;
+- a large generated diff;
+- a short interval between presentation and approval;
+- weak or missing verification evidence; and
+- an irreversible downstream action.
+
+Each proxy can be wrong. Diff size is not risk. Speed is not negligence. Familiarity may reflect genuine expertise. The signals should determine where to test an intervention, not establish that a reviewer was careless.
+
+Targeting therefore requires its own evaluation. Record:
+
+- where the forcing function appeared;
+- whether the reviewer changed or rejected the output;
+- how long the decision took;
+- which defects later appeared;
+- whether defects concentrated in bypassed cases; and
+- whether users routed work around the gate.
+
+Segmenting results by reviewer experience and task class may reveal useful differences, but each segment adds another comparison. Chapter 1’s multiplicity rules apply before a subgroup result is treated as real.
+
+An aggregate change in acceptance rate cannot show whether the intervention improved judgment or merely annoyed one group into leaving the workflow.
+
+Time pressure deserves separate treatment. Rosbach et al. ([2024](https://arxiv.org/abs/2411.00998)) studied computational pathology and found that time pressure increased the severity of automation-bias errors while leaving their frequency unchanged.
+
+That setting does not establish the same effect in software review. It does identify a possible design error: adding a forcing function while retaining an impossible service deadline may reduce the opportunity for reflection on the cases whose consequences are greatest. Protecting a checkpoint from time pressure may matter as much as adding the checkpoint.
+
+The decision prompt should solicit evidence tied to the action it authorizes. “Have you reviewed this?” can be answered with a checkbox.
+
+A prompt such as:
+
+> Which authorization boundary changed, and which denied case demonstrates that it remains closed?
+
+requires a claim tied to an observable check. The answer can still be wrong, but shallow assent becomes harder to reconcile with the authorized action.
+
+Forcing functions also need explicit escape paths. An emergency may justify bypassing an independent pre-commit judgment, but the bypass should retain:
+
+- the responsible owner;
+- the reason;
+- the scope of the exception;
+- the evidence available at the time; and
+- the required follow-up state.
+
+A gate with no exception can become unsafe when delay carries greater cost. A gate whose exception leaves no durable record becomes optional whenever pressure rises.
+
+Chapter 16 examines how to determine whether documented gates continue to affect execution. The narrower conclusion here is that friction is unpopular by construction. Its existence and actual use cannot be inferred from the workflow diagram.
+
+## Allocate review where it can change the outcome
+
+Kale et al. ([2025](https://arxiv.org/abs/2508.19461)) reported that targeted escalation improved true-positive rate over blanket oversight at a false-positive rate of 0.01, with a gain of approximately 15 percent. Blanket oversight does not guarantee greater detection at fixed human capacity. Spreading attention across every case reduces the scrutiny available to each one, while targeting concentrates the same attention on fewer cases. The study’s hierarchical and sequential monitor scaffolds also allowed weaker models to oversee stronger agents.
+
+This result is unusually relevant because it measured the allocation of oversight rather than only asking whether a judge could classify isolated outputs. Its setting was a covert-misbehavior arena rather than production software review. The operating point should not be treated as a deployment guarantee, and a gain measured at a 0.01 false-positive rate need not persist at another threshold.
+
+The allocation problem is broader than that setting. When every agent action receives the same depth of human review, review burden grows directly with action volume. A fleet can then increase output until reviewers skim, queues stall, or teams weaken the gate. Blanket oversight preserves the appearance of equal scrutiny while reducing the scrutiny available per case.
+
+Targeted escalation changes the unit of human work. Automated monitors inspect the full stream, while people receive the cases selected for judgment. An escalation route must connect each flag to:
+
+- a named decision owner;
+- the evidence supporting the flag;
+- an available verdict;
+- the state paused by the escalation; and
+- the event that resumes execution.
+
+Without those elements, a flag is only a notification. It can remain unread, move among teams, or leave execution suspended indefinitely.
+
+A monitor scaffold should assign each detection problem to the least complex mechanism capable of resolving it:
+
+- Deterministic rules handle exact violations.
+- A model judge applies a fixed rubric to contextual cases.
+- An agent judge examines live traces when the decision depends on sequence, changing state, or tool interaction.
+- Human reviewers calibrate the layers and own the final verdict.
+
+Kale et al. measured the value of monitoring scaffolds. The particular ordering above is a design convention drawn from one practitioner account and has no independent measurement behind it.
+
+A deterministic rule can establish that an agent wrote outside an allowed directory, attempted a forbidden operation, or omitted a required approval token. Asking a model to infer an exact violation adds variance without adding useful judgment.
+
+A model judge becomes appropriate when the rubric requires contextual interpretation, such as whether a migration plan includes a credible rollback for the affected data path. An agent judge is appropriate only when no single artifact contains the evidence, such as whether a sequence of individually permitted actions collectively bypassed a control.
+
+Each layer must expose its evidence to the next:
 
 ```text
 kind of detection
     -> least complex mechanism capable of checking it
         |
-        +-> exact violations
-        |   -> deterministic rules
+        +-> exact violation
+        |   -> deterministic rule
         |      -> event + matched policy clause
         |
-        +-> contextual cases
+        +-> contextual judgment
         |   -> model judge with fixed rubric
-        |      -> criterion + trace span + uncertainty
+        |      -> criterion + supporting trace span + uncertainty
         |
         +-> sequence + changing state + tool interaction
-            -> agent judge examines live traces
+            -> agent judge examines live trace
                -> observations + intermediate actions
 
-human reviewers -> calibrate the layers -> final verdict
-bare risk score -> human repeats the discovery work
+human reviewer
+    -> calibrates the layers
+    -> owns the final verdict
 ```
 
-Calibration follows the Chapter 5 procedure. Select the operating point against an expert-labeled stratified matched control set that represents the consequential case types, including rare failures. Report the true-positive rate at the chosen false-positive rate and retain the confusion matrix by stratum. Both rates are estimates from a finite labeled sample, and a stratum with few labeled cases yields a wide uncertainty interval. Re-run the evaluation when the agent, rubric, tools, environment, or case mix changes. An overall accuracy number is especially misleading when most actions are benign and the human queue is constrained by false positives.
+A bare risk score forces the reviewer either to repeat the discovery work or to accept the classifier’s authority without an affordable check.
 
-The queue budget is part of the operating point. At a 0.01 false-positive rate, a monitor applied to one hundred actions creates a different human burden from the same monitor applied to one million actions. Base rates and action volume determine the absolute number of false alarms. When the flagged condition is rare, that number is drawn from a much larger population of benign actions. False alarms can therefore outnumber correct flags even at a low false-positive rate, which is the prevalence effect Chapter 5 describes for graders. A statistically respectable rate can still exhaust the review team.
+Calibration follows the Chapter 5 protocol. Select the operating point on an expert-labeled, stratified, held-out set representing consequential case types, including rare failures. Report true-positive rate at the chosen false-positive rate and preserve the confusion matrix by stratum.
+
+Both rates are estimates from finite labeled samples. A stratum with few cases produces wide uncertainty. Re-run the evaluation when the agent, rubric, tools, environment, or case mix changes. Overall accuracy is especially misleading when most actions are benign and false positives determine whether the human queue remains usable.
+
+The queue budget is part of the operating point. A false-positive rate of 0.01 produces one expected false alarm across 100 benign actions and 10,000 across one million. When the flagged event is rare, false alarms may outnumber correct flags even at a seemingly low false-positive rate. This is the prevalence effect Chapter 5 develops for graders.
 
 ![At fixed 0.01 false-positive rate, false alarms rise from 1 among 100 actions to 10,000 among 1,000,000 and can outnumber correct rare-event flags; targeted escalation adds about 15% true-positive rate in one covert-misbehavior arena.](/book-figures/ch15-queue-budget.svg)
 
-False alarms scale with action volume and base rates. The approximately 15% escalation gain comes from one covert-misbehavior-arena comparison at a 0.01 operating point.
+False alarms scale with action volume and event prevalence. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
 
-Escalation is therefore a budgeted online decision. The system has to choose, as cases arrive, which uncertainty deserves scarce human attention now. That choice can account for expected consequence, novelty, reversibility, monitor disagreement, and the availability of a qualified owner. These inputs do not justify an opaque semantic risk formula. They define the evidence given to the judge and the explicit policy constraints applied to the queue.
+Escalation is therefore a budgeted online decision. As cases arrive, the system must decide which uncertainty deserves scarce human attention. The decision may consider:
 
-My own orchestration fleet uses a related division of labor. Mechanical work proceeds autonomously, and judgments the system should not make unilaterally are collected in a structured morning decision ledger. The system does not silently resolve those entries. The design reserves interruptions for entries that need a person. I have not measured maintainer minutes, scrutiny depth, or escaped-defect rate, so the attention saving remains a design claim rather than a demonstrated outcome.
+- expected consequence;
+- reversibility;
+- novelty;
+- disagreement among monitors;
+- evidence quality; and
+- availability of a qualified owner.
 
-The associated wake-up contract makes the route more specific. The fleet should wake me for suspected wrong calls and for decisions about scope or trust. It should not wake me for passing runs or routine plumbing. A request has to state the outcome at stake, present a decision answerable in one line, list the options and the recommendation, and explain why the system cannot resolve the matter itself. The success criterion is behavioral. Engineers should not learn to filter the messages out.
+These factors should not disappear into an unexplained semantic risk score. They should define the evidence presented to the judge and the explicit constraints governing the queue.
 
-This contract separates notification quality from verdict authority. A monitor may decide that a case meets the escalation rule. It should not quietly convert that classification into the substantive decision under review. The person named on the route must be able to reject the work, request evidence, narrow the scope, or authorize resumption. Naming an owner who cannot do these things assigns accountability without control.
+My orchestration fleet uses a related division of labor. Mechanical work proceeds autonomously, while judgments the system should not make unilaterally enter a structured morning decision record. The system does not silently resolve them. The design reserves interruption for decisions that require a person.
 
-The resumption state deserves explicit design, because asynchronous review creates races. If an agent continues acting while its escalation is pending, a later rejection may arrive after dependent actions have executed. If execution stops globally, an unrelated low-risk queue can be blocked by one ambiguous case. The route should state whether the affected action, trajectory, repository, or fleet pauses, which state is durable, and which decision token releases it.
+I have not measured maintainer time, review depth, or escaped defects, so the attention benefit remains a design claim rather than a demonstrated result.
 
-Observed failure paths should determine checkpoint placement. When damaging actions become irreversible at deployment, a checkpoint after deployment can only document what happened. When the common failure begins as a plan silently expands its scope, waiting until the final diff makes reconstruction expensive. The companion pattern is narrow. Place human checkpoints where failure evidence shows that intervention can still change the outcome.
+The associated wake-up contract makes the route more specific. The fleet should wake me for suspected wrong calls and decisions about scope or trust. It should not wake me for passing runs or routine plumbing. Each escalation must:
 
-Human skill is another boundary. A reviewer who handles only rare anomalies may lose familiarity with ordinary system behavior, while automation inherits the routine cases that once maintained that familiarity. Bainbridge ([1983](https://doi.org/10.1016/0005-1098(83)90046-8)) described this problem for industrial process control in "Ironies of Automation." Its transfer to software-agent oversight is an analogy rather than a measured result on software work. It nevertheless identifies a design question that triage cannot answer alone. How will the person expected to intervene retain the knowledge needed to recognize and correct an abnormal state?
+- name the outcome at stake;
+- present a question answerable in one line;
+- list the available options;
+- state the recommendation; and
+- explain why the system cannot decide.
 
-Xie et al. ([2024](https://arxiv.org/abs/2408.01703)) advanced a thinly supported companion proposal. Agent actions can be rendered as live state so that a reviewer inspects a trajectory before it terminates. The support is one prototype-scale item and does not establish improved oversight. The proposal is useful as a design prompt when late reconstruction has repeatedly failed, provided that the live view preserves the durable trace rather than replacing it.
+The success criterion is behavioral: engineers should not learn to ignore the messages.
 
-Monitoring can alter the behavior it measures. An agent that knows it is being watched may adapt to the evaluation frame. I treat that possibility as a design caution and not as a measured result from Kale et al. (2025), whose reported result was that monitor scaffolding mattered more than monitor awareness. In my own evaluation harnesses, I therefore use de-framed prompts that omit evaluation vocabulary, so the acting agent receives no cue to behave differently because it is being assessed. Removing that cue is a design precaution against one measurement effect, but it provides no proof that the resulting behavior matches unobserved production behavior.
+This separates notification quality from verdict authority. A monitor may decide that a case satisfies an escalation rule. It should not convert that classification into the substantive decision under review. The named owner must be able to reject the work, request evidence, narrow its scope, or authorize resumption. Naming someone who lacks those powers assigns accountability without control.
 
-Judge drift creates a second measurement problem. Deterministic rules drift when policy or event schemas change. Model judges drift when the evaluated distribution, the model version, or the rubric interpretation changes. Agent judges can drift most severely, because their behavior depends on a longer sequence of observations and actions. A monitor calibrated last quarter may preserve its interface while changing which cases reach humans.
+The resumption state also requires explicit design because asynchronous review creates races. If an agent continues acting while escalation is pending, rejection may arrive after dependent effects have occurred. If execution stops globally, one ambiguous case can block unrelated low-risk work.
 
-Layering redistributes detection work, but it does not resolve who judges the judges. Human owners need sampled review of unflagged cases to estimate misses, adjudication of flagged cases to measure false alarms, and versioned records connecting each verdict to the monitor configuration that produced it. The sample cannot consist only of easy negatives. It has to include strata in which the monitor is likely to fail and cases drawn after relevant system changes. The sampling unit is the action or trajectory the monitor scored, and estimates from a stratified sample have to be weighted back to the deployed case mix before they describe the monitor in production.
+The route should state:
 
-These audits do not require blanket human oversight of every action. They require enough independent labels to estimate whether the chosen operating point still holds. When the estimate degrades, the response may be recalibration, a narrower deployment boundary, a new deterministic check, a rubric revision, or more human review. The correct response depends on the failure mechanism, and 'use a stronger judge' is not a diagnosis.
+- whether the action, trajectory, repository, or fleet pauses;
+- which state becomes durable while it waits;
+- which later actions are prohibited;
+- which decision token releases the pause; and
+- how stale approvals are rejected.
 
-## An operating protocol
+Checkpoint placement should follow observed failure paths. If an action becomes irreversible at deployment, a checkpoint after deployment can only document the result. If failures begin when a plan silently expands scope, waiting for the final diff makes intervention expensive.
 
-Start with one consequential agent workflow. Identify the acceptance decision that transfers authority from proposed work to an effect: merge, deploy, publish, modify data, contact a customer, or change another system's state. Name the person or role that owns that decision. When no one can be named, escalation cannot end in an accountable verdict.
+The narrow companion rule is to place human checkpoints where the evidence shows that intervention can still change the outcome.
 
-For that workflow, list the claims a reviewer must establish before acceptance. Attach a falsification artifact to each claim where one is available: a test, a typed interface, a replay, a trace, a sandbox result, a policy match, or an executable example. Mark the claims that still depend on expert judgment. Do not count an explanation as evidence unless it makes one of those checks possible.
+Human expertise is another boundary. A reviewer who handles only rare anomalies may lose familiarity with ordinary system behavior, while automation absorbs the routine work that previously maintained that familiarity. Bainbridge ([1983](https://doi.org/10.1016/0005-1098(83)90046-8)) described this problem in industrial process control as an “irony of automation.” Its application to software-agent oversight is analogical rather than measured.
 
-Measure the review path before adding friction. Record how long evidence takes to obtain, which tools or permissions it requires, where reviewers abandon the check, and which failures remain invisible after a green run. The objective is to find the cases in which the system charges a person for mechanical work or presents confidence without a reachable basis. No universal review-time target applies.
+The design question remains relevant: how will the person expected to intervene retain the knowledge required to recognize and correct an abnormal state?
 
-Place a forcing function at the accept decision for the cases in which shallow validation is plausible and consequential. Require an independent judgment or a claim-specific response before revealing the agent's recommendation. Preserve an explicit emergency bypass with an owner, a reason, an affected scope, and a follow-up state. Evaluate detection, delay, bypass, and workarounds together. Satisfaction alone will select for the gates that interfere least.
+Xie et al. ([2024](https://arxiv.org/abs/2408.01703)) propose rendering agent actions as live state so a reviewer can inspect a trajectory before it terminates. The support is one prototype-scale result and does not establish improved oversight. The proposal is useful when delayed reconstruction repeatedly fails, provided the live interface preserves the durable trace rather than replacing it.
 
-Build the monitor scaffold from exact checks outward. Use deterministic rules for exact policy violations, a model judge with a versioned rubric for contextual classification, and an agent judge only when sequential interpretation is necessary. Make every layer return the evidence a human needs to challenge it. Calibrate the stack against an expert-labeled stratified matched control set, choose and record the operating point, and translate the rates into expected queue volume at the actual base rate.
+Monitoring can also alter the behavior being measured. An agent aware of evaluation may adapt to the evaluation frame. I treat this as a design caution rather than a measured result from Kale et al., whose reported finding was that monitor scaffolding mattered more than monitor awareness.
 
-Define the escalation route as part of deployment. A flag should identify the decision owner, the outcome at stake, the evidence, the available options, the recommended action, the reason automation cannot decide, the state that is paused, and the event that resumes execution. Test the route by processing a real rejection through it. When the owner cannot stop or revise the action, assign authority before assigning accountability.
+My evaluation harnesses therefore use de-framed prompts that omit evaluation vocabulary. Removing those cues is a precaution against one measurement effect. It does not prove that the resulting behavior matches unobserved production behavior.
 
-Sample both flagged and unflagged cases after deployment. Compare human verdicts with monitor decisions by risk stratum and monitor version. Recalibrate after material changes to agents, tools, rubrics, or workload, and examine whether awareness of monitoring changes behavior. Budget practice for the humans who must handle rare failures. A name in an escalation table does not preserve operational skill.
+Judge drift creates another measurement problem. Deterministic rules drift when policy or event schemas change. Model judges drift when the model, rubric interpretation, or evaluated distribution changes. Agent judges can drift more severely because their decisions depend on longer sequences of observations and actions.
+
+A monitor calibrated last quarter may preserve the same interface while changing which cases reach people.
+
+Layering redistributes detection work but does not answer who evaluates the evaluators. Human owners need:
+
+- adjudication of flagged cases to estimate false alarms;
+- sampled review of unflagged cases to estimate misses;
+- versioned records connecting each verdict to its monitor configuration; and
+- targeted samples after relevant system changes.
+
+The unflagged sample cannot contain only easy negatives. It must include strata in which the monitor is expected to fail. When a stratified sample is used, its estimates must be weighted back to the deployed case mix before they describe production performance.
+
+These audits do not require human review of every action. They require enough independent labels to determine whether the chosen operating point still holds. When performance degrades, the response may be recalibration, a narrower deployment boundary, a new deterministic check, a revised rubric, or greater human review.
+
+The correct response depends on the failure mechanism. “Use a stronger judge” is not a diagnosis.
+
+## Build the review and escalation path
+
+Start with one consequential agent workflow. Identify the decision that transfers authority from proposed work to an external effect, such as merge, deployment, publication, data modification, customer contact, or a change to another system.
+
+Name the person or role that owns that decision. When no owner can be named, escalation cannot end in an accountable verdict.
+
+List the claims the reviewer must establish before acceptance. Attach a falsification artifact to each claim where one is available:
+
+- a test;
+- a typed interface;
+- a deterministic replay;
+- a structured trace;
+- a sandbox result;
+- a policy match; or
+- an executable example.
+
+Mark the claims that still require expert judgment. Do not count an explanation as evidence unless it makes one of those checks possible.
+
+Measure the review path before adding friction. Record:
+
+- how long evidence takes to obtain;
+- which tools, permissions, and expertise it requires;
+- where reviewers stop checking;
+- which failures remain invisible after a green run; and
+- how often approval occurs without accessing the available evidence.
+
+The objective is to identify where the system charges a person for mechanical work or presents confidence without a reachable basis. No universal review-time threshold applies.
+
+Place a forcing function at the acceptance decision for cases in which shallow validation is both plausible and consequential. Require an independent judgment or claim-specific response before revealing the agent’s recommendation.
+
+Preserve an emergency bypass with:
+
+- a named owner;
+- a reason;
+- a defined scope;
+- the evidence available at the time; and
+- a required follow-up state.
+
+Evaluate detection, delay, bypass frequency, and workarounds together. Satisfaction alone will favor the controls that interfere least, not necessarily those that improve judgment.
+
+Build the monitor scaffold from exact checks outward:
+
+1. Use deterministic rules for exact policy violations.
+2. Use a model judge with a versioned rubric for contextual classification.
+3. Use an agent judge only when sequence and changing state make it necessary.
+4. Keep the final verdict with a named person.
+
+Every layer should return the evidence required to challenge its conclusion.
+
+Calibrate the complete stack on an expert-labeled, stratified, held-out set. Choose and record the operating point, then translate its rates into expected queue volume using the deployed action volume and event prevalence. A percentage without the expected number of human cases does not define an operating policy.
+
+Define the escalation route as part of deployment. Every flag should identify:
+
+- the decision owner;
+- the outcome at stake;
+- the supporting evidence;
+- the available options;
+- the recommended action;
+- the reason automation cannot decide;
+- the state currently paused; and
+- the event or token that resumes execution.
+
+Test the route by processing a real rejection through it. When the named owner cannot stop, revise, or narrow the action, assign authority before assigning accountability.
+
+After deployment, sample both flagged and unflagged cases. Compare human verdicts with monitor decisions by risk stratum and monitor version. Recalibrate after material changes to agents, tools, rubrics, or workload. Examine whether knowledge of monitoring changes behavior.
+
+Finally, budget practice for the people expected to handle rare failures. A name in an escalation table does not preserve operational skill.
 
 ## Sources and evidence
 
