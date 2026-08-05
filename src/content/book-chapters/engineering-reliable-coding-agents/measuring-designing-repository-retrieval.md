@@ -78,10 +78,6 @@ Retrieval depth is an experimental variable. I sweep \(k\) across a range and pl
 
 A shallow cutoff can make a viable retriever appear incapable. A deep cutoff can conceal poor ranking because a disordered list still contains the target somewhere among many returned items. The plateau does not determine the operating point by itself. Latency, context consumption, and distractors may justify stopping earlier. It shows the recall the ranker can reach and the marginal number of returned items required to reach it.
 
-![An unmeasured recall curve rises and plateaus with retrieval depth, but a shallow cutoff leaves gains unrealized, a deep cutoff can mask poor ranking, and latency, context use, or distractors may justify stopping earlier.](/book-figures/ch11-recall-depth.svg)
-
-Shallow cutoffs understate retrieval capability, while deep cutoffs can hide poor ranking. Latency, context consumption, and distractors may justify stopping before the plateau.
-
 Multiple retrieval channels produce ordered lists whose numeric scores may have incompatible meanings. BM25, a lexical ranking function based on term occurrence and document statistics, can produce values well above one. Cosine similarity between embedding vectors usually occupies a bounded interval. Adding or averaging their raw scores gives arbitrary influence to whichever implementation emits larger numbers.
 
 **Reciprocal-rank fusion** combines lists by position instead. Each item receives a contribution such as \(1/(c+r)\) from each channel, where \(r\) is its rank and \(c\) is a fixed damping constant. The fused order reflects agreement and placement across lists without assuming comparable score scales.
@@ -289,8 +285,6 @@ The retrieval depths, fusion constants, and chunk sizes in this chapter are not 
 Chapter 12 turns to the architecture around these measurements: cheap retrieval funnels, typed indexes, and the conditions under which apparently relevant context should be rejected as stale.
 
 ## Sources and evidence
-
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
 
 ### Score retrieval and generation separately
 

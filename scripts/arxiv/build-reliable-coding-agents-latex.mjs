@@ -182,6 +182,7 @@ function renderReferences(audit) {
     "https://addyo.substack.com/p/long-running-agents": ["Addy Osmani", "2026", "Long-running agents", "Elevate"],
     "https://cursor.com/blog/dynamic-context-discovery": ["Cursor", "2026", "Dynamic context discovery", "Cursor Blog"],
     "https://devops.com/when-should-a-devops-agent-act-without-human-approval/": ["Bala Priya C", "2026", "When should a DevOps agent act without human approval?", "DevOps.com"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: manuscript and companion repository", "GitHub repository"],
     "https://github.com/sjarmak/codeprobe": ["Stephanie Jarmak", "2026", "CodeProbe", "GitHub repository"],
     "https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html": ["Birgitta Bockeler", "2026", "Harness engineering for coding agent users", "martinfowler.com"],
     "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953": ["Jacob Meyers and Rob Zienert", "2025", "How Temporal powers reliable cloud operations at Netflix", "Netflix Technology Blog"],
@@ -194,6 +195,8 @@ function renderReferences(audit) {
     "https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/": ["Gunnar Morling", "2025", "Building a durable execution engine with SQLite", "morling.dev"],
     "https://www.reddit.com/r/compsci/comments/1rqcmu8/": ["Bytesfortruth", "2026", "Lending-domain benchmark account", "Reddit, r/compsci"],
     "https://www.reddit.com/r/devops/comments/1touxz4/": ["Prateek Jain", "2026", "Harness engineering: the new DevOps layer for AI agents", "Reddit, r/devops"],
+    "https://sjarmak.ai/books/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: web edition", "sjarmak.ai"],
+    "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: companion catalog", "sjarmak.ai"],
     "https://x.com/swyx/status/2011344788486774942": ["swyx", "2026", "Comment on coding-benchmark and long-horizon evaluation disagreement", "X"],
   };
   for (const record of audit.urls.filter(manuscriptRecord)) {
@@ -391,11 +394,11 @@ async function main() {
   await writeFile(path.join(chapterRoot, `${closingStem}.tex`), `\\chapter{Closing: the evidence chain behind reliable agents}\n\\label{closing-evidence-chain}\n${closingBody}`);
   inputLines.push("\\input{chapters/closing}");
 
-  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review synthesizes evidence about reliability at those system boundaries. The source base comprises 118 scholarly works organized into seven topic-specific review threads, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Evidence is grouped as strong, directional, corroborating, or null and conflicting; high-strength synthesis claims were rechecked against their underlying sources. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are therefore reported as illustrations and are not treated as independent external evidence.\n");
+  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured search assembled 118 scholarly works in seven topic-specific reviews, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened for identifiable claims, graded by the strength and independence of their support, and challenged through targeted evidence audits; ambiguous classifications defaulted to the lower grade. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are reported as illustrations, not as independent external evidence.\n");
 
   await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
 
   await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 19 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
@@ -430,14 +433,17 @@ async function main() {
 
 \\setlength{\\emergencystretch}{6em}
 \\setlength{\\parindent}{1.25em}
-\\setlength{\\parskip}{0pt}
+\\setlength{\\parskip}{0.08\\baselineskip plus 0.03\\baselineskip minus 0.02\\baselineskip}
 \\setcounter{secnumdepth}{2}
 \\setcounter{tocdepth}{1}
+\\makeatletter
+\\renewcommand*\\l@section{\\@dottedtocline{1}{1.5em}{3.3em}}
+\\makeatother
 \\setlist{
-  topsep=0.45\\baselineskip,
-  partopsep=0.12\\baselineskip,
-  itemsep=0.12\\baselineskip,
-  parsep=0pt
+  topsep=0.62\\baselineskip,
+  partopsep=0.18\\baselineskip,
+  itemsep=0.16\\baselineskip,
+  parsep=0.04\\baselineskip
 }
 \\setcounter{topnumber}{3}
 \\setcounter{bottomnumber}{2}
@@ -455,7 +461,7 @@ async function main() {
 \\pagestyle{plain}
 
 \\providecommand{\\tightlist}{%
-  \\setlength{\\itemsep}{0.10\\baselineskip}\\setlength{\\parskip}{0pt}}
+  \\setlength{\\itemsep}{0.16\\baselineskip}\\setlength{\\parskip}{0.04\\baselineskip}}
 \\newcommand{\\pandocbounded}[1]{%
   \\begingroup
   \\setbox0=\\hbox{#1}%

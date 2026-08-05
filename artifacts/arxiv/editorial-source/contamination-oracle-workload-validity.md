@@ -1,4 +1,4 @@
-In February 2026, OpenAI ([Feb 2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified)) stopped reporting results on a benchmark subset it had helped create. Later in July 2026, it did the same for SWE-Bench Pro ([Jul 2026](https://openai.com/index/separating-signal-from-noise-coding-evaluations/)). SWE-bench Verified had become one of the most cited measures of coding-agent performance. Its 500 tasks had survived screening by 93 paid professional developers, a process intended to remove ambiguous issues and defective tests. Less than two years later, a practitioner breakdown of the sponsor's audit reported that at least 16.4 percent of the full subset was unsolvable as shipped. That figure is derived from the audited sample rather than stated in the sponsor's own summary. The same audit showed frontier models reproducing solution details verbatim when given only a task identifier.
+In February 2026, OpenAI ([Feb 2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified)) stopped reporting results on a benchmark subset it had helped create. In July 2026, it retracted its subsequent recommendation to use SWE-Bench Pro after an audit estimated that roughly 30 percent of its tasks were broken ([Jul 2026](https://openai.com/index/separating-signal-from-noise-coding-evaluations/)). SWE-bench Verified had become one of the most cited measures of coding-agent performance. Its 500 tasks had survived screening by 93 paid professional developers, a process intended to remove ambiguous issues and defective tests. Less than two years later, a practitioner breakdown of the sponsor's audit reported that at least 16.4 percent of the full subset was unsolvable as shipped. That figure is derived from the audited sample rather than stated in the sponsor's own summary. The same audit showed frontier models reproducing solution details verbatim when given only a task identifier.
 
 Human screening had improved the original collection, but it could not control what happened after publication. **Contamination** is exposure to evaluation material before testing. Once tasks, issue discussions, reference patches, tests, and leaderboard results are public, they can enter training corpora, retrieval systems, fine-tuning sets, prompt libraries, and repeated development cycles. A clean review at release establishes nothing about those later paths.
 
@@ -63,7 +63,7 @@ Retroactive twins make the matching problem especially visible. Haimes et al. ([
 
 Those results do not establish a comparable gap for repository-scale coding. The twins were constructed and validated for question answering, and the method applies only when the model's training cutoff predates publication of the twin set. The 16-point result is the largest gap observed under that study's design. It is not a bound on coding benchmarks and should not be used as a correction factor for coding scores.
 
-A controlled arithmetic study provides another boundary. Zhang et al. ([2024](https://arxiv.org/abs/2405.00332)) econstructed a grade-school arithmetic benchmark as a private mirror and measured accuracy drops of up to 8 percent. The model-level gap was also associated with the probability that a model would reproduce public items verbatim, with a reported squared Spearman correlation of 0.36.
+A controlled arithmetic study provides another boundary. Zhang et al. ([2024](https://arxiv.org/abs/2405.00332)) reconstructed a grade-school arithmetic benchmark as a private mirror and measured accuracy drops of up to 8 percent. The model-level gap was also associated with the probability that a model would reproduce public items verbatim, with a reported squared Spearman correlation of 0.36.
 
 Many frontier systems showed little overfitting, and every evaluated model generalized to the novel items. That variation is why the audit must be performed separately for each model. Exposure and score inflation are properties of a particular model-benchmark pair. Applying one average correction across models would erase the model-specific signal the audit is intended to measure.
 
@@ -197,11 +197,10 @@ These answers do not yield a universal correction formula. They turn one impress
 
 ## Sources and evidence
 
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative and methodology illustrations, not evidence. They support no empirical claim or capability number.
-
 ### Opening scene
 
-- OpenAI, "Why we no longer evaluate SWE-bench Verified," 2026-02-20, https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified. [Corroborating evidence]
+- OpenAI, "Why SWE-bench Verified no longer measures frontier coding capabilities," 2026-02-23, https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified. [Corroborating evidence]
+- OpenAI, "Separating signal from noise in coding evaluations," 2026-07-08, https://openai.com/index/separating-signal-from-noise-coding-evaluations/. [Corroborating evidence]
 - swyx, "SWE-Bench Verified is dead!!", 2026-02-23, breakdown of the OpenAI audit. [Corroborating evidence] Source of the 16.4% full-set figure, which is derived from the audited sample and does not appear verbatim in the post summary.
 - Tejal Patwardhan, public statement on frontier evaluations, 2026-06-16: "saturated or gamed." [Corroborating evidence]
 - SWE-bench Verified card: 500 instances, 93 professional screeners. [Benchmark record]

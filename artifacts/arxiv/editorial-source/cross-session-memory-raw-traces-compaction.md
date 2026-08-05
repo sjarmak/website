@@ -8,9 +8,7 @@ Each rewriting pass optimizes a representation already produced by earlier optim
 
 I treat the complete chronological record of a session’s inputs, actions, outputs, and state changes as the source record for cross-session memory. I call it the raw, or episodic, trace. Every representation derived from that trace must remain rebuildable. Observed query and task failures, rather than anticipated ones, determine when the storage and retrieval layers deserve additional complexity.
 
-The evidence base for this chapter is thin. Six items support its three design entries. Only two are strong, and five are source syntheses rather than controlled experiments. The storage recommendation has no strong evidence item and remains contested among practitioners.
-
-I therefore use the evidence to define architectures and measurement decisions. It supplies no defensible retention period, retrieval threshold, or compression ratio.
+Six items support the chapter's three design entries; two are strong, and five are syntheses rather than controlled experiments. The contested storage recommendation has no strong supporting item. The evidence defines architectures and measurement decisions, but supplies no defensible retention period, retrieval threshold, or compression ratio.
 
 ## Keep the source record rebuildable
 
@@ -374,8 +372,6 @@ Review capacity is finite and does not increase automatically with fleet size. P
 
 ## Sources and evidence
 
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Preserve raw traces and distill separately
 
 - Strong evidence: "Useful Memories Become Faulty When Continuously Updated by LLMs" (Zhang 2026), arXiv:2605.12978, with Slack production context management (InfoQ 2026-04) named in the same synthesis.
@@ -403,5 +399,3 @@ These are not part of this chapter's three developed practices. Each is named in
 - Directional evidence: AiScientist long-horizon engineering (Chen 2026), arXiv:2604.13018, carried by the companion record on durable artifact handoff.
 - Corroborating case: memorywire (Munirathinam 2026), arXiv:2606.01138, carried by the companion record on memory portability.
 - Directional evidence: Product context and coding-agent decision compliance (Dillon 2026), arXiv:2605.08112, carried by the companion record on the tribal-knowledge substrate. Its compliance figure is not used in the prose.
-
-Author-system cases in this chapter are narrative illustration, not evidence.

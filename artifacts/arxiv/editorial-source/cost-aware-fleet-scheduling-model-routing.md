@@ -1,8 +1,6 @@
 A fleet can increase throughput while also increasing the cost of each accepted result. Only the fleet’s own traces can establish which happened. Concurrent execution, together with a willingness to attempt work a human team might have left queued, exposes more tasks to model inference, verification, review, and recovery. Throughput alone therefore does not establish an economic gain.
 
-The evidence for improving that outcome is thin and largely transferred from other fields. This chapter contains one strong software-engineering result concerning cheap baselines, directional work from observatory and compute-cluster scheduling, and my own fleet replay as narrative illustration. The relevant evidence cluster contains one strong item.
-
-Astronomical scheduling supplies most of the transferred architecture, through both a survey telescope’s nightly planner and a gravitational-wave follow-up scheduler built on the same facility. Learned compute-cluster scheduling provides a second source, and search-based software engineering a third. Budget-constrained bandit theory and router calibration address the model-routing decision rather than the complete fleet.
+The evidence is largely transferred from other fields. One strong software-engineering result concerns cheap baselines; observatory and compute-cluster scheduling, search-based software engineering, budget-constrained bandit theory, and router calibration supply directional mechanisms. My fleet replay remains a narrative illustration.
 
 These systems schedule telescopes and compute clusters, not software-agent fleets. The transferable design is narrower:
 
@@ -472,5 +470,3 @@ Until the ledger can answer those questions, choosing a more sophisticated polic
 - Directional evidence: Lampoudi, S., Saunders, E., & Eastman, J. (2015), "An Integer Linear Programming Solution to the Telescope Network Scheduling Problem," arXiv:1503.07170. Supports validating a scheduling kernel on instances with known optima.
 - Fixed-arrival replay itself is a reasoned transfer, not a directly controlled fleet result, and per-class starvation must be checked separately because a policy can improve the mean by starving one class.
 - Corroboration (illustration only): the author's eleven-week replay of 1,286 work items across 22 execution pools, and the author's shadow, canary, then fleet rollout design. These cases do not count as independent external evidence.
-
-Author-system cases in this chapter are narrative illustration, not evidence.

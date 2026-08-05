@@ -259,8 +259,6 @@ Chapter 13 turns from which evidence the system retrieves to how much of that ev
 
 ## Sources and evidence
 
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Taught entry 1: staged-localization-funnel
 
 - lit/strong: Xia, C. S., et al. (2024), "Agentless: Demystifying LLM-based Software Engineering Agents," arXiv:2407.01489.

@@ -4,13 +4,13 @@ Prepared August 5, 2026 for the August 2026 edition of *Engineering Reliable Cod
 
 ## Positioning
 
-“Monograph” is a normal scholarly term for a sustained book-length treatment of one subject, but it is not an arXiv metadata field and is not necessary here. The abstract and Comments field use **technical review** because that description foregrounds the evidence synthesis. The title page carries only the title, subtitle, author, and date.
+“Monograph” is the conventional scholarly term for a sustained book-length treatment of one subject. The stable positioning for this work is **technical review and engineering monograph**: “technical review” foregrounds the evidence synthesis, while “engineering monograph” accurately describes its scale and organizing argument. The title page carries only the title, subtitle, author, and date.
 
 ## Prepared files
 
 - `engineering-reliable-coding-agents-arxiv-source.zip`: LaTeX release candidate for arXiv.
 - `engineering-reliable-coding-agents-preview.pdf`: PDF compiled from that source.
-- `engineering-reliable-coding-agents-companion-1.0.0-rc.3.zip`: separate companion research artifact release candidate.
+- `engineering-reliable-coding-agents-companion-1.0.0-rc.4.zip`: separate companion research artifact release candidate.
 - `engineering-reliable-coding-agents-skills-0.1.0.zip`: reusable agent workflows derived from selected companion practices.
 - `reference-audit/README.md`: reference-audit summary.
 
@@ -30,11 +30,11 @@ Add an affiliation only if it is current and should be public. Use the same name
 
 ### Abstract
 
-AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review synthesizes evidence about reliability at those system boundaries. The source base comprises 118 scholarly works organized into seven topic-specific review threads, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Evidence is grouped as strong, directional, corroborating, or null and conflicting; high-strength synthesis claims were rechecked against their underlying sources. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are therefore reported as illustrations and are not treated as independent external evidence.
+AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured search assembled 118 scholarly works in seven topic-specific reviews, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened for identifiable claims, graded by the strength and independence of their support, and challenged through targeted evidence audits; ambiguous classifications defaulted to the lower grade. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are reported as illustrations, not as independent external evidence.
 
 ### Comments
 
-Technical review, 251 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
+Technical review and engineering monograph, 262 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -62,7 +62,7 @@ The repository currently has a root Apache-2.0 license. Before adding the manusc
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
-3. Replace release-candidate version `1.0.0-rc.3` with `1.0.0` in the build script and citation metadata.
+3. Replace release-candidate version `1.0.0-rc.4` with `1.0.0` in the build script and citation metadata.
 4. Publish the exact package in the book repository and create a `v1.0.0` release.
 5. Connect that repository to Zenodo or another DOI-granting archive and archive the exact tag.
 6. Add the DOI to `CITATION.cff`, the companion README, the manuscript’s Data and materials availability statement, and the arXiv Comments field.
@@ -92,7 +92,7 @@ The audit covers all 20 manuscript files and all 192 companion practices.
 - 308 unique arXiv identifiers resolved through the official arXiv API; zero unresolved.
 - Five DOI records resolved through Crossref; zero unresolved.
 - 28 other web URLs checked with redirects enabled.
-- Two official OpenAI pages returned HTTP 403 to the automated client. Open both manually in a normal browser before freezing v1:
+- Two official OpenAI pages returned HTTP 403 to the automated client. Both were opened and checked manually on August 5, 2026; that check corrected the July article's description and the February article's title and date:
   - `https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/`
   - `https://openai.com/index/separating-signal-from-noise-coding-evaluations/`
 - The audit found and corrected one author-name defect in the companion source: DynTaskMAS is by Yu, Ding, and Sato, not “Yin.”
@@ -106,7 +106,7 @@ Identifier resolution verifies that the cited record exists and captures current
 3. **Companion license.** Decide independently whether the catalog and benchmark metadata should permit adaptation and redistribution. The repository currently has a root Apache-2.0 license; confirm or scope it before publishing the companion.
 4. **Endorsement.** Start a draft submission and select `cs.SE` early. A prior record in another archive may not satisfy endorsement for a new computer-science category.
 5. **Identity.** Link ORCID and confirm author name and affiliation.
-6. **Reference exceptions.** Manually open the two access-restricted OpenAI pages noted above.
+6. **Reference exceptions.** No action remains for the two access-restricted OpenAI pages; their manual verification is recorded above.
 7. **Companion DOI.** Either archive the companion first and insert its DOI, or remove the DOI clause and submit with only the public companion-site URL.
 
 ## Submission sequence
@@ -125,11 +125,11 @@ Identifier resolution verifies that the cited record exists and captures current
 ## Technical validation
 
 - Exact source ZIP compiled in a fresh temporary directory with Tectonic 0.15.0.
-- Output: 251 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
+- Output: 262 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
 - Figures: 19 of 19 included as PDF.
 - Chapter sources: 19 unnumbered chapter-end source blocks, excluded from the numbered section hierarchy and table of contents.
-- Full references: 182 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 16 audited web sources are represented, with additional named sources and author illustrations identified separately.
-- Text extraction: approximately 104,500 machine-readable words.
+- Full references: 185 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 20 audited web sources are represented, with additional named sources and author illustrations identified separately.
+- Text extraction: approximately 106,150 machine-readable words.
 - PDF security: no encryption, JavaScript, forms, or embedded multimedia.
 - Archive hygiene: 44 required files; no generated PDF, log, auxiliary file, Markdown source, dataset, or private note.
 - TeX diagnostics: no errors, missing files, missing characters, undefined commands, or overfull boxes. A small number of harmless underfull-box warnings remain in source-list paragraphs.

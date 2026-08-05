@@ -420,13 +420,13 @@ If those answers cannot be reconstructed, the graph has become another hidden co
 
 A structural redesign should end in a reproducible allocation decision. A diagram and a promising demonstration are not enough. The following protocol is narrow enough to apply to an existing workflow while preserving the distinctions developed in this chapter.
 
-### 1. Select one persistent failure class
+### Select one persistent failure class
 
 Use repeated paired runs across the current and upgraded model configurations. Preserve the first-upstream-failure assignment from Chapter 10.
 
 Do not begin from a broad objective such as “improve collaboration.” Name the failure class whose path the structural change is expected to interrupt.
 
-### 2. Draw the current causal path
+### Draw the current causal path
 
 Mark:
 
@@ -439,7 +439,7 @@ Mark:
 
 Identify the smallest boundary at which the target failure could have become observable and stoppable.
 
-### 3. Preserve the live single-agent baseline
+### Preserve the live single-agent baseline
 
 Replay the existing single-agent workflow on the current golden set. Record:
 
@@ -452,7 +452,7 @@ Replay the existing single-agent workflow on the current golden set. Record:
 
 Keep this baseline executable for later model releases. A topology should not receive permanent credit from a comparison against an obsolete single-agent system.
 
-### 4. Specify one structural treatment
+### Specify one structural treatment
 
 The treatment may be:
 
@@ -465,7 +465,7 @@ The treatment may be:
 
 State which boundary changes and which causal path the change is expected to interrupt. Avoid combining several architectural changes unless the experiment is explicitly evaluating the combined system.
 
-### 5. Record the promotion rule before execution
+### Record the promotion rule before execution
 
 The rule should include:
 
@@ -478,7 +478,7 @@ The rule should include:
 
 A mechanism condition might require at least one delegated result to be consumed by the aggregator or require the scheduler to dispatch at least one pair of independent nodes concurrently. When candidates are voted on or synthesized, add a check for whether an oracle-correct candidate was retained or discarded.
 
-### 6. Inject a representative fault
+### Inject a representative fault
 
 Choose a fault matched to the proposed structure:
 
@@ -490,7 +490,7 @@ Choose a fault matched to the proposed structure:
 
 Verify that incomplete or disputed state remains visible and that downstream work does not proceed as though the missing evidence existed.
 
-### 7. Run paired repeated trials
+### Run paired repeated trials
 
 Run baseline and treatment on the same task versions. Keep the model, harness, permissions, evaluator, and execution environment fixed except for the declared structural change.
 
@@ -507,7 +507,7 @@ Report separately:
 
 Inspect traces to confirm that delegation, scheduling, coordination, and aggregation actually occurred. A configured mechanism that never enters the execution path has not been evaluated.
 
-### 8. Promote, retain, or redesign
+### Promote, retain, or redesign
 
 Promote only when the treatment clears the recorded success, reliability, cost, mechanism, and fault-containment conditions.
 
@@ -518,8 +518,6 @@ Redesign when the trace shows that the treatment changed a boundary but left the
 The resulting record should be understandable without trusting the architecture’s name. Promotion depends on whether the observed execution supports the claimed benefit, not on whether the design can be described as dynamic, hierarchical, multi-agent, or dependency-aware.
 
 ## Sources and evidence
-
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
 
 - Bertalanič, et al. 2026. *The Cost of Consensus*. arXiv:2605.00914. Exploratory evidence on aggregation failure; Chapter 5 carries the reported oracle-gap result.
 - Böckeler, Birgitta. 2026. "Harness Engineering." MartinFowler.com, February 17. Practitioner account based partly on vendor-reported Codex-team practice.

@@ -250,8 +250,6 @@ Chapter 13 turns from which evidence the system retrieves to how much of that ev
 
 ## Sources and evidence
 
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Stage localization before repair
 
 - Strong evidence: Xia, C. S., et al. (2024), "Agentless: Demystifying LLM-based Software Engineering Agents," arXiv:2407.01489.

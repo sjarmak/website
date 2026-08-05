@@ -26,7 +26,7 @@ These components do not operate independently. A better score may reflect an eas
 
 Plausible results can survive weak measurement. In one controlled study, researchers compared a single score from each of two identical systems. As many as 26 percent of those comparisons appeared significantly different at (p < 0.05). The statistical test correctly described the two runs it received, but the experiment could not establish that the systems differed because it had sampled too few runs to estimate the variation between them.
 
-That example captures the practical problem beneath many claims about agents. A number can be calculated correctly and still answer a narrower question than the reader assumes (i.e., lies, damned lies, and statistics). It is best to treat measurement as part of the operating system around an agent. It determines which changes are adopted, which regressions are detected, and which risks remain invisible.
+That example captures the practical problem beneath many claims about agents. A number can be calculated correctly and still answer a narrower question than the reader assumes. Measurement is part of the operating system around an agent: it determines which changes are adopted, which regressions are detected, and which risks remain invisible.
 
 The same reasoning applies to safety boundaries. We all know the stories of an agent deleting a production database with the backups disappearing along with it. In one such case, the same credentials could reach both resources, so while the immediate action was deletion, the deeper failure was shared authority across systems that were expected to fail independently. These systems are far too complex with unpredictable emergent behaviors, make such assumptions at your own peril.
 
@@ -37,6 +37,14 @@ This book draws from a catalog of 192 practices assembled from research literatu
 These practices are not universal rules. Each applies under particular workloads, permissions, failure costs, and organizational constraints. Where the evidence supports only a narrow claim, I keep the claim narrow. Where support remains incomplete, I state the uncertainty and describe the comparison needed to resolve it.
 
 The goal of this book is to enable others to build and maintain agentic systems whose reliability can be observed, tested, and defended.
+
+## The reliability dependency chain
+
+The organizing argument is a dependency chain. Measurement determines whether a difference is credible. Grading converts observations into acceptance decisions. Containment and recovery determine whether the execution record survives failure without extending authority. Retrieval and context determine which evidence reaches the agent. Review and accountability determine who can challenge the result and who controls the consequential transition. Allocation and cost determine which system receives future work.
+
+Each layer determines what the next may trust. A defect that begins in measurement can propagate through every later decision while retaining the appearance of a clean score, verdict, or artifact.
+
+![The reliability dependency chain runs from measurement through grading, containment and recovery, retrieval and context, review and accountability, and allocation and cost. Each layer supplies the evidence boundary on which the next relies.](/book-figures/dependency-chain.svg)
 
 ## What this book is not
 
@@ -52,7 +60,7 @@ The book has six parts and eighteen chapters. Measurement comes first because ev
 
 This order costs you roughly three chapters of experiment design before we specifically get to agents. The alternative would make later recommendations easier to reach but harder to assess. Definitions would arrive after their first use, and repeated fragments would replace a coherent method.
 
-Part I establishes how I compare systems when runs vary and scores can mislead. Part II turns those measurements into grading and release decisions. Part III addresses containment, persistent state, recovery, and failure analysis. Part IV examines how repository information enters, survives, and leaves an agent run. Part V treats human review as an engineered control with interfaces, escalation rules, and accountable ownership. Part VI allocates work across agents and models under cost and capacity constraints.
+Part I establishes how I compare systems when runs vary and scores can mislead. Part II turns those measurements into grading and release decisions. Part III addresses containment, persistent state, recovery, and failure analysis. Part IV examines how repository information enters, survives, and leaves an agent run. Part V treats human review as an engineered control with interfaces, escalation rules, and accountable ownership. Part VI allocates work across agents and models under cost and capacity constraints. It is the most transfer-heavy part and should be read partly as a research agenda rather than as settled deployment guidance.
 
 | Part | Ch | Title |
 |---|---:|---|
@@ -124,13 +132,15 @@ Sentences are scoped to what was actually measured. Where support is thin, the c
 
 ## The companion catalog
 
-The companion site indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation.
+The [companion site](/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums.
 
 Use the relevant chapter as the foundation, then consult the catalog for practices that match a specific constraint. A compact entry cannot reproduce the chapter’s full treatment of mechanism, evidence, tradeoffs, and failure boundaries. The chapter provides the reasoning needed to decide whether a neighboring practice applies to your workload.
 
 Twenty-nine of the full entries are labeled as thin-support asides. I excluded them from the taught set because the available evidence does not support a recommendation. Treat them as prompts for investigation rather than established guidance. They may point to a useful experiment, a missing control, or a failure mode worth instrumenting.
 
 The chapters and catalog serve different purposes. The chapters develop methods and claims in enough detail to evaluate critically. The catalog preserves breadth and makes related practices easier to find. Together, they let you begin with a measured problem and identify an intervention suited to the system you actually operate.
+
+The repository also packages five reusable agent skills derived from selected practices: evaluation design, end-to-end test design, failure-mode capture, focused execution, and verified long-running implementation. Each skill includes a practice-level evidence map. These are reusable implementation artifacts, not additional evidence for the practices.
 
 ## What you should be able to do by the end
 

@@ -9,11 +9,9 @@ number: 16
 
 I built a human-approval queue to hold decisions an agent was not permitted to make. The architecture appeared conservative: the agent could prepare an action, but execution stopped at a human-only boundary.
 
-An audit found paths around that boundary. Some scripts failed open when a required component was missing, and command construction reached execution without the validation the gate was supposed to enforce. The system could report that approval existed while allowing an action to bypass the person. I had built the apparatus to be the careful option, which made the finding particularly uncomfortable.
+An audit found paths around that boundary. Some scripts failed open when a required component was missing, and command construction reached execution without the validation the gate was supposed to enforce. The system could report that approval existed while allowing an action to bypass the person. The conservative appearance of the apparatus had concealed a material difference between policy and execution.
 
-The evidence for this chapter is limited. Its four entries rest on seven evidence items, two of them strong. Six come from research literature and one from a practitioner account. Two entries, `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control`, have no strong supporting item.
-
-The accountability literature represented here consists largely of surveys, frameworks, and position papers. Production-grounded evidence is thin. The available work establishes that these problems and design options exist; it does not measure their effects in production. I therefore present the practices as defensible defaults to test in a particular system, not as universal policy.
+The chapter's four entries rest on seven evidence items, two of them strong. The accountability literature represented here consists largely of surveys, frameworks, and position papers, with one practitioner account and little production-grounded measurement. The practices are therefore testable defaults rather than universal policy; the entries on gate effectiveness and alignment between accountability and control have no strong supporting item.
 
 The failed queue illustrates the broader problem. An autonomy policy constrains nothing unless the system enforces the boundary it names. A provenance label changes nothing unless it changes what a reviewer can learn or do. A human gate controls nothing unless the person can alter the execution path. An accountability assignment prevents nothing unless the named person has authority over the outcome.
 
@@ -415,7 +413,7 @@ Neither should diffuse answerability so widely that no role owns a state transit
 
 Run four checks against one defined action class and one real repository workflow.
 
-### 1. Test the autonomy transfer
+### Test the autonomy transfer
 
 Define:
 
@@ -429,7 +427,7 @@ Record every proposed transfer, including rejected, modified, timed-out, abandon
 
 Calculate uncertainty around approval, modification, and outcome rates. Test whether reviewers understand the affected state, evidence, and rollback path. Widen authority by one rung only when those observations support the change.
 
-### 2. Test whether provenance survives review and integration
+### Test whether provenance survives review and integration
 
 Choose the smallest provenance unit that can survive the repository workflow while still representing the review decision it is intended to affect.
 
@@ -447,7 +445,7 @@ Verify that a reviewer can distinguish generation, human revision, and integrati
 
 Keep the count semantics narrow. The 14.5 percent trailer-signed floor described earlier is a lower bound on visible trailer-marked authorship. It must not be combined with an inferred contribution share.
 
-### 3. Test the gate as a failure experiment
+### Test the gate as a failure experiment
 
 Run the gate audit in a contained environment. Name the action, gate, and decision owner, then capture the complete execution trace.
 
@@ -467,7 +465,7 @@ Inspect the evidence available to the reviewer and verify the durable state prod
 
 Interview the assigned reviewer about the risk they believe they are checking, then compare that account with the actual execution path. Repair or remove a gate that cannot demonstrate causal power and epistemic access. Decide explicitly how queue pressure, defaults, incentives, and emergency procedures will preserve self-control and fitting intentions.
 
-### 4. Audit accountability in two passes
+### Audit accountability in two passes
 
 #### Pass one: verify operational control
 
@@ -517,8 +515,6 @@ Do not adopt a pass rate borrowed from another system. Decide in advance which f
 
 ## Sources and evidence
 
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 Support is thin across the chapter: 4 taught entries carry 7 evidence items, of which 2 are strong and 5 directional; 6 are literature and 1 is practitioner. `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control` carry no strong evidence item.
 
 ### graduate-autonomy-per-action-track-record
@@ -542,5 +538,3 @@ Support is thin across the chapter: 4 taught entries carry 7 evidence items, of 
 
 - lit/directional: Cavalcante Siebert, L., et al. (2023). Meaningful human control: actionable properties for AI system development. AI and Ethics 3, 241-255. arXiv:2112.01298. Supports responsibility commensurate with ability and authority to control, the framework's third actionable property.
 - lit/directional: Suryana, L. E., Nordhoff, S., Calvert, S., Zgonnikov, A., van Arem, B. (2025). Meaningful human control of partially automated driving systems: Insights from interviews with Tesla users. Transportation Research Part F 113, 213-236. Applies tracking and tracing criteria to 103 users to localize expectation-reality gaps and inconsistent protocol adherence. The method requires case-specific operationalization, yields failure localization rather than a compliance score, and is evidenced here in the driving domain. No arXiv identifier or DOI is carried in the catalog record, so the inline citation is unlinked.
-
-Author-system cases in this chapter are narrative illustration, not evidence.

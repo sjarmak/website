@@ -12,18 +12,7 @@ The first interval I reported around that difference likely understates the unce
 
 Interpreting that one experiment required two parts of this book. The stage decomposition from Part IV located where the improvement occurred. The resampling rule from Part I determined whether the end-to-end difference had been measured adequately at all.
 
-The same dependency runs through the complete sequence:
-
-```text
-measurement
-    -> grading
-        -> isolation and recovery
-            -> retrieval and context
-                -> review and accountability
-                    -> allocation and cost
-```
-
-This is not a difficulty progression. Each part determines which evidence the next part may rely on. A defect in an earlier layer rarely announces itself downstream. It arrives as a clean score, a confident verdict, or a plausible artifact.
+The dependency chain introduced at the beginning therefore returns as the conclusion. A defect in an earlier layer rarely announces itself downstream. It arrives as a clean score, a confident verdict, or a plausible artifact.
 
 ## Each layer determines what the next may trust
 
@@ -78,7 +67,7 @@ Strong-graded items account for 59 percent of the evidence in Part I and 53 perc
 
 Those are also among the practices a reader with production write access may need first.
 
-Two of Chapter 7’s three practices were selected independently by all three prioritization lenses while their evidence remained at the floor. Across this corpus, operational urgency and evidence strength were nearly uncorrelated. Reporting that mismatch is more honest than allowing chapter length or prescriptive language to imply support the record does not contain.
+Two of Chapter 7’s three practices were selected independently by all three prioritization lenses while their evidence remained at the floor. Among the 52 practices ranked by the consequence lens, Spearman's rho between urgency rank and the presence of at least one strong evidence item was -0.004. The near-zero relationship is specific to that selected set and operational definition; it is not an estimate for the full field.
 
 I would have preferred to write a Part III supported by controlled comparisons. The field has produced incident reports and architectural arguments instead. Adding more hedging would not fill the gap. It would only hide the same absence beneath more language.
 
@@ -96,7 +85,7 @@ The second is a recovery benchmark for agent runtimes with a published fault men
 
 Neither experiment is exotic. Both are within reach of teams that already operate agent fleets and preserve their traces, which is the same instrumentation the operating protocol below requires.
 
-Part III and Part VI should therefore be read as design arguments carrying named failure checks. Recovery is often credited to an architecture diagram rather than to an injected fault, after which “fault tolerant” describes the drawing rather than the running system.
+Part III should therefore be read as a design argument carrying named failure checks. Part VI is more transfer-heavy still: it combines adjacent multi-agent results with observatory, compute-cluster, and search-based software-engineering research. Its scheduling and topology proposals are executable research questions for coding-agent fleets, not established production effects.
 
 The prescriptions in those parts resolve to executable observations:
 
@@ -178,7 +167,7 @@ The following sequence combines the closing procedures from several chapters int
 
 Run the steps in order. Each one creates evidence consumed by the next.
 
-### 1. Reopen one comparison you trusted too quickly
+### Reopen one comparison you trusted too quickly
 
 Choose the most recent decision made largely from one aggregate number. Rerun both conditions at least three times on the same items. Preserve the per-item outcomes and inspect the run-to-run spread before interpreting the mean difference.
 
@@ -186,7 +175,7 @@ A delta that remains smaller than the measured spread remains uncredited.
 
 The output is a distribution and a paired record rather than one score.
 
-### 2. Add the inexpensive baseline you omitted
+### Add the inexpensive baseline you omitted
 
 Run the base model directly. Then run it with one retry using a failure signal the deployed system can actually observe.
 
@@ -194,7 +183,7 @@ Report quality and cost as separate coordinates. Preserve the model, harness, pr
 
 The output is a comparison capable of showing whether added architecture beats a cheap alternative.
 
-### 3. Audit one live capability boundary
+### Audit one live capability boundary
 
 Begin from the running process rather than the architecture diagram. Enumerate every destructive action the ordinary identity can reach without a new human decision. Follow delegated services, credential-minting paths, mounted filesystems, and policy-changing endpoints.
 
@@ -204,7 +193,7 @@ Attempt one prohibited operation with the ordinary identity and require the deni
 
 The output is an observed capability boundary rather than an assurance about permissions.
 
-### 4. Verify one completion claim against state
+### Verify one completion claim against state
 
 Choose one recent claim that an agent completed work. Compare the starting and ending revisions or read the relevant system of record. Inspect the artifact and rerun the check that would make the claim true.
 
@@ -212,7 +201,7 @@ Preserve the attempt identity, workspace identity, command, result, and any disc
 
 The output is an independently observed state transition rather than a self-report.
 
-### 5. Read twenty failed runs end to end
+### Read twenty failed runs end to end
 
 Include apparent successes whose verification was skipped. Assign one primary label to each case: the first upstream failure that materially changed its path to success.
 
@@ -222,7 +211,7 @@ The first ordinary causal question the trace cannot answer becomes an instrument
 
 The output is a seed failure corpus and a trace schema shaped by real investigations.
 
-### 6. Fix the next promotion rule before running it
+### Fix the next promotion rule before running it
 
 Before comparing the next release, model, topology, router, or scheduling policy, record:
 

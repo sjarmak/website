@@ -233,8 +233,6 @@ Part IV turns to the evidence available when the model acts: retrieval, context 
 
 ## Sources and evidence
 
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Derive the failure taxonomy from your own traces
 
 - lit/directional: Lu, R., Li, Y., Huo, Y. (2025), "Exploring Autonomous Agents: A Closer Look at Why They Fail When Completing Tasks," arXiv:2508.13143. (Phase-aligned classification; ~50% completion base rate on 34 programmable tasks with off-the-shelf frameworks; NOT a base rate for real enterprise repos.)

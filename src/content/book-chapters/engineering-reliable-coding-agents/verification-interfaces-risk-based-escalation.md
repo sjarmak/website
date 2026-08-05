@@ -421,8 +421,6 @@ Finally, budget practice for the people expected to handle rare failures. A name
 
 ## Sources and evidence
 
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Building verification surfaces so verifying costs less than blind acceptance
 
 - lit/strong: Vasconcelos, H., Jörke, M., Grunde-McLaughlin, M., Gerstenberg, T., Bernstein, M., Krishna, R. (2022/2023). Explanations Can Reduce Overreliance on AI Systems During Decision-Making. PACM HCI 7(CSCW1). arXiv:2212.06823. Five experiments treat overreliance as a cost-benefit choice and find greater engagement when verification is cheaper or stakes are higher.

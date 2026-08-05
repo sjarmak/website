@@ -248,8 +248,6 @@ Keep tasks without executable checks in a separate lane. They are not lesser tas
 
 ## Sources and evidence
 
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Motivating observation and companion entry
 
 - Directional evidence: Mehta, A. (2026). Confident and Wrong: Silent Semantic Failures in Coding Agents. arXiv:2603.25764. Analysis of 1,750 trajectories across 50 tasks and four models; single-author, limited-sample observational finding. Supports the companion-only entry on scoring verified resolution separately from submission.

@@ -406,5 +406,3 @@ Chapter 14 turns to what survives between sessions and in what form.
 - lit/null-result: Gloaguen, T., Mündler, N., Müller, M., Raychev, V., Vechev, M. (2026), "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" arXiv:2602.11988.
 - lit/strong: Chatlatanagulchai, W., et al. (2025), "Agent READMEs: An Empirical Study of Context Files for Agentic Coding," arXiv:2511.12884.
 - Corroboration, narrative only: the author's systems include a context file maintained as a failure-mode ledger and a knowledge map with a machine-checkable source hash; contrary cases include a review-checker whose live rule count disagreed with its header and wrapper, and a skill-library README with three inconsistent counts.
-
-Author-system cases in this chapter are narrative illustration, not evidence.

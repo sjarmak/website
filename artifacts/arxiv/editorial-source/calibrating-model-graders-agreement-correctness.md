@@ -205,8 +205,6 @@ That first stratum tests one grading decision and identifies which category shou
 
 ## Sources and evidence
 
-The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative illustration and are not part of the evidence base.
-
 ### Calibrate LLM judges
 
 - Strong evidence: Zheng et al. (2023), "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena," arXiv:2306.05685. Judge position, verbosity, and self-preference bias; inter-rater agreement against human labels.
