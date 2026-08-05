@@ -130,6 +130,8 @@ Resume begins with reconciliation. The new process reads the actual branch, comp
 
 The same reconciliation is required when several agents use separate worktrees. Git worktrees separate working files, indexes, and checked-out heads, but references and repository metadata remain shared and mutable. In my orchestration system, a controller once supplied the wrong base revision to several agents working in separate worktrees. A mechanical branch guard blocked one commit after other work had already begun. This is an author-system illustration and provides no estimate of how often the failure occurs.
 
+\Needspace{5\baselineskip}
+
 The repair classified the observed repository state before acting:
 
 \begin{itemize}

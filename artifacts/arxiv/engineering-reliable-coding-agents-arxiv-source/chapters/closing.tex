@@ -29,6 +29,8 @@ Part II turns measurements into operating verdicts. A model grader, consensus vo
 
 A grading system therefore produces a verdict at an operating point under a stated distribution. Layering is necessary because any nonconstant verdict can become an optimization target.
 
+\Needspace{5\baselineskip}
+
 Part III asks whether the record underlying those verdicts is evidence at all. Four ordinary failures can corrupt that record in ways no later statistic repairs:
 
 \begin{itemize}
@@ -46,6 +48,8 @@ Part III asks whether the record underlying those verdicts is evidence at all. F
 Preserving the record is necessary and insufficient. Zhang et al.~(\href{https://arxiv.org/abs/2505.00212}{2025}) gave expert-annotated failure logs from 127 multi-agent systems to the strongest automated attribution methods they evaluated. The best method identified the decisive step in 14.2 percent of cases.
 
 A complete trace supports a causal explanation. It does not generate one automatically.
+
+\Needspace{5\baselineskip}
 
 Part IV determines what evidence reached the model. A failure should not be assigned to model reasoning until the evaluation records whether the required evidence:
 
@@ -91,6 +95,8 @@ Two of Chapter 7's three practices were selected independently by all three prio
 
 I would have preferred to write a Part III supported by controlled comparisons. The field has produced incident reports and architectural arguments instead. Adding more hedging would not fill the gap. It would only hide the same absence beneath more language.
 
+\Needspace{5\baselineskip}
+
 The thin chapters therefore follow three rules:
 
 \begin{enumerate}
@@ -113,6 +119,8 @@ The second is a recovery benchmark for agent runtimes with a published fault men
 Neither experiment is exotic. Both are within reach of teams that already operate agent fleets and preserve their traces, which is the same instrumentation the operating protocol below requires.
 
 Part III and Part VI should therefore be read as design arguments carrying named failure checks. Recovery is often credited to an architecture diagram rather than to an injected fault, after which ``fault tolerant'' describes the drawing rather than the running system.
+
+\Needspace{5\baselineskip}
 
 The prescriptions in those parts resolve to executable observations:
 
@@ -137,6 +145,8 @@ A design argument that cannot be reduced to a check of this kind has not yet bee
 Almost none of the numerical values in this book are settings to adopt.
 
 The reviewed literature provides no universal refresh cadence for a repository index. That is a gap in the evidence, not a value withheld. There is no universal kappa threshold that turns labels into truth, no universal repeat count for a release gate, no context limit, no routing cost ratio, and no fleet re-solve cadence.
+
+\Needspace{5\baselineskip}
 
 Each is a local quantity determined by:
 
@@ -170,6 +180,8 @@ Propagation of deletion through summaries, embeddings, caches, and graph edges r
 
 A fourth question is how long any capability result remains current.
 
+\Needspace{5\baselineskip}
+
 Several measurements in this book are snapshots:
 
 \begin{itemize}
@@ -187,6 +199,8 @@ Several measurements in this book are snapshots:
 \end{itemize}
 
 These values will move with models, harnesses, and workloads. Reporting them as constants would make the book age badly.
+
+\Needspace{5\baselineskip}
 
 The structural findings are more likely to persist:
 
@@ -207,6 +221,8 @@ The structural findings are more likely to persist:
 \item
   A schedule computed for obsolete state is not operationally optimal.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 Local measurement replaces the missing constants. Each chapter names the observation its decision requires. The recurring set is small:
 
@@ -284,6 +300,8 @@ The output is a seed failure corpus and a trace schema shaped by real investigat
 
 \section{6. Fix the next promotion rule before running it}\label{fix-the-next-promotion-rule-before-running-it}
 
+\Needspace{5\baselineskip}
+
 Before comparing the next release, model, topology, router, or scheduling policy, record:
 
 \begin{itemize}
@@ -305,6 +323,8 @@ Before comparing the next release, model, topology, router, or scheduling policy
 Run both configurations on the same task versions and preserve the per-case evidence.
 
 The output is a decision that can be reproduced without relying on memory of how the result felt.
+
+\Needspace{5\baselineskip}
 
 Each step replaces an assertion with an artifact:
 

@@ -20,6 +20,8 @@ I use \textbf{effective context length} to mean the largest assembled context at
 
 Measurement begins with task shape. A production coding agent may need to retrieve a declaration from one file, connect it to a caller in another, incorporate a test failure from a third, and preserve a constraint supplied near the beginning of the run. A single hidden fact embedded in filler tests only one part of that work.
 
+\Needspace{5\baselineskip}
+
 The qualification workload should represent the operations the deployed system actually performs, including:
 
 \begin{itemize}
@@ -62,6 +64,8 @@ The model receives the same task, permissions, and tool surface in every arm. I 
 
 Each stratum is a measured comparison, so Chapter 1's requirements apply. Tasks should be paired across context sizes wherever possible, and every stratum needs repeated independent runs. One run at each length cannot distinguish a context-length effect from ordinary run-to-run variation.
 
+\Needspace{5\baselineskip}
+
 Four outcomes should remain separate:
 
 \begin{itemize}
@@ -89,6 +93,8 @@ The margin accounts for token-estimation error, task variation, and fixed contex
 The final record should state the threshold, uncertainty, and consequence that justified the margin so the decision can be revisited when the system changes.
 
 Several mechanisms can produce decline. Additional context introduces competing versions of facts, similarly named symbols, and relationships the model must reconstruct. Position affects whether early instructions and evidence influence later actions. Repetition can induce repetition, while conflicting material can cause refusal or stale instruction following. The model may also spend more of its output budget restating or reconciling context rather than acting.
+
+\Needspace{5\baselineskip}
 
 Token count alone therefore does not diagnose the failure. I retain traces from every stratum and annotate the first consequential divergence. Useful classes include:
 
@@ -125,6 +131,8 @@ An unchanged average can conceal a shorter effective context offset by stronger 
 Synthetic probes remain useful because they isolate positional recall, aggregation, and distractor effects. Their thresholds transfer only approximately to repository work. Realistic tasks entangle retrieval, reasoning, tools, and verification, making mechanism attribution harder but deployment relevance greater.
 
 I use synthetic probes to explain a failure and repository-shaped trials to set the operating limit. Neither establishes the other's threshold without measurement.
+
+\Needspace{5\baselineskip}
 
 The final configuration should specify:
 
@@ -164,6 +172,8 @@ The operational response is consolidation. When requirements emerge through disc
 
 It represents the current agreement rather than the chronology through which that agreement emerged.
 
+\Needspace{5\baselineskip}
+
 Consolidation must remain selective because a transcript contains several kinds of state:
 
 \begin{itemize}
@@ -183,6 +193,8 @@ The distinction between specification and observation determines what a restart 
 Suppose a run has established that an API must remain backward compatible, selected a migration sequence, edited several files, and discovered that a test fixture relies on an undocumented field. The compatibility requirement and migration sequence belong in the consolidated specification. The changed-file list, diff, test command, failure output, and fixture discovery belong in the execution handoff.
 
 Combining both into undifferentiated prose makes it difficult to tell which statements govern future work and which report what happened.
+
+\Needspace{5\baselineskip}
 
 I restart when the run's behavior shows that appended corrections no longer alter its governing interpretation. Indicators include:
 
@@ -238,6 +250,8 @@ The evidence for file-backed tool output is limited to two directional practitio
 
 This changes where state lives. Without externalization, a tool response exists only in the conversation history. Truncation can remove it, while summarization replaces it with an interpretation produced before anyone knows which details will later matter.
 
+\Needspace{5\baselineskip}
+
 With an external artifact, the raw output belongs to the run rather than to the current context window. The active context can retain an index entry containing:
 
 \begin{itemize}
@@ -263,6 +277,8 @@ The pointer should expose the cost before loading the content. My memory system 
 Cursor's engineering blog (\href{https://cursor.com/blog/dynamic-context-discovery}{2026}) reports writing long tool output to files that the agent can read back, reducing forced summaries near the context limit. The Hightouch team, in an interview published by Amplify Partners (\href{https://www.amplifypartners.com/blog-posts/how-hightouch-built-their-long-running-agent-harness}{2026}), describes buffering large tool results similarly and reports that the design kept the active window focused on reasoning rather than raw output.
 
 Hightouch also reported that allowing the model to choose when to buffer performed better for its system than a coded decision tree. These accounts provide implementation direction rather than a controlled comparison. Model-selected buffering remains probabilistic, and another model or prompt may make worse choices.
+
+\Needspace{5\baselineskip}
 
 A safe interface therefore places deterministic controls around that choice. The harness owns:
 
@@ -299,6 +315,8 @@ Externalization addresses only one source of context growth. Plans, speculative 
 The convention also introduces retrieval failures. An agent may never follow the pointer, search for the wrong term, or load an excerpt that omits the decisive line. An index may point to deleted content. A summary may misdescribe an artifact and discourage inspection.
 
 I therefore retain the raw output, validate pointer resolution, expose search and range operations, and record which portions the agent actually loaded.
+
+\Needspace{5\baselineskip}
 
 The first tests are operational:
 
@@ -339,6 +357,8 @@ The measured cost remains part of the result, as does the evidence that the file
 
 The local decision requires a no-file baseline. The same representative tasks and repository states run under the same model, prompts, tools, harness, and evaluator with and without the standing file. The comparison is paired by task, and repeated runs remain necessary when model variation is material.
 
+\Needspace{5\baselineskip}
+
 Before executing the comparison, I record:
 
 \begin{itemize}
@@ -364,6 +384,8 @@ This prevents an unfavorable result from being rescued after the fact by whichev
 Inference cost includes more than the file's input tokens. An instruction may trigger additional searches, builds, reviews, or explanations. A concise repository-specific command may instead prevent failed exploration and lower total cost despite adding permanent context.
 
 I therefore record input and output tokens, model calls, tool execution, and cost per completed task. File length alone is incomplete. A reported 20 percent aggregate difference is also one estimate and deserves the same repeated measurement as a completion score.
+
+\Needspace{5\baselineskip}
 
 The task sample must exercise the claims the file makes. A suite of isolated function edits says little about migration rules, generated code, deployment checks, or concurrent changes. I include:
 
@@ -394,6 +416,8 @@ One of my repositories uses its context file as a failure-mode ledger. Each proh
 Actual context files are broader. Chatlatanagulchai et al.~(\href{https://arxiv.org/abs/2511.12884}{2025}) analyzed 2,303 files from 1,925 repositories. Implementation details appeared in 69.9 percent, architecture information in 67.7 percent, and build or execution guidance in 62.3 percent. Security and performance guidance each appeared in 14.5 percent.
 
 Those percentages describe what maintainers wrote, not what improved outcomes. The relative absence of security and performance guidance is a useful review prompt because coding agents can execute commands and modify production-relevant code. It does not show that generic security or performance text should be added.
+
+\Needspace{5\baselineskip}
 
 A file retained after evaluation should be maintained like configuration. Every instruction needs:
 
@@ -451,6 +475,8 @@ Begin with one production-shaped task family and run it across several context s
 
 Record the model, workload, margin, and changes that require requalification.
 
+\Needspace{5\baselineskip}
+
 Next, identify one long-running task whose governing specification has become fragmented. Stop appending correction messages. Consolidate the accepted decisions, constraints, and unresolved questions into one authoritative specification. Inspect the repository state and verification evidence, then restart from a package containing:
 
 \begin{itemize}
@@ -470,6 +496,8 @@ Move large tool outputs into session-scoped artifacts and retain costed pointers
 Finally, compare the repository context file with no standing file on the same tasks and repository states. Record task success, reliability, instruction adherence, total inference and tool cost, and the exact file revision. The roughly 20 percent increase reported in one study is a reason to measure, not a transferable estimate.
 
 The paired comparison determines whether the file earns its permanent cost. Category-level ablations determine which instructions remain.
+
+\Needspace{5\baselineskip}
 
 Together, these controls establish:
 

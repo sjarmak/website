@@ -15,6 +15,7 @@ const figureSourceRoot = path.join(root, "src/assets/books/engineering-reliable-
 const buildRoot = path.join(root, "artifacts/arxiv/.latex-build");
 const previewPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-preview.pdf");
 const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source.zip");
+const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
 const rsvgConvert = process.env.RELIABLE_AGENTS_RSVG_CONVERT
@@ -84,6 +85,10 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
     })
     .join("\n");
   output = output.replace(/\(\/book-figures\/([a-z0-9-]+)\.svg\)/g, "(figures/$1.pdf)");
+  output = output.replace(
+    /^(.+:)\n\n(?=(?:- |\d+\. ))/gm,
+    "\\Needspace{5\\baselineskip}\n$1\n\n",
+  );
   if (introduction) output = output.slice(output.indexOf("## Problem and scope"));
   if (!introduction) {
     const marker = "## Sources and evidence";
@@ -103,6 +108,200 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
 
 function texEscape(value) {
   return value.replaceAll("&", "\\&");
+}
+
+function texText(value) {
+  const unicode = new Map([
+    ["ç", "\\c{c}"], ["è", "\\`{e}"], ["é", "\\'{e}"], ["ë", "\\\"{e}"],
+    ["í", "\\'{i}"], ["ö", "\\\"{o}"], ["ø", "\\o{}"], ["ü", "\\\"{u}"],
+    ["ć", "\\'{c}"], ["č", "\\v{c}"], ["ž", "\\v{z}"], ["τ", "tau"],
+    ["“", "``"], ["”", "''"], ["’", "'"], ["–", "--"], ["—", "---"],
+  ]);
+  const placeholders = [];
+  let output = String(value ?? "").replaceAll("$τ$", "tau").replace(/[çèéëíöøüćčžτ“”’–—]/g, (character) => {
+    const marker = `@@TEX${placeholders.length}@@`;
+    placeholders.push(unicode.get(character));
+    return marker;
+  });
+  output = output
+    .replaceAll("\\", "\\textbackslash{}")
+    .replaceAll("&", "\\&")
+    .replaceAll("%", "\\%")
+    .replaceAll("$", "\\$")
+    .replaceAll("#", "\\#")
+    .replaceAll("_", "\\_")
+    .replaceAll("{", "\\{")
+    .replaceAll("}", "\\}");
+  placeholders.forEach((replacement, index) => {
+    output = output.replace(`@@TEX${index}@@`, replacement);
+  });
+  return output;
+}
+
+function manuscriptRecord(record) {
+  return record.occurrences?.some((occurrence) => occurrence.file !== "companion catalog");
+}
+
+function formatAuthors(authors) {
+  if (!authors?.length) return "Anonymous";
+  const selected = authors.length > 8 ? [...authors.slice(0, 8), "et al."] : authors;
+  return selected.map(texText).join(", ");
+}
+
+function referenceSortKey(reference) {
+  const lead = reference.sortAuthor ?? reference.authors?.[0] ?? reference.organization ?? "";
+  const normalizedLead = lead.replace(/\s+et al\.$/i, "");
+  const words = normalizedLead.trim().split(/\s+/);
+  const surname = words.length > 1 ? words.at(-1) : normalizedLead;
+  return `${surname} ${normalizedLead} ${reference.year ?? ""} ${reference.title}`.toLocaleLowerCase();
+}
+
+function renderReferences(audit) {
+  const references = [];
+  for (const record of audit.arxiv.filter(manuscriptRecord)) {
+    references.push({
+      key: `arxiv-${record.id.replaceAll(".", "-")}`,
+      authors: record.metadata.authors,
+      year: record.metadata.published.slice(0, 4),
+      title: record.metadata.title,
+      locator: `arXiv:${record.id}. \\url{https://arxiv.org/abs/${record.id}}`,
+    });
+  }
+  for (const record of audit.dois.filter(manuscriptRecord)) {
+    references.push({
+      key: `doi-${record.doi.replace(/[^a-z0-9]+/gi, "-").replace(/-$/, "")}`,
+      authors: record.authors,
+      year: record.published.slice(0, 4),
+      title: record.title,
+      locator: `DOI: \\url{${record.url}}`,
+    });
+  }
+
+  const webMetadata = {
+    "https://addyo.substack.com/p/long-running-agents": ["Addy Osmani", "2026", "Long-running agents", "Elevate"],
+    "https://cursor.com/blog/dynamic-context-discovery": ["Cursor", "2026", "Dynamic context discovery", "Cursor Blog"],
+    "https://devops.com/when-should-a-devops-agent-act-without-human-approval/": ["Bala Priya C", "2026", "When should a DevOps agent act without human approval?", "DevOps.com"],
+    "https://github.com/sjarmak/codeprobe": ["Stephanie Jarmak", "2026", "CodeProbe", "GitHub repository"],
+    "https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html": ["Birgitta Bockeler", "2026", "Harness engineering for coding agent users", "martinfowler.com"],
+    "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953": ["Jacob Meyers and Rob Zienert", "2025", "How Temporal powers reliable cloud operations at Netflix", "Netflix Technology Blog"],
+    "https://newsletter.pragmaticengineer.com/p/evals": ["Gergely Orosz and Hamel Husain", "2025", "A pragmatic guide to LLM evals for devs", "The Pragmatic Engineer"],
+    "https://openai.com/index/separating-signal-from-noise-coding-evaluations/": ["OpenAI", "2026", "Separating signal from noise in coding evaluations", "OpenAI"],
+    "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified": ["OpenAI", "2026", "Why we no longer evaluate SWE-bench Verified", "OpenAI"],
+    "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12": ["Karthik Halukurike et al.", "2026", "Blueberry: force multiplier for the on-call engineer", "Instacart Tech"],
+    "https://www.amplifypartners.com/blog-posts/how-hightouch-built-their-long-running-agent-harness": ["Amplify Partners", "2026", "How Hightouch built its long-running agent harness", "Amplify Partners"],
+    "https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/": ["InfoQ", "2026", "Stripe uses autonomous coding agents to generate over 1,300 pull requests per week", "InfoQ"],
+    "https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/": ["Gunnar Morling", "2025", "Building a durable execution engine with SQLite", "morling.dev"],
+    "https://www.reddit.com/r/compsci/comments/1rqcmu8/": ["Bytesfortruth", "2026", "Lending-domain benchmark account", "Reddit, r/compsci"],
+    "https://www.reddit.com/r/devops/comments/1touxz4/": ["Prateek Jain", "2026", "Harness engineering: the new DevOps layer for AI agents", "Reddit, r/devops"],
+    "https://x.com/swyx/status/2011344788486774942": ["swyx", "2026", "Comment on coding-benchmark and long-horizon evaluation disagreement", "X"],
+  };
+  for (const record of audit.urls.filter(manuscriptRecord)) {
+    if (record.url.includes("w3.org/1998/Math/MathML")) continue;
+    const metadata = webMetadata[record.url];
+    if (!metadata) throw new Error(`Missing bibliography metadata for ${record.url}`);
+    const [author, year, title, publication] = metadata;
+    references.push({
+      key: `web-${references.length + 1}`,
+      authors: [author],
+      sortAuthor: author === "Amplify Partners" ? "Amplify" : author,
+      year,
+      title,
+      locator: `${texText(publication)}. \\url{${record.url}}`,
+    });
+  }
+
+  references.push(
+    {
+      key: "suryana-2025",
+      authors: ["L. E. Suryana", "S. Nordhoff", "S. Calvert", "A. Zgonnikov", "B. van Arem"],
+      year: "2025",
+      title: "Meaningful human control of partially automated driving systems: insights from interviews with Tesla users",
+      locator: "Transportation Research Part F: Traffic Psychology and Behaviour, 113, 213--236.",
+    },
+    {
+      key: "trautmann-2026",
+      authors: ["Trautmann"],
+      year: "2026",
+      title: "Agents that remember",
+      locator: "Cloudflare. No stable URL was recorded in the evidence catalog.",
+    },
+    {
+      key: "patwardhan-2026",
+      authors: ["Tejal Patwardhan"],
+      year: "2026",
+      title: "Public statement on frontier evaluations",
+      locator: "June 16, 2026. No stable URL was recorded in the evidence catalog.",
+    },
+    {
+      key: "push-to-prod-2026",
+      authors: ["Matthew Hawthorne"],
+      year: "2026",
+      title: "My AI agent said it was done. It hadn't done anything",
+      locator: "Push to Prod newsletter, February 17, 2026. \\url{https://pushtoprod.substack.com/archive}",
+    },
+    {
+      key: "upstairs-safe-2026",
+      authors: ["Upstairs_Safe2922"],
+      year: "2026",
+      title: "AI agent wiped Railway DB in 9 seconds",
+      locator: "Reddit, r/devops, May 12, 2026. No stable URL was recorded in the evidence catalog.",
+    },
+    {
+      key: "saurabh-jain-2026",
+      authors: ["saurabhjain1592"],
+      year: "2026",
+      title: "What actually broke when we put AI agents into real production workflows",
+      locator: "Reddit, r/LLMDevs, January 8, 2026. No stable URL was recorded in the evidence catalog.",
+    },
+    {
+      key: "swyx-swe-bench-2026",
+      authors: ["swyx"],
+      year: "2026",
+      title: "SWE-Bench Verified is dead!!",
+      locator: "Public post, February 23, 2026. No stable URL was recorded in the evidence catalog.",
+    },
+    {
+      key: "openai-swe-bench-verified-2024",
+      organization: "OpenAI",
+      year: "2024",
+      title: "Introducing SWE-bench Verified",
+      locator: "\\url{https://openai.com/index/introducing-swe-bench-verified/}",
+    },
+    {
+      key: "owasp-llm-top-10",
+      organization: "OWASP Foundation",
+      year: "2025",
+      title: "OWASP Top 10 for LLM applications 2025",
+      locator: "\\url{https://genai.owasp.org/llm-top-10/}",
+    },
+    {
+      key: "jarmak-retrieval-systems-2026",
+      authors: ["Stephanie Jarmak"],
+      year: "2026",
+      title: "Two retrieval systems write this site",
+      locator: "\\url{https://sjarmak.ai/writing/two-retrieval-systems-write-this-site/}",
+    },
+    {
+      key: "jarmak-slack-agent-city-2026",
+      authors: ["Stephanie Jarmak"],
+      year: "2026",
+      title: "Running my own agent city on Slack",
+      locator: "\\url{https://sjarmak.ai/writing/slack-as-my-agent-orchestration-interface/}",
+    },
+  );
+
+  references.sort((left, right) => referenceSortKey(left).localeCompare(referenceSortKey(right)));
+  const items = references.map((reference) => {
+    const authors = reference.organization ? texText(reference.organization) : formatAuthors(reference.authors);
+    const normalizedTitle = reference.title.replace(/^"Sampling"' as/, "Sampling as").trim();
+    const title = texText(normalizedTitle);
+    const punctuation = /[.!?]$/.test(title) ? "" : ".";
+    return `\\bibitem{${reference.key}} ${authors} (${reference.year}). ${title}${punctuation} ${reference.locator}`;
+  });
+  return {
+    count: references.length,
+    latex: `\\begin{thebibliography}{999}\n\\addcontentsline{toc}{chapter}{References}\n${items.join("\n\n")}\n\\end{thebibliography}\n`,
+  };
 }
 
 function assertSourcesAreEndmatter(latex, sourceName) {
@@ -136,6 +335,8 @@ async function pandocConvert(markdown, outputPath) {
 }
 
 async function main() {
+  const referenceAudit = JSON.parse(await readFile(referenceAuditPath, "utf8"));
+  const references = renderReferences(referenceAudit);
   const figureSources = (await readdir(figureSourceRoot))
     .filter((file) => file.endsWith(".svg"))
     .sort();
@@ -191,9 +392,11 @@ async function main() {
 
   await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review synthesizes evidence about reliability at those system boundaries. The source base comprises 118 scholarly works organized into seven topic-specific review threads, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Evidence is grouped as strong, directional, corroborating, or null and conflicting; high-strength synthesis claims were rechecked against their underlying sources. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are therefore reported as illustrations and are not treated as independent external evidence.\n");
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The companion research artifact contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. It is packaged separately so that it can be versioned and archived with its own DOI. The public companion catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}. The archival DOI must be added to this statement and to the submission metadata before the public-review edition is frozen.\n`);
+  await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "00README"), "Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source and the 19 required PDF figures.\nThe companion research artifact is released and archived separately.\n");
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The companion research artifact contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. It is packaged separately so that it can be versioned and archived with its own DOI. The public companion catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
+
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 19 required PDF figures.\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 
@@ -210,6 +413,7 @@ async function main() {
 \\usepackage{array}
 \\usepackage{calc}
 \\usepackage{enumitem}
+\\usepackage{needspace}
 \\usepackage{fancyvrb}
 \\usepackage{upquote}
 \\usepackage[htt]{hyphenat}
@@ -273,10 +477,7 @@ async function main() {
   \\vspace{2.5em}
   {\\large Stephanie Jarmak\\par}
   \\vfill
-  {\\large Public review edition\\par}
   {\\large August 2026\\par}
-  \\vspace{2em}
-  {\\normalsize An evidence-grounded technical review of the evaluation, operation, and governance of AI coding-agent systems.\\par}
 \\end{titlepage}
 
 \\chapter*{Abstract}
@@ -290,6 +491,9 @@ async function main() {
 ${inputLines.join("\n\n")}
 
 \\backmatter
+\\renewcommand{\\bibname}{References}
+\\input{references}
+
 \\chapter*{Data and materials availability}
 \\addcontentsline{toc}{chapter}{Data and materials availability}
 \\input{materials}

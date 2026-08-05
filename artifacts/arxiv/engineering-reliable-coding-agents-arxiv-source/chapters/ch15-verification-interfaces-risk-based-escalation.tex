@@ -8,6 +8,8 @@ A reviewer who skims that diff is making a cost-benefit decision. Reading every 
 
 Vasconcelos et al.~(\href{https://arxiv.org/abs/2212.06823}{2023}) tested this account across five experiments. They studied \textbf{overreliance}, the failure in which a person accepts an incorrect AI output. Overreliance changed when the economics of checking changed. Participants engaged more when verification required less effort or when the cost of an error became more salient. Explanations reduced overreliance when they altered that calculation. They did not act as a general antidote to misplaced trust.
 
+\Needspace{5\baselineskip}
+
 This changes the engineering question. Telling reviewers to be more careful treats attention as a personality trait. A review system should instead account for:
 
 \begin{itemize}
@@ -25,6 +27,8 @@ These are properties of the workflow and can be inspected, measured, and changed
 Review capacity does not expand because an agent fleet can produce more patches. Practitioner reports already describe systems generating substantial code volume behind retained human gates. InfoQ reported (\href{https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/}{2026}) that Stripe's Minions system produces more than 1,300 production pull requests each week.
 
 That number says nothing about review depth, escaped defects, or whether the human gate changed any verdict. It does illustrate the queueing problem. Generation can scale faster than the people authorized to accept its consequences.
+
+\Needspace{5\baselineskip}
 
 I treat this mismatch as three connected design problems:
 
@@ -46,6 +50,8 @@ Nearly all of the empirical oversight evidence used here predates long-horizon a
 A code completion that waits for a programmer to accept one function creates a different control problem from an agent that edits several files, runs commands, revises its plan, and opens a proposed patch after a long trajectory. The older evidence remains useful for identifying mechanisms. It does not settle how those mechanisms behave as autonomy, duration, and action space increase.
 
 The practical standard is therefore narrower than ``keep a human in the loop.'' A workflow can include a person who sees too little, arrives too late, lacks an affordable way to check the work, or has no authority to stop it.
+
+\Needspace{5\baselineskip}
 
 The useful questions are concrete:
 
@@ -69,6 +75,8 @@ An explanation describes why an output might be right. A verification interface 
 
 Tests, executable examples, type checks, continuous-integration gates, sandboxed runs, and evidence placed beside the claim all serve the second purpose. Their value comes from the failures they can expose.
 
+\Needspace{5\baselineskip}
+
 Suppose an agent changes a retry loop. A prose rationale may say that the new backoff prevents overload while preserving responsiveness. A useful review surface instead exposes:
 
 \begin{itemize}
@@ -86,6 +94,8 @@ Suppose an agent changes a retry loop. A prose rationale may say that the new ba
 \item
   a test that advances a fake clock through failure and recovery.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 The reviewer can then challenge specific claims:
 
@@ -129,6 +139,8 @@ A large diff with weak tests can therefore make verification much more expensive
 
 Optimizing first for a complete agent explanation is therefore the wrong starting point. Begin with the claims whose failure matters and ask what artifact could disconfirm each one.
 
+\Needspace{5\baselineskip}
+
 For example:
 
 \begin{itemize}
@@ -148,6 +160,8 @@ The check also needs a sound scope. A changed-file hook that formats or tests on
 Cheap verification produced through unsound scoping is an instrumentation artifact. The dashboard becomes greener because the check stopped observing where the failure could occur.
 
 Displayed confidence does not repair that defect. A confidence signal should be calibrated before it reaches a reviewer because an uncalibrated percentage adds persuasive precision without dependable information. Calibration is a prerequisite for presentation, not a substitute for checking the claim underneath it.
+
+\Needspace{5\baselineskip}
 
 The reviewer still needs to know:
 
@@ -177,6 +191,8 @@ An explanation without a practical check is context. It may orient the reviewer,
 
 Cheap verification does not ensure that anyone performs it. A reviewer may adopt a global heuristic such as ``this agent is usually right'' and apply it to the next output without examining the particulars. The interface must then interrupt the act of acceptance rather than add ceremony to every earlier step.
 
+\Needspace{5\baselineskip}
+
 A \textbf{cognitive forcing function} requires deliberate judgment at a point where a person might otherwise rely on a fast heuristic. In an AI review workflow, it might:
 
 \begin{itemize}
@@ -200,6 +216,8 @@ Buçinca, Malaya, and Gajos (\href{https://arxiv.org/abs/2102.09692}{2021}) test
 Benefits accrued disproportionately to participants with high \textbf{Need for Cognition}, a measured tendency to engage in effortful thought. Friction changed behavior, but it imposed a real usability cost and did not affect everyone equally.
 
 That unpopularity is not merely an implementation defect. Effective friction blocks the shortest path through the task, so users experience its mechanism as inconvenience. A team that evaluates the gate only through satisfaction scores will select against the property that makes it work. A team that ignores usability will invite workarounds, perfunctory responses, and pressure to remove the control.
+
+\Needspace{5\baselineskip}
 
 The useful comparison has three parts:
 
@@ -230,6 +248,8 @@ Barke et al.~studied suggestion-level interaction rather than autonomous agents 
 
 The distinction is therefore a useful hypothesis for instrumentation, not a validated classification for autonomous-agent review.
 
+\Needspace{5\baselineskip}
+
 A practical system needs observable proxies for the decision context without pretending to read the reviewer's mind. Candidate signals include:
 
 \begin{itemize}
@@ -251,6 +271,8 @@ A practical system needs observable proxies for the decision context without pre
 \end{itemize}
 
 Each proxy can be wrong. Diff size is not risk. Speed is not negligence. Familiarity may reflect genuine expertise. The signals should determine where to test an intervention, not establish that a reviewer was careless.
+
+\Needspace{5\baselineskip}
 
 Targeting therefore requires its own evaluation. Record:
 
@@ -288,6 +310,8 @@ Which authorization boundary changed, and which denied case demonstrates that it
 
 requires a claim tied to an observable check. The answer can still be wrong, but shallow assent becomes harder to reconcile with the authorized action.
 
+\Needspace{5\baselineskip}
+
 Forcing functions also need explicit escape paths. An emergency may justify bypassing an independent pre-commit judgment, but the bypass should retain:
 
 \begin{itemize}
@@ -316,6 +340,8 @@ This result is unusually relevant because it measured the allocation of oversigh
 
 The allocation problem is broader than that setting. When every agent action receives the same depth of human review, review burden grows directly with action volume. A fleet can then increase output until reviewers skim, queues stall, or teams weaken the gate. Blanket oversight preserves the appearance of equal scrutiny while reducing the scrutiny available per case.
 
+\Needspace{5\baselineskip}
+
 Targeted escalation changes the unit of human work. Automated monitors inspect the full stream, while people receive the cases selected for judgment. An escalation route must connect each flag to:
 
 \begin{itemize}
@@ -333,6 +359,8 @@ Targeted escalation changes the unit of human work. Automated monitors inspect t
 \end{itemize}
 
 Without those elements, a flag is only a notification. It can remain unread, move among teams, or leave execution suspended indefinitely.
+
+\Needspace{5\baselineskip}
 
 A monitor scaffold should assign each detection problem to the least complex mechanism capable of resolving it:
 
@@ -393,6 +421,8 @@ The queue budget is part of the operating point. A false-positive rate of 0.01 p
 
 False alarms scale with action volume and event prevalence. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
 
+\Needspace{5\baselineskip}
+
 Escalation is therefore a budgeted online decision. As cases arrive, the system must decide which uncertainty deserves scarce human attention. The decision may consider:
 
 \begin{itemize}
@@ -417,6 +447,8 @@ My orchestration fleet uses a related division of labor. Mechanical work proceed
 
 I have not measured maintainer time, review depth, or escaped defects, so the attention benefit remains a design claim rather than a demonstrated result.
 
+\Needspace{5\baselineskip}
+
 The associated wake-up contract makes the route more specific. The fleet should wake me for suspected wrong calls and decisions about scope or trust. It should not wake me for passing runs or routine plumbing. Each escalation must:
 
 \begin{itemize}
@@ -438,6 +470,8 @@ The success criterion is behavioral: engineers should not learn to ignore the me
 This separates notification quality from verdict authority. A monitor may decide that a case satisfies an escalation rule. It should not convert that classification into the substantive decision under review. The named owner must be able to reject the work, request evidence, narrow its scope, or authorize resumption. Naming someone who lacks those powers assigns accountability without control.
 
 The resumption state also requires explicit design because asynchronous review creates races. If an agent continues acting while escalation is pending, rejection may arrive after dependent effects have occurred. If execution stops globally, one ambiguous case can block unrelated low-risk work.
+
+\Needspace{5\baselineskip}
 
 The route should state:
 
@@ -473,6 +507,8 @@ Judge drift creates another measurement problem. Deterministic rules drift when 
 
 A monitor calibrated last quarter may preserve the same interface while changing which cases reach people.
 
+\Needspace{5\baselineskip}
+
 Layering redistributes detection work but does not answer who evaluates the evaluators. Human owners need:
 
 \begin{itemize}
@@ -499,6 +535,8 @@ Start with one consequential agent workflow. Identify the decision that transfer
 
 Name the person or role that owns that decision. When no owner can be named, escalation cannot end in an accountable verdict.
 
+\Needspace{5\baselineskip}
+
 List the claims the reviewer must establish before acceptance. Attach a falsification artifact to each claim where one is available:
 
 \begin{itemize}
@@ -521,6 +559,8 @@ List the claims the reviewer must establish before acceptance. Attach a falsific
 
 Mark the claims that still require expert judgment. Do not count an explanation as evidence unless it makes one of those checks possible.
 
+\Needspace{5\baselineskip}
+
 Measure the review path before adding friction. Record:
 
 \begin{itemize}
@@ -541,6 +581,8 @@ The objective is to identify where the system charges a person for mechanical wo
 
 Place a forcing function at the acceptance decision for cases in which shallow validation is both plausible and consequential. Require an independent judgment or claim-specific response before revealing the agent's recommendation.
 
+\Needspace{5\baselineskip}
+
 Preserve an emergency bypass with:
 
 \begin{itemize}
@@ -558,6 +600,8 @@ Preserve an emergency bypass with:
 \end{itemize}
 
 Evaluate detection, delay, bypass frequency, and workarounds together. Satisfaction alone will favor the controls that interfere least, not necessarily those that improve judgment.
+
+\Needspace{5\baselineskip}
 
 Build the monitor scaffold from exact checks outward:
 
@@ -577,6 +621,8 @@ Build the monitor scaffold from exact checks outward:
 Every layer should return the evidence required to challenge its conclusion.
 
 Calibrate the complete stack on an expert-labeled, stratified, held-out set. Choose and record the operating point, then translate its rates into expected queue volume using the deployed action volume and event prevalence. A percentage without the expected number of human cases does not define an operating policy.
+
+\Needspace{5\baselineskip}
 
 Define the escalation route as part of deployment. Every flag should identify:
 

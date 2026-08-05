@@ -26,6 +26,8 @@ An immutable raw layer changes that failure mode. The recorder appends original 
 
 When the distillate omits relevant material, the omission becomes a retrieval or consolidation defect that can be repaired from preserved evidence.
 
+\Needspace{5\baselineskip}
+
 The architecture has two ownership rules:
 
 \begin{itemize}
@@ -37,6 +39,8 @@ The architecture has two ownership rules:
 \end{itemize}
 
 A summary may state what the system believed about a user. The trace records which event produced that belief, when it arrived, and which later event contradicted it. Combining those roles in one mutable record turns an inference into history.
+
+\Needspace{5\baselineskip}
 
 Rebuildability follows from this separation. Every derived item carries provenance to:
 
@@ -80,6 +84,8 @@ The underlying artifact is the replayable trace from Chapter 9, used for another
 
 The requirements overlap, but memory adds retrieval patterns, retention policy, user correction, supersession, and deletion obligations that execution replay alone does not resolve.
 
+\Needspace{5\baselineskip}
+
 Consider a coding agent that learns three facts during a repository investigation:
 
 \begin{enumerate}
@@ -94,6 +100,8 @@ Consider a coding agent that learns three facts during a repository investigatio
 \end{enumerate}
 
 A concise summary may preserve the rename and wrapper while omitting the rollback dependency as a low-frequency detail.
+
+\Needspace{5\baselineskip}
 
 Weeks later, an incident task asks whether the wrapper can be removed. A query against the summary returns a confident but incomplete answer. When the raw trace remains available, the system can:
 
@@ -119,6 +127,8 @@ The raw event sequence supplies the observations. The derived schema still decid
 
 Immutability does not imply public access or indefinite retention. Raw traces may contain credentials, personal information, proprietary code, and conclusions later shown to be false. Their value as recovery material increases the harm of unauthorized access.
 
+\Needspace{5\baselineskip}
+
 I therefore treat the raw layer as sensitive source material:
 
 \begin{itemize}
@@ -136,6 +146,8 @@ I therefore treat the raw layer as sensitive source material:
 \end{itemize}
 
 Deletion must follow provenance in the reverse direction. If a user or policy requires removal of a raw event, every summary, profile, embedding, cache entry, and graph edge derived from it becomes suspect. Removing only the transcript leaves the more convenient copies intact.
+
+\Needspace{5\baselineskip}
 
 The system therefore needs a mechanical path to:
 
@@ -157,6 +169,8 @@ Forgetting is part of the architecture, and it is the least-measured part of the
 Deletion propagation and stale-claim retrieval should therefore be measured separately from task completion. A task can succeed while a deleted fact continues shaping the answer.
 
 Retention also has a boundary that the recovery argument cannot override. Some systems cannot lawfully or safely preserve complete traces. Others should not preserve them because the likely harm exceeds their diagnostic value.
+
+\Needspace{5\baselineskip}
 
 The raw layer may therefore require:
 
@@ -188,6 +202,8 @@ The case against that default is directional, practitioner-weighted, and contest
 
 A practitioner argument that knowledge graphs are the wrong abstraction for agent memory accompanies those sources without a study behind it. Together they establish a presumption in favor of simpler infrastructure. They do not establish that relational storage is best across workloads.
 
+\Needspace{5\baselineskip}
+
 I begin with the corpus the agent actually records:
 
 \begin{itemize}
@@ -205,6 +221,8 @@ I begin with the corpus the agent actually records:
 \end{itemize}
 
 A relational database can store these records with stable identities, explicit time fields, transactional deletion, and access controls. Full-text search provides an inspectable first retrieval path. The operator can see the query, matched terms, filters, and returned records without first interpreting a learned similarity score or model-generated relation.
+
+\Needspace{5\baselineskip}
 
 This starting point is deliberately modest. It handles:
 
@@ -230,6 +248,8 @@ It also exposes its failures clearly.
 
 Suppose a user asks for ``the outage caused by stale ownership data,'' while the trace says that ``the on-call mapping lagged the transfer.'' Lexical retrieval may miss the relationship. Repeated misses of this kind provide evidence for a semantic lane.
 
+\Needspace{5\baselineskip}
+
 Vector retrieval addresses lexical mismatch by comparing learned representations of the query and stored text. It may be justified when:
 
 \begin{itemize}
@@ -254,6 +274,8 @@ Which services depend on a library owned by a team whose runbook changed after a
 
 When relationships are the retrieval target and multi-hop questions recur, the schema and maintenance burden may be justified. Similarity search is not a reliable substitute for explicit traversal when the answer depends on a sequence of named relations.
 
+\Needspace{5\baselineskip}
+
 The graph obtains those relations through an extraction pipeline. A model or parser reads an event or summary, identifies entities, resolves identities, and emits edges. Each step can:
 
 \begin{itemize}
@@ -273,6 +295,8 @@ The graph obtains those relations through an extraction pipeline. A model or par
 The graph can then return a mechanically valid traversal over semantically incorrect edges. Structured presentation may make the answer appear better supported than the underlying evidence warrants.
 
 High-degree entities create another scaling problem. Common concepts such as production, a central platform team, or a widely used library can become hubs connected to much of the store. Traversal through those hubs expands quickly and returns weakly related paths.
+
+\Needspace{5\baselineskip}
 
 Operating the graph then requires:
 
@@ -294,6 +318,8 @@ Operating the graph then requires:
 
 Graph construction becomes an ongoing information-quality program rather than a one-time schema decision.
 
+\Needspace{5\baselineskip}
+
 The two additions address different failures:
 
 \begin{itemize}
@@ -311,6 +337,8 @@ The decision resembles Chapter 12's repository-index choice, but the corpus diff
 That difference raises the cost of opaque derivation errors.
 
 Claims of local deployment need the same scrutiny. A framework may store its database on a workstation while sending extraction or embedding requests to a remote service. Another may require a cloud model key for its default path even though the storage package is open source.
+
+\Needspace{5\baselineskip}
 
 I inspect the effective dependency graph, including:
 
@@ -340,6 +368,8 @@ The evaluation should keep correctness, performance, and governance separate. A 
 
 Calling all three ``memory quality'' conceals which component must change.
 
+\Needspace{5\baselineskip}
+
 Before adding infrastructure, I construct a small query set containing:
 
 \begin{itemize}
@@ -357,6 +387,8 @@ Before adding infrastructure, I construct a small query set containing:
 \item
   the relational questions motivating the proposed graph.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 For each query, I record:
 
@@ -408,6 +440,8 @@ The evidence for treating compaction as a tunable component rests on one strong 
 
 Chapter 10 asks the reader to build a corpus of roughly one hundred diverse traces, cluster them into five to ten failure classes, and assign the first upstream failure in each run. Those counts are unmeasured starting recommendations. For compaction failures, I add a context label only when the preserved trace supports it.
 
+\Needspace{5\baselineskip}
+
 The label records whether necessary evidence was:
 
 \begin{itemize}
@@ -425,6 +459,8 @@ It also identifies the compaction-policy version and points to the source events
 This label is an attribution judgment rather than a direct measurement. Chapter 10 requires a named human to approve any attribution that changes remediation or the interpretation of an evaluation. Revising the compaction policy is such a decision.
 
 The label also prevents a common attribution error. A task may fail after compaction even when compaction played no causal role. The repository may have changed, a tool may have timed out, or the agent may have ignored evidence that remained available. I revise the policy only when the trace supports a counterfactual claim: a different representation of the same prior history could plausibly have changed the relevant decision.
+
+\Needspace{5\baselineskip}
 
 The initial policies are therefore hypotheses. Before a local failure corpus exists, I can define structural rules such as preserving:
 
@@ -474,6 +510,8 @@ A plausible mechanism is the effort required to discriminate among records. A mo
 
 Compression creates the inverse failure. A short history may omit a rare constraint because it appeared once or consumed few tokens. Frequency is a poor proxy for importance when one low-salience fact determines whether a destructive operation is allowed. The failure corpus reveals which details became decisive in real investigations, allowing the policy to preserve evidence according to function rather than prominence.
 
+\Needspace{5\baselineskip}
+
 Task correctness remains too coarse for diagnosis. I inspect whether the compacted context:
 
 \begin{itemize}
@@ -511,6 +549,8 @@ From the first run, I preserve every permitted raw trace in inexpensive immutabl
 Retention limits and deletion propagation are tested as part of the architecture. A recovery boundary that violates its governance boundary cannot remain in service.
 
 I begin retrieval with a relational event store and full-text search. This is a presumption drawn from contested, directional evidence rather than a measured conclusion. Local query failures determine whether the system needs more.
+
+\Needspace{5\baselineskip}
 
 Before adding another retrieval component, I write down the representative queries and observed failures that would justify it:
 

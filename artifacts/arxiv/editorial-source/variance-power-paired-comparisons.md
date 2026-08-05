@@ -143,15 +143,31 @@ The companion catalog covers designs that this basic framework does not. Cluster
 
 The catalog also covers profiling benchmark noise before making decisions, declaring the decoding configuration, aggregating scarce repetitions with interquartile means and resampled intervals, reducing an evaluation around a specific decision, using precommitted confirmatory designs, and measuring sensitivity across prompt variants. Each addresses a narrower problem than the core decisions developed in this chapter.
 
-## The procedure I run before crediting a delta
+## Before drawing a conclusion from a difference
 
-I write the engineering threshold first, before the expensive suite runs. Pilot variance then determines the required task and run counts, with margin added for uncertainty in that estimate, and the design record states the smallest difference the planned experiment can detect. When the available budget cannot resolve the threshold, I narrow the claim or postpone the verdict before spending the calls.
+I define the engineering threshold before running the expensive suite. The threshold is the smallest change that would alter the engineering decision, not the smallest change a statistical test might detect.
 
-Three independent repeats per configuration form my floor. The variance estimate may remain unstable at three, and a single lucky or unlucky draw no longer owns the result. I pair nuisance assignments across systems wherever possible and run both systems on identical item states. Each retained row records the item identity, both outcomes, the repeat identity, and the assigned random conditions.
+Pilot variance then determines the required numbers of tasks and repeated runs. I add margin because the pilot estimate is itself uncertain, and the design record states the smallest difference the planned experiment can reliably resolve. When the available budget cannot resolve a difference large enough to matter, I narrow the claim or withhold the verdict before spending the calls.
 
-Per-item differences supply the analysis: the mean difference, its standard error, the correlation between system scores, and a confidence interval on the mean difference. Pass/fail tasks call for the discordant pairs and the binary paired test, and nonlinear composite metrics call for resampling or permuting intact pairs. Matching task names do not establish pairing when repository state or execution path differs.
+Three independent repeats per configuration are my minimum. Three may still produce an unstable variance estimate, but they prevent one unusually favorable or unfavorable run from determining the result. I pair nuisance conditions across systems wherever possible and run both systems against identical item states. Each retained row records the item identity, the outcomes from both systems, the repeat identity, and the assigned random conditions.
 
-A repeat stays interpretable only while the apparatus is pinned: model version, decoding settings, exact prompts, task revision, tool permissions, and harness version. When a provider exposes no stable model version, I record the evaluation window and treat later reruns as open to drift. The observed delta belongs beside the complete run distribution and the prewritten threshold. I credit no difference smaller than the measured spread, and I return no verdict on a difference the experiment lacked the power to resolve.
+The analysis begins with per-item differences. For continuous outcomes, I report the mean paired difference, its standard error, the correlation between the two systems' scores, and a confidence interval for the mean difference.
+
+Binary pass-or-fail outcomes require the discordant pairs and an appropriate paired test. Nonlinear composite metrics require resampling or permutation of intact pairs. Matching task names do not create a paired design when the repository state, inputs, or execution path differs.
+
+Repeated trials remain interpretable only while the apparatus is pinned:
+
+- model version;
+- decoding settings;
+- exact prompts;
+- task and repository revision;
+- tool definitions and permissions;
+- harness version; and
+- evaluator version.
+
+When a provider exposes no stable model version, I record the evaluation window and treat later reruns as potentially affected by model drift.
+
+The observed difference belongs beside the complete run distribution and the engineering threshold written before execution. I do not credit a difference that remains smaller than the measured variation. I return no verdict when the experiment lacked the power to resolve the difference that would have changed the decision.
 
 ## Sources and evidence
 

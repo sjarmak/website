@@ -42,6 +42,8 @@ Pass rate captures only the final state. It cannot reveal which transition faile
 
 A passing task is equally ambiguous. A generator may solve a familiar edit from model knowledge while the retriever returns irrelevant material. A broad retriever may place the answer somewhere in a large dump that exceeds the model's useful attention and still receive credit because the final edit happens to work. Chapter 6's return-everything case achieved recall 1.0 by construction. Correctness at the end of a run does not certify the evidence path that preceded it.
 
+\Needspace{5\baselineskip}
+
 I therefore retain a per-task record containing at least:
 
 \begin{itemize}
@@ -104,6 +106,8 @@ The cost limits where this decomposition can be applied. Repository-scale releva
 
 A proxy based only on file overlap with one reference patch is cheaper and should be reported as that proxy.
 
+\Needspace{5\baselineskip}
+
 Five terms help describe retrieved context:
 
 \begin{itemize}
@@ -124,6 +128,8 @@ This vocabulary comes from a position paper by Vishnyakova (\href{https://arxiv.
 
 Evidence use is harder to measure than exposure. Model-generated citations may be incomplete or retrospective. Removing one retrieved item and rerunning the task is an ablation, but model variability may change the result for reasons unrelated to that item. Attention weights do not establish causal use.
 
+\Needspace{5\baselineskip}
+
 I therefore combine the available signals and state what each supports:
 
 \begin{itemize}
@@ -141,6 +147,8 @@ This decomposition also changes how verbose retrieval should be interpreted. Ret
 A system that improves recall by filling the context window has made a different tradeoff from one that promotes the same evidence into its first few results.
 
 Stage scoring is well established in benchmarked retrieval pipelines and less established in end-to-end agent evaluation. Agents reformulate queries, inspect results, open additional files, and change direction during a run. One static top-\(k\) list does not represent that trajectory.
+
+\Needspace{5\baselineskip}
 
 I record each retrieval event with:
 
@@ -200,6 +208,8 @@ Every added lane also adds cost. It requires index construction, storage, query 
 
 Demand may be asymmetric. In one corpus served by my systems, I observed 7,993 keyword calls and 2,449 semantic calls across site traffic and benchmark runs. Those counts do not measure answer quality and reflect the interfaces and users exposed by that system. They do show that replacing lexical retrieval with semantic retrieval would have ignored most expressed demand, even though the semantic lane remained necessary for vocabulary gaps.
 
+\Needspace{5\baselineskip}
+
 I evaluate an added lane through a paired ablation. The same tasks run with:
 
 \begin{enumerate}
@@ -251,6 +261,8 @@ The reported 4.3-percentage-point retrieval gain should be interpreted at that l
 
 The 2.67-percentage-point generation gain is smaller and farther downstream. Better retrieval must survive context selection and then alter the model's output. The attenuation is consistent with the stage chain developed earlier, although the study does not identify one cause for it. Some newly retrieved chunks may be redundant, appear below the usable cutoff, or fail to change generation.
 
+\Needspace{5\baselineskip}
+
 I compare chunking policies on identical repository revisions and tasks. The fixed-window and syntax-aware indexes use the same:
 
 \begin{itemize}
@@ -283,6 +295,8 @@ The final comparison returns to decomposed scoring. I measure whether syntax-awa
 
 Begin with the stack that serves real tasks. The first version can use a small sample from one query class, sized to the available annotation budget and stratified across the repositories or task shapes relevant to the decision. Judge the evidence each task requires and instrument the production retrieval path. A retrieval-depth sweep on that stratum can answer one question: whether the current top-\(k\) cutoff should change for that query class.
 
+\Needspace{5\baselineskip}
+
 For each task, identify the file, symbol, or evidence set that a competent solution could use. Record:
 
 \begin{itemize}
@@ -309,6 +323,8 @@ Separate tasks by the evidence they require. Exact symbols, error strings, natur
 
 If the production stack has only one retrieval lane, add the missing lexical or semantic lane as a controlled arm. Run each lane independently and preserve its original ranking. Fuse ranks rather than raw scores because the score scales are not commensurate.
 
+\Needspace{5\baselineskip}
+
 Measure:
 
 \begin{itemize}
@@ -328,6 +344,8 @@ Measure:
 Keep lane health visible in production so a populated result list cannot conceal the failure of one channel.
 
 When reliable parsers exist, build a second index using syntax-boundary chunks. Hold corpus eligibility, repository revision, task set, queries, and retriever fixed. Sweep chunk size and retrieval depth together, and report parse failures and fallback coverage.
+
+\Needspace{5\baselineskip}
 
 Compare the syntax-aware and existing chunkers on:
 

@@ -30,6 +30,8 @@ This changes the acceptance question. A confidence score asks the process that p
 
 The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. Its evidentiary value comes from being produced causally downstream of the candidate artifact rather than by the process that proposed it.
 
+\Needspace{5\baselineskip}
+
 The architecture has three owners:
 
 \begin{itemize}
@@ -115,6 +117,8 @@ candidate
 
 The correction step does not modify the verdict. It consumes the failed candidate and its run record, then emits a new candidate with a new identity. This preserves the history needed to distinguish recovery from repeated failure. It also prevents revised bytes from inheriting a passing result produced by an earlier version.
 
+\Needspace{5\baselineskip}
+
 Feedback should contain enough detail to distinguish the failed path without flooding the next attempt with unrelated output. A useful package identifies:
 
 \begin{itemize}
@@ -146,6 +150,8 @@ External observations also have authority boundaries. A unit-test failure can ju
 Reliable feedback may still be incomplete. A failing test can expose a symptom without identifying its cause. A compiler diagnostic may point to a generated file even though the defect originated in source configuration. The next attempt should use the observation to constrain its diagnosis before modifying the artifact. Execution adds information to the correction loop, but the observation does not necessarily contain the remedy.
 
 Faulty feedback creates a directed failure mode. An incorrect expected value, nondeterministic test, stale fixture, or verifier attached to the wrong artifact can push successive revisions farther from correct behavior. The loop may then appear to converge while following a bad oracle. Preserve the raw run records and candidate lineage so an operator can determine whether each correction followed valid evidence.
+
+\Needspace{5\baselineskip}
 
 Retry limits remain necessary even when every attempt receives a genuine new signal. A sequence of distinct failing tests can consume an unbounded budget, and each revision can create a new failure surface. Stop conditions should distinguish:
 

@@ -104,6 +104,8 @@ Fault injection forces that interaction to occur on demand. Kill a worker or pod
 
 \section{Specify the claim before the kill}\label{specify-the-claim-before-the-kill}
 
+\Needspace{5\baselineskip}
+
 Begin by expressing the recovery claim in observable terms. A useful claim names:
 
 \begin{itemize}
@@ -129,6 +131,8 @@ Each clause points to an observable event or measurement.
 The control run uses the same workload and configuration without an injected fault. This applies Chapter 2's control logic to recovery. The difference between the faulted and clean runs estimates the effect of the injection within the tested conditions.
 
 When exact output comparison is possible, retain a content digest or canonicalized output from the clean run. When model nondeterminism prevents byte-for-byte equality, compare the deterministic state and effects that the recovery contract actually constrains, and state which outputs remain incomparable.
+
+\Needspace{5\baselineskip}
 
 A faulted run needs more than a final pass indicator. At minimum, measure:
 
@@ -160,6 +164,8 @@ The clean control must use the same anchors. Otherwise the comparison measures a
 
 One restart demonstrates one recovery. Estimating stability requires repetition. Repeated faults connect recovery testing to Chapter 1's repeated-run discipline. Recovery impact is a distribution across independent runs and across recurring failures within one run.
 
+\Needspace{5\baselineskip}
+
 Schedule both:
 
 \begin{itemize}
@@ -188,6 +194,8 @@ The harness must not repair the system it measures. It may schedule the fault an
 
 A negative control can expose that error. A naive adapter restarts the workflow from its first step without reconciliation or deduplication. At every kill point after an external commitment, that adapter should violate the no-duplicates invariant.
 
+\Needspace{5\baselineskip}
+
 If it passes, the harness may be:
 
 \begin{itemize}
@@ -201,6 +209,8 @@ If it passes, the harness may be:
 \end{itemize}
 
 A control expected to fail is useful because a false pass is otherwise easy to mistake for fault tolerance. It detects only the defect it was designed to expose, however, and a subtler recovery failure may still pass both variants.
+
+\Needspace{5\baselineskip}
 
 The kill-point sweep should include:
 
@@ -249,6 +259,8 @@ Thirteen of thirteen is a satisfying result, but it describes one kill placement
 
 I can conclude that the running system exhibited the specified invariants in that trial. I cannot conclude that the engine is generally fault tolerant, that another activity would recover through the same path, or that a different software version would preserve the result. Vogel et al.~(2024) justify that restraint: recovery comparisons changed when configuration and recurring faults were measured directly.
 
+\Needspace{5\baselineskip}
+
 My publish-gate protocol, also an \textbf{unverified working artifact}, defines a broader intended experiment. Its first gate injects a failure in continuous integration at a randomized kill point. The fault matrix includes:
 
 \begin{itemize}
@@ -266,6 +278,8 @@ My publish-gate protocol, also an \textbf{unverified working artifact}, defines 
 Randomization broadens the sampled placement. It does not replace a fixed sweep across named high-risk intervals.
 
 These artifacts support no comparison among workflow engines. I never ran the comparison sweep, and the non-naive adapters remain specification stubs. There are therefore no author-generated comparative measurements to report. An interface diagram containing several adapters can resemble an experiment even when no workload has passed through them.
+
+\Needspace{5\baselineskip}
 
 Every published result should carry the configuration that produced it. Record:
 
@@ -318,6 +332,8 @@ The first is a durably persisted typed event stream that distinguishes model cal
 The second artifact is a fault-injection result produced under representative load. I run a clean control, kill a worker from inside an active step, and place at least one kill between an external effect and its durable completion record. I repeat injections within continuing runs and across independent runs because the first restart does not characterize later recovery.
 
 The harness must confirm that the intended kill occurred, observe recovery without supplying recovery state, and exercise a naive negative control expected to duplicate effects.
+
+\Needspace{5\baselineskip}
 
 I measure recovery time between declared application events rather than between process death and process restart. I retain:
 

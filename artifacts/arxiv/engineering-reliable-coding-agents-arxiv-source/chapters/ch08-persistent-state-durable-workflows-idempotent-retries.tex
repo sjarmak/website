@@ -38,6 +38,8 @@ The ADEMA architecture, from Hanlin (Zhou) et al.~(\href{https://arxiv.org/abs/2
 
 Halukurike et al.~(\href{https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12}{2026}) report a database-backed durable queue with per-pass session snapshots handling approximately 25,000 diagnostic passes per month at 99.9 percent success, including takeover by another worker during a pass. The report comes from the team that built the system, and no independent evaluation is available. The workload also consists of bounded diagnostic passes. A multi-day agent that continually discovers new subproblems may accumulate state whose relevance, size, and ownership change during execution.
 
+\Needspace{5\baselineskip}
+
 Long-running work therefore requires more than periodic serialization. Each snapshot should record:
 
 \begin{itemize}
@@ -81,6 +83,8 @@ A workflow engine makes that global view durable. A failed capacity reservation 
 The supporting literature is useful but limited. Laigner et al.~(\href{https://arxiv.org/abs/2103.00170}{2021}) combined a literature review, repository analysis, and a survey of more than 120 practitioners. They found reliability problems concentrated around hand-built sagas and convention-managed consistency. Nadeem and Malik (\href{https://arxiv.org/abs/2204.07210}{2022}) ported a benchmark system containing 22 known bugs to a workflow engine in a single-participant case study and reported that the bugs became easier to localize. Their debugging times were compared with figures reported separately in another study, so the result is not a controlled head-to-head measurement.
 
 Centralized history does not provide one universally correct consistency guarantee. Zhang et al.~(\href{https://arxiv.org/abs/2208.09827}{2022}) surveyed a decade of transactional stream-processing research and found no generally accepted approach, even for computations far more deterministic than agent workflows. Each system selected guarantees around its application characteristics. The absence of a generally accepted approach means that an ``exactly once'' feature label does not establish that an application's state, latency, and external effects fit the advertised guarantee.
+
+\Needspace{5\baselineskip}
 
 The engine boundary should follow the workload. I use three questions:
 
@@ -180,6 +184,8 @@ Three entries have thin support and contribute no evidence to the claims made in
 \section{Run the crash check}\label{run-the-crash-check}
 
 Choose the agent workflow whose failure midway through a run would have the greatest consequence. Give the run a stable identity, and store its plan, progress, and append-only event history as declared artifacts with named owners. Stop the process after several steps and delete nothing. A replacement worker should be able to identify completed work, pending work, and uncertain external effects from those artifacts alone.
+
+\Needspace{5\baselineskip}
 
 Before introducing a workflow engine, apply the three-question adoption check:
 

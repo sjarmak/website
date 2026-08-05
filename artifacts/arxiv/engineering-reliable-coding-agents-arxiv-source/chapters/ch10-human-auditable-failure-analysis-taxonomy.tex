@@ -80,6 +80,8 @@ Ma et al.~(\href{https://arxiv.org/abs/2509.08682}{2025}) later reached 36.2 per
 
 The fixes were evaluated on the benchmarks that defined the attribution task, and the method required a bespoke causal-discovery algorithm for interaction data whose behavior changes over time. That makes it useful as a candidate generator for a reviewer. It does not justify silently storing its assignment as the postmortem cause.
 
+\Needspace{5\baselineskip}
+
 A human verdict needs a reconstructable chain. I ask:
 
 \begin{itemize}
@@ -99,6 +101,8 @@ The record must distinguish the actor that introduced the defect from the actor 
 Consider a run in which a planner selects an obsolete interface, a coding worker implements it faithfully, and a verifier reports an integration failure. The verifier owns the detection. The planner is the first candidate for causal responsibility, provided the current interface was available in the planner's evidence and no later gate explicitly owned the currency check. If the repository index supplied stale documentation, responsibility may move again.
 
 The trace cannot resolve those alternatives unless it records what each step received and what obligation each step owned.
+
+\Needspace{5\baselineskip}
 
 I therefore represent attribution as a structured claim. It records:
 
@@ -162,6 +166,8 @@ The model scores will change as trace readers improve, and the benchmark cannot 
 
 Chapter 9's typed event stream supported replay and recovery. Human audit adds a different requirement. A reviewer must be able to follow step boundaries, decisions, inputs, state transitions, retries, and outcomes without inferring their identities from prose. The same event stream can support both purposes when its schema records semantic boundaries. Timestamps on messages alone do not preserve them.
 
+\Needspace{5\baselineskip}
+
 At minimum, I retain:
 
 \begin{itemize}
@@ -177,6 +183,8 @@ At minimum, I retain:
 \item
   ordered step identifiers.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 Each step records:
 
@@ -213,6 +221,8 @@ Some inputs cannot be stored in full. Repository snapshots, retrieved documents,
 Step boundaries should correspond to ownership and state transitions visible to the control plane. One step containing plan generation, three tool calls, an edit, and verification is too coarse for attribution. Recording every token or streaming fragment produces the opposite failure: thousands of events without a meaningful decision boundary.
 
 I use the smallest unit in which one actor receives a defined input and produces an action or state transition consumed by another component.
+
+\Needspace{5\baselineskip}
 
 Tool-call records need more than a name and final output. They should include:
 
@@ -309,7 +319,7 @@ The evidence grouping on each entry below comes from its catalog record. Author-
 \item
   Strong evidence: Deshpande, D., et al.~(2025), ``TRAIL: Trace Reasoning and Agentic Issue Localization,'' Patronus AI, arXiv:2505.08638. (Best evaluated model localized issues in 11\% of 148 expert-annotated traces; a 2025 capability snapshot.)
 \item
-  Corroborating case: ``What actually broke when we put AI agents into real production workflows'', /u/saurabhjain1592, r/LLMDevs, 2026-01-08 (independently corroborated by a second practitioner account of event sourcing with replayable traces, r/programming, 2025-11-26).
+  Corroborating case: ``What actually broke when we put AI agents into real production workflows'', /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
 \end{itemize}
 
 \textbf{Author-system illustration cited inline}

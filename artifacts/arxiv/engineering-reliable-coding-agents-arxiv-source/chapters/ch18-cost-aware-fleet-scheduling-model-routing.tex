@@ -6,6 +6,8 @@ The evidence for improving that outcome is thin and largely transferred from oth
 
 Astronomical scheduling supplies most of the transferred architecture, through both a survey telescope's nightly planner and a gravitational-wave follow-up scheduler built on the same facility. Learned compute-cluster scheduling provides a second source, and search-based software engineering a third. Budget-constrained bandit theory and router calibration address the model-routing decision rather than the complete fleet.
 
+\Needspace{5\baselineskip}
+
 These systems schedule telescopes and compute clusters, not software-agent fleets. The transferable design is narrower:
 
 \begin{itemize}
@@ -32,6 +34,8 @@ A cheaper model call can trigger enough repair and review to cost more per accep
 
 The important word is \emph{sufficient}. The router does not minimize the invoice in isolation, and it does not assign every task class through a fixed hand-written rule. It estimates expected performance and expected cost for the current request, then chooses the least expensive option predicted to satisfy the stated tradeoff.
 
+\Needspace{5\baselineskip}
+
 This definition leaves two deployment decisions open:
 
 \begin{itemize}
@@ -47,6 +51,8 @@ Both affect calibration and evaluation.
 \textbf{Shipping the incumbent at the deadline} places a hard time limit on schedule computation and executes the best feasible plan available when that limit expires. A feasible plan respects constraints that cannot be violated, such as capacity, hard deadlines, and work already in flight. The \textbf{incumbent} is the best feasible plan found so far.
 
 Additional solve time may find a better plan or establish that the incumbent is optimal. The schedule has operational value only while it still describes the fleet's current state. A solve deadline makes decision latency an explicit policy rather than an accidental result.
+
+\Needspace{5\baselineskip}
 
 The \textbf{optimality gap} records how far the shipped plan may remain from the best possible solution, using the strongest bound available when the deadline expires. Preserving that gap distinguishes two operationally different outcomes:
 
@@ -67,6 +73,8 @@ Operations may reasonably execute either. Evaluation should not treat them as eq
 \end{figure}
 
 Ordinary arrivals may use a cheap greedy rule between re-decision events. The system discards the existing plan only when the cost of recomputing is lower than the expected cost of executing or repairing an obsolete one.
+
+\Needspace{5\baselineskip}
 
 These terms identify the decisions that must be made before selecting an algorithm:
 
@@ -98,6 +106,8 @@ The schedule should be treated as the current output of a control loop. At a coa
 
 The system should abandon an obsolete plan when recomputation costs less than repairing or completing that plan. This comparison must include decision latency. An excellent schedule returned after the queue, capacity, or deadlines have changed is a schedule for a fleet that no longer exists.
 
+\Needspace{5\baselineskip}
+
 Current state includes more than queued work. Running tasks may:
 
 \begin{itemize}
@@ -120,6 +130,8 @@ The objective should also charge for \textbf{plan churn}: avoidable reassignment
 
 When the solve deadline arrives, execute the incumbent and retain its optimality gap. This follows from the mismatch between proof time and operational time. A solver may find a feasible plan quickly but take much longer to establish how close it is to the best plan. Meanwhile, new work arrives and the state used to construct the plan ages.
 
+\Needspace{5\baselineskip}
+
 The deadline prevents optimization itself from becoming another queue. The stored gap supports later questions:
 
 \begin{itemize}
@@ -135,6 +147,8 @@ The deadline prevents optimization itself from becoming another queue. The store
 \end{itemize}
 
 Parazin et al.~(\href{https://arxiv.org/abs/2203.00013}{2022}) compared a mixed-integer scheduler for gravitational-wave follow-up with a tuned greedy heuristic. Neither won consistently. Under a 500-second cap, each performed better on different skymaps, and only 37 of 97 well-localized skymaps improved under the reported optimization comparison. Across 951 simulated events, a hybrid improved detection efficiency by roughly 3 to 11 percent. The authors also reported that reducing the cap to 100 seconds would have truncated only 64 additional schedules without a substantial efficiency loss.
+
+\Needspace{5\baselineskip}
 
 These are directional results from gravitational-wave follow-up rather than operating parameters for an agent fleet. They support evaluating:
 
@@ -182,6 +196,8 @@ Choose the cadence and solve deadline through a short pilot. Retain the incumben
 
 The companion entry \texttt{pilot-to-pick-the-algorithm-then-commit-the-budget} states the same logic: spend a small amount distinguishing among methods, then commit the operating budget to the one that performs better.
 
+\Needspace{5\baselineskip}
+
 The design becomes auditable when the following are explicit:
 
 \begin{itemize}
@@ -212,6 +228,8 @@ My fleet orchestrator illustrates the starting point. Each execution pool has a 
 
 The static table is predictable and legible. It also supplies the fallback when a selective router lacks evidence. Its limitation is that dispatch cannot respond to variation in request difficulty.
 
+\Needspace{5\baselineskip}
+
 A cheapest-sufficient router replaces the static assignment with two estimates for every candidate worker on the current request:
 
 \begin{itemize}
@@ -227,6 +245,8 @@ It then selects the least expensive worker predicted to satisfy the declared req
 Somerstep et al.~analyze this plug-in structure in CARROT and argue that its direct routing overhead is negligible because selection requires evaluating the two predictors for each available model. The useful behavior still depends on calibration: predicted performance must correspond to observed performance on the deployment distribution.
 
 A mathematically correct selector cannot compensate for a predictor that assigns unjustified confidence to unfamiliar work.
+
+\Needspace{5\baselineskip}
 
 The sufficiency requirement must be operational rather than rhetorical. ``Good enough'' might mean:
 
@@ -258,6 +278,8 @@ Online updating addresses a real limitation of static routing. Models and worklo
 
 Li conditions routing on a user-selected performance-cost preference, allowing one learned policy to represent several tradeoffs at inference time. The evidence is benchmark-based and comes from a single-author preprint. It supports testing preference conditioning. Calibration under delayed software outcomes remains unmeasured.
 
+\Needspace{5\baselineskip}
+
 The reward definition is the controlling measurement choice. Software signals arrive at different times and answer different questions:
 
 \begin{itemize}
@@ -275,6 +297,8 @@ The reward definition is the controlling measurement choice. Software signals ar
 \end{itemize}
 
 Combining those signals into one reward is a construct-validity decision outside the routing mathematics. The reward definition should be versioned so that policies trained under different meanings of success are not silently compared.
+
+\Needspace{5\baselineskip}
 
 A learned policy should remain advisory until its recommendations correlate with an outcome measured outside the router and relevant to accepted work. In advisory mode, record:
 
@@ -302,6 +326,8 @@ When observations are sparse, fall back to the static cost-performance table. Th
 
 Rare task families, new models, and new reward definitions should remain on the static floor until the router exposes enough evidence and uncertainty to justify a different choice.
 
+\Needspace{5\baselineskip}
+
 Calibration can fail before deployment. Benchmark-derived routing data may encode:
 
 \begin{itemize}
@@ -321,6 +347,8 @@ Calibration can fail before deployment. Benchmark-derived routing data may encod
 CARROT assumes a static model pool. Production pools change as prices move, versions are retired, rate limits vary, and tool compatibility excludes some models. Each change requires recalibration or creates a region in which the router is extrapolating.
 
 Online exploration creates another cost. A learning policy must sometimes choose an uncertain worker to gather information, and the routed request is real production work. A budget constraint reveals the cost but does not decide who may bear it.
+
+\Needspace{5\baselineskip}
 
 Deployment therefore needs:
 
@@ -377,6 +405,8 @@ An \textbf{arrival trace} is a time-ordered record of work entering the system, 
 
 A \textbf{replay harness} re-executes the recorded arrivals under a candidate dispatch policy without changing production state. It differs from the single-run replay used for debugging in Chapter 9. That replay reconstructs one execution. This harness holds an entire workload sequence fixed while replacing the policy that allocates it.
 
+\Needspace{5\baselineskip}
+
 The trace needs, at minimum:
 
 \begin{itemize}
@@ -407,6 +437,8 @@ Holding arrivals fixed creates a paired comparison. Every policy encounters the 
 
 The replay is not causal in every respect. It does remove one large source of variation that often overwhelms scheduler comparisons.
 
+\Needspace{5\baselineskip}
+
 The first run should validate the harness rather than compare policies. Construct small cases whose best schedule is known, including:
 
 \begin{itemize}
@@ -429,6 +461,8 @@ Confirm that the replay clock, eligibility logic, claim duration, completion eve
 
 Lampoudi, Saunders, and Eastman (2015) derived an integer-program formulation for the Las Cumbres Observatory network and reported computational validation at realistic problem sizes. The transferable practice is to test the scheduling kernel on instances with known answers before trusting its output on a historical trace.
 
+\Needspace{5\baselineskip}
+
 The second run establishes cheap baselines. Compare the proposed policy with:
 
 \begin{itemize}
@@ -446,6 +480,8 @@ The second run establishes cheap baselines. Compare the proposed policy with:
 Random oversampling generates several inexpensive randomized schedules and retains the best under the declared objective. Chen et al.~(2016) developed SWAY by sampling a large candidate population down to better solutions rather than evolving many generations. Across several software-engineering models, it was competitive with state-of-the-art evolutionary algorithms at substantially lower computational cost. The authors proposed it explicitly as a baseline for search-based software engineering.
 
 The controlled result supports the discipline: an elaborate optimizer that cannot beat a cheap alternative has not earned adoption.
+
+\Needspace{5\baselineskip}
 
 The objective must be fixed before inspecting the policy results. Possible objectives include:
 
@@ -483,6 +519,8 @@ Decima provides a useful but bounded comparison. Mao et al.~(2018) trained a clu
 
 Those measurements support learned scheduling in that cluster environment. They do not evaluate fixed-arrival replay and do not establish an expected effect for agent work. The transferable experimental rule is narrower: preserve the arrival process when comparing policies and look for gains where resources are actually contested.
 
+\Needspace{5\baselineskip}
+
 Historical replay also preserves historical selection. Work absent from the ledger remains absent, including:
 
 \begin{itemize}
@@ -501,6 +539,8 @@ A route may therefore contain an artificially easy trace because the incumbent p
 
 A live policy can also change future arrivals. Faster completion may create more demand. Priority treatment may change how users label requests. Model routing can change reviewer behavior and the kinds of tasks people submit.
 
+\Needspace{5\baselineskip}
+
 Historical replay cannot capture all such feedback. Use a \textbf{temporal holdout}, a later period excluded while policies are developed, to test whether the replay result survives workload drift. Then stage deployment through:
 
 \begin{enumerate}
@@ -517,6 +557,8 @@ Historical replay cannot capture all such feedback. Use a \textbf{temporal holdo
 \end{enumerate}
 
 Each stage should retain an external outcome measure and the starvation guard.
+
+\Needspace{5\baselineskip}
 
 A compact replay protocol is:
 
@@ -538,6 +580,8 @@ A compact replay protocol is:
 \item
   Require shadow and canary evidence before expanding live allocation authority.
 \end{enumerate}
+
+\Needspace{5\baselineskip}
 
 This protocol is stricter than asking whether the queue feels better. It asks:
 
@@ -565,6 +609,8 @@ Build the trace, hold arrivals fixed, make the cheap policy compete, and let the
 
 \section{Instrument decisions before optimizing them}\label{instrument-decisions-before-optimizing-them}
 
+\Needspace{5\baselineskip}
+
 When the ledger does not preserve decision state, begin with events the system can record without prediction:
 
 \begin{itemize}
@@ -584,6 +630,8 @@ When the ledger does not preserve decision state, begin with events the system c
 \end{itemize}
 
 These fields reconstruct demand, occupancy, and accepted work. They also expose missing or contradictory histories before policy-specific estimates complicate the schema.
+
+\Needspace{5\baselineskip}
 
 Next, record the resource state visible at every dispatch decision:
 
@@ -609,6 +657,8 @@ Next, record the resource state visible at every dispatch decision:
 
 Record the route selected and the reason for that route in the same decision event. State and reason need a shared decision identity and timestamp. Without them, later analysis cannot determine which alternatives were feasible or distinguish worker performance from the policy that selected the work.
 
+\Needspace{5\baselineskip}
+
 Only after those observations are complete should the ledger add estimates such as:
 
 \begin{itemize}
@@ -631,6 +681,8 @@ Estimates belong last because they are outputs of a policy rather than observati
 
 The first operating comparison can remain descriptive. Ask whether high-throughput intervals under the incumbent policy also have a higher accepted-result cost than lower-throughput intervals. Report both measures by request class and constrained resource.
 
+\Needspace{5\baselineskip}
+
 That comparison cannot establish:
 
 \begin{itemize}
@@ -652,6 +704,8 @@ That comparison cannot establish:
 Those questions still require replay, shadow execution, or controlled rollout on the fleet's workload. None of the cited studies reports results from a software-agent fleet.
 
 My replay supplies no default cadence, threshold, or cost ratio. Do not import an observatory schedule, a bandit guarantee, or my 15 percent promotion rule.
+
+\Needspace{5\baselineskip}
 
 The useful outcome is an allocation record that can answer:
 

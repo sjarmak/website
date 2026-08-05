@@ -1,14 +1,10 @@
 # arXiv submission handoff
 
-Prepared August 5, 2026 for the public-review edition of *Engineering Reliable Coding Agents*.
+Prepared August 5, 2026 for the August 2026 edition of *Engineering Reliable Coding Agents*.
 
 ## Positioning
 
-“Monograph” is a normal scholarly term for a sustained book-length treatment of one subject, but it is not an arXiv metadata field and is not necessary here. This edition uses **technical review** in its title-page positioning line, abstract, and Comments field. That wording foregrounds the evidence synthesis and avoids making the submission sound like either a trade book or a narrowly conventional monograph.
-
-Positioning line:
-
-> An evidence-grounded technical review of the evaluation, operation, and governance of AI coding-agent systems.
+“Monograph” is a normal scholarly term for a sustained book-length treatment of one subject, but it is not an arXiv metadata field and is not necessary here. The abstract and Comments field use **technical review** because that description foregrounds the evidence synthesis. The title page carries only the title, subtitle, author, and date.
 
 ## Prepared files
 
@@ -37,7 +33,7 @@ AI coding agents are commonly evaluated as models but deployed as systems whose 
 
 ### Comments
 
-Technical review, 236 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. Public review edition, August 2026. Companion DOI: [insert DOI].
+Technical review, 251 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -58,6 +54,8 @@ Keep the cross-list to these two categories. The contribution centers on softwar
 ## Companion release sequence
 
 The companion should be a separate citable research artifact, not extra files inside the arXiv TeX archive.
+
+Use a dedicated public repository for the book and companion. The website remains the reading and discovery layer; the repository becomes the versioned scholarly record. A practical top-level layout is `manuscript/` for the LaTeX source, `companion/` for the catalog, ledger, crosswalk, benchmark data, schemas, and provenance files, plus `CITATION.cff`, a release changelog, and separate manuscript and companion license files. Publish immutable version tags and archive the companion release through Zenodo or another DOI-granting service.
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
@@ -118,14 +116,15 @@ Identifier resolution verifies that the cited record exists and captures current
 ## Technical validation
 
 - Exact source ZIP compiled in a fresh temporary directory with Tectonic 0.15.0.
-- Output: 236 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
+- Output: 251 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
 - Figures: 19 of 19 included as PDF.
 - Chapter sources: 19 unnumbered chapter-end source blocks, excluded from the numbered section hierarchy and table of contents.
+- Full references: 182 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 16 audited web sources are represented, with additional named sources and author illustrations identified separately.
 - Text extraction: approximately 104,500 machine-readable words.
 - PDF security: no encryption, JavaScript, forms, or embedded multimedia.
-- Archive hygiene: 43 required files; no generated PDF, log, auxiliary file, Markdown source, dataset, or private note.
+- Archive hygiene: 44 required files; no generated PDF, log, auxiliary file, Markdown source, dataset, or private note.
 - TeX diagnostics: no errors, missing files, missing characters, undefined commands, or overfull boxes. A small number of harmless underfull-box warnings remain in source-list paragraphs.
-- Prose checks: zero failures under the manuscript prose linter after the academic-register sweep.
+- Prose review: all 20 source files were reviewed for academic register, casual framing, unsupported certainty, promotional language, and unexplained internal evidence shorthand.
 - Companion checks: catalog and benchmark JSON validate against their schemas; checksums pass; the CSV contains 564 records with a consistent 11-column structure.
 
 ## Official arXiv guidance

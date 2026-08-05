@@ -2,8 +2,6 @@
 
 Stephanie Jarmak
 
-Public review edition, August 2026
-
 ## Problem and scope
 
 An agent has finished a change. The tests pass, and a reviewer is examining a compact diff. The run appears successful, yet the available record may not establish whether another run would produce the same result, whether the tests exercised the relevant behavior, or whether the reviewer saw the decisions that carried the most risk.

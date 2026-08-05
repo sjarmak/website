@@ -239,7 +239,7 @@ The evidence grouping on each entry below comes from its catalog record. Author-
 ### Design traces for human audit
 
 - Strong evidence: Deshpande, D., et al. (2025), "TRAIL: Trace Reasoning and Agentic Issue Localization," Patronus AI, arXiv:2505.08638. (Best evaluated model localized issues in 11% of 148 expert-annotated traces; a 2025 capability snapshot.)
-- Corroborating case: "What actually broke when we put AI agents into real production workflows", /u/saurabhjain1592, r/LLMDevs, 2026-01-08 (independently corroborated by a second practitioner account of event sourcing with replayable traces, r/programming, 2025-11-26).
+- Corroborating case: "What actually broke when we put AI agents into real production workflows", /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
 
 ### Author-system illustration cited inline
 

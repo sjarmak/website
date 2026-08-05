@@ -48,6 +48,8 @@ That result provides directional evidence for complementary signals in that sett
 
 The study also exposes a coordination cost hidden by the word ``layering.'' The two fitness functions could guide one search only after someone decided how to scale them relative to each other. A weighted combination can allow many small gains to outweigh one rare but serious violation. A veto avoids that trade for hard invariants, but a noisy veto can reject useful work. An advisory signal preserves throughput but has no force unless a person or later gate responds to it.
 
+\Needspace{5\baselineskip}
+
 I therefore assign different jobs to different signals:
 
 \begin{itemize}
@@ -134,6 +136,8 @@ Zero direct reward pressure does not guarantee permanent independence. Model dev
 
 The method also requires access to reasoning traces. It does not apply to systems that expose only final actions, and a short generated explanation may not contain the same information as the traces studied. Even when traces are available, visible reasoning is neither complete nor necessarily truthful. Monitoring preserves an observed advantage over action-only inspection; it does not turn exposed reasoning into ground truth.
 
+\Needspace{5\baselineskip}
+
 The resulting acceptance path contains three distinct views:
 
 \begin{itemize}
@@ -155,6 +159,8 @@ A thinly supported aside also proposes multi-objective acceptance with an indepe
 \section{Rebuild the acceptance path}\label{rebuild-the-acceptance-path}
 
 I rebuild an acceptance pipeline by tracing one recently accepted agent change from candidate generation through deployment. At each transition, I identify any value that could have ended the decision by itself: a passing test suite, clean lint result, judge score, approval label, or post-run summary.
+
+\Needspace{5\baselineskip}
 
 The inventory records more than the metric name. For each value, it records:
 

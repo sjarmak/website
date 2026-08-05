@@ -14,6 +14,8 @@ These are separate design objects, but they fail in the same way when the operat
 
 Agent systems acquire more kinds of authority as they grow. One may restart a service, propose a migration, merge documentation, rotate a credential, or delete a branch. Calling the system ``autonomous'' collapses those different powers into one word. That word says nothing about reversibility, blast radius, available evidence, ownership of state, or the ability to interrupt execution.
 
+\Needspace{5\baselineskip}
+
 The useful unit is the transfer of control for one action class. Each transfer has:
 
 \begin{itemize}
@@ -67,6 +69,8 @@ routine success does not remove the floor
 
 My operator policy makes this separation explicit. Service restarts are pre-approved. Destructive operations such as recursive deletion, force-push, and branch deletion require renewed confirmation every time. The policy is durable configuration, so a new session inherits the same boundary. This illustrates the shape of an action-specific policy; it is not evidence that these classifications suit another system.
 
+\Needspace{5\baselineskip}
+
 A transfer-of-control record documents every decision to let the system act, require approval, or return control to a person. For each action class, it should preserve:
 
 \begin{itemize}
@@ -118,6 +122,8 @@ Outcome correctness is a third measure because approval can reflect reviewer beh
 
 Chen et al.~(\href{https://arxiv.org/abs/2507.08149}{2025}) complicate a capability-only account of automation. In their controlled study, limited understanding of agent behavior constrained willingness to adopt higher automation even as capability increased. Capability alone did not determine the limit.
 
+\Needspace{5\baselineskip}
+
 The verification surface is therefore part of the autonomy mechanism. A reviewer needs:
 
 \begin{itemize}
@@ -145,6 +151,8 @@ Some action classes remain above a permanent approval floor, below which human a
 Least privilege should still constrain the executing identity so that a mistaken approval cannot authorize effects beyond the operation being reviewed.
 
 Most teams should keep most consequential actions below full autonomy today because the supporting evidence remains thin and action-specific. The companion entry \texttt{set-autonomy-defaults-per-task-type} can initialize a policy table, but it cannot create a track record or replace the ladder.
+
+\Needspace{5\baselineskip}
 
 The executable decision is narrower:
 
@@ -183,6 +191,8 @@ The study suggests a specific mechanism. Disclosure caused participants to searc
 
 A common misuse ignores that dependence. A warning badge can become a substitute for testing, as though declaring machine authorship discharged the maintainer's responsibility. It can also become a weak liability transfer in which the system announces risk while giving the reviewer no practical way to inspect it.
 
+\Needspace{5\baselineskip}
+
 A useful label connects to:
 
 \begin{itemize}
@@ -204,6 +214,8 @@ None of those artifacts is thereby proven correct.
 The disclosure boundary needs a defined object. One pull request may contain human-written scaffolding, generated implementation, generated tests, and later human repairs. A request-level label is simple but loses that composition. A marker on every line is more precise but noisy and dependent on editor and diff support. Commit trailers provide a durable repository unit, although squashing, copying, and cherry-picking can detach the trailer from the code it described.
 
 There is no universal granularity. The team should identify the review decision the label is meant to influence and choose the smallest unit whose provenance survives the repository workflow.
+
+\Needspace{5\baselineskip}
 
 Test that survival through:
 
@@ -248,6 +260,8 @@ Tang et al.'s measured workload cost limits the recommendation. Increased cognit
 
 The study does not establish how large diffs, persistent queues, or experienced teams respond over time. Local evaluation should therefore measure reviewer behavior and repair, not label coverage alone.
 
+\Needspace{5\baselineskip}
+
 Useful observations include whether reviewers:
 
 \begin{itemize}
@@ -267,6 +281,8 @@ Useful observations include whether reviewers:
 \end{itemize}
 
 Compare equivalent review artifacts with and without disclosure under the actual tools and queue constraints. Using the same artifacts removes change difficulty from the comparison, as Chapter 1 recommends for paired designs.
+
+\Needspace{5\baselineskip}
 
 The experimental unit is the reviewer-artifact pair, not the artifact alone. The design must state:
 
@@ -301,6 +317,8 @@ These sources justify an audit structure and a burden of proof. Whether a partic
 In a workflow diagram, the word ``gate'' implies causal control. In execution, an approval step may only record that someone clicked before an action the person and the click could not alter.
 
 \textbf{Compliance theater} is a control whose visible form satisfies the policy description while its execution path does not mitigate the named risk. A \textbf{fail-open gate} stops enforcing its boundary when a dependency, validation step, or error path fails.
+
+\Needspace{5\baselineskip}
 
 The interdisciplinary framework identifies four conditions for effective oversight:
 
@@ -408,6 +426,8 @@ After an incident, organizations often assign responsibility to the engineer who
 
 The resulting responsibility gap produces blame without creating a path that could have prevented the failure.
 
+\Needspace{5\baselineskip}
+
 The control check begins before an incident. For every role named as accountable, identify the exact state transitions that role can:
 
 \begin{itemize}
@@ -428,6 +448,8 @@ Authority, access, tooling, and time are separate requirements. An engineer may 
 
 A role has control only when those elements combine into an effective intervention path.
 
+\Needspace{5\baselineskip}
+
 When responsibility exceeds control, the organization has two coherent options:
 
 \begin{enumerate}
@@ -444,6 +466,8 @@ Leaving the responsibility label in place while operational control remains else
 The check should include the identity that executes the action. In my enterprise data-access service, mutations are unavailable, requests use the caller's identity, and the audit log records that person. The agent cannot silently accumulate authority beyond what its operator already holds.
 
 This design aligns execution and identity more closely than a shared privileged service account. It does not establish that every read is justified or that the caller understands the returned information.
+
+\Needspace{5\baselineskip}
 
 Identity passthrough also carries a cost. It improves attribution and limits silent privilege expansion, but it can reduce availability when the caller lacks a permission that a service account previously supplied. The system should first determine which authority the action genuinely requires, then measure:
 
@@ -473,6 +497,8 @@ These concepts become operational only after the team translates them into obser
 
 Suryana et al.~applied tracking and tracing through interviews with 103 users of Tesla Autopilot and Full Self-Driving features. The interviews revealed expectation-reality gaps and inconsistent adherence to operating protocols. The findings do not establish equivalent failure rates or causes in software delivery. They show that interviews can reveal an operational control model different from the one described in design documents.
 
+\Needspace{5\baselineskip}
+
 For an agent that prepares production changes, a tracking interview might ask:
 
 \begin{itemize}
@@ -490,6 +516,8 @@ For an agent that prepares production changes, a tracking interview might ask:
 \end{itemize}
 
 Those answers should be compared with policy and with actual execution traces.
+
+\Needspace{5\baselineskip}
 
 A tracing interview might ask:
 
@@ -513,6 +541,8 @@ Compare the answers across operators, reviewers, system owners, and affected use
 
 The audit identifies distinct failures rather than producing one certification score. A shared credential may erase the responsible identity even when the system tracks user expectations well. A complete decision history may coexist with systematic misunderstanding about when the system will act. Combining both into one ``meaningful control'' score would hide the repair each problem requires.
 
+\Needspace{5\baselineskip}
+
 Operational definitions must therefore remain local. A deployment system may define a traceable decision through:
 
 \begin{itemize}
@@ -530,6 +560,8 @@ Operational definitions must therefore remain local. A deployment system may def
 \item
   rollback authority.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 A data-access agent may require:
 
@@ -559,6 +591,8 @@ Run four checks against one defined action class and one real repository workflo
 
 \section{1. Test the autonomy transfer}\label{test-the-autonomy-transfer}
 
+\Needspace{5\baselineskip}
+
 Define:
 
 \begin{itemize}
@@ -582,6 +616,8 @@ Calculate uncertainty around approval, modification, and outcome rates. Test whe
 \section{2. Test whether provenance survives review and integration}\label{test-whether-provenance-survives-review-and-integration}
 
 Choose the smallest provenance unit that can survive the repository workflow while still representing the review decision it is intended to affect.
+
+\Needspace{5\baselineskip}
 
 Exercise that marker through:
 
@@ -610,6 +646,8 @@ Keep the count semantics narrow. The 14.5 percent trailer-signed floor described
 \section{3. Test the gate as a failure experiment}\label{test-the-gate-as-a-failure-experiment}
 
 Run the gate audit in a contained environment. Name the action, gate, and decision owner, then capture the complete execution trace.
+
+\Needspace{5\baselineskip}
 
 Remove or fail each gate dependency in turn. Exercise:
 
@@ -645,6 +683,8 @@ Interview the assigned reviewer about the risk they believe they are checking, t
 
 For each role named as accountable, select a real action and test the role's deployed permissions.
 
+\Needspace{5\baselineskip}
+
 Exercise whether the role can:
 
 \begin{itemize}
@@ -671,6 +711,8 @@ Where control is missing, either repair the role within least-privilege constrai
 
 Interview actual users, operators, reviewers, and owners using tracking and tracing questions. Compare their justified expectations with policy and execution traces.
 
+\Needspace{5\baselineskip}
+
 Record as separate findings:
 
 \begin{itemize}
@@ -692,6 +734,8 @@ Record as separate findings:
 \end{itemize}
 
 Repeat the first pass whenever permissions, action classes, execution paths, or recovery mechanisms change. Repeat the second when the user population, operating protocol, interface, or escalation policy changes.
+
+\Needspace{5\baselineskip}
 
 Measure the findings that carry operational weight, such as:
 

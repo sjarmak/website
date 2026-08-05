@@ -52,6 +52,8 @@ The schema does not make the interpretation correct. It keeps evidence, interpre
 
 During failure, the status must remain \texttt{failed} or \texttt{incomplete}. Converting it to an empty success recreates the original defect behind a cleaner interface.
 
+\Needspace{5\baselineskip}
+
 The structural boundary may also be a verification loop rather than another worker. One agent can produce an artifact, run a deterministic check, inspect the failure, and revise. An independent reviewer becomes useful when:
 
 \begin{itemize}
@@ -86,6 +88,8 @@ Zero mentions did not imply zero prompt influence. In a later 17-run experiment,
 
 These observations separate two effects. Prompt steering may improve selection efficiency without improving task success. The target retrieval failure in my rerun still survived. Another wording change was therefore not the primary repair. The system needed a boundary that checked retrieval coverage before synthesis trusted the result.
 
+\Needspace{5\baselineskip}
+
 Structural repair carries costs. Splitting work introduces:
 
 \begin{itemize}
@@ -105,6 +109,8 @@ Structural repair carries costs. Splitting work introduces:
 \end{itemize}
 
 A protocol may omit the field later needed for diagnosis, while a specialist may lose information a generalist would have retained. Representing topology in configuration may make revision easier, but that companion proposal has thin support and an unmeasured maintenance burden.
+
+\Needspace{5\baselineskip}
 
 The repair criterion is causal and comparative:
 
@@ -149,6 +155,8 @@ Because those syntheses overlap in their underlying sources and were not retaine
 
 Aggregation belongs inside the treatment definition. Chapter 5 described an exploratory plurality-vote oracle gap of up to 32.3 percentage points from Bertalani\v{c} et al.~A correct answer existed among the candidates, but the vote selected another answer. That establishes a failure mode rather than its frequency elsewhere.
 
+\Needspace{5\baselineskip}
+
 It is enough to separate two outcomes:
 
 \begin{itemize}
@@ -160,6 +168,8 @@ It is enough to separate two outcomes:
 \end{itemize}
 
 Suppose five workers review a code change. Three repeat the same shallow diagnosis, one identifies a real race condition, and one reports an unrelated issue. Plurality voting selects the shallow diagnosis even though the candidate set contains the critical finding.
+
+\Needspace{5\baselineskip}
 
 A synthesis worker may recover the minority report, but it can also suppress it when all findings arrive as undifferentiated prose. The evaluation must therefore:
 
@@ -178,6 +188,8 @@ A synthesis worker may recover the minority report, but it can also suppress it 
 The same requirement applies to debate. Later turns can make workers converge by exposing them to one early answer even when independent reasoning never resolves the problem. If independent judgment is the reason for adding reviewers, the treatment must preserve that independence long enough to test it.
 
 Blind review lanes, in which reviewers do not see the producing worker's identity or conclusion, are a thinly supported companion option. They reduce one obvious coupling path but are not an established remedy for correlated errors.
+
+\Needspace{5\baselineskip}
 
 Cost measurement must include the full topology:
 
@@ -211,6 +223,8 @@ In my repository-scale benchmark, I configured a lean-subagent treatment across 
 
 Configuration is not behavior. A system may expose a delegation tool while the planner never invokes it. It may dispatch workers and ignore their responses. It may ask several workers questions that do not meaningfully partition the task. All can be labeled ``multi-agent'' while operating as an effectively single-agent system.
 
+\Needspace{5\baselineskip}
+
 I therefore instrument the treatment at three levels:
 
 \begin{enumerate}
@@ -227,6 +241,8 @@ I therefore instrument the treatment at three levels:
 A run enters the multi-agent comparison only when the trace shows that the defining coordination behavior occurred.
 
 That eligibility rule must be declared before execution. Writing it afterward selects runs based on observed behavior or outcome. Declared in advance, it distinguishes noncompliance from architectural failure.
+
+\Needspace{5\baselineskip}
 
 The distinction guides diagnosis:
 
@@ -318,6 +334,8 @@ A \textbf{blackboard} is shared evolving state that workers read and update. It 
 
 The blackboard externalizes state that would otherwise be scattered across pairwise conversations. It also creates concurrency obligations. Updates require identities, versions, conflict rules, provenance, and a distinction between an untested hypothesis and an established observation.
 
+\Needspace{5\baselineskip}
+
 Consider a security review of a large change:
 
 \begin{itemize}
@@ -360,6 +378,8 @@ In a hierarchy, a lead's inaccurate summary can erase correct subordinate findin
 
 Containment is conditional. A shared corrupted premise, an inaccurate lead summary, or repeated reads of an unqualified claim can turn a local error into a global one.
 
+\Needspace{5\baselineskip}
+
 Observation routes are therefore part of correctness. Record:
 
 \begin{itemize}
@@ -384,6 +404,8 @@ Runtime oversight can represent the topology as an interaction graph whose nodes
 
 Topology should be tested through faults, not inferred from diagrams.
 
+\Needspace{5\baselineskip}
+
 For a pipeline:
 
 \begin{itemize}
@@ -395,6 +417,8 @@ For a pipeline:
 \item
   test whether the pipeline can widen or restart upstream.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 For an orchestrator-worker system:
 
@@ -410,6 +434,8 @@ For an orchestrator-worker system:
   verify that the orchestrator distinguishes missing, late, and conflicting evidence.
 \end{itemize}
 
+\Needspace{5\baselineskip}
+
 For a hierarchy:
 
 \begin{itemize}
@@ -421,6 +447,8 @@ For a hierarchy:
 \item
   test whether the lead can request source evidence.
 \end{itemize}
+
+\Needspace{5\baselineskip}
 
 For a blackboard:
 
@@ -437,6 +465,8 @@ For a blackboard:
 The strongest evidence here, from Jia et al., concerns synthetic injected faults. Naturally occurring production faults lie outside that result, and the injected fault distribution determines what the comparison can show.
 
 The reported closed-loop advantage supplies a reason to run local fault tests. It does not remove their necessity.
+
+\Needspace{5\baselineskip}
 
 The acceptable topology is the simplest one that:
 
@@ -479,6 +509,8 @@ No controlled result in the cited evidence establishes that a dynamic dependency
 The narrower systems argument applies when dependencies vary during execution. If independent branches exist, their prerequisites are observable, and their durations are uncertain, an explicit graph can expose safe concurrency without forcing unrelated work through one serial queue. If the workflow is short, fixed, and inexpensive, a graph scheduler may add persistence and recovery complexity without creating useful parallelism.
 
 Dependency accuracy is the central risk. A missing edge can dispatch two workers that edit the same file, migrate the same schema, or invalidate each other's assumptions. A false edge serializes work that could safely overlap.
+
+\Needspace{5\baselineskip}
 
 File overlap is only one conflict signal. Work may also conflict through:
 
@@ -536,6 +568,8 @@ worker exceeds time limit
 
 Retries require the same discipline. A retry creates a new attempt for the same logical node rather than a second independent task. The scheduler must either establish that repeated execution is idempotent or isolate side effects before trying again. Otherwise a timeout can produce duplicate comments, partial writes, or two workers claiming the same resource.
 
+\Needspace{5\baselineskip}
+
 Dynamic graphs are most useful when they expose decisions that were previously implicit. The runtime should be able to explain:
 
 \begin{itemize}
@@ -568,6 +602,8 @@ Do not begin from a broad objective such as ``improve collaboration.'' Name the 
 
 \section{2. Draw the current causal path}\label{draw-the-current-causal-path}
 
+\Needspace{5\baselineskip}
+
 Mark:
 
 \begin{itemize}
@@ -589,6 +625,8 @@ Mark:
 Identify the smallest boundary at which the target failure could have become observable and stoppable.
 
 \section{3. Preserve the live single-agent baseline}\label{preserve-the-live-single-agent-baseline}
+
+\Needspace{5\baselineskip}
 
 Replay the existing single-agent workflow on the current golden set. Record:
 
@@ -612,6 +650,8 @@ Keep this baseline executable for later model releases. A topology should not re
 
 \section{4. Specify one structural treatment}\label{specify-one-structural-treatment}
 
+\Needspace{5\baselineskip}
+
 The treatment may be:
 
 \begin{itemize}
@@ -633,6 +673,8 @@ The treatment may be:
 State which boundary changes and which causal path the change is expected to interrupt. Avoid combining several architectural changes unless the experiment is explicitly evaluating the combined system.
 
 \section{5. Record the promotion rule before execution}\label{record-the-promotion-rule-before-execution}
+
+\Needspace{5\baselineskip}
 
 The rule should include:
 
@@ -656,6 +698,8 @@ A mechanism condition might require at least one delegated result to be consumed
 
 \section{6. Inject a representative fault}\label{inject-a-representative-fault}
 
+\Needspace{5\baselineskip}
+
 Choose a fault matched to the proposed structure:
 
 \begin{itemize}
@@ -677,6 +721,8 @@ Verify that incomplete or disputed state remains visible and that downstream wor
 \section{7. Run paired repeated trials}\label{run-paired-repeated-trials}
 
 Run baseline and treatment on the same task versions. Keep the model, harness, permissions, evaluator, and execution environment fixed except for the declared structural change.
+
+\Needspace{5\baselineskip}
 
 Report separately:
 
