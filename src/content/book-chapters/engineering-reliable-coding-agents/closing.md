@@ -1,80 +1,254 @@
 ---
-title: "Closing: each part decides what the next one can claim"
+title: "Closing: the evidence chain behind reliable agents"
 book: engineering-reliable-coding-agents
 order: 19
 part: 7
 kind: closing
 ---
 
-The most useful result in my own retrieval work was a disagreement between two instruments. Three retrieval measurements agreed that the tool had become much better at putting relevant repository evidence in front of the agent. The paired end-to-end reward across 370 tasks moved by +0.0349, and the first interval I put around that number likely understates the uncertainty and should not be read as a bound on it, because it resampled tasks that shared 73 repositories and 20 suites. Reading that one experiment took two parts of this book. The stage decomposition from Part IV located where the change had landed, and the resampling rule from Part I decided whether the end-to-end difference was a measurement at all.
+The most useful result in my retrieval work was a disagreement between two instruments. Three retrieval measures agreed that the tool had become much better at placing relevant repository evidence in front of the agent. The paired end-to-end reward across 370 tasks moved by +0.0349.
 
-The same dependency runs through the whole sequence. Measurement comes first, then grading systems, then isolation and recovery, then retrieval and context, then human review and accountability, then work allocation and cost. That order is not a difficulty ramp. Each part decides what evidence the next one is allowed to rely on, and a defect in an earlier part does not announce itself downstream. It arrives as a clean number.
+The first interval I reported around that difference likely understates the uncertainty and should not be read as a valid bound. It resampled tasks as though they were independent even though they came from 73 repositories and 20 suites.
 
-## The order is a dependency chain
+Interpreting that one experiment required two parts of this book. The stage decomposition from Part IV located where the improvement occurred. The resampling rule from Part I determined whether the end-to-end difference had been measured adequately at all.
 
-Part I sits under everything else because every later practice is adopted or rejected through a comparison. A difference has to clear the local run-to-run spread, and the design has to have been capable of resolving a difference of that size, before any downstream verdict describes the system rather than the draw. Nineteen taught practices in the later parts execute a method taught in Part I. Dropping that dependency does not remove the requirement; it leaves the requirement unstated.
+The same dependency runs through the complete sequence:
 
-Part II turns those measurements into daily verdicts. A model grader, a consensus vote, and a proxy score are instruments, and Part I is how their errors are estimated. Skalse et al. ([2022](https://arxiv.org/abs/2209.13085)) established the structural reason no single one of them can be the last word. Over the set of all stochastic policies, two rewards can be mutually unhackable only when at least one of them is constant. A grading system therefore returns a verdict at an operating point under a stated distribution, and the layering exists because that verdict can be optimized against.
+```text
+measurement
+    -> grading
+        -> isolation and recovery
+            -> retrieval and context
+                -> review and accountability
+                    -> allocation and cost
+```
 
-Part III decides whether the record those verdicts are computed over is evidence at all. Four ordinary conditions corrupt that record in ways no later statistic repairs. An agent can hold one identity that reaches both the primary data and its backups. A run can die without a durable account of which steps completed. A trace can fail to separate a tool dispatch from its external commitment, and a quarantine policy can remove the failed runs before anyone reads them.
+This is not a difficulty progression. Each part determines which evidence the next part may rely on. A defect in an earlier layer rarely announces itself downstream. It arrives as a clean score, a confident verdict, or a plausible artifact.
 
-Preservation is necessary and it is not sufficient. Zhang et al. ([2025](https://arxiv.org/abs/2505.00212)) handed already-annotated failure logs from 127 multi-agent systems to the best automated attribution methods available, and the best of those identified the decisive step 14.2 percent of the time. A preserved record supports an explanation. It does not supply one.
+## Each layer determines what the next may trust
 
-Part IV decides what the model saw. A failure cannot be assigned to the model until the evaluation records whether the needed evidence existed in the index, was returned, survived the context cutoff, and described the current repository state. Stale context is the sharp case, because it replaces an ordinary miss with a confident implementation against an interface that no longer exists.
+Part I sits beneath the rest of the book because every later practice is adopted or rejected through a comparison. Before a difference can describe the system rather than one draw from it, the evaluation must measure local run-to-run variation and be capable of resolving an effect large enough to matter.
 
-Part V treats review capacity as a finite input to the system. Its allocation depends on the monitors calibrated in Part II, and its interfaces decide whether challenging a claim costs less than accepting it. A gate that cannot stop the action it names records assent and nothing else.
+Nineteen practices taught in later parts execute a method introduced in Part I. Removing that dependency does not remove the requirement. It leaves the requirement unstated.
 
-The decisions in Part VI can only be settled from the artifacts the earlier parts produced. A routing or scheduling policy is tested by replaying recorded arrivals with the arrival sequence held fixed, and by making a cheap rule compete for the same work. That discipline appears at both ends of the book. Kapoor et al. ([2024](https://arxiv.org/abs/2407.01502)) found that retrying the model matched more elaborate architectures on a function-level coding benchmark at a fraction of their inference cost. Chen et al. ([2016](https://arxiv.org/abs/1608.07617)) proposed cheap random sampling as the baseline a search-based method has to beat before it earns adoption.
+Part II turns measurements into operating verdicts. A model grader, consensus vote, and proxy score are all instruments, and Part I supplies the methods for estimating their errors. Skalse et al. ([2022](https://arxiv.org/abs/2209.13085)) establish the structural reason none can be the final authority. Across all stochastic policies, two rewards can be mutually unhackable only when at least one is constant.
 
-The chain also constrains what a repair can accomplish. Compensating for a weak link with machinery from a later part is the most expensive mistake available here, and it is an easy one to make, because the later machinery is usually the cheaper thing to deploy. More samples do not repair a task distribution that omits the work the deployed system will meet. More judges do not repair a rubric whose categories two experts apply differently. More agents do not repair a retrieval boundary that treats an empty result as authoritative, and more context does not repair a run that has already lost its specification. In each case the added component is then measured by an instrument the earlier part was supposed to have fixed.
+A grading system therefore produces a verdict at an operating point under a stated distribution. Layering is necessary because any nonconstant verdict can become an optimization target.
 
-## The support is thinnest where the urgency is highest
+Part III asks whether the record underlying those verdicts is evidence at all. Four ordinary failures can corrupt that record in ways no later statistic repairs:
 
-The evidence behind these six parts is uneven, and the unevenness runs against operational urgency. Strong-graded items account for 59 percent of the evidence in Part I and 53 percent in Part IV. In Part III, the thinnest part in the book, they account for 14 percent, and in Part VI for 22 percent. Chapter 7, on containment, injection defenses, and independent verification, carries no strong-graded evidence and no research-literature item of any class; its support is incident reports and single-organization accounts.
+- One identity can reach both primary data and its recovery material.
+- A run can die without a durable account of completed work.
+- A trace can fail to distinguish tool dispatch from external commitment.
+- A quarantine policy can remove failed runs before anyone examines them.
 
-Those are also the chapters a reader with production write access needs first. Two of Chapter 7's three practices were chosen independently by all three selection lenses while their evidence stayed at the floor. In this corpus, urgency and evidence strength were close to uncorrelated, and reporting that is better than letting chapter length imply a support the record does not have.
+Preserving the record is necessary and insufficient. Zhang et al. ([2025](https://arxiv.org/abs/2505.00212)) gave expert-annotated failure logs from 127 multi-agent systems to the strongest automated attribution methods they evaluated. The best method identified the decisive step in 14.2 percent of cases.
 
-I would have preferred to write a Part III backed by controlled comparisons. The field has produced design arguments and incident reports instead, and wrapping them in more hedging would have hidden the same gap under more words. The thin chapters are therefore shorter, state their limit before recommending anything, and prescribe an observation rather than a number.
+A complete trace supports a causal explanation. It does not generate one automatically.
 
-Two observations would change those chapters. The first is a controlled comparison of isolation designs scored against a measured incident rate rather than against a set of self-reports. The second is a recovery benchmark for agent runtimes with a published fault menu, run at several kill placements and across more than one software version. Neither is exotic. Both are within reach of a team that already operates a fleet and keeps its traces, which is the same instrumentation the procedure below asks for.
+Part IV determines what evidence reached the model. A failure should not be assigned to model reasoning until the evaluation records whether the required evidence:
 
-Read Part III and Part VI as design arguments carrying named failure checks. A recovery path is often credited to an architecture diagram rather than to an injected fault, and 'fault tolerant' then describes the drawing. Every prescription in those parts resolves to something a reader can run against a live system. Kill a worker between an external effect and its completion record. Remove a gate's dependency inside a contained environment and observe whether the action still reaches durable state. Replay recorded arrivals against a trivial rule and see which one wins.
+- existed in the searchable corpus;
+- was present in the current index;
+- was returned by retrieval;
+- survived ranking and context selection; and
+- described the repository state being modified.
 
-A design argument that cannot be reduced to a check of that kind has not been stated precisely enough to test.
+Stale context is the sharpest case. It converts an ordinary absence of evidence into a confident implementation against an interface that no longer exists.
 
-## What this book does not settle
+Part V treats human review capacity as a finite system resource. Its allocation depends on monitors calibrated in Part II. Its interfaces determine whether challenging a claim costs less than accepting it. Its gates depend on the authority and evidence preserved in Part III.
 
-Almost none of the numbers here are settings to adopt. No refresh cadence for a repository index appears in the literature reviewed for Chapter 12, and that is a gap in the record rather than a value withheld. There is no universal kappa threshold that converts labels into truth, no k for a release gate, no context cap, no routing cost ratio, and no re-solve cadence for a fleet. Each is a local quantity fixed by a workload, a failure cost, and a review capacity.
+A gate that cannot change the execution path records assent and nothing more.
 
-A second group of open questions concerns transfer. Matching topology to task shape remains unvalidated for the repository-scale coding work this book is about, and the strongest result behind it was measured on short-form question answering, mathematics, and function-level code. The compaction results come from app, office, and question-answering agents. Most of the oversight evidence predates long-horizon agents and was collected on people accepting single suggestions. No controlled result in the reviewed set shows that a dynamic dependency graph beats a well-designed fixed schedule.
+Part VI depends on artifacts produced by every earlier part. Routing and scheduling policies are evaluated by replaying recorded arrivals while holding demand fixed and forcing sophisticated policies to compete against cheap alternatives.
 
-A third group is unmeasured. None of the evidence behind the release-test chapter estimates the gap between a public benchmark result and production reliability, so no conversion factor is available. The stale-context result rests on 17 curated samples and two models, which establishes a direction and no effect size for another codebase. Deletion propagation through a derived memory layer is close to unmeasured across the reviewed record.
+That discipline appears at both ends of the book. Kapoor et al. ([2024](https://arxiv.org/abs/2407.01502)) found that retrying a model matched more elaborate architectures on a function-level coding benchmark at a fraction of their inference cost. Chen et al. ([2016](https://arxiv.org/abs/1608.07617)) proposed inexpensive random sampling as the baseline a search-based method should beat before earning adoption.
 
-A fourth question is how long any of this stays true. Several results here are capability snapshots: the context length at which a model still performs reliably on a task family, the share of decisive steps an automated attribution method identifies, the localization accuracy of a trace reader. Those will move with model releases, and a book that reported them as constants would age badly. The structural results are the ones I expect to survive. A single run is one draw, an optimizable score can be optimized against, an identity that reaches both the primary data and its recovery material defines one failure domain, and a component that never executed cannot have caused the outcome.
+The dependency chain also limits what a repair can accomplish. Compensating for an earlier defect with machinery from a later part is among the most expensive mistakes available here, and it is easy to make because the later component is often easier to deploy.
 
-What replaces the missing constants is a local measurement, and each chapter names the specific one. The recurring set is short. Measure the run-to-run spread on the workload before crediting a delta. Measure the effective context length of the weakest task that has to work reliably, and the contribution of each retrieval lane on the operated corpus. Measure class-specific grader rates at the deployed threshold, and the queue volume a monitor's false-positive rate produces at the actual base rate. Report the cost of an accepted result rather than the token bill.
+More samples do not repair a task distribution that excludes production work. More judges do not repair a rubric that experts apply inconsistently. More agents do not repair a retrieval boundary that treats an empty result as authoritative. More context does not repair a run that has lost its governing specification.
 
-The companion catalog indexes all 192 practices, arranged under the chapter whose mechanism each one extends. Read the chapter first, then look beneath it for the variant that fits your constraint. A compact entry cannot repeat the chapter’s full treatment of the mechanism, the evidence class, and the failure boundary, and that reasoning is what decides whether a variant transfers. Entries marked as thin-support asides are leads for investigation, kept out of the taught set because their support does not justify a recommendation.
+In each case, the added machinery is evaluated using the instrument the earlier layer was supposed to repair.
 
-## What to run first
+## Operational urgency outruns the evidence
 
-The sequence below composes the closing procedures of several chapters into one pass through a system you already operate. It fits inside a week, and it produces the records the rest of the book depends on. Run the steps in order, because the later ones consume what the earlier ones preserve.
+Evidence strength varies substantially across the six parts, and the pattern runs against operational urgency.
 
-1. Take the most recent comparison you made on the strength of one number. Rerun both arms at least three times on the same items, keep the per-item record, and read the spread before reading the difference. A delta that stays smaller than the measured spread stays uncredited.
+Strong-graded items account for 59 percent of the evidence in Part I and 53 percent in Part IV. They account for 14 percent in Part III, the thinnest part of the book, and 22 percent in Part VI. Chapter 7, covering containment, injection defenses, and independent verification, has no strong-graded evidence item and no research-literature item of any class. Its support comes from incident reports and accounts from individual organizations.
 
-2. Add the inexpensive arm you skipped. Run the base model directly, then with one retry under a failure signal the deployed system can observe. Report accuracy and cost as two coordinates, and store the pricing snapshot beside the token counts.
+Those are also among the practices a reader with production write access may need first.
 
-3. Inventory one live agent identity from the running process rather than from the architecture diagram. Enumerate every destructive action it can reach without a fresh human decision, follow the delegation edges, and check whether one credential reaches both the primary data and its recovery path. Then attempt the prohibited write under the ordinary identity and require the denial from the enforcing system.
+Two of Chapter 7’s three practices were selected independently by all three prioritization lenses while their evidence remained at the floor. Across this corpus, operational urgency and evidence strength were nearly uncorrelated. Reporting that mismatch is more honest than allowing chapter length or prescriptive language to imply support the record does not contain.
 
-4. Verify one recent completion claim against the workspace or the system of record. Compare the revisions, rerun the relevant check, and keep the attempt identity with the result. Any discrepancy becomes the first test case for the resume and review path.
+I would have preferred to write a Part III supported by controlled comparisons. The field has produced incident reports and architectural arguments instead. Adding more hedging would not fill the gap. It would only hide the same absence beneath more language.
 
-5. Read the last twenty failed runs end to end and annotate the first upstream failure in each. The first question the trace cannot answer is an instrumentation defect. Add the missing state reference, ordering relation, or identity, then version the schema and keep the old runs decodable.
+The thin chapters therefore follow three rules:
 
-6. Write the promotion rule before the next release comparison. Record the success floor, the cost ceiling, the repeat count, and the condition under which the mechanism counts as having actually run. Then run the comparison against a stored baseline on the same task versions.
+1. State the evidence limit before presenting the practice.
+2. Avoid prescribing a numerical target the sources cannot support.
+3. Reduce the recommendation to an observation a reader can make against a running system.
 
-Each step leaves an artifact the next decision can be challenged against. A distribution replaces a score. Two coordinates replace one. A denial issued by an enforcing layer replaces an assurance about permissions, and a diff with a rerun replaces a completion claim. A labeled failure corpus and a threshold fixed in advance replace a recollection of how the last release went.
+Two studies would materially change those chapters.
 
-None of those artifacts certifies that a system is reliable. They make the next reliability claim checkable by someone who did not make it. Begin with step one this week, on the comparison you are currently most confident about, and keep the per-item record even when the rerun agrees with you.
+The first is a controlled comparison of isolation designs scored against measured incidents rather than self-reported confidence or demonstrations.
+
+The second is a recovery benchmark for agent runtimes with a published fault menu, several kill placements, recurring failures, and recovery across more than one software version.
+
+Neither experiment is exotic. Both are within reach of teams that already operate agent fleets and preserve their traces, which is the same instrumentation the operating protocol below requires.
+
+Part III and Part VI should therefore be read as design arguments carrying named failure checks. Recovery is often credited to an architecture diagram rather than to an injected fault, after which “fault tolerant” describes the drawing rather than the running system.
+
+The prescriptions in those parts resolve to executable observations:
+
+- Kill a worker between external commitment and the durable completion record.
+- Remove a gate dependency in a contained environment and observe whether the action still reaches durable state.
+- Attempt a prohibited write with the ordinary identity and require denial from the enforcement layer.
+- Replay identical arrivals under a candidate scheduler and a trivial baseline.
+- Verify that a configured multi-agent mechanism actually entered the execution path.
+
+A design argument that cannot be reduced to a check of this kind has not yet been stated precisely enough to test.
+
+## What remains local or unresolved
+
+Almost none of the numerical values in this book are settings to adopt.
+
+The reviewed literature provides no universal refresh cadence for a repository index. That is a gap in the evidence, not a value withheld. There is no universal kappa threshold that turns labels into truth, no universal repeat count for a release gate, no context limit, no routing cost ratio, and no fleet re-solve cadence.
+
+Each is a local quantity determined by:
+
+- the operated workload;
+- the consequence of failure;
+- the available review capacity;
+- the deployment configuration; and
+- the smallest difference that would change the engineering decision.
+
+A second group of open questions concerns transfer.
+
+Matching topology to task shape remains unvalidated for the long-horizon repository work this book addresses. The strongest supporting result was measured on short-form question answering, mathematics, and function-level code.
+
+The compaction results come from app, office, and question-answering agents rather than coding agents. Most oversight evidence predates long-running agents and concerns people accepting individual suggestions. No controlled result in the reviewed set shows that a dynamic dependency graph outperforms a well-designed fixed schedule for repository work.
+
+A third group remains largely unmeasured.
+
+No evidence item behind the release-test chapter estimates the gap between a public benchmark score and production reliability, so no conversion factor is available.
+
+The stale-context result rests on 17 curated examples and two models. It establishes the direction of the failure without estimating its magnitude in another codebase.
+
+Propagation of deletion through summaries, embeddings, caches, and graph edges remains close to unmeasured across the reviewed memory literature.
+
+A fourth question is how long any capability result remains current.
+
+Several measurements in this book are snapshots:
+
+- the context length at which a model remains reliable on one workload;
+- the fraction of decisive steps an attribution method identifies;
+- the localization accuracy of a trace reader;
+- the cost-performance frontier of a model pool; and
+- the failure rate of a particular grader at one threshold.
+
+These values will move with models, harnesses, and workloads. Reporting them as constants would make the book age badly.
+
+The structural findings are more likely to persist:
+
+- One run is one draw.
+- An optimizable score can be optimized against.
+- An identity that reaches both primary data and its recovery material defines one failure domain.
+- A stale artifact can remain fluent after losing authority.
+- A component that never executed cannot have caused the outcome.
+- A person without evidence or intervention power does not control the action.
+- A schedule computed for obsolete state is not operationally optimal.
+
+Local measurement replaces the missing constants. Each chapter names the observation its decision requires. The recurring set is small:
+
+- Measure run-to-run variation before crediting a delta.
+- Measure the effective context length of the weakest task that must remain reliable.
+- Measure the unique contribution and failure state of each retrieval lane.
+- Measure class-specific grader rates at the deployed threshold.
+- Convert monitor false-positive rates into expected queue volume at the actual base rate.
+- Measure cost per accepted result rather than model-call cost alone.
+- Preserve the configuration, policy version, and evidence behind each result.
+
+The companion catalog indexes all 192 practices beneath the chapter whose mechanism each extends. Read the chapter before selecting a variant. A compact catalog entry cannot reproduce the chapter’s treatment of evidence class, causal boundary, operating assumptions, and failure mode. That reasoning determines whether the variant transfers.
+
+Entries marked as thin-support asides are leads for investigation. They remain outside the taught set because the evidence does not justify presenting them as recommendations.
+
+## Run the dependency chain once
+
+The following sequence combines the closing procedures from several chapters into one pass through an existing system. It is designed to produce the records on which later decisions depend.
+
+Run the steps in order. Each one creates evidence consumed by the next.
+
+### 1. Reopen one comparison you trusted too quickly
+
+Choose the most recent decision made largely from one aggregate number. Rerun both conditions at least three times on the same items. Preserve the per-item outcomes and inspect the run-to-run spread before interpreting the mean difference.
+
+A delta that remains smaller than the measured spread remains uncredited.
+
+The output is a distribution and a paired record rather than one score.
+
+### 2. Add the inexpensive baseline you omitted
+
+Run the base model directly. Then run it with one retry using a failure signal the deployed system can actually observe.
+
+Report quality and cost as separate coordinates. Preserve the model, harness, prompt, pricing snapshot, token counts, tool use, and retry condition.
+
+The output is a comparison capable of showing whether added architecture beats a cheap alternative.
+
+### 3. Audit one live capability boundary
+
+Begin from the running process rather than the architecture diagram. Enumerate every destructive action the ordinary identity can reach without a new human decision. Follow delegated services, credential-minting paths, mounted filesystems, and policy-changing endpoints.
+
+Determine whether one reachable identity can affect both primary data and the material required to recover it.
+
+Attempt one prohibited operation with the ordinary identity and require the denial from the enforcement layer. When a narrow escalation path exists, verify that it permits the intended operation while adjacent destructive actions remain denied.
+
+The output is an observed capability boundary rather than an assurance about permissions.
+
+### 4. Verify one completion claim against state
+
+Choose one recent claim that an agent completed work. Compare the starting and ending revisions or read the relevant system of record. Inspect the artifact and rerun the check that would make the claim true.
+
+Preserve the attempt identity, workspace identity, command, result, and any discrepancy.
+
+The output is an independently observed state transition rather than a self-report.
+
+### 5. Read twenty failed runs end to end
+
+Include apparent successes whose verification was skipped. Assign one primary label to each case: the first upstream failure that materially changed its path to success.
+
+Do not force attribution when the trace lacks the required evidence.
+
+The first ordinary causal question the trace cannot answer becomes an instrumentation defect. Add the missing state reference, event boundary, ordering relation, attempt identity, or outcome field. Version the schema and keep earlier traces decodable.
+
+The output is a seed failure corpus and a trace schema shaped by real investigations.
+
+### 6. Fix the next promotion rule before running it
+
+Before comparing the next release, model, topology, router, or scheduling policy, record:
+
+- the success floor;
+- the cost ceiling;
+- the repeat count;
+- the task-set and baseline versions;
+- the mechanism condition proving the treatment ran; and
+- any class-specific or fault-containment guard.
+
+Run both configurations on the same task versions and preserve the per-case evidence.
+
+The output is a decision that can be reproduced without relying on memory of how the result felt.
+
+Each step replaces an assertion with an artifact:
+
+- A distribution replaces a score.
+- A cost-quality pair replaces one aggregate.
+- An enforcement-layer denial replaces a statement about permissions.
+- A diff and rerun replace a completion claim.
+- A labeled failure corpus replaces anecdotes about what usually goes wrong.
+- A threshold fixed in advance replaces a retrospective explanation for promotion.
+
+None of these artifacts certifies that the system is reliable. They make the next reliability claim challengeable by someone who did not produce it.
+
+Begin with the comparison you are currently most confident about. Keep the per-item record even when the rerun agrees with you.
 
 ## Sources and evidence
 
