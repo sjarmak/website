@@ -28,7 +28,7 @@ If this step had been correct while the preceding record remained unchanged, cou
 
 A clear no makes the step a plausible causal boundary. A yes suggests that the annotation identifies a symptom, or that the trace does not expose enough state to decide. In the latter case, I preserve the uncertainty and leave the causal assignment unresolved.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={A planning error is the first upstream failure linking four visible defects, while a counterfactual test distinguishes a plausible causal boundary from a symptom.}]{figures/ch10-first-upstream-failure.pdf}}
 \caption{A planning error is the first upstream failure linking four visible defects, while a counterfactual test distinguishes a plausible causal boundary from a symptom.}
@@ -150,7 +150,7 @@ Repeated local categories can eventually expose a structural defect. When the sa
 
 Deshpande et al.~(\href{https://arxiv.org/abs/2505.08638}{2025}) reported that the strongest evaluated long-context model correctly localized issues in 11 percent of 148 expert-annotated traces. The traces were benchmark-derived but ecologically valid and more complex than short synthetic sequences designed to isolate one error. Reasoning, tool calls, outputs, retries, and state changes appeared in the same record. A large context window could contain the transcript, but containment did not make the decisive event legible.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={Responsible-agent attribution is 53.5\%; decisive-step attribution is 14.2\% earlier, below 15\% for prior methods, and 36.2\% later; the top long-context model localizes 11\% of 148 traces, and some methods underperform random.}]{figures/ch10-attribution-accuracy.pdf}}
 \caption{Responsible-agent attribution is 53.5\%; decisive-step attribution is 14.2\% earlier, below 15\% for prior methods, and 36.2\% later; the top long-context model localizes 11\% of 148 traces, and some methods underperform random.}

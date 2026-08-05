@@ -32,7 +32,7 @@ The fifth is \textbf{use}. The model may receive sufficient evidence and still i
 
 An end-to-end failure is compatible with failure at any one of these stages, or at several simultaneously. A tool may return the correct method at position twelve, while the context builder retains only ten results and the generator invents an interface from the remaining snippets. The final failure does not reveal whether query formation, ranking, truncation, or generation should change. The trace can, but only when the evaluation records the boundaries between those stages.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={The retrieval chain separates availability, retrieval, placement, contextual sufficiency, and use failures across the transitions from task formulation to scored execution and verification.}]{figures/ch11-retrieval-chain.pdf}}
 \caption{The retrieval chain separates availability, retrieval, placement, contextual sufficiency, and use failures across the transitions from task formulation to scored execution and verification.}
@@ -82,7 +82,7 @@ Retrieval depth is an experimental variable. I sweep \(k\) across a range and pl
 
 A shallow cutoff can make a viable retriever appear incapable. A deep cutoff can conceal poor ranking because a disordered list still contains the target somewhere among many returned items. The plateau does not determine the operating point by itself. Latency, context consumption, and distractors may justify stopping earlier. It shows the recall the ranker can reach and the marginal number of returned items required to reach it.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={An unmeasured recall curve rises and plateaus with retrieval depth, but a shallow cutoff leaves gains unrealized, a deep cutoff can mask poor ranking, and latency, context use, or distractors may justify stopping earlier.}]{figures/ch11-recall-depth.pdf}}
 \caption{An unmeasured recall curve rises and plateaus with retrieval depth, but a shallow cutoff leaves gains unrealized, a deep cutoff can mask poor ranking, and latency, context use, or distractors may justify stopping earlier.}

@@ -221,7 +221,7 @@ The kill-point sweep should include:
 
 These points test different properties. The first asks whether unstarted work can be rescheduled. The middle points expose ambiguity and deduplication behavior. The last asks whether the runtime recognizes completed work and suppresses repetition. A step with several external effects requires a separate sweep for each effect.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={Five lifecycle kill points test recovery from unstarted work through ambiguous commitment gaps to durable completion, including recognition and suppression of repeated external effects.}]{figures/ch09-kill-points.pdf}}
 \caption{Five lifecycle kill points test recovery from unstarted work through ambiguous commitment gaps to durable completion, including recognition and suppression of repeated external effects.}

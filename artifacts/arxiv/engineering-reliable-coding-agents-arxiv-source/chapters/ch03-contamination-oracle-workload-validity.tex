@@ -130,7 +130,7 @@ The problem predates current coding models. Ye et al.~(\href{https://arxiv.org/a
 
 Adversarial strengthening begins from the candidate failures a benchmark should reject. Construct plausible patches that implement only the common case, hard-code a fixture, change an unrelated return value, suppress an exception, or satisfy the visible assertion while violating the issue's broader contract. Then retain the tests that kill those patches. Yu et al.~(\href{https://arxiv.org/abs/2603.00520}{2026}) built suites that way, rejected 19.71 percent of patches that had passed previously, and reported a top score falling from 78.80 percent to 62.20 percent.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={Stronger oracles cut SWE-ABS from 78.80\% to 62.20\% and SWE-Bench+ resolution from 12.47\% to 3.97\%; 40.9\% corrections, 29 ranking changes, 80x test expansion, 19\% to 29\% pass@k reductions, 32.67\% leakage, and 31.08\% weak-test passes.}]{figures/ch03-oracle-strength.pdf}}
 \caption{Stronger oracles cut SWE-ABS from 78.80\% to 62.20\% and SWE-Bench+ resolution from 12.47\% to 3.97\%; 40.9\% corrections, 29 ranking changes, 80x test expansion, 19\% to 29\% \href{mailto:pass@k}{\nolinkurl{pass@k}} reductions, 32.67\% leakage, and 31.08\% weak-test passes.}

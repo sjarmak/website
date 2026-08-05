@@ -44,7 +44,7 @@ LongCodeBench, the source of the million-token declines described above, evaluat
 
 These studies do not identify a universal ceiling. Their results depend on the model generation, prompts, tasks, and scoring rules. The durable finding is the repeated gap between capacity and competence, together with a protocol for measuring it. The knee can move with a new model and may differ between retrieval and code modification even within the same release.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={Across incomparable metrics, RULER is about half-satisfactory at 32k, long-context RAG saturates near 64k, LONGCODEU degrades beyond 32k, and toward 1M Claude 3.5 Sonnet falls 29\% to 3\% while Qwen2.5 falls 70.2\% to 40\%.}]{figures/ch13-capacity-competence.pdf}}
 \caption{Across incomparable metrics, RULER is about half-satisfactory at 32k, long-context RAG saturates near 64k, LONGCODEU degrades beyond 32k, and toward 1M Claude 3.5 Sonnet falls 29\% to 3\% while Qwen2.5 falls 70.2\% to 40\%.}

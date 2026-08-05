@@ -11,11 +11,14 @@ const editorialRoot = path.join(root, "artifacts/arxiv/editorial-source");
 const sourceRoot = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source");
 const chapterRoot = path.join(sourceRoot, "chapters");
 const figureRoot = path.join(sourceRoot, "figures");
+const figureSourceRoot = path.join(root, "src/assets/books/engineering-reliable-coding-agents");
 const buildRoot = path.join(root, "artifacts/arxiv/.latex-build");
 const previewPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-preview.pdf");
 const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source.zip");
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
+const rsvgConvert = process.env.RELIABLE_AGENTS_RSVG_CONVERT
+  ?? "/tmp/arxiv-tools/rsvg/usr/bin/rsvg-convert";
 
 const parts = [
   ["Evaluation measurement and experiment design", [
@@ -124,26 +127,34 @@ async function pandocConvert(markdown, outputPath) {
     `--output=${outputPath}`,
   ]);
   const generated = await readFile(outputPath, "utf8");
-  await writeFile(outputPath, generated.replaceAll("č", "\\v{c}"));
+  await writeFile(
+    outputPath,
+    generated
+      .replaceAll("č", "\\v{c}")
+      .replaceAll("\\begin{figure}", "\\begin{figure}[htbp]"),
+  );
 }
 
 async function main() {
-  const preservedFigures = new Map();
-  try {
-    for (const name of (await readdir(path.join(sourceRoot, "figures"))).filter((file) => file.endsWith(".pdf"))) {
-      preservedFigures.set(name, await readFile(path.join(sourceRoot, "figures", name)));
-    }
-  } catch {
-    // The first build may provide figures through another preparation step.
+  const figureSources = (await readdir(figureSourceRoot))
+    .filter((file) => file.endsWith(".svg"))
+    .sort();
+  if (figureSources.length !== 19) {
+    throw new Error(`Expected 19 authoritative SVG figures, found ${figureSources.length}`);
   }
-  if (preservedFigures.size !== 19) throw new Error(`Expected 19 prepared PDF figures, found ${preservedFigures.size}`);
 
   await rm(sourceRoot, { recursive: true, force: true });
   await rm(buildRoot, { recursive: true, force: true });
   await mkdir(chapterRoot, { recursive: true });
   await mkdir(figureRoot, { recursive: true });
   await mkdir(buildRoot, { recursive: true });
-  for (const [name, content] of preservedFigures) await writeFile(path.join(figureRoot, name), content);
+  for (const name of figureSources) {
+    await run(rsvgConvert, [
+      "--format=pdf1.5",
+      `--output=${path.join(figureRoot, name.replace(/\.svg$/, ".pdf"))}`,
+      path.join(figureSourceRoot, name),
+    ]);
+  }
 
   const introduction = preprocessMarkdown(
     await readFile(path.join(editorialRoot, "introduction.md"), "utf8"),
@@ -217,12 +228,29 @@ async function main() {
 \\setlength{\\parskip}{0pt}
 \\setcounter{secnumdepth}{2}
 \\setcounter{tocdepth}{1}
-\\setlist{nosep}
+\\setlist{
+  topsep=0.45\\baselineskip,
+  partopsep=0.12\\baselineskip,
+  itemsep=0.12\\baselineskip,
+  parsep=0pt
+}
+\\setcounter{topnumber}{3}
+\\setcounter{bottomnumber}{2}
+\\setcounter{totalnumber}{4}
+\\renewcommand{\\topfraction}{0.90}
+\\renewcommand{\\bottomfraction}{0.80}
+\\renewcommand{\\textfraction}{0.08}
+\\renewcommand{\\floatpagefraction}{0.72}
+\\setlength{\\textfloatsep}{0.80\\baselineskip plus 0.20\\baselineskip minus 0.10\\baselineskip}
+\\setlength{\\intextsep}{0.80\\baselineskip plus 0.20\\baselineskip minus 0.10\\baselineskip}
+\\setlength{\\floatsep}{0.65\\baselineskip plus 0.15\\baselineskip minus 0.10\\baselineskip}
+\\setlength{\\abovecaptionskip}{0.45\\baselineskip}
+\\setlength{\\belowcaptionskip}{0.15\\baselineskip}
 \\fvset{fontsize=\\small}
 \\pagestyle{plain}
 
 \\providecommand{\\tightlist}{%
-  \\setlength{\\itemsep}{0pt}\\setlength{\\parskip}{0pt}}
+  \\setlength{\\itemsep}{0.10\\baselineskip}\\setlength{\\parskip}{0pt}}
 \\newcommand{\\pandocbounded}[1]{%
   \\begingroup
   \\setbox0=\\hbox{#1}%

@@ -31,12 +31,29 @@
 \setlength{\parskip}{0pt}
 \setcounter{secnumdepth}{2}
 \setcounter{tocdepth}{1}
-\setlist{nosep}
+\setlist{
+  topsep=0.45\baselineskip,
+  partopsep=0.12\baselineskip,
+  itemsep=0.12\baselineskip,
+  parsep=0pt
+}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.72}
+\setlength{\textfloatsep}{0.80\baselineskip plus 0.20\baselineskip minus 0.10\baselineskip}
+\setlength{\intextsep}{0.80\baselineskip plus 0.20\baselineskip minus 0.10\baselineskip}
+\setlength{\floatsep}{0.65\baselineskip plus 0.15\baselineskip minus 0.10\baselineskip}
+\setlength{\abovecaptionskip}{0.45\baselineskip}
+\setlength{\belowcaptionskip}{0.15\baselineskip}
 \fvset{fontsize=\small}
 \pagestyle{plain}
 
 \providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+  \setlength{\itemsep}{0.10\baselineskip}\setlength{\parskip}{0pt}}
 \newcommand{\pandocbounded}[1]{%
   \begingroup
   \setbox0=\hbox{#1}%

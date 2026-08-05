@@ -32,7 +32,7 @@ In the disconnect case, the first stage narrows the repository to the transport 
 
 The stages have asymmetric consequences. Validation can sometimes correct a mistaken edit location after a patch fails. A file omitted during the first stage is unavailable to every later stage, however capable the repair model may be. The maximum recall of the complete pipeline is therefore capped by file selection.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={The localization funnel progressively narrows repository evidence, while candidate file selection caps recall because any omitted file remains unavailable to every later inspection and edit stage.}]{figures/ch12-localization-funnel.pdf}}
 \caption{The localization funnel progressively narrows repository evidence, while candidate file selection caps recall because any omitted file remains unavailable to every later inspection and edit stage.}
@@ -135,7 +135,7 @@ Ma et al.~(\href{https://arxiv.org/abs/2406.01422}{2024}) measured this tension 
 
 The patch-application rate, which measured whether generated diffs applied cleanly, peaked at 200 iterations and then declined through 600. Clean application was necessary but not sufficient for resolution. Fewer patches could apply while more tasks were resolved if the patches that did apply were more often correct. The result suggests that additional exploration continued to improve localization while making the downstream generation problem harder.
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \pandocbounded{\includegraphics[keepaspectratio,alt={Separate axes reflect different denominators; resolution rises from 16.0\% at zero iterations to 21.3\% at 600 on a zero-based scale, while unquantified patch application peaks at 200 and declines through 600.}]{figures/ch12-exploration-budget.pdf}}
 \caption{Separate axes reflect different denominators; resolution rises from 16.0\% at zero iterations to 21.3\% at 600 on a zero-based scale, while unquantified patch application peaks at 200 and declines through 600.}
