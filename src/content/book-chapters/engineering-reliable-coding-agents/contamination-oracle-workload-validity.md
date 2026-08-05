@@ -195,12 +195,12 @@ The companion catalog carries the remaining validity checks. They include real t
 
 ## Discount the next public number
 
-The next time I am handed a public benchmark number, I record four answers before using it.
+The next time you encounter a public benchmark number, identify the answers to these 4 questions before using it.
 
-1. How old are the tasks relative to this model's training cutoff? I look for a public-versus-matched gap measured on this model. I do not substitute the leaderboard average or another model's audit.
-2. How strong is the test oracle? I ask whether anyone augmented the tests, constructed adversarial wrong patches, or manually screened apparent successes. The useful result is the fraction of previous passes that survived.
-3. Who produced the number, on which harness, with what task distribution? I compare the languages, prompt forms, repository structures, time horizons, context, and acceptance criteria against the work I need done.
-4. What does the same protocol report on tasks mined from my team's merged work? I preserve the original instruction, pre-change state, acceptance evidence, and repeated-run uncertainty.
+1. How old are the tasks relative to this model's training cutoff? Look for a public-versus-matched gap measured on this model. Do not substitute the leaderboard average or another model's audit.
+2. How strong is the test oracle? Ask whether anyone augmented the tests, constructed adversarial wrong patches, or manually screened apparent successes. The useful result is the fraction of previous passes that survived.
+3. Who produced the number, on which harness, with what task distribution? Compare the languages, prompt forms, repository structures, time horizons, context, and acceptance criteria against the work you need done.
+4. What does the same protocol report on tasks mined from your team's merged work? Preserve the original instruction, pre-change state, acceptance evidence, and repeated-run uncertainty.
 
 These answers do not yield a universal correction formula. They turn one impressive-looking score into a bounded claim: performance by a named system, under a named apparatus, on work with a known exposure history, judged by tests with observed power to reject wrong patches. The local replay tests that claim on the work the system will actually be asked to do.
 
