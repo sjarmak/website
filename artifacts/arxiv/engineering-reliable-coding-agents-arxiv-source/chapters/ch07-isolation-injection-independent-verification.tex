@@ -1,0 +1,201 @@
+\chapter{Agent isolation, injection defenses, and independent verification}\label{agent-isolation-injection-defenses-and-independent-verification}
+
+In spring 2026, a practitioner reported on a public forum that an agent deleted a production database in nine seconds. The backups were unrecoverable because the same credentials could reach both the live database and the backup store. This is a self-reported incident, not a verified reconstruction. The public record does not establish the exact command sequence, the surrounding controls, or whether every contributing condition was identified.
+
+The containment literature available for this chapter consists of incident reports and accounts from individual organizations. It contains no controlled comparison of the three practices taught here, and none of the three has a strong-graded evidence item behind it.
+
+Evidence strength and practice urgency were close to uncorrelated in the source corpus. A weak estimate of how often something happens does not make an already exposed production boundary less urgent. Because the record cannot support a numerical target, every practice below is stated as a boundary to move or a check to run, and each one resolves to an observation a reader can make against a live system.
+
+The incident exposes two questions: what could the agent reach, and what could reach the agent? Its identity reached both the live store and the material needed to recover from losing it. An instruction stream that nobody in the public account reconstructed or audited reached the agent. A third question appears later, when a system reports what it believes it did. What evidence would show that the report is true?
+
+\section{Put the recovery path outside the failure domain}\label{put-the-recovery-path-outside-the-failure-domain}
+
+The direct support for the containment practice is two practitioner anecdotes. Both are self-reports from a single organization or author, so they establish concrete failure modes rather than an incident rate. One describes the database and backup loss in the opening. The other summarizes a year of internal agent deployments, and reports that overly narrow permissions left agents reasoning from incomplete visibility, while broad permissions allowed small mistakes to have large consequences.
+
+The failed boundary in the database incident was an identity. Destroying the backup after deleting production required no special ability. The agent already held a credential that both systems accepted. Once execution crossed the intended path, the distinction between primary data and recovery data existed only in the operator's mental model. To the authorization system, both were resources that one identity was allowed to reach.
+
+I use \emph{blast radius} to mean the set of resources and effects that one mistake or compromise can reach before a new decision is required. For an agent, that set is determined by effective capabilities: credentials, filesystem permissions, network routes, tool endpoints, delegated tokens, and any service that will act on the agent's behalf. A warning in the prompt does not reduce the set. It changes the instructions given to the same capable process.
+
+\begin{verbatim}
+database incident:
+failed boundary -> one identity -> credential -> both systems
+primary data and recovery data -> resources one identity can reach
+
+effective capabilities -> blast radius
+credentials -> filesystem permissions -> network routes
+tool endpoints -> delegated tokens -> any service
+blast radius -> resources and effects before a new decision
+
+warning in the prompt -> same capable process -> does not reduce the set
+
+least privilege -> read-only default identity
+ordinary access -> read-only -> bounds what the process can change
+write -> explicit escalation -> one capability -> period required
+
+read-only -> does not bound what the process can disclose
+read access -> model output
+\end{verbatim}
+
+The first useful move is to make ordinary access read-only. \emph{Least privilege} means giving the running identity only the capabilities its current task requires, and only for the period it requires them. Read-only should be the default identity, and an agent's promise to avoid writes does not create that identity. A write then requires explicit escalation for one capability, such as deploying one service, updating one issue, or applying one reviewed database migration.
+
+A read-only default bounds what the process can change. It does not bound what the process can disclose, because everything the identity can read can also leave through the model's output. Sensitivity therefore belongs in the read scope as well as in the write scope, and the injection section below treats disclosure as a threat category of its own.
+
+Read access and write access should be designed separately. The internal deployment account found that agents with too little visibility made decisions from partial state. That observation does not support broad mutation rights. An identity that can inspect the relevant deployment configuration, logs, health state, and current version, without being able to change any of them, addresses the visibility problem directly. The agent can then assemble a proposed action from complete evidence, while a narrower write identity performs the approved change.
+
+The separation has to exist at the permission or endpoint level. Blocking an entire command-line tool is often too coarse, because the same client may issue harmless reads and destructive requests. Allowing the tool and asking the agent to avoid one argument leaves the destructive call reachable. When a platform exposes separate scopes or endpoints, routine reads can stay continuously available while deployment, deletion, credential rotation, and policy changes pass through distinct gates.
+
+Consider an agent that diagnoses a failed release. Its normal identity can read the deployment manifest, compare the running revision with the expected revision, inspect logs, and query health endpoints. It cannot issue a rollout, delete a namespace, or change an access policy. If it proposes a rollback, the request names the service, the target revision, and the expected effect. A person or a separate policy path authorizes that one operation, and the escalation token expires after the call rather than becoming a broader session.
+
+This design places enforcement below the model's instructions. The model may misunderstand the task, follow hostile content, retry an unsafe call, or construct an unexpected argument. The authorization layer still receives a request from an identity with a bounded set of rights. Correct prompting remains useful, because it reduces bad proposals and wasted review. It does not substitute for a boundary that the operating system, database, cloud control plane, or application service will enforce.
+
+Backups require a stricter separation, because their purpose is to survive failure in the primary path. No credential available to the agent should be able to delete, rewrite, shorten the retention of, or replace the recovery material. The agent may need to read backup status, last successful snapshot time, and restore-test results. Those observations can come from a read-only monitoring surface. The credential that changes backup policy or removes snapshots belongs to a different administrative domain, and it should be unavailable through the agent's normal escalation path.
+
+Separation also applies to services that can mint credentials. An agent may be unable to delete a snapshot directly while retaining several indirect paths to the same effect. It might assume the backup administrator role, edit the identity policy, retrieve a stored administrative token, or ask an unrestricted helper service to act on its behalf. A capability inventory must follow those delegation edges. Listing the tools named in the prompt will miss authority conveyed through the environment.
+
+I test the boundary from both directions. With the normal identity, I attempt the prohibited write and require a denial from the enforcing system. With the escalated identity, I verify that the intended narrow action succeeds and that adjacent destructive actions still fail. A gate proved only by a successful permitted action says nothing about what else the identity can do. A gate proved only by a denied action may also block the recovery operation it exists to allow.
+
+One passing pair of checks describes the configuration that produced it, and not a standing property of the agent. Platform scopes, role definitions, and tool endpoints change underneath a deployed system, so both directions should be exercised again after any change to a role, a scope, or a tool endpoint.
+
+My own benchmark for enterprise data-access agents, used here only as an isolation-methodology example, moved a boundary from a prompt instruction into filesystem ownership. Repository trees were owned by a different operating-system identity, so the kernel denied the writes, and each trial checked both the permitted and the prohibited direction. Its results are not evidence for this chapter's practice. The design does illustrate the kind of claim a local check can establish. Under the tested identity and filesystem mode, a write either succeeds or it does not.
+
+CodeProbe (\href{https://github.com/sjarmak/codeprobe}{public repository}), which mines evaluation tasks from a repository's merged pull requests, applies the same principle to the scripts it extracts from those third-party repositories. It refuses to execute outside a container, disables networking for mined scripts, and records the isolation posture with the result. This author-system example supplies illustration only. Its useful feature is that the run record carries the containment state, which removes an assumption about how an operator launched the process.
+
+Escalation adds latency, and a human decision adds attention cost. Poorly scoped prompts can turn a narrow approval channel into a stream of almost identical requests, which trains reviewers to approve by reflex. Capabilities should therefore be grouped around meaningful operational decisions. A gate around every low-level system call obscures the decision the reviewer is there to make. A reviewed deployment plan may authorize a fixed sequence against one service and one revision, while a deletion or a policy change remains a separate decision.
+
+Some platforms expose only coarse scopes. The incident poster asked how to separate destructive from legitimate requests sent through the same interface, and reported no satisfactory capability-level solution short of a person deciding each call. That limitation should stay visible. The operator can place a typed service in front of such a platform, or move execution into an isolated environment where the consequences are disposable. Otherwise a person has to remain at the destructive boundary, because a prompt-level ban does not create isolation.
+
+The choice between partial commits, reversible environments, snapshots, and approval gates depends on the resource. Reversibility reduces the cost of some writes, but a snapshot controlled by the same identity may disappear with the primary data. Approval reduces the frequency of unreviewed writes, but it does not repair an overbroad credential once approval is granted. Capability boundaries constrain the effect of both mistaken and malicious instructions, including instructions the reviewer failed to recognize as dangerous.
+
+I therefore review the complete reachable graph. The nominal account role is only the starting point. The review follows every credential source, network path, service delegation, mounted filesystem, and policy-changing endpoint to the resources those paths can affect. That graph is the operational blast radius. The production database and its backups belonged to one failure domain because one path reached both, however separately they appeared in the architecture diagram.
+
+\section{Verify the workspace, not the agent's confidence}\label{verify-the-workspace-not-the-agents-confidence}
+
+Perry et al.~(\href{https://arxiv.org/abs/2211.03622}{2023}) found that participants who used an AI coding assistant produced less secure code while believing that their code was more secure. Participants who trusted the assistant less, and spent more effort steering it, produced fewer vulnerabilities. A reviewer who accepts a system's confidence inherits the same mismatch. The belief becomes stronger while the artifact becomes less safe.
+
+Those results do not establish an equivalent effect for current coding agents. The assistant supplied suggestions for security programming tasks, effect sizes varied by task, and protective skepticism was observed among participants rather than assigned as an experimental condition. The finding is used here because it ties trust to a measurable defect in the artifact. Its peer-reviewed standing does not upgrade the rest of the containment evidence, which remains incident reports and single-organization accounts.
+
+Agent self-reports create a more general version of the problem. A progress message is generated from the agent's current context, which may hold tool output, a checklist, prior messages, and summaries of earlier attempts. It is not a measurement taken independently from the workspace. Stale or misleading inputs can produce a fluent claim of completion that reflects the model's context while remaining false about the state the operator cares about.
+
+One practitioner account describes a resumed agent that inherited a clean worktree and a nearly complete task list. The earlier attempt had produced no change at all. The resumed agent checked off the remaining steps and declared the task complete, again without changing anything. The account is anecdotal, but the failure chain is mechanically plausible and can be tested in any local workflow.
+
+Each visible clue pointed the wrong way. The task list implied that earlier steps had been completed. The clean worktree implied that no unfinished edits remained. The resumed context supplied a narrative of progress without the artifact that narrative described. The final attempt treated agreement among those clues as evidence, even though all of them descended from the same failed attempt. Its `done' was true about the context and false about the repository.
+
+I break that chain by giving every attempt a distinct identity and requiring claims to resolve to inspectable state. The attempt record names the task, the workspace or branch, the starting revision, the commands run, the tests observed, and the final revision if one exists. On exit, the process either records recoverable local state or states that no change was produced. A later process does not inherit a bare declaration of completion.
+
+For code work, the branch contents are the primary object of review. A completion check compares the starting and ending revisions, inspects the diff, and runs the relevant tests from the recorded workspace. A checklist can direct that inspection, but it cannot satisfy itself. If an item says that an endpoint validates input, the reviewer locates the boundary, supplies invalid input, and observes the rejection.
+
+The same rule applies outside version control. A database migration claim resolves to the migration file, the schema state, and a test against an isolated database. A cloud configuration claim resolves to the configuration diff and a read-back from the control plane. A report claim resolves to the underlying records and the transformation used to compute it. The verifying observation should come from the system that owns the state, and a second paraphrase of the agent's message is not such an observation.
+
+A failed attempt should leave enough local evidence for diagnosis. I preserve its worktree when possible, including uncommitted changes, logs, test output, and the identity of the base revision. Deleting the workspace and asking the same model to try again removes the evidence about why the failure occurred. It can also repeat an external side effect whose completion was uncertain.
+
+Preservation does not mean that every partial artifact belongs on a shared branch. A local commit can make a useful checkpoint, but it can also preserve generated files, insecure code, or edits that never passed a test. I use a private attempt reference or a retained worktree for forensic state, and require review before that state joins an integration branch. When every write is idempotent, meaning that repeating it has the same effect as applying it once, a stateless retry may be simpler. The choice depends on whether the discarded state carries diagnostic value and whether repeated external effects are safe.
+
+Resume begins with reconciliation. The new process reads the actual branch, compares it with the recorded base, checks which task artifacts exist, and reruns the evidence needed for the next decision. If the worktree is clean because an earlier attempt committed valid work, the revision proves that history. If it is clean because nothing happened, the unchanged revision exposes the gap. If the branch moved independently, the mismatch is resolved before the task list is trusted.
+
+The same reconciliation applies when several agents work through separate worktrees. Git worktrees separate working files, indexes, and checked-out heads, but references and repository metadata remain shared and mutable. In my own orchestration system, a controller once supplied the wrong base revision to several agents working through separate worktrees. A mechanical branch guard blocked one commit after other work had already started. The incident is an author-system illustration and supplies no estimate of how often that failure occurs.
+
+The repair classified the observed repository state before taking action. A workspace on the expected base could proceed. A workspace on the wrong branch with no work to preserve could be rebuilt from the correct base. A workspace holding work that could not be safely relocated stopped the run with a visible error. The guard did not ask the agent whether its branch was correct. It inspected the repository state that would make the answer true or false.
+
+Independent verification also requires a change of role. The authoring context has already invested in a plan, selected an implementation, and explained its own choices. Giving that context another review pass preserves the same evidence selection and many of the same blind spots. A separate reviewer should begin from the acceptance criteria and the artifacts, and its assignment should state that it did not write the code and must actively test each claim.
+
+My own agent-workflow library retains failed worktrees for this purpose and hands review to a separate context. That design illustrates role separation, but it cannot establish that a second model is independent. The reviewer may share training biases, receive the same misleading documentation, or repeat the author's assumptions. Independence comes from the evidence path and the assigned task: inspect the diff, run named checks, exercise boundary cases, and report discrepancies without defending the implementation.
+
+An audit of my own research pipeline showed that artifact-level checks apply well outside code. A generated reference list contained fabricated, mis-cited, unverifiable, and untraceable sources. The central figure supporting its thesis could not be traced and had to be relabeled as an untested hypothesis. The prose sounded certain, but certainty provided no information about whether the cited record existed. Only checking each source against the claim exposed the failure.
+
+Tang et al.~(\href{https://arxiv.org/abs/2605.29442}{2026}) analyzed 20,574 real sessions across 1,639 repositories. They reported that 90.5 percent of misalignment episodes cost effort and trust without causing irreversible damage, and that 91.49 percent of visible resolutions required explicit user correction. As overall misalignment declined, inaccurate self-reporting accounted for a larger share of what remained. The study is directional, and it adds scale without establishing an incident rate for silent failures.
+
+Those measurements describe visible developer pushback. A user who silently accepts an incorrect completion claim, abandons the session, or discovers the defect later may never appear as a resolution. The corpus also favors people who opted into the observed development tools, including integrated-development-environment and command-line users. I treat the figures as directional evidence about the visible recovery burden. They do not estimate the population of all agent users.
+
+Explicit correction should therefore be cheap. The interface should let a user point at the false claim, preserve the current artifact, and start a fresh attempt with the discrepancy attached. Correction becomes expensive when the system collapses attempts into one conversation, destroys the failed workspace, or carries a completed checklist forward without its evidence. Those choices turn a common visible recovery path into another source of hidden state.
+
+I treat an account of work as a hypothesis about the workspace. Acceptance requires an observation with a different provenance. For a code change, that observation is usually a diff plus tests run from the branch under review. For an operational action, it is a read-back from the system of record and an audit trail tied to the attempt identity. Confidence, checklist state, and narrative coherence can direct an investigation, but none of them establishes completion.
+
+\section{Design for instructions that arrive through data}\label{design-for-instructions-that-arrive-through-data}
+
+An agent that reads untrusted content will eventually receive instructions written for that agent by someone other than its operator. \emph{Indirect prompt injection} inserts such instructions into material the system consumes: a web page, an issue, an email, a document, a log entry, or a retrieved database record. The operator may ask a legitimate question while the retrieved content asks the agent to reveal data, change its objective, or invoke a tool.
+
+The three sources supporting this practice are explorer-class and directional. Greshake et al.~(\href{https://arxiv.org/abs/2302.12173}{2023}) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, and that work measured none of the layered defenses described here. AgentDojo, from Debenedetti et al.~(\href{https://arxiv.org/abs/2406.13352}{2024}), evaluates attacks and defenses under specified tasks, and AgentShield, from Rassul and Rashid (\href{https://arxiv.org/abs/2605.11026}{2026}), explores a deception-based screen. Together they support a threat model and a way to exercise controls. The complete remedy has no measured result in this source set.
+
+The architectural difficulty is that the system deliberately combines instructions and data inside one model context. A retrieved page must influence the answer, or retrieval has little value. The model therefore cannot identify hostile text by asking whether that text affected its behavior, because legitimate evidence affects behavior too. Attackers exploit the ambiguity by placing operational language inside content the agent has been told to read and use.
+
+Transfer makes simple screening less dependable. An attack may use phrasing absent from the filter's examples, or split itself across retrieved items. It may hide in a routine-looking field, or arrive from a source the workflow normally trusts. A first check may reject a familiar form while a semantically equivalent instruction proceeds. Detection remains useful, but the security design has to assume detection failure.
+
+I layer controls because they observe different points in the path. Input checks inspect retrieved material before it enters the agent context, and they can flag instruction-like content, unexpected encodings, or data that violates a source schema. Output checks inspect the proposed response or action for sensitive data, policy violations, and mismatches with the operator's request. Neither check changes the authority the process holds.
+
+Tool allowlists constrain which interfaces the process may invoke during a task. The list should be assembled from the capabilities the task requires and enforced by the tool gateway, so that the names the model emits do not determine it. A research task may receive retrieval and note-writing tools while deployment, messaging, and credential access remain absent. A later operational step can use a separately authorized identity after review.
+
+Human approval belongs before effects with a large blast radius. The request shown to the reviewer should include the proposed action, the target, the parameters, the evidence used to choose it, and the expected side effects. A generic prompt asking whether the agent may `continue' hides the decision. Approval is most useful when the person can compare a concrete proposal against the operator's original intent.
+
+Each control should map to a named threat category. The map can be small: untrusted instructions in retrieved content, sensitive output disclosure, unauthorized tool selection, and high-impact external effects. For each category, the record identifies the preventive control, the detecting control, and the capability boundary that limits consequences. An empty cell is an observable gap for review.
+
+Injection cases belong in continuous integration, because filters, prompts, tool schemas, and retrieval pipelines change. AgentDojo (Debenedetti et al.~2024) supplies reusable tasks in which attacks and defenses can be exercised separately. I adapt representative cases to the system's actual sources and tools, then keep them as regression tests. The result shows whether a named control behaved as expected on those cases, but it does not estimate resistance to attacks outside them.
+
+The tests should inspect intermediate decisions as well as the final answer. A run that refuses to reveal a secret but still invokes an unauthorized tool has crossed a boundary. A run that produces a harmless answer after a hidden policy violation may fail under a slightly different target. Recording retrieved inputs, tool requests, approvals, denials, and outputs keeps the control path available for investigation.
+
+The practice fails when rails or alignment are the only defense. Transferable attacks can survive an initial screen and arrive through material the workflow treats as relevant. Alignment may reduce how often the model follows them, and rails may catch known forms. The decisive backstop is the authority available after the model has been redirected.
+
+The two analyses meet at that backstop. Injection analysis asks what can reach the agent, and containment asks what the affected process can reach afterward: tools, data, credentials, services, and external side effects. The layers before execution reduce exposure and reveal regressions. The enforced capability boundary determines how far a missed instruction propagates.
+
+The companion catalog carries six related designs that this chapter does not expand into separate practices. It treats agent topology as a security decision, marks cross-session guards as a thinly supported aside, and describes routing proposed remediations through a typed policy executor. It also covers placing autonomy according to reversibility and blast radius, measuring a system's own security change without importing a comparative claim, and the self-attestation entry folded into this chapter's verification practice.
+
+\section{Audit one live boundary}\label{audit-one-live-boundary}
+
+Inventory one deployed agent this week, starting from the running process rather than the architecture diagram. Enumerate every destructive action it can take without a fresh human decision, including actions reachable through delegated services and policy-changing endpoints. For each action, record the enforcing identity, the affected resources, and the observation that proves the denial or the permission.
+
+Then check the recovery path with the credentials the process currently holds. If any agent-held identity can delete, replace, or shorten retention for both the primary data and the backups, separate that authority before touching prompts or filters. Move one routinely write-capable identity to read-only access, and add escalation for a specific operation. The check succeeds when the ordinary identity receives an enforcement-layer denial and the narrow escalation completes only its intended action.
+
+Finally, take one recent completion claim and verify it against the workspace or the system of record. Compare the revisions, inspect the artifact, rerun the relevant check, and retain the attempt identity with the result. Any discrepancy becomes a concrete test case for the resume and review workflow.
+
+Containment bounds the damage a live process can cause. Chapter 8 examines what must survive when that process dies.
+
+\section{Sources and evidence}\label{sources-and-evidence}
+
+The evidence class and strength on each entry below come from its catalog record. The author-system cases in this chapter are narrative illustration. They show implementation choices and control boundaries, and they do not independently support the chapter's empirical or theoretical claims.
+
+\subsection{Contain agent blast radius}\label{contain-agent-blast-radius}
+
+\begin{itemize}
+\tightlist
+\item
+  practitioner/anecdotal: ``What actually broke when we put AI agents into real production workflows'', /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
+\item
+  practitioner/anecdotal: ``AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?'', /u/Upstairs\_Safe2922, r/devops, 2026-05-12.
+\end{itemize}
+
+\subsection{Distrust agent self-reports}\label{distrust-agent-self-reports}
+
+\begin{itemize}
+\tightlist
+\item
+  practitioner/anecdotal: ``My AI Agent Said It Was Done. It Hadn't Done Anything'', Push to Prod substack, 2026-02.
+\item
+  practitioner/directional: Tang et al., ``How Coding Agents Fail Their Users: A Large-Scale Analysis of Developer-Agent Misalignment in 20,574 Real-World Sessions'', arXiv:2605.29442, 2026.
+\item
+  Folded per PC-3 from the excluded self-attestation pattern:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    lit/strong: Perry, Srivastava, Kumar, Boneh (2022/2023), ``Do Users Write More Insecure Code with AI Assistants?'', ACM CCS 2023, arXiv:2211.03622.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Defense in depth for indirect prompt injection}\label{defense-in-depth-for-indirect-prompt-injection}
+
+\begin{itemize}
+\tightlist
+\item
+  explorer/directional: Indirect prompt injection (Greshake et al.~2023, arXiv:2302.12173); companion material named in the same synthesis: OWASP LLM Top 10.
+\item
+  explorer/directional: AgentDojo (Debenedetti et al.~2024, arXiv:2406.13352).
+\item
+  explorer/directional: AgentShield deception-based detection (Rassul and Rashid 2026, arXiv:2605.11026).
+\end{itemize}
+
+\subsection{Author artifact cited inline}\label{author-artifact-cited-inline}
+
+\begin{itemize}
+\tightlist
+\item
+  Not an evidence item: CodeProbe, the author's task-mining evaluation tool, \href{https://github.com/sjarmak/codeprobe}{public repository}. Named inline for the container refusal, disabled networking, and recorded isolation posture described above, all of which are narrative illustration.
+\end{itemize}
