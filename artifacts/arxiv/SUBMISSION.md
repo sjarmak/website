@@ -10,7 +10,8 @@ Prepared August 5, 2026 for the August 2026 edition of *Engineering Reliable Cod
 
 - `engineering-reliable-coding-agents-arxiv-source.zip`: LaTeX release candidate for arXiv.
 - `engineering-reliable-coding-agents-preview.pdf`: PDF compiled from that source.
-- `engineering-reliable-coding-agents-companion-1.0.0-rc.2.zip`: separate companion research artifact release candidate.
+- `engineering-reliable-coding-agents-companion-1.0.0-rc.3.zip`: separate companion research artifact release candidate.
+- `engineering-reliable-coding-agents-skills-0.1.0.zip`: reusable agent workflows derived from selected companion practices.
 - `reference-audit/README.md`: reference-audit summary.
 
 The manuscript source ZIP does not contain the companion dataset. This keeps the article submission small and self-contained while allowing the catalog and evidence ledger to receive their own version and DOI.
@@ -61,7 +62,7 @@ The repository currently has a root Apache-2.0 license. Before adding the manusc
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
-3. Replace release-candidate version `1.0.0-rc.2` with `1.0.0` in the build script and citation metadata.
+3. Replace release-candidate version `1.0.0-rc.3` with `1.0.0` in the build script and citation metadata.
 4. Publish the exact package in the book repository and create a `v1.0.0` release.
 5. Connect that repository to Zenodo or another DOI-granting archive and archive the exact tag.
 6. Add the DOI to `CITATION.cff`, the companion README, the manuscript’s Data and materials availability statement, and the arXiv Comments field.
@@ -76,6 +77,11 @@ The companion release contains:
 - 29 benchmark records;
 - resolved metadata for 308 arXiv identifiers, five DOIs, and other web sources;
 - JSON Schemas, provenance hashes, citation metadata, and checksums.
+
+The separately packaged skills bundle contains five derived operational
+workflows with practice-level evidence maps. Treat the skills as implementation
+artifacts rather than independent evidence, and keep them outside the arXiv TeX
+archive.
 
 Author-system cases are labeled as illustrations and are explicitly excluded from independent external evidence. Working notes, rejected candidates, private comments, local paths, unpublished raw operational data, and internal derivation records are excluded.
 
