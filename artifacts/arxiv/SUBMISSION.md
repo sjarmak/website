@@ -37,7 +37,7 @@ AI coding agents are commonly evaluated as models but deployed as systems whose 
 
 ### Comments
 
-Technical review, 238 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. Public review edition, August 2026. Companion DOI: [insert DOI].
+Technical review, 231 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. Public review edition, August 2026. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -118,8 +118,9 @@ Identifier resolution verifies that the cited record exists and captures current
 ## Technical validation
 
 - Exact source ZIP compiled in a fresh temporary directory with Tectonic 0.15.0.
-- Output: 238 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
+- Output: 231 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
 - Figures: 19 of 19 included as PDF.
+- Chapter sources: 19 unnumbered chapter-end source blocks, excluded from the numbered section hierarchy and table of contents.
 - Text extraction: approximately 104,500 machine-readable words.
 - PDF security: no encryption, JavaScript, forms, or embedded multimedia.
 - Archive hygiene: 43 required files; no generated PDF, log, auxiliary file, Markdown source, dataset, or private note.

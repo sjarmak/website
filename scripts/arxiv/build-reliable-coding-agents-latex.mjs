@@ -82,6 +82,18 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
     .join("\n");
   output = output.replace(/\(\/book-figures\/([a-z0-9-]+)\.svg\)/g, "(figures/$1.pdf)");
   if (introduction) output = output.slice(output.indexOf("## Problem and scope"));
+  if (!introduction) {
+    const marker = "## Sources and evidence";
+    const markerIndex = output.lastIndexOf(marker);
+    if (markerIndex === -1) throw new Error("Chapter is missing its sources end matter");
+    const sources = output
+      .slice(markerIndex + marker.length)
+      .replace(/^### (.+)$/gm, "**$1**");
+    if (/^#{1,6} /m.test(sources)) {
+      throw new Error("Unexpected heading inside chapter sources end matter");
+    }
+    output = `${output.slice(0, markerIndex)}\\section*{Sources and evidence}${sources}`;
+  }
   output = output.replace(/^### /gm, "## ").replace(/^## /gm, "# ");
   return output;
 }
@@ -90,12 +102,22 @@ function texEscape(value) {
   return value.replaceAll("&", "\\&");
 }
 
+function assertSourcesAreEndmatter(latex, sourceName) {
+  const marker = "\\section*{Sources and evidence}";
+  const markerIndex = latex.indexOf(marker);
+  if (markerIndex === -1) throw new Error(`Missing unnumbered chapter-end sources in ${sourceName}`);
+  const sources = latex.slice(markerIndex + marker.length);
+  if (/\\(?:sub)*section\*?\{/.test(sources)) {
+    throw new Error(`Section heading found inside chapter-end sources in ${sourceName}`);
+  }
+}
+
 async function pandocConvert(markdown, outputPath) {
   const inputPath = path.join(buildRoot, `${path.basename(outputPath, ".tex")}.md`);
   await writeFile(inputPath, markdown);
   await run(pandoc, [
     inputPath,
-    "--from=markdown+raw_html+pipe_tables+autolink_bare_uris",
+    "--from=markdown+raw_html+raw_tex+pipe_tables+autolink_bare_uris",
     "--to=latex",
     "--wrap=preserve",
     "--no-highlight",
@@ -141,6 +163,7 @@ async function main() {
       const outputPath = path.join(chapterRoot, `${stem}.tex`);
       await pandocConvert(markdown, outputPath);
       const body = await readFile(outputPath, "utf8");
+      assertSourcesAreEndmatter(body, file);
       await writeFile(outputPath, `\\chapter{${texEscape(title)}}\n\\label{${stem}}\n${body}`);
       inputLines.push(`\\input{chapters/${stem}}`);
       chapterNumber += 1;
@@ -151,6 +174,7 @@ async function main() {
   const closing = preprocessMarkdown(await readFile(path.join(editorialRoot, "closing.md"), "utf8"));
   await pandocConvert(closing, path.join(chapterRoot, `${closingStem}.tex`));
   const closingBody = await readFile(path.join(chapterRoot, `${closingStem}.tex`), "utf8");
+  assertSourcesAreEndmatter(closingBody, "closing.md");
   await writeFile(path.join(chapterRoot, `${closingStem}.tex`), `\\chapter{Closing: the evidence chain behind reliable agents}\n\\label{closing-evidence-chain}\n${closingBody}`);
   inputLines.push("\\input{chapters/closing}");
 
