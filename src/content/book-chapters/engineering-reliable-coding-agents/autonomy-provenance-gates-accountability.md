@@ -7,212 +7,513 @@ kind: chapter
 number: 16
 ---
 
-I built a human-approval queue whose purpose was to hold decisions that an agent was not allowed to make. The architecture looked conservative. An agent could prepare an action, and execution waited at a human-only boundary. An audit found that some scripts failed open when a required component was absent, and that command construction reached execution without the validation the gate was supposed to enforce. The queue could therefore report the presence of an approval process while allowing a path around the person. I had built that apparatus to be the careful option, which is an uncomfortable thing to read in an audit of your own system.
+I built a human-approval queue to hold decisions an agent was not permitted to make. The architecture appeared conservative: the agent could prepare an action, but execution stopped at a human-only boundary.
 
-The evidence for the practices in this chapter is limited. The four taught entries rest on seven evidence items, of which two are strong; six come from the research literature and one from a practitioner account. Two entries, `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control`, have no strong evidence item. The accountability literature represented here consists largely of survey, framework, and position work. Production-grounded accountability literature is thin, and the available material functions as existence proof and design catalog without measuring production outcomes. I therefore present these practices as defensible defaults to test in a particular system, and the evidence does not establish universal policy.
+An audit found paths around that boundary. Some scripts failed open when a required component was missing, and command construction reached execution without the validation the gate was supposed to enforce. The system could report that approval existed while allowing an action to bypass the person. I had built the apparatus to be the careful option, which made the finding particularly uncomfortable.
 
-The failed queue is one instance of a general problem. An autonomy policy constrains nothing unless the system preserves the boundary it names. A provenance label changes nothing unless it changes what a reviewer can learn or do. A human gate controls nothing unless the person can alter the execution path. An accountability assignment prevents nothing unless the named person can affect the outcome. These are four separate design objects, and each collapses in the same way when its operational path differs from its policy description.
+The evidence for this chapter is limited. Its four entries rest on seven evidence items, two of them strong. Six come from research literature and one from a practitioner account. Two entries, `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control`, have no strong supporting item.
 
-Agent systems acquire more action types as they grow. A system might restart a service, propose a database migration, merge a documentation change, rotate a credential, or delete a branch. Calling such a system 'autonomous' compresses those authorities into one word. That word records nothing about reversibility, blast radius, the evidence available to a reviewer, the ownership of state, or the practical ability to interrupt execution, and those are the variables that determine risk.
+The accountability literature represented here consists largely of surveys, frameworks, and position papers. Production-grounded evidence is thin. The available work establishes that these problems and design options exist; it does not measure their effects in production. I therefore present the practices as defensible defaults to test in a particular system, not as universal policy.
 
-The useful unit is the transfer of control for one action class. Each transfer has an initiator, an action, an approving or executing party, an artifact that supports the decision, and a recorded outcome. Once those elements are explicit, observations can calibrate autonomy, provenance can be attached to the artifact, and a gate can be tested as an executable control. Accountability can then be assigned to a role that holds authority.
+The failed queue illustrates the broader problem. An autonomy policy constrains nothing unless the system enforces the boundary it names. A provenance label changes nothing unless it changes what a reviewer can learn or do. A human gate controls nothing unless the person can alter the execution path. An accountability assignment prevents nothing unless the named person has authority over the outcome.
 
-## Autonomy is a ladder for each action type
+These are separate design objects, but they fail in the same way when the operational path differs from the policy description.
 
-An autonomy ladder widens control one rung at a time for a defined action type, using its own approval, modification, and outcome record. A promotion threshold is the criterion for moving to a wider rung. A frequently cited value is roughly 95 percent unmodified approvals, meaning that a reviewer approves the proposed action without changing it. That number is a calibration starting point stated as policy in one practitioner article, Priya C ([2026](https://devops.com/when-should-a-devops-agent-act-without-human-approval/)), which reports no measurement behind the cutoff. The threshold has no claim to universality.
+Agent systems acquire more kinds of authority as they grow. One may restart a service, propose a migration, merge documentation, rotate a credential, or delete a branch. Calling the system “autonomous” collapses those different powers into one word. That word says nothing about reversibility, blast radius, available evidence, ownership of state, or the ability to interrupt execution.
 
-A team should instead decide what difference in performance would justify a wider rung, gather enough observations to detect that difference, and retain the underlying counts. This practice rests on one directional practitioner source for the protocol and one strong controlled study for the role of comprehension.
+The useful unit is the transfer of control for one action class. Each transfer has:
 
-The ladder needs separate rails because action types expose different failure modes. A service restart usually changes transient process state and can often be reversed by another restart. A credential rotation changes distributed configuration, invalidates clients, and may lock operators out of the recovery path. A branch deletion changes repository state, while a proposed text edit changes only an artifact that still requires merge. Hundreds of clean restarts therefore establish nothing about the same system's ability to rotate credentials safely.
+- an initiator;
+- a proposed action;
+- an approving or executing party;
+- an artifact supporting the decision; and
+- a recorded outcome.
+
+Once those elements are explicit, autonomy can be calibrated from observations, provenance can travel with the artifact, and the gate can be tested as an executable control. Accountability can then be assigned to a role that actually holds authority.
+
+## Widen authority one action class at a time
+
+An autonomy ladder widens control one rung at a time for a defined action class. Each class keeps its own approval, modification, and outcome record. A **promotion threshold** is the criterion for moving that action to a wider rung.
+
+One practitioner article, Priya C ([2026](https://devops.com/when-should-a-devops-agent-act-without-human-approval/)), proposes roughly 95 percent unmodified approvals as a starting policy. It reports no measurement supporting that cutoff. The number has no claim to universality.
+
+A team should instead define the performance difference that would justify wider authority, gather enough observations to detect that difference, and retain the underlying counts. The protocol here rests on one directional practitioner source and one strong controlled study concerning reviewer comprehension.
+
+The ladder needs separate rails because action classes expose different risks. A service restart changes transient process state and can often be reversed with another restart. A credential rotation changes distributed configuration, invalidates clients, and may lock operators out of recovery. A branch deletion changes repository state. A proposed text edit changes only an artifact that still requires merge.
+
+Hundreds of clean service restarts establish nothing about whether the same system can rotate credentials safely.
 
 ```text
-defined action type
+defined action class
     -> its own approval + modification + outcome record
-        -> measured evidence -> widen control one rung at a time
+        -> measured evidence
+            -> widen authority one rung at a time
 
 service restart rail              credential rotation rail
 transient process state           distributed configuration
-another restart can reverse       invalidates clients
-clean restarts -> widen rung      may lock operators out
+another restart may reverse       invalidates clients
+clean restarts may widen rung     may block recovery access
         |                                  ^
         +-> establish nothing about -------+
 
 permanent approval floor
-    -> human authorization is not removed
+    -> human authorization remains mandatory
     -> irreversible actions stay above
     -> high-blast-radius actions stay above
 
-routine successes -> do not lift the floor
+routine success does not remove the floor
 ```
 
-My own operator policy makes this separation explicit. Service restarts are pre-approved. Destructive operations, such as recursive deletion, force-push, and branch deletion, require renewed confirmation every time. The rule is stored as durable configuration so that a new session inherits the same boundary. It illustrates the shape of such a policy and is not evidence that these categories or settings suit another environment.
+My operator policy makes this separation explicit. Service restarts are pre-approved. Destructive operations such as recursive deletion, force-push, and branch deletion require renewed confirmation every time. The policy is durable configuration, so a new session inherits the same boundary. This illustrates the shape of an action-specific policy; it is not evidence that these classifications suit another system.
 
-A transfer-of-control record documents each decision to let the system act, require approval, or return control to a person. For one action type, the record should identify the proposed action, the rung in force, the reviewer's decision, any human modification, the observed outcome, and later reversal or incident evidence. Outcome correctness needs an operational definition tied to the action. For a restart, 'the command exited zero' is insufficient when the service never became healthy. For a patch, 'merged' is insufficient when it was reverted after a production failure.
+A transfer-of-control record documents every decision to let the system act, require approval, or return control to a person. For each action class, it should preserve:
 
-Approval rate is a proportion over repeated observations:
+- the proposed action;
+- the autonomy rung in force;
+- the reviewer’s decision;
+- any human modification;
+- the observed outcome; and
+- later reversal or incident evidence.
+
+Outcome correctness requires an action-specific definition. For a restart, “the command exited zero” is insufficient if the service never became healthy. For a patch, “merged” is insufficient if production failure caused an immediate revert.
+
+Approval measures are proportions over repeated observations:
 
 ```text
-approval rate = approved proposals / reviewed proposals
-unmodified approval rate = approved proposals with no human change / reviewed proposals
-modification rate = proposals changed by a human / reviewed proposals
+approval rate
+    = approved proposals / reviewed proposals
+
+unmodified approval rate
+    = proposals approved without human change / reviewed proposals
+
+modification rate
+    = proposals changed by a human / reviewed proposals
 ```
 
-These denominators must describe the same action class and the same rung. Mixing restarts with schema changes can produce a stable aggregate while both constituent rates move in opposite directions. Excluding rejected or timed-out proposals can make the system appear more acceptable by removing the cases in which the transfer failed. Recording only executed actions produces survivorship bias, because abandoned proposals disappear before the outcome table is built.
+The denominators must refer to the same action class and autonomy rung. Combining restarts with schema changes can produce a stable aggregate while both underlying rates move in opposite directions. Excluding rejected or timed-out proposals makes the system look more acceptable by removing the transfers that failed. Recording only executed actions introduces survivorship bias because abandoned proposals disappear before the outcome record is built.
 
-Part I established why an observed proportion is not the property itself. Nine unmodified approvals out of ten proposals gives 90 percent, and the confidence interval around it remains wide because the sample is small. Ninety approvals out of one hundred supports a narrower estimate at the identical point estimate. The appropriate interval method depends on the analysis plan, but the operational conclusion does not depend on that choice. A rate from a small <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> should not move authority because its displayed percentage crossed a line.
+Part I established why an observed proportion is not the underlying property. Nine unmodified approvals among ten proposals and ninety among one hundred both produce 90 percent, but the first estimate is much less precise. The interval method depends on the analysis plan; the operational conclusion does not. A small-\(n\) percentage should not transfer authority merely because it crossed a displayed threshold.
 
-The sampling unit deserves the same attention Part I gave it. Transfers reviewed by one person are repeated observations of that reviewer as much as of the system, and a rate computed over them describes the pair. A track record accumulated under one model version, prompt set, or harness revision also describes that configuration, so a change to any of them reopens the question the record was meant to settle.
+The sampling unit also matters. A series of transfers reviewed by one person measures the reviewer-system pair as much as the system itself. A track record collected under one model version, prompt set, or harness revision describes that configuration. Changing any of them reopens the question the record was intended to settle.
 
-Promotion also requires a power analysis. The team first specifies the effect size that would change the decision, such as the smallest increase in post-action failures that would make a wider rung unacceptable. It then estimates how many observations are needed to detect that difference at the chosen error rates. Rare, high-consequence failures can require more evidence than the deployment will plausibly accumulate. In that case, the action cannot earn promotion from its local track record, even when every observed outcome has been clean.
+Promotion also requires a power analysis. The team first defines the smallest change that would reverse the decision, such as the smallest increase in post-action failures that would make a wider rung unacceptable. It then estimates how many observations are needed to detect that change at the chosen error rates.
 
-The approval rate omits information that the modification rate records. A reviewer may approve every database query after correcting the time window, tenant filter, or target environment. The approval rate is then 100 percent, while execution without intervention would reproduce the same material error. The modification log should retain the substance of each change, because a punctuation edit and a correction to the production target have different implications. A team can classify modifications for analysis when it specifies the categories and the inter-rater reliability before examining the rate.
+Rare, high-consequence failures may require more observations than the deployment can plausibly accumulate. In that case, the action cannot earn wider autonomy from its local record, even when every observed outcome has been clean.
 
-Outcome correctness is a third measure, because approval can reflect reviewer behavior rather than system quality. Reviewers under queue pressure may approve more quickly, rubber-stamp familiar actions, or reserve comments for severe defects. A rising unmodified approval rate alongside a rising rollback rate is evidence against promotion. The system should also report delayed outcomes, because a configuration change that fails after the review window would otherwise be counted as correct.
+Approval alone omits information captured by modification. A reviewer may approve every database query only after correcting its time window, tenant filter, or target environment. Approval is then 100 percent, even though autonomous execution would repeatedly reproduce a material error.
 
-Chen et al. ([2025](https://arxiv.org/abs/2507.08149)) complicate a capability-only account of automation. In their controlled study, as automation increased, limited understanding of agent behavior constrained willingness to adopt higher automation, and capability alone did not explain the limit. The verification surface is therefore part of the autonomy mechanism. A reviewer needs a behavior summary, the relevant diff, the intended and observed state transition, and an explanation of why the proposed action follows from the available evidence. When those artifacts do not support comprehension, an accurate system can still fail to earn legitimate control.
+The modification record should retain what changed. Correcting punctuation and changing a production target have different implications. Modifications can be classified for analysis when the categories and inter-rater reliability procedure are fixed before the rates are examined.
 
-Comprehension should be tested at the rung under consideration. Ask reviewers to predict the affected resources, identify the rollback path, and locate the evidence for the system's claim before revealing the answer. Record where their model diverges from execution. This is a design decision and a measurement task, and no generic quiz score follows from it. The companion catalog holds an explain-back gate under `require-comprehension-before-merge` that makes the check explicit, and an independent checker should evaluate the generating system's work.
+Outcome correctness is a third measure because approval can reflect reviewer behavior rather than system quality. Reviewers under queue pressure may approve familiar actions quickly or reserve comments for severe defects. A rising unmodified approval rate combined with a rising rollback rate argues against promotion. Delayed outcomes must also remain attached to the original transfer, or failures discovered after the review window will be counted as successes.
 
-Some action classes stay above a permanent approval floor, a boundary below which human authorization is not removed. Irreversible and high-blast-radius actions belong there when the cost of a mistaken transfer exceeds what the observed record can justify. The floor is not a trust ramp, and it does not lift because the system has accumulated routine successes. Least privilege should still constrain the executing identity, so that a mistaken approval cannot exceed the authority the action requires.
+Chen et al. ([2025](https://arxiv.org/abs/2507.08149)) complicate a capability-only account of automation. In their controlled study, limited understanding of agent behavior constrained willingness to adopt higher automation even as capability increased. Capability alone did not determine the limit.
 
-Most teams should keep most actions below full autonomy today, because the promotion evidence is thin and action-specific. A table of task-type defaults, held separately in the companion catalog under `set-autonomy-defaults-per-task-type`, can initialize policy but cannot supply a track record, and it does not replace the ladder. The executable decision is narrower. Define an action class, define the outcome and the material difference, and collect every transfer using denominators that do not exclude rejected or timed-out proposals. Calculate uncertainty, test reviewer comprehension, and widen one rung only when those observations support it.
+The verification surface is therefore part of the autonomy mechanism. A reviewer needs:
 
-Two further companion entries sit beside this one. `measure-oversight-with-decomposed-metrics` separates overreliance from underreliance and classifies review interactions before counting coverage. The evidence for `attach-reliance-disclaimers` supports only its use as a marked design option.
+- a behavior summary;
+- the relevant artifact or diff;
+- the intended state transition;
+- the observed state transition; and
+- the evidence connecting the proposed action to the stated objective.
 
-## Provenance belongs at the review surface
+When those artifacts do not support comprehension, even an accurate system may fail to earn legitimate authority.
 
-Tang et al. ([2024](https://arxiv.org/abs/2405.16081)) observed twenty-eight developers in a laboratory study and found them unreliable at recognizing machine-generated code without assistance. When told that the code was generated, participants searched and verified more, and their repair performance improved. Measured cognitive workload also increased. Tang and colleagues supply the strong evidence for this practice, and their experiment used short code fragments under laboratory conditions.
+Comprehension should be tested at the rung under consideration. Ask reviewers to predict affected resources, identify the rollback path, and locate the evidence behind the system’s claim before revealing the answer. Record where their understanding diverges from execution. No universal quiz score follows from this design.
 
-A provenance label records how an artifact was produced and shows that record where the artifact is reviewed. It may take the form of a pull-request label, a commit trailer placed in the structured footer of a commit message, or an editor marker.
+The companion entry `require-comprehension-before-merge` makes the explain-back check explicit. An independent checker should evaluate the generating system’s work.
 
-Recognition is the wrong task to spend reviewer capacity on. Machine-generated code has no stable visual signature, and asking reviewers to infer origin consumes attention before they inspect behavior. Inference also produces selective disclosure in practice. Obvious generations attract scrutiny while plausible generations pass as ordinary work. Attaching provenance at the point of review makes origin an input rather than a detection task.
+Some action classes remain above a permanent approval floor, below which human authorization is never removed. Irreversible and high-blast-radius actions belong there when the consequence of a mistaken transfer exceeds what the observed record can justify. The floor is not a trust ramp and does not disappear after routine successes.
 
-The observed behavior in that study suggests a specific mechanism. Disclosure prompted additional search and verification, which gave participants more evidence for repair. The label did not establish that the code was defective, and it performed no verification itself. Its value depended on the response it produced in a reviewer who had tools and enough time to use them.
+Least privilege should still constrain the executing identity so that a mistaken approval cannot authorize effects beyond the operation being reviewed.
 
-A common misuse ignores that dependence. A warning badge can become a substitute for a test, as though declaring machine authorship discharged the maintainer's duty. It can also become a weak liability transfer, in which the system announces risk while leaving the reviewer no practical way to investigate it. A useful label connects to the generation context, the tests, the diff explanation, and the responsibility path, without asserting that any of those artifacts are correct.
+Most teams should keep most consequential actions below full autonomy today because the supporting evidence remains thin and action-specific. The companion entry `set-autonomy-defaults-per-task-type` can initialize a policy table, but it cannot create a track record or replace the ladder.
 
-The disclosure boundary needs a clear object. A whole pull request may contain human-written scaffolding, machine-generated implementation, generated tests, and later human repairs. One label at the request level is simple and loses that composition. A marker on every line is more precise, produces noise, and depends on editor and diff support. Commit-level trailers preserve a durable unit in repository history, although squashing or copying changes can separate the trailer from the code it described.
+The executable decision is narrower:
 
-There is no universal granularity to adopt. The team should identify the review decision the label is meant to affect, then choose the smallest unit whose provenance survives the repository workflow. Test that survival through rebases, cherry-picks, squash merges, file moves, and copied patches. A provenance control that disappears during the normal merge path produces a confident but incomplete history.
+1. Define one action class.
+2. Define a correct outcome and the material difference that would reverse the policy.
+3. Record every proposed transfer, including rejection and timeout.
+4. Estimate uncertainty.
+5. Test reviewer comprehension.
+6. Widen authority by one rung only when the observations support it.
 
-My own authorship-measurement project shows why the semantics of a provenance count must stay narrow. I measured a 14.5 percent trailer-signed floor, a lower bound on visible trailer-marked authorship, because every match was treated as a true positive. That figure says nothing about total agent contribution, and it must not be averaged with an inferred share. An earlier exploratory range was superseded when a replication whose design was fixed in advance returned 'Not identified'. The estimator had targeted the agent share of authorship beyond the trailer-marked floor, and the verdict recorded that it did not identify that share under the prespecified design. Only the reliable floor survives, because the identification failure invalidates the larger estimate.
+Two companion entries sit beside this practice. `measure-oversight-with-decomposed-metrics` separates overreliance from underreliance and classifies review interactions before counting coverage. The evidence for `attach-reliance-disclaimers` supports only its inclusion as a marked design option.
 
-Provenance and authorship also separate from answerability. In my maintainer practice, an adoption pull request can preserve a contributor's commits verbatim while recording:
+## Put provenance where review happens
+
+Tang et al. ([2024](https://arxiv.org/abs/2405.16081)) observed 28 developers in a laboratory study and found that they were unreliable at recognizing machine-generated code without assistance. When told that the code was generated, participants searched and verified more, and their repair performance improved. Cognitive workload also increased.
+
+This study provides the strong evidence for provenance disclosure in this chapter. It used short code fragments under laboratory conditions.
+
+A provenance label records how an artifact was produced and presents that record where the artifact is reviewed. It may be a pull-request label, a structured commit trailer, or an editor marker.
+
+Recognition is the wrong task on which to spend reviewer attention. Machine-generated code has no stable visual signature. Asking reviewers to infer its origin consumes attention before they inspect its behavior and produces selective scrutiny: obvious generations receive extra review while plausible generations pass as ordinary work.
+
+Attaching provenance at the review surface makes origin an input to the decision rather than a detection task.
+
+The study suggests a specific mechanism. Disclosure caused participants to search and verify more, giving them additional evidence for repair. The label did not establish that the code was defective and performed no verification itself. Its value depended on the behavior it produced in a reviewer who had the tools and time to investigate.
+
+A common misuse ignores that dependence. A warning badge can become a substitute for testing, as though declaring machine authorship discharged the maintainer’s responsibility. It can also become a weak liability transfer in which the system announces risk while giving the reviewer no practical way to inspect it.
+
+A useful label connects to:
+
+- the generation context;
+- the proposed diff or artifact;
+- the tests and verification results;
+- later human modifications; and
+- the role answerable for integration.
+
+None of those artifacts is thereby proven correct.
+
+The disclosure boundary needs a defined object. One pull request may contain human-written scaffolding, generated implementation, generated tests, and later human repairs. A request-level label is simple but loses that composition. A marker on every line is more precise but noisy and dependent on editor and diff support. Commit trailers provide a durable repository unit, although squashing, copying, and cherry-picking can detach the trailer from the code it described.
+
+There is no universal granularity. The team should identify the review decision the label is meant to influence and choose the smallest unit whose provenance survives the repository workflow.
+
+Test that survival through:
+
+- rebases;
+- cherry-picks;
+- squash merges;
+- file moves;
+- copied patches; and
+- partial adoption of generated work.
+
+A provenance control that disappears during the ordinary merge path creates a confident but incomplete history.
+
+My authorship-measurement project illustrates why provenance counts must remain narrow. I measured a 14.5 percent trailer-signed floor, a lower bound on visible trailer-marked authorship, because every detected trailer was treated as a true positive. The figure says nothing about total agent contribution and cannot be averaged with an inferred share.
+
+An earlier exploratory range was superseded when a preregistered replication returned `Not identified`. The estimator targeted agent authorship beyond the trailer-marked floor and failed to identify that quantity under the specified design. Only the measured floor remains defensible.
+
+Provenance is also distinct from answerability. In my maintainer practice, an adoption pull request can preserve a contributor’s commits while stating:
 
 ```text
 Supersedes #X
 Credit: original fix by @X (commit preserved with original authorship)
 ```
 
-The original author remains attached to the work, and the maintainer who adopts and submits it becomes answerable for the integration decision. Both facts survive in the artifact. The format does not establish that the code is correct. It removes the need for a later reviewer to infer who wrote the change and who accepted responsibility for putting it forward.
+The original author remains attached to the work. The maintainer who adopts and submits it becomes answerable for the integration decision. Both facts survive in the artifact.
 
-Persistent provenance also supports incident reconstruction. A reviewer examining a regression can ask whether the failure arose in generation, in human modification, in integration, or in a later environment change. That question is harder to answer when labels exist only in an editor and disappear before merge. The companion catalog covers one tamper-evident history design under `record-steps-in-hash-chained-ledger`, and the argument here does not depend on that implementation.
+The format does not establish correctness. It removes the need for a later reviewer to infer who produced the change and who accepted responsibility for putting it forward.
 
-The workload cost Tang and colleagues measured limits the recommendation. Higher cognitive workload may be acceptable when disclosure focuses attention on an occasional generated fragment. In a mixed codebase where the marker appears on most changes, constant exposure can tax attention and lose salience.
+Persistent provenance also supports incident reconstruction. A reviewer investigating a regression can ask whether the failure arose during generation, human modification, integration, or a later environmental change. That distinction is harder when provenance exists only in an editor and disappears before merge.
 
-Those results do not establish how large diffs, sustained review queues, or experienced teams respond over time. A local evaluation should therefore measure reviewer behavior and repair outcomes rather than label coverage alone. Useful observations include whether reviewers open referenced files, run or inspect tests, search documentation, change the generated code, detect seeded defects, and report excessive workload.
+The companion entry `record-steps-in-hash-chained-ledger` describes one tamper-evident history mechanism. The argument here does not depend on that implementation.
 
-Compare equivalent review tasks with and without provenance disclosure, under the actual tools and queue constraints. Assigning the same artifacts to both conditions removes the difficulty of the change from the comparison, in the way Chapter 1 describes for paired designs. A comparison drawn across different pull requests instead confounds disclosure with artifact difficulty. Pairing on the artifact alone is not sufficient, because the experimental unit is the reviewer-artifact pair. The design must therefore state how reviewers are assigned to conditions, whether anyone reviews the same artifact twice, and how condition order is counterbalanced. It must also decide which defects count and how workload will be measured, and the study supplies no production cutoff to copy.
+Tang et al.’s measured workload cost limits the recommendation. Increased cognitive effort may be acceptable when a marker directs attention to occasional generated work. In a codebase where nearly every change carries the label, constant exposure may tax reviewers and lose salience.
 
-If disclosure increases activity without improving repair, the label may be producing ritual rather than evidence. If repair improves while queue latency or abandonment rises sharply, the team has found a real tradeoff between scrutiny and capacity. Either result is more informative than a policy requiring an 'AI-generated' badge everywhere. The relevant question is whether provenance changes verification in the deployed review environment.
+The study does not establish how large diffs, persistent queues, or experienced teams respond over time. Local evaluation should therefore measure reviewer behavior and repair, not label coverage alone.
 
-The companion entry `write-an-agent-contribution-policy` covers the repository rules around disclosure, attribution, and accepted contribution paths. Such a policy can keep the wire format consistent, but it cannot make the label effective. Effectiveness remains an observed relation among the marker, the verification surface, reviewer behavior, and repair.
+Useful observations include whether reviewers:
 
-## A gate must have causal power
+- open referenced files;
+- inspect or run tests;
+- search documentation;
+- change the proposed code;
+- detect seeded defects; and
+- report excessive workload.
 
-A human gate has support here from two directional literature items and no strong evidence item. Sterz et al. ([2024](https://arxiv.org/abs/2404.04059)) set out an interdisciplinary framework for effective human oversight, and their paper contains no empirical validation of a universal test. Green ([2022](https://arxiv.org/abs/2109.05067)) compared 41 government oversight policies with findings from human-computer interaction research and concluded that the human functions those policies prescribed were generally not performable. These sources justify an audit structure and a burden of proof. The effectiveness of any given gate remains unresolved until the deploying team tests it.
+Compare equivalent review artifacts with and without disclosure under the actual tools and queue constraints. Using the same artifacts removes change difficulty from the comparison, as Chapter 1 recommends for paired designs.
 
-In a workflow diagram, the word 'gate' reads as causal. In execution, an approval step may only record that a person clicked before an action that neither the person nor the click could alter. Compliance theater is a control whose visible form satisfies a policy description while its execution path does not mitigate the named risk. A fail-open gate stops enforcing its boundary when a dependency, validation step, or error path fails.
+The experimental unit is the reviewer-artifact pair, not the artifact alone. The design must state:
 
-The interdisciplinary framework identifies four conditions for an effective oversight person: causal power, epistemic access, self-control, and fitting intentions. Causal power means the person can stop or change the consequential action. Epistemic access means the person can obtain the information needed to understand the decision at the time it is made. Self-control means the person can exercise judgment rather than follow a compelled path. Fitting intentions means the person actually intends to perform the assigned oversight function.
+- how reviewers are assigned to conditions;
+- whether any reviewer sees the same artifact twice;
+- how condition order is counterbalanced;
+- which defects count; and
+- how cognitive workload is measured.
 
-Evaluate these conditions against an execution trace. For each named gate, trace the proposed action from creation through approval, mutation, dispatch, and durable state change. Introduce the failures the gate claims to handle. Observe whether the reviewer receives the required evidence, whether rejection blocks every execution path, and whether an altered action requires renewed review.
+The study provides no production threshold to copy.
 
-| Condition | Question for the actual gate | Observation to collect | Failure implication |
+If disclosure increases activity without improving repair, the marker may be producing ritual rather than evidence. If repair improves while queue delay or abandonment rises sharply, the team has found a real tradeoff between scrutiny and capacity. Either result is more useful than a policy requiring an “AI-generated” badge everywhere.
+
+The relevant question is whether provenance changes verification in the deployed review environment.
+
+The companion entry `write-an-agent-contribution-policy` covers repository rules for disclosure, attribution, and accepted contribution paths. A policy can standardize the wire format. It cannot make the marker effective. Effectiveness remains an observed relationship among the label, verification surface, reviewer behavior, and repair outcome.
+
+## Prove that a gate can change execution
+
+Human gates have only directional support in this chapter and no strong evidence item. Sterz et al. ([2024](https://arxiv.org/abs/2404.04059)) propose an interdisciplinary framework for effective human oversight but provide no empirical validation of a universal test. Green ([2022](https://arxiv.org/abs/2109.05067)) compared 41 government oversight policies with findings from human-computer interaction research and concluded that the human functions prescribed by those policies were generally not performable.
+
+These sources justify an audit structure and a burden of proof. Whether a particular gate works remains unresolved until the deploying team tests it.
+
+In a workflow diagram, the word “gate” implies causal control. In execution, an approval step may only record that someone clicked before an action the person and the click could not alter.
+
+**Compliance theater** is a control whose visible form satisfies the policy description while its execution path does not mitigate the named risk. A **fail-open gate** stops enforcing its boundary when a dependency, validation step, or error path fails.
+
+The interdisciplinary framework identifies four conditions for effective oversight:
+
+- **Causal power:** the person can stop or change the consequential action.
+- **Epistemic access:** the person can obtain the evidence needed to understand the decision before it takes effect.
+- **Self-control:** the person can exercise judgment rather than follow a compelled path.
+- **Fitting intentions:** the person intends and is prepared to perform the assigned oversight function.
+
+Evaluate those conditions against an execution trace rather than the policy document. For every named gate, follow the proposed action through approval, mutation, dispatch, and durable state change. Inject the failures the gate claims to handle. Observe whether the reviewer receives the required evidence, whether rejection blocks every path, and whether a modified action requires renewed approval.
+
+| Condition | Question for the running gate | Observation to collect | Failure implication |
 | --- | --- | --- | --- |
-| Causal power | Can this person stop or alter this exact action? | Reject, cancel, edit, and timeout traces | The click records assent but does not control execution |
-| Epistemic access | Can the person inspect the relevant inputs, diff, target, and consequences before acting? | Missing context, inaccessible logs, and reviewer reconstruction errors | Approval is based on an incomplete system state |
-| Self-control | Can the person choose without a forced default or an impossible queue constraint? | Default acceptance, time pressure, and override use | The workflow substitutes acquiescence for judgment |
-| Fitting intentions | Is the assigned role expected and prepared to examine the named risk? | Review actions, escalation behavior, and interviews | The role is ceremonial or aimed at a different risk |
+| Causal power | Can the person stop or alter this exact action? | Rejection, cancellation, edit, and timeout traces | The click records assent but does not control execution |
+| Epistemic access | Can the person inspect the relevant inputs, artifact, target, and consequences before deciding? | Missing context, inaccessible logs, and reconstruction errors | Approval rests on incomplete state |
+| Self-control | Can the person decide without a forced default or impossible queue constraint? | Default acceptance, time pressure, and override use | The workflow substitutes acquiescence for judgment |
+| Fitting intentions | Is the role expected and prepared to inspect the named risk? | Review actions, escalation behavior, and interviews | The role is ceremonial or aimed at another risk |
 
-The observations need system-specific acceptance criteria. A team might decide that a deployment approver must be able to cancel a queued release before the first production mutation, and must see the exact artifact digest being deployed. Another team may require a database reviewer to alter the migration plan while prohibiting direct execution. Name the claimed function, construct a trace that could falsify it, and decide in advance what evidence would demonstrate control.
+The acceptance criteria must be system-specific. One team may require a deployment approver to cancel a queued release before the first production mutation and to see the exact artifact digest being deployed. Another may require a migration reviewer to revise the plan while withholding direct execution authority.
 
-Removing a gate dependency is itself a state change, so the failure experiment belongs in an environment where the mutation it might permit is contained. Chapter 7 supplies that boundary. An audit run against production to see whether the gate holds is an experiment whose negative result is an incident.
+Name the claimed oversight function, build a trace capable of falsifying it, and decide in advance what observation would establish control.
 
-My human-approval queue failed that test. Missing components let scripts bypass the path that was supposed to wait for a person, and unvalidated command construction weakened the relationship between the reviewed proposal and the executed command. The presence of a decision queue did not establish causal power. Its failure was useful contrary evidence, because the queue had been built specifically to preserve human-only decisions.
+Removing a dependency from a gate is itself a state change, so this failure test belongs in a contained environment. Chapter 7 supplies that boundary. Auditing a production gate by allowing its negative result to mutate production converts a test into an incident.
 
-Another of my systems used a reproduction-before-mutation hook, a check intended to require a reproducible failure before code could be changed. When a required binary was missing, the hook stopped enforcing the gate entirely. The project documented that fail-open behavior rather than counting the hook's installation as coverage. The case does not measure how often such failures occur. It shows how an environmental dependency can erase a governance boundary.
+My approval queue failed this audit. Missing components allowed scripts to bypass the path that should have waited for a person. Unvalidated command construction weakened the connection between the reviewed proposal and the executed command. The existence of the queue did not establish causal power.
 
-Mechanical and attentional gates fail differently. A mechanical gate uses execution state to block an action until a condition holds, such as a verified signature or an explicit `--apply` flag. An attentional gate presents evidence to a person and requires a decision, such as reviewing a diff explanation. A mechanical gate can enforce a condition that does not establish the property the gate is credited with. An attentional gate can obtain a click without scrutiny. Agent memory is neither kind, because a remembered instruction has no independent causal path to enforcement.
+The failure is useful contrary evidence precisely because the queue was designed to preserve human-only decisions.
 
-In my own approval-gate configuration, seven action-class rows make that distinction explicit. Every row identifies the gate as mechanical or attentional and names an owner, and no row relies on agent memory. Mutating commands dry-run by default and require `--apply`, which puts a mechanical boundary between inspection and state change. This is a design exemplar, not evidence that seven rows, this flag name, or these classifications improve outcomes elsewhere.
+Another of my systems used a reproduction-before-mutation hook intended to require a reproducible failure before code could change. When a required binary was missing, the hook stopped enforcing the gate. The project documented the fail-open behavior rather than counting installation of the hook as coverage.
 
-A more elaborate gate does not escape the same audit. In pull request 1558 of my agent-fleet orchestration system, the review surface recorded:
+The case does not estimate how often gates fail this way. It shows how one environmental dependency can erase a governance boundary.
+
+Mechanical and attentional gates fail differently.
+
+A **mechanical gate** uses execution state to block an action until a condition holds, such as a verified signature or explicit `--apply` flag. It may enforce a condition that does not establish the property for which the gate receives credit.
+
+An **attentional gate** presents evidence to a person and requires a decision, such as review of a diff and its supporting checks. It may obtain a click without scrutiny.
+
+Agent memory is neither. A remembered instruction has no independent causal path to enforcement.
+
+My approval-gate configuration contains seven action-class rows. Each identifies the gate as mechanical or attentional, names an owner, and avoids reliance on agent memory. Mutating commands dry-run by default and require `--apply`, placing a mechanical boundary between inspection and state change.
+
+This is a design example, not evidence that seven rows, that flag name, or those classifications improve outcomes elsewhere.
+
+More elaborate gates require the same audit. In pull request 1558 of my orchestration system, the review surface recorded:
 
 ```text
 Latest review attempt: 6
 Quality score: 950/1000, threshold 850
 ```
 
-The attempt count and the scores are verified properties of that artifact. The gate was designed to concentrate human attention after repeated model review, and degradation of the gate was treated as an incident. The claimed attention saving remains a design claim, because maintainer minutes, scrutiny depth, and escaped-defect rate were not measured.
+The attempt count and score are verified properties of that artifact. The gate was intended to concentrate human attention after repeated model review, and degradation of the gate was treated as an incident.
 
-Optimizer and model-review gates depend on the same distinction. A threshold can block execution mechanically while providing no assurance that its score tracks the failure a human cares about. The companion entries `treat-objective-weights-as-reviewed-policy` and `gate-optimizer-output-behind-human-review` address those policy surfaces. Their presence does not remove the need to test whether rejection changes system state and whether the reviewer can interrogate the score.
+The claimed attention saving remains unmeasured because maintainer time, scrutiny depth, and escaped-defect rate were not recorded.
 
-Green's policy analysis places the burden of proof on the institution deploying the automation. A team should be able to justify why automation is appropriate for the action, and demonstrate that its reviewers can perform the function assigned to them. When the reviewer cannot see the relevant diff context or cannot stop the deploy, adding their name legitimizes the action without reducing its risk. Responsibility then diffuses toward the actor with the least practical control.
+Optimizer and model-review gates depend on the same distinction. A threshold may mechanically block execution while providing no assurance that its score tracks the failure a person cares about. The companion entries `treat-objective-weights-as-reviewed-policy` and `gate-optimizer-output-behind-human-review` address those policy surfaces.
 
-That negative conclusion is bounded. Code review can offer unusually strong epistemic access, because the reviewer can inspect a precise diff, run tests, examine history, and delay the merge. Chapter 15 describes the verification surface that makes such access practical. A government benefits decision, a live vehicle intervention, and a repository change do not present the same verification problem. The audit should test the gate in its own domain, and these cases support no universal conclusion about human incapacity or human benefit.
+Their presence does not remove the need to test whether rejection changes system state and whether the reviewer can interrogate the score.
 
-Chapter 7 also established why a control cannot be accepted solely because the harness attests that it ran. The governance extension asks whether a person can independently verify the relevant state and interrupt the path that changes it. A missing independent signal weakens override authority even when an override button exists.
+Green’s analysis places the burden of proof on the institution deploying the automation. The team should justify why automation is appropriate for the action and demonstrate that reviewers can perform the function assigned to them.
 
-Three companion entries sit beside this one, each resting on a single evidence item. `separate-control-from-oversight`, `write-an-oversight-card`, and `keep-override-authority-real` can help classify control before action, oversight after action, claimed reviewer duties, and override paths. None of them establishes that a particular gate works.
+When a reviewer cannot see the relevant evidence or cannot stop the action, attaching their name legitimizes the decision without reducing its risk. Accountability then moves toward the person with the least practical control.
 
-## Responsibility must follow control
+That negative conclusion is bounded. Code review can offer unusually strong epistemic access because a reviewer can inspect an exact diff, run tests, examine history, and delay merge. Government-benefit decisions, live vehicle intervention, and repository changes do not create the same verification problem.
 
-Cavalcante Siebert et al. ([2023](https://arxiv.org/abs/2112.01298)) provide a philosophy-to-engineering bridge, a conceptual framework that makes responsibility commensurate with the ability and authority to control. Suryana et al. (2025) provide a qualitative operationalization in another domain, using interviews with 103 users of partially automated driving systems to locate expectation gaps and inconsistent protocol adherence. Together these are two directional literature items, and this practice carries no strong evidence item. Organizational accountability results for agent systems are thin and brand new. Their support reaches a defensible audit method, and they supply no compliance score and no estimate of software-delivery failure rates.
+The gate must be tested in its own domain. These sources establish no universal conclusion about either human incapacity or human benefit.
 
-After a failure, organizations often name the engineer who approved, monitored, or happened to be on call. That assignment can be formally clear and causally false. When the person lacked authority to halt the action, access to its state, tools to change it, or time to intervene, accountability has been assigned to proximity rather than control. The resulting responsibility gap produces blame without adding a path that could have prevented the failure.
+Chapter 7 also showed why a control cannot be accepted merely because the harness reports that it ran. The governance extension asks whether a person can independently inspect the relevant state and interrupt the path that changes it. An override button without an independent signal provides nominal authority without usable control.
 
-The control check begins before an incident. For every role named as accountable, identify the exact state transition that role can authorize, alter, stop, or reverse. Verify the permissions with the deployed identity rather than an administrator's demonstration. Record the information available at decision time, the tools through which intervention occurs, and the window in which an intervention remains effective.
+Three companion entries sit beside this practice: `separate-control-from-oversight`, `write-an-oversight-card`, and `keep-override-authority-real`. Each rests on one evidence item and can help distinguish control before action, observation after action, stated reviewer duties, and override paths.
 
-Authority and access are distinct. An engineer may have permission to cancel a deployment but lack access to the tenant, model trace, or configuration that explains why cancellation is necessary. Tooling and time are also distinct. A working rollback command does not create control when the system commits an irreversible external action before the reviewer can evaluate it.
+None establishes that a particular gate works. That requires a trace showing that the reviewer had the evidence, authority, and execution path needed to change the outcome.
 
-Missing control has two coherent remedies. The organization can repair the role by granting the necessary authority, access, tooling, and time, subject to least privilege. Otherwise it can move responsibility to the role that already holds those controls. Leaving the responsibility label in place while control sits elsewhere preserves the gap by design.
+## Assign responsibility only where control exists
 
-This check should include the executing identity. In my own enterprise data-access service, mutations are excluded, requests use the caller's identity, and the audit log names that person. The blast radius is capped at authority the human already holds. The design aligns action and identity more closely than a shared privileged service account, but it does not establish that every read is justified or that the caller understands the result.
+Cavalcante Siebert et al. ([2023](https://arxiv.org/abs/2112.01298)) provide a conceptual bridge from responsibility theory to engineering practice: responsibility should be commensurate with the ability and authority to control an outcome. Suryana et al. (2025) operationalized related questions in another domain through interviews with 103 users of partially automated driving systems, identifying gaps between expected and actual behavior and inconsistent adherence to operating protocols.
 
-Identity passthrough also has a cost. It improves attribution and prevents an agent from silently accumulating broader authority than its operator. It can reduce availability when the caller lacks a permission that an automated workflow previously obtained from a service account. The correct response is to decide which authority the action actually requires, then measure authorization failures, escalation paths, and unauthorized access attempts.
+These are two directional literature items, and this practice has no strong supporting evidence item. Organizational-accountability research for agent systems is thin and recent. The sources support a defensible audit method. They provide no compliance threshold and no estimate of failure rates in software delivery.
 
-Provenance answers a neighboring question. It records who or what contributed to an artifact and how that contribution moved through the workflow. Accountability identifies the person or institution answerable for the decision to accept and deploy it. The adoption pull-request format shown earlier preserves original authorship while transferring integration answerability to the maintainer. Conflating those roles would either erase contribution history or blame a contributor for a deployment decision they did not control.
+After an incident, organizations often assign responsibility to the engineer who approved the action, monitored the system, or happened to be on call. That assignment may be administratively clear while remaining causally false. When the person lacked authority to halt the action, access to the relevant state, tools to change it, or time to intervene, responsibility has followed proximity rather than control.
 
-Meaningful human control supplies a way to examine that relationship after deployment. In this literature, tracking asks whether system behavior follows the relevant and justified reasons or expectations of the people affected by it. Tracing asks whether a capable, aware person can be connected to the decision and its control path. The terms become useful once a team translates them into observable behavior for its own system.
+The resulting responsibility gap produces blame without creating a path that could have prevented the failure.
 
-Suryana et al. applied the tracking and tracing criteria through interviews with 103 users of Tesla Autopilot and Full Self-Driving features. The interviews localized expectation-reality gaps and inconsistent adherence to operating protocols. Those results do not establish that software delivery has the same failure frequency or the same causes. They show what user interviews can reveal and a design document cannot. A deployed system may teach expectations and routines that differ from its stated control model.
+The control check begins before an incident. For every role named as accountable, identify the exact state transitions that role can:
 
-For an agent that prepares production changes, a tracking interview might ask what users believe the agent will modify, which constraints they expect it to preserve, and what evidence would cause it to stop. Compare those expectations with actual traces and with policy. A tracing interview might ask who can explain a particular action, who could have changed it at each stage, and where a user would escalate when behavior diverges. Compare the answers across operators, reviewers, owners, and affected users.
+- authorize;
+- alter;
+- stop; or
+- reverse.
 
-The audit locates failures, but there is no scalar certification to compute. A shared credential may erase the responsible identity even when the system tracks user expectations well. A complete decision history can coexist with systematic user misunderstanding about when the system will act. Collapsing both into a single 'meaningful control' score would hide the repair each system requires.
+Test those powers using the role’s deployed identity rather than an administrator’s demonstration. Record the information available at decision time, the tools through which intervention occurs, and the interval during which intervention remains effective.
 
-Operational definitions must therefore remain local. A code-deployment system can define a traceable decision through artifact digest, approver identity, execution identity, and rollback authority. A data-access agent may need caller identity, query purpose, source authorization, and a record of returned fields. A partially automated vehicle has different timing, embodiment, and safety constraints. The questions about control and awareness port across domains, while the observed rates and the exact controls do not.
+Authority, access, tooling, and time are separate requirements. An engineer may have permission to cancel a deployment while lacking access to the tenant, model trace, or configuration needed to know that cancellation is warranted. A rollback command may exist while an irreversible external action commits before the reviewer has time to evaluate the evidence.
 
-Collective work complicates responsibility without removing it. Models propose, tools execute, reviewers approve, platform teams configure permissions, and managers allocate review capacity. The companion entry `rebuild-collective-accountability` addresses how those contributions fit an institutional account, and `scale-review-capacity-to-experience` addresses review-load planning by contributor experience tier. Neither should be used to spread answerability so broadly that no role owns a stoppable state transition.
+A role has control only when those elements combine into an effective intervention path.
 
-## Test the operational path
+When responsibility exceeds control, the organization has two coherent options:
 
-Run the four checks on a defined action class and repository workflow.
+1. Repair the role by granting the required authority, access, tooling, and time, subject to least privilege.
+2. Move responsibility to the role that already holds those controls.
 
-1. Define the action class, the outcome, and the material difference that would justify wider authority. Collect every transfer using denominators that do not exclude rejected or timed-out proposals. Do not mix action classes or rungs, and do not record only executed actions. Calculate uncertainty, test reviewer comprehension, and widen one rung only when those observations support it.
+Leaving the responsibility label in place while operational control remains elsewhere preserves the gap by design.
 
-2. Choose the smallest unit whose provenance survives the repository workflow. Test that survival through rebases, cherry-picks, squash merges, file moves, and copied patches. Keep the count semantics narrow: the 14.5 percent trailer-signed floor is a lower bound on visible trailer-marked authorship and must not be averaged with an inferred share.
+The check should include the identity that executes the action. In my enterprise data-access service, mutations are unavailable, requests use the caller’s identity, and the audit log records that person. The agent cannot silently accumulate authority beyond what its operator already holds.
 
-3. Run the gate audit as a failure experiment in a contained environment. Name the action and owner, capture the execution trace, remove each gate dependency in turn, reject and alter the action, inspect the reviewer's evidence, and verify the resulting durable state. Interview the assigned reviewer about the risk they believe they are checking, then compare that account with the system path. Repair or remove a gate that cannot demonstrate causal power and epistemic access, and decide explicitly how self-control and fitting intentions will be protected under real queue load.
+This design aligns execution and identity more closely than a shared privileged service account. It does not establish that every read is justified or that the caller understands the returned information.
 
-4. Run the accountability audit in two passes.
+Identity passthrough also carries a cost. It improves attribution and limits silent privilege expansion, but it can reduce availability when the caller lacks a permission that a service account previously supplied. The system should first determine which authority the action genuinely requires, then measure:
 
-   1. In the first pass, for each named accountable role, select a real action and verify authority, access, tooling, and time. Exercise reject, alter, stop, and recovery paths with that role's deployed permissions. Record which state transitions remain outside its control, then either repair the controls or reassign responsibility.
+- authorization failures;
+- escalation requests;
+- escalation completion time;
+- unauthorized access attempts; and
+- cases in which the agent requests authority broader than the task requires.
 
-   2. In the second pass, interview actual users and operators using tracking and tracing questions. Compare justified expectations with execution traces, then identify a capable, aware person for each consequential decision. Record expectation mismatches, protocol deviations, missing identities, and escalation dead ends as separate findings.
+Provenance answers a neighboring but different question. It records who or what contributed to an artifact and how that contribution moved through the workflow. Accountability identifies the person or institution answerable for the decision to accept and deploy it.
 
-Repeat the first pass when permissions, execution paths, or action classes change, and repeat the second when the user population or operating protocol changes. Measure the findings that carry weight in the deployment, such as untraceable actions, failed stops, expectation mismatches, and time lost before effective intervention. Do not adopt a borrowed pass rate. Decide which failures invalidate the accountability claim, and preserve the evidence needed to reproduce that decision.
+The adoption pull-request format shown earlier preserves original authorship while transferring answerability for integration to the maintainer. Conflating the two roles would either erase contribution history or blame a contributor for a deployment decision they did not control.
+
+The literature on meaningful human control offers two additional concepts: **tracking** and **tracing**.
+
+Tracking asks whether system behavior follows the relevant and justified reasons or expectations of the people affected by it. Tracing asks whether a capable and aware person can be connected to the decision and its control path.
+
+These concepts become operational only after the team translates them into observable behavior for its own system.
+
+Suryana et al. applied tracking and tracing through interviews with 103 users of Tesla Autopilot and Full Self-Driving features. The interviews revealed expectation-reality gaps and inconsistent adherence to operating protocols. The findings do not establish equivalent failure rates or causes in software delivery. They show that interviews can reveal an operational control model different from the one described in design documents.
+
+For an agent that prepares production changes, a tracking interview might ask:
+
+- What do users believe the agent may modify?
+- Which constraints do they expect it to preserve?
+- What evidence do they expect to stop execution?
+- When do they believe human approval is required?
+- What do they believe happens after rejection?
+
+Those answers should be compared with policy and with actual execution traces.
+
+A tracing interview might ask:
+
+- Who can explain this action?
+- Who could have changed or stopped it at each stage?
+- Which identity executed it?
+- Who could reverse it?
+- Where should a user escalate when behavior diverges?
+- What happens if that person is unavailable?
+
+Compare the answers across operators, reviewers, system owners, and affected users. Inconsistent answers are evidence that the operational responsibility model is not shared.
+
+The audit identifies distinct failures rather than producing one certification score. A shared credential may erase the responsible identity even when the system tracks user expectations well. A complete decision history may coexist with systematic misunderstanding about when the system will act. Combining both into one “meaningful control” score would hide the repair each problem requires.
+
+Operational definitions must therefore remain local. A deployment system may define a traceable decision through:
+
+- the artifact digest;
+- approver identity;
+- execution identity;
+- target environment;
+- authorization token; and
+- rollback authority.
+
+A data-access agent may require:
+
+- caller identity;
+- query purpose;
+- source authorization;
+- returned-field records; and
+- a durable record of disclosure.
+
+A partially automated vehicle has different timing, embodiment, and safety constraints. The questions about authority, awareness, and intervention transfer across domains. The measured rates and exact controls do not.
+
+Collective work complicates responsibility without removing it. Models propose actions, tools execute them, reviewers approve them, platform teams configure permissions, and managers allocate review capacity. The companion entry `rebuild-collective-accountability` addresses how those contributions form an institutional account, while `scale-review-capacity-to-experience` addresses review planning by contributor experience.
+
+Neither should diffuse answerability so widely that no role owns a state transition it can actually stop.
+
+## Audit the path from policy to execution
+
+Run four checks against one defined action class and one real repository workflow.
+
+### 1. Test the autonomy transfer
+
+Define:
+
+- the action class;
+- the current autonomy rung;
+- a correct outcome;
+- the material difference that would justify wider authority; and
+- the failures that would prevent promotion.
+
+Record every proposed transfer, including rejected, modified, timed-out, abandoned, and executed proposals. Do not combine action classes or autonomy rungs, and do not build the record from executed actions alone.
+
+Calculate uncertainty around approval, modification, and outcome rates. Test whether reviewers understand the affected state, evidence, and rollback path. Widen authority by one rung only when those observations support the change.
+
+### 2. Test whether provenance survives review and integration
+
+Choose the smallest provenance unit that can survive the repository workflow while still representing the review decision it is intended to affect.
+
+Exercise that marker through:
+
+- rebases;
+- cherry-picks;
+- squash merges;
+- file moves;
+- copied patches;
+- partial adoption; and
+- later human modification.
+
+Verify that a reviewer can distinguish generation, human revision, and integration responsibility after each transformation.
+
+Keep the count semantics narrow. The 14.5 percent trailer-signed floor described earlier is a lower bound on visible trailer-marked authorship. It must not be combined with an inferred contribution share.
+
+### 3. Test the gate as a failure experiment
+
+Run the gate audit in a contained environment. Name the action, gate, and decision owner, then capture the complete execution trace.
+
+Remove or fail each gate dependency in turn. Exercise:
+
+- approval;
+- rejection;
+- modification;
+- cancellation;
+- timeout;
+- missing validation;
+- missing binaries or services;
+- stale approval tokens; and
+- attempts to execute through alternate paths.
+
+Inspect the evidence available to the reviewer and verify the durable state produced by each decision. A rejected action must fail to execute through every path. A modified action must receive renewed review when the modification changes the authorized state transition.
+
+Interview the assigned reviewer about the risk they believe they are checking, then compare that account with the actual execution path. Repair or remove a gate that cannot demonstrate causal power and epistemic access. Decide explicitly how queue pressure, defaults, incentives, and emergency procedures will preserve self-control and fitting intentions.
+
+### 4. Audit accountability in two passes
+
+#### Pass one: verify operational control
+
+For each role named as accountable, select a real action and test the role’s deployed permissions.
+
+Exercise whether the role can:
+
+- reject the action;
+- alter its scope;
+- stop execution;
+- inspect the relevant evidence;
+- initiate recovery; and
+- reverse the result where reversal is part of the claimed control.
+
+Record the state transitions outside that role’s authority, the information it cannot access, the tools it lacks, and the point after which intervention becomes ineffective.
+
+Where control is missing, either repair the role within least-privilege constraints or reassign responsibility to the role that holds the necessary authority.
+
+#### Pass two: compare the stated and experienced control models
+
+Interview actual users, operators, reviewers, and owners using tracking and tracing questions. Compare their justified expectations with policy and execution traces.
+
+Record as separate findings:
+
+- expectation mismatches;
+- protocol deviations;
+- actions without a traceable execution identity;
+- reviewers who cannot explain the decision they approved;
+- roles assigned responsibility without intervention power;
+- ineffective escalation routes; and
+- delays that allowed the action to become irreversible before review.
+
+Repeat the first pass whenever permissions, action classes, execution paths, or recovery mechanisms change. Repeat the second when the user population, operating protocol, interface, or escalation policy changes.
+
+Measure the findings that carry operational weight, such as:
+
+- untraceable actions;
+- failed stops;
+- unauthorized execution paths;
+- expectation mismatches;
+- dead-end escalations;
+- stale approvals;
+- interventions that arrive too late; and
+- time lost before someone with effective control becomes involved.
+
+Do not adopt a pass rate borrowed from another system. Decide in advance which failures invalidate the accountability claim and preserve the identities, traces, interviews, and execution evidence required to reproduce that decision.
 
 ## Sources and evidence
 
