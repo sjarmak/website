@@ -66,19 +66,28 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
         <p class="muted">
           18 chapters · {book.data.parts.length} parts · approximately {book.data.pageCount.toLocaleString("en-US")} pages
         </p>
-        {
-          introduction && (
-            <a class="book-head__start" href={hrefFor(introduction)}>
-              Start reading <span aria-hidden="true">→</span>
-            </a>
-          )
-        }
-        <a class="book-head__companion" href={bookCompanionHref(book.id)}>
-          Browse all 192 practices <span aria-hidden="true">→</span>
-        </a>
-        <a class="book-head__explore" href={bookExploreHref(book.id)}>
-          Explore the knowledge graph <span aria-hidden="true">→</span>
-        </a>
+        <nav class="book-head__links" aria-label="Book resources">
+          {
+            introduction && (
+              <a href={hrefFor(introduction)}>
+                Start reading <span aria-hidden="true">→</span>
+              </a>
+            )
+          }
+          <a href={bookCompanionHref(book.id)}>
+            Browse all 192 practices <span aria-hidden="true">→</span>
+          </a>
+          <a href={bookExploreHref(book.id)}>
+            Explore the knowledge graph <span aria-hidden="true">→</span>
+          </a>
+          {
+            book.data.repository && (
+              <a href={book.data.repository}>
+                Source and companion files <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </nav>
       </div>
     </header>
 
@@ -172,30 +181,16 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
     font-weight: var(--weight-semibold);
   }
 
-  .book-head__start {
-    display: inline-flex;
-    gap: var(--space-2xs);
-    align-items: center;
-    min-height: 2.75rem;
-    font-weight: var(--weight-semibold);
-    text-decoration: none;
+  .book-head__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
   }
 
-  .book-head__companion {
+  .book-head__links a {
     display: inline-flex;
     gap: var(--space-2xs);
     align-items: center;
-    margin-inline-start: var(--space-m);
-    min-height: 2.75rem;
-    font-weight: var(--weight-semibold);
-    text-decoration: none;
-  }
-
-  .book-head__explore {
-    display: inline-flex;
-    gap: var(--space-2xs);
-    align-items: center;
-    margin-inline-start: var(--space-m);
     min-height: 2.75rem;
     font-weight: var(--weight-semibold);
     text-decoration: none;

@@ -61,10 +61,19 @@ const { Content } = await render(companion);
           <span>{companion.data.taughtCount} taught</span>
           <span>{companion.data.untaughtCount} untaught</span>
         </p>
-        <a href={`/books/${book.id}`}>Return to the book <span aria-hidden="true">→</span></a>
-        <a class="catalog-head__explore" href={bookExploreHref(book.id)}>
-          Explore as a graph <span aria-hidden="true">→</span>
-        </a>
+        <nav class="catalog-head__links" aria-label="Book companion resources">
+          <a href={`/books/${book.id}`}>Return to the book <span aria-hidden="true">→</span></a>
+          <a href={bookExploreHref(book.id)}>
+            Explore as a graph <span aria-hidden="true">→</span>
+          </a>
+          {
+            book.data.repository && (
+              <a href={book.data.repository}>
+                Source and data repository <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </nav>
       </div>
     </header>
 
@@ -166,9 +175,17 @@ const { Content } = await render(companion);
     margin-block-start: var(--space-s);
   }
 
-  .catalog-head__explore {
+  .catalog-head__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+  }
+
+  .catalog-head__links a {
     display: inline-flex;
-    margin-inline-start: var(--space-m);
+    gap: var(--space-2xs);
+    align-items: center;
+    min-height: 2.75rem;
   }
 
   .catalog-head__counts {

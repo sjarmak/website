@@ -33,7 +33,7 @@ AI coding agents are commonly evaluated as models but deployed as systems whose 
 
 ### Comments
 
-Technical review, 251 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Companion DOI: [insert DOI].
+Technical review, 251 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -55,12 +55,14 @@ Keep the cross-list to these two categories. The contribution centers on softwar
 
 The companion should be a separate citable research artifact, not extra files inside the arXiv TeX archive.
 
-Use a dedicated public repository for the book and companion. The website remains the reading and discovery layer; the repository becomes the versioned scholarly record. A practical top-level layout is `manuscript/` for the LaTeX source, `companion/` for the catalog, ledger, crosswalk, benchmark data, schemas, and provenance files, plus `CITATION.cff`, a release changelog, and separate manuscript and companion license files. Publish immutable version tags and archive the companion release through Zenodo or another DOI-granting service.
+Use the public [Engineering Reliable Coding Agents repository](https://github.com/sjarmak/engineering-reliable-coding-agents) as the versioned scholarly record for the book and companion. The website remains the reading and discovery layer. A practical top-level layout is `manuscript/` for the LaTeX source, `companion/` for the catalog, ledger, crosswalk, benchmark data, schemas, and provenance files, plus `CITATION.cff`, a release changelog, and separate manuscript and companion license files. Publish immutable version tags and archive the companion release through Zenodo or another DOI-granting service.
+
+The repository currently has a root Apache-2.0 license. Before adding the manuscript or companion files, confirm that this license is intended to cover both. If it is not, replace the root license or add clearly scoped license files and notices before the first content release.
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
 3. Replace release-candidate version `1.0.0-rc.1` with `1.0.0` in the build script and citation metadata.
-4. Publish the exact package in a public, version-controlled repository and create a `v1.0.0` release.
+4. Publish the exact package in the book repository and create a `v1.0.0` release.
 5. Connect that repository to Zenodo or another DOI-granting archive and archive the exact tag.
 6. Add the DOI to `CITATION.cff`, the companion README, the manuscript’s Data and materials availability statement, and the arXiv Comments field.
 7. Rebuild both ZIPs and compile the exact final manuscript archive before uploading.
@@ -94,7 +96,7 @@ Identifier resolution verifies that the cited record exists and captures current
 
 1. **Structural freeze.** Read the generated PDF as a permanent, citable edition. Check every chapter start, figure, table, equation, source section, and the closing chapter.
 2. **Manuscript license.** If a commercial or university-press edition remains possible, arXiv’s perpetual non-exclusive license is the conservative starting point unless a publisher or funder requires a Creative Commons license. Check the intended publisher’s preprint policy first. The selected arXiv license is irrevocable for that version.
-3. **Companion license.** Decide independently whether the catalog and benchmark metadata should permit adaptation and redistribution. Do not publish the companion without an explicit license decision.
+3. **Companion license.** Decide independently whether the catalog and benchmark metadata should permit adaptation and redistribution. The repository currently has a root Apache-2.0 license; confirm or scope it before publishing the companion.
 4. **Endorsement.** Start a draft submission and select `cs.SE` early. A prior record in another archive may not satisfy endorsement for a new computer-science category.
 5. **Identity.** Link ORCID and confirm author name and affiliation.
 6. **Reference exceptions.** Manually open the two access-restricted OpenAI pages noted above.

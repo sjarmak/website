@@ -1,5 +1,7 @@
 # Provenance
 
+Canonical repository: [https://github.com/sjarmak/engineering-reliable-coding-agents](https://github.com/sjarmak/engineering-reliable-coding-agents)
+
 ## Source snapshot
 
 - Public manuscript chapter snapshot: website repository commit `c40183e` (August 5, 2026).

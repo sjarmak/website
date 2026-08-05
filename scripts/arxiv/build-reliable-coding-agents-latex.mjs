@@ -16,6 +16,7 @@ const buildRoot = path.join(root, "artifacts/arxiv/.latex-build");
 const previewPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-preview.pdf");
 const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source.zip");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
+const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
 const rsvgConvert = process.env.RELIABLE_AGENTS_RSVG_CONVERT
@@ -394,9 +395,9 @@ async function main() {
 
   await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The companion research artifact contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. It is packaged separately so that it can be versioned and archived with its own DOI. The public companion catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
 
-  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 19 required PDF figures.\nThe companion research artifact is released and archived separately.\n`);
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 19 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 

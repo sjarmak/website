@@ -197,6 +197,7 @@ const books = defineCollection({
     subtitle: z.string(),
     author: z.string(),
     description: z.string(),
+    repository: z.string().url().optional(),
     pageCount: z.number().int().positive(),
     parts: z.array(
       z.object({

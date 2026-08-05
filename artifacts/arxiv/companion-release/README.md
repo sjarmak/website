@@ -4,6 +4,8 @@ Release candidate 1.0.0-rc.1, prepared August 5, 2026.
 
 This package accompanies *Engineering Reliable Coding Agents: Evaluation, Recovery, Context, and Control Beyond the Model*. It is designed to be archived as a separate, citable research artifact. The final archival release should receive its own DOI and should be cited alongside the manuscript.
 
+Canonical repository: [https://github.com/sjarmak/engineering-reliable-coding-agents](https://github.com/sjarmak/engineering-reliable-coding-agents)
+
 ## Contents
 
 - `catalog.json`: all 192 bounded practices, including evidence and boundary conditions.
@@ -24,4 +26,4 @@ Author-system cases are labeled `author_system_illustration` and set `independen
 
 ## Before public release
 
-Replace this release-candidate version with `1.0.0`, add the selected license, publish a tagged repository release, archive that exact tag with Zenodo or another DOI-granting repository, and add the resulting DOI to this file and `CITATION.cff`. Do not archive internal review notes, rejected candidates, private receipts, or unpublished operational data.
+Replace this release-candidate version with `1.0.0`, add the selected license, publish a tagged release in the canonical repository, archive that exact tag with Zenodo or another DOI-granting repository, and add the resulting DOI to this file and `CITATION.cff`. Do not archive internal review notes, rejected candidates, private receipts, or unpublished operational data.

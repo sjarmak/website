@@ -3,6 +3,7 @@ title: "Engineering Reliable Coding Agents"
 subtitle: "Evaluation, Recovery, Context, and Control Beyond the Model"
 author: Stephanie Jarmak
 description: "The goal of this book is to enable others to build and maintain agentic systems whose reliability can be observed, tested, and defended."
+repository: "https://github.com/sjarmak/engineering-reliable-coding-agents"
 pageCount: 356
 parts:
   - number: 1
