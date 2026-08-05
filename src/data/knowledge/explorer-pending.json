@@ -13,8 +13,8 @@
         }
       ],
       "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-08-04",
-      "attempts": 10
+      "lastAttempt": "2026-08-05",
+      "attempts": 11
     },
     {
       "bibcode": "2026arXiv260401527J",
@@ -35,8 +35,8 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-08-04",
-      "attempts": 5,
+      "lastAttempt": "2026-08-05",
+      "attempts": 6,
       "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-08-04."
     },
     {
@@ -53,9 +53,41 @@
         }
       ],
       "firstSeen": "2026-08-01",
-      "lastAttempt": "2026-08-04",
-      "attempts": 3,
+      "lastAttempt": "2026-08-05",
+      "attempts": 4,
       "note": "read_paper returns 'Paper not found' as of 2026-08-04; ADS has the bibcode but SciX has not ingested the body yet."
+    },
+    {
+      "bibcode": "2026arXiv260801347W",
+      "arxiv": null,
+      "title": "Prompt-Induced Waste in Large Reasoning Models: A Preregistered Two-Harness Benchmark of Coding Agents",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "routing"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-05",
+      "lastAttempt": "2026-08-05",
+      "attempts": 1
+    },
+    {
+      "bibcode": "2026arXiv260801913L",
+      "arxiv": "2608.01913",
+      "title": "Diagnosing Search Behavior and Failure Modes in Long-Horizon Search Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-information-retrieval",
+          "branches": [
+            "agentic-loops"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-05",
+      "lastAttempt": "2026-08-05",
+      "attempts": 1
     }
   ]
 }

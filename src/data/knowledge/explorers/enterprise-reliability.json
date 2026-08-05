@@ -2040,6 +2040,25 @@
           "why": "The branch says record the cost facts before optimizing routing and never treat unknown cost as zero, and reward-model calls are the clearest case of a cost that gets treated as zero: evaluation, data curation and RL each want millions of judgments, so a per-judgment price that is invisible at demo scale sets the ceiling on the training run. The useful structure here is that the cost-accuracy frontier is not fixed. A small distilled judge trained on the failure the evaluation exposed moved the frontier by more than any routing policy over the existing field could have, which is the argument for spending on a targeted small model before spending on a cascade over expensive ones."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260728802R",
+      "title": "Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures",
+      "firstAuthor": "Raj, Harsh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.28802",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260728802R",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "A taxonomy of 41 agent failure modes that labels each failure with the interaction edge it occurred on (model–context, model–tool, model–memory, and so on) plus a fault side naming the component that owes the repair — the same visible failure (say, an agent reporting a failed tool call as a success) gets a different label depending on whether the tool wrapper suppressed the error or the model ignored it. Labels attach to the earliest failure the trajectory never recovers from, not its downstream symptoms, and four frontier-model judges recover the human labels at up to Cohen's κ = 0.76 (pairwise judge agreement up to 0.84).",
+          "why": "This branch's premise is that you need the failure taxonomy before you scale, and this paper makes the taxonomy actionable rather than descriptive: the fault side tells you whether the fix is model post-training, harness engineering, environment redesign, or benchmark repair. Its worked examples — a compaction summary that keeps a goal but drops the rationale so the agent redoes forbidden edits, a wrapper that branches on code==0 and silently drops a partial-failure field — are precisely the harness-vs-model confusions that outcome-level labels collapse."
+        }
+      ]
     }
   ],
   "sections": [
