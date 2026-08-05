@@ -77,14 +77,6 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
   output = output.replace(/\\\(([\s\S]*?)\\\)/g, (_match, tex) => `$${tex}$`);
   output = output.replaceAll("τ-bench", "tau-bench");
   output = output.replaceAll("κ", "kappa").replaceAll("≈", "approximately");
-  let fenced = false;
-  output = output
-    .split("\n")
-    .map((line) => {
-      if (line.startsWith("```")) fenced = !fenced;
-      return fenced ? line : line.replaceAll("pass^k", "pass^k^");
-    })
-    .join("\n");
   output = output.replace(/\(\/book-figures\/([a-z0-9-]+)\.svg\)/g, "(figures/$1.pdf)");
   output = output.replace(
     /^(.+:)\n\n(?=(?:- |\d+\. ))/gm,
@@ -199,6 +191,7 @@ function renderReferences(audit) {
     "https://newsletter.pragmaticengineer.com/p/evals": ["Gergely Orosz and Hamel Husain", "2025", "A pragmatic guide to LLM evals for devs", "The Pragmatic Engineer"],
     "https://openai.com/index/separating-signal-from-noise-coding-evaluations/": ["OpenAI", "2026", "Separating signal from noise in coding evaluations", "OpenAI"],
     "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified": ["OpenAI", "2026", "Why we no longer evaluate SWE-bench Verified", "OpenAI"],
+    "https://scixplorer.org/scixhelp/api-scix/": ["NASA Science Explorer", "2026", "SciX API", "NASA Science Explorer documentation"],
     "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12": ["Karthik Halukurike et al.", "2026", "Blueberry: force multiplier for the on-call engineer", "Instacart Tech"],
     "https://www.amplifypartners.com/blog-posts/how-hightouch-built-their-long-running-agent-harness": ["Amplify Partners", "2026", "How Hightouch built its long-running agent harness", "Amplify Partners"],
     "https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/": ["InfoQ", "2026", "Stripe uses autonomous coding agents to generate over 1,300 pull requests per week", "InfoQ"],
@@ -354,8 +347,8 @@ async function main() {
   const figureSources = (await readdir(figureSourceRoot))
     .filter((file) => file.endsWith(".svg"))
     .sort();
-  if (figureSources.length !== 19) {
-    throw new Error(`Expected 19 authoritative SVG figures, found ${figureSources.length}`);
+  if (figureSources.length !== 18) {
+    throw new Error(`Expected 18 authoritative SVG figures, found ${figureSources.length}`);
   }
 
   await rm(sourceRoot, { recursive: true, force: true });
@@ -410,7 +403,7 @@ async function main() {
 
   await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
 
-  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 19 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 18 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 

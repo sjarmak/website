@@ -290,7 +290,7 @@ Chapter 12 turns to the architecture around these measurements: cheap retrieval 
 ### Hybrid retrieval fused on ranks
 
 - Strong evidence: Yang, Z., et al. (2025), "A Deep Dive into Retrieval-Augmented Generation for Code Completion: Experience on WeChat," arXiv:2507.18515 (industrial study).
-- Strong evidence: CodeSearchNet vocabulary-gap framing (Husain 2019), arXiv:1909.09436. (Exact/lexical match as a first-class lane fused on ranks; score fusion broken by construction.)
+- Strong evidence for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval.
 - Directional evidence: Cloudflare "Agents that remember" (Trautmann 2026), the production account carrying the shipped default of parallel channels fused with reciprocal-rank fusion. No canonical URL is on record for this item. Direction only.
 - Directional evidence: AdaMem (Yan et al. 2026), arXiv:2603.16496, carried in the same evidence record as the Cloudflare account. Its own retrieval route is semantic retrieval with conditional graph expansion rather than rank fusion, so it supports retaining a complementary semantic lane only. Direction only.
 - Directional evidence: ColBERT (Khattab and Zaharia 2020), arXiv:2004.12832. Direction only.

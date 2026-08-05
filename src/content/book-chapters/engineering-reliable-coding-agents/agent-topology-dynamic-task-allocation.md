@@ -111,7 +111,7 @@ Every proposal to add debate, delegation, or parallel workers needs a live singl
 
 **Fan-out** assigns one task, or parts of it, to several workers whose outputs must later be selected or combined. **Delegation** transfers responsibility for a defined unit of work to another worker. Neither mechanism deserves credit merely because the configuration makes it available.
 
-The golden set from Chapter 4 supplies the comparison. Replay the current single-agent workflow and the proposed team on the same versioned tasks and executable oracles. Record the promotion rule before the first run. Use the same number of repeated trials in both arms and score reliability through pass^k where that metric matches the deployment semantics.
+The golden set from Chapter 4 supplies the comparison. Replay the current single-agent workflow and the proposed team on the same versioned tasks and executable oracles. Record the promotion rule before the first run. Use the same number of repeated trials in both arms and score reliability through \(\mathrm{pass}^{k}\) where that metric matches the deployment semantics.
 
 The multi-agent treatment advances only when it clears both the success requirement and the relevant cost limit. Chapter 2’s Pareto discipline rejects a quality gain whose operating cost makes the workflow unusable.
 
@@ -196,13 +196,13 @@ A compact promotion record can contain:
 golden_set_version: repository-maintenance-2026-07
 
 single_agent:
-  pass^k:
+  all_k_success:
   total_tokens:
   elapsed_time:
   failures_by_class:
 
 multi_agent:
-  pass^k:
+  all_k_success:
   total_tokens:
   elapsed_time:
   failures_by_class:
@@ -452,7 +452,7 @@ Identify the smallest boundary at which the target failure could have become obs
 
 Replay the existing single-agent workflow on the current golden set. Record:
 
-- pass^k or the selected reliability measure;
+- \(\mathrm{pass}^{k}\) or the selected reliability measure;
 - the chosen cost axis;
 - elapsed time;
 - tool and model use;

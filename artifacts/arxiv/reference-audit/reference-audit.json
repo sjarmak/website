@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T21:28:59.710Z",
+  "generated_at": "2026-08-05T22:50:22.347Z",
   "method": {
     "arxiv": "Official arXiv Atom API, queried by identifier in batches of 20.",
     "doi": "Crossref REST API, queried by DOI.",
@@ -12,8 +12,8 @@
     "arxiv_unresolved": 0,
     "doi_identifiers": 5,
     "doi_unresolved": 0,
-    "other_urls": 31,
-    "url_failures": 3
+    "other_urls": 32,
+    "url_failures": 4
   },
   "arxiv": [
     {
@@ -120,7 +120,7 @@
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
           "line": 468,
-          "context": "- Strong evidence: SWAY, Chen, J., et al. (2016), \"Sampling as a Baseline Optimizer for Search-Based Software Engineering,\" arXiv:1608.07617. The one in-domain software-engineering result: a candidate optimizer that cannot beat a cheap baseline has not earned adoption."
+          "context": "- Strong evidence for the cheap-baseline comparison only: SWAY, Chen, J., et al. (2016), \"Sampling as a Baseline Optimizer for Search-Based Software Engineering,\" arXiv:1608.07617. The study supports requiring a candidate optimizer to beat a cheap baseline; fixed-arrival replay is a transfer beyond its experiment."
         },
         {
           "file": "companion catalog",
@@ -268,7 +268,7 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 188,
+          "line": 190,
           "context": "- Strong evidence: Colas, Sigaud & Oudeyer (2018). How Many Random Seeds? arXiv:1806.08295. The pilot floor, the bootstrap false-positive rate at small N, the DDPG case, and the preference for Welch's t-test."
         },
         {
@@ -300,7 +300,7 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 193,
+          "line": 195,
           "context": "- Directional evidence: Dror & Reichart (2018). Appendix, Recommended Statistical Significance Tests for NLP Tasks. arXiv:1809.01448. The per-metric test selection; directional, so the table is guidance, not a measured result."
         },
         {
@@ -551,7 +551,7 @@
         {
           "file": "measuring-designing-repository-retrieval.md",
           "line": 293,
-          "context": "- Strong evidence: CodeSearchNet vocabulary-gap framing (Husain 2019), arXiv:1909.09436. (Exact/lexical match as a first-class lane fused on ranks; score fusion broken by construction.)"
+          "context": "- Strong evidence for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval."
         },
         {
           "file": "companion catalog",
@@ -949,7 +949,7 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 187,
+          "line": 189,
           "context": "- Strong evidence: Card et al. (2020). With Little Power Comes Great Responsibility. EMNLP 2020. arXiv:2010.06595. GLUE underpowering and effect-size exaggeration."
         },
         {
@@ -2072,7 +2072,7 @@
         {
           "file": "contamination-oracle-workload-validity.md",
           "line": 123,
-          "context": "Function-level code generation provides a controlled example. Liu et al. ([2023](https://arxiv.org/abs/2305.01210)) expanded a widely used suite's tests by 80x with generated inputs and mutation-based cases. Across 26 models, the stronger suite reduced pass@k by up to roughly 19 to 29 percent and reshuffled rankings. The models and the generated programs were held fixed. Only the set of observations used to decide correctness changed. The original ranking had partly measured which wrong programs happened to fit sparse tests."
+          "context": "Function-level code generation provides a controlled example. Liu et al. ([2023](https://arxiv.org/abs/2305.01210)) expanded a widely used suite's tests by 80x with generated inputs and mutation-based cases. Across 26 models, the stronger suite reduced \\(\\mathrm{pass}@k\\) by up to roughly 19 to 29 percent and reshuffled rankings. The models and the generated programs were held fixed. Only the set of observations used to decide correctness changed. The original ranking had partly measured which wrong programs happened to fit sparse tests."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
@@ -2509,7 +2509,7 @@
         {
           "file": "variance-power-paired-comparisons.md",
           "line": 182,
-          "context": "- Prompt-variance finding: incorporated into this chapter's first developed practice, with its full evidence recorded in the companion catalog. Strong evidence: Sclar et al. (2023), FormatSpread, arXiv:2310.11324; Mizrahi et al. (2024), TACL, arXiv:2401.00595; and Salinas and Morstatter (2024), arXiv:2401.03729."
+          "context": "- Strong evidence: Sclar et al. (2023), FormatSpread, arXiv:2310.11324. Meaning-preserving prompt-format changes produced a median 7.5-point accuracy spread across the tested tasks, with larger task-level spreads."
         },
         {
           "file": "companion catalog",
@@ -2652,8 +2652,8 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 182,
-          "context": "- Prompt-variance finding: incorporated into this chapter's first developed practice, with its full evidence recorded in the companion catalog. Strong evidence: Sclar et al. (2023), FormatSpread, arXiv:2310.11324; Mizrahi et al. (2024), TACL, arXiv:2401.00595; and Salinas and Morstatter (2024), arXiv:2401.03729."
+          "line": 183,
+          "context": "- Strong evidence: Mizrahi et al. (2024), TACL, arXiv:2401.00595. Individual templates reversed some model comparisons even where aggregate comparisons were more stable."
         },
         {
           "file": "companion catalog",
@@ -2684,8 +2684,8 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 182,
-          "context": "- Prompt-variance finding: incorporated into this chapter's first developed practice, with its full evidence recorded in the companion catalog. Strong evidence: Sclar et al. (2023), FormatSpread, arXiv:2310.11324; Mizrahi et al. (2024), TACL, arXiv:2401.00595; and Salinas and Morstatter (2024), arXiv:2401.03729."
+          "line": 184,
+          "context": "- Strong evidence: Salinas and Morstatter (2024), arXiv:2401.03729. Trivial prompt edits changed more than 10 percent of predictions on some tested tasks."
         },
         {
           "file": "companion catalog",
@@ -3638,12 +3638,12 @@
         {
           "file": "execution-correction-gates-release-tests.md",
           "line": 142,
-          "context": "Support for the repeated-trial metric comes from one source. τ-bench, from Yao et al. ([2024](https://arxiv.org/abs/2406.12045)), evaluates interactive, multi-turn tool use with executable oracles across repeated trials and introduces pass^k as a reliability measure."
+          "context": "Support for the repeated-trial metric comes from one source. τ-bench, from Yao et al. ([2024](https://arxiv.org/abs/2406.12045)), evaluates interactive, multi-turn tool use with executable oracles across repeated trials and introduces \\(\\mathrm{pass}^{k}\\) as a reliability measure."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
           "line": 266,
-          "context": "- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures pass^k on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings."
+          "context": "- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \\(\\mathrm{pass}^{k}\\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings."
         },
         {
           "file": "companion catalog",
@@ -3974,7 +3974,7 @@
         {
           "file": "baselines-ablations-cost-accuracy.md",
           "line": 124,
-          "context": "- Strong evidence: Evaluation-design blocks of the code-retrieval source corpus, covering the no-tool baseline, tool access as a controlled variable, and ground-truth tautology. CoIR (Li et al. 2024, arXiv:2407.02883) is the metric spine of that corpus and supplies the code-retrieval tasks and metrics only. The three controls come from the source synthesis, not from the CoIR paper."
+          "context": "- Directional evidence: evaluation-design material from the code-retrieval source corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here."
         },
         {
           "file": "companion catalog",
@@ -4256,7 +4256,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 397,
+          "line": 396,
           "context": "- Directional evidence: Temporal KG memory (Kim et al.), arXiv:2408.05861, carried by the companion record on modeling time explicitly. Supports the two-time-axes aside only."
         },
         {
@@ -4495,12 +4495,12 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 186,
+          "line": 188,
           "context": "- Strong evidence: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640 (Anthropic). The 13.2% to 7.5% minimum-detectable-effect example and the response-count lever."
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 192,
+          "line": 194,
           "context": "- Strong evidence: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640. Paired per-item differences with paired standard error and score correlation."
         },
         {
@@ -6195,7 +6195,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 383,
+          "line": 382,
           "context": "- Directional evidence: PersonalAI KG comparison (Menschikov), arXiv:2506.17001, with a contested practitioner thread named in the same synthesis. Direction only."
         },
         {
@@ -6469,7 +6469,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 398,
+          "line": 397,
           "context": "- Directional evidence: Prometheus (Pan, H., et al. 2025), arXiv:2507.19942, carried by the companion record on persisting explored context. No figure quoted here."
         },
         {
@@ -6837,8 +6837,8 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 390,
-          "context": "- Strong evidence: Kang, M., et al. (2025), \"ACON: Optimizing Context Compression for Long-horizon LLM Agents,\" arXiv:2510.00615 (Microsoft)."
+          "line": 389,
+          "context": "- Strong evidence for the measured failure-driven compression comparison: Kang, M., et al. (2025), \"ACON: Optimizing Context Compression for Long-horizon LLM Agents,\" arXiv:2510.00615 (Microsoft). The study tests failure-guided compression on app, office, and question-answering benchmarks; transfer to coding agents remains directional."
         },
         {
           "file": "companion catalog",
@@ -6953,7 +6953,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 378,
+          "line": 377,
           "context": "- Directional evidence: Agentic Context Engineering, arXiv:2510.04618. Direction only."
         },
         {
@@ -7358,7 +7358,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 384,
+          "line": 383,
           "context": "- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978. Direction only."
         },
         {
@@ -7497,7 +7497,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 385,
+          "line": 384,
           "context": "- Directional evidence (boundary citation): Graph-based Agent Memory survey (Yang 2026), arXiv:2602.05665. Cited as the counterweight, not support."
         },
         {
@@ -8215,7 +8215,7 @@
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
           "line": 463,
-          "context": "- Strong evidence: CascadeDebate (Chang 2026), arXiv:2604.12262. Supports the catalog pointer only, not the routing entry itself."
+          "context": "- Directional evidence for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional."
         },
         {
           "file": "companion catalog",
@@ -8254,7 +8254,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 399,
+          "line": 398,
           "context": "- Directional evidence: AiScientist long-horizon engineering (Chen 2026), arXiv:2604.13018, carried by the companion record on durable artifact handoff."
         },
         {
@@ -8842,7 +8842,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 401,
+          "line": 400,
           "context": "- Directional evidence: Product context and coding-agent decision compliance (Dillon 2026), arXiv:2605.08112, carried by the companion record on the tribal-knowledge substrate. Its compliance figure is not used in the prose."
         },
         {
@@ -8978,8 +8978,8 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 377,
-          "context": "- Strong evidence: \"Useful Memories Become Faulty When Continuously Updated by LLMs\" (Zhang 2026), arXiv:2605.12978, with Slack production context management (InfoQ 2026-04) named in the same synthesis."
+          "line": 375,
+          "context": "- Strong evidence for the degradation mechanism: \"Useful Memories Become Faulty When Continuously Updated by LLMs\" (Zhang 2026), arXiv:2605.12978. The study measures degradation under repeated LLM memory updates; it does not compare immutable-source and rebuildable-distillate architectures."
         },
         {
           "file": "companion catalog",
@@ -9422,7 +9422,7 @@
         {
           "file": "baselines-ablations-cost-accuracy.md",
           "line": 123,
-          "context": "- Strong evidence: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117), agentic-memory source synthesis covering no-skill and raw-trajectory controls, coverage matching, one-factor sweeps, and the writer information-flow pitfall."
+          "context": "- Directional evidence: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117), through the agentic-memory source synthesis. The underlying study measures no-skill and raw-trajectory controls in its setting; coverage matching, one-factor sweeps, and the writer information-flow constraint are transfers within the broader protocol."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
@@ -9614,7 +9614,7 @@
         },
         {
           "file": "cross-session-memory-raw-traces-compaction.md",
-          "line": 400,
+          "line": 399,
           "context": "- Corroborating case: memorywire (Munirathinam 2026), arXiv:2606.01138, carried by the companion record on memory portability."
         },
         {
@@ -10208,7 +10208,7 @@
         {
           "file": "execution-correction-gates-release-tests.md",
           "line": 217,
-          "context": "CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) uses a different gate. It blocks a release tag unless the two most recent full-mode acceptance verdicts both pass. Those verdicts come from successive acceptance-loop iterations, not repeated trials of one pinned candidate. The rule is therefore a check over acceptance history, not a pass^k measurement. Its requirement of two consecutive passes is local to that system and should not be treated as a recommended value of k."
+          "context": "CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) uses a different gate. It blocks a release tag unless the two most recent full-mode acceptance verdicts both pass. Those verdicts come from successive acceptance-loop iterations, not repeated trials of one pinned candidate. The rule is therefore a check over acceptance history, not a \\(\\mathrm{pass}^{k}\\) measurement. Its requirement of two consecutive passes is local to that system and should not be treated as a recommended value of \\(k\\)."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
@@ -10252,7 +10252,7 @@
         },
         {
           "file": "variance-power-paired-comparisons.md",
-          "line": 198,
+          "line": 200,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the task-family run and rerun described in the opening, which are narrative illustration."
         }
       ]
@@ -10266,7 +10266,7 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 136,
+          "line": 140,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
@@ -10314,10 +10314,10 @@
     },
     {
       "url": "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953",
-      "status": "resolved",
-      "http_status": 200,
-      "final_url": "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953?gi=02a9a7c93866",
-      "title": "Medium",
+      "status": "http_error",
+      "http_status": 403,
+      "final_url": "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953",
+      "title": "Attention Required! | Cloudflare",
       "occurrences": [
         {
           "file": "persistent-state-durable-workflows-idempotent-retries.md",
@@ -10327,7 +10327,7 @@
         {
           "file": "persistent-state-durable-workflows-idempotent-retries.md",
           "line": 193,
-          "context": "- Strong evidence: Jacob Meyers and Rob Zienert (2025). \"How Temporal Powers Reliable Cloud Operations at Netflix\", [Netflix TechBlog](https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953), 2025-12-15."
+          "context": "- Strong evidence for the reported service-local before-and-after measurement: Jacob Meyers and Rob Zienert (2025). \"How Temporal Powers Reliable Cloud Operations at Netflix\", [Netflix TechBlog](https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953), 2025-12-15. The adopting team reports its observed failure-rate change; the account does not isolate a causal component or measure transfer to agent workloads."
         },
         {
           "file": "persistent-state-durable-workflows-idempotent-retries.md",
@@ -10444,17 +10444,30 @@
     },
     {
       "url": "https://rss.xcancel.com/GergelyOrosz/status/2077434907274428914",
-      "status": "request_error",
-      "http_status": null,
-      "final_url": null,
-      "title": null,
-      "error": "fetch failed",
+      "status": "resolved",
+      "http_status": 200,
+      "final_url": "https://xcancel.com/GergelyOrosz/status/2077434907274428914",
+      "title": "Verifying your browser…",
       "occurrences": [
         {
           "file": "companion catalog",
           "line": null,
           "practice_id": "keep-always-loaded-context-minimal",
           "context": "Pragmatic Engineer podcast episode with Dex Horthy (HumanLayer), summarized by Gergely Orosz, 2026-07-15."
+        }
+      ]
+    },
+    {
+      "url": "https://scixplorer.org/scixhelp/api-scix/",
+      "status": "resolved",
+      "http_status": 202,
+      "final_url": "https://scixplorer.org/scixhelp/api-scix/",
+      "title": null,
+      "occurrences": [
+        {
+          "file": "introduction.md",
+          "line": 35,
+          "context": "Scholarly retrieval used hybrid keyword and semantic searches over a 32-million-record corpus derived from the [NASA Science Explorer (SciX) API](https://scixplorer.org/scixhelp/api-scix/) and an arXiv mirror. Queries were scoped by topic, arXiv subject class, and year where appropriate. Each thread combined seminal work with recent agent-era research. Candidate records were checked through a metadata lookup, and full text was read when the corpus provided it and the claim required more than the abstract. A citation audit then added a seventh thread for scheduling and repository-scoping sources that had entered the draft through adjacent operations-research material rather than the original searches."
         }
       ]
     },
@@ -10467,7 +10480,7 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 136,
+          "line": 140,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
@@ -10481,17 +10494,17 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 136,
+          "line": 140,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
     },
     {
       "url": "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12",
-      "status": "resolved",
-      "http_status": 200,
-      "final_url": "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12?gi=c2249832d06a",
-      "title": "Medium",
+      "status": "http_error",
+      "http_status": 403,
+      "final_url": "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12",
+      "title": "Attention Required! | Cloudflare",
       "occurrences": [
         {
           "file": "persistent-state-durable-workflows-idempotent-retries.md",

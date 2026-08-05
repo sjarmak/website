@@ -18,12 +18,12 @@ const benchmarkRoot = path.join(researchRoot, "benchmarks");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const websiteCompanionPath = path.join(root, "src/content/book-companions/engineering-reliable-coding-agents.md");
 const outputRoot = path.join(root, "artifacts/arxiv/companion-release");
-const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.5.zip");
+const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.6.zip");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const websiteCompanionUrl = "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion";
 const skillsUrl = `${repositoryUrl}/tree/main/skills`;
 
-const version = "1.0.0-rc.5";
+const version = "1.0.0-rc.6";
 const sourceKinds = {
   lit: "scholarly",
   explorer: "synthesis",
@@ -36,6 +36,28 @@ const evidenceGroups = {
   contested: "null_or_conflicting",
   "null-result": "null_or_conflicting",
 };
+
+// Public-release corrections for claims whose working-catalog labels are broader
+// than the cited study. Keeping these transformations here makes the archived
+// artifact reproducible without rewriting the private research workspace.
+const evidenceCorrections = new Map([
+  ["run-ablation-controls:2605.24117", {
+    evidenceGroup: "directional",
+    claimSupport: "SkillEvolBench directly measures no-skill and raw-trajectory controls, coverage matching, and controlled skill evaluation. These controls inform, but do not validate, the chapter's broader ablation protocol across coding-agent systems.",
+  }],
+  ["run-ablation-controls:2407.02883", {
+    evidenceGroup: "directional",
+    claimSupport: "CoIR provides a multi-task code-retrieval benchmark and its evaluation measures. It does not test the no-tool/tool-access controls or tautology checks in the broader ablation protocol.",
+  }],
+  ["hybrid-retrieval-fused-on-ranks:1909.09436", {
+    evidenceGroup: "directional",
+    claimSupport: "CodeSearchNet documents the vocabulary gap between natural-language queries and code. It motivates complementary retrieval channels but does not test rank fusion or the chapter's hybrid-retrieval protocol.",
+  }],
+  ["retain-raw-distill-separately:2605.12978", {
+    evidenceGroup: "strong",
+    claimSupport: "The controlled study measures degradation under repeated LLM memory updates and supports preserving episodic source material. It does not compare immutable-source and rebuildable-distillate system architectures.",
+  }],
+]);
 
 const chapterTitles = {
   1: "Run-to-run variance, statistical power, and paired comparisons",
@@ -159,15 +181,16 @@ async function main() {
     const location = assignment.get(practice.id);
     if (!location) throw new Error(`No chapter assignment for ${practice.id}`);
     const evidence = (practice.evidence ?? []).map((item, index) => {
+      const correction = evidenceCorrections.get(`${practice.id}:${item.arxiv ?? ""}`);
       const record = {
         evidence_id: `${practice.id}:e${index + 1}`,
         source_kind: sourceKinds[item.class] ?? "other",
-        evidence_group: evidenceGroups[item.strength] ?? "unclassified",
+        evidence_group: correction?.evidenceGroup ?? evidenceGroups[item.strength] ?? "unclassified",
         citation: cleanCitation(item.source, item.arxiv ? arxivMetadata.get(item.arxiv) : null, item.arxiv),
         bibcode: item.bibcode ?? null,
         arxiv: item.arxiv ?? null,
         url: item.url ?? (item.arxiv ? `https://arxiv.org/abs/${item.arxiv}` : null),
-        claim_support: sanitizeProse(item.note),
+        claim_support: correction?.claimSupport ?? sanitizeProse(item.note),
         resolved_metadata: item.arxiv ? arxivMetadata.get(item.arxiv) ?? null : null,
       };
       evidenceRows.push({
@@ -243,7 +266,7 @@ async function main() {
   ]));
   files.set("CITATION.cff", `cff-version: 1.2.0\nmessage: "Please cite the archived release of this companion and the associated manuscript."\ntitle: "Engineering Reliable Coding Agents: Companion Research Artifact"\ntype: dataset\nauthors:\n  - family-names: Jarmak\n    given-names: Stephanie\nversion: "${version}"\nrepository-code: "${repositoryUrl}"\nurl: "${websiteCompanionUrl}"\nabstract: >-\n  Human-readable and machine-readable practice catalog, evidence ledger,\n  chapter crosswalk, and benchmark records accompanying Engineering Reliable\n  Coding Agents.\nkeywords:\n  - AI coding agents\n  - software engineering\n  - evaluation\n  - reliability\n  - agent operations\n`);
   files.set("README.md", `# Engineering Reliable Coding Agents: companion research artifact\n\nRelease candidate ${version}, prepared August 5, 2026.\n\nThis package accompanies *Engineering Reliable Coding Agents: Evaluation, Recovery, Context, and Control Beyond the Model*. It is designed to be archived as a separate, citable research artifact. The final archival release should receive its own DOI and should be cited alongside the manuscript.\n\nReview the interactive [website companion](${websiteCompanionUrl}), or read the complete chapter-organized catalog in [\`LEARNINGS.md\`](LEARNINGS.md).\n\nReusable agent workflows derived from selected practices are published separately in the repository's [\`skills/\` collection](${skillsUrl}). They are implementation artifacts, not additional evidence.\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\n## Contents\n\n- \`LEARNINGS.md\`: human-readable, chapter-organized presentation of all 192 practices, including actions, mechanisms, evidence, and boundaries.\n- \`catalog.json\`: all 192 bounded practices in machine-readable form.\n- \`evidence-ledger.csv\`: one row per evidence item or corroborating item.\n- \`chapter-crosswalk.json\`: the 55 practices developed in the manuscript and the 137 companion-only entries.\n- \`benchmark-catalog.json\`: 29 coding-agent benchmark records.\n- \`reference-metadata.json\`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n- \`schemas/\`: JSON Schemas for the catalog and benchmark records.\n- \`PROVENANCE.md\`: source snapshot, transformations, evidence definitions, and release exclusions.\n- \`CITATION.cff\`: citation metadata for GitHub and archival services.\n- \`SHA256SUMS\`: checksums for the release files.\n\n## Evidence vocabulary\n\n\`strong\` directly supports the stated claim through a controlled comparison, validated benchmark result, or comparably specific measurement. \`directional\` supports the mechanism or direction without establishing magnitude or broad transfer. \`corroborating\` establishes plausibility through a case or convergent observation. \`null_or_conflicting\` records a result that did not support the expected effect or limits another claim.\n\nAuthor-system cases are labeled \`author_system_illustration\` and set \`independent_external_evidence\` to \`false\`. They illustrate mechanisms and failure cases but do not support general claims independently.\n\n## Before public release\n\nReplace this release-candidate version with \`1.0.0\`, add the selected license, publish a tagged release in the canonical repository, archive that exact tag with Zenodo or another DOI-granting repository, and add the resulting DOI to this file and \`CITATION.cff\`. Do not archive internal review notes, rejected candidates, private receipts, or unpublished operational data.\n`);
-  files.set("PROVENANCE.md", `# Provenance\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\nInteractive companion: [${websiteCompanionUrl}](${websiteCompanionUrl})\n\nDerived agent skills: [${skillsUrl}](${skillsUrl})\n\n## Source snapshot\n\n- Public manuscript chapter snapshot: website repository commit \`c40183e\` (August 5, 2026).\n- Human-readable companion input SHA-256: \`${sha256(websiteCompanionSource)}\`.\n- Practice catalog input SHA-256: \`${sha256(catalogSource)}\`.\n- Companion chapter-map input SHA-256: \`${sha256(chapterMapSource)}\`.\n- Developed-practice map input SHA-256: \`${sha256(taughtMapSource)}\`.\n- Benchmark catalog input SHA-256: \`${sha256(benchmarkSource)}\`.\n\nThe hashes identify the exact build inputs without exposing workstation paths or unpublished repository contents.\n\n## Transformations\n\n\`LEARNINGS.md\` is generated from the website companion source by removing site frontmatter and replacing rendered MathML spans with ordinary inline LaTeX. Internal evidence shorthand and editorial workflow notes were replaced by reader-facing \`source_kind\` and \`evidence_group\` fields in the machine-readable catalog. Internal derivation pointers were omitted. The known DynTaskMAS author-name defect in the source catalog was corrected from “Yin” to Yu, Ding, and Sato using the official arXiv record. Official arXiv metadata captured during the manuscript reference audit supplies citations and appears under \`resolved_metadata\`.\n\nThe separately packaged skills retain their own practice maps and evidence boundaries. They are derived operational artifacts and are not counted as independent evidence.\n\nCorroborating author-system records remain available for reproducibility but are explicitly excluded from independent external evidence. Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.\n\n## Excluded material\n\nThe package excludes working notes, selection deliberations, rejected entries, private comments, unpublished raw operational data, local configuration, and internal receipts. The release is a public research artifact, not a mirror of the working directory.\n`);
+  files.set("PROVENANCE.md", `# Provenance\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\nInteractive companion: [${websiteCompanionUrl}](${websiteCompanionUrl})\n\nDerived agent skills: [${skillsUrl}](${skillsUrl})\n\n## Source snapshot\n\n- Public manuscript chapter snapshot: packaged with companion version \`${version}\` in the canonical repository.\n- Human-readable companion input SHA-256: \`${sha256(websiteCompanionSource)}\`.\n- Practice catalog input SHA-256: \`${sha256(catalogSource)}\`.\n- Companion chapter-map input SHA-256: \`${sha256(chapterMapSource)}\`.\n- Developed-practice map input SHA-256: \`${sha256(taughtMapSource)}\`.\n- Benchmark catalog input SHA-256: \`${sha256(benchmarkSource)}\`.\n\nThe hashes identify the exact build inputs without exposing workstation paths or unpublished repository contents.\n\n## Transformations\n\n\`LEARNINGS.md\` is generated from the website companion source by removing site frontmatter and replacing rendered MathML spans with ordinary inline LaTeX. Internal evidence shorthand and editorial workflow notes were replaced by reader-facing \`source_kind\` and \`evidence_group\` fields in the machine-readable catalog. Internal derivation pointers were omitted. Four public-release evidence records were narrowed to the claim tested by the cited study: the SkillEvolBench and CoIR records under \`run-ablation-controls\`, the CodeSearchNet record under \`hybrid-retrieval-fused-on-ranks\`, and the memory-degradation record under \`retain-raw-distill-separately\`. The known DynTaskMAS author-name defect in the source catalog was corrected from “Yin” to Yu, Ding, and Sato using the official arXiv record. Official arXiv metadata captured during the manuscript reference audit supplies citations and appears under \`resolved_metadata\`.\n\nThe separately packaged skills retain their own practice maps and evidence boundaries. They are derived operational artifacts and are not counted as independent evidence.\n\nCorroborating author-system records remain available for reproducibility but are explicitly excluded from independent external evidence. Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.\n\n## Excluded material\n\nThe package excludes working notes, selection deliberations, rejected entries, private comments, unpublished raw operational data, local configuration, and internal receipts. The release is a public research artifact, not a mirror of the working directory.\n`);
   files.set("schemas/catalog.schema.json", `${JSON.stringify({
     $schema: "https://json-schema.org/draft/2020-12/schema",
     title: "Engineering Reliable Coding Agents practice catalog",

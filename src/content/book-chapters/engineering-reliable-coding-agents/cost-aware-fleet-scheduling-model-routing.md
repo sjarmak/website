@@ -469,12 +469,12 @@ Until the ledger can answer those questions, choosing a more sophisticated polic
 - lit/directional: Somerstep, S., et al. (2025), "CARROT: A Cost Aware Rate Optimal Router," arXiv:2502.03261. Static model pool assumed.
 - lit/directional: Li, Y. (2025), "LLM Bandit: Cost-Efficient LLM Generation via Preference-Conditioned Dynamic Routing," arXiv:2502.02743. Single-author preprint, benchmark evidence.
 - Three directional items and zero strong results; none evaluates a production software-agent fleet, so the entry defines a decision and its measurements rather than establishing a cost reduction.
-- explorer/strong: CascadeDebate (Chang 2026), arXiv:2604.12262. Supports the catalog pointer only, not the routing entry itself.
+- explorer/directional for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional.
 - Corroboration (narrative only): the author's transfer notes restate the budgeted-bandit formulation already carried above.
 
 ### Replay fixed arrival traces before changing policy
 
-- explorer/strong: SWAY, Chen, J., et al. (2016), "Sampling as a Baseline Optimizer for Search-Based Software Engineering," arXiv:1608.07617. The one in-domain software-engineering result: a candidate optimizer that cannot beat a cheap baseline has not earned adoption.
+- explorer/strong for the cheap-baseline comparison only: SWAY, Chen, J., et al. (2016), "Sampling as a Baseline Optimizer for Search-Based Software Engineering," arXiv:1608.07617. The study supports requiring a candidate optimizer to beat a cheap baseline; fixed-arrival replay is a transfer beyond its experiment.
 - explorer/directional: Decima, Mao, H., et al. (2018), "Learning Scheduling Algorithms for Data Processing Clusters," arXiv:1810.01963. Measures learned scheduling under stochastic arrivals, not fixed-arrival replay; the replay transfer is the explorer's.
 - explorer/directional: Lampoudi, S., Saunders, E., & Eastman, J. (2015), "An Integer Linear Programming Solution to the Telescope Network Scheduling Problem," arXiv:1503.07170. Supports validating a scheduling kernel on instances with known optima.
 - Fixed-arrival replay itself is a reasoned transfer, not a directly controlled fleet result, and per-class starvation must be checked separately because a policy can improve the mean by starving one class.

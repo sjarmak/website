@@ -129,8 +129,8 @@ Reserve the iteration holdout before the first scaffold change. Decide who can i
 
 ### Run ablation controls
 
-- explorer/strong: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117), agentic-memory explorer synthesis covering no-skill and raw-trajectory controls, coverage matching, one-factor sweeps, and the writer information-flow pitfall.
-- explorer/strong: Evaluation-design blocks of the code-retrieval explorer corpus, covering the no-tool baseline, tool access as a controlled variable, and ground-truth tautology. CoIR (Li et al. 2024, arXiv:2407.02883) is the metric spine of that corpus and supplies the code-retrieval tasks and metrics only. The three controls come from the explorer synthesis, not from the CoIR paper.
+- explorer/directional: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117). The underlying study measures no-skill and raw-trajectory controls in its setting; coverage matching, one-factor sweeps, and the writer information-flow constraint are transfers within the broader protocol.
+- explorer/directional: evaluation-design material from the code-retrieval corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here.
 - explorer/directional: *TIAP* (arXiv:2605.24060), direction only; no figure carried.
 - explorer/directional: *MemConflict* (arXiv:2605.20926), direction only; no figure carried.
 

@@ -112,6 +112,8 @@ Items graded strong form a minority of the evidence items across the book. Their
 
 Cases from my own systems appear only as illustrations to reveal a mechanism, suggest a failure mode, or make an abstract constraint concrete. I do not use them as the basis for a recommendation. 
 
+An **unverified working artifact** is an author-system record whose source was uncommitted at the cited repository revision and whose reported figures were read from that source rather than independently remeasured. The label describes provenance, not evidence strength. Later chapters call these records local artifacts unless the uncommitted-source condition changes the interpretation of a result.
+
 Chapter 7 presents the clearest tension between evidence strength and operational urgency. None of its three practices is supported by research literature, and three of the seven supporting sources are single anecdotes. Even so, two of its three practices were chosen for the main chapters by all three selection methods independently, and the third by two of them. Across this corpus, evidence strength and urgency showed little relationship.
 
 That mismatch does not warrant greater confidence in the practices. It indicates a decision made under uncertainty, where the costs of acting and waiting are unequal. Some failures justify protective boundaries before their frequency is known with confidence, especially when a single credential can destroy both the primary resource and its recovery path. In those cases, I state the limits of the evidence and identify the observation that would cause me to revise the design.

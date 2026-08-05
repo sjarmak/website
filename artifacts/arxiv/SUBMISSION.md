@@ -10,7 +10,7 @@ Prepared August 5, 2026 for the August 2026 edition of *Engineering Reliable Cod
 
 - `engineering-reliable-coding-agents-arxiv-source.zip`: LaTeX release candidate for arXiv.
 - `engineering-reliable-coding-agents-preview.pdf`: PDF compiled from that source.
-- `engineering-reliable-coding-agents-companion-1.0.0-rc.5.zip`: separate companion research artifact release candidate.
+- `engineering-reliable-coding-agents-companion-1.0.0-rc.6.zip`: separate companion research artifact release candidate.
 - `engineering-reliable-coding-agents-skills-0.1.0.zip`: reusable agent workflows derived from selected companion practices.
 - `reference-audit/README.md`: reference-audit summary.
 
@@ -34,7 +34,7 @@ AI coding agents are commonly evaluated as models but deployed as systems whose 
 
 ### Comments
 
-Technical review and engineering monograph, 263 pages, 19 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
+Technical review and engineering monograph, 263 pages, 18 figures. Includes an evidence audit, a 192-practice companion research artifact, and runnable protocols for evaluating and operating AI coding agents. August 2026. Source and companion repository: https://github.com/sjarmak/engineering-reliable-coding-agents. Companion DOI: [insert DOI].
 
 Remove the final DOI clause if the companion will not be archived before the arXiv submission. Do not submit the bracketed placeholder.
 
@@ -62,7 +62,7 @@ The repository currently has a root Apache-2.0 license. Before adding the manusc
 
 1. Complete the author review of `companion-release/`.
 2. Choose a companion license separately from the manuscript license. `CITATION.cff` intentionally has no license field yet.
-3. Replace release-candidate version `1.0.0-rc.5` with `1.0.0` in the build script and citation metadata.
+3. Replace release-candidate version `1.0.0-rc.6` with `1.0.0` in the build script and citation metadata.
 4. Publish the exact package in the book repository and create a `v1.0.0` release.
 5. Connect that repository to Zenodo or another DOI-granting archive and archive the exact tag.
 6. Add the DOI to `CITATION.cff`, the companion README, the manuscript’s Data and materials availability statement, and the arXiv Comments field.
@@ -117,7 +117,7 @@ Identifier resolution verifies that the cited record exists and captures current
 4. Upload `engineering-reliable-coding-agents-arxiv-source.zip`.
 5. Confirm that arXiv identifies `main.tex` as the top-level file and compiles it in PDF mode.
 6. Compare arXiv’s generated PDF with `engineering-reliable-coding-agents-preview.pdf`.
-7. Inspect the title page, abstract, table of contents, all part and chapter starts, equations, hyperlinks, and all 19 figures.
+7. Inspect the title page, abstract, table of contents, all part and chapter starts, equations, hyperlinks, and all 18 figures.
 8. Paste the metadata above without the Markdown headings or any unresolved placeholder.
 9. Choose the license only after the publisher/funder check.
 10. Submit for moderation. After announcement, record the arXiv identifier and DOI on the website and in the companion metadata.
@@ -126,10 +126,10 @@ Identifier resolution verifies that the cited record exists and captures current
 
 - Exact source ZIP compiled in a fresh temporary directory with Tectonic 0.15.0.
 - Output: 263 letter-size pages, single-spaced, one-inch margins, PDF 1.5.
-- Figures: 19 of 19 included as PDF.
+- Figures: 18 of 18 included as PDF.
 - Chapter sources: 19 unnumbered chapter-end source blocks, excluded from the numbered section hierarchy and table of contents.
-- Full references: 185 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 20 audited web sources are represented, with additional named sources and author illustrations identified separately.
-- Text extraction: approximately 106,150 machine-readable words.
+- Full references: 186 alphabetized entries; all 150 manuscript-cited arXiv identifiers, five DOI records, and 20 audited web sources are represented, with additional named sources and author illustrations identified separately.
+- Text extraction: approximately 106,200 machine-readable words.
 - PDF security: no encryption, JavaScript, forms, or embedded multimedia.
 - Archive hygiene: 44 required files; no generated PDF, log, auxiliary file, Markdown source, dataset, or private note.
 - TeX diagnostics: no errors, missing files, missing characters, undefined commands, or overfull boxes. A small number of harmless underfull-box warnings remain in source-list paragraphs.

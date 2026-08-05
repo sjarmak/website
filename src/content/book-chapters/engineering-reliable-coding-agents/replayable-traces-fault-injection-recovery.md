@@ -207,13 +207,13 @@ The companion catalog’s realistic-fault-menu pattern develops the fuller const
 
 ### Keep the result attached to its envelope
 
-My kill demonstration, an **unverified working artifact**, illustrates the protocol without extending the literature evidence. In one run, the worker was killed during an activity after a retryable fault had already been injected. The recovered execution passed all 13 invariant checks. The interrupted activity resumed after a heartbeat-timeout retry, reused a cached result, and produced output identical to the clean reference by content hash.
+My kill demonstration, a **local artifact**, illustrates the protocol without extending the literature evidence. In one run, the worker was killed during an activity after a retryable fault had already been injected. The recovered execution passed all 13 invariant checks. The interrupted activity resumed after a heartbeat-timeout retry, reused a cached result, and produced output identical to the clean reference by content hash.
 
 Thirteen of thirteen is a satisfying result, but it describes one kill placement under one configuration.
 
 I can conclude that the running system exhibited the specified invariants in that trial. I cannot conclude that the engine is generally fault tolerant, that another activity would recover through the same path, or that a different software version would preserve the result. Vogel et al. (2024) justify that restraint: recovery comparisons changed when configuration and recurring faults were measured directly.
 
-My publish-gate protocol, also an **unverified working artifact**, defines a broader intended experiment. Its first gate injects a failure in continuous integration at a randomized kill point. The fault matrix includes:
+My publish-gate protocol, also a **local artifact**, defines a broader intended experiment. Its first gate injects a failure in continuous integration at a randomized kill point. The fault matrix includes:
 
 - a kill during a model call;
 - a kill inside the execute-then-log gap;
@@ -292,4 +292,4 @@ A trace detailed enough to replay is also the artifact a person reads when recov
 
 - lit/strong: Vogel et al. (2024), "A Comprehensive Benchmarking Analysis of Fault Recovery in Stream Processing Frameworks," arXiv:2404.06203 (JSS line).
 
-Author-system cases are narrative illustration, not evidence. The kill demonstration and publish-gate protocol are unverified working artifacts.
+Author-system cases are narrative illustration, not evidence. The kill demonstration and publish-gate protocol are local artifacts.
