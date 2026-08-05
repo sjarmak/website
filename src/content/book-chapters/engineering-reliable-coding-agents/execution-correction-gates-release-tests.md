@@ -7,35 +7,47 @@ kind: chapter
 number: 4
 ---
 
-Mehta ([2026](https://arxiv.org/abs/2603.25764)) analyzed 1,750 coding-agent trajectories across 50 tasks and four models, and found a sharp separation between finishing and being correct. One model submitted work in 100 percent of its trials but resolved only 44 percent of the tasks when an external oracle checked the result. The silent semantic failures were often confident and consistent across repeated runs. Most of the models also changed code that was already correct. The scope of that study is directional: one author, a limited task sample, and no controlled estimate of failure rates across coding agents.
+Mehta ([2026](https://arxiv.org/abs/2603.25764)) analyzed 1,750 coding-agent trajectories across 50 tasks and four models and found a sharp divide between submission and correctness. One model submitted an answer in every trial, yet an external oracle found that it resolved only 44 percent of the tasks. Its semantic failures were often silent, confident, and consistent across repeated runs. Most models also modified code that was already correct.
+
+The study provides directional evidence rather than a general estimate of coding-agent failure rates. It covers one author’s analysis, a limited task set, and four models, without a controlled design for estimating prevalence across agents or workloads.
 
 ![Across 1,750 trajectories covering 50 tasks and four models, one model submitted work in 100% of its trials but resolved only 44% under an external oracle.](/book-figures/ch04-submission-resolution.svg)
 
-One author's analysis of 1,750 coding-agent trajectories across 50 tasks and four models provides directional evidence without a controlled failure-rate estimate across coding agents.
+Submission, consistency, and self-assessment are all produced by the process under evaluation. A model can repeatedly generate the same incorrect patch, describe it with stable confidence, and end each run cleanly. Those signals characterize the trajectory, but they do not show that the repository moved from a failing state to a working one. Acceptance therefore requires evidence of an observable state transition, verified by a system outside the inference process that proposed the change.
 
-Submission, consistency, and self-assessment all come from the process being evaluated. A model can repeatedly produce the same wrong patch, describe it with stable confidence, and end its turn cleanly. Those signals describe the trajectory, but they cannot establish that the repository changed from failing to working. Acceptance requires an observable state transition owned by a system outside the inference that proposed the change.
+The evidence base for this chapter is thin. The actions below therefore ask readers to execute and measure work on their own systems rather than adopt a reported threshold. Six evidence items support the three entries taught here. Five are explorer-class syntheses, and one is a controlled experiment. One entry has no strong supporting evidence item.
 
-The support for this chapter is thin. The actions below therefore ask readers to execute and measure work on their own systems rather than adopt a reported threshold. Six evidence items support the three taught entries. Five come from explorer-class synthesis, and one comes from a controlled experiment. One of the three entries has no strong evidence item at all.
+The practical unit is a gate that can stop candidate work from propagating. The candidate runs under explicit constraints, any correction attempt receives the evidence produced by verification, and a compact set of representative tasks is replayed whenever the system changes.
 
-The practical unit is a gate that can refuse propagation. Candidate work runs under explicit constraints, the resulting evidence enters any correction attempt, and a compact set of real tasks is replayed whenever the system changes. Four adjacent controls sit in the companion catalog rather than here. An agent that submits on nearly every trial needs verified resolution scored separately from submission, with abstention probes among its tasks. A tool whose failure returns a plausible success string needs explicit detection of silent tool errors. A loop that keeps retrying needs a turn budget. A gate whose per-candidate verification cost governs how often it can run needs that cost in the accounting.
+Four adjacent controls appear in the companion catalog rather than in this chapter. For an agent that submits on nearly every trial, score verified resolution separately from submission and include tasks that test whether it can abstain. For a tool that can fail while returning a plausible success string, detect silent tool errors explicitly. For a loop that can retry indefinitely, impose a turn budget. When per-candidate verification cost determines how often a gate can run, include that cost in the system’s accounting.
 
 ## Make execution decide whether work moves
 
-Two explorer-class directional items support execution-gated evaluation, and neither is a controlled result. AgentForge, from Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), describes an execution-grounded evaluator that runs candidate work in resource-bounded, network-isolated sandboxes and gates propagation on the execution result. SWE-bench, from Jimenez et al. ([2023](https://arxiv.org/abs/2310.06770)), establishes executable repository repair as an evaluation form. The AgentForge preprint is unrefereed, rests on a single configuration, and reports one sample from each agent. Its headline number also conflicts with the published range for that setup and has not been independently replicated. I therefore omit the number.
+Two explorer-class directional items support execution-gated evaluation, but neither is a controlled estimate of its effect. AgentForge, from Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), describes an evaluator that runs candidate work in resource-bounded, network-isolated sandboxes and permits propagation only after successful execution. SWE-bench, from Jimenez et al. ([2023](https://arxiv.org/abs/2310.06770)), establishes executable repository repair as an evaluation form.
 
-Those limits constrain what the evidence establishes, and the mechanism is still worth testing. Run the artifact in a constrained environment, and let the observed result determine whether it can proceed.
+The AgentForge preprint is unrefereed, evaluates a single configuration, and reports one sample from each agent. Its headline result also conflicts with the published range for that configuration and has not been independently replicated, so I omit the number. These limits prevent either source from establishing a general failure rate or a measured advantage for execution gating. They do not weaken the mechanism worth testing: run the artifact in a constrained environment, and let the observed result determine whether it can proceed.
 
-A plausible patch is only text until a repository accepts it. It may compile and fail a type check, pass the visible test and fail a broader suite, produce the wrong output, or depend on undeclared state left in the working directory. Reading the patch identifies some of these defects. Executing it produces a result from the system the change is supposed to affect.
+A plausible patch is only text until the repository accepts it. It may fail to compile, violate a type constraint, pass a visible test while failing the broader suite, produce the wrong output, or depend on undeclared state left in the workspace. Reading the patch can reveal some of these defects. Executing it produces evidence from the system the change is supposed to affect.
 
-The gate changes the acceptance question. A confidence score asks the process that produced an answer to characterize that answer. An execution check asks a compiler, test runner, package builder, schema validator, or deployment probe whether a specified transition occurred. The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. The observation is informative because it is produced causally downstream of the candidate artifact.
+This changes the acceptance question. A confidence score asks the process that produced an answer to characterize its own answer. An execution check asks a compiler, test runner, package builder, schema validator, or deployment probe whether a specified transition occurred.
 
-The architecture has three owners. The agent owns a proposed change. A sandbox controller owns the environment and the authority to start a run. A release controller owns the downstream state and changes it only after the sandbox returns an admissible result. Separating those roles prevents the producer from converting a claim of success into release state by writing a status field or selecting which checks to report.
+The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. The observation matters because it is produced causally downstream of the candidate artifact rather than by the process that proposed it.
 
-A sandbox needs enough isolation to make its result interpretable. Start each run from a known repository snapshot, and mount only the inputs the task permits. Bound wall-clock time, CPU, memory, processes, and disk. Deny network access unless the task explicitly requires a named endpoint. Capture standard output, standard error, the exit status, resource termination, and declared artifacts, then dispose of the environment after the verdict. Reusing a mutable workspace is cheaper, but it allows one attempt to seed the next through generated files, caches, installed dependencies, or running processes.
+The architecture has three owners:
 
-Network isolation serves measurement as well as security. An unrestricted candidate can fetch an undeclared dependency, consult a changing service, upload material, or pass because a remote cache happened to hold the needed state. When a task genuinely depends on a network service, the evaluator should expose a controlled substitute or record the service version and its responses. Otherwise the same artifact can receive different verdicts for reasons unrelated to its behavior.
+- The agent owns the proposed change.
+- A sandbox controller owns the execution environment and the authority to start a run.
+- A release controller owns downstream state and changes it only after the sandbox returns an admissible result.
 
-Resource bounds make nontermination an explicit outcome. A process killed after a declared limit belongs in a category distinct from a failed assertion and from an ordinary completion. The gate should record which bound fired. Parallel tests can trigger the memory bound, and a surviving child process can trigger the process or wall-clock bound.
+Separating these roles prevents the producer from turning a claim of success into release state by writing a status field, omitting failed checks, or selecting which results to report.
+
+A sandbox needs enough isolation for its verdict to be interpretable. Each run should begin from a known repository snapshot and receive only the inputs permitted by the task. Bound wall-clock time, CPU, memory, process count, and disk use. Deny network access unless the task explicitly requires a named endpoint. Capture standard output, standard error, exit status, resource termination, and declared artifacts, then dispose of the environment after the verdict.
+
+Reusing a mutable workspace is cheaper, but it allows one attempt to seed the next through generated files, caches, installed dependencies, or surviving processes. The later result then reflects both the current candidate and undeclared state inherited from earlier attempts.
+
+Network isolation serves measurement as well as security. An unrestricted candidate can fetch an undeclared dependency, consult a changing service, upload material, or pass because a remote cache happens to contain the required state. When a task genuinely depends on a network service, expose a controlled substitute or record the service version and responses. Otherwise identical artifacts can receive different verdicts for reasons unrelated to their behavior.
+
+Resource bounds make nontermination an explicit outcome. A process killed after exceeding a declared limit should be recorded separately from a failed assertion or an ordinary completion. The gate should identify which bound fired. Parallel tests may exhaust memory, while a surviving child process may trigger the process-count or wall-clock limit.
 
 The acceptance contract should be readable without inspecting the controller:
 
@@ -49,37 +61,45 @@ timeout:       12 minutes
 network:       denied
 ```
 
-The task definition fixes the command before the candidate encounters a failure. The expected condition names something more specific than 'works correctly'. The artifact rules remove a common ambiguity. A wrapper can exit successfully after skipping the operation that should have produced the evidence.
+The task definition fixes the command before the candidate encounters a failure. The expected condition names something more specific than “works correctly.” The artifact rules remove another common ambiguity: a wrapper can exit successfully after skipping the operation that should have produced the evidence.
 
-Exit status alone is often too weak. A test runner can return zero after discovering no tests, a report generator can write an empty file, and a shell pipeline can discard the failure status of an earlier command. A green exit status tells us that the process ended, not that it did the work. The controller should therefore validate the structure it relies on: an expected test count where that count is stable, a parseable result file, a package containing the required members, or a deployment probe tied to the candidate version. These checks are mechanical and require no guess about patch semantics.
+Exit status alone is often too weak. A test runner can return zero after discovering no tests. A report generator can create an empty file. A shell pipeline can discard the failure status of an earlier command. A zero exit status shows that the final process ended successfully, not necessarily that the intended work occurred.
 
-Environment failure must remain distinguishable from candidate failure. If the sandbox image cannot be pulled, the verifier binary is absent, or the runner loses its workspace, rejecting the candidate as incorrect corrupts the score. If the gate passes when verification could not start, it corrupts release state. The correct outcome is an infrastructure error that blocks propagation and can be retried without crediting or blaming the candidate. Those errors should still be counted, because a run set thinned by repeated infrastructure failures no longer represents the intended sample of attempts.
+The controller should therefore validate the structure on which the verdict depends. Depending on the task, that may mean checking for an expected test count, a parseable result file, a package containing required members, or a deployment probe tied to the candidate version. These are mechanical checks. They do not require the controller to infer the patch’s semantics.
 
-State should move monotonically through the gate. A candidate begins unverified, receives an immutable run record, and becomes eligible for the next stage only when that record satisfies the contract. A later modification creates a new candidate identity and invalidates the prior verdict. When a verdict is keyed only to a branch name or a task identifier, changed work inherits evidence produced for different bytes.
+Environment failure must remain distinct from candidate failure. If the sandbox image cannot be pulled, the verifier is absent, or the runner loses its workspace, marking the candidate incorrect corrupts the evaluation. Allowing it to pass because verification could not start corrupts release state. The correct outcome is an infrastructure error that blocks propagation and may be retried without crediting or blaming the candidate.
 
-In my own agent-workflow system, I reject any acceptance criterion that says only that a result 'works correctly', and the rejection happens at decomposition, before work begins. Each criterion has to name a command and an exit condition. An end-of-turn lifecycle check then inspects whether the declared output files exist and contain data. The check fires deterministically on every turn, but a model judges the filesystem and only advises. Refusal requires a command hook whose non-zero exit ends the turn. This example shows how a gate can begin in the task contract. It supplies no evidence for the general claim.
+Infrastructure errors should still be counted. A run set repeatedly thinned by environment failures no longer represents the intended sample of attempts, even when those failures are excluded from candidate scores.
 
-My own repository-scale benchmark suite uses a deterministic verifier as the primary scorer for every task. Additional judgment layers can surface suspicious trajectories, but they cannot replace or override the execution verdict. This design preserves one stable state transition even when the optional analysis changes.
+State should move monotonically through the gate. A candidate begins unverified, receives an immutable run record, and becomes eligible for the next stage only when that record satisfies the contract. Any modification creates a new candidate identity and invalidates the earlier verdict. When a verdict is keyed only to a branch name or task identifier, changed bytes can inherit evidence produced for different work.
 
-Execution does not fit every task. Architecture proposals, interface critiques, threat models, and underspecified behavioral changes may have no executable oracle. Those tasks need a separate calibrated judgment lane, and Chapter 5 develops it.
+In my own agent-workflow system, I reject any acceptance criterion that says only that a result “works correctly.” The rejection occurs during decomposition, before work begins. Each criterion must name a command and an exit condition. At the end of every turn, a lifecycle check also verifies that declared output files exist and contain data.
 
-Executable checks have a coverage boundary of their own. They can show that a candidate compiled, passed a selected suite, produced the required artifacts, and stayed inside its resource envelope. They cannot show that untested inputs, longer operating periods, or a different production topology will behave the same way. The narrowest downstream claim justified by the run is the one to record: test-eligible, build-eligible, or deployment-eligible.
+That lifecycle check runs deterministically, but a model evaluates the filesystem and provides only advisory judgment. Enforced refusal requires a command hook whose nonzero exit ends the turn. The example shows how a gate can begin in the task contract, but it does not provide evidence for the general claim.
 
-The run record also supplies the input that correction requires. A failed command, an assertion diff, a resource termination, or an absent artifact gives the next attempt information that was unavailable when the candidate was produced. Without that new information, another pass through the model is repetition presented as diagnosis.
+My repository-scale benchmark suite uses a deterministic verifier as the primary scorer for every task. Additional judgment layers can flag suspicious trajectories, but they cannot replace or override the execution verdict. This preserves one stable state transition even when the optional analysis changes.
+
+Execution is not suitable for every task. Architecture proposals, interface critiques, threat models, and underspecified behavioral changes may have no executable oracle. Those tasks require a separate, calibrated judgment lane, which Chapter 5 develops.
+
+Executable checks also have a coverage boundary. They can establish that a candidate compiled, passed a selected suite, produced required artifacts, and stayed within its resource envelope. They cannot establish that untested inputs, longer operating periods, or a different production topology will behave the same way.
+
+Record only the narrowest downstream claim justified by the run: test-eligible, build-eligible, or deployment-eligible.
+
+The run record also provides the evidence needed for correction. A failed command, assertion diff, resource termination, or missing artifact gives the next attempt information that was unavailable when the candidate was produced. Without new evidence, another model pass is repetition presented as diagnosis.
 
 ## Let failed runs change the next attempt
 
-A retry that begins from the same prompt, the same evidence, and the same workspace state receives no new information about what went wrong. Sampling can produce a different answer without addressing the error. The model may repeat the premise that caused the failure, replace a correct intermediate step, or elaborate the same mistaken conclusion. Calling the second pass 'reflection' does not change the information available to it.
+A retry that begins with the same prompt, evidence, and workspace state has learned nothing about the failure. Sampling may produce a different answer, but it does not direct the model toward the error. The next pass may repeat the faulty premise, replace a correct intermediate step, or elaborate the same mistaken conclusion. Calling that pass “reflection” does not add information.
 
-Huang et al. ([2023](https://arxiv.org/abs/2310.01798)) evaluated intrinsic self-correction on reasoning tasks with 2023-era models, and found that it often failed and sometimes reduced performance. When reliable external feedback was supplied, correction improved. This strong result concerns an earlier model generation and cannot estimate the behavior of every current coding system. Newer models may change the magnitude.
+Huang et al. ([2023](https://arxiv.org/abs/2310.01798)) evaluated intrinsic self-correction on reasoning tasks using 2023-era models. Self-correction often failed and sometimes reduced performance, while reliable external feedback improved it. This is strong evidence for the systems studied, not an estimate of every current coding system. Newer models may change the magnitude of the effect.
 
-The safe operational default remains asymmetric. Another attempt is justified after an external result has changed the evidence, and not before.
+The operational default should therefore be asymmetric: authorize another attempt when an external observation changes the available evidence, not merely because the previous attempt failed.
 
-An external result is produced outside the inference that generated the candidate. A test assertion, a compiler diagnostic, a tool response, a verifier verdict, or a deployment probe qualifies. A second model-generated critique does not qualify merely because it arrived in another call. Unless that critique has access to independent observations, it is another inference over substantially the same record.
+An external observation originates outside the inference that produced the candidate. Examples include a test assertion, compiler diagnostic, tool response, verifier verdict, or deployment probe. A critique produced by another model call does not become external evidence merely because it was generated separately. Without access to an independent observation, it remains another inference over substantially the same record.
 
-The distinction concerns information. Suppose an agent changes a parser because it believes empty fields should be discarded. Re-reading the issue may reinforce that interpretation. A failing test showing that an empty field must keep its position introduces a counterexample. The next attempt can revise one specific assumption instead of searching an unconstrained space of possible mistakes.
+The distinction is informational. Suppose an agent changes a parser because it concludes that empty fields should be discarded. Re-reading the issue may reinforce that interpretation. A failing test showing that an empty field must preserve its position introduces a counterexample. The next attempt can now revise a specific assumption rather than search an unconstrained space of possible mistakes.
 
-This closes the loop the sandbox opened:
+This closes the loop opened by the sandbox:
 
 ```text
 candidate
@@ -90,45 +110,71 @@ candidate
                 -> new sandbox run
 ```
 
-The correction step does not edit a verdict. It consumes the prior candidate and its run record, then emits a new candidate with a new identity. That separation preserves the history needed to distinguish recovery from repeated failure. It also prevents a revision from inheriting a passing result attached to earlier bytes.
+The correction step does not modify the verdict. It consumes the failed candidate and its run record, then emits a new candidate with a new identity. This preserves the history needed to distinguish recovery from repeated failure. It also prevents revised bytes from inheriting a passing result produced by an earlier version.
 
-The feedback should carry enough detail to discriminate the failed path without filling the next attempt with unrelated output. A useful package identifies the command, the exit status, the failed check, the relevant diagnostic, any resource termination, and the candidate version that produced it. When a test report is large, retain the complete report as an artifact and present a mechanically selected excerpt with a pointer to it. The full evidence then remains available when the excerpt omits the decisive line.
+Feedback should contain enough detail to distinguish the failed path without flooding the next attempt with unrelated output. A useful package identifies:
 
-Selection should stay mechanical wherever possible. When a model decides which failures another model sees, it can drop evidence that contradicts its diagnosis or overweight a familiar error. Test frameworks already expose failed case names, assertion diffs, stack traces, and structured result records. Use those fields before asking another inference to summarize them.
+- the command that ran;
+- the candidate version;
+- the exit status;
+- the failed check and relevant diagnostic;
+- any resource limit or termination that fired; and
+- a pointer to the complete run record.
 
-The deployed system has to have access to the signal. Chapter 2 required the retry baseline to use a failure signal available in deployment; otherwise the experimental retry arm receives information the product will not have. Here the qualification becomes concrete. A retry is externally informed only when the signal comes from a tool or an observation the deployed loop can obtain at that point in its lifecycle.
+When a report is large, retain the full output as an artifact and present a mechanically selected excerpt. The complete evidence remains available when the excerpt omits the decisive line.
 
-This rule prevents a subtle comparison error. An evaluator may show the retry arm the hidden reference test that rejected a patch while the production agent sees only public tests. The experiment then measures correction under privileged supervision and says nothing about the deployed retry policy. Hidden checks can still decide the final score. Their diagnostics should enter the correction prompt only when production has an equivalent channel.
+Selection should remain mechanical wherever possible. When one model decides which failures another model sees, it may omit evidence that contradicts its diagnosis or overemphasize a familiar error. Test frameworks already expose failed case names, assertion differences, stack traces, and structured result records. Use those fields before asking another inference to summarize them.
 
-External feedback also has authority boundaries. A unit-test failure can justify another code attempt. A package-registry outage says little about the candidate and belongs in infrastructure handling. A deployment probe run against the wrong version can direct the model to 'fix' code that was never exercised. The controller must classify the observation as belonging to the candidate, the environment, or the evaluator before it spends another attempt.
+The deployed system must also have access to the feedback channel. Chapter 2 required a retry baseline to use only failure signals available in deployment. Otherwise the experimental retry arm receives information that the product will not have. Here that requirement becomes concrete: a retry is externally informed only when its signal comes from a tool or observation that the deployed loop can obtain at that point in its lifecycle.
 
-Reliable feedback can still be incomplete. One failing test may expose a symptom and leave the cause ambiguous. A compiler diagnostic can point at a generated file when the source configuration caused the defect. The next attempt should use the signal to constrain a diagnosis before patching. Execution improves the correction loop by adding observations, but an observation need not contain the remedy.
+This prevents a subtle comparison error. An evaluator might show the retry arm the hidden reference test that rejected a patch, while the production agent sees only public tests. The experiment then measures correction under privileged supervision, not the deployed retry policy. Hidden checks may still determine the final score, but their diagnostics should enter the correction loop only when production has an equivalent feedback channel.
 
-Faulty feedback creates a directed failure mode. A mistaken expected value, a nondeterministic test, a stale fixture, or a verifier attached to the wrong artifact can move successive revisions farther from correct behavior. The loop can then produce apparently disciplined convergence around a bad oracle. Preserve the raw run record and the candidate lineage so an operator can audit whether the correction loop followed valid evidence.
+External observations also have authority boundaries. A unit-test failure can justify another code attempt. A package-registry outage says little about the candidate and belongs in infrastructure handling. A deployment probe run against the wrong version may direct the model to repair code that was never exercised. Before authorizing another attempt, the controller must classify the observation as a candidate failure, an environment failure, or an evaluator failure.
 
-Retry limits remain necessary even when every iteration receives a real signal. A sequence of different failing tests can consume an unbounded budget, and each patch can create a new failure surface. Stop conditions should distinguish a fixed attempt limit, repeated identical failures, infrastructure errors, and exhaustion of the gate's resource budget. Another attempt is justified only when the system has learned something that could change the outcome.
+Reliable feedback may still be incomplete. A failing test can expose a symptom without identifying its cause. A compiler diagnostic may point to a generated file even though the defect originated in source configuration. The next attempt should use the observation to constrain its diagnosis before modifying the artifact. Execution adds information to the correction loop, but the observation does not necessarily contain the remedy.
 
-Correction belongs to the evaluation architecture rather than to any personality attributed to the model. The model proposes revisions. The surrounding system determines whether the evidence changed, whether the next attempt may run, and whether the resulting artifact can propagate. That division keeps working when the model, the prompt, or the correction language changes.
+Faulty feedback creates a directed failure mode. An incorrect expected value, nondeterministic test, stale fixture, or verifier attached to the wrong artifact can push successive revisions farther from correct behavior. The loop may then appear to converge while following a bad oracle. Preserve the raw run records and candidate lineage so an operator can determine whether each correction followed valid evidence.
+
+Retry limits remain necessary even when every attempt receives a genuine new signal. A sequence of distinct failing tests can consume an unbounded budget, and each revision can create a new failure surface. Stop conditions should distinguish:
+
+- a fixed attempt limit;
+- repeated identical failures;
+- infrastructure failures; and
+- exhaustion of the gate’s resource budget.
+
+A new observation may justify another attempt, but it does not justify unlimited attempts.
+
+Correction belongs to the evaluation architecture, not to a personality attributed to the model. The model proposes revisions. The surrounding system determines whether the evidence changed, whether another attempt may run, and whether the resulting artifact may propagate. That division continues to hold when the model, prompt, or language of correction changes.
 
 ## Turn repeated trials into a release test
 
-Support for the repeated-trial metric comes from one source. τ-bench, from Yao et al. ([2024](https://arxiv.org/abs/2406.12045)), is a public benchmark of interactive, multi-turn tool-use tasks with executable oracles, scored across repeated trials. The paper introduced pass^k and measured it. It did not measure two parts of the practice this chapter recommends: selecting a team's own tasks, and replaying them for each release. Those two elements are transfers from benchmark design into release engineering, and they reach beyond the measured finding.
+Support for the repeated-trial metric comes from one source. τ-bench, from Yao et al. ([2024](https://arxiv.org/abs/2406.12045)), evaluates interactive, multi-turn tool use with executable oracles across repeated trials and introduces pass^k as a reliability measure.
 
-The transfer begins with the workload set established at the end of Chapter 3. The golden set is a compact group of completed tasks whose initial repository states can be reconstructed and whose outcomes have unambiguous executable checks. For each task, keep the original request, the starting state, the allowed tools, the sandbox contract, and the verifier together as one versioned case. A merged patch can help reconstruct the expected behavior, but it should not appear in the agent's context.
+The paper does not evaluate two parts of the practice recommended here: selecting a team’s own tasks and replaying them for every release. Those are transfers from benchmark design into release engineering. The measured result supports repeated trials under executable evaluation, not the claim that a particular local task set or release policy will predict production reliability.
 
-Real tasks are preferable because they preserve local constraints that public suites cannot know. A repository may require generated files to stay synchronized, forbid a dependency, run a custom migration check, or treat a particular warning as release-blocking. Those details decide whether work is acceptable in that repository. A general coding score does not encode them.
+The transfer begins with the workload set established at the end of Chapter 3. The golden set is a compact collection of completed tasks whose initial repository states can be reconstructed and whose outcomes have unambiguous executable checks. Each versioned case should keep together:
 
-The set should stay small enough to run repeatedly and to inspect when it changes. Its purpose is release discrimination across a controlled sample. Each case should represent a failure that would be costly if it reappeared, a workflow the system performs often, or an interaction whose state is hard to infer from a static answer. Ten nearly identical formatting fixes add less information than a smaller set spanning localization, modification, testing, and recovery.
+the original request;
+the starting repository state;
+the allowed tools and turn constraints;
+the sandbox contract; and
+the verifier.
 
-Interactive work belongs in the set when the deployed system uses tools across turns. A static final patch does not show whether the agent read the right file, preserved state after a failed command, recovered from a tool error, or applied a later observation to an earlier plan. Replaying the trajectory under the same tool and turn constraints exposes sequencing and recovery failures that answer accuracy cannot observe.
+A merged patch may help reconstruct the expected behavior, but it should not appear in the agent’s context.
 
-Each case needs a stable identity and immutable versions. Changing the prompt, the starting repository, the tool contract, or the verifier changes the case, and that change should be stored as a new version. Rewriting history beneath prior scores can produce apparent improvement by removing a difficult test or exposing more of the solution.
+Real tasks preserve local constraints that public benchmarks cannot know. A repository may require generated files to remain synchronized, prohibit a dependency, enforce a custom migration check, or treat a particular warning as release-blocking. Those details determine whether work is acceptable in that repository. A general coding score does not encode them.
 
-Run each case more than once under the same release candidate. The repeated-trial statistics from Chapter 1 govern the experimental design and do not need rebuilding here. For release control, pass^k reports whether all k of k trials passed. An agent that succeeds intermittently is penalized, because a single failed trajectory breaks the sequence.
+The set should remain small enough to run repeatedly and inspect when it changes. Its purpose is to discriminate between releases on a controlled sample, not to approximate every production request. Each case should represent at least one of three things: a failure that would be costly if it returned, a workflow the system performs frequently, or an interaction whose state cannot be inferred from a static answer. Ten nearly identical formatting fixes provide less coverage than a smaller set spanning localization, modification, testing, tool failure, and recovery.
 
-Those repeats describe the release candidate only when the configuration stays pinned across the whole sequence. Chapter 1's apparatus record, including the model version and the decoding settings, applies to every trial. Pinning does not by itself make the trials independent. Shared caches, mutable services, and provider-side incidents can correlate them, and that dependence changes which analysis the sequence supports.
+Interactive cases belong in the set when the deployed system uses tools across turns. A final patch alone does not show whether the agent opened the right file, preserved state after a failed command, recovered from a tool error, or incorporated a later observation into an earlier plan. Replaying the trajectory under the deployed tool and turn constraints exposes sequencing and recovery failures that final-answer scoring cannot observe.
 
-That property matches unattended use better than selecting the best run. A best-of-k result records whether at least one trajectory succeeded when several were available. Pass^k records whether every trajectory in the required sequence succeeded. Neither metric is universally correct. The release test should use the one whose failure semantics resemble deployment, and a workflow that must complete reliably without supervision has the stronger reason to use pass^k.
+Each case needs a stable identity and immutable versions. Changing the request, starting repository, tool contract, sandbox policy, or verifier creates a different case and should produce a new version. Rewriting an existing case beneath prior scores can manufacture apparent improvement by removing a difficult condition or exposing more of the solution.
+
+Run each case more than once for the same release candidate. The repeated-trial statistics from Chapter 1 govern the experimental design and do not need to be rebuilt here. For release control, pass^k asks whether all k of k trials passed. One failed trajectory breaks the sequence.
+
+The result describes a single release candidate only when its configuration remains pinned across the sequence. Chapter 1’s apparatus record applies to every trial, including the model version and decoding settings. Pinning does not guarantee independence. Shared caches, mutable services, provider incidents, and reused infrastructure can correlate outcomes, which limits the analyses the sequence supports.
+
+Pass^k reflects a different operational question from best-of-k:
 
 ```text
 same k trials
@@ -139,21 +185,23 @@ same k trials
     |
     +-> best-of-k
           at least one trajectory succeeded
-          several were available
+          several attempts were available
 
-use failure semantics that resemble deployment
+choose the metric whose failure semantics resemble deployment
 
 workflow must complete reliably without supervision
     -> stronger reason to use pass^k
 ```
 
-The value of k comes from release policy rather than from the benchmark. A larger k makes intermittent failure easier to observe and makes the gate more expensive to satisfy. It also raises run cost and can let a small amount of evaluator noise dominate promotion. Choose k from the operational consequence of one failed run, the variance observed in pilot repeats, and the budget available for each release candidate.
+Best-of-k asks whether at least one acceptable trajectory can be found when several attempts are available. Pass^k asks whether every trajectory in a required sequence succeeds. Neither is universally correct. A supervised workflow that can select among alternatives may justify best-of-k. A workflow expected to complete reliably without intervention has a stronger reason to use pass^k.
 
-The size of the set interacts with that choice. Under a strict all-trials rule, the probability that at least one case fails from evaluator noise alone grows with the number of cases, which is the multiplicity problem Chapter 1 assigns to claims spanning many tasks. A gate covering a large set therefore needs either a low per-case noise rate or an explicit rule for how many case failures block promotion.
+The value of k comes from release policy, not from the benchmark. Increasing k makes intermittent failures easier to observe and the gate harder to satisfy. It also increases cost and gives evaluator noise more opportunities to block promotion. Choose k based on the consequence of one failed production run, the variance observed during pilot repeats, and the budget available for evaluating each release candidate.
 
-The comparison unit is a fully specified system release. Record the model identifier, the prompt version, the tool definitions, the orchestration code, the sandbox image, the task-set version, the retry policy, and the verifier version. A change to any of them can change the trajectory distribution. A result labeled only by model name erases the components most teams alter between releases.
+The number of cases interacts with that decision. Under a strict all-trials rule, the chance that at least one verdict fails because of evaluator noise grows with both the set size and k. This is the multiplicity problem that Chapter 1 assigns to claims spanning many tasks. A larger gate therefore requires either a very low per-run evaluator error rate or an explicit policy defining how many case failures block promotion.
 
-A release record can be mechanically small:
+The comparison unit is the fully specified system release. Record the model identifier, prompt version, tool definitions, orchestration code, sandbox image, task-set version, retry policy, and verifier version. Any of these components can change the trajectory distribution. A result labeled only with a model name erases much of what teams actually change between releases.
+
+The release record can remain mechanically small:
 
 ```text
 release:         candidate-2026-07-28
@@ -165,39 +213,47 @@ case_verdicts:   stored run records
 promotion_rule:  recorded before execution
 ```
 
-The digest binds the result to the evaluated configuration. The case verdicts link directly to the sandbox evidence. The promotion rule is written down before the first comparison. Otherwise the same observed regression can be accepted for a favored release and rejected for another.
+The digest binds the verdict to the evaluated configuration. The case verdicts link to the sandbox evidence. The promotion rule is recorded before the comparison begins. Otherwise the same regression can be accepted for a favored release and rejected for another.
 
-Compare the candidate with a stored baseline using the same task versions and the same execution policy. Report per-case outcomes and run-to-run spread alongside the aggregate release verdict. A pooled pass^k value can conceal a complete regression on one critical task behind stable performance elsewhere, and a case-only view can be dominated by one noisy verifier. Both levels are needed to locate the change and to decide whether the promotion rule has been met.
+Compare the candidate with a stored baseline using the same case versions and execution policy. Report both per-case outcomes and run-to-run spread alongside the aggregate release verdict. An aggregate value can conceal a complete regression on one critical workflow behind stable performance elsewhere. A case-only view can be dominated by one noisy verifier. Both levels are needed to locate the change and determine whether the promotion rule was met.
 
-The candidate and the baseline run the same cases, which makes the per-case outcomes paired by construction. Chapter 1's paired analysis therefore applies to them, and treating the two releases as independent samples discards a pairing the design already provides.
+Because the candidate and baseline run the same cases, their outcomes are paired by construction. Chapter 1’s paired analysis applies. Treating the releases as independent samples discards a dependency that the design already provides.
 
-The baseline should stay executable. A table copied from a prior report is not sufficient, because environment images disappear, dependencies move, and tool services change behavior. Re-running a sample from the stored baseline separates candidate drift from evaluator drift. When the old release also fails under the new infrastructure, the comparison has lost its fixed reference and should block until the cause is understood.
+The baseline must remain executable. A table copied from an earlier report is not enough. Sandbox images disappear, dependencies move, and tool services change behavior. Re-running at least a sample from the stored baseline helps separate candidate drift from evaluator drift. When the old release also fails under the current infrastructure, the comparison has lost its fixed reference and promotion should block until the cause is understood.
 
-My own search-visibility measurement project treats a model update as a deployment. It replays a fixed prompt corpus against the stored model-version baseline and combines a statistical comparison with an absolute change threshold, producing pass, warning, or failure exit states for continuous integration. The two controls serve different purposes. One suppresses sampling noise, and the other prevents a statistically detectable but operationally trivial change from deciding promotion. This illustration supplies no evidence for either threshold.
+My search-visibility measurement project treats a model update as a deployment. It replays a fixed prompt corpus against a stored model-version baseline and combines a statistical comparison with an absolute change threshold, producing pass, warning, or failure exit states for continuous integration. The controls answer different questions. Statistical comparison reduces the chance that sampling noise decides promotion. The absolute threshold prevents a detectable but operationally trivial change from doing so. This example supplies no evidence for either threshold.
 
-CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) applies a smaller consecutive-verdict gate. It blocks a release tag unless the two newest full-mode acceptance verdicts both pass. Those verdicts come from successive acceptance-loop iterations rather than from repeated trials of one pinned candidate. The rule is therefore an acceptance-iteration-history check and not a pass^k measurement. The local requirement of two consecutive passes is not a recommendation for another workload.
+CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) uses a different gate. It blocks a release tag unless the two most recent full-mode acceptance verdicts both pass. Those verdicts come from successive acceptance-loop iterations, not repeated trials of one pinned candidate. The rule is therefore a check over acceptance history, not a pass^k measurement. Its requirement of two consecutive passes is local to that system and should not be treated as a recommended value of k.
 
-Golden sets decay even when their files do not change. Production work moves to new frameworks, repositories acquire new checks, tool interfaces change, and models can become adapted to repeatedly exposed cases. A set that once represented costly failures may end up measuring a narrow historical workflow. Treat it as production test data, with ownership, review, and retirement criteria.
+Golden sets decay even when their files remain unchanged. Production work moves to new frameworks, repositories acquire new checks, tool interfaces change, and models may become adapted to repeatedly exposed cases. A set that once represented costly failures can gradually become a test of a narrow historical workflow. Treat the set as production test data, with named ownership, review, and retirement criteria.
 
-Maintenance should preserve longitudinal meaning. Add a case when a production failure reveals a missing class of behavior. Silently replacing the old set makes its score incomparable with prior releases. Run an overlap period when feasible, report results on the shared cases, and establish a new baseline for the revised set. Retire a case when its workload no longer exists or its oracle no longer expresses the current contract.
+Maintenance should preserve longitudinal meaning. Add a case when a production failure reveals a missing class of behavior. Do not silently replace the old set, because the new score will no longer be comparable with earlier releases. When feasible, run an overlap period, report performance on the shared cases, and establish a new baseline for the revised set. Retire a case when its workload no longer exists or its oracle no longer represents the current contract.
 
-Public benchmark results can inform case design and reveal task forms worth reproducing locally. They do not establish production reliability for a particular repository, tool policy, or release process. None of the evidence items supporting this entry measures the size of that public-to-production gap. I therefore cannot supply a conversion factor. The local release test answers a smaller question. Did this fully specified system preserve acceptable behavior on a controlled sample of local work?
+Public benchmarks can inform case design and reveal task forms worth reproducing locally.
 
-SWE-bench provides directional support for executable software tasks. MultiAgentBench, from Zhu ([2025](https://arxiv.org/abs/2503.01935)), does the same for broader interaction-centered evaluation. Neither adds a measured result for the own-task or per-release transfer. Their architectural contribution is to put an environment, tools, state, and an outcome check inside the evaluated unit rather than scoring final-answer text alone.
+SWE-bench provides directional support for executable repository repair. MultiAgentBench, from Zhu ([2025](https://arxiv.org/abs/2503.01935)), does the same for broader interaction-centered evaluation. Their architectural contribution is to place an environment, tools, state, and an outcome check inside the evaluated unit rather than scoring final-answer text alone.
 
-Once the set runs as part of release, a failure should trigger diagnosis before any threshold revision. Inspect whether the candidate changed, the case changed, or the evaluator changed. Route valid candidate failures through the external-feedback correction loop, then rerun the entire required sequence for the revised candidate. Reusing the passing trials from before a modification would attach evidence to a system that no longer exists.
+Neither benchmark measures the effect of selecting a team’s own tasks or replaying them for each release. Nor does either estimate the gap between public benchmark performance and reliability in a particular repository, tool policy, or release process. No evidence item supporting this entry supplies a conversion factor.
 
-## Build the first gate this week
+The local release test answers a narrower question: did this fully specified system preserve acceptable behavior on a controlled sample of local work?
 
-Start with five to ten tasks drawn from merged work, not from a generic capability suite. Choose tasks whose starting states can be reconstructed and whose acceptable outcomes can be checked without interpretation. The set can be small because its first job is to establish a release path that produces trustworthy records. Coverage can grow when production failures reveal what the initial sample missed.
+Once the set participates in release, a failure should trigger diagnosis before any threshold is revised. Determine whether the candidate changed, the case changed, or the evaluator changed. Route valid candidate failures through the external-feedback correction loop, then rerun the entire required sequence for the revised candidate. Reusing passing trials from before a modification would attach evidence to a system that no longer exists.
 
-Wrap each task in a sandboxed run. Write down the command the controller will execute, the exit condition it will accept, and the artifacts that must exist afterward. Bound the resources, isolate the network, and preserve the run record. Run the current production system first. Its observed result under the same evaluator becomes the baseline, and it replaces any remembered claim about the previous release.
+## Build the first gate
 
-Feed a failed run back into the retry loop with the candidate identity and the raw evidence intact. Refuse a revision that proceeds only from re-reading the original request. Every changed candidate returns to a clean sandbox and receives a new verdict. Infrastructure failure stays blocking without becoming a candidate failure.
+Begin with five to ten tasks drawn from merged work rather than from a generic capability suite. Choose tasks whose starting states can be reconstructed and whose acceptable outcomes can be verified without interpretive judgment. The first set can remain small because its purpose is to establish a release path that produces trustworthy evidence. Expand it when production failures reveal behaviors the initial sample did not cover.
 
-Replay the set whenever the model, the prompt, the tools, or the orchestration changes. Score pass^k across the chosen repeats, retain the per-case distribution, and compare it with the stored baseline. Record the promotion threshold before the first candidate comparison. When the gate turns out to be too strict, change the policy as a versioned decision and establish a new comparison. Editing the threshold around an observed result invalidates the gate.
+Wrap each task in a sandboxed run. Define the command the controller will execute, the exit condition it will accept, and the artifacts that must exist afterward. Bound resource use, isolate the network, and preserve the complete run record.
 
-Place tasks with no executable check in a separate pile. They are not lesser tasks, and forcing them through a weak proxy would only make the gate look more complete than it is. Chapter 5 takes up the calibrated judgment lane they require.
+Run the current production system through the same cases and evaluator before testing a candidate release. Its observed performance becomes the baseline. This replaces remembered claims, old summary tables, or results produced under a different environment.
+
+When a candidate fails, return the raw evidence to the correction loop together with the candidate identity. Do not authorize a revision that has learned nothing beyond the original request. Every modified candidate receives a new identity, starts in a clean sandbox, and earns a new verdict. Infrastructure failures remain blocking, but they do not count as candidate failures.
+
+Replay the set whenever the model, prompt, tools, orchestration, sandbox, or verifier changes. Measure pass^k across the chosen repeats, retain the per-case outcomes and run-to-run spread, and compare the candidate with the executable baseline.
+
+Record the promotion rule before running the first candidate comparison. When experience shows that the gate is too strict or too permissive, change the policy as a versioned decision and establish a new baseline where necessary. Adjusting the threshold after seeing a result turns the rule into an explanation for a decision already made.
+
+Keep tasks without executable checks in a separate lane. They are not lesser tasks, but forcing them through weak proxies would make the gate appear more complete than it is. Chapter 5 develops the calibrated judgment process those tasks require.
 
 ## Sources and evidence
 
