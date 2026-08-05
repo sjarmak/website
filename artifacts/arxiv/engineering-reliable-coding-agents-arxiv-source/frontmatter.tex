@@ -1,46 +1,57 @@
-Stephanie Jarmak
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\section{Problem and scope}\label{problem-and-scope}
 
-\chapter{Preface}\label{preface}
+An agent has finished a change. The tests pass, and a reviewer is examining a compact diff. The run appears successful, yet the available record may not establish whether another run would produce the same result, whether the tests exercised the relevant behavior, or whether the reviewer saw the decisions that carried the most risk.
 
-An agent has finished a change. The tests are green, and a reviewer is looking at a compact diff. The run appears successful. Yet, no one can say whether another run would produce the same result, whether the tests exercised the relevant behavior, or whether the reviewer was aware of the decisions that carried the most risk.
+The visible output is code; the uncertainty around its quality resides in the system that produced, evaluated, and approved it. A coding agent is one component in that system. Evaluation determines what counts as success, governance constrains access, context management controls the information available during a run, review defines the quality gate, and scheduling allocates compute, money, time, and human attention.
 
-The visible output is code. The uncertainty around its quality lives in the system that produced, evaluated, and approved it.
+These functions interact. A higher score can result from an easier test rather than a better system. A reviewer can appear ineffective because the interface concealed the evidence needed for judgment. Instrumentation can record component failures while missing failures at component boundaries. A recovery procedure can pass while depending on credentials whose compromise would also destroy the recovery path.
 
-I wrote this book for the engineer who now owns that system. I assume you are fluent in software engineering and may be new to evaluation methodology. Your agents write and ship code, so you must decide which claims about their reliability ought to be trusted.
+This report examines the evaluation, operation, and governance of AI coding-agent systems. It focuses on mechanisms that remain relevant as models and products change: measurement design, execution-based grading, containment, durable state, recovery, repository retrieval, context limits, human oversight, topology, and resource allocation. It does not compare current models or teach prompt and tool-schema design.
 
-That system is more than the model, and even more than the tools that model uses that make it `agentic'. The agent itself is one component in a more complex apparatus. Managing that apparatus involves evaluation, governance, context management, review, and scheduling. Evaluation determines what counts as success, governance defines what an agent should be able to access, context management controls what information enters the session state, review determines the quality gate, and scheduling allocates time, money, compute, and human attention.
+The intended reader is a software engineer who operates or evaluates coding agents and may be new to evaluation methodology. The practices are not universal rules. Their applicability depends on workload, permissions, failure costs, deployment conditions, and available review capacity.
 
-Those five activities do not map one-to-one onto the six parts of this book. Evaluation takes two parts, measurement first and grading systems second, because the second depends on the first. Context management is Part IV. Scheduling is Part VI. Governance runs across two parts rather than sitting in one: Part III covers what an agent can reach and whether its work survives failure, and Part V covers who authorizes the work and who answers for it.
+\section{Method, scope, and evidence classification}\label{method-scope-and-evidence-classification}
 
-These components do not operate independently. A better score may reflect an easier test rather than a better system. A reviewer may appear ineffective because the interface concealed the evidence needed for judgment. Instrumentation may record failures within individual components while missing failures in the connections among them. A recovery procedure may pass repeatedly while relying on the same credentials whose compromise would make recovery impossible.
+The source collection combines 118 scholarly works organized into seven topic-specific review threads, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Searches were organized around evaluation validity, grading, containment and recovery, context and memory, oversight, multi-agent design, and scheduling. Candidate sources were retained when they described a measured result, a reproducible system mechanism, an operational incident, or a concrete practice relevant to coding-agent reliability. The review is structured rather than exhaustive; it does not claim complete coverage of every adjacent literature.
 
-Plausible results can survive weak measurement. In one controlled study, researchers compared a single score from each of two identical systems. As many as 26 percent of those comparisons appeared significantly different at (p \textless{} 0.05). The statistical test correctly described the two runs it received, but the experiment could not establish that the systems differed because it had sampled too few runs to estimate the variation between them.
+Evidence is reported in four reader-facing groups. \textbf{Strong evidence} directly supports the stated claim through a controlled comparison, validated benchmark result, or comparably specific measurement. \textbf{Directional evidence} supports the mechanism or direction of a claim but does not establish its magnitude or broad transfer. \textbf{Corroborating evidence} consists of case reports, practitioner accounts, or convergent observations that establish plausibility without estimating prevalence. \textbf{Null or conflicting evidence} records a result that did not support the expected effect or that materially limits another claim.
 
-That example captures the practical problem beneath many claims about agents. A number can be calculated correctly and still answer a narrower question than the reader assumes (i.e., lies, damned lies, and statistics). It is best to treat measurement as part of the operating system around an agent. It determines which changes are adopted, which regressions are detected, and which risks remain invisible.
+Each evidence item was assigned a strength independently of its publication venue. Strong classifications were rechecked against the underlying source and retained only when the reported design and result supported the practice's own claim. Directional classifications were used when the source supported a mechanism, threat model, or comparison design but not the full recommendation. Case reports were kept as corroboration and are identified as such. The source notes preserve null and countervailing findings rather than treating absence of support as support for the opposite conclusion.
 
-The same reasoning applies to safety boundaries. We all know the stories of an agent deleting a production database with the backups disappearing along with it. In one such case, the same credentials could reach both resources, so while the immediate action was deletion, the deeper failure was shared authority across systems that were expected to fail independently. These systems are far too complex with unpredictable emergent behaviors, make such assumptions at your own peril.
+Practice selection proceeded in three passes. Each pass assessed whether a practice changes an engineering decision, covers a mechanism omitted by neighboring entries, or can be explained through a sufficiently bounded case. Practices selected across those passes received full treatment when their operational relevance and available evidence justified the space. This procedure produced a catalog of 192 practices, of which 55 are developed in the 18 chapters. The remaining 137 appear in the companion catalog.
 
-I focus on mechanisms because outcomes alone provide poor guidance. ``The agent failed'' is as useful as a two-percent point spread on a benchmark leaderboard. It does not reveal where state lived, which boundary was crossed, why the failure propagated, or why recovery failed as well. A useful account traces ownership, permissions, persistence, ordering, and observation. It also distinguishes correctness from reliability, performance, cost, safety, and usability.
+Cases from systems operated by the author are used only as illustrations. They expose mechanisms, original measurements, and reproducible failure cases, but they are not counted as independent external evidence and do not by themselves support a general recommendation. Each chapter separates reported findings from local observations and states the conditions that limit transfer.
 
-This book draws from a catalog of 192 practices assembled from research literature and independent practitioner sources along with my own experiences. The chapters develop 55 of those practices in depth. All 192 appear in the companion catalog, with the remaining 137 in compact form. The extent to which we explore these was prioritized based on a tradeoff between evidence strength and operational urgency, which did not always correlate with each other.
+The main limitations follow from the source base. Evidence is uneven across topics, several operational questions have only case-level support, recent capability measurements can age quickly, and practitioner reports are vulnerable to selection and reporting bias. The review also excludes model-comparison and prompt-engineering literatures except where they bear directly on system reliability. The resulting practices should therefore be treated as bounded claims and testable protocols, not universal deployment thresholds.
 
-These practices are not universal rules. Each applies under particular workloads, permissions, failure costs, and organizational constraints. Where the evidence supports only a narrow claim, I keep the claim narrow. Where support remains incomplete, I state the uncertainty and describe the comparison needed to resolve it.
+\section{Contributions}\label{contributions}
 
-The goal of this book is to enable others to build and maintain agentic systems whose reliability can be observed, tested, and defended.
+This work makes five contributions:
 
-\section{What this book is not}\label{what-this-book-is-not}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  an evidence audit that distinguishes direct support, directional findings, corroborating cases, and null or conflicting results;
+\item
+  a catalog of 192 bounded engineering practices, including 55 practices developed in depth;
+\item
+  a dependency chain connecting measurement, grading, containment and recovery, context management, human oversight, and resource allocation;
+\item
+  original measurements and failure cases from author-operated systems, explicitly separated from external evidence; and
+\item
+  runnable protocols for local evaluation, capability-boundary testing, recovery testing, trace analysis, and release decisions.
+\end{enumerate}
 
-It is not a survey of the literature. The companion catalog does that work, at an entry each, while the chapters spend their length on a minority of the practices and on the conditions under which each one stops working. Equal coverage would produce a better index and a worse book.
-
-It is not a comparison of models either. Capability moves faster than a book can track, and a ranking of the `state of the art' written in one quarter describes a different population by the next. The methods here concern how you measure and contain whatever model you are handed, which is why they outlast the ranking.
-
-It is also not a guide to writing agents. No chapter covers prompt structure, tool schema design, or framework selection. I assume you already have an agent running, or will soon, and that your open question is whether its results can be believed and its reach can be bounded.
+The chapters emphasize conditions, measurements, and failure boundaries because an outcome alone rarely identifies why a system succeeded or failed. A useful account traces ownership, permissions, persistence, ordering, and observation while distinguishing correctness from reliability, performance, cost, safety, and usability.
 
 \section{How the book is organized}\label{how-the-book-is-organized}
 
-The book has six parts and eighteen chapters. Measurement comes first because every later practice is adopted or rejected through a measured comparison. Nineteen taught practices in Parts II through VI also require a method taught in Part I. Interleaving those methods with their uses would scatter each method across four or five chapters.
+The book has six parts and eighteen chapters. Measurement comes first because every later practice is adopted or rejected through a measured comparison. Nineteen developed practices in Parts II through VI also require a method introduced in Part I. Interleaving those methods with their uses would scatter each method across four or five chapters.
 
-This order costs you roughly three chapters of experiment design before we specifically get to agents. The alternative would make later recommendations easier to reach but harder to assess. Definitions would arrive after their first use, and repeated fragments would replace a coherent method.
+This order places three chapters of experiment design before the agent-specific operating chapters. Later recommendations depend on those definitions and comparison methods.
 
 Part I establishes how I compare systems when runs vary and scores can mislead. Part II turns those measurements into grading and release decisions. Part III addresses containment, persistent state, recovery, and failure analysis. Part IV examines how repository information enters, survives, and leaves an agent run. Part V treats human review as an engineered control with interfaces, escalation rules, and accountable ownership. Part VI allocates work across agents and models under cost and capacity constraints.
 
@@ -92,37 +103,13 @@ Another method checks whether a score was earned on work the model had already e
 
 The book does not assume a particular agent architecture or deployment scale. I describe architecture separately from implementation so the mechanism survives changes in products and interfaces. Examples expose permissions, retries, caching, concurrency, identity, and ordering when those details affect the claim. Code appears only when prose would obscure a state transition or failure path.
 
-\section{How I grade evidence}\label{how-i-grade-evidence}
-
-Every taught practice states its support in its first paragraph. Each evidence item has a \textbf{source class} and an independent \textbf{strength grade}. \textbf{Research literature} comprises papers, preprints, and published benchmarks cited by identifier. An \textbf{explorer synthesis} distills a topic-scoped corpus of papers and industry sources into named practices with a source list for each. An item in this class points to the synthesis, whose record usually names one paper identifier even when the synthesis summarized several works. I assessed this class separately because its claim may be real despite thinner provenance than a direct citation. Convergence across independent corpora on the same structure provides a different kind of support from a single reported measurement in one study. A \textbf{practitioner account} is a production report, incident write-up, or first-person operational account.
-
-The strength grades are \textbf{strong}, directly supporting the practice's claim, and \textbf{directional}, supporting its direction without establishing it firmly. An \textbf{anecdotal} grade is drawn from a single reported case. A \textbf{null-result} grade records a test that found no supported effect. Class and grade are reported together, so an explorer-synthesis item may be graded strong while a practitioner account may be graded anecdotal.
-
-The \textbf{selection lenses} were three independent passes over the catalog. Each proposed a taught set by asking whether a practice changes a decision in the reader's system, whether its omission loses coverage, or whether there is a case that can be taught. Their agreements and disagreements decided the taught set.
-
-The \textbf{evidence audit} separately rechecked every explorer-synthesis item graded strong against its underlying source, retaining that grade only when the source was a controlled result supporting the practice's own claim and downgrading the rest.
-
-The catalog's \textbf{mechanism clusters}, numbered 1 through 14, group practices acting on the same mechanism. The book's parts are named for the engineering disciplines those clusters require. Chapters refer to clusters by number.
-
-Items graded strong form a minority of the evidence items across the book. Their distribution is also uneven. In Part I, they account for 59\% of the items. In Part III, the thinnest part, they account for 14\%.
-
-Cases from my own systems appear only as illustrations to reveal a mechanism, suggest a failure mode, or make an abstract constraint concrete. I do not use them as the basis for a recommendation.
-
-Chapter 7 presents the clearest tension between evidence strength and operational urgency. None of its three practices is supported by research literature, and three of the seven supporting sources are single anecdotes. Even so, two of its three practices were chosen for the main chapters by all three selection methods independently, and the third by two of them. Across this corpus, evidence strength and urgency showed little relationship.
-
-That mismatch does not warrant greater confidence in the practices. It indicates a decision made under uncertainty, where the costs of acting and waiting are unequal. Some failures justify protective boundaries before their frequency is known with confidence, especially when a single credential can destroy both the primary resource and its recovery path. In those cases, I state the limits of the evidence and identify the observation that would cause me to revise the design.
-
-I also treat every measured result as conditional on the experiment that produced it. A comparison inherits its workload, scoring procedure, task sample, and run conditions. Interpretation begins by checking those boundaries. Any claim that extends beyond them requires a separate argument; the result does not generalize on its own.
-
 \section{How to read a chapter}\label{how-to-read-a-chapter}
 
 A chapter opens on a concrete situation, usually a measurement that came out wrong or a failure with a traceable cause. The mechanism follows, then what the evidence does and does not establish, then the boundary conditions, then a procedure you can run. Specialized terms are marked in bold where they are defined, so a term met later can be traced back to that site.
 
-Citations appear inline, in author-year form, with the year linked to the source. The back matter of each chapter, headed Sources and evidence, carries the record behind those mentions: the source class, the strength grade, the identifier, and what the item supports. The two layers have separate jobs. The back matter is the authority for the identifier, the author list, and the grade, while the prose is the authority for the claim a source is being used to support. A disagreement between them is a defect.
+Citations appear inline in author-year form, with the year linked to the source. The back matter of each chapter, headed Sources and evidence, records the evidence grouping, identifier, and claim supported by each item. The back matter is authoritative for identifiers and evidence grouping; the prose states the claim for which a source is used. A disagreement between the two is an editorial defect.
 
-The class and the grade both do practical work while you read. Research literature, an explorer synthesis, and a practitioner account fail in different ways. A paper can be narrow, a synthesis can compress several works into one line of provenance, and a production report can be true of exactly one system.
-
-A strong item means I state the finding as measured, inside the conditions the study ran under. A directional item means the direction has support and the magnitude does not, so the prose stops at the direction. An anecdotal item is one reported case, which can establish that a failure mode exists and cannot establish how often it occurs. A null-result item records a test that found no supported effect, and any recommendation standing near it has to survive that. A few items are contested, meaning the same corpus supplies a counterweight, and there the chapter names the counterweight.
+A strong item supports a measured statement within the conditions of the study. A directional item supports the direction but not the magnitude of a claim. A corroborating case can establish that a failure mode exists but cannot estimate how often it occurs. A null or conflicting result limits the adjacent recommendation, and the chapter names that limit.
 
 Sentences are scoped to what was actually measured. Where support is thin, the chapter says so in its opening paragraph and prescribes a measurement you can run rather than a number to adopt.
 
@@ -132,7 +119,7 @@ The companion site indexes all 192 practices under the chapter whose mechanism e
 
 Use the relevant chapter as the foundation, then consult the catalog for practices that match a specific constraint. A compact entry cannot reproduce the chapter's full treatment of mechanism, evidence, tradeoffs, and failure boundaries. The chapter provides the reasoning needed to decide whether a neighboring practice applies to your workload.
 
-Twenty-nine of the full entries are labeled as thin-support asides. I excluded them from the taught set because the available evidence does not support a recommendation. Treat them as prompts for investigation rather than established guidance. They may point to a useful experiment, a missing control, or a failure mode worth instrumenting.
+Twenty-nine of the full entries are labeled as limited-support notes. I excluded them from the developed set because the available evidence does not support a recommendation. Treat them as prompts for investigation rather than established guidance. They may point to a useful experiment, a missing control, or a failure mode worth instrumenting.
 
 The chapters and catalog serve different purposes. The chapters develop methods and claims in enough detail to evaluate critically. The catalog preserves breadth and makes related practices easier to find. Together, they let you begin with a measured problem and identify an intervention suited to the system you actually operate.
 

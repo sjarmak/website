@@ -1,5 +1,5 @@
-\chapter{Benchmark contamination, oracle strength, and workload validity}\label{benchmark-contamination-oracle-strength-and-workload-validity}
-
+\chapter{Benchmark contamination, oracle strength, and workload validity}
+\label{ch03-contamination-oracle-workload-validity}
 In February 2026, OpenAI (\href{https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified}{Feb 2026}) stopped reporting results on a benchmark subset it had helped create. Later in July 2026, it did the same for SWE-Bench Pro (\href{https://openai.com/index/separating-signal-from-noise-coding-evaluations/}{Jul 2026}). SWE-bench Verified had become one of the most cited measures of coding-agent performance. Its 500 tasks had survived screening by 93 paid professional developers, a process intended to remove ambiguous issues and defective tests. Less than two years later, a practitioner breakdown of the sponsor's audit reported that at least 16.4 percent of the full subset was unsolvable as shipped. That figure is derived from the audited sample rather than stated in the sponsor's own summary. The same audit showed frontier models reproducing solution details verbatim when given only a task identifier.
 
 Human screening had improved the original collection, but it could not control what happened after publication. \textbf{Contamination} is exposure to evaluation material before testing. Once tasks, issue discussions, reference patches, tests, and leaderboard results are public, they can enter training corpora, retrieval systems, fine-tuning sets, prompt libraries, and repeated development cycles. A clean review at release establishes nothing about those later paths.
@@ -192,102 +192,102 @@ The companion catalog carries the remaining validity checks. They include real t
 
 \section{Discount the next public number}\label{discount-the-next-public-number}
 
-The next time I am handed a public benchmark number, I record four answers before using it.
+The next time you encounter a public benchmark number, identify the answers to these 4 questions before using it.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  How old are the tasks relative to this model's training cutoff? I look for a public-versus-matched gap measured on this model. I do not substitute the leaderboard average or another model's audit.
+  How old are the tasks relative to this model's training cutoff? Look for a public-versus-matched gap measured on this model. Do not substitute the leaderboard average or another model's audit.
 \item
-  How strong is the test oracle? I ask whether anyone augmented the tests, constructed adversarial wrong patches, or manually screened apparent successes. The useful result is the fraction of previous passes that survived.
+  How strong is the test oracle? Ask whether anyone augmented the tests, constructed adversarial wrong patches, or manually screened apparent successes. The useful result is the fraction of previous passes that survived.
 \item
-  Who produced the number, on which harness, with what task distribution? I compare the languages, prompt forms, repository structures, time horizons, context, and acceptance criteria against the work I need done.
+  Who produced the number, on which harness, with what task distribution? Compare the languages, prompt forms, repository structures, time horizons, context, and acceptance criteria against the work you need done.
 \item
-  What does the same protocol report on tasks mined from my team's merged work? I preserve the original instruction, pre-change state, acceptance evidence, and repeated-run uncertainty.
+  What does the same protocol report on tasks mined from your team's merged work? Preserve the original instruction, pre-change state, acceptance evidence, and repeated-run uncertainty.
 \end{enumerate}
 
 These answers do not yield a universal correction formula. They turn one impressive-looking score into a bounded claim: performance by a named system, under a named apparatus, on work with a known exposure history, judged by tests with observed power to reject wrong patches. The local replay tests that claim on the work the system will actually be asked to do.
 
 \section{Sources and evidence}\label{sources-and-evidence}
 
-The evidence class and strength on each entry below come from its catalog record. Author-system cases in this chapter are narrative and methodology illustrations, not evidence. They support no empirical claim or capability number.
+The evidence grouping on each entry below comes from its catalog record. Author-system cases in this chapter are narrative and methodology illustrations, not evidence. They support no empirical claim or capability number.
 
-\subsection{Opening scene}\label{opening-scene}
+\section{Opening scene}\label{opening-scene}
 
 \begin{itemize}
 \tightlist
 \item
-  OpenAI, ``Why we no longer evaluate SWE-bench Verified,'' 2026-02-20, \url{https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified}. {[}practitioner / corpus-verified{]}
+  OpenAI, ``Why we no longer evaluate SWE-bench Verified,'' 2026-02-20, \url{https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified}. {[}Corroborating evidence{]}
 \item
-  swyx, ``SWE-Bench Verified is dead!!'', 2026-02-23, breakdown of the OpenAI audit. {[}practitioner / corpus-verified{]} Source of the 16.4\% full-set figure, which is derived from the audited sample and does not appear verbatim in the post summary.
+  swyx, ``SWE-Bench Verified is dead!!'', 2026-02-23, breakdown of the OpenAI audit. {[}Corroborating evidence{]} Source of the 16.4\% full-set figure, which is derived from the audited sample and does not appear verbatim in the post summary.
 \item
-  Tejal Patwardhan, public statement on frontier evaluations, 2026-06-16: ``saturated or gamed.'' {[}practitioner / corpus-verified{]}
+  Tejal Patwardhan, public statement on frontier evaluations, 2026-06-16: ``saturated or gamed.'' {[}Corroborating evidence{]}
 \item
-  SWE-bench Verified card: 500 instances, 93 professional screeners. {[}reference / benchmark card{]}
+  SWE-bench Verified card: 500 instances, 93 professional screeners. {[}Benchmark record{]}
 \end{itemize}
 
-\subsection{Measure public-score inflation with matched controls}\label{measure-public-score-inflation-with-matched-controls}
+\section{Measure public-score inflation with matched controls}\label{measure-public-score-inflation-with-matched-controls}
 
 \begin{itemize}
 \tightlist
 \item
-  Prathifkumar, Saji Mathews \& Nagappan (2025), arXiv:2512.10218, Waterloo. {[}lit / directional{]}
+  Prathifkumar, Saji Mathews \& Nagappan (2025), arXiv:2512.10218, Waterloo. {[}Directional evidence{]}
 \item
-  Zhang, H. et al.~(2024), GSM1k, arXiv:2405.00332, Scale AI. {[}lit / strong{]}
+  Zhang, H. et al.~(2024), GSM1k, arXiv:2405.00332, Scale AI. {[}Strong evidence{]}
 \item
-  Haimes, Wenner et al.~(2024), arXiv:2410.09247, Apart Research. {[}lit / strong{]}
+  Haimes, Wenner et al.~(2024), arXiv:2410.09247, Apart Research. {[}Strong evidence{]}
 \item
   Corroboration: none on record.
 \end{itemize}
 
-\subsection{Evaluate on post-cutoff tasks}\label{evaluate-on-post-cutoff-tasks}
+\section{Evaluate on post-cutoff tasks}\label{evaluate-on-post-cutoff-tasks}
 
 \begin{itemize}
 \tightlist
 \item
-  Jain et al.~(2024), arXiv:2403.07974, LiveCodeBench, ICLR 2025. {[}lit / strong{]}
+  Jain et al.~(2024), arXiv:2403.07974, LiveCodeBench, ICLR 2025. {[}Strong evidence{]}
 \item
-  Zhang, L. et al.~(2025), SWE-bench Goes Live!, arXiv:2505.23419, Microsoft Research. {[}lit / directional{]}
+  Zhang, L. et al.~(2025), SWE-bench Goes Live!, arXiv:2505.23419, Microsoft Research. {[}Directional evidence{]}
 \item
-  Adamenko et al.~(2025), arXiv:2507.11059, SWE-MERA. {[}lit / directional{]}
+  Adamenko et al.~(2025), arXiv:2507.11059, SWE-MERA. {[}Directional evidence{]}
 \item
-  Badertdinov et al.~(2025), arXiv:2505.20411, SWE-rebench, Nebius. {[}lit / directional{]}
+  Badertdinov et al.~(2025), arXiv:2505.20411, SWE-rebench, Nebius. {[}Directional evidence{]}
 \item
-  Chen, S. et al.~(2025), arXiv:2502.17521, static-to-dynamic benchmark survey. {[}lit / directional{]}
+  Chen, S. et al.~(2025), arXiv:2502.17521, static-to-dynamic benchmark survey. {[}Directional evidence{]}
 \end{itemize}
 
-\subsection{Strengthen test oracles before adjudication}\label{strengthen-test-oracles-before-adjudication}
+\section{Strengthen test oracles before adjudication}\label{strengthen-test-oracles-before-adjudication}
 
 \begin{itemize}
 \tightlist
 \item
-  Liu, Xia, Wang \& Zhang (2023), arXiv:2305.01210, HumanEval+ / EvalPlus, NeurIPS 2023. {[}lit / strong{]}
+  Liu, Xia, Wang \& Zhang (2023), arXiv:2305.01210, HumanEval+ / EvalPlus, NeurIPS 2023. {[}Strong evidence{]}
 \item
-  Yu, S. et al.~(2025), arXiv:2506.09289, UTBoost. {[}lit / strong{]}
+  Yu, S. et al.~(2025), arXiv:2506.09289, UTBoost. {[}Strong evidence{]}
 \item
-  Ye, Martinez \& Monperrus (2019), arXiv:1909.13694. {[}lit / strong{]}
+  Ye, Martinez \& Monperrus (2019), arXiv:1909.13694. {[}Strong evidence{]}
 \item
-  Aleithan et al.~(2024), arXiv:2410.06992, SWE-Bench+. {[}lit / directional{]}
+  Aleithan et al.~(2024), arXiv:2410.06992, SWE-Bench+. {[}Directional evidence{]}
 \item
-  Yu, B. et al.~(2026), arXiv:2603.00520, SWE-ABS. {[}lit / strong{]}
+  Yu, B. et al.~(2026), arXiv:2603.00520, SWE-ABS. {[}Strong evidence{]}
 \end{itemize}
 
-\subsection{Benchmark on your own workload}\label{benchmark-on-your-own-workload}
+\section{Benchmark on your own workload}\label{benchmark-on-your-own-workload}
 
 \begin{itemize}
 \tightlist
 \item
-  Jha, Paltenghi, Maddila, Murali, Ugare \& Chandra (2026), \emph{REAP: Automatic Curation of Coding Agent Benchmarks from Interactive Production Usage}, arXiv:2604.01527; the resulting benchmark is Harvest. {[}practitioner / directional{]} Title and benchmark name verified against the arXiv record on 2026-07-29; the catalog record and RECEIPTS row 31 carry the earlier name ProdCodeBench and need the same correction.
+  Jha, Paltenghi, Maddila, Murali, Ugare, and Chandra (2026), \emph{REAP: Automatic Curation of Coding Agent Benchmarks from Interactive Production Usage}, arXiv:2604.01527; the resulting benchmark is Harvest. {[}Directional evidence{]} The title and benchmark name were verified against the arXiv record on 2026-07-29; earlier working records used the name ProdCodeBench.
 \item
-  Bytesfortruth (2026), lending-domain benchmark account, r/compsci, 2026-03-10, \url{https://www.reddit.com/r/compsci/comments/1rqcmu8/}. {[}practitioner / anecdotal{]}
+  Bytesfortruth (2026), lending-domain benchmark account, r/compsci, 2026-03-10, \url{https://www.reddit.com/r/compsci/comments/1rqcmu8/}. {[}Corroborating case{]}
 \item
-  swyx (2026), long-horizon evaluation account, X, 2026-01-14, \url{https://x.com/swyx/status/2011344788486774942}. {[}practitioner / anecdotal{]}
+  swyx (2026), long-horizon evaluation account, X, 2026-01-14, \url{https://x.com/swyx/status/2011344788486774942}. {[}Corroborating case{]}
 \item
-  Bean, A.M. et al.~(2025), Measuring what Matters, arXiv:2511.04703. {[}lit / directional{]} Carried in the companion catalog as the construct-validity record; named inline for the construct-validity definition that opens this section.
+  Bean, A.M. et al.~(2025), Measuring what Matters, arXiv:2511.04703. {[}Directional evidence{]} Carried in the companion catalog as the construct-validity record; named inline for the construct-validity definition that opens this section.
 \end{itemize}
 
-\subsection{Author artifact cited inline}\label{author-artifact-cited-inline}
+\section{Author-system illustration cited inline}\label{author-system-illustration-cited-inline}
 
 \begin{itemize}
 \tightlist
