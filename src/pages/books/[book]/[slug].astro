@@ -221,7 +221,8 @@ const navigationTitle = (entry: CollectionEntry<"bookChapters">) =>
   .chapter-body :global(.book-figure) {
     width: 100%;
     max-width: 100%;
-    margin-block: clamp(var(--space-l), 6vw, var(--space-xl));
+    margin-block-start: clamp(var(--space-l), 6vw, var(--space-xl));
+    margin-block-end: var(--space-m);
   }
 
   .chapter-body :global(.book-figure__scroll) {
@@ -308,6 +309,10 @@ const navigationTitle = (entry: CollectionEntry<"bookChapters">) =>
     color: var(--color-text-muted);
     font-size: var(--step--1);
     line-height: var(--leading-normal);
+  }
+
+  .chapter-body :global(.book-figure + p:empty) {
+    display: none;
   }
 
   .chapter-nav {
