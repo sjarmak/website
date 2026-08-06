@@ -17,6 +17,7 @@ const previewPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding
 const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source.zip");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
+const expectedFigureCount = 16;
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
 const pandocDataDir = process.env.RELIABLE_AGENTS_PANDOC_DATA_DIR;
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
@@ -319,6 +320,7 @@ async function pandocConvert(markdown, outputPath) {
     outputPath,
     metricsTypeset
       .replaceAll("č", "\\v{c}")
+      .replace(/\\includegraphics\[([^\]]+)\]\{/g, "\\includegraphics[$1,keepaspectratio]{")
       .replaceAll("\\begin{figure}", "\\begin{figure}[htbp]"),
   );
 }
@@ -329,8 +331,8 @@ async function main() {
   const figureSources = (await readdir(figureSourceRoot))
     .filter((file) => file.endsWith(".svg"))
     .sort();
-  if (figureSources.length !== 13) {
-    throw new Error(`Expected 13 authoritative SVG figures, found ${figureSources.length}`);
+  if (figureSources.length !== expectedFigureCount) {
+    throw new Error(`Expected ${expectedFigureCount} authoritative SVG figures, found ${figureSources.length}`);
   }
 
   await rm(sourceRoot, { recursive: true, force: true });
@@ -385,7 +387,7 @@ async function main() {
 
   await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, source snapshots, thread protocols and source identities, update-screening decisions, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. No archival DOI had been assigned when this edition was prepared; until one is issued, cite the tagged repository release. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
 
-  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 6, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 13 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 6, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the ${expectedFigureCount} required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 
