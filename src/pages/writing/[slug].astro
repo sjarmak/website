@@ -61,6 +61,13 @@ const kicker = isFieldNotes
     mix-blend-mode: screen;
     filter: invert(1) hue-rotate(180deg);
   }
+  /* ConceptFigure bakes in its index ("Figure 03 / Recovery invariant"), numbered
+     against the long-form article it was drawn for. A post that reuses a subset
+     of those figures would show a jumped sequence, so drop the index here and let
+     the figcaption carry the meaning. */
+  .post__body :global(.concept-figure__index) {
+    display: none;
+  }
   .post__back {
     margin-block-start: var(--space-xl);
   }
