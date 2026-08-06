@@ -109,6 +109,8 @@ Concurrency creates another ambiguity. Two workers may read the same starting st
 
 Before assigning fault to an agent, I rule out the evaluator and execution environment. A broken dependency, stale fixture, permission mismatch, nondeterministic test, or malformed task can make a correct action appear defective. Differential testing runs the same candidate under a controlled change in agent, harness, or environment and asks whether the failure follows the candidate. The companion catalog treats this as a separate diagnostic control because attribution without apparatus checks can turn measurement error into a model failure.
 
+Raj et al. ([2026](https://arxiv.org/abs/2607.28802)) organize 41 failure modes by the interaction edge where a fault originates and the component that owns the repair. The strongest of four automated judges reached Cohen's \(\kappa=0.76\) against human category labels. The taxonomy is directional evidence for an interaction-centered diagnostic structure; the agreement result strongly supports reproducibility of those labels in the evaluated set, not causal correctness of an attribution.
+
 Human control does not require every reviewer to read every trace from the beginning. Automated systems can rank likely decisive steps, group similar incidents, retrieve related cases, prefill observed events, and flag assignments inconsistent with the recorded state transitions. The reviewer remains responsible for accepting, revising, or abstaining. The stored record distinguishes the automated proposal from the signed attribution.
 
 I used the same authority boundary in my internal benchmark-curation process, which determined whether generated software tasks were sound enough to evaluate. Candidate decisions retained an explicit provisional label until a project lead approved them. The pipeline could assemble evidence and run checks, but it could not finalize whether a defect belonged to the task or the evaluated system. This methodology example supplies no accuracy evidence.
@@ -236,6 +238,7 @@ Part IV turns to the evidence available when the model acts: retrieval, context 
 
 - Strong evidence: Deshpande, D., et al. (2025), "TRAIL: Trace Reasoning and Agentic Issue Localization," Patronus AI, arXiv:2505.08638. (Best evaluated model localized issues in 11% of 148 expert-annotated traces; a 2025 capability snapshot.)
 - Corroborating case: ["What actually broke when we put AI agents into real production workflows"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
+- Directional evidence for interaction-centered failure localization, with strong evidence for label reproducibility in the evaluated set: Raj, H., et al. (2026), "Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures," arXiv:2607.28802. The strongest automated judge reached Cohen's \(\kappa=0.76\) against human labels.
 
 ### Author-system illustration cited inline
 

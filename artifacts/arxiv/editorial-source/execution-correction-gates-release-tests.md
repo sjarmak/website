@@ -22,6 +22,8 @@ A plausible patch is only text until the repository accepts it. It may fail to c
 
 This changes the acceptance question. A confidence score asks the process that produced an answer to characterize its own answer. An execution check asks a compiler, test runner, package builder, schema validator, or deployment probe whether a specified transition occurred.
 
+Park and Choi ([2026](https://arxiv.org/abs/2607.25152)) held an agent and its tool surface fixed while changing the evaluator's information channel. Across 54 cycles, the agent claimed improvement every time, although 56 percent of measured deltas were zero or negative; the self-verdict gate accepted every cycle and eroded the best reached state by 19 percent. On a boundary task whose success was verifiable from the artifact, the same judge's gap disappeared. This is strong evidence within the preregistered testbed that a gate must observe the state in which success is defined.
+
 The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. Its evidentiary value comes from being produced causally downstream of the candidate artifact rather than by the process that proposed it.
 
 The architecture has three owners:
@@ -256,6 +258,7 @@ Keep tasks without executable checks in a separate lane. They are not lesser tas
 
 - Directional evidence: AgentForge (Kumar et al. 2026, arXiv:2604.13120). Execution-grounded evaluation in resource-bounded, network-isolated sandboxes, with propagation gated on execution results. Unrefereed preprint; single configuration; one sample per agent.
 - Directional evidence: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. No figure carried.
+- Strong evidence for externally grounded gating in the measured testbed: Park, H., and Choi, B. (2026), "When Do Agent Loops Mistake Stagnation for Progress?" arXiv:2607.25152. The 54-cycle result does not estimate a general agent failure rate.
 
 ### `gate-self-correction-on-external-feedback`
 

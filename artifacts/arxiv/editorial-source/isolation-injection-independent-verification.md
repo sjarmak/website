@@ -4,6 +4,8 @@ The containment evidence available for this chapter consists of incident reports
 
 The incident raises two immediate questions: what could the agent reach, and what could reach the agent? Its identity could reach both the live store and the material needed to recover from losing it. An instruction stream that the public account neither reconstructed nor audited could reach the agent. A third question appears later, when the system reports what it believes it did: what evidence would show that the report is true?
 
+Completion and safety also need separate observations. Zhou et al. ([2026](https://arxiv.org/abs/2607.27294)) constructed 328 risk-injected workspace tasks and ran 20 harness-model combinations for 6,560 trials. Prespecified unsafe signals fired in 68.0 percent of runs, and 66.22 percent were both unsafe and complete. Safety varied by harness-model pairing and by how the risk was delivered. These are strong results for the tested configurations and benchmark; they do not establish a production incident rate.
+
 ## Put the recovery path outside the failure domain
 
 Direct support for this containment practice comes from two practitioner anecdotes. Both are self-reports from a single organization or author, so they establish concrete failure modes rather than an incident rate. One describes the database and backup loss in the opening. The other summarizes a year of internal agent deployments and reports that overly narrow permissions left agents reasoning from incomplete visibility, while broad permissions allowed small mistakes to produce large consequences.
@@ -203,6 +205,10 @@ Containment limits the damage a live process can cause. Chapter 8 turns to what 
 
 - Corroborating case: ["What actually broke when we put AI agents into real production workflows"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
 - Corroborating case: ["AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?"](https://www.reddit.com/r/devops/comments/1tbbls4/), /u/Upstairs_Safe2922, r/devops, 2026-05-12.
+
+### Separate completion from runtime safety
+
+- Strong evidence within the tested benchmark and configurations: Zhou, J., et al. (2026), "AgentS4D: Benchmarking Runtime Risks across the Execution Lifecycle of LLM-Based Workspace Agents," arXiv:2607.27294. Across 6,560 runs, 66.22 percent were both unsafe under a prespecified signal and complete; the result is not a production incident rate.
 
 ### Distrust agent self-reports
 

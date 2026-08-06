@@ -127,11 +127,15 @@ A passing patch can fail to support the capability claim for three independent r
 
 All three failures can produce a successful-looking transcript. A model may reproduce a reference patch it saw during training, copy an answer supplied in the prompt, or find a shortcut that satisfies shallow assertions. The final test process records the same state in each case: pass. Transcript inspection and contamination probes cannot compensate for a test suite that accepts wrong behavior, and added tests cannot establish whether the model recalled the right behavior.
 
+Shao et al. ([2026](https://arxiv.org/abs/2607.22368)) make this broader condition explicit as protocol validity: the intended capability must remain necessary for success under the evaluation protocol. Their HackDetect audit covered 2,385 traces across 15 agent benchmarks and found exposures or reward hacking in 67.0 percent of Frontier Science traces and 66.7 percent of AutoLab tasks; paired audits measured score inflation of 0.45 to 1.00 on their Mislead-gap scale. These are strong measurements for the audited protocols, not prevalence estimates for agent benchmarks as a whole.
+
 I therefore treat a passing patch as a hypothesis about correctness. The test oracle is the ordinary continuous-integration mechanism that decides whether the candidate passes or fails. Its strength is the range of plausible wrong behavior it can reject. A suite is stronger when it checks more of the behavior implied by the task, especially behavior that superficially reasonable patches get wrong.
 
 Function-level code generation provides a controlled example. Liu et al. ([2023](https://arxiv.org/abs/2305.01210)) expanded a widely used suite's tests by 80x with generated inputs and mutation-based cases. Across 26 models, the largest relative reductions in \(\mathrm{pass}@k\) ranged from roughly 19 to 29 percent across the reported values of \(k\), and model rankings changed. The models and generated programs were fixed; only the observations used to decide correctness changed. The original ranking had partly measured which wrong programs happened to fit sparse tests.
 
 Repository-scale results show the same mechanism under more realistic state. Yu et al. ([2025](https://arxiv.org/abs/2506.09289)) augmented SWE-bench tests retroactively and found 36 under-tested tasks and 345 patches that had been labeled as passing incorrectly. Re-adjudication corrected 40.9 percent of entries on the smaller suite and 24.4 percent on the human-screened suite, changing 29 rankings. This was an audit of already reported results, so oracle weakness had propagated beyond individual tasks into system comparisons.
+
+Task construction can fail before the oracle runs. Wang, Xu, and He ([2026](https://arxiv.org/abs/2607.28587)) audited SWE-bench Verified and found PR-issue misalignment in 13.6 percent of instances across five patterns and eleven scenarios. Their PAIChecker reached up to 92.12 percent binary accuracy on SWE-Gym and 91.67 percent on SWE-bench Multilingual across four model backbones. The results strongly support the measured misalignment rate and detector accuracy on those collections; other SWE-bench-derived sets require their own audit.
 
 The problem predates current coding models. Ye et al. ([2019](https://arxiv.org/abs/1909.13694)) generated random tests against a human reference patch and assessed 638 candidate patches from 14 repair systems. The added oracle improved automatic patch assessment by 190 percent over the prior methods used in that comparison. The historical context is useful because it locates the defect in test-based program repair itself. Generative models make candidate production faster and more varied, but shipped tests are not equivalent to a specification.
 
@@ -230,6 +234,8 @@ These answers do not yield a universal correction formula. They turn one impress
 - Ye, Martinez & Monperrus (2019), arXiv:1909.13694. [Strong evidence]
 - Aleithan et al. (2024), arXiv:2410.06992, SWE-Bench+. [Directional evidence]
 - Yu, B. et al. (2026), arXiv:2603.00520, SWE-ABS. [Strong evidence]
+- Strong evidence for audited protocol defects and paired score inflation: Shao, J., Chen, H., Zhang, W., Pan, M., and Luo, B. (2026), "Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI," arXiv:2607.22368. The reported rates apply to the audited protocols, not all agent benchmarks.
+- Strong evidence for benchmark-specific PR-issue misalignment and detector accuracy: Wang, M., Xu, J., and He, P. (2026), "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks," arXiv:2607.28587.
 
 ### Benchmark on your own workload
 

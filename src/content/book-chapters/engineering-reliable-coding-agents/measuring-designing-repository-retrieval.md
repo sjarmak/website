@@ -62,6 +62,8 @@ Memory Circuit Analysis, from Mao et al. ([2026](https://arxiv.org/abs/2605.0335
 
 Three newer studies provide directional support for the same measurement shape. SkillEvolBench, from Lei et al. ([2026](https://arxiv.org/abs/2605.24117)), and EngramaBench, from Acuna ([2026](https://arxiv.org/abs/2604.21229)), examine whether stored or evolved material remains available and useful while also reporting final answers. Wolff and Bennati ([2026](https://arxiv.org/abs/2601.07978)) separate what a memory system retrieves from what the answering model produces. I use these studies to establish direction, not as a numerical basis for repository-retrieval policy.
 
+Agent Retrieval Bench provides a direct repository-scale instrument for the upstream stage. Qin and Xie ([2026](https://arxiv.org/abs/2607.24882)) built 427 samples across 25 repositories, including positive retrieval tasks, natural no-gold cases, and counterfactual wrong-repository controls. No retrieval family dominated all measures, and logged agent trajectories missed every gold file on 27 to 35 percent of samples. A controlled seed pilot found that retrieval-derived initial context raised file F1 while reducing later exploration relative to random non-gold context. These are strong benchmark and pilot results under the released design; they do not select one retrieval architecture for every repository.
+
 ### Retrieval metrics
 
 When a task requires one item, its Recall@k value is binary: the item either appears among the first \(k\) results or it does not. When several items are required, Recall@k is the fraction found within those results.
@@ -295,6 +297,7 @@ Chapter 12 turns to the architecture around these measurements: cheap retrieval 
 - Directional evidence: EngramaBench (Acuna 2026), arXiv:2604.21229.
 - Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978.
 - Corroborating case: Vishnyakova, O. (2026), arXiv:2603.09619. (Names the five context-quality criteria; position paper.)
+- Strong evidence for the benchmark measurements and controlled seed pilot: Qin, B., and Xie, Y. (2026), "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents," arXiv:2607.24882. The benchmark supports stage-level evaluation rather than a universal retrieval-family ranking.
 
 ### Hybrid retrieval fused on ranks
 

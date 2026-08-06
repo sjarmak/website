@@ -24,6 +24,8 @@ Allocation policy is easy to mistake for a local configuration detail. In an age
 
 A cheaper model call can trigger enough repair and review to cost more per accepted result. A mathematically better schedule can become operationally worse if computing it delays the work beyond its deadline. I therefore treat scheduling and routing as measured decisions rather than static configuration.
 
+Production traces also show that coding-agent traffic differs from chatbot traffic. Liu et al. ([2026](https://arxiv.org/abs/2608.00101)) sampled GitHub Copilot activity from 3.2 million users, 13 million sessions, 761 million model calls, and 95 trillion tokens. KV-cache hit rates averaged 90 percent within a turn and 55 percent across turn boundaries; a lightweight predictor captured 86 to 90 percent of total user idle time. The study strongly characterizes one production workload and directionally supports measuring turn boundaries and idle periods in capacity policy.
+
 ## Define the allocation decision before choosing the algorithm
 
 **Cheapest-sufficient routing** selects, for each request, the least expensive worker predicted to satisfy that request’s declared requirement. The worker may be a model tier, a model-plus-tool configuration, or another execution pool with a known price.
@@ -146,9 +148,9 @@ Its value remains an empirical question until the fleet’s traces answer it.
 
 ## Route to the cheapest worker predicted to meet the requirement
 
-Cheapest-sufficient routing has support from three directional literature items and no strong result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint.
+Cheapest-sufficient routing has support from three directional literature items and one recent benchmark-bound controlled result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint.
 
-All three evaluate mathematical formulations or benchmarks. None evaluates a production software-agent fleet. This section therefore defines the routing decision and the measurements required to test it. It does not establish that a learned router will lower the cost of a particular fleet.
+None evaluates a production software-agent fleet. This section therefore defines the routing decision and the measurements required to test it. It does not establish that a learned router will lower the cost of a particular fleet.
 
 My fleet orchestrator illustrates the starting point. Each execution pool has a model assigned through a static configuration string. There is no request-level performance estimate, cost model, deadline, or lookahead.
 
@@ -160,6 +162,8 @@ A cheapest-sufficient router replaces the static assignment with two estimates f
 - expected total cost.
 
 It then selects the least expensive worker predicted to satisfy the declared requirement.
+
+Bhola, Krishnan, and NS ([2026](https://arxiv.org/abs/2608.04804)) evaluated a scout-and-route configuration on 266 Python tasks from SWE-bench Pro. It solved 159 tasks, compared with 158 for the best single model, at about one fifth of the reported total cost per solve. A no-router ablation that always selected the cheapest fixer but retained the verified handoff tied the routed system, locating the measured gain in the handoff rather than the routing decision. The result strongly supports that benchmark-specific configuration and its null routing ablation; generalized cheapest-sufficient routing remains directional.
 
 Somerstep et al. analyze this plug-in structure in CARROT and argue that its direct routing overhead is negligible because selection requires evaluating the two predictors for each available model. The useful behavior still depends on calibration: predicted performance must correspond to observed performance on the deployment distribution.
 
@@ -460,6 +464,7 @@ Until the ledger can answer those questions, choosing a more sophisticated polic
 - Directional evidence: Bellm, E. C., et al. (2019), "The Zwicky Transient Facility: Surveys and Scheduler," PASP 131, 068003, arXiv:1905.02209.
 - Directional evidence: Naghib, E., et al. (2019), "A Framework for Telescope Schedulers: With Applications to the Large Synoptic Survey Telescope," AJ 157, 151, arXiv:1810.04815. Framework and simulation evidence.
 - Directional evidence: Parazin, B., et al. (2022), "Foraging with MUSHROOMS: A Mixed-integer Linear Programming Scheduler for Multimessenger Target of Opportunity Searches with the Zwicky Transient Facility," ApJ 935, 87, arXiv:2203.00013.
+- Strong evidence for production workload characterization, directional for capacity-policy transfer: Liu, B., et al. (2026), "Agentic Coding in the Wild: Characterizing GitHub Copilot Traces at Production Scale," arXiv:2608.00101.
 - No strong result and no software-fleet measurement support this entry; all three items are observatory scheduling, and the cadence, cap, and churn charge remain deployment decisions.
 - Corroboration (narrative only): the author's transfer notes on observatory scheduling restate the same ZTF and MUSHROOMS results already carried above as literature evidence.
 
@@ -468,7 +473,8 @@ Until the ledger can answer those questions, choosing a more sophisticated polic
 - Directional evidence: Cayci, S., Eryilmaz, A., & Srikant, R. (2020), "Budget-Constrained Bandits over General Cost and Reward Distributions," arXiv:2003.00365. Asymptotic guarantee under stated moment conditions.
 - Directional evidence: Somerstep, S., et al. (2025), "CARROT: A Cost Aware Rate Optimal Router," arXiv:2502.03261. Static model pool assumed.
 - Directional evidence: Li, Y. (2025), "LLM Bandit: Cost-Efficient LLM Generation via Preference-Conditioned Dynamic Routing," arXiv:2502.02743. Single-author preprint, benchmark evidence.
-- Three directional items and zero strong results; none evaluates a production software-agent fleet, so the entry defines a decision and its measurements rather than establishing a cost reduction.
+- Strong evidence for one benchmark-bound scout-and-fixer configuration and its no-router ablation: Bhola, I., Krishnan, A., and NS, M. (2026), "Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First," arXiv:2608.04804. The handoff, rather than the router, carried the measured result.
+- The three routing-theory items remain directional, and no source evaluates a production software-agent fleet; generalized cheapest-sufficient routing therefore remains a decision to test rather than an established cost reduction.
 - Directional evidence for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional.
 - Corroboration (narrative only): the author's transfer notes restate the budgeted-bandit formulation already carried above.
 

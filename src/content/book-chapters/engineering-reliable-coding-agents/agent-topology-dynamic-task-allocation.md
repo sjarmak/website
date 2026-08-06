@@ -35,6 +35,8 @@ That is evidence that an architectural failure can survive a more capable model.
 
 The OpenRCA result separates two failure mechanisms. Protocol enrichment addressed communication failures, whereas hallucinated interpretation required another intervention. A structured handoff cannot repair a worker that invents the meaning of accurate evidence, and a stronger verifier cannot recover evidence no upstream component retrieved.
 
+Oskooei et al. ([2026](https://arxiv.org/abs/2608.01507)) measured one such boundary on SWE-QA. Semantic search answered 65.2 percent of repository questions correctly, compared with 46.2 percent for planner-to-subagent search, at less than half the cost per correct answer. Handoff loss accounted for 41.8 percent of the subagent system's failures. This is strong evidence for the compared configurations on SWE-QA and directional evidence for topology selection beyond read-only repository questions.
+
 “Change the structure” is therefore not a remedy. It is an instruction to revisit the causal boundary that produced the observed class.
 
 A **multi-agent system** consists of several model-driven workers coordinating on one task. Its **topology** determines which workers exchange observations, where decisions converge, and which component owns shared state. Topology is distinct from implementation. Two programs can use the same queue library while exposing different communication structures, and two runtimes can implement the same topology.
@@ -451,6 +453,7 @@ The record should remain intelligible without the architecture's label. “Hiera
 - Jia, J., et al. 2026. "MAS-FIRE: Fault Injection and Reliability Evaluation for LLM-Based Multi-Agent Systems." arXiv:2602.19843. Synthetic fault injection across three architectures.
 - Jain, Prateek. 2026. "Harness Engineering: The New DevOps Layer for AI Agents." r/devops, May 27. Anecdotal practitioner account.
 - Kim, T., et al. 2026. "Why Do AI Agents Systematically Fail at Cloud Root Cause Analysis?" arXiv:2602.09937. OpenRCA evidence on failure persistence across capability tiers and protocol intervention.
+- Oskooei, A. R., et al. 2026. "Deep Agentic Search for Repository-Level Code Question Answering: An Empirical Study." arXiv:2608.01507. Strong evidence for the SWE-QA comparison and its measured handoff failures; broader topology transfer is directional.
 - Kumar, et al. 2026. *AgentForge*. arXiv:2604.13120. Directional evidence on multi-agent design.
 - Li, et al. 2026. *SIMAS*. arXiv:2606.00655. Audit-retained strong evidence on token cost, non-monotonic scaling, and debate versus self-correction.
 - Luo, et al. 2025. *Autellix*. arXiv:2502.13965. Directional scheduling and orchestration example.

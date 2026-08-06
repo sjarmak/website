@@ -39,6 +39,8 @@ An ablation result is conditional on the configuration in which the removal occu
 
 Skills and multi-agent structures need the same discipline, but their removal needs a more precise intervention. Deleting a skill while also shortening the prompt changes both procedural guidance and context length. Replacing several agents with one while reducing the call budget changes topology and sampling opportunity together. A useful control preserves the available information and budget wherever the design permits and removes only the coordination or representation being credited. When that preservation is impossible, an intermediate arm lets the comparison separate fewer model calls from a different arrangement of those calls.
 
+Tank and Nama ([2026](https://arxiv.org/abs/2607.22520)) compared agents with and without procedural skills across nearly 6,000 runs on two office-automation benchmarks and three model-harness stacks. The best-performing skills won primarily by causing fewer regressions, a distinction concealed by net task-success change. The study strongly supports decomposing a skill intervention into gains, regressions, and residual failures in those settings; transfer to coding-agent skill libraries remains directional.
+
 The paired design from Chapter 1 belongs here. Each arm runs on the same tasks, task ordering and other sources of randomness are matched across arms wherever the execution system permits it, and the outcomes are analyzed as pairs. Otherwise, item difficulty can dominate the component effect. A retrieval arm that happens to receive more questions answerable by lexical lookup may appear superior even when the tool adds nothing on matched items.
 
 Target size is a second confound of the same kind. A tool may look better when its index contains a narrow, curated collection and worse when it searches a large repository with many plausible distractors. Query coverage, corpus size, and retrieval depth should therefore be recorded with the configuration. If target size changes between arms, the experiment measures both the target and the retrieval algorithm.
@@ -133,6 +135,7 @@ Reserve the iteration holdout before the first scaffold change. Decide who can i
 - Directional evidence: evaluation-design material from the code-retrieval source corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here.
 - Directional evidence: *TIAP* (arXiv:2605.24060); no figure carried.
 - Directional evidence: *MemConflict* (arXiv:2605.20926); no figure carried.
+- Strong evidence for the narrower transition analysis: Tank, D., and Nama, B. (2026), "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents," arXiv:2607.22520. Nearly 6,000 runs across two office-automation benchmarks and three model-harness stacks; transfer to coding-agent skill libraries is directional.
 
 ### Report cost-accuracy tradeoffs
 

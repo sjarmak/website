@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-06T02:07:04.215Z",
+  "generated_at": "2026-08-06T14:46:28.551Z",
   "rule": "A strong label must point to one directly identifiable source and must not promote a synthesis, corpus, or catalog-only transfer into a strong composite claim.",
   "totals": {
-    "strong_entries": 58,
-    "passing": 58,
+    "strong_entries": 66,
+    "passing": 66,
     "failing": 0
   },
   "entries": [
@@ -28,6 +28,17 @@
       "composite_risk_terms": [],
       "status": "pass",
       "text": "- Strong evidence: Tang, N., Chen, M., Ning, Z., Bansal, A., Huang, Y., McMillan, C., Li, T. J.-J. (2024). A Study on Developer Behaviors for Validating and Repairing LLM-Generated Code Using Eye Tracking and IDE Actions. arXiv:2405.16081. Supports improved repair performance and greater verification effort with provenance disclosure; recognition without disclosure was unreliable. Limited by a small laboratory sample and code chunks of tens of lines; the attention cost may not scale to constant exposure."
+    },
+    {
+      "location": "baselines-ablations-cost-accuracy.md:129",
+      "arxiv_ids": [
+        "2607.22520"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for the narrower transition analysis: Tank, D., and Nama, B. (2026), \"The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents,\" arXiv:2607.22520. Nearly 6,000 runs across two office-automation benchmarks and three model-harness stacks; transfer to coding-agent skill libraries is directional."
     },
     {
       "location": "calibrating-model-graders-agreement-correctness.md:210",
@@ -118,7 +129,51 @@
       "text": "- Strong evidence: Chen, J., et al. (2016). Sampling as a Baseline Optimizer for Search-Based Software Engineering. arXiv:1608.07617. Chapter 18, `replay-traces-before-policy-changes`."
     },
     {
-      "location": "cost-aware-fleet-scheduling-model-routing.md:468",
+      "location": "contamination-oracle-workload-validity.md:228",
+      "arxiv_ids": [
+        "2607.22368"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for audited protocol defects and paired score inflation: Shao, J., Chen, H., Zhang, W., Pan, M., and Luo, B. (2026), \"Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI,\" arXiv:2607.22368. The reported rates apply to the audited protocols, not all agent benchmarks."
+    },
+    {
+      "location": "contamination-oracle-workload-validity.md:229",
+      "arxiv_ids": [
+        "2607.28587"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for benchmark-specific PR-issue misalignment and detector accuracy: Wang, M., Xu, J., and He, P. (2026), \"PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks,\" arXiv:2607.28587."
+    },
+    {
+      "location": "cost-aware-fleet-scheduling-model-routing.md:458",
+      "arxiv_ids": [
+        "2608.00101"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for production workload characterization, directional for capacity-policy transfer: Liu, B., et al. (2026), \"Agentic Coding in the Wild: Characterizing GitHub Copilot Traces at Production Scale,\" arXiv:2608.00101."
+    },
+    {
+      "location": "cost-aware-fleet-scheduling-model-routing.md:467",
+      "arxiv_ids": [
+        "2608.04804"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for one benchmark-bound scout-and-fixer configuration and its no-router ablation: Bhola, I., Krishnan, A., and NS, M. (2026), \"Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First,\" arXiv:2608.04804. The handoff, rather than the router, carried the measured result."
+    },
+    {
+      "location": "cost-aware-fleet-scheduling-model-routing.md:474",
       "arxiv_ids": [
         "1608.07617"
       ],
@@ -151,7 +206,18 @@
       "text": "- Strong evidence for the measured failure-driven compression comparison: Kang, M., et al. (2025), \"ACON: Optimizing Context Compression for Long-horizon LLM Agents,\" arXiv:2510.00615 (Microsoft). The study tests failure-guided compression on app, office, and question-answering benchmarks; transfer to coding agents remains directional."
     },
     {
-      "location": "execution-correction-gates-release-tests.md:262",
+      "location": "execution-correction-gates-release-tests.md:261",
+      "arxiv_ids": [
+        "2607.25152"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for externally grounded gating in the measured testbed: Park, H., and Choi, B. (2026), \"When Do Agent Loops Mistake Stagnation for Progress?\" arXiv:2607.25152. The 54-cycle result does not estimate a general agent failure rate."
+    },
+    {
+      "location": "execution-correction-gates-release-tests.md:265",
       "arxiv_ids": [
         "2310.01798"
       ],
@@ -162,7 +228,7 @@
       "text": "- Strong evidence: Huang, J., et al. (2023). Large Language Models Cannot Self-Correct Reasoning Yet. ICLR 2024. arXiv:2310.01798."
     },
     {
-      "location": "execution-correction-gates-release-tests.md:266",
+      "location": "execution-correction-gates-release-tests.md:269",
       "arxiv_ids": [
         "2406.12045"
       ],
@@ -173,7 +239,7 @@
       "text": "- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \\(\\mathrm{pass}^{k}\\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings."
     },
     {
-      "location": "human-auditable-failure-analysis-taxonomy.md:232",
+      "location": "human-auditable-failure-analysis-taxonomy.md:234",
       "arxiv_ids": [
         "2505.00212"
       ],
@@ -184,7 +250,7 @@
       "text": "- Strong evidence: Zhang, S., et al. (2025), \"Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems,\" ICML 2025, arXiv:2505.00212. (Who&When: expert-annotated failure logs from 127 multi-agent systems; 53.5% agent-level and 14.2% step-level for the best automated method; some methods below random.)"
     },
     {
-      "location": "human-auditable-failure-analysis-taxonomy.md:237",
+      "location": "human-auditable-failure-analysis-taxonomy.md:239",
       "arxiv_ids": [
         "2505.08638"
       ],
@@ -195,7 +261,18 @@
       "text": "- Strong evidence: Deshpande, D., et al. (2025), \"TRAIL: Trace Reasoning and Agentic Issue Localization,\" Patronus AI, arXiv:2505.08638. (Best evaluated model localized issues in 11% of 148 expert-annotated traces; a 2025 capability snapshot.)"
     },
     {
-      "location": "isolation-injection-independent-verification.md:212",
+      "location": "human-auditable-failure-analysis-taxonomy.md:241",
+      "arxiv_ids": [
+        "2607.28802"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Directional evidence for interaction-centered failure localization, with strong evidence for label reproducibility in the evaluated set: Raj, H., et al. (2026), \"Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures,\" arXiv:2607.28802. The strongest automated judge reached Cohen's \\(\\kappa=0.76\\) against human labels."
+    },
+    {
+      "location": "isolation-injection-independent-verification.md:218",
       "arxiv_ids": [
         "2211.03622"
       ],
@@ -272,7 +349,7 @@
       "text": "- Strong evidence: AOCI AI-oriented code indexing (Liu 2026), arXiv:2605.02421."
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:282",
+      "location": "measuring-designing-repository-retrieval.md:284",
       "arxiv_ids": [
         "2306.03091"
       ],
@@ -283,7 +360,7 @@
       "text": "- Strong evidence: Liu, T., et al. (2023), \"RepoBench: Benchmarking Repository-Level Code Auto-Completion Systems,\" ICLR 2024, arXiv:2306.03091. (R/C/P decomposition localizes failure to retrieval vs completion vs pipeline stage.)"
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:283",
+      "location": "measuring-designing-repository-retrieval.md:285",
       "arxiv_ids": [
         "2605.20926"
       ],
@@ -294,7 +371,7 @@
       "text": "- Strong evidence: MemConflict (Tao et al. 2026), arXiv:2605.20926. (Black-box + white-box memory evaluation; localizes missing vs low-ranked vs retrieved-but-unused; best reported conflict-recognition score 0.2501.)"
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:284",
+      "location": "measuring-designing-repository-retrieval.md:286",
       "arxiv_ids": [
         "2605.03354"
       ],
@@ -305,7 +382,18 @@
       "text": "- Strong evidence: Memory Circuit Analysis (Mao et al. 2026), arXiv:2605.03354. (Stage-level diagnostic localizing a silent failure to the responsible memory operation; extraction/retention/retrieval fail silently behind fluent answers.)"
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:292",
+      "location": "measuring-designing-repository-retrieval.md:291",
+      "arxiv_ids": [
+        "2607.24882"
+      ],
+      "linked_urls": [],
+      "doi_urls": [],
+      "composite_risk_terms": [],
+      "status": "pass",
+      "text": "- Strong evidence for the benchmark measurements and controlled seed pilot: Qin, B., and Xie, Y. (2026), \"Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents,\" arXiv:2607.24882. The benchmark supports stage-level evaluation rather than a universal retrieval-family ranking."
+    },
+    {
+      "location": "measuring-designing-repository-retrieval.md:295",
       "arxiv_ids": [
         "2507.18515"
       ],
@@ -316,7 +404,7 @@
       "text": "- Strong evidence: Yang, Z., et al. (2025), \"A Deep Dive into Retrieval-Augmented Generation for Code Completion: Experience on WeChat,\" arXiv:2507.18515 (industrial study)."
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:293",
+      "location": "measuring-designing-repository-retrieval.md:296",
       "arxiv_ids": [
         "1909.09436"
       ],
@@ -327,7 +415,7 @@
       "text": "- Strong evidence for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval."
     },
     {
-      "location": "measuring-designing-repository-retrieval.md:300",
+      "location": "measuring-designing-repository-retrieval.md:303",
       "arxiv_ids": [
         "2506.15655"
       ],
@@ -393,7 +481,7 @@
       "text": "- Strong evidence: Vogel et al. (2024), \"A Comprehensive Benchmarking Analysis of Fault Recovery in Stream Processing Frameworks,\" arXiv:2404.06203 (JSS line)."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:376",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:378",
       "arxiv_ids": [
         "2404.06654"
       ],
@@ -404,7 +492,7 @@
       "text": "- Strong evidence: Hsieh, C.-P., et al. (2024), \"RULER: What's the Real Context Size of Your Long-Context Language Models?\" COLM 2024, arXiv:2404.06654."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:377",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:379",
       "arxiv_ids": [
         "2411.03538"
       ],
@@ -415,7 +503,7 @@
       "text": "- Strong evidence: Leng, Q., et al. (2024), \"Long Context RAG Performance of Large Language Models,\" Databricks Mosaic Research, arXiv:2411.03538."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:378",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:380",
       "arxiv_ids": [
         "2503.04359"
       ],
@@ -426,7 +514,7 @@
       "text": "- Strong evidence: Li, J., et al. (2025), \"LONGCODEU: Benchmarking Long-Context Language Models on Long Code Understanding,\" arXiv:2503.04359."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:379",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:381",
       "arxiv_ids": [
         "2505.07897"
       ],
@@ -437,7 +525,7 @@
       "text": "- Strong evidence: Rando, S., et al. (2025), \"LongCodeBench: Evaluating Coding LLMs at 1M Context Windows,\" arXiv:2505.07897."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:384",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:386",
       "arxiv_ids": [
         "2505.06120"
       ],
@@ -448,7 +536,7 @@
       "text": "- Strong evidence: Laban, P., et al. (2025), \"LLMs Get Lost In Multi-Turn Conversation,\" arXiv:2505.06120."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:396",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:399",
       "arxiv_ids": [
         "2511.12884"
       ],

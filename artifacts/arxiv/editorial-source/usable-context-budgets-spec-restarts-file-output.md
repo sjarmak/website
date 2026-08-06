@@ -248,6 +248,8 @@ Gloaguen et al. ([2026](https://arxiv.org/abs/2602.11988)) tested whether reposi
 
 This is a null result from one study. It should reverse the assumption that a standing context file is beneficial by default, without becoming a universal verdict against such files.
 
+Khatri ([2026](https://arxiv.org/abs/2607.27250)) ran a second controlled ablation across two agents, 17 real tasks from three repositories, and 288 evaluated runs. Equivalence tests bounded any correctness effect to no more than roughly 10 to 15 percentage points and found no measurable improvement. This null result strengthens the case for a no-file baseline while remaining limited by the agents, repositories, tasks, and equivalence bounds studied.
+
 Instruction adherence and task completion measure different effects. A file can cause an agent to run a command, follow a naming rule, or avoid a directory while leaving the final task score unchanged. It can also consume context, provoke additional tool calls, or direct attention toward an overview the model did not need.
 
 Evidence that the file was read and followed establishes treatment delivery; task and cost outcomes determine benefit.
@@ -393,5 +395,6 @@ Chapter 14 turns to what survives between sessions and in what form.
 ### Measure context files and maintain them like configuration
 
 - Null or conflicting result: Gloaguen, T., Mündler, N., Müller, M., Raychev, V., Vechev, M. (2026), "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?" arXiv:2602.11988.
+- Null or conflicting result: Khatri, P. (2026), "Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories," arXiv:2607.27250. Across 288 runs, equivalence tests bounded correctness effects to no more than roughly 10 to 15 percentage points in the studied conditions.
 - Strong evidence: Chatlatanagulchai, W., et al. (2025), "Agent READMEs: An Empirical Study of Context Files for Agentic Coding," arXiv:2511.12884.
 - Corroboration, narrative only: the author's systems include a context file maintained as a failure-mode ledger and a knowledge map with a machine-checkable source hash; contrary cases include a review-checker whose live rule count disagreed with its header and wrapper, and a skill-library README with three inconsistent counts.

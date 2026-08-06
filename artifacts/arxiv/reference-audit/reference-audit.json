@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-08-06T02:07:04.162Z",
+  "generated_at": "2026-08-06T14:33:14.845Z",
   "method": {
     "arxiv": "Official arXiv Atom API, queried by identifier in batches of 20; previously resolved official-API metadata is reused if the API becomes temporarily unavailable.",
-    "arxiv_cache_used": true,
+    "arxiv_cache_used": false,
     "doi": "Crossref REST API, queried by DOI.",
     "urls": "HTTP GET with redirects enabled and a 25-second timeout."
   },
   "summary": {
     "files": 20,
     "catalog_practices": 192,
-    "arxiv_identifiers": 308,
+    "arxiv_identifiers": 319,
     "arxiv_unresolved": 0,
     "doi_identifiers": 5,
     "doi_unresolved": 0,
-    "other_urls": 32,
-    "url_failures": 4
+    "other_urls": 34,
+    "url_failures": 3
   },
   "arxiv": [
     {
@@ -34,12 +34,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 257,
+          "line": 261,
           "context": "That result has narrative value only and is not load-bearing evidence for this practice. The strong support comes from SWAY, the controlled software-engineering study by Chen et al. ([2016](https://arxiv.org/abs/1608.07617)), which shows why a proposed search method should have to beat a cheap baseline. Decima, from Mao et al. ([2018](https://arxiv.org/abs/1810.01963)), and the telescope-network work of Lampoudi, Saunders, and Eastman ([2015](https://arxiv.org/abs/1503.07170)) provide directional support for learned scheduling and validation against known optima."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 470,
+          "line": 476,
           "context": "- Directional evidence: Lampoudi, S., Saunders, E., & Eastman, J. (2015), \"An Integer Linear Programming Solution to the Telescope Network Scheduling Problem,\" arXiv:1503.07170. Supports validating a scheduling kernel on instances with known optima."
         },
         {
@@ -115,12 +115,12 @@
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 257,
+          "line": 261,
           "context": "That result has narrative value only and is not load-bearing evidence for this practice. The strong support comes from SWAY, the controlled software-engineering study by Chen et al. ([2016](https://arxiv.org/abs/1608.07617)), which shows why a proposed search method should have to beat a cheap baseline. Decima, from Mao et al. ([2018](https://arxiv.org/abs/1810.01963)), and the telescope-network work of Lampoudi, Saunders, and Eastman ([2015](https://arxiv.org/abs/1503.07170)) provide directional support for learned scheduling and validation against known optima."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 468,
+          "line": 474,
           "context": "- Strong evidence for the cheap-baseline comparison only: SWAY, Chen, J., et al. (2016), \"Sampling as a Baseline Optimizer for Search-Based Software Engineering,\" arXiv:1608.07617. The study supports requiring a candidate optimizer to beat a cheap baseline; fixed-arrival replay is a transfer beyond its experiment."
         },
         {
@@ -331,12 +331,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 257,
+          "line": 261,
           "context": "That result has narrative value only and is not load-bearing evidence for this practice. The strong support comes from SWAY, the controlled software-engineering study by Chen et al. ([2016](https://arxiv.org/abs/1608.07617)), which shows why a proposed search method should have to beat a cheap baseline. Decima, from Mao et al. ([2018](https://arxiv.org/abs/1810.01963)), and the telescope-network work of Lampoudi, Saunders, and Eastman ([2015](https://arxiv.org/abs/1503.07170)) provide directional support for learned scheduling and validation against known optima."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 469,
+          "line": 475,
           "context": "- Directional evidence: Decima, Mao, H., et al. (2018), \"Learning Scheduling Algorithms for Data Processing Clusters,\" arXiv:1810.01963. Measures learned scheduling under stochastic arrivals, not fixed-arrival replay; the replay transfer is the synthesis's."
         },
         {
@@ -366,12 +366,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 99,
+          "line": 101,
           "context": "Naghib et al. ([2019](https://arxiv.org/abs/1810.04815)) describe another observatory design in which a feature-based, memoryless policy chooses again from current state at every step. *Memoryless* here does not mean that durable state is discarded. It means that the next scheduling action does not depend on preserving a brittle sequence of prior planned actions."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 452,
+          "line": 456,
           "context": "- Directional evidence: Naghib, E., et al. (2019), \"A Framework for Telescope Schedulers: With Applications to the Large Synoptic Survey Telescope,\" AJ 157, 151, arXiv:1810.04815. Framework and simulation evidence."
         },
         {
@@ -416,12 +416,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 59,
+          "line": 61,
           "context": "An observatory scheduler can spend the night improving a plan that clouds have already invalidated, or compute another imperfect plan from the sky that remains observable. Bellm et al. ([2019](https://arxiv.org/abs/1905.02209)) describe the Zwicky Transient Facility taking the second approach in production since 2018. When changing conditions invalidate the schedule, it resolves the nightly integer program again rather than enumerating every weather scenario in advance."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 451,
+          "line": 455,
           "context": "- Directional evidence: Bellm, E. C., et al. (2019), \"The Zwicky Transient Facility: Surveys and Scheduler,\" PASP 131, 068003, arXiv:1905.02209."
         },
         {
@@ -546,12 +546,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 131,
+          "line": 133,
           "context": "CodeSearchNet, from Husain et al. ([2019](https://arxiv.org/abs/1909.09436)), framed this as a vocabulary gap between natural-language intent and source code. Repository agents face a wider form of the same problem because their queries combine prose, symbols, stack traces, and partial hypotheses. An embedding lane can connect semantically related text with little token overlap. It may retrieve a lease-recovery routine for the duplicate-job request even when the task never uses the routine’s identifiers."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 293,
+          "line": 296,
           "context": "- Strong evidence for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval."
         },
         {
@@ -579,12 +579,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 127,
+          "line": 131,
           "context": "The problem predates current coding models. Ye et al. ([2019](https://arxiv.org/abs/1909.13694)) generated random tests against a human reference patch and assessed 638 candidate patches from 14 repair systems. The added oracle improved automatic patch assessment by 190 percent over the prior methods used in that comparison. The historical context is useful because it locates the defect in test-based program repair itself. Generative models make candidate production faster and more varied, but shipped tests are not equivalent to a specification."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 221,
+          "line": 225,
           "context": "- Ye, Martinez & Monperrus (2019), arXiv:1909.13694. [Strong evidence]"
         },
         {
@@ -741,12 +741,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 140,
-          "context": "Cheapest-sufficient routing has support from three directional literature items and no strong result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
+          "line": 142,
+          "context": "Cheapest-sufficient routing has support from three directional literature items and one recent benchmark-bound controlled result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 459,
+          "line": 464,
           "context": "- Directional evidence: Cayci, S., Eryilmaz, A., & Srikant, R. (2020), \"Budget-Constrained Bandits over General Cost and Reward Distributions,\" arXiv:2003.00365. Asymptotic guarantee under stated moment conditions."
         },
         {
@@ -773,12 +773,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 139,
+          "line": 141,
           "context": "Production reports and late-interaction research point in the same direction without settling the question. A production account of agent memory from Trautmann and Sutter ([2026](https://blog.cloudflare.com/introducing-agent-memory/)) describes parallel channels fused by rank as a deployed default. Adaptive memory retrieval, from Yan et al. ([2026](https://arxiv.org/abs/2603.16496)), and late-interaction retrieval, from Khattab and Zaharia ([2020](https://arxiv.org/abs/2004.12832)), support retaining complementary representations rather than any specific fusion policy. None provides code-specific evidence for the effect of fusion."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 296,
+          "line": 299,
           "context": "- Directional evidence: ColBERT (Khattab and Zaharia 2020), arXiv:2004.12832."
         },
         {
@@ -1495,12 +1495,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 88,
+          "line": 90,
           "context": "Parazin et al. ([2022](https://arxiv.org/abs/2203.00013)) compared a mixed-integer scheduler for gravitational-wave follow-up with a tuned greedy heuristic. Neither won consistently. Under a 500-second cap, each performed better on different skymaps, and only 37 of 97 well-localized skymaps improved under the reported optimization comparison. Across 951 simulated events, a hybrid improved detection efficiency by roughly 3 to 11 percent. The authors also reported that reducing the cap to 100 seconds would have truncated only 64 additional schedules without a substantial efficiency loss."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 453,
+          "line": 457,
           "context": "- Directional evidence: Parazin, B., et al. (2022), \"Foraging with MUSHROOMS: A Mixed-integer Linear Programming Scheduler for Multimessenger Target of Opportunity Searches with the Zwicky Transient Facility,\" ApJ 935, 87, arXiv:2203.00013."
         },
         {
@@ -1866,12 +1866,12 @@
       "occurrences": [
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 105,
+          "line": 107,
           "context": "Perry et al. ([2023](https://arxiv.org/abs/2211.03622)) found that participants using an AI coding assistant produced less secure code while believing that their code was more secure. Participants who trusted the assistant less and spent more effort steering it produced fewer vulnerabilities. Accepting an agent’s confidence creates the same kind of risk: belief can strengthen while the artifact becomes less safe."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 212,
+          "line": 218,
           "context": "- Strong evidence: Perry, Srivastava, Kumar, Boneh (2022/2023), \"Do Users Write More Insecure Code with AI Assistants?\", ACM CCS 2023, arXiv:2211.03622."
         },
         {
@@ -1985,12 +1985,12 @@
       "occurrences": [
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 155,
+          "line": 157,
           "context": "The three sources supporting this practice are directional syntheses. Greshake et al. ([2023](https://arxiv.org/abs/2302.12173)) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, but did not measure the layered defenses described here. AgentDojo, from Debenedetti et al. ([2024](https://arxiv.org/abs/2406.13352)), evaluates attacks and defenses under specified tasks. AgentShield, from Rassul and Rashid ([2026](https://arxiv.org/abs/2605.11026)), explores a deception-based screen. Together they support the threat model and a way to exercise controls. This source set contains no measured result for the complete remedy."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 216,
+          "line": 222,
           "context": "- Directional evidence: Indirect prompt injection (Greshake et al. 2023, arXiv:2302.12173); companion material named in the same synthesis: OWASP LLM Top 10."
         },
         {
@@ -2072,12 +2072,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 123,
+          "line": 125,
           "context": "Function-level code generation provides a controlled example. Liu et al. ([2023](https://arxiv.org/abs/2305.01210)) expanded a widely used suite's tests by 80x with generated inputs and mutation-based cases. Across 26 models, the largest relative reductions in \\(\\mathrm{pass}@k\\) ranged from roughly 19 to 29 percent across the reported values of \\(k\\), and model rankings changed. The models and generated programs were fixed; only the observations used to decide correctness changed. The original ranking had partly measured which wrong programs happened to fit sparse tests."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 219,
+          "line": 223,
           "context": "- Liu, Xia, Wang & Zhang (2023), arXiv:2305.01210, HumanEval+ / EvalPlus, NeurIPS 2023. [Strong evidence]"
         },
         {
@@ -2166,7 +2166,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 282,
+          "line": 284,
           "context": "- Strong evidence: Liu, T., et al. (2023), \"RepoBench: Benchmarking Repository-Level Code Auto-Completion Systems,\" ICLR 2024, arXiv:2306.03091. (R/C/P decomposition localizes failure to retrieval vs completion vs pipeline stage.)"
         },
         {
@@ -2422,12 +2422,12 @@
       "occurrences": [
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 85,
+          "line": 87,
           "context": "Huang et al. ([2023](https://arxiv.org/abs/2310.01798)) evaluated intrinsic self-correction on reasoning tasks using 2023-era models. Self-correction often failed and sometimes reduced performance, while reliable external feedback improved it. This is strong evidence for the systems studied, not an estimate of every current coding system. Newer models may change the magnitude of the effect."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 262,
+          "line": 265,
           "context": "- Strong evidence: Huang, J., et al. (2023). Large Language Models Cannot Self-Correct Reasoning Yet. ICLR 2024. arXiv:2310.01798."
         },
         {
@@ -2464,12 +2464,12 @@
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 258,
+          "line": 260,
           "context": "- Directional evidence: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. No figure carried."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 267,
+          "line": 270,
           "context": "- Directional evidence: SWE-bench (arXiv:2310.06770)."
         },
         {
@@ -3040,7 +3040,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 211,
+          "line": 215,
           "context": "- Jain et al. (2024), arXiv:2403.07974, LiveCodeBench, ICLR 2025. [Strong evidence]"
         },
         {
@@ -3258,7 +3258,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 376,
+          "line": 378,
           "context": "- Strong evidence: Hsieh, C.-P., et al. (2024), \"RULER: What's the Real Context Size of Your Long-Context Language Models?\" COLM 2024, arXiv:2404.06654."
         },
         {
@@ -3327,7 +3327,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 205,
+          "line": 209,
           "context": "- Zhang, H. et al. (2024), GSM1k, arXiv:2405.00332, Scale AI. [Strong evidence]"
         },
         {
@@ -3542,12 +3542,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 117,
+          "line": 119,
           "context": "A strong source synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanič et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155))."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 449,
+          "line": 452,
           "context": "- Qian, et al. 2024. *MacNet*. arXiv:2406.07155. Directional evidence on network scaling."
         },
         {
@@ -3638,12 +3638,12 @@
       "occurrences": [
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 142,
+          "line": 144,
           "context": "Support for the repeated-trial metric comes from one source. τ-bench, from Yao et al. ([2024](https://arxiv.org/abs/2406.12045)), evaluates interactive, multi-turn tool use with executable oracles across repeated trials and introduces \\(\\mathrm{pass}^{k}\\) as a reliability measure."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 266,
+          "line": 269,
           "context": "- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \\(\\mathrm{pass}^{k}\\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings."
         },
         {
@@ -3709,12 +3709,12 @@
       "occurrences": [
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 155,
+          "line": 157,
           "context": "The three sources supporting this practice are directional syntheses. Greshake et al. ([2023](https://arxiv.org/abs/2302.12173)) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, but did not measure the layered defenses described here. AgentDojo, from Debenedetti et al. ([2024](https://arxiv.org/abs/2406.13352)), evaluates attacks and defenses under specified tasks. AgentShield, from Rassul and Rashid ([2026](https://arxiv.org/abs/2605.11026)), explores a deception-based screen. Together they support the threat model and a way to exercise controls. This source set contains no measured result for the complete remedy."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 217,
+          "line": 223,
           "context": "- Directional evidence: AgentDojo (Debenedetti et al. 2024, arXiv:2406.13352)."
         },
         {
@@ -3920,7 +3920,7 @@
         },
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 130,
+          "line": 133,
           "context": "- Directional evidence: Kapoor, Stroebl, Siegel, Nadgir, and Narayanan (2024), *AI Agents That Matter*, arXiv:2407.01502, a re-evaluation study."
         },
         {
@@ -3974,7 +3974,7 @@
         },
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 124,
+          "line": 126,
           "context": "- Directional evidence: evaluation-design material from the code-retrieval source corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here."
         },
         {
@@ -4360,12 +4360,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 137,
+          "line": 141,
           "context": "Manual review addresses failures that generated tests are unlikely to expose. Aleithan et al. ([2024](https://arxiv.org/abs/2410.06992)) screened the apparent SWE-bench successes of one agent and model pair and found that 32.67 percent involved solution leakage and 31.08 percent passed weak tests. Removing those cases dropped the reported resolution rate from 12.47 percent to 3.97 percent. The scope is one pair, and the percentages do not estimate the prevalence for other agents or models. They show that leakage and oracle weakness can occupy a large share of one system's credited successes."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 222,
+          "line": 226,
           "context": "- Aleithan et al. (2024), arXiv:2410.06992, SWE-Bench+. [Directional evidence]"
         },
         {
@@ -4402,7 +4402,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 206,
+          "line": 210,
           "context": "- Haimes, Wenner et al. (2024), arXiv:2410.09247, Apart Research. [Strong evidence]"
         },
         {
@@ -4583,7 +4583,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 377,
+          "line": 379,
           "context": "- Strong evidence: Leng, Q., et al. (2024), \"Long Context RAG Performance of Large Language Models,\" Databricks Mosaic Research, arXiv:2411.03538."
         },
         {
@@ -4881,12 +4881,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 140,
-          "context": "Cheapest-sufficient routing has support from three directional literature items and no strong result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
+          "line": 142,
+          "context": "Cheapest-sufficient routing has support from three directional literature items and one recent benchmark-bound controlled result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 461,
+          "line": 466,
           "context": "- Directional evidence: Li, Y. (2025), \"LLM Bandit: Cost-Efficient LLM Generation via Preference-Conditioned Dynamic Routing,\" arXiv:2502.02743. Single-author preprint, benchmark evidence."
         },
         {
@@ -4919,12 +4919,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 140,
-          "context": "Cheapest-sufficient routing has support from three directional literature items and no strong result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
+          "line": 142,
+          "context": "Cheapest-sufficient routing has support from three directional literature items and one recent benchmark-bound controlled result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 460,
+          "line": 465,
           "context": "- Directional evidence: Somerstep, S., et al. (2025), \"CARROT: A Cost Aware Rate Optimal Router,\" arXiv:2502.03261. Static model pool assumed."
         },
         {
@@ -5126,12 +5126,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 355,
+          "line": 357,
           "context": "Rose et al. ([2026](https://arxiv.org/abs/2605.15132)) in APWA, Luo et al. ([2025](https://arxiv.org/abs/2502.13965)) in Autellix, and Masters et al. ([2025](https://arxiv.org/abs/2510.02557)) in the Manager Agent research challenge provide separate directional examples of related planning and scheduling architectures. None replicates a dynamic-versus-fixed comparison."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 447,
+          "line": 450,
           "context": "- Luo, et al. 2025. *Autellix*. arXiv:2502.13965. Directional scheduling and orchestration example."
         },
         {
@@ -5193,7 +5193,7 @@
         {
           "file": "localization-funnels-repository-indexes-freshness-checks.md",
           "line": 254,
-          "context": "- Directional evidence: Chang, J., et al. (2025), \"BugCerberus: Bridging Bug Localization and Issue Fixing,\" arXiv:2502.15292. (Per-hierarchy-level specialization; direction only.)"
+          "context": "- Directional evidence: Chang, J., et al. (2025), \"BugCerberus: Bridging Bug Localization and Issue Fixing,\" arXiv:2502.15292. (Per-hierarchy-level specialization.)"
         },
         {
           "file": "companion catalog",
@@ -5283,7 +5283,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 215,
+          "line": 219,
           "context": "- Chen, S. et al. (2025), arXiv:2502.17521, static-to-dynamic benchmark survey. [Directional evidence]"
         },
         {
@@ -5352,12 +5352,12 @@
       "occurrences": [
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 225,
+          "line": 227,
           "context": "SWE-bench provides directional support for executable repository repair. MultiAgentBench, from Zhu ([2025](https://arxiv.org/abs/2503.01935)), does the same for broader interaction-centered evaluation. Their architectural contribution is to place an environment, tools, state, and an outcome check inside the evaluated unit rather than scoring final-answer text alone."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 268,
+          "line": 271,
           "context": "- Directional evidence: MultiAgentBench (Zhu 2025, arXiv:2503.01935)."
         },
         {
@@ -5398,7 +5398,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 378,
+          "line": 380,
           "context": "- Strong evidence: Li, J., et al. (2025), \"LONGCODEU: Benchmarking Long-Context Language Models on Long Code Understanding,\" arXiv:2503.04359."
         },
         {
@@ -5450,12 +5450,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 351,
+          "line": 353,
           "context": "Yu et al. ([2025](https://arxiv.org/abs/2503.07675)) provide the only direct systems report attached to this practice, at directional strength. DynTaskMAS contains no controlled comparison between dynamic and fixed scheduling. The study compared parallel with serial execution on one seven-agent travel-planning workload. It did not compare a dynamic schedule with a fixed parallel schedule or isolate the task graph from the asynchronous execution engine."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 453,
+          "line": 456,
           "context": "- Yu, Junwei, Yepeng Ding, and Hiroyuki Sato. 2025. *DynTaskMAS*. arXiv:2503.07675. Directional parallel-versus-serial result on a seven-agent travel-planning workload; no controlled dynamic-versus-fixed comparison."
         },
         {
@@ -5584,12 +5584,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 111,
+          "line": 113,
           "context": "Chun et al. ([2025](https://arxiv.org/abs/2503.12029)) compared debate configurations with task baselines and reported the inference cost of the debate variants themselves. They did not compare debate with a single-model baseline on cost and identified that comparison as an open question. Debate therefore receives no presumed efficiency benefit."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 440,
+          "line": 442,
           "context": "- Chun, Jina, et al. 2025. \"Is Multi-Agent Debate the Silver Bullet?\" arXiv:2503.12029. Audit-retained strong evidence on debate performance against task baselines; reports inference cost across debate variants and leaves the single-model cost comparison open."
         },
         {
@@ -5661,7 +5661,7 @@
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 439,
+          "line": 441,
           "context": "- Cemri, M., et al. 2025. \"Why Do Multi-Agent LLM Systems Fail?\" arXiv:2503.13657. MAST failure taxonomy and benchmark-framework interventions."
         },
         {
@@ -5824,7 +5824,7 @@
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 232,
+          "line": 234,
           "context": "- Strong evidence: Zhang, S., et al. (2025), \"Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems,\" ICML 2025, arXiv:2505.00212. (Who&When: expert-annotated failure logs from 127 multi-agent systems; 53.5% agent-level and 14.2% step-level for the best automated method; some methods below random.)"
         },
         {
@@ -5858,7 +5858,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 384,
+          "line": 386,
           "context": "- Strong evidence: Laban, P., et al. (2025), \"LLMs Get Lost In Multi-Turn Conversation,\" arXiv:2505.06120."
         },
         {
@@ -5896,7 +5896,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 379,
+          "line": 381,
           "context": "- Strong evidence: Rando, S., et al. (2025), \"LongCodeBench: Evaluating Coding LLMs at 1M Context Windows,\" arXiv:2505.07897."
         },
         {
@@ -5927,12 +5927,12 @@
       "occurrences": [
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 126,
+          "line": 128,
           "context": "Deshpande et al. ([2025](https://arxiv.org/abs/2505.08638)) reported that the strongest evaluated long-context model correctly localized issues in 11 percent of 148 expert-annotated traces. The traces were benchmark-derived but ecologically valid and more complex than short synthetic sequences designed to isolate one error. Reasoning, tool calls, outputs, retries, and state changes appeared in the same record. A large context window could contain the transcript, but containment did not make the decisive event legible."
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 237,
+          "line": 239,
           "context": "- Strong evidence: Deshpande, D., et al. (2025), \"TRAIL: Trace Reasoning and Agentic Issue Localization,\" Patronus AI, arXiv:2505.08638. (Best evaluated model localized issues in 11% of 148 expert-annotated traces; a 2025 capability snapshot.)"
         },
         {
@@ -5996,7 +5996,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 214,
+          "line": 218,
           "context": "- Badertdinov et al. (2025), arXiv:2505.20411, SWE-rebench, Nebius. [Directional evidence]"
         },
         {
@@ -6041,7 +6041,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 212,
+          "line": 216,
           "context": "- Zhang, L. et al. (2025), SWE-bench Goes Live!, arXiv:2505.23419, Microsoft Research. [Directional evidence]"
         },
         {
@@ -6094,12 +6094,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 125,
+          "line": 127,
           "context": "Repository-scale results show the same mechanism under more realistic state. Yu et al. ([2025](https://arxiv.org/abs/2506.09289)) augmented SWE-bench tests retroactively and found 36 under-tested tasks and 345 patches that had been labeled as passing incorrectly. Re-adjudication corrected 40.9 percent of entries on the smaller suite and 24.4 percent on the human-screened suite, changing 29 rankings. This was an audit of already reported results, so oracle weakness had propagated beyond individual tasks into system comparisons."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 220,
+          "line": 224,
           "context": "- Yu, S. et al. (2025), arXiv:2506.09289, UTBoost. [Strong evidence]"
         },
         {
@@ -6153,12 +6153,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 175,
+          "line": 177,
           "context": "Replacing fixed line windows with syntax-aware chunks increased Recall@5 by 4.3 percentage points on RepoEval, a repository-level retrieval and completion benchmark, in the cAST study from Zhang et al. ([2025](https://arxiv.org/abs/2506.15655)). The same study reported a 2.67-percentage-point Pass@1 gain on SWE-bench generation across languages."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 300,
+          "line": 303,
           "context": "- Strong evidence: Zhang, Y., et al. (2025), \"cAST: Enhancing Code Retrieval-Augmented Generation with Structural Chunking via Abstract Syntax Tree,\" arXiv:2506.15655."
         },
         {
@@ -6393,7 +6393,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 213,
+          "line": 217,
           "context": "- Adamenko et al. (2025), arXiv:2507.11059, SWE-MERA. [Directional evidence]"
         },
         {
@@ -6424,12 +6424,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 135,
+          "line": 137,
           "context": "The strongest code-specific evidence for retaining both lanes comes from an industrial study. Across 1,669 internal WeChat repositories and 26 language models, Yang et al. ([2025](https://arxiv.org/abs/2507.18515)) found that combined lexical and semantic retrieval performed best for closed-source code completion. The channels recovered complementary evidence rather than acting as interchangeable versions of one ranking function."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 292,
+          "line": 295,
           "context": "- Strong evidence: Yang, Z., et al. (2025), \"A Deep Dive into Retrieval-Augmented Generation for Code Completion: Experience on WeChat,\" arXiv:2507.18515 (industrial study)."
         },
         {
@@ -6561,7 +6561,7 @@
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 227,
+          "line": 229,
           "context": "- Directional evidence: Lu, R., Li, Y., Huo, Y. (2025), \"Exploring Autonomous Agents: A Closer Look at Why They Fail When Completing Tasks,\" arXiv:2508.13143. (Phase-aligned classification; ~50% completion base rate on 34 programmable tasks with off-the-shelf frameworks; not an estimate for production repositories.)"
         },
         {
@@ -6664,7 +6664,7 @@
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 233,
+          "line": 235,
           "context": "- Directional evidence: Ma, G., et al. (2025), \"Automatic Failure Attribution and Critical Step Prediction Method for Multi-Agent Systems Based on Causal Inference,\" arXiv:2509.08682 (CDC-MAS). (36.2% step-level against under 15% for prior methods; counterfactually validated fixes worth an average 22.4% task success.)"
         },
         {
@@ -6704,12 +6704,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 117,
+          "line": 119,
           "context": "A strong source synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanič et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155))."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 452,
+          "line": 455,
           "context": "- Tian, et al. 2025. \"Beyond the Strongest LLM.\" arXiv:2509.23537. Directional evidence on multi-agent teams."
         },
         {
@@ -6895,12 +6895,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 355,
+          "line": 357,
           "context": "Rose et al. ([2026](https://arxiv.org/abs/2605.15132)) in APWA, Luo et al. ([2025](https://arxiv.org/abs/2502.13965)) in Autellix, and Masters et al. ([2025](https://arxiv.org/abs/2510.02557)) in the Manager Agent research challenge provide separate directional examples of related planning and scheduling architectures. None replicates a dynamic-versus-fixed comparison."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 448,
+          "line": 451,
           "context": "- Masters, et al. 2025. *Manager Agent research challenge*. arXiv:2510.02557. Directional planning and scheduling example."
         },
         {
@@ -7148,12 +7148,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 157,
+          "line": 161,
           "context": "Construct validity asks whether an instrument measures the property named in the claim. Bean et al. ([2025](https://arxiv.org/abs/2511.04703)) used that question as the checklist for a systematic review of 445 benchmarks. A coding benchmark can measure repository issue resolution while offering weak evidence about migration work, security remediation, build repair, or long-running feature development. Passing tests establish performance on the sampled tasks under the specified harness. Generalizing that result to another workload requires a reason to believe the task distributions and operating conditions overlap."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 229,
+          "line": 235,
           "context": "- Bean, A.M. et al. (2025), Measuring what Matters, arXiv:2511.04703. [Directional evidence] Carried in the companion catalog as the construct-validity record; named inline for the construct-validity definition that opens this section."
         },
         {
@@ -7189,12 +7189,12 @@
       "occurrences": [
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 297,
+          "line": 299,
           "context": "Actual context files are broader. Chatlatanagulchai et al. ([2025](https://arxiv.org/abs/2511.12884)) analyzed 2,303 files from 1,925 repositories. Implementation details appeared in 69.9 percent, architecture information in 67.7 percent, and build or execution guidance in 62.3 percent. Security and performance guidance each appeared in 14.5 percent."
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 396,
+          "line": 399,
           "context": "- Strong evidence: Chatlatanagulchai, W., et al. (2025), \"Agent READMEs: An Empirical Study of Context Files for Agentic Coding,\" arXiv:2511.12884."
         },
         {
@@ -7279,7 +7279,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 204,
+          "line": 208,
           "context": "- Prathifkumar, Saji Mathews & Nagappan (2025), arXiv:2512.10218, Waterloo. [Directional evidence]"
         },
         {
@@ -7369,7 +7369,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 287,
+          "line": 289,
           "context": "- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978."
         },
         {
@@ -7594,7 +7594,7 @@
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 444,
+          "line": 446,
           "context": "- Kim, T., et al. 2026. \"Why Do AI Agents Systematically Fail at Cloud Root Cause Analysis?\" arXiv:2602.09937. OpenRCA evidence on failure persistence across capability tiers and protocol intervention."
         },
         {
@@ -7650,7 +7650,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 395,
+          "line": 397,
           "context": "- Null or conflicting result: Gloaguen, T., Mündler, N., Müller, M., Raychev, V., Vechev, M. (2026), \"Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?\" arXiv:2602.11988."
         },
         {
@@ -7680,12 +7680,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 221,
+          "line": 223,
           "context": "Jia et al. ([2026](https://arxiv.org/abs/2602.19843)) injected synthetic faults into three multi-agent architectures in MAS-FIRE. Closed-loop architectures neutralized more than 40 percent of faults that caused the linear pipeline to collapse, and stronger foundation models did not uniformly produce greater robustness."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 442,
+          "line": 444,
           "context": "- Jia, J., et al. 2026. \"MAS-FIRE: Fault Injection and Reliability Evaluation for LLM-Based Multi-Agent Systems.\" arXiv:2602.19843. Synthetic fault injection across three architectures."
         },
         {
@@ -7753,12 +7753,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 129,
+          "line": 133,
           "context": "Adversarial strengthening begins from the candidate failures a benchmark should reject. Construct plausible patches that implement only the common case, hard-code a fixture, change an unrelated return value, suppress an exception, or satisfy the visible assertion while violating the issue's broader contract. Then retain the tests that kill those patches. Yu et al. ([2026](https://arxiv.org/abs/2603.00520)) built suites that way, rejected 19.71 percent of patches that had passed previously, and reported a top score falling from 78.80 percent to 62.20 percent."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 223,
+          "line": 227,
           "context": "- Yu, B. et al. (2026), arXiv:2603.00520, SWE-ABS. [Strong evidence]"
         },
         {
@@ -7784,12 +7784,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 94,
+          "line": 96,
           "context": "This vocabulary comes from a position paper by Vishnyakova ([2026](https://arxiv.org/abs/2603.09619)) and is not itself a measurement protocol. Each property requires an operational definition tied to the evaluated system before it can enter a score."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 288,
+          "line": 290,
           "context": "- Corroborating case: Vishnyakova, O. (2026), arXiv:2603.09619. (Names the five context-quality criteria; position paper.)"
         },
         {
@@ -7849,12 +7849,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 139,
+          "line": 141,
           "context": "Production reports and late-interaction research point in the same direction without settling the question. A production account of agent memory from Trautmann and Sutter ([2026](https://blog.cloudflare.com/introducing-agent-memory/)) describes parallel channels fused by rank as a deployed default. Adaptive memory retrieval, from Yan et al. ([2026](https://arxiv.org/abs/2603.16496)), and late-interaction retrieval, from Khattab and Zaharia ([2020](https://arxiv.org/abs/2004.12832)), support retaining complementary representations rather than any specific fusion policy. None provides code-specific evidence for the effect of fusion."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 295,
+          "line": 298,
           "context": "- Directional evidence: AdaMem (Yan et al. 2026), arXiv:2603.16496, carried in the same evidence record as the Cloudflare account. Its own retrieval route is semantic retrieval with conditional graph expansion rather than rank fusion, so it supports retaining a complementary semantic lane only."
         },
         {
@@ -7939,7 +7939,7 @@
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 253,
+          "line": 255,
           "context": "- Directional evidence: Mehta, A. (2026). Confident and Wrong: Silent Semantic Failures in Coding Agents. arXiv:2603.25764. Analysis of 1,750 trajectories across 50 tasks and four models; single-author, limited-sample observational finding. Supports the companion-only entry on scoring verified resolution separately from submission."
         },
         {
@@ -7970,12 +7970,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 163,
+          "line": 167,
           "context": "Jha et al. ([2026](https://arxiv.org/abs/2604.01527)) demonstrated one curation approach for a production-derived benchmark. They built tasks from sessions with their own coding assistant, classified the work, checked that tests were relevant to each task, and required stability across repeated runs. This is directional evidence from one vendor's environment. It shows that production traces can be converted into repeatable tasks. It does not establish that the resulting distribution represents another organization, or even every kind of work inside the source organization."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 227,
+          "line": 233,
           "context": "- Jha, Paltenghi, Maddila, Murali, Ugare, and Chandra (2026), *REAP: Automatic Curation of Coding Agent Benchmarks from Interactive Production Usage*, arXiv:2604.01527; the resulting benchmark is Harvest. [Directional evidence] The title and benchmark name were verified against the arXiv record on 2026-07-29; earlier working records used the name ProdCodeBench."
         },
         {
@@ -8126,12 +8126,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 271,
+          "line": 273,
           "context": "Two directional research lines expand the vocabulary without resolving the transfer. Huang and Zhou ([2026](https://arxiv.org/abs/2605.13850)) organize agent design patterns along two dimensions. Shang ([2026](https://arxiv.org/abs/2604.08206)) relates blackboard coordination to a global workspace in Theater of Mind. Both provide exploratory support without a quantitative claim here."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 451,
+          "line": 454,
           "context": "- Shang, Wenlong. 2026. *\"Theater of Mind\" for LLMs: A Cognitive Architecture Based on Global Workspace Theory*. arXiv:2604.08206. Directional blackboard and global-workspace design; single-author architecture proposal, not a controlled measurement."
         },
         {
@@ -8210,12 +8210,12 @@
       "occurrences": [
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 228,
+          "line": 232,
           "context": "The companion pattern `cost-cascade-routing` provides another response to uncertainty. Begin with a cheaper route and escalate when calibrated confidence is insufficient. Chang ([2026](https://arxiv.org/abs/2604.12262)) reports that confidence-gated cascades often outperformed always-on strong-model fan-out in both cost and quality."
         },
         {
           "file": "cost-aware-fleet-scheduling-model-routing.md",
-          "line": 463,
+          "line": 469,
           "context": "- Directional evidence for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional."
         },
         {
@@ -8306,12 +8306,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 117,
+          "line": 119,
           "context": "A strong source synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanič et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155))."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 445,
+          "line": 448,
           "context": "- Kumar, et al. 2026. *AgentForge*. arXiv:2604.13120. Directional evidence on multi-agent design."
         },
         {
@@ -8321,7 +8321,7 @@
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 257,
+          "line": 259,
           "context": "- Directional evidence: AgentForge (Kumar et al. 2026, arXiv:2604.13120). Execution-grounded evaluation in resource-bounded, network-isolated sandboxes, with propagation gated on execution results. Unrefereed preprint; single configuration; one sample per agent."
         },
         {
@@ -8433,7 +8433,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 286,
+          "line": 288,
           "context": "- Directional evidence: EngramaBench (Acuna 2026), arXiv:2604.21229."
         },
         {
@@ -8627,12 +8627,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 117,
+          "line": 119,
           "context": "A strong source synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanič et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155))."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 437,
+          "line": 439,
           "context": "- Bertalanič, et al. 2026. *The Cost of Consensus*. arXiv:2605.00914. Exploratory evidence on aggregation failure; Chapter 5 carries the reported oracle-gap result."
         },
         {
@@ -8787,7 +8787,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 284,
+          "line": 286,
           "context": "- Strong evidence: Memory Circuit Analysis (Mao et al. 2026), arXiv:2605.03354. (Stage-level diagnostic localizing a silent failure to the responsible memory operation; extraction/retention/retrieval fail silently behind fluent answers.)"
         },
         {
@@ -8937,12 +8937,12 @@
       "occurrences": [
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 155,
+          "line": 157,
           "context": "The three sources supporting this practice are directional syntheses. Greshake et al. ([2023](https://arxiv.org/abs/2302.12173)) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, but did not measure the layered defenses described here. AgentDojo, from Debenedetti et al. ([2024](https://arxiv.org/abs/2406.13352)), evaluates attacks and defenses under specified tasks. AgentShield, from Rassul and Rashid ([2026](https://arxiv.org/abs/2605.11026)), explores a deception-based screen. Together they support the threat model and a way to exercise controls. This source set contains no measured result for the complete remedy."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 218,
+          "line": 224,
           "context": "- Directional evidence: AgentShield deception-based detection (Rassul and Rashid 2026, arXiv:2605.11026)."
         },
         {
@@ -9006,12 +9006,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 271,
+          "line": 273,
           "context": "Two directional research lines expand the vocabulary without resolving the transfer. Huang and Zhou ([2026](https://arxiv.org/abs/2605.13850)) organize agent design patterns along two dimensions. Shang ([2026](https://arxiv.org/abs/2604.08206)) relates blackboard coordination to a global workspace in Theater of Mind. Both provide exploratory support without a quantitative claim here."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 441,
+          "line": 443,
           "context": "- Huang, Jia, and Joey Tianyi Zhou. 2026. \"A Two-Dimensional Framework for AI Agent Design Patterns: Cognitive Function and Execution Topology.\" arXiv:2605.13850. Directional taxonomy of topology choices."
         },
         {
@@ -9082,12 +9082,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 355,
+          "line": 357,
           "context": "Rose et al. ([2026](https://arxiv.org/abs/2605.15132)) in APWA, Luo et al. ([2025](https://arxiv.org/abs/2502.13965)) in Autellix, and Masters et al. ([2025](https://arxiv.org/abs/2510.02557)) in the Manager Agent research challenge provide separate directional examples of related planning and scheduling architectures. None replicates a dynamic-versus-fixed comparison."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 450,
+          "line": 453,
           "context": "- Rose, Evan, et al. 2026. *APWA: A Distributed Architecture for Parallelizable Agentic Workflows*. arXiv:2605.15132. Directional orchestration example."
         },
         {
@@ -9182,8 +9182,8 @@
       "occurrences": [
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 126,
-          "context": "- Directional evidence: *MemConflict* (arXiv:2605.20926), direction only; no figure carried."
+          "line": 128,
+          "context": "- Directional evidence: *MemConflict* (arXiv:2605.20926); no figure carried."
         },
         {
           "file": "calibrating-model-graders-agreement-correctness.md",
@@ -9197,7 +9197,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 283,
+          "line": 285,
           "context": "- Strong evidence: MemConflict (Tao et al. 2026), arXiv:2605.20926. (Black-box + white-box memory evaluation; localizes missing vs low-ranked vs retrieved-but-unused; best reported conflict-recognition score 0.2501.)"
         },
         {
@@ -9348,8 +9348,8 @@
       "occurrences": [
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 125,
-          "context": "- Directional evidence: *TIAP* (arXiv:2605.24060), direction only; no figure carried."
+          "line": 127,
+          "context": "- Directional evidence: *TIAP* (arXiv:2605.24060); no figure carried."
         },
         {
           "file": "calibrating-model-graders-agreement-correctness.md",
@@ -9422,7 +9422,7 @@
         },
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 123,
+          "line": 125,
           "context": "- Directional evidence: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117), through the agentic-memory source synthesis. The underlying study measures no-skill and raw-trajectory controls in its setting; coverage matching, one-factor sweeps, and the writer information-flow constraint are transfers within the broader protocol."
         },
         {
@@ -9432,7 +9432,7 @@
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 285,
+          "line": 287,
           "context": "- Directional evidence: SkillEvolBench (Lei 2026), arXiv:2605.24117."
         },
         {
@@ -9484,12 +9484,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 265,
+          "line": 267,
           "context": "Zhao et al. ([2026](https://arxiv.org/abs/2605.26178)) provide strong experimental evidence from ATOM that topology is a first-order variable and that adapting it to task difficulty can outperform one average design. Their evaluation used five-agent teams with two open models across MMLU, GSM8K, HumanEval, AQuA, MultiArith, and SVAMP."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 454,
+          "line": 457,
           "context": "- Zhao, et al. 2026. *ATOM*. arXiv:2605.26178. Audit-retained strong evidence on difficulty-conditioned topology across six short-form benchmarks."
         },
         {
@@ -9545,12 +9545,12 @@
       "occurrences": [
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 143,
+          "line": 145,
           "context": "Tang et al. ([2026](https://arxiv.org/abs/2605.29442)) analyzed 20,574 real sessions across 1,639 repositories. They reported that 90.5 percent of misalignment episodes consumed effort and trust without causing irreversible harm, and that 91.49 percent of visible resolutions required explicit user correction. As overall misalignment declined, inaccurate self-reporting accounted for a larger share of the remaining episodes. The study adds scale for visible correction burden but cannot estimate silent failures."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 210,
+          "line": 216,
           "context": "- Directional evidence: Tang et al., \"How Coding Agents Fail Their Users: A Large-Scale Analysis of Developer-Agent Misalignment in 20,574 Real-World Sessions\", arXiv:2605.29442, 2026."
         },
         {
@@ -9579,12 +9579,12 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 113,
+          "line": 115,
           "context": "Li et al. ([2026](https://arxiv.org/abs/2606.00655)) provide a controlled cost result from SIMAS. Their multi-agent configurations used roughly 15 times as many tokens, returns were non-monotonic as agents were added, and debate sometimes underperformed self-correction."
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 446,
+          "line": 449,
           "context": "- Li, et al. 2026. *SIMAS*. arXiv:2606.00655. Audit-retained strong evidence on token cost, non-monotonic scaling, and debate versus self-correction."
         },
         {
@@ -9914,6 +9914,315 @@
           "context": "Caumartin, G., et al. (2026). Retrieval-Oriented Code Representations in Agentic Bug Localization. arXiv e-print (cs.SE)."
         }
       ]
+    },
+    {
+      "id": "2607.22368",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.22368",
+        "title": "Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI",
+        "authors": [
+          "Jiaqi Shao",
+          "Hanck Chen",
+          "Wei Zhang",
+          "Maxm Pan",
+          "Bing Luo"
+        ],
+        "published": "2026-07-24",
+        "updated": "2026-07-24"
+      },
+      "occurrences": [
+        {
+          "file": "contamination-oracle-workload-validity.md",
+          "line": 121,
+          "context": "Shao et al. ([2026](https://arxiv.org/abs/2607.22368)) make this broader condition explicit as protocol validity: the intended capability must remain necessary for success under the evaluation protocol. Their HackDetect audit covered 2,385 traces across 15 agent benchmarks and found exposures or reward hacking in 67.0 percent of Frontier Science traces and 66.7 percent of AutoLab tasks; paired audits measured score inflation of 0.45 to 1.00 on their Mislead-gap scale. These are strong measurements for the audited protocols, not prevalence estimates for agent benchmarks as a whole."
+        },
+        {
+          "file": "contamination-oracle-workload-validity.md",
+          "line": 228,
+          "context": "- Strong evidence for audited protocol defects and paired score inflation: Shao, J., Chen, H., Zhang, W., Pan, M., and Luo, B. (2026), \"Do Agent Benchmarks Measure Capability? Protocol Validity in the Age of Agentic AI,\" arXiv:2607.22368. The reported rates apply to the audited protocols, not all agent benchmarks."
+        }
+      ]
+    },
+    {
+      "id": "2607.22520",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.22520",
+        "title": "The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents",
+        "authors": [
+          "Darshan Tank",
+          "Baran Nama"
+        ],
+        "published": "2026-07-24",
+        "updated": "2026-07-24"
+      },
+      "occurrences": [
+        {
+          "file": "baselines-ablations-cost-accuracy.md",
+          "line": 33,
+          "context": "Tank and Nama ([2026](https://arxiv.org/abs/2607.22520)) compared agents with and without procedural skills across nearly 6,000 runs on two office-automation benchmarks and three model-harness stacks. The best-performing skills won primarily by causing fewer regressions, a distinction concealed by net task-success change. The study strongly supports decomposing a skill intervention into gains, regressions, and residual failures in those settings; transfer to coding-agent skill libraries remains directional."
+        },
+        {
+          "file": "baselines-ablations-cost-accuracy.md",
+          "line": 129,
+          "context": "- Strong evidence for the narrower transition analysis: Tank, D., and Nama, B. (2026), \"The Regression Tax: Decomposing Why Skills Help and Hurt LLM Agents,\" arXiv:2607.22520. Nearly 6,000 runs across two office-automation benchmarks and three model-harness stacks; transfer to coding-agent skill libraries is directional."
+        }
+      ]
+    },
+    {
+      "id": "2607.24882",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.24882",
+        "title": "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents",
+        "authors": [
+          "Bowen Qin",
+          "Yi Xie"
+        ],
+        "published": "2026-07-27",
+        "updated": "2026-07-27"
+      },
+      "occurrences": [
+        {
+          "file": "measuring-designing-repository-retrieval.md",
+          "line": 56,
+          "context": "Agent Retrieval Bench provides a direct repository-scale instrument for the upstream stage. Qin and Xie ([2026](https://arxiv.org/abs/2607.24882)) built 427 samples across 25 repositories, including positive retrieval tasks, natural no-gold cases, and counterfactual wrong-repository controls. No retrieval family dominated all measures, and logged agent trajectories missed every gold file on 27 to 35 percent of samples. A controlled seed pilot found that retrieval-derived initial context raised file F1 while reducing later exploration relative to random non-gold context. These are strong benchmark and pilot results under the released design; they do not select one retrieval architecture for every repository."
+        },
+        {
+          "file": "measuring-designing-repository-retrieval.md",
+          "line": 291,
+          "context": "- Strong evidence for the benchmark measurements and controlled seed pilot: Qin, B., and Xie, Y. (2026), \"Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents,\" arXiv:2607.24882. The benchmark supports stage-level evaluation rather than a universal retrieval-family ranking."
+        }
+      ]
+    },
+    {
+      "id": "2607.25152",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.25152",
+        "title": "When Do Agent Loops Mistake Stagnation for Progress? Self-Evaluation Bias and Externally Grounded Verification in Long-Running Autonomous LLM Agent Loops",
+        "authors": [
+          "Hyundoo Park",
+          "Byungho Choi"
+        ],
+        "published": "2026-07-27",
+        "updated": "2026-07-27"
+      },
+      "occurrences": [
+        {
+          "file": "execution-correction-gates-release-tests.md",
+          "line": 25,
+          "context": "Park and Choi ([2026](https://arxiv.org/abs/2607.25152)) held an agent and its tool surface fixed while changing the evaluator's information channel. Across 54 cycles, the agent claimed improvement every time, although 56 percent of measured deltas were zero or negative; the self-verdict gate accepted every cycle and eroded the best reached state by 19 percent. On a boundary task whose success was verifiable from the artifact, the same judge's gap disappeared. This is strong evidence within the preregistered testbed that a gate must observe the state in which success is defined."
+        },
+        {
+          "file": "execution-correction-gates-release-tests.md",
+          "line": 261,
+          "context": "- Strong evidence for externally grounded gating in the measured testbed: Park, H., and Choi, B. (2026), \"When Do Agent Loops Mistake Stagnation for Progress?\" arXiv:2607.25152. The 54-cycle result does not estimate a general agent failure rate."
+        }
+      ]
+    },
+    {
+      "id": "2607.27250",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.27250",
+        "title": "Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories",
+        "authors": [
+          "Prakhar Khatri"
+        ],
+        "published": "2026-07-28",
+        "updated": "2026-07-28"
+      },
+      "occurrences": [
+        {
+          "file": "usable-context-budgets-spec-restarts-file-output.md",
+          "line": 251,
+          "context": "Khatri ([2026](https://arxiv.org/abs/2607.27250)) ran a second controlled ablation across two agents, 17 real tasks from three repositories, and 288 evaluated runs. Equivalence tests bounded any correctness effect to no more than roughly 10 to 15 percentage points and found no measurable improvement. This null result strengthens the case for a no-file baseline while remaining limited by the agents, repositories, tasks, and equivalence bounds studied."
+        },
+        {
+          "file": "usable-context-budgets-spec-restarts-file-output.md",
+          "line": 398,
+          "context": "- Null or conflicting result: Khatri, P. (2026), \"Do Context Files Help Coding Agents? A Two-Agent Ablation Study on Real Repositories,\" arXiv:2607.27250. Across 288 runs, equivalence tests bounded correctness effects to no more than roughly 10 to 15 percentage points in the studied conditions."
+        }
+      ]
+    },
+    {
+      "id": "2607.27294",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.27294",
+        "title": "AgentS4D: Benchmarking Runtime Risks across the Execution Lifecycle of LLM-Based Workspace Agents",
+        "authors": [
+          "Jiajun Zhou",
+          "Zhaoxuan Ke",
+          "Jihang Ye",
+          "Xuanze Chen",
+          "Shanqing Yu",
+          "Qi Xuan"
+        ],
+        "published": "2026-07-29",
+        "updated": "2026-07-29"
+      },
+      "occurrences": [
+        {
+          "file": "isolation-injection-independent-verification.md",
+          "line": 7,
+          "context": "Completion and safety also need separate observations. Zhou et al. ([2026](https://arxiv.org/abs/2607.27294)) constructed 328 risk-injected workspace tasks and ran 20 harness-model combinations for 6,560 trials. Prespecified unsafe signals fired in 68.0 percent of runs, and 66.22 percent were both unsafe and complete. Safety varied by harness-model pairing and by how the risk was delivered. These are strong results for the tested configurations and benchmark; they do not establish a production incident rate."
+        },
+        {
+          "file": "isolation-injection-independent-verification.md",
+          "line": 211,
+          "context": "- Strong evidence within the tested benchmark and configurations: Zhou, J., et al. (2026), \"AgentS4D: Benchmarking Runtime Risks across the Execution Lifecycle of LLM-Based Workspace Agents,\" arXiv:2607.27294. Across 6,560 runs, 66.22 percent were both unsafe under a prespecified signal and complete; the result is not a production incident rate."
+        }
+      ]
+    },
+    {
+      "id": "2607.28587",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.28587",
+        "title": "PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks",
+        "authors": [
+          "Manyi Wang",
+          "Junjielong Xu",
+          "Pinjia He"
+        ],
+        "published": "2026-07-30",
+        "updated": "2026-08-04"
+      },
+      "occurrences": [
+        {
+          "file": "contamination-oracle-workload-validity.md",
+          "line": 129,
+          "context": "Task construction can fail before the oracle runs. Wang, Xu, and He ([2026](https://arxiv.org/abs/2607.28587)) audited SWE-bench Verified and found PR-issue misalignment in 13.6 percent of instances across five patterns and eleven scenarios. Their PAIChecker reached up to 92.12 percent binary accuracy on SWE-Gym and 91.67 percent on SWE-bench Multilingual across four model backbones. The results strongly support the measured misalignment rate and detector accuracy on those collections; other SWE-bench-derived sets require their own audit."
+        },
+        {
+          "file": "contamination-oracle-workload-validity.md",
+          "line": 229,
+          "context": "- Strong evidence for benchmark-specific PR-issue misalignment and detector accuracy: Wang, M., Xu, J., and He, P. (2026), \"PAIChecker: Uncovering and Checking PR-Issue Misalignment in SWE-Bench-Like Benchmarks,\" arXiv:2607.28587."
+        }
+      ]
+    },
+    {
+      "id": "2607.28802",
+      "status": "resolved",
+      "metadata": {
+        "id": "2607.28802",
+        "title": "Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures",
+        "authors": [
+          "Harsh Raj",
+          "Vipul Gupta",
+          "Anas Mahmoud",
+          "Razvan-Gabriel Dumitru",
+          "Darvin Yi",
+          "Aakash Sabharwal",
+          "Yunzhong He"
+        ],
+        "published": "2026-07-30",
+        "updated": "2026-07-30"
+      },
+      "occurrences": [
+        {
+          "file": "human-auditable-failure-analysis-taxonomy.md",
+          "line": 112,
+          "context": "Raj et al. ([2026](https://arxiv.org/abs/2607.28802)) organize 41 failure modes by the interaction edge where a fault originates and the component that owns the repair. The strongest of four automated judges reached Cohen's \\(\\kappa=0.76\\) against human category labels. The taxonomy is directional evidence for an interaction-centered diagnostic structure; the agreement result strongly supports reproducibility of those labels in the evaluated set, not causal correctness of an attribution."
+        },
+        {
+          "file": "human-auditable-failure-analysis-taxonomy.md",
+          "line": 241,
+          "context": "- Directional evidence for interaction-centered failure localization, with strong evidence for label reproducibility in the evaluated set: Raj, H., et al. (2026), \"Model or Harness? An Interaction-Centric Taxonomy for Localizing Agent Failures,\" arXiv:2607.28802. The strongest automated judge reached Cohen's \\(\\kappa=0.76\\) against human labels."
+        }
+      ]
+    },
+    {
+      "id": "2608.00101",
+      "status": "resolved",
+      "metadata": {
+        "id": "2608.00101",
+        "title": "Agentic Coding in the Wild: Characterizing GitHub Copilot Traces at Production Scale",
+        "authors": [
+          "Banruo Liu",
+          "Haoran Qiu",
+          "Íñigo Goiri",
+          "Rodrigo Fonseca",
+          "Ricardo Bianchini",
+          "Esha Choukse"
+        ],
+        "published": "2026-07-30",
+        "updated": "2026-07-30"
+      },
+      "occurrences": [
+        {
+          "file": "cost-aware-fleet-scheduling-model-routing.md",
+          "line": 18,
+          "context": "Production traces also show that coding-agent traffic differs from chatbot traffic. Liu et al. ([2026](https://arxiv.org/abs/2608.00101)) sampled GitHub Copilot activity from 3.2 million users, 13 million sessions, 761 million model calls, and 95 trillion tokens. KV-cache hit rates averaged 90 percent within a turn and 55 percent across turn boundaries; a lightweight predictor captured 86 to 90 percent of total user idle time. The study strongly characterizes one production workload and directionally supports measuring turn boundaries and idle periods in capacity policy."
+        },
+        {
+          "file": "cost-aware-fleet-scheduling-model-routing.md",
+          "line": 458,
+          "context": "- Strong evidence for production workload characterization, directional for capacity-policy transfer: Liu, B., et al. (2026), \"Agentic Coding in the Wild: Characterizing GitHub Copilot Traces at Production Scale,\" arXiv:2608.00101."
+        }
+      ]
+    },
+    {
+      "id": "2608.01507",
+      "status": "resolved",
+      "metadata": {
+        "id": "2608.01507",
+        "title": "Deep Agentic Search for Repository-Level Code Question Answering: An Empirical Study",
+        "authors": [
+          "Amirkia Rafiei Oskooei",
+          "Bora Ilci",
+          "Alperen Kayim",
+          "Mehmet Egemen Uzun",
+          "Berat Can",
+          "Kaan Emre Kara",
+          "Ozan Orhan",
+          "Mehmet S. Aktas"
+        ],
+        "published": "2026-08-02",
+        "updated": "2026-08-02"
+      },
+      "occurrences": [
+        {
+          "file": "agent-topology-dynamic-task-allocation.md",
+          "line": 29,
+          "context": "Oskooei et al. ([2026](https://arxiv.org/abs/2608.01507)) measured one such boundary on SWE-QA. Semantic search answered 65.2 percent of repository questions correctly, compared with 46.2 percent for planner-to-subagent search, at less than half the cost per correct answer. Handoff loss accounted for 41.8 percent of the subagent system's failures. This is strong evidence for the compared configurations on SWE-QA and directional evidence for topology selection beyond read-only repository questions."
+        },
+        {
+          "file": "agent-topology-dynamic-task-allocation.md",
+          "line": 447,
+          "context": "- Oskooei, A. R., et al. 2026. \"Deep Agentic Search for Repository-Level Code Question Answering: An Empirical Study.\" arXiv:2608.01507. Strong evidence for the SWE-QA comparison and its measured handoff failures; broader topology transfer is directional."
+        }
+      ]
+    },
+    {
+      "id": "2608.04804",
+      "status": "resolved",
+      "metadata": {
+        "id": "2608.04804",
+        "title": "Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First",
+        "authors": [
+          "Ishaan Bhola",
+          "Adithyan Krishnan",
+          "Mukunda NS"
+        ],
+        "published": "2026-08-05",
+        "updated": "2026-08-05"
+      },
+      "occurrences": [
+        {
+          "file": "cost-aware-fleet-scheduling-model-routing.md",
+          "line": 157,
+          "context": "Bhola, Krishnan, and NS ([2026](https://arxiv.org/abs/2608.04804)) evaluated a scout-and-route configuration on 266 Python tasks from SWE-bench Pro. It solved 159 tasks, compared with 158 for the best single model, at about one fifth of the reported total cost per solve. A no-router ablation that always selected the cheapest fixer but retained the verified handoff tied the routed system, locating the measured gain in the handoff rather than the routing decision. The result strongly supports that benchmark-specific configuration and its null routing ablation; generalized cheapest-sufficient routing remains directional."
+        },
+        {
+          "file": "cost-aware-fleet-scheduling-model-routing.md",
+          "line": 467,
+          "context": "- Strong evidence for one benchmark-bound scout-and-fixer configuration and its no-router ablation: Bhola, I., Krishnan, A., and NS, M. (2026), \"Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First,\" arXiv:2608.04804. The handoff, rather than the router, carried the measured result."
+        }
+      ]
     }
   ],
   "dois": [
@@ -10018,12 +10327,12 @@
       "occurrences": [
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 61,
+          "line": 63,
           "context": "Additional model calls can raise the pass rate without any change to the architecture. If one attempt has probability <span class=\"katex\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mi>p</mi></mrow><annotation encoding=\"application/x-tex\">p</annotation></semantics></math></span> of passing and two attempts are independent, the probability that at least one passes is <span class=\"katex\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>1</mn><mo>−</mo><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><msup><mo stretchy=\"false\">)</mo><mn>2</mn></msup></mrow><annotation encoding=\"application/x-tex\">1-(1-p)^2</annotation></semantics></math></span>. The expression illustrates the effect under independence. It does not estimate real agent behavior, in which attempts are correlated. Correlation changes the size of the gain, but a system allowed to sample, revise, or delegate more often still has more opportunities to produce a passing output."
         },
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 61,
+          "line": 63,
           "context": "Additional model calls can raise the pass rate without any change to the architecture. If one attempt has probability <span class=\"katex\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mi>p</mi></mrow><annotation encoding=\"application/x-tex\">p</annotation></semantics></math></span> of passing and two attempts are independent, the probability that at least one passes is <span class=\"katex\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>1</mn><mo>−</mo><mo stretchy=\"false\">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><msup><mo stretchy=\"false\">)</mo><mn>2</mn></msup></mrow><annotation encoding=\"application/x-tex\">1-(1-p)^2</annotation></semantics></math></span>. The expression illustrates the effect under independence. It does not estimate real agent behavior, in which attempts are correlated. Correlation changes the size of the gain, but a system allowed to sample, revise, or delegate more often still has more opportunities to produce a passing output."
         },
         {
@@ -10097,12 +10406,12 @@
       "occurrences": [
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 139,
+          "line": 141,
           "context": "Production reports and late-interaction research point in the same direction without settling the question. A production account of agent memory from Trautmann and Sutter ([2026](https://blog.cloudflare.com/introducing-agent-memory/)) describes parallel channels fused by rank as a deployed default. Adaptive memory retrieval, from Yan et al. ([2026](https://arxiv.org/abs/2603.16496)), and late-interaction retrieval, from Khattab and Zaharia ([2020](https://arxiv.org/abs/2004.12832)), support retaining complementary representations rather than any specific fusion policy. None provides code-specific evidence for the effect of fusion."
         },
         {
           "file": "measuring-designing-repository-retrieval.md",
-          "line": 294,
+          "line": 297,
           "context": "- Directional evidence: Trautmann & Sutter (2026), [\"Agents that remember: introducing Agent Memory\"](https://blog.cloudflare.com/introducing-agent-memory/), Cloudflare. Production account carrying the shipped default of parallel channels fused with reciprocal-rank fusion."
         }
       ]
@@ -10121,7 +10430,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 389,
+          "line": 391,
           "context": "- Directional evidence: [\"Dynamic Context Discovery in Coding Agents\"](https://cursor.com/blog/dynamic-context-discovery), Cursor engineering blog, 2026-01-07."
         },
         {
@@ -10192,7 +10501,7 @@
         },
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 458,
+          "line": 461,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the preamble rerun described in the opening, which is narrative illustration."
         },
         {
@@ -10202,7 +10511,7 @@
         },
         {
           "file": "baselines-ablations-cost-accuracy.md",
-          "line": 135,
+          "line": 138,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the end-to-end run and the score-per-dollar reporting described above, both of which are narrative illustration."
         },
         {
@@ -10217,42 +10526,42 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 169,
+          "line": 173,
           "context": "In my own work, I built CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) to mine evaluation tasks from a repository's merged pull requests. It keeps the instruction separate from the recorded ground-truth commit and uses the test files touched by the original change as the verification command. That design turns completed work into replayable cases without exposing the recorded solution to the candidate. It is a methodology illustration and carries the same oracle caveat as any test-derived benchmark. The tests a merged change happened to touch are candidate historical checks, not a certification that the recorded solution was correct."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 233,
+          "line": 239,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the merged-pull-request mining design described above, which is methodology illustration."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 217,
+          "line": 219,
           "context": "CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) uses a different gate. It blocks a release tag unless the two most recent full-mode acceptance verdicts both pass. Those verdicts come from successive acceptance-loop iterations, not repeated trials of one pinned candidate. The rule is therefore a check over acceptance history, not a \\(\\mathrm{pass}^{k}\\) measurement. Its requirement of two consecutive passes is local to that system and should not be treated as a recommended value of \\(k\\)."
         },
         {
           "file": "execution-correction-gates-release-tests.md",
-          "line": 272,
+          "line": 275,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the consecutive-release acceptance gate described above, which is narrative illustration."
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 184,
+          "line": 186,
           "context": "CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) publishes complete transcripts and preserves quarantined runs separately. Its successor adds a side-by-side trace browser for audited comparisons. These author-system choices illustrate preservation and review practices; they make competing conclusions reviewable without claiming an optimal schema."
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 242,
+          "line": 245,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the published transcripts and quarantined runs described above, which are narrative illustration."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 89,
+          "line": 91,
           "context": "CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)), which mines evaluation tasks from merged pull requests, applies the same principle to scripts extracted from third-party repositories. It refuses to execute outside a container, disables networking for mined scripts, and records the isolation posture with each result. In this author-system illustration, the useful property is that the run record carries the containment state instead of relying on an assumption about how the operator launched the process."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 222,
+          "line": 228,
           "context": "- Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the container refusal, disabled networking, and recorded isolation posture described above, all of which are narrative illustration."
         },
         {
@@ -10286,7 +10595,7 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 142,
+          "line": 154,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
@@ -10321,7 +10630,7 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 68,
+          "line": 70,
           "context": "Accounts grouped under “harness engineering” describe teams accumulating capability in execution boundaries, verification loops, repository instructions, rollback paths, and approval controls rather than in prompts alone. Böckeler ([2026](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html)) analyzes vendor-reported practice from the OpenAI Codex team. Jain ([2026](https://www.reddit.com/r/devops/comments/1touxz4/)) writes from practitioner experience rather than a controlled evaluation."
         },
         {
@@ -10392,7 +10701,7 @@
         },
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 228,
+          "line": 230,
           "context": "- Directional evidence: \"A pragmatic guide to LLM evals for devs\", Gergely Orosz with Hamel Husain, Pragmatic Engineer newsletter, 2025-12-02, https://newsletter.pragmaticengineer.com/p/evals. (Open coding on 100+ traces, first upstream failure, axial coding into 5-10 themes, prioritize by frequency.)"
         },
         {
@@ -10423,17 +10732,17 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 199,
+          "line": 203,
           "context": "- OpenAI, \"Separating signal from noise in coding evaluations,\" 2026-07-08, https://openai.com/index/separating-signal-from-noise-coding-evaluations/. [Corroborating evidence]"
         }
       ]
     },
     {
       "url": "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified",
-      "status": "http_error",
-      "http_status": 403,
-      "final_url": "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified",
-      "title": null,
+      "status": "resolved",
+      "http_status": 200,
+      "final_url": "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/",
+      "title": "Why SWE-bench Verified no longer measures frontier coding capabilities | OpenAI",
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
@@ -10442,7 +10751,7 @@
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 198,
+          "line": 202,
           "context": "- OpenAI, \"Why SWE-bench Verified no longer measures frontier coding capabilities,\" 2026-02-23, https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified. [Corroborating evidence]"
         }
       ]
@@ -10478,6 +10787,20 @@
       ]
     },
     {
+      "url": "https://scixplorer.org/scixabout/",
+      "status": "resolved",
+      "http_status": 202,
+      "final_url": "https://scixplorer.org/scixabout/",
+      "title": null,
+      "occurrences": [
+        {
+          "file": "introduction.md",
+          "line": 35,
+          "context": "Scholarly retrieval used [SciX](https://scixplorer.org/scixabout/), the NASA-supported literature discovery service operated by the Smithsonian Astrophysical Observatory, and a local retrieval layer referred to here as **SciX Agent**. The official [SciX API](https://scixplorer.org/scixhelp/api-scix/) supplied bibliographic identities and metadata. At consolidation, SciX Agent searched a 32.4-million-record SciX and arXiv corpus with 299.3 million citation links and full text for 14.9 million records. It combined INDUS dense retrieval with BM25 lexical retrieval through reciprocal-rank fusion. These systems determined which records were retrieved and read first; they did not determine evidence grades."
+        }
+      ]
+    },
+    {
       "url": "https://scixplorer.org/scixhelp/api-scix/",
       "status": "resolved",
       "http_status": 202,
@@ -10487,7 +10810,7 @@
         {
           "file": "introduction.md",
           "line": 35,
-          "context": "Scholarly retrieval used hybrid keyword and semantic searches over a 32-million-record corpus derived from the [NASA Science Explorer (SciX) API](https://scixplorer.org/scixhelp/api-scix/) and an arXiv mirror. Queries were scoped by topic, arXiv subject class, and year where appropriate. Each thread combined seminal work with recent agent-era research. Candidate records were checked through a metadata lookup, and full text was read when the corpus provided it and the claim required more than the abstract. A citation audit then added a seventh thread for scheduling and repository-scoping sources that had entered the draft through adjacent operations-research material rather than the original searches."
+          "context": "Scholarly retrieval used [SciX](https://scixplorer.org/scixabout/), the NASA-supported literature discovery service operated by the Smithsonian Astrophysical Observatory, and a local retrieval layer referred to here as **SciX Agent**. The official [SciX API](https://scixplorer.org/scixhelp/api-scix/) supplied bibliographic identities and metadata. At consolidation, SciX Agent searched a 32.4-million-record SciX and arXiv corpus with 299.3 million citation links and full text for 14.9 million records. It combined INDUS dense retrieval with BM25 lexical retrieval through reciprocal-rank fusion. These systems determined which records were retrieved and read first; they did not determine evidence grades."
         }
       ]
     },
@@ -10500,7 +10823,7 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 142,
+          "line": 154,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
@@ -10514,7 +10837,7 @@
       "occurrences": [
         {
           "file": "introduction.md",
-          "line": 142,
+          "line": 154,
           "context": "The [companion site](https://sjarmak.ai/books/engineering-reliable-coding-agents/companion) indexes all 192 practices under the chapter whose mechanism each extends. The 55 developed in the main chapters appear as short pointers into the chapter; the remaining 137 appear as compact entries. The catalog broadens the set of available options without forcing the main text to explain every variation. The [project repository](https://github.com/sjarmak/engineering-reliable-coding-agents) contains the versioned manuscript, evidence ledger, benchmark catalog, schemas, provenance data, and release checksums. The [web edition](https://sjarmak.ai/books/engineering-reliable-coding-agents) provides the browser-oriented reading version."
         }
       ]
@@ -10564,7 +10887,7 @@
         },
         {
           "file": "usable-context-budgets-spec-restarts-file-output.md",
-          "line": 390,
+          "line": 392,
           "context": "- Directional evidence: [\"How Hightouch built their long-running agent harness\"](https://www.amplifypartners.com/blog-posts/how-hightouch-built-their-long-running-agent-harness), Amplify Partners engineering interview, 2026-01-20."
         },
         {
@@ -10628,12 +10951,12 @@
       "occurrences": [
         {
           "file": "human-auditable-failure-analysis-taxonomy.md",
-          "line": 238,
+          "line": 240,
           "context": "- Corroborating case: [\"What actually broke when we put AI agents into real production workflows\"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08."
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 204,
+          "line": 206,
           "context": "- Corroborating case: [\"What actually broke when we put AI agents into real production workflows\"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08."
         },
         {
@@ -10689,12 +11012,12 @@
       "occurrences": [
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 165,
+          "line": 169,
           "context": "The anecdotal account identifies a transfer failure worth testing. Bytesfortruth ([2026](https://www.reddit.com/r/compsci/comments/1rqcmu8/)), a lending-domain practitioner, reported that a model near the 90th percentile on a general-reasoning measure failed basic mortgage-underwriting tasks, and that rankings changed considerably on a domain-lifecycle evaluation. The account covers one team and reports no failure frequencies. It establishes one transfer failure and supplies no population rate for domain mismatch."
         },
         {
           "file": "contamination-oracle-workload-validity.md",
-          "line": 228,
+          "line": 234,
           "context": "- Bytesfortruth (2026), lending-domain benchmark account, r/compsci, 2026-03-10, https://www.reddit.com/r/compsci/comments/1rqcmu8/. [Corroborating case]"
         },
         {
@@ -10719,7 +11042,7 @@
         },
         {
           "file": "isolation-injection-independent-verification.md",
-          "line": 205,
+          "line": 207,
           "context": "- Corroborating case: [\"AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?\"](https://www.reddit.com/r/devops/comments/1tbbls4/), /u/Upstairs_Safe2922, r/devops, 2026-05-12."
         },
         {
@@ -10739,7 +11062,7 @@
       "occurrences": [
         {
           "file": "agent-topology-dynamic-task-allocation.md",
-          "line": 68,
+          "line": 70,
           "context": "Accounts grouped under “harness engineering” describe teams accumulating capability in execution boundaries, verification loops, repository instructions, rollback paths, and approval controls rather than in prompts alone. Böckeler ([2026](https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html)) analyzes vendor-reported practice from the OpenAI Codex team. Jain ([2026](https://www.reddit.com/r/devops/comments/1touxz4/)) writes from practitioner experience rather than a controlled evaluation."
         },
         {
@@ -10762,6 +11085,20 @@
           "line": null,
           "practice_id": "cap-turn-budgets",
           "context": "\"Agentic AI: The Hidden Engineering Traps in Building Autonomous Workflows\", /u/Futurismtechnologies, r/programming, 2025-11-26, https://www.reddit.com/r/programming/comments/1p70pol/"
+        }
+      ]
+    },
+    {
+      "url": "https://www.sjarmak.ai/projects/code-intelligence-digest",
+      "status": "resolved",
+      "http_status": 200,
+      "final_url": "https://www.sjarmak.ai/projects/code-intelligence-digest",
+      "title": "Code Intelligence Digest — Stephanie Jarmak",
+      "occurrences": [
+        {
+          "file": "introduction.md",
+          "line": 39,
+          "context": "Practitioner retrieval used the **[Code Intelligence Digest](https://www.sjarmak.ai/projects/code-intelligence-digest)**, an author-operated corpus that ingests research feeds, engineering publications, newsletters, podcasts, community discussions, and product or operations accounts. At the July 26 cutoff, its local snapshot contained 162,350 normalized records from 149 source labels, including 43,953 records with retained full text. Keyword and semantic retrieval were used within relevant practitioner categories. Research records found through the Digest were moved to the scholarly lane and deduplicated there. Repeated practitioner accounts of one incident shared an independence key and could not be counted as independent corroboration merely because several pages repeated the event."
         }
       ]
     },

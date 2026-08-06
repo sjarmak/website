@@ -64,13 +64,14 @@ for (const file of (await readdir(sourceRoot)).filter((name) => name.endsWith(".
   }
 }
 
-const chapterTwoStrong = entries.filter((entry) =>
-  entry.location.startsWith("baselines-ablations-cost-accuracy.md:"));
-if (chapterTwoStrong.length > 0) {
+const chapterTwoCompositeStrong = entries.filter((entry) =>
+  entry.location.startsWith("baselines-ablations-cost-accuracy.md:")
+  && entry.arxiv_ids.some((id) => ["2605.24117", "2407.02883"].includes(id)));
+if (chapterTwoCompositeStrong.length > 0) {
   failures.push({
     location: "baselines-ablations-cost-accuracy.md",
     problems: ["Chapter 2 composite ablation sources remain labeled strong"],
-    text: chapterTwoStrong.map((entry) => entry.text).join(" | "),
+    text: chapterTwoCompositeStrong.map((entry) => entry.text).join(" | "),
   });
 }
 

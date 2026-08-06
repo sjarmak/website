@@ -18,6 +18,7 @@ const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-age
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
+const pandocDataDir = process.env.RELIABLE_AGENTS_PANDOC_DATA_DIR;
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
 const rsvgConvert = process.env.RELIABLE_AGENTS_RSVG_CONVERT
   ?? "/tmp/arxiv-tools/rsvg/usr/bin/rsvg-convert";
@@ -78,6 +79,7 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
   output = output.replaceAll("τ-bench", "tau-bench");
   output = output.replaceAll("κ", "kappa").replaceAll("≈", "approximately");
   output = output.replace(/\(\/book-figures\/([a-z0-9-]+)\.svg\)/g, "(figures/$1.pdf)");
+  output = output.replace("(figures/dependency-chain.pdf)", "(figures/dependency-chain.pdf){width=100%}");
   output = output.replace(
     /^(.+:)\n\n(?=(?:- |\d+\. ))/gm,
     "\\Needspace{5\\baselineskip}\n$1\n\n",
@@ -195,6 +197,7 @@ function renderReferences(audit) {
     "https://newsletter.pragmaticengineer.com/p/evals": ["Gergely Orosz and Hamel Husain", "2025", "A pragmatic guide to LLM evals for devs", "The Pragmatic Engineer"],
     "https://openai.com/index/separating-signal-from-noise-coding-evaluations/": ["OpenAI", "2026", "Separating signal from noise in coding evaluations", "OpenAI"],
     "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified": ["OpenAI", "2026", "Why we no longer evaluate SWE-bench Verified", "OpenAI"],
+    "https://scixplorer.org/scixabout/": ["Smithsonian Astrophysical Observatory", "2026", "About SciX", "NASA Science Explorer"],
     "https://scixplorer.org/scixhelp/api-scix/": ["NASA Science Explorer", "2026", "SciX API", "NASA Science Explorer documentation"],
     "https://tech.instacart.com/blueberry-force-multiplier-for-the-on-call-engineer-98c446dfcc12": ["Karthik Halukurike et al.", "2026", "Blueberry: force multiplier for the on-call engineer", "Instacart Tech"],
     "https://www.amplifypartners.com/blog-posts/how-hightouch-built-their-long-running-agent-harness": ["Amplify Partners", "2026", "How Hightouch built its long-running agent harness", "Amplify Partners"],
@@ -206,6 +209,7 @@ function renderReferences(audit) {
     "https://www.reddit.com/r/LLMDevs/comments/1q7avil/": ["saurabhjain1592", "2026", "What actually broke when we put AI agents into real production workflows", "Reddit, r/LLMDevs"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: web edition", "sjarmak.ai"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: companion catalog", "sjarmak.ai"],
+    "https://www.sjarmak.ai/projects/code-intelligence-digest": ["Stephanie Jarmak", "2026", "Code Intelligence Digest", "sjarmak.ai"],
   };
   for (const record of audit.urls.filter(manuscriptRecord)) {
     if (record.url.includes("w3.org/1998/Math/MathML")) continue;
@@ -295,6 +299,7 @@ async function pandocConvert(markdown, outputPath) {
   const inputPath = path.join(buildRoot, `${path.basename(outputPath, ".tex")}.md`);
   await writeFile(inputPath, markdown);
   await run(pandoc, [
+    ...(pandocDataDir ? [`--data-dir=${pandocDataDir}`] : []),
     inputPath,
     "--from=markdown+raw_html+raw_tex+pipe_tables+autolink_bare_uris",
     "--to=latex",
@@ -374,13 +379,13 @@ async function main() {
   await writeFile(path.join(chapterRoot, `${closingStem}.tex`), `\\chapter{Closing: the evidence chain behind reliable agents}\n\\label{closing-evidence-chain}\n${closingBody}`);
   inputLines.push("\\input{chapters/closing}");
 
-  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured search assembled 118 scholarly works in seven topic-specific reviews, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened for identifiable claims, graded by the strength and independence of their support, and challenged through targeted evidence audits; ambiguous classifications defaulted to the lower grade. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are reported as illustrations, not as independent external evidence.\n");
+  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured search and bounded update audit assembled 129 scholarly works, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened for identifiable claims, graded by the strength and independence of their support, and challenged through targeted evidence audits; ambiguous classifications defaulted to the lower grade. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are reported as illustrations, not as independent external evidence.\n");
 
   await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. No archival DOI had been assigned when this edition was prepared; until one is issued, cite the tagged repository release. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, source snapshots, thread protocols and source identities, update-screening decisions, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. No archival DOI had been assigned when this edition was prepared; until one is issued, cite the tagged repository release. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
 
-  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 13 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 6, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 13 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 
