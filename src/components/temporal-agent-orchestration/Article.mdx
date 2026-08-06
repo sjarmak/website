@@ -310,7 +310,7 @@ Tests define the invariants. The failure harness in [the repository](https://git
 
 The harness kills the orchestration Worker, not the coding agent. The agent continues working after its coordinator disappears. The test is whether the retried orchestration attaches to that same agent or launches a second one.
 
-The process pane on the right answers that question with two counters it measures for itself, once a second. `agent procs` counts operating-system processes and reads 2 during each retry window, when the surviving agent and the retry's new process run side by side. `sessions` counts distinct session identities that have written to the work item, and it stays at 1. Two processes over one session is the fix working. The before-state recording on the [companion page](/temporal-agent-orchestration/) shows the failure in the same two counters: there, both read 2.
+The process pane on the right answers that question with two counters it measures for itself, once a second. `agent procs` counts operating-system processes and reads 2 during each retry window, when the surviving agent and the retry's new process run side by side. `sessions` counts distinct session identities that have written to the work item, and it stays at 1. Two processes over one session is the fix working. The [before-state recording](/temporal-agent-orchestration/demo/before-temporal.mp4) shows the failure in the same two counters: there, both read 2.
 
 <CastPlayer
   src="/temporal-agent-orchestration/demo/worker-kill.cast"
@@ -350,7 +350,7 @@ Cross-host recovery has not been demonstrated. The agent Task Queue is shared, W
 
 The resolver contract itself does not require host-local state. A Worker on another host could reattach if the production adapter resolved session ownership from the shared control plane. That still needs to be implemented and verified with a two-host kill test. Same-host Worker recovery is supported. Cross-host recovery remains unproven.
 
-The [companion page](/temporal-agent-orchestration/) shows the same failure against the pre-Temporal orchestrator. That run ends with two agents working in the same worktree and a stale receipt overwriting the current one.
+The same failure against the pre-Temporal orchestrator is recorded in the [before-state run](/temporal-agent-orchestration/demo/before-temporal.mp4). That run ends with two agents working in the same worktree and a stale receipt overwriting the current one.
 
 ## The canary failed, but that's why we use canaries
 
@@ -461,7 +461,7 @@ The replaceable parts should be safe to replace. The continuity the system depen
 
 ## The evidence, and where to go deeper
 
-* The [companion page](/temporal-agent-orchestration/) holds the paired before-and-after Worker-kill recordings and the one-screen version of this argument.
+* The paired before-state Worker-kill run is recorded end to end: [the video](/temporal-agent-orchestration/demo/before-temporal.mp4), or the [raw asciinema event log](/temporal-agent-orchestration/demo/before-temporal.cast) it renders from.
 * The [annotated source reader](/temporal-agent-orchestration/code) renders every before and after file at its pinned revision, section by section, with the complete test matrix.
 * The demo's evidence bundle is downloadable: the [invariant report for both arms](/temporal-agent-orchestration/demo/artifacts/worker-kill/verify-report.txt), the [retry-gap samples from the decisive arm](/temporal-agent-orchestration/demo/artifacts/worker-kill/pre-checkpoint/retry-gap.jsonl), the [agent session events](/temporal-agent-orchestration/demo/artifacts/worker-kill/pre-checkpoint/agent-events.jsonl), the [before-state gate report](/temporal-agent-orchestration/demo/artifacts/before-temporal/verify-report.txt), the [before-state store with the stale receipt on top](/temporal-agent-orchestration/demo/artifacts/before-temporal/work.json), and the [run provenance](/temporal-agent-orchestration/demo/artifacts/provenance.json), which names the revision, SDK, server, and host, and hashes every published evidence file.
 * For Gas City contributors: the natural upstream shape of this integration is a [pack](https://github.com/gastownhall/gascity-packs), so an installation adopts durable procedure only at the boundaries where its guarantees earn their cost.

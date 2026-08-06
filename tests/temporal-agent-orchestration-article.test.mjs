@@ -949,8 +949,8 @@ test("no internal identifiers reach the reader-facing surface", () => {
     : [];
   // The built pages are the authoritative surface; checked only when a build
   // exists so this still runs standalone, and it always runs in CI where build
-  // precedes test. Every page in the route family is scanned: the companion
-  // page, the article, and the code browser.
+  // precedes test. Every page in the route family is scanned: the article and
+  // the code browser.
   const builtRouteDir = path.join(ROOT, "dist/temporal-agent-orchestration");
   const builtPages = existsSync(builtRouteDir)
     ? readdirSync(builtRouteDir, { recursive: true, withFileTypes: true })
@@ -970,10 +970,6 @@ test("no internal identifiers reach the reader-facing surface", () => {
         .map((e) => path.join(e.parentPath ?? e.path, e.name))
     : [];
 
-  const companionPage = path.join(
-    ROOT,
-    "src/pages/temporal-agent-orchestration/index.astro",
-  );
   const surfaces = [
     ARTICLE,
     FIGURES,
@@ -984,7 +980,6 @@ test("no internal identifiers reach the reader-facing surface", () => {
     OPENING_FIGURE,
     WORKSHOP_FIGURE,
     ILLUSTRATION,
-    companionPage,
     path.join(ROOT, "public/temporal-agent-orchestration/demo/worker-kill.cast"),
     path.join(
       ROOT,
