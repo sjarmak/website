@@ -21,12 +21,12 @@ const calibrationAnalysisPath = path.join(root, "scripts/arxiv/analyze-reliable-
 const seCoverageRoot = path.join(root, "artifacts/arxiv/supplementary-se-search");
 const websiteCompanionPath = path.join(root, "src/content/book-companions/engineering-reliable-coding-agents.md");
 const outputRoot = path.join(root, "artifacts/arxiv/companion-release");
-const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.11.zip");
+const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.12.zip");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const websiteCompanionUrl = "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion";
 const skillsUrl = `${repositoryUrl}/tree/main/skills`;
 
-const version = "1.0.0-rc.11";
+const version = "1.0.0-rc.12";
 const sourceKinds = {
   lit: "scholarly",
   explorer: "synthesis",
@@ -138,7 +138,7 @@ const supplementalEvidence = new Map([
   }, {
     doi: "10.1145/3656341",
     url: "https://doi.org/10.1145/3656341",
-    citation: "Liu, C., et al. (2024). A Survey of Source Code Search: A 3-Dimensional Perspective. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3656341.",
+    citation: "Sun, W., et al. (2024). A Survey of Source Code Search: A 3-Dimensional Perspective. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3656341.",
     evidenceGroup: "directional",
     claimSupport: "The systematic survey of 68 works separates query, code, and matching components. It supports stage-aware code-search analysis without establishing one retrieval architecture for coding agents.",
   }]],
@@ -151,7 +151,7 @@ const supplementalEvidence = new Map([
   }, {
     doi: "10.1145/3772370",
     url: "https://doi.org/10.1145/3772370",
-    citation: "Drosos, I., et al. (2025). Facilitating Trust in AI-assisted Software Tools. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3772370.",
+    citation: "Johnson, B., et al. (2026). Facilitating Trust in AI-assisted Software Tools. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3772370.",
     evidenceGroup: "directional",
     claimSupport: "Eighteen interviews and a 368-response Microsoft survey identify factors shaping trust in traditional and AI-assisted tools. The study supports designing review surfaces around inspectable evidence and user control, while transfer to autonomous patch gates remains directional.",
   }]],
