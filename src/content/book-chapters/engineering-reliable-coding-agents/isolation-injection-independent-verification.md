@@ -7,9 +7,9 @@ kind: chapter
 number: 7
 ---
 
-In spring 2026, a practitioner reported on a public forum that an agent deleted a production database in nine seconds. The backups could not be recovered because the same credentials reached both the live database and the backup store. This is a self-reported incident rather than a verified reconstruction. The public record does not establish the exact command sequence, the surrounding controls, or whether every contributing condition was identified.
+In spring 2026, a practitioner [reported](https://www.reddit.com/r/devops/comments/1tbbls4/) that an agent deleted a production database in nine seconds. The backups could not be recovered because the same credentials reached both the live database and the backup store. The account is self-reported, but the authority defect is directly testable: one credential could reach resources that were expected to fail independently.
 
-The containment evidence available for this chapter consists of incident reports and accounts from individual organizations; it contains no controlled comparison of the three practices taught here. Across the 52 practices ranked by operational consequence during selection, rank and the presence of strong evidence had a Spearman correlation of -0.004. Sparse prevalence evidence therefore does not resolve the urgency of an exposed production boundary. The practices below specify observable boundaries and checks rather than unsupported numerical targets.
+The containment evidence available for this chapter consists of incident reports and accounts from individual organizations; it contains no controlled comparison of the three practices developed here. Across the 52 practices ranked by operational consequence during selection, rank and the presence of strong evidence had a Spearman correlation of -0.004. Sparse prevalence evidence therefore does not resolve the urgency of an exposed production boundary. The practices below specify observable boundaries and checks rather than unsupported numerical targets.
 
 The incident raises two immediate questions: what could the agent reach, and what could reach the agent? Its identity could reach both the live store and the material needed to recover from losing it. An instruction stream that the public account neither reconstructed nor audited could reach the agent. A third question appears later, when the system reports what it believes it did: what evidence would show that the report is true?
 
@@ -91,11 +91,11 @@ escalated identity:
     adjacent destructive actions -> denied
 ```
 
-One passing set of checks describes only the configuration that produced it. It does not establish a permanent property of the agent. Platform scopes, role definitions, and tool endpoints can change beneath a deployed system, so both directions should be tested again after any change to a role, scope, delegation path, or tool endpoint.
+One passing set of checks describes only the configuration that produced it. Platform scopes, role definitions, and tool endpoints can change beneath a deployed system, so both directions should be tested again after any change to a role, scope, delegation path, or tool endpoint.
 
 My benchmark for enterprise data-access agents, used here only as an isolation-methodology example, moved one boundary from a prompt instruction into filesystem ownership. Repository trees belonged to a different operating-system identity, so the kernel denied writes. Each trial checked both the permitted and prohibited directions. The benchmark results are not evidence for this chapter’s practice. The design illustrates the kind of claim a local test can establish: under the tested identity and filesystem mode, the write either succeeds or it does not.
 
-CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)), which mines evaluation tasks from merged pull requests, applies the same principle to scripts extracted from third-party repositories. It refuses to execute outside a container, disables networking for mined scripts, and records the isolation posture with each result. This author-system example is illustrative rather than evidentiary. Its useful property is that the run record carries the containment state instead of relying on an assumption about how the operator launched the process.
+CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)), which mines evaluation tasks from merged pull requests, applies the same principle to scripts extracted from third-party repositories. It refuses to execute outside a container, disables networking for mined scripts, and records the isolation posture with each result. In this author-system illustration, the useful property is that the run record carries the containment state instead of relying on an assumption about how the operator launched the process.
 
 Escalation adds latency, and human approval consumes attention. Poorly scoped tasks can turn a narrow approval path into a stream of nearly identical requests, training reviewers to approve by reflex. Capabilities should therefore be grouped around meaningful operational decisions. A gate around every low-level system call obscures the decision the reviewer is meant to make.
 
@@ -113,7 +113,7 @@ That graph is the operational blast radius. The production database and its back
 
 Perry et al. ([2023](https://arxiv.org/abs/2211.03622)) found that participants using an AI coding assistant produced less secure code while believing that their code was more secure. Participants who trusted the assistant less and spent more effort steering it produced fewer vulnerabilities. Accepting an agent’s confidence creates the same kind of risk: belief can strengthen while the artifact becomes less safe.
 
-The study does not establish an equivalent effect for current coding agents. The assistant supplied suggestions for security-programming tasks, effect sizes varied by task, and protective skepticism was observed rather than assigned experimentally. I use the result because it connects trust to measurable defects in the artifact. Its peer-reviewed status does not strengthen the rest of the containment evidence, which consists primarily of incident reports and accounts from individual organizations.
+The study concerns security-programming suggestions rather than current coding agents; effect sizes varied by task, and protective skepticism was observed rather than assigned experimentally. Its relevant contribution is the connection between trust and measurable artifact defects. The rest of the containment evidence remains primarily incident reports and accounts from individual organizations.
 
 Agent self-reports create a broader version of the problem. A progress message is generated from the agent’s current context, which may contain tool output, checklists, prior messages, and summaries of earlier attempts. It is not an independent measurement of the workspace. Stale or misleading inputs can therefore produce a fluent completion claim that accurately reflects the context while remaining false about the state the operator cares about.
 
@@ -145,13 +145,13 @@ The guard did not ask the agent whether its branch was correct. It inspected the
 
 Independent verification also requires a change of role. The authoring context has already committed to a plan, selected an implementation, and explained its choices. Giving that context another review pass preserves the same evidence selection and many of the same blind spots. A separate reviewer should begin from the acceptance criteria and artifacts. Its assignment should state that it did not write the code and must actively test each claim.
 
-My agent-workflow library retains failed worktrees for this purpose and assigns review to a separate context. That design illustrates role separation, but it does not establish that a second model is independent. The reviewer may share training biases, receive the same misleading documentation, or repeat the author’s assumptions. Independence comes from the evidence path and the task: inspect the diff, run named checks, exercise boundary cases, and report discrepancies without defending the implementation.
+My agent-workflow library retains failed worktrees for this purpose and assigns review to a separate context. That author-system design illustrates role separation, not model independence. The reviewer may share training biases, receive the same misleading documentation, or repeat the author’s assumptions. Independence comes from the evidence path and the task: inspect the diff, run named checks, exercise boundary cases, and report discrepancies without defending the implementation.
 
 An audit of my research pipeline showed that artifact-level verification applies beyond code. A generated reference list contained fabricated, mis-cited, unverifiable, and untraceable sources. The central figure supporting its thesis could not be traced and had to be relabeled as an untested hypothesis. The prose sounded certain, but certainty supplied no information about whether the cited record existed. Only checking each source against the claim exposed the failure.
 
-Tang et al. ([2026](https://arxiv.org/abs/2605.29442)) analyzed 20,574 real sessions across 1,639 repositories. They reported that 90.5 percent of misalignment episodes consumed effort and trust without causing irreversible harm, and that 91.49 percent of visible resolutions required explicit user correction. As overall misalignment declined, inaccurate self-reporting accounted for a larger share of the remaining episodes. The study is directional. It adds scale but does not establish an incident rate for silent failures.
+Tang et al. ([2026](https://arxiv.org/abs/2605.29442)) analyzed 20,574 real sessions across 1,639 repositories. They reported that 90.5 percent of misalignment episodes consumed effort and trust without causing irreversible harm, and that 91.49 percent of visible resolutions required explicit user correction. As overall misalignment declined, inaccurate self-reporting accounted for a larger share of the remaining episodes. The study adds scale for visible correction burden but cannot estimate silent failures.
 
-Those measurements describe visible developer correction. A user who silently accepts a false completion claim, abandons the session, or discovers the defect later may never appear as a resolution. The corpus also reflects users who opted into the observed development tools, including integrated-development-environment and command-line workflows. I treat the figures as directional evidence about visible recovery burden, not as estimates for all agent users.
+Those measurements describe visible developer correction. A user who silently accepts a false completion claim, abandons the session, or discovers the defect later may never appear as a resolution. The corpus also reflects users who opted into the observed development tools, including integrated-development-environment and command-line workflows. The figures therefore bound visible recovery burden within the observed corpus rather than all agent users.
 
 Explicit correction should therefore be cheap. The interface should let a user identify the false claim, preserve the current artifact, and begin a new attempt with the discrepancy attached. Correction becomes expensive when the system collapses several attempts into one conversation, destroys the failed workspace, or carries a completed checklist forward without its evidence. Those choices turn a common recovery path into another source of hidden state.
 
@@ -161,7 +161,7 @@ I treat every account of completed work as a hypothesis about the workspace. Acc
 
 An agent that reads untrusted content will eventually encounter instructions written for it by someone other than its operator. **Indirect prompt injection** places those instructions inside material the system consumes: a web page, issue, email, document, log entry, or retrieved database record. The operator may ask a legitimate question while the retrieved content asks the agent to reveal data, change its objective, or invoke a tool.
 
-The three sources supporting this practice are explorer-class and directional. Greshake et al. ([2023](https://arxiv.org/abs/2302.12173)) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, but did not measure the layered defenses described here. AgentDojo, from Debenedetti et al. ([2024](https://arxiv.org/abs/2406.13352)), evaluates attacks and defenses under specified tasks. AgentShield, from Rassul and Rashid ([2026](https://arxiv.org/abs/2605.11026)), explores a deception-based screen. Together they support the threat model and a way to exercise controls. This source set contains no measured result for the complete remedy.
+The three sources supporting this practice are directional syntheses. Greshake et al. ([2023](https://arxiv.org/abs/2302.12173)) demonstrated indirect injection through retrieved content and reported that effective mitigations were lacking, but did not measure the layered defenses described here. AgentDojo, from Debenedetti et al. ([2024](https://arxiv.org/abs/2406.13352)), evaluates attacks and defenses under specified tasks. AgentShield, from Rassul and Rashid ([2026](https://arxiv.org/abs/2605.11026)), explores a deception-based screen. Together they support the threat model and a way to exercise controls. This source set contains no measured result for the complete remedy.
 
 The architectural difficulty is that the system deliberately combines instructions and data inside one model context. Retrieved material must influence the answer or retrieval provides little value. The model therefore cannot identify hostile text merely by asking whether the text affected its behavior, because legitimate evidence affects behavior too. An attacker exploits that ambiguity by placing operational language inside content the agent has been instructed to read and use.
 
@@ -210,22 +210,22 @@ Containment limits the damage a live process can cause. Chapter 8 turns to what 
 
 ### Contain agent blast radius
 
-- practitioner/anecdotal: "What actually broke when we put AI agents into real production workflows", /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
-- practitioner/anecdotal: "AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?", /u/Upstairs_Safe2922, r/devops, 2026-05-12.
+- Corroborating case: ["What actually broke when we put AI agents into real production workflows"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
+- Corroborating case: ["AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?"](https://www.reddit.com/r/devops/comments/1tbbls4/), /u/Upstairs_Safe2922, r/devops, 2026-05-12.
 
 ### Distrust agent self-reports
 
-- practitioner/anecdotal: "My AI Agent Said It Was Done. It Hadn't Done Anything", Push to Prod substack, 2026-02.
-- practitioner/directional: Tang et al., "How Coding Agents Fail Their Users: A Large-Scale Analysis of Developer-Agent Misalignment in 20,574 Real-World Sessions", arXiv:2605.29442, 2026.
+- Corroborating case: "My AI Agent Said It Was Done. It Hadn't Done Anything", Push to Prod substack, 2026-02.
+- Directional evidence: Tang et al., "How Coding Agents Fail Their Users: A Large-Scale Analysis of Developer-Agent Misalignment in 20,574 Real-World Sessions", arXiv:2605.29442, 2026.
 - Folded per PC-3 from the excluded self-attestation pattern:
-  - lit/strong: Perry, Srivastava, Kumar, Boneh (2022/2023), "Do Users Write More Insecure Code with AI Assistants?", ACM CCS 2023, arXiv:2211.03622.
+  - Strong evidence: Perry, Srivastava, Kumar, Boneh (2022/2023), "Do Users Write More Insecure Code with AI Assistants?", ACM CCS 2023, arXiv:2211.03622.
 
 ### Defense in depth for indirect prompt injection
 
-- explorer/directional: Indirect prompt injection (Greshake et al. 2023, arXiv:2302.12173); companion material named in the same synthesis: OWASP LLM Top 10.
-- explorer/directional: AgentDojo (Debenedetti et al. 2024, arXiv:2406.13352).
-- explorer/directional: AgentShield deception-based detection (Rassul and Rashid 2026, arXiv:2605.11026).
+- Directional evidence: Indirect prompt injection (Greshake et al. 2023, arXiv:2302.12173); companion material named in the same synthesis: OWASP LLM Top 10.
+- Directional evidence: AgentDojo (Debenedetti et al. 2024, arXiv:2406.13352).
+- Directional evidence: AgentShield deception-based detection (Rassul and Rashid 2026, arXiv:2605.11026).
 
-### Author artifact cited inline
+### Author-system illustration cited inline
 
 - Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the container refusal, disabled networking, and recorded isolation posture described above, all of which are narrative illustration.

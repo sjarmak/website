@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T22:50:00.404Z",
+  "generated_at": "2026-08-06T02:07:04.215Z",
   "rule": "A strong label must point to one directly identifiable source and must not promote a synthesis, corpus, or catalog-only transfer into a strong composite claim.",
   "totals": {
     "strong_entries": 58,
@@ -85,7 +85,7 @@
       "text": "- Strong evidence: Bertalanič (2026), \"Cost of Consensus,\" arXiv:2605.00914. Oracle gap up to 32.3 percentage points; plurality voting discards correct answers already present; grounding catches failures that agreement masks."
     },
     {
-      "location": "closing.md:238",
+      "location": "closing.md:111",
       "arxiv_ids": [
         "2209.13085"
       ],
@@ -96,7 +96,7 @@
       "text": "- Strong evidence: Skalse, Howe, Krasheninnikov & Krueger (2022). Defining and Characterizing Reward Hacking. NeurIPS 2022. arXiv:2209.13085. Chapter 6, `layer-signals-beyond-single-proxy`."
     },
     {
-      "location": "closing.md:239",
+      "location": "closing.md:112",
       "arxiv_ids": [
         "2505.00212"
       ],
@@ -107,7 +107,7 @@
       "text": "- Strong evidence: Zhang, S., et al. (2025). Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems. ICML 2025. arXiv:2505.00212. Chapter 10, `keep-humans-in-failure-attribution`."
     },
     {
-      "location": "closing.md:241",
+      "location": "closing.md:114",
       "arxiv_ids": [
         "1608.07617"
       ],
@@ -173,7 +173,7 @@
       "text": "- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \\(\\mathrm{pass}^{k}\\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings."
     },
     {
-      "location": "human-auditable-failure-analysis-taxonomy.md:234",
+      "location": "human-auditable-failure-analysis-taxonomy.md:232",
       "arxiv_ids": [
         "2505.00212"
       ],
@@ -184,7 +184,7 @@
       "text": "- Strong evidence: Zhang, S., et al. (2025), \"Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems,\" ICML 2025, arXiv:2505.00212. (Who&When: expert-annotated failure logs from 127 multi-agent systems; 53.5% agent-level and 14.2% step-level for the best automated method; some methods below random.)"
     },
     {
-      "location": "human-auditable-failure-analysis-taxonomy.md:239",
+      "location": "human-auditable-failure-analysis-taxonomy.md:237",
       "arxiv_ids": [
         "2505.08638"
       ],
@@ -206,7 +206,7 @@
       "text": "  - Strong evidence: Perry, Srivastava, Kumar, Boneh (2022/2023), \"Do Users Write More Insecure Code with AI Assistants?\", ACM CCS 2023, arXiv:2211.03622."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:255",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:253",
       "arxiv_ids": [
         "2407.01489"
       ],
@@ -217,7 +217,7 @@
       "text": "- Strong evidence: Xia, C. S., et al. (2024), \"Agentless: Demystifying LLM-based Software Engineering Agents,\" arXiv:2407.01489."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:257",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:255",
       "arxiv_ids": [
         "2604.05481"
       ],
@@ -228,7 +228,7 @@
       "text": "- Strong evidence: Sepidband, M., Viet Pham, H., Hemmati, H. (2026), \"On the Role of Fault Localization Context for LLM-Based Program Repair,\" arXiv:2604.05481."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:262",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:260",
       "arxiv_ids": [
         "2503.09089"
       ],
@@ -239,7 +239,7 @@
       "text": "- Strong evidence: Chen, Z., et al. (2025), \"LocAgent: Graph-Guided LLM Agents for Code Localization,\" arXiv:2503.09089."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:264",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:262",
       "arxiv_ids": [
         "2406.01422"
       ],
@@ -250,7 +250,7 @@
       "text": "- Strong evidence: Ma, Y., et al. (2024), \"Alibaba LingmaAgent: Improving Automated Issue Resolution via Comprehensive Repository Exploration,\" arXiv:2406.01422."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:266",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:264",
       "arxiv_ids": [
         "2410.14684"
       ],
@@ -261,7 +261,7 @@
       "text": "- Strong evidence: Ouyang, S., et al. (2024), \"RepoGraph: Enhancing AI Software Engineering with Repository-level Code Graph,\" arXiv:2410.14684."
     },
     {
-      "location": "localization-funnels-repository-indexes-freshness-checks.md:267",
+      "location": "localization-funnels-repository-indexes-freshness-checks.md:265",
       "arxiv_ids": [
         "2605.02421"
       ],
@@ -393,7 +393,7 @@
       "text": "- Strong evidence: Vogel et al. (2024), \"A Comprehensive Benchmarking Analysis of Fault Recovery in Stream Processing Frameworks,\" arXiv:2404.06203 (JSS line)."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:378",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:376",
       "arxiv_ids": [
         "2404.06654"
       ],
@@ -404,7 +404,7 @@
       "text": "- Strong evidence: Hsieh, C.-P., et al. (2024), \"RULER: What's the Real Context Size of Your Long-Context Language Models?\" COLM 2024, arXiv:2404.06654."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:379",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:377",
       "arxiv_ids": [
         "2411.03538"
       ],
@@ -415,7 +415,7 @@
       "text": "- Strong evidence: Leng, Q., et al. (2024), \"Long Context RAG Performance of Large Language Models,\" Databricks Mosaic Research, arXiv:2411.03538."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:380",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:378",
       "arxiv_ids": [
         "2503.04359"
       ],
@@ -426,7 +426,7 @@
       "text": "- Strong evidence: Li, J., et al. (2025), \"LONGCODEU: Benchmarking Long-Context Language Models on Long Code Understanding,\" arXiv:2503.04359."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:381",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:379",
       "arxiv_ids": [
         "2505.07897"
       ],
@@ -437,7 +437,7 @@
       "text": "- Strong evidence: Rando, S., et al. (2025), \"LongCodeBench: Evaluating Coding LLMs at 1M Context Windows,\" arXiv:2505.07897."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:386",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:384",
       "arxiv_ids": [
         "2505.06120"
       ],
@@ -448,7 +448,7 @@
       "text": "- Strong evidence: Laban, P., et al. (2025), \"LLMs Get Lost In Multi-Turn Conversation,\" arXiv:2505.06120."
     },
     {
-      "location": "usable-context-budgets-spec-restarts-file-output.md:398",
+      "location": "usable-context-budgets-spec-restarts-file-output.md:396",
       "arxiv_ids": [
         "2511.12884"
       ],
@@ -602,7 +602,7 @@
       "text": "- Strong evidence: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640. Paired per-item differences with paired standard error and score correlation."
     },
     {
-      "location": "verification-interfaces-risk-based-escalation.md:417",
+      "location": "verification-interfaces-risk-based-escalation.md:415",
       "arxiv_ids": [
         "2212.06823"
       ],
@@ -613,7 +613,7 @@
       "text": "- Strong evidence: Vasconcelos, H., Jörke, M., Grunde-McLaughlin, M., Gerstenberg, T., Bernstein, M., Krishna, R. (2022/2023). Explanations Can Reduce Overreliance on AI Systems During Decision-Making. PACM HCI 7(CSCW1). arXiv:2212.06823. Five experiments treat overreliance as a cost-benefit choice and find greater engagement when verification is cheaper or stakes are higher."
     },
     {
-      "location": "verification-interfaces-risk-based-escalation.md:423",
+      "location": "verification-interfaces-risk-based-escalation.md:421",
       "arxiv_ids": [
         "2102.09692"
       ],
@@ -624,7 +624,7 @@
       "text": "- Strong evidence: Buçinca, Z., Malaya, M.B., Gajos, K.Z. (2021). To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making. PACM HCI 5(CSCW1), 188. arXiv:2102.09692. Cognitive forcing functions reduced overreliance where explanations failed (N=199)."
     },
     {
-      "location": "verification-interfaces-risk-based-escalation.md:429",
+      "location": "verification-interfaces-risk-based-escalation.md:427",
       "arxiv_ids": [
         "2508.19461"
       ],
@@ -635,7 +635,7 @@
       "text": "- Strong evidence: Kale, N., et al. (2025). Reliable Weak-to-Strong Monitoring of LLM Agents. arXiv:2508.19461. Targeted escalation adds approximately 15% TPR at FPR=0.01. Hybrid hierarchical-sequential scaffolds let weaker models monitor stronger agents. The paper reports that scaffolding mattered more than monitor awareness; the awareness caution in this chapter is my design caution, not a result from this paper. The setting is a covert-misbehavior arena, not production code review. This is the sole admitted evidence item for the whole grouping."
     },
     {
-      "location": "verification-interfaces-risk-based-escalation.md:434",
+      "location": "verification-interfaces-risk-based-escalation.md:432",
       "arxiv_ids": [
         "2411.00998"
       ],

@@ -374,13 +374,13 @@ Review capacity is finite and does not increase automatically with fleet size. P
 
 - Strong evidence for the degradation mechanism: "Useful Memories Become Faulty When Continuously Updated by LLMs" (Zhang 2026), arXiv:2605.12978. The study measures degradation under repeated LLM memory updates; it does not compare immutable-source and rebuildable-distillate architectures.
 - Corroborating case: Slack production context management (InfoQ 2026-04). The account supports operational plausibility without extending the strong result.
-- Directional evidence: Agentic Context Engineering, arXiv:2510.04618. Direction only.
+- Directional evidence: Agentic Context Engineering, arXiv:2510.04618.
 - Corroboration (narrative only): the author's memory system rebuilds its derived layer on schema changes and mechanically carries three append-only event tables across rebuilds.
 
 ### Use a light store by default
 
-- Directional evidence: PersonalAI KG comparison (Menschikov), arXiv:2506.17001, with a contested practitioner thread named in the same synthesis. Direction only.
-- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978. Direction only.
+- Directional evidence: PersonalAI KG comparison (Menschikov), arXiv:2506.17001, with a contested practitioner thread named in the same synthesis.
+- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978.
 - Directional evidence (boundary citation): Graph-based Agent Memory survey (Yang 2026), arXiv:2602.05665. Cited as the counterweight, not support.
 - Corroboration: none on record.
 

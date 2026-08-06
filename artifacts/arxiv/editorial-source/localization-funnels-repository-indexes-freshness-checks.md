@@ -112,9 +112,7 @@ Ma et al. ([2024](https://arxiv.org/abs/2406.01422)) measured this tension in Li
 
 The patch-application rate, which measured whether generated diffs applied cleanly, peaked at 200 iterations and then declined through 600. Clean application was necessary but not sufficient for resolution. Fewer patches could apply while more tasks were resolved if the patches that did apply were more often correct. The result suggests that additional exploration continued to improve localization while making the downstream generation problem harder.
 
-![Separate axes reflect different denominators; resolution rises from 16.0% at zero iterations to 21.3% at 600 on a zero-based scale, while unquantified patch application peaks at 200 and declines through 600.](/book-figures/ch12-exploration-budget.svg)
-
-Both curves come from one benchmark configuration. The 200-iteration application peak is configuration-specific, and the application curve reports shape without published values.
+Both measurements come from one benchmark configuration. The paper reports the 200-iteration location of the application-rate peak but not the curve's values, so the peak is useful only as a prompt to measure the local stopping point.
 
 A traversal budget must therefore be evaluated against both localization and patch application. It may stop after a fixed number of expansions, when no new relationship type appears, or when the candidate set reaches the repair budget. The literature does not identify one stopping rule that dominates across repositories.
 
@@ -253,7 +251,7 @@ Chapter 13 turns from which evidence the system retrieves to how much of that ev
 ### Stage localization before repair
 
 - Strong evidence: Xia, C. S., et al. (2024), "Agentless: Demystifying LLM-based Software Engineering Agents," arXiv:2407.01489.
-- Directional evidence: Chang, J., et al. (2025), "BugCerberus: Bridging Bug Localization and Issue Fixing," arXiv:2502.15292. (Per-hierarchy-level specialization; direction only.)
+- Directional evidence: Chang, J., et al. (2025), "BugCerberus: Bridging Bug Localization and Issue Fixing," arXiv:2502.15292. (Per-hierarchy-level specialization.)
 - Strong evidence: Sepidband, M., Viet Pham, H., Hemmati, H. (2026), "On the Role of Fault Localization Context for LLM-Based Program Repair," arXiv:2604.05481.
 - Corroboration: none on record.
 
@@ -265,7 +263,7 @@ Chapter 13 turns from which evidence the system retrieves to how much of that ev
 - Directional evidence: Liu, X., et al. (2024), "CodexGraph: Bridging Large Language Models and Code Repositories via Code Graph Databases," ICLR 2025, arXiv:2408.03910.
 - Strong evidence: Ouyang, S., et al. (2024), "RepoGraph: Enhancing AI Software Engineering with Repository-level Code Graph," arXiv:2410.14684.
 - Strong evidence: AOCI AI-oriented code indexing (Liu 2026), arXiv:2605.02421.
-- Directional evidence: MAGIS (Tao 2024), arXiv:2403.17927. Direction only.
+- Directional evidence: MAGIS (Tao 2024), arXiv:2403.17927.
 
 ### Gate retrieval on freshness
 

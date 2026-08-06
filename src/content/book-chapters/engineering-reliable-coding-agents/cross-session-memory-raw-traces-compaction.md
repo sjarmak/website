@@ -21,7 +21,7 @@ Six items support the chapter's three design entries; two are strong, and five a
 
 ## Keep the source record rebuildable
 
-Continuous rewriting can leave the latest memory without evidence that earlier versions contained. Support for this mechanism comes from one explorer-class study retained as strong by the evidence audit, one directional synthesis, and the Slack production account described above. The directional synthesis, Agentic Context Engineering (2025), reports no quantitative result and therefore supports only the direction of the practice. No controlled comparison of storage architectures is available.
+Continuous rewriting can leave the latest memory without evidence that earlier versions contained. Support for this mechanism comes from one source study retained as strong by the evidence audit, one directional synthesis, and the Slack production account described above. The directional synthesis, Agentic Context Engineering (2025), reports no quantitative result and therefore supports only the direction of the practice. No controlled comparison of storage architectures is available.
 
 I separate the immutable source record from every summary, profile, or extracted fact derived from it. Material removed during an earlier rewrite cannot be reconstructed from the latest version. Another pass may produce a better summary of what remains, but it has no observation from which to recover what disappeared.
 
@@ -130,17 +130,17 @@ The raw layer may therefore require:
 - deliberate noncollection; or
 - irreversible deletion of selected event classes.
 
-The design requirement is not universal retention. It is that each loss be explicit and testable. A record already compressed by a model cannot serve as the raw recovery boundary.
+The design requires each loss to be explicit and testable, without requiring universal retention. A record already compressed by a model cannot serve as the raw recovery boundary.
 
-*Companion-site aside, thin support:* Persisting the repository regions an agent has already explored may reduce repeated discovery across sessions. The idea rests on one directional source from Pan et al. ([2025](https://arxiv.org/abs/2507.19942)). Whether it reduces redundant retrieval without preserving stale interpretations requires local measurement.
+**Companion catalog note (limited support).** Persisting the repository regions an agent has already explored may reduce repeated discovery across sessions. The idea rests on one directional source from Pan et al. ([2025](https://arxiv.org/abs/2507.19942)). Whether it reduces redundant retrieval without preserving stale interpretations requires local measurement.
 
-*Companion-site aside, thin support:* Durable project state survived crashes and context loss in the long-horizon engineering system evaluated by Chen ([2026](https://arxiv.org/abs/2604.13018)). This provides directional support for handing artifact references between agents. No controlled comparison with transcript-summary handoff is available, so any fidelity advantage remains an inference. The receiving agent must still verify artifact identity, version, and permissions.
+**Companion catalog note (limited support).** Durable project state survived crashes and context loss in the long-horizon engineering system evaluated by Chen ([2026](https://arxiv.org/abs/2604.13018)). This provides directional support for handing artifact references between agents. No controlled comparison with transcript-summary handoff is available, so any fidelity advantage remains an inference. The receiving agent must still verify artifact identity, version, and permissions.
 
 ## Add memory infrastructure only for measured retrieval failures
 
 At an architecture review for a new agent project, the proposed design already included a vector database and a knowledge graph. The query log was empty. Nobody had yet asked the system a question, but the retrieval architecture had already been chosen.
 
-The case against that default is directional, practitioner-weighted, and contested. It draws on three explorer syntheses and no strong evidence item. Menschikov ([2025](https://arxiv.org/abs/2506.17001)) compared knowledge-graph memory with lighter substrates in a personal-AI setting. Wolff and Bennati ([2026](https://arxiv.org/abs/2601.07978)) compared cost and accuracy, although the evidence audit classifies the result as directional and records no quantitative finding behind it. Yang ([2026](https://arxiv.org/abs/2602.05665)) surveyed graph-based agent memory and serves as a counterweight to the position taken here rather than direct support for it.
+The case against that default is directional, practitioner-weighted, and contested. It draws on three source syntheses and no strong evidence item. Menschikov ([2025](https://arxiv.org/abs/2506.17001)) compared knowledge-graph memory with lighter substrates in a personal-AI setting. Wolff and Bennati ([2026](https://arxiv.org/abs/2601.07978)) compared cost and accuracy, although the evidence audit classifies the result as directional and records no quantitative finding behind it. Yang ([2026](https://arxiv.org/abs/2602.05665)) surveyed graph-based agent memory and serves as a counterweight to the position taken here rather than direct support for it.
 
 A practitioner argument that knowledge graphs are the wrong abstraction for agent memory accompanies those sources without a study behind it. Together they establish a presumption in favor of simpler infrastructure. They do not establish that relational storage is best across workloads.
 
@@ -276,7 +276,7 @@ Product and decision context may also deserve separation from repository search.
 
 Such material should retain explicit source and time semantics. Code search should remain scoped to the repository rather than becoming an undifferentiated memory store.
 
-*Companion-site aside, thin support:* Memory portability favors exportable events, explicit schemas, and provenance another system can audit. The support from Munirathinam ([2026](https://arxiv.org/abs/2606.01138)) is anecdotal. A portability claim should therefore be tested by exporting and importing an actual corpus. A feature statement in product documentation is not a portability test.
+**Companion catalog note (limited support).** Memory portability favors exportable events, explicit schemas, and provenance another system can audit. The support from Munirathinam ([2026](https://arxiv.org/abs/2606.01138)) is anecdotal. A portability claim should therefore be tested by exporting and importing an actual corpus. A feature statement in product documentation is not a portability test.
 
 ## Let observed failures determine what compaction preserves
 
@@ -381,29 +381,29 @@ Review capacity is finite and does not increase automatically with fleet size. P
 
 ### Preserve raw traces and distill separately
 
-- explorer/strong for the degradation mechanism: "Useful Memories Become Faulty When Continuously Updated by LLMs" (Zhang 2026), arXiv:2605.12978. The study measures degradation under repeated LLM memory updates; it does not compare immutable-source and rebuildable-distillate architectures.
-- practitioner/corroborating: Slack production context management (InfoQ 2026-04). The account supports operational plausibility without extending the strong result.
-- explorer/directional: Agentic Context Engineering, arXiv:2510.04618. Direction only.
+- Strong evidence for the degradation mechanism: "Useful Memories Become Faulty When Continuously Updated by LLMs" (Zhang 2026), arXiv:2605.12978. The study measures degradation under repeated LLM memory updates; it does not compare immutable-source and rebuildable-distillate architectures.
+- Corroborating case: Slack production context management (InfoQ 2026-04). The account supports operational plausibility without extending the strong result.
+- Directional evidence: Agentic Context Engineering, arXiv:2510.04618.
 - Corroboration (narrative only): the author's memory system rebuilds its derived layer on schema changes and mechanically carries three append-only event tables across rebuilds.
 
 ### Use a light store by default
 
-- explorer/directional: PersonalAI KG comparison (Menschikov), arXiv:2506.17001, with a contested practitioner thread named in the same synthesis. Direction only.
-- explorer/directional: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978. Direction only.
-- explorer/directional (boundary citation): Graph-based Agent Memory survey (Yang 2026), arXiv:2602.05665. Cited as the counterweight, not support.
+- Directional evidence: PersonalAI KG comparison (Menschikov), arXiv:2506.17001, with a contested practitioner thread named in the same synthesis.
+- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978.
+- Directional evidence (boundary citation): Graph-based Agent Memory survey (Yang 2026), arXiv:2602.05665. Cited as the counterweight, not support.
 - Corroboration: none on record.
 
 ### Optimize compaction from failures
 
-- lit/strong for the measured failure-driven compression comparison: Kang, M., et al. (2025), "ACON: Optimizing Context Compression for Long-horizon LLM Agents," arXiv:2510.00615 (Microsoft). The study tests failure-guided compression on app, office, and question-answering benchmarks; transfer to coding agents remains directional.
+- Strong evidence for the measured failure-driven compression comparison: Kang, M., et al. (2025), "ACON: Optimizing Context Compression for Long-horizon LLM Agents," arXiv:2510.00615 (Microsoft). The study tests failure-guided compression on app, office, and question-answering benchmarks; transfer to coding agents remains directional.
 - Corroboration: none on record.
 
 ### Companion-catalog records named inline
 
-These are not part of this chapter's three taught entries. Each is named in the prose so a reader can follow the aside to its source, at the strength the record carries.
+These are not part of this chapter's three developed practices. Each is named in the prose so that its source and evidence grouping remain visible.
 
-- explorer/directional: Temporal KG memory (Kim et al.), arXiv:2408.05861, carried by the companion record on modeling time explicitly. Supports the two-time-axes aside only.
-- lit/directional: Prometheus (Pan, H., et al. 2025), arXiv:2507.19942, carried by the companion record on persisting explored context. No figure quoted here.
-- explorer/directional: AiScientist long-horizon engineering (Chen 2026), arXiv:2604.13018, carried by the companion record on durable artifact handoff.
-- explorer/anecdotal: memorywire (Munirathinam 2026), arXiv:2606.01138, carried by the companion record on memory portability.
-- explorer/directional: Product context and coding-agent decision compliance (Dillon 2026), arXiv:2605.08112, carried by the companion record on the tribal-knowledge substrate. Its compliance figure is not used in the prose.
+- Directional evidence: Temporal KG memory (Kim et al.), arXiv:2408.05861, carried by the companion record on modeling time explicitly. Supports the two-time-axes aside only.
+- Directional evidence: Prometheus (Pan, H., et al. 2025), arXiv:2507.19942, carried by the companion record on persisting explored context. No figure quoted here.
+- Directional evidence: AiScientist long-horizon engineering (Chen 2026), arXiv:2604.13018, carried by the companion record on durable artifact handoff.
+- Corroborating case: memorywire (Munirathinam 2026), arXiv:2606.01138, carried by the companion record on memory portability.
+- Directional evidence: Product context and coding-agent decision compliance (Dillon 2026), arXiv:2605.08112, carried by the companion record on the tribal-knowledge substrate. Its compliance figure is not used in the prose.

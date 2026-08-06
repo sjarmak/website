@@ -12,6 +12,9 @@ const catalogPath = path.join(researchRoot, "catalog_v2/catalog-final.json");
 const arxivPattern = /(?:arXiv:|arxiv\.org\/(?:abs|html|pdf)\/)(\d{4}\.\d{4,5})/gi;
 const urlPattern = /https?:\/\/[^\s)>\]]+/g;
 const doiPattern = /https?:\/\/doi\.org\/10\.\d{4,9}\/[-._;()/:a-z0-9]+/gi;
+const excludedEvidenceUrls = new Set([
+  "https://x.com/swyx/status/2011344788486774942",
+]);
 
 function cleanUrl(url) {
   return url.replace(/[.,;:'"]+$/, "");
@@ -37,19 +40,33 @@ function xmlText(value) {
     .trim();
 }
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = 25_000) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, {
-      redirect: "follow",
-      headers: { "User-Agent": "reliable-coding-agents-reference-audit/1.0 (mailto:stephanie@stephaniejarmak.com)" },
-      ...options,
-      signal: controller.signal,
-    });
-  } finally {
-    clearTimeout(timeout);
+async function fetchWithTimeout(url, options = {}, timeoutMs = 20_000) {
+  let lastError;
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, {
+        redirect: "follow",
+        headers: { "User-Agent": "reliable-coding-agents-reference-audit/1.0 (mailto:stephanie@stephaniejarmak.com)" },
+        ...options,
+        signal: controller.signal,
+      });
+      if (attempt === 1 && (response.status === 429 || response.status >= 500)) {
+        await response.body?.cancel();
+        await new Promise((resolve) => setTimeout(resolve, 1_000));
+        continue;
+      }
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 2) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 1_000));
+    } finally {
+      clearTimeout(timeout);
+    }
   }
+  throw lastError;
 }
 
 async function mapLimited(items, limit, fn) {
@@ -95,6 +112,7 @@ async function loadOccurrences() {
   const catalog = JSON.parse(await readFile(catalogPath, "utf8"));
   for (const practice of catalog) {
     for (const item of [...(practice.evidence ?? []), ...(practice.corroboration ?? [])]) {
+      if (excludedEvidenceUrls.has(item.url)) continue;
       const occurrence = { file: "companion catalog", line: null, practice_id: practice.id, context: item.source ?? "" };
       if (item.arxiv) arxiv.set(item.arxiv, [...(arxiv.get(item.arxiv) ?? []), occurrence]);
       if (item.url) urls.set(item.url, [...(urls.get(item.url) ?? []), occurrence]);
@@ -107,34 +125,46 @@ async function loadOccurrences() {
   return { arxiv, dois, urls, catalogPractices: catalog.length };
 }
 
-async function auditArxiv(ids, occurrences) {
+async function auditArxiv(ids, occurrences, cachedRecords = new Map()) {
   const records = new Map();
   const batches = [];
   for (let i = 0; i < ids.length; i += 20) batches.push(ids.slice(i, i + 20));
+  let apiUnavailable = false;
 
   for (const batch of batches) {
     const endpoint = `https://export.arxiv.org/api/query?id_list=${batch.join(",")}&max_results=${batch.length}`;
-    const response = await fetchWithTimeout(endpoint);
-    if (!response.ok) throw new Error(`arXiv API returned ${response.status}`);
-    const xml = await response.text();
-    for (const entry of xml.match(/<entry>[\s\S]*?<\/entry>/g) ?? []) {
-      const id = entry.match(/<id>https?:\/\/arxiv\.org\/abs\/(\d{4}\.\d{4,5})(?:v\d+)?<\/id>/)?.[1];
-      if (!id) continue;
-      const title = xmlText(entry.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "");
-      const published = entry.match(/<published>(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
-      const updated = entry.match(/<updated>(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
-      const authors = [...entry.matchAll(/<author>\s*<name>([\s\S]*?)<\/name>/g)].map((m) => xmlText(m[1]));
-      records.set(id, { id, title, authors, published, updated });
+    try {
+      if (apiUnavailable) throw new Error("arXiv API unavailable; using cached metadata");
+      const response = await fetchWithTimeout(endpoint);
+      if (!response.ok) throw new Error(`arXiv API returned ${response.status}`);
+      const xml = await response.text();
+      for (const entry of xml.match(/<entry>[\s\S]*?<\/entry>/g) ?? []) {
+        const id = entry.match(/<id>https?:\/\/arxiv\.org\/abs\/(\d{4}\.\d{4,5})(?:v\d+)?<\/id>/)?.[1];
+        if (!id) continue;
+        const title = xmlText(entry.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "");
+        const published = entry.match(/<published>(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
+        const updated = entry.match(/<updated>(\d{4}-\d{2}-\d{2})/)?.[1] ?? null;
+        const authors = [...entry.matchAll(/<author>\s*<name>([\s\S]*?)<\/name>/g)].map((m) => xmlText(m[1]));
+        records.set(id, { id, title, authors, published, updated });
+      }
+    } catch (error) {
+      apiUnavailable = true;
+      for (const id of batch) {
+        if (cachedRecords.has(id)) records.set(id, cachedRecords.get(id));
+      }
     }
     await new Promise((resolve) => setTimeout(resolve, 350));
   }
 
-  return ids.map((id) => ({
-    id,
-    status: records.has(id) ? "resolved" : "unresolved",
-    metadata: records.get(id) ?? null,
-    occurrences: occurrences.get(id) ?? [],
-  }));
+  return {
+    results: ids.map((id) => ({
+      id,
+      status: records.has(id) ? "resolved" : "unresolved",
+      metadata: records.get(id) ?? null,
+      occurrences: occurrences.get(id) ?? [],
+    })),
+    usedCache: apiUnavailable,
+  };
 }
 
 async function auditUrl(url, occurrences) {
@@ -206,7 +236,7 @@ function renderMarkdown(record) {
     "## Coverage",
     "",
     `- ${record.summary.files} manuscript files and ${record.summary.catalog_practices} companion practices scanned`,
-    `- ${record.summary.arxiv_identifiers} unique arXiv identifiers checked against the official arXiv API`,
+    `- ${record.summary.arxiv_identifiers} unique arXiv identifiers resolved from official arXiv API metadata${record.method.arxiv_cache_used ? "; cached prior responses were used after a temporary API failure" : ""}`,
     `- ${record.summary.other_urls} other unique URLs checked with redirects enabled`,
     `- ${record.summary.arxiv_unresolved} unresolved arXiv identifiers`,
     `- ${record.summary.doi_identifiers} unique DOI identifiers checked against Crossref`,
@@ -251,13 +281,21 @@ async function main() {
     .filter((url) => !/^https?:\/\/doi\.org\//i.test(url))
     .sort();
 
-  const arxivResults = await auditArxiv(arxivIds, arxiv);
+  let cachedArxiv = new Map();
+  try {
+    const cached = JSON.parse(await readFile(path.join(outputRoot, "reference-audit.json"), "utf8"));
+    cachedArxiv = new Map((cached.arxiv ?? []).filter((item) => item.metadata).map((item) => [item.id, item.metadata]));
+  } catch {
+    // The first audit has no cache; unresolved identifiers remain visible below.
+  }
+  const { results: arxivResults, usedCache: arxivCacheUsed } = await auditArxiv(arxivIds, arxiv, cachedArxiv);
   const doiResults = await mapLimited(doiUrls, 4, (url) => auditDoi(url, dois.get(url) ?? []));
   const urlResults = await mapLimited(otherUrls, 6, (url) => auditUrl(url, urls.get(url) ?? []));
   const record = {
     generated_at: new Date().toISOString(),
     method: {
-      arxiv: "Official arXiv Atom API, queried by identifier in batches of 20.",
+      arxiv: "Official arXiv Atom API, queried by identifier in batches of 20; previously resolved official-API metadata is reused if the API becomes temporarily unavailable.",
+      arxiv_cache_used: arxivCacheUsed,
       doi: "Crossref REST API, queried by DOI.",
       urls: "HTTP GET with redirects enabled and a 25-second timeout.",
     },

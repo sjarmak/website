@@ -21,7 +21,7 @@ That disagreement changed the engineering question. Had I retained only the fina
 
 The reverse pattern would require another explanation. An end-to-end gain without a retrieval gain could come from a model change, a prompt difference, or another uncontrolled part of the pipeline.
 
-Repository retrieval belongs to a causal chain. A task becomes one or more queries. Each query searches an index. Ranked results enter a context budget. A model interprets that context. Execution and verification then turn the model’s output into a scored result. Pass rate records only the state at the end of the chain. It cannot identify which transition produced it.
+Repository retrieval belongs to a causal chain. A task becomes one or more queries, each query searches an index, and ranked results enter a context budget. A model interprets that context before execution and verification turn its output into a scored result. Pass rate records only the state at the end of the chain and cannot identify which transition produced it.
 
 ## Score retrieval and generation separately
 
@@ -145,7 +145,7 @@ The strongest code-specific evidence for retaining both lanes comes from an indu
 
 That result does not establish the same ordering for every repository agent or newer embedding model. The workload was industrial, dominated by large C++ codebases and completion-style tasks. The experimental design transfers more readily than the result: run each lane independently on the operated corpus and measure which relevant items each uniquely recovers.
 
-Production reports and late-interaction research point in the same direction without settling the question. A production account of agent memory from Trautmann (2026) describes parallel channels fused by rank as a deployed default. Adaptive memory retrieval, from Yan et al. ([2026](https://arxiv.org/abs/2603.16496)), and late-interaction retrieval, from Khattab and Zaharia ([2020](https://arxiv.org/abs/2004.12832)), support retaining complementary representations rather than any specific fusion policy. None provides code-specific evidence for the effect of fusion.
+Production reports and late-interaction research point in the same direction without settling the question. A production account of agent memory from Trautmann and Sutter ([2026](https://blog.cloudflare.com/introducing-agent-memory/)) describes parallel channels fused by rank as a deployed default. Adaptive memory retrieval, from Yan et al. ([2026](https://arxiv.org/abs/2603.16496)), and late-interaction retrieval, from Khattab and Zaharia ([2020](https://arxiv.org/abs/2004.12832)), support retaining complementary representations rather than any specific fusion policy. None provides code-specific evidence for the effect of fusion.
 
 I execute the channels separately and preserve their original result lists. The lexical lane records its query, tokenizer, filters, and index version. The semantic lane records its query, embedding model, filters, and vector-index version. Per-lane Recall@k and target ranks show what each channel contributes. The fused list is a separate stage with its own recall, ranks, context consumption, and downstream completion score.
 
@@ -288,23 +288,23 @@ Chapter 12 turns to the architecture around these measurements: cheap retrieval 
 
 ### Score retrieval and generation separately
 
-- lit/strong: Liu, T., et al. (2023), "RepoBench: Benchmarking Repository-Level Code Auto-Completion Systems," ICLR 2024, arXiv:2306.03091. (R/C/P decomposition localizes failure to retrieval vs completion vs pipeline stage.)
-- explorer/strong: MemConflict (Tao et al. 2026), arXiv:2605.20926. (Black-box + white-box memory evaluation; localizes missing vs low-ranked vs retrieved-but-unused; best reported conflict-recognition score 0.2501.)
-- explorer/strong: Memory Circuit Analysis (Mao et al. 2026), arXiv:2605.03354. (Stage-level diagnostic localizing a silent failure to the responsible memory operation; extraction/retention/retrieval fail silently behind fluent answers.)
-- explorer/directional: SkillEvolBench (Lei 2026), arXiv:2605.24117. Direction only.
-- explorer/directional: EngramaBench (Acuna 2026), arXiv:2604.21229. Direction only.
-- explorer/directional: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978. Direction only.
-- lit/anecdotal: Vishnyakova, O. (2026), arXiv:2603.09619. (Names the five context-quality criteria; position paper.)
+- Strong evidence: Liu, T., et al. (2023), "RepoBench: Benchmarking Repository-Level Code Auto-Completion Systems," ICLR 2024, arXiv:2306.03091. (R/C/P decomposition localizes failure to retrieval vs completion vs pipeline stage.)
+- Strong evidence: MemConflict (Tao et al. 2026), arXiv:2605.20926. (Black-box + white-box memory evaluation; localizes missing vs low-ranked vs retrieved-but-unused; best reported conflict-recognition score 0.2501.)
+- Strong evidence: Memory Circuit Analysis (Mao et al. 2026), arXiv:2605.03354. (Stage-level diagnostic localizing a silent failure to the responsible memory operation; extraction/retention/retrieval fail silently behind fluent answers.)
+- Directional evidence: SkillEvolBench (Lei 2026), arXiv:2605.24117.
+- Directional evidence: EngramaBench (Acuna 2026), arXiv:2604.21229.
+- Directional evidence: Cost-and-Accuracy study (Wolff & Bennati 2026), arXiv:2601.07978.
+- Corroborating case: Vishnyakova, O. (2026), arXiv:2603.09619. (Names the five context-quality criteria; position paper.)
 
 ### Hybrid retrieval fused on ranks
 
-- lit/strong: Yang, Z., et al. (2025), "A Deep Dive into Retrieval-Augmented Generation for Code Completion: Experience on WeChat," arXiv:2507.18515 (industrial study).
-- explorer/strong for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval.
-- explorer/directional: Cloudflare "Agents that remember" (Trautmann 2026), the production account carrying the shipped default of parallel channels fused with reciprocal-rank fusion. No canonical URL is on record for this item. Direction only.
-- explorer/directional: AdaMem (Yan et al. 2026), arXiv:2603.16496, carried in the same evidence record as the Cloudflare account. Its own retrieval route is semantic retrieval with conditional graph expansion rather than rank fusion, so it supports retaining a complementary semantic lane only. Direction only.
-- explorer/directional: ColBERT (Khattab and Zaharia 2020), arXiv:2004.12832. Direction only.
+- Strong evidence: Yang, Z., et al. (2025), "A Deep Dive into Retrieval-Augmented Generation for Code Completion: Experience on WeChat," arXiv:2507.18515 (industrial study).
+- Strong evidence for the vocabulary-gap claim: CodeSearchNet (Husain 2019), arXiv:1909.09436. The study establishes the mismatch between natural-language queries and code vocabulary. It does not test the chapter's rank-fusion protocol; Yang et al. supply the direct comparison of combined lexical and semantic retrieval.
+- Directional evidence: Trautmann & Sutter (2026), ["Agents that remember: introducing Agent Memory"](https://blog.cloudflare.com/introducing-agent-memory/), Cloudflare. Production account carrying the shipped default of parallel channels fused with reciprocal-rank fusion.
+- Directional evidence: AdaMem (Yan et al. 2026), arXiv:2603.16496, carried in the same evidence record as the Cloudflare account. Its own retrieval route is semantic retrieval with conditional graph expansion rather than rank fusion, so it supports retaining a complementary semantic lane only.
+- Directional evidence: ColBERT (Khattab and Zaharia 2020), arXiv:2004.12832.
 
 ### Chunk on AST boundaries
 
-- lit/strong: Zhang, Y., et al. (2025), "cAST: Enhancing Code Retrieval-Augmented Generation with Structural Chunking via Abstract Syntax Tree," arXiv:2506.15655.
-- Corroboration for this entry: none on record. The other two entries in this chapter carry dossier corroborations from the author's own systems, which are illustration rather than independent sources.
+- Strong evidence: Zhang, Y., et al. (2025), "cAST: Enhancing Code Retrieval-Augmented Generation with Structural Chunking via Abstract Syntax Tree," arXiv:2506.15655.
+- Corroboration for this entry: none on record. The other two entries in this chapter include author-system cases as illustrations rather than independent sources.

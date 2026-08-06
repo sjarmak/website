@@ -33,7 +33,7 @@ Kim et al. ([2026](https://arxiv.org/abs/2602.09937)) provide a stronger cross-v
 
 That is evidence that an architectural failure can survive a more capable model. It does not establish a coding-agent failure rate or show that prompt engineering is generally ineffective.
 
-The specificity of the OpenRCA result matters. Protocol enrichment addressed communication failures. Hallucinated interpretation required another intervention. A structured handoff cannot repair a worker that invents the meaning of accurate evidence, and a stronger verifier cannot recover evidence no upstream component retrieved.
+The OpenRCA result separates two failure mechanisms. Protocol enrichment addressed communication failures, whereas hallucinated interpretation required another intervention. A structured handoff cannot repair a worker that invents the meaning of accurate evidence, and a stronger verifier cannot recover evidence no upstream component retrieved.
 
 “Change the structure” is therefore not a remedy. It is an instruction to revisit the causal boundary that produced the observed class.
 
@@ -123,11 +123,11 @@ Li et al. ([2026](https://arxiv.org/abs/2606.00655)) provide a controlled cost r
 
 These are strong results within the tested tasks and configurations. They do not supply a universal exchange rate for another worker. Token premiums depend on prompt length, number of rounds, context sharing, model mix, and duplicated work.
 
-A strong explorer synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanic et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155)).
+A strong source synthesis across several studies supports the general need for a gate, but no standardized experiment settles it. Other directional syntheses cover heterogeneous and homogeneous teams, consensus systems, and scaling networks: Tian et al. ([2025](https://arxiv.org/abs/2509.23537)), Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), Bertalanič et al. ([2026](https://arxiv.org/abs/2605.00914)), and Qian et al. ([2024](https://arxiv.org/abs/2406.07155)).
 
 Because those syntheses overlap in their underlying sources and were not retained as strong controlled evidence, I use them only for direction. The operational decision still comes from reproducing the comparison on the target workload.
 
-Aggregation belongs inside the treatment definition. Chapter 5 described an exploratory plurality-vote oracle gap of up to 32.3 percentage points from Bertalanic et al. A correct answer existed among the candidates, but the vote selected another answer. That establishes a failure mode rather than its frequency elsewhere.
+Aggregation belongs inside the treatment definition. Chapter 5 described an exploratory plurality-vote oracle gap of up to 32.3 percentage points from Bertalanič et al. A correct answer existed among the candidates, but the vote selected another answer. That establishes a failure mode rather than its frequency elsewhere.
 
 It is enough to separate two outcomes:
 
@@ -269,7 +269,7 @@ Consider a security review of a large change:
 
 These topologies can be combined. An orchestrator may dispatch pipelines. A hierarchy may use a blackboard for cross-group evidence while keeping control messages within leadership paths.
 
-The architectural question is not which label appears in configuration. It is which component owns each state transition and which participants can observe, challenge, or revise it.
+The relevant architectural properties are ownership of each state transition and the participants able to observe, challenge, or revise it; a configuration label alone does not establish either property.
 
 Zhao et al. ([2026](https://arxiv.org/abs/2605.26178)) provide strong experimental evidence from ATOM that topology is a first-order variable and that adapting it to task difficulty can outperform one average design. Their evaluation used five-agent teams with two open models across MMLU, GSM8K, HumanEval, AQuA, MultiArith, and SVAMP.
 
@@ -425,110 +425,25 @@ Dynamic graphs are most useful when they expose decisions that were previously i
 
 If those answers cannot be reconstructed, the graph has become another hidden coordinator rather than an observable allocation mechanism.
 
-## Promote topology from a recorded comparison
+## Promote topology from a topology-specific record
 
-A structural redesign should end in a reproducible allocation decision. A diagram and a promising demonstration are not enough. The following protocol is narrow enough to apply to an existing workflow while preserving the distinctions developed in this chapter.
+Chapter 1 defines the paired comparison, Chapter 2 the baseline and cost coordinates, Chapter 9 the fault-injection method, and Chapter 10 the first-upstream-failure label. A topology experiment should reuse those protocols rather than restating them.
 
-### Select one persistent failure class
+Begin with one recurring failure class and draw the smallest boundary at which it could have become observable and stoppable. Change one structural element at that boundary: a verification loop, specialist role, handoff, communication route, aggregation rule, or dependency-aware dispatcher. Preserve the live single-agent workflow as the cheapest credible baseline.
 
-Use repeated paired runs across the current and upgraded model configurations. Preserve the first-upstream-failure assignment from Chapter 10.
+The promotion record adds three topology-specific conditions:
 
-Do not begin from a broad objective such as “improve collaboration.” Name the failure class whose path the structural change is expected to interrupt.
+- **Mechanism entry:** a delegated result was consumed, independent nodes actually overlapped, or the proposed aggregation rule selected among real candidates.
+- **Fault containment:** an omitted artifact, delayed worker, contradictory finding, late completion, or dependency error remained visible and did not release downstream work as complete.
+- **Coordination return:** any gain in the target failure class cleared the predeclared success, reliability, latency, review-burden, and total-cost limits.
 
-### Draw the current causal path
+Run the baseline and treatment on identical task versions and preserve the complete configuration identity. Promote only if all three conditions hold. Retain the baseline when added structure does not earn its coordination cost; redesign when the mechanism executed but left the target failure path intact.
 
-Mark:
-
-- where evidence originates;
-- where interpretation occurs;
-- where state becomes durable;
-- where authority changes hands;
-- where verification occurs; and
-- where the final decision converges.
-
-Identify the smallest boundary at which the target failure could have become observable and stoppable.
-
-### Preserve the live single-agent baseline
-
-Replay the existing single-agent workflow on the current golden set. Record:
-
-- \(\mathrm{pass}^{k}\) or the selected reliability measure;
-- the chosen cost axis;
-- elapsed time;
-- tool and model use;
-- failures by class; and
-- the complete configuration identity.
-
-Keep this baseline executable for later model releases. A topology should not receive permanent credit from a comparison against an obsolete single-agent system.
-
-### Specify one structural treatment
-
-The treatment may be:
-
-- a deterministic verification loop;
-- a specialized role;
-- a structured handoff;
-- a different communication topology;
-- a new aggregation rule; or
-- a dependency-aware dispatcher.
-
-State which boundary changes and which causal path the change is expected to interrupt. Avoid combining several architectural changes unless the experiment is explicitly evaluating the combined system.
-
-### Record the promotion rule before execution
-
-The rule should include:
-
-- a task-success floor;
-- a reliability requirement;
-- a cost ceiling;
-- a latency limit where relevant;
-- a mechanism condition; and
-- any required fault-containment result.
-
-A mechanism condition might require at least one delegated result to be consumed by the aggregator or require the scheduler to dispatch at least one pair of independent nodes concurrently. When candidates are voted on or synthesized, add a check for whether an oracle-correct candidate was retained or discarded.
-
-### Inject a representative fault
-
-Choose a fault matched to the proposed structure:
-
-- For a pipeline, corrupt or omit an upstream artifact.
-- For an orchestrator, delay one worker or return contradictory findings.
-- For a hierarchy, place a critical result in a minority branch.
-- For a blackboard, submit conflicting updates and inspect ordering and provenance.
-- For a task graph, omit a dependency, introduce a false conflict, expire a worker attempt, or return a late completion.
-
-Verify that incomplete or disputed state remains visible and that downstream work does not proceed as though the missing evidence existed.
-
-### Run paired repeated trials
-
-Run baseline and treatment on the same task versions. Keep the model, harness, permissions, evaluator, and execution environment fixed except for the declared structural change.
-
-Report separately:
-
-- correctness;
-- reliability;
-- latency;
-- total computation;
-- monetary or token cost;
-- coordination failures;
-- usability or review burden; and
-- target failure-class frequency.
-
-Inspect traces to confirm that delegation, scheduling, coordination, and aggregation actually occurred. A configured mechanism that never enters the execution path has not been evaluated.
-
-### Promote, retain, or redesign
-
-Promote only when the treatment clears the recorded success, reliability, cost, mechanism, and fault-containment conditions.
-
-Retain the baseline when additional structure does not earn its coordination cost.
-
-Redesign when the trace shows that the treatment changed a boundary but left the target failure path intact. The next experiment may require a narrower specialist role, another handoff field, a different aggregation rule, a corrected dependency model, or no additional worker.
-
-The resulting record should be understandable without trusting the architecture’s name. Promotion depends on whether the observed execution supports the claimed benefit, not on whether the design can be described as dynamic, hierarchical, multi-agent, or dependency-aware.
+The record should remain intelligible without the architecture's label. “Hierarchical,” “dynamic,” and “multi-agent” describe arrangements; mechanism entry, containment, and measured return decide whether the arrangement earned adoption.
 
 ## Sources and evidence
 
-- Bertalanic, et al. 2026. *The Cost of Consensus*. arXiv:2605.00914. Exploratory evidence on aggregation failure; Chapter 5 carries the reported oracle-gap result.
+- Bertalanič, et al. 2026. *The Cost of Consensus*. arXiv:2605.00914. Exploratory evidence on aggregation failure; Chapter 5 carries the reported oracle-gap result.
 - Böckeler, Birgitta. 2026. "Harness Engineering." MartinFowler.com, February 17. Practitioner account based partly on vendor-reported Codex-team practice.
 - Cemri, M., et al. 2025. "Why Do Multi-Agent LLM Systems Fail?" arXiv:2503.13657. MAST failure taxonomy and benchmark-framework interventions.
 - Chun, Jina, et al. 2025. "Is Multi-Agent Debate the Silver Bullet?" arXiv:2503.12029. Audit-retained strong evidence on debate performance against task baselines; reports inference cost across debate variants and leaves the single-model cost comparison open.
@@ -547,6 +462,6 @@ The resulting record should be understandable without trusting the architecture�
 - Yu, Junwei, Yepeng Ding, and Hiroyuki Sato. 2025. *DynTaskMAS*. arXiv:2503.07675. Directional parallel-versus-serial result on a seven-agent travel-planning workload; no controlled dynamic-versus-fixed comparison.
 - Zhao, et al. 2026. *ATOM*. arXiv:2605.26178. Audit-retained strong evidence on difficulty-conditioned topology across six short-form benchmarks.
 
-### Author artifact cited inline
+### Author-system illustration cited inline
 
 - Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the preamble rerun described in the opening, which is narrative illustration.

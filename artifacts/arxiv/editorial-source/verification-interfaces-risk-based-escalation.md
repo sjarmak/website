@@ -270,9 +270,7 @@ Both rates are estimates from finite labeled samples. A stratum with few cases p
 
 The queue budget is part of the operating point. A false-positive rate of 0.01 produces one expected false alarm across 100 benign actions and 10,000 across one million. When the flagged event is rare, false alarms may outnumber correct flags even at a seemingly low false-positive rate. This is the prevalence effect Chapter 5 develops for graders.
 
-![At fixed 0.01 false-positive rate, false alarms rise from 1 among 100 actions to 10,000 among 1,000,000 and can outnumber correct rare-event flags; targeted escalation adds about 15% true-positive rate in one covert-misbehavior arena.](/book-figures/ch15-queue-budget.svg)
-
-False alarms scale with action volume and event prevalence. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
+The arithmetic is linear, but its operational consequence depends on prevalence: even a low false-positive rate can overwhelm the review queue when benign actions dominate. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
 
 Escalation is therefore a budgeted online decision. As cases arrive, the system must decide which uncertainty deserves scarce human attention. The decision may consider:
 

@@ -212,9 +212,9 @@ That first stratum tests one grading decision and identifies which category shou
 - Strong evidence: Cemri, M., et al. (2025), "Why Do Multi-Agent LLM Systems Fail?," arXiv:2503.13657. Kappa 0.88 expert taxonomy before validated automated annotation.
 - Directional evidence: Orosz with Husain (2025), "A pragmatic guide to LLM evals for devs," Pragmatic Engineer newsletter, 2025-12-02, https://newsletter.pragmaticengineer.com/p/evals. Binary PASS/FAIL, deterministic evaluation where possible, and judge validation against held-out human labels with TPR/TNR.
 - Strong evidence: Panthi & Abdelfattah (2026), "Same Ranking, Different Winner," arXiv:2605.24060. The 115-case stratified validation protocol, agreement measurements, overlap adjudication, and scaled contested-case evaluation.
-- Directional evidence: Li (2025), "Preference Leakage," arXiv:2502.01534. Direction only.
-- Directional evidence: Badagi (2026), "AI Assurance," arXiv:2605.23459. Direction only.
-- Directional evidence: "MemConflict," arXiv:2605.20926. Direction only.
+- Directional evidence: Li (2025), "Preference Leakage," arXiv:2502.01534.
+- Directional evidence: Badagi (2026), "AI Assurance," arXiv:2605.23459.
+- Directional evidence: "MemConflict," arXiv:2605.20926.
 - Foundational method: Cohen, J. (1960). A Coefficient of Agreement for Nominal Scales. Educational and Psychological Measurement 20(1), 37-46. DOI: 10.1177/001316446002000104. Primary source for Cohen's kappa, the agreement statistic the chapter defines; a standard method rather than a catalog evidence item.
 - Foundational method: Fleiss, J. L. (1971). Measuring Nominal Scale Agreement Among Many Raters. Psychological Bulletin 76(5), 378-382. DOI: 10.1037/h0031619. Primary source for Fleiss's kappa, the agreement statistic the chapter defines; a standard method rather than a catalog evidence item.
 - Foundational method: Scott, W. A. (1955). Reliability of Content Analysis: The Case of Nominal Scale Coding. Public Opinion Quarterly 19(3), 321-325. DOI: 10.1086/266577. Primary source for Scott's pi, the agreement statistic the chapter defines; a standard method rather than a catalog evidence item.
@@ -222,9 +222,9 @@ That first stratum tests one grading decision and identifies which category shou
 ### Separate agreement from correctness
 
 - Strong evidence: Bertalanič (2026), "Cost of Consensus," arXiv:2605.00914. Oracle gap up to 32.3 percentage points; plurality voting discards correct answers already present; grounding catches failures that agreement masks.
-- Directional evidence: Kamelhar (2026), GSAR grounded consensus, arXiv:2604.23366. Direction only.
-- Directional evidence: Wang (2026), "Conformal Social Choice," arXiv:2604.07667. Direction only.
-- Directional evidence: Chen et al. (2023), "ReConcile," arXiv:2309.13007. Direction only.
+- Directional evidence: Kamelhar (2026), GSAR grounded consensus, arXiv:2604.23366.
+- Directional evidence: Wang (2026), "Conformal Social Choice," arXiv:2604.07667.
+- Directional evidence: Chen et al. (2023), "ReConcile," arXiv:2309.13007.
 - Corroboration: none on record.
 
 ### Author-system illustration cited inline

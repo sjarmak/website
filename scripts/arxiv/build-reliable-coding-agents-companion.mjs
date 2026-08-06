@@ -18,12 +18,12 @@ const benchmarkRoot = path.join(researchRoot, "benchmarks");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const websiteCompanionPath = path.join(root, "src/content/book-companions/engineering-reliable-coding-agents.md");
 const outputRoot = path.join(root, "artifacts/arxiv/companion-release");
-const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.6.zip");
+const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.7.zip");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const websiteCompanionUrl = "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion";
 const skillsUrl = `${repositoryUrl}/tree/main/skills`;
 
-const version = "1.0.0-rc.6";
+const version = "1.0.0-rc.7";
 const sourceKinds = {
   lit: "scholarly",
   explorer: "synthesis",
@@ -36,6 +36,14 @@ const evidenceGroups = {
   contested: "null_or_conflicting",
   "null-result": "null_or_conflicting",
 };
+const excludedEvidenceUrls = new Set([
+  "https://x.com/swyx/status/2011344788486774942",
+]);
+const practiceTextCorrections = new Map([
+  ["benchmark-on-your-own-workload", {
+    rationale: "Public benchmarks diverge from production workloads in language distribution, prompt style, and codebase structure; production-derived tasks restore fidelity. One lending-domain account reports that a model near the 90th percentile on a general measure still failed basic domain tasks and that rankings changed on a domain-lifecycle evaluation. The account motivates a local construct-validity test without supplying a population rate.",
+  }],
+]);
 
 // Public-release corrections for claims whose working-catalog labels are broader
 // than the cited study. Keeping these transformations here makes the archived
@@ -180,7 +188,9 @@ async function main() {
   const publicCatalog = catalog.map((practice) => {
     const location = assignment.get(practice.id);
     if (!location) throw new Error(`No chapter assignment for ${practice.id}`);
-    const evidence = (practice.evidence ?? []).map((item, index) => {
+    const evidence = (practice.evidence ?? [])
+      .filter((item) => !excludedEvidenceUrls.has(item.url))
+      .map((item, index) => {
       const correction = evidenceCorrections.get(`${practice.id}:${item.arxiv ?? ""}`);
       const record = {
         evidence_id: `${practice.id}:e${index + 1}`,
@@ -198,8 +208,8 @@ async function main() {
         ...record,
         independent_external_evidence: true,
       });
-      return record;
-    });
+        return record;
+      });
     const corroboratingMaterial = (practice.corroboration ?? []).map((item, index) => {
       const authorOwned = item.author_owned === true || ["dossier", "author-owned", "explorer-author-owned"].includes(item.class);
       const record = {
@@ -225,7 +235,7 @@ async function main() {
       id: practice.id,
       name: practice.name,
       practice: sanitizeProse(practice.do),
-      rationale: sanitizeProse(practice.why),
+      rationale: practiceTextCorrections.get(practice.id)?.rationale ?? sanitizeProse(practice.why),
       boundary_conditions: sanitizeProse(practice.boundary),
       transfers_to: sanitizeProse(practice.transfers_to),
       chapter: location.chapter,
@@ -252,6 +262,19 @@ async function main() {
   await mkdir(path.join(outputRoot, "schemas"), { recursive: true });
 
   const files = new Map();
+  files.set("WEB-SOURCE-PRESERVATION.md", `# Web-source preservation
+
+The manuscript retains canonical URLs in its citations and records the following independently captured snapshots for practitioner sources whose host content may change. Snapshot availability preserves the cited page; it does not promote the source's evidence grade.
+
+| Source | Canonical URL | Archived snapshot |
+| --- | --- | --- |
+| Trautmann and Sutter, “Agents that remember” | https://blog.cloudflare.com/introducing-agent-memory/ | https://web.archive.org/web/20260806014045/https://blog.cloudflare.com/introducing-agent-memory/ |
+| Bytesfortruth, lending-domain benchmark account | https://www.reddit.com/r/compsci/comments/1rqcmu8/ | https://web.archive.org/web/20260806020302/https://www.reddit.com/r/compsci/comments/1rqcmu8/benchmark_contamination_and_the_case_for/ |
+| saurabhjain1592, production-workflow failure account | https://www.reddit.com/r/LLMDevs/comments/1q7avil/ | https://web.archive.org/web/20260806014103/https://www.reddit.com/r/LLMDevs/comments/1q7avil/what_actually_broke_when_we_put_ai_agents_into/ |
+| Upstairs_Safe2922, Railway database incident account | https://www.reddit.com/r/devops/comments/1tbbls4/ | https://web.archive.org/web/20260806014121/https://www.reddit.com/r/devops/comments/1tbbls4/ai_agent_wiped_railway_db_in_9_seconds_how_do_you/ |
+
+Two unstable records identified during review were removed rather than preserved as support: an unlinked audit attributed to swyx and an unlinked statement attributed to Patwardhan. A separate X post about benchmark transfer was also removed after the host and archive service could not provide a stable snapshot. None is counted in the released evidence ledger.
+`);
   files.set("LEARNINGS.md", renderReviewableLearnings(websiteCompanionSource));
   files.set("catalog.json", `${JSON.stringify(publicCatalog, null, 2)}\n`);
   files.set("chapter-crosswalk.json", `${JSON.stringify(crosswalk, null, 2)}\n`);
@@ -292,6 +315,15 @@ async function main() {
       },
     },
   }, null, 2)}\n`);
+
+  files.set("README.md", files.get("README.md").replace(
+    "- `reference-metadata.json`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n",
+    "- `reference-metadata.json`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n- `WEB-SOURCE-PRESERVATION.md`: canonical and archived URLs for retained practitioner sources on mutable hosts.\n",
+  ));
+  files.set("PROVENANCE.md", files.get("PROVENANCE.md").replace(
+    "Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.",
+    "Records previously removed from supporting evidence are retained as null or conflicting material with their limitation. Mutable practitioner pages retained by the manuscript have canonical and archived locations in `WEB-SOURCE-PRESERVATION.md`; unstable unsupported records removed during review are named there for auditability.",
+  ));
 
   for (const [name, content] of files) await writeFile(path.join(outputRoot, name), content);
   await cp(path.join(benchmarkRoot, "benchmarks.json"), path.join(outputRoot, "benchmark-catalog.json"), { force: true });

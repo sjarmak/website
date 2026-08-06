@@ -279,9 +279,7 @@ Both rates are estimates from finite labeled samples. A stratum with few cases p
 
 The queue budget is part of the operating point. A false-positive rate of 0.01 produces one expected false alarm across 100 benign actions and 10,000 across one million. When the flagged event is rare, false alarms may outnumber correct flags even at a seemingly low false-positive rate. This is the prevalence effect Chapter 5 develops for graders.
 
-![At fixed 0.01 false-positive rate, false alarms rise from 1 among 100 actions to 10,000 among 1,000,000 and can outnumber correct rare-event flags; targeted escalation adds about 15% true-positive rate in one covert-misbehavior arena.](/book-figures/ch15-queue-budget.svg)
-
-False alarms scale with action volume and event prevalence. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
+The arithmetic is linear, but its operational consequence depends on prevalence: even a low false-positive rate can overwhelm the review queue when benign actions dominate. The approximately 15 percent true-positive-rate gain comes from one covert-misbehavior comparison at one operating point.
 
 Escalation is therefore a budgeted online decision. As cases arrive, the system must decide which uncertainty deserves scarce human attention. The decision may consider:
 
@@ -423,33 +421,33 @@ Finally, budget practice for the people expected to handle rare failures. A name
 
 ### Building verification surfaces so verifying costs less than blind acceptance
 
-- lit/strong: Vasconcelos, H., Jörke, M., Grunde-McLaughlin, M., Gerstenberg, T., Bernstein, M., Krishna, R. (2022/2023). Explanations Can Reduce Overreliance on AI Systems During Decision-Making. PACM HCI 7(CSCW1). arXiv:2212.06823. Five experiments treat overreliance as a cost-benefit choice and find greater engagement when verification is cheaper or stakes are higher.
-- lit/directional: Fok, R., Weld, D.S. (2023/2024). In Search of Verifiability: Explanations Rarely Enable Complementary Performance in AI-Advised Decision Making. AI Magazine 45(3). arXiv:2305.07722. Across the XAI-reliance literature, explanations help only insofar as they enable verification.
-- Corroboration: the author's website, "Two retrieval systems write this site" (2026-06-10), an author-owned anecdotal account of schema-validated agent output landing as a git diff that serves as the review gate, and an unpublished internal record of the author's agent-workflow system. Both are narrative only and neither is an admitting basis. Dossier items corroborate only.
+- Strong evidence: Vasconcelos, H., Jörke, M., Grunde-McLaughlin, M., Gerstenberg, T., Bernstein, M., Krishna, R. (2022/2023). Explanations Can Reduce Overreliance on AI Systems During Decision-Making. PACM HCI 7(CSCW1). arXiv:2212.06823. Five experiments treat overreliance as a cost-benefit choice and find greater engagement when verification is cheaper or stakes are higher.
+- Directional evidence: Fok, R., Weld, D.S. (2023/2024). In Search of Verifiability: Explanations Rarely Enable Complementary Performance in AI-Advised Decision Making. AI Magazine 45(3). arXiv:2305.07722. Across the XAI-reliance literature, explanations help only insofar as they enable verification.
+- Corroboration (illustration only): the author's website, "Two retrieval systems write this site" (2026-06-10), describes schema-validated agent output landing as a Git diff that serves as the review gate. This author-system case does not count as independent external evidence.
 
 ### Putting the forcing function at the accept decision, aimed at acceleration mode
 
-- lit/strong: Buçinca, Z., Malaya, M.B., Gajos, K.Z. (2021). To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making. PACM HCI 5(CSCW1), 188. arXiv:2102.09692. Cognitive forcing functions reduced overreliance where explanations failed (N=199).
-- lit/directional: Barke, S., James, M.B., Polikarpova, N. (2022/2023). Grounded Copilot: How Programmers Interact with Code-Generating Models. PACMPL 7(OOPSLA1). arXiv:2206.15000. Grounded theory from 20 programmers supports the suggestion-level acceleration/exploration split. Transfer to autonomous-agent diffs is untested. This directional item is the only source for the chapter's targeting rule.
+- Strong evidence: Buçinca, Z., Malaya, M.B., Gajos, K.Z. (2021). To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making. PACM HCI 5(CSCW1), 188. arXiv:2102.09692. Cognitive forcing functions reduced overreliance where explanations failed (N=199).
+- Directional evidence: Barke, S., James, M.B., Polikarpova, N. (2022/2023). Grounded Copilot: How Programmers Interact with Code-Generating Models. PACMPL 7(OOPSLA1). arXiv:2206.15000. Grounded theory from 20 programmers supports the suggestion-level acceleration/exploration split. Transfer to autonomous-agent diffs is untested. This directional item is the only source for the chapter's targeting rule.
 - Corroboration: none on record.
 
 ### Escalating only monitor-flagged cases to a human who owns the verdict, with a scaffolded monitor
 
-- lit/strong: Kale, N., et al. (2025). Reliable Weak-to-Strong Monitoring of LLM Agents. arXiv:2508.19461. Targeted escalation adds approximately 15% TPR at FPR=0.01. Hybrid hierarchical-sequential scaffolds let weaker models monitor stronger agents. The paper reports that scaffolding mattered more than monitor awareness; the awareness caution in this chapter is my design caution, not a result from this paper. The setting is a covert-misbehavior arena, not production code review. This is the sole admitted evidence item for the whole grouping.
-- Corroboration: the author's website, "Running my own agent city on Slack" (2026-06-16), an author-owned anecdotal account of mechanical work proceeding autonomously while judgment calls accumulate in a decision ledger for a human; the author's website, "WF2026: evals are the new CI" field notes, an account distilled from other people's conference talks of a three-layer judge stack with a human owning the verdict; and unpublished internal context notes. None is an admitting basis. The conference-talk-derived account was demoted out of the evidence base and is not citable as independent support. The chapter's three-layer scaffold ordering rests on it and on nothing stronger. Dossier items corroborate only.
+- Strong evidence: Kale, N., et al. (2025). Reliable Weak-to-Strong Monitoring of LLM Agents. arXiv:2508.19461. Targeted escalation adds approximately 15% TPR at FPR=0.01. Hybrid hierarchical-sequential scaffolds let weaker models monitor stronger agents. The paper reports that scaffolding mattered more than monitor awareness; the awareness caution in this chapter is my design caution, not a result from this paper. The setting is a covert-misbehavior arena, not production code review. This is the sole admitted evidence item for the whole grouping.
+- Corroboration (illustration only): the author's website, "Running my own agent city on Slack" (2026-06-16), describes mechanical work proceeding autonomously while judgment calls accumulate in a decision ledger for a human. The author's WF2026 field notes describe a three-layer judge stack reported in conference talks. Neither account counts as independent external evidence, and the reviewed source set contains no direct study of that scaffold ordering.
 
-### Companion material carried in-text but not taught as a pattern
+### Companion material carried in-text but not developed as a practice
 
-- lit/strong: Rosbach, E., Ganz, J., Ammeling, J., Riener, A., Aubreville, M. (2024). Automation Bias in AI-Assisted Medical Decision-Making under Time Pressure in Computational Pathology. arXiv:2411.00998. This is the basis for the time-pressure paragraph. The setting is computational pathology, not software review.
-- lit/directional: Bainbridge, L. (1983). Ironies of Automation. Automatica 19(6), 775-779. doi:10.1016/0005-1098(83)90046-8. This is the single source behind the skill-retention paragraph. The evidence is pre-AI and industrial. Transfer to code review is analogical.
-- lit/anecdotal: Sarkar, A., et al. (2022). What is it like to program with artificial intelligence? PPIG 2022. arXiv:2208.06213. This is the basis for the companion hypothesis that verification is the dominant cost. The magnitudes are not quantified.
-- lit/directional: Xie, L., Zheng, C., Xia, H., Qu, H., Zhu-Tian, C. (2024). WaitGPT: Monitoring and Steering Conversational LLM Agent in Data Analysis with On-the-Fly Code Visualization. UIST 2024. arXiv:2408.01703. This prototype-scale single item is the basis for the live-state proposal and the thinnest support in the chapter. Transfer to arbitrary code agents requires an operation-level abstraction that may not exist.
-- explorer/directional: DeepRare (Zhao 2026); Manager Agent (Masters 2025, arXiv:2510.02557); NIST AI RMF.
-- explorer/directional: Bounded Autonomy for Enterprise AI (Sohail 2026, arXiv:2604.14723).
-- explorer/directional: AMBIPOM human-LLM co-planning (He 2026, arXiv:2605.23023).
-- explorer/directional: Token Budgets (Khan 2026, arXiv:2606.04056). Together, the four explorer items support only the direction of the checkpoint-placement claim. None is strong.
-- Corroboration: an unpublished internal record of the author's repository-scale benchmark, an unpublished internal record of the author's background-agent review pipeline, and unpublished internal context notes corroborate the checkpoint-placement claim as narrative only. Dossier items corroborate only.
+- Strong evidence: Rosbach, E., Ganz, J., Ammeling, J., Riener, A., Aubreville, M. (2024). Automation Bias in AI-Assisted Medical Decision-Making under Time Pressure in Computational Pathology. arXiv:2411.00998. This is the basis for the time-pressure paragraph. The setting is computational pathology, not software review.
+- Directional evidence: Bainbridge, L. (1983). Ironies of Automation. Automatica 19(6), 775-779. doi:10.1016/0005-1098(83)90046-8. This is the single source behind the skill-retention paragraph. The evidence is pre-AI and industrial. Transfer to code review is analogical.
+- Corroborating case: Sarkar, A., et al. (2022). What is it like to program with artificial intelligence? PPIG 2022. arXiv:2208.06213. This is the basis for the companion hypothesis that verification is the dominant cost. The magnitudes are not quantified.
+- Directional evidence: Xie, L., Zheng, C., Xia, H., Qu, H., Zhu-Tian, C. (2024). WaitGPT: Monitoring and Steering Conversational LLM Agent in Data Analysis with On-the-Fly Code Visualization. UIST 2024. arXiv:2408.01703. This prototype-scale single item is the basis for the live-state proposal and the thinnest support in the chapter. Transfer to arbitrary code agents requires an operation-level abstraction that may not exist.
+- Directional evidence: DeepRare (Zhao 2026); Manager Agent (Masters 2025, arXiv:2510.02557); NIST AI RMF.
+- Directional evidence: Bounded Autonomy for Enterprise AI (Sohail 2026, arXiv:2604.14723).
+- Directional evidence: AMBIPOM human-LLM co-planning (He 2026, arXiv:2605.23023).
+- Directional evidence: Token Budgets (Khan 2026, arXiv:2606.04056). Together, the four synthesis items support only the direction of the checkpoint-placement claim. None is strong.
+- Corroboration (illustration only): author-system cases concerning a repository-scale benchmark and a background-agent review pipeline illustrate checkpoint placement. They do not count as independent external evidence.
 
 ### Opening scene
 
-- practitioner/corpus-verified: InfoQ, "Stripe Engineers Deploy Minions, Autonomous Agents Producing Thousands of Pull Requests Weekly," 2026-03-20, https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/. Reports over 1,300 production pull requests per week with human review retained. Carried as scale context; it reports no measure of review depth or defect escape.
+- Corroborating evidence: InfoQ, "Stripe Engineers Deploy Minions, Autonomous Agents Producing Thousands of Pull Requests Weekly," 2026-03-20, https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/. Reports over 1,300 production pull requests per week with human review retained. Carried as scale context; it reports no measure of review depth or defect escape.

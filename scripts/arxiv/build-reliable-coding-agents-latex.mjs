@@ -162,12 +162,15 @@ function referenceSortKey(reference) {
 function renderReferences(audit) {
   const references = [];
   for (const record of audit.arxiv.filter(manuscriptRecord)) {
+    const journalOverride = record.id === "2109.05067"
+      ? { year: "2022", prefix: "Computer Law \\& Security Review, 45, 105681. " }
+      : { year: record.metadata.published.slice(0, 4), prefix: "" };
     references.push({
       key: `arxiv-${record.id.replaceAll(".", "-")}`,
       authors: record.metadata.authors,
-      year: record.metadata.published.slice(0, 4),
+      year: journalOverride.year,
       title: record.metadata.title,
-      locator: `arXiv:${record.id}. \\url{https://arxiv.org/abs/${record.id}}`,
+      locator: `${journalOverride.prefix}arXiv:${record.id}. \\url{https://arxiv.org/abs/${record.id}}`,
     });
   }
   for (const record of audit.dois.filter(manuscriptRecord)) {
@@ -182,6 +185,7 @@ function renderReferences(audit) {
 
   const webMetadata = {
     "https://addyo.substack.com/p/long-running-agents": ["Addy Osmani", "2026", "Long-running agents", "Elevate"],
+    "https://blog.cloudflare.com/introducing-agent-memory/": ["Tyson Trautmann and Rob Sutter", "2026", "Agents that remember: introducing Agent Memory", "Cloudflare Blog"],
     "https://cursor.com/blog/dynamic-context-discovery": ["Cursor", "2026", "Dynamic context discovery", "Cursor Blog"],
     "https://devops.com/when-should-a-devops-agent-act-without-human-approval/": ["Bala Priya C", "2026", "When should a DevOps agent act without human approval?", "DevOps.com"],
     "https://github.com/sjarmak/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: manuscript and companion repository", "GitHub repository"],
@@ -197,10 +201,11 @@ function renderReferences(audit) {
     "https://www.infoq.com/news/2026/03/stripe-autonomous-coding-agents/": ["InfoQ", "2026", "Stripe uses autonomous coding agents to generate over 1,300 pull requests per week", "InfoQ"],
     "https://www.morling.dev/blog/building-durable-execution-engine-with-sqlite/": ["Gunnar Morling", "2025", "Building a durable execution engine with SQLite", "morling.dev"],
     "https://www.reddit.com/r/compsci/comments/1rqcmu8/": ["Bytesfortruth", "2026", "Lending-domain benchmark account", "Reddit, r/compsci"],
+    "https://www.reddit.com/r/devops/comments/1tbbls4/": ["Upstairs_Safe2922", "2026", "AI agent wiped Railway DB in 9 seconds", "Reddit, r/devops"],
     "https://www.reddit.com/r/devops/comments/1touxz4/": ["Prateek Jain", "2026", "Harness engineering: the new DevOps layer for AI agents", "Reddit, r/devops"],
+    "https://www.reddit.com/r/LLMDevs/comments/1q7avil/": ["saurabhjain1592", "2026", "What actually broke when we put AI agents into real production workflows", "Reddit, r/LLMDevs"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: web edition", "sjarmak.ai"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: companion catalog", "sjarmak.ai"],
-    "https://x.com/swyx/status/2011344788486774942": ["swyx", "2026", "Comment on coding-benchmark and long-horizon evaluation disagreement", "X"],
   };
   for (const record of audit.urls.filter(manuscriptRecord)) {
     if (record.url.includes("w3.org/1998/Math/MathML")) continue;
@@ -226,46 +231,11 @@ function renderReferences(audit) {
       locator: "Transportation Research Part F: Traffic Psychology and Behaviour, 113, 213--236.",
     },
     {
-      key: "trautmann-2026",
-      authors: ["Trautmann"],
-      year: "2026",
-      title: "Agents that remember",
-      locator: "Cloudflare. No stable URL was recorded in the evidence catalog.",
-    },
-    {
-      key: "patwardhan-2026",
-      authors: ["Tejal Patwardhan"],
-      year: "2026",
-      title: "Public statement on frontier evaluations",
-      locator: "June 16, 2026. No stable URL was recorded in the evidence catalog.",
-    },
-    {
       key: "push-to-prod-2026",
       authors: ["Matthew Hawthorne"],
       year: "2026",
       title: "My AI agent said it was done. It hadn't done anything",
       locator: "Push to Prod newsletter, February 17, 2026. \\url{https://pushtoprod.substack.com/archive}",
-    },
-    {
-      key: "upstairs-safe-2026",
-      authors: ["Upstairs_Safe2922"],
-      year: "2026",
-      title: "AI agent wiped Railway DB in 9 seconds",
-      locator: "Reddit, r/devops, May 12, 2026. No stable URL was recorded in the evidence catalog.",
-    },
-    {
-      key: "saurabh-jain-2026",
-      authors: ["saurabhjain1592"],
-      year: "2026",
-      title: "What actually broke when we put AI agents into real production workflows",
-      locator: "Reddit, r/LLMDevs, January 8, 2026. No stable URL was recorded in the evidence catalog.",
-    },
-    {
-      key: "swyx-swe-bench-2026",
-      authors: ["swyx"],
-      year: "2026",
-      title: "SWE-Bench Verified is dead!!",
-      locator: "Public post, February 23, 2026. No stable URL was recorded in the evidence catalog.",
     },
     {
       key: "openai-swe-bench-verified-2024",
@@ -333,9 +303,16 @@ async function pandocConvert(markdown, outputPath) {
     `--output=${outputPath}`,
   ]);
   const generated = await readFile(outputPath, "utf8");
+  const metricsTypeset = generated.replace(
+    /\\href\{mailto:((?:pass|Pass|Recall|Precision)@(k|\d+))\}\{\\nolinkurl\{\1\}\}/g,
+    (_match, metric, suffix) => {
+      const name = metric.slice(0, metric.indexOf("@"));
+      return `\\(\\mathrm{${name}}@${suffix}\\)`;
+    },
+  );
   await writeFile(
     outputPath,
-    generated
+    metricsTypeset
       .replaceAll("č", "\\v{c}")
       .replaceAll("\\begin{figure}", "\\begin{figure}[htbp]"),
   );
@@ -347,8 +324,8 @@ async function main() {
   const figureSources = (await readdir(figureSourceRoot))
     .filter((file) => file.endsWith(".svg"))
     .sort();
-  if (figureSources.length !== 18) {
-    throw new Error(`Expected 18 authoritative SVG figures, found ${figureSources.length}`);
+  if (figureSources.length !== 13) {
+    throw new Error(`Expected 13 authoritative SVG figures, found ${figureSources.length}`);
   }
 
   await rm(sourceRoot, { recursive: true, force: true });
@@ -401,9 +378,9 @@ async function main() {
 
   await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. The archival DOI must be added to this statement and to the submission metadata before this edition is frozen.\n`);
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. No archival DOI had been assigned when this edition was prepared; until one is issued, cite the tagged repository release. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
 
-  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 18 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
+  await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 5, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the 13 required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
   const mainTex = `\\documentclass[11pt,oneside]{book}
 

@@ -1,11 +1,11 @@
 # Reference audit
 
-Generated 2026-08-05T22:50:22.347Z from the arXiv editorial source.
+Generated 2026-08-06T02:07:04.162Z from the arXiv editorial source.
 
 ## Coverage
 
 - 20 manuscript files and 192 companion practices scanned
-- 308 unique arXiv identifiers checked against the official arXiv API
+- 308 unique arXiv identifiers resolved from official arXiv API metadata; cached prior responses were used after a temporary API failure
 - 32 other unique URLs checked with redirects enabled
 - 0 unresolved arXiv identifiers
 - 5 unique DOI identifiers checked against Crossref

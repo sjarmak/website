@@ -77,7 +77,7 @@ This is what reduced the minimum detectable effect from 13.2 percent to 7.5 perc
 
 Lowering temperature is not a substitute for sampling more responses when the deployed system will run at the original temperature. It changes the distribution being measured rather than estimating that distribution more precisely. A lower temperature is a legitimate system change when the deployed configuration will use it, but it cannot serve as free variance reduction in an experiment intended to evaluate another configuration.
 
-Small run counts also affect which inferential procedure is defensible. A **bootstrap** estimates uncertainty by resampling the observed data. In a paired comparison, it resamples the observed pairs. In experiments on reinforcement-learning systems, Colas et al. (2018) found that the bootstrap produced a realized false-positive rate of about 10 percent at small sample sizes despite a nominal rate of 5 percent. Two identical implementations of DDPG, a continuous-control reinforcement-learning algorithm, also appeared significantly different when evaluated with only five runs. Under those measured conditions, Welch's t-test performed better than the bootstrap, and the evidence supported using a false-positive threshold below 0.05.
+Small run counts also affect which inferential procedure is defensible. A **bootstrap** estimates uncertainty by resampling the observed data; in a paired comparison, it resamples whole pairs. In Colas et al.'s (2018) reinforcement-learning experiment, the bootstrap's realized false-positive rate was about 10 percent for fewer than ten runs despite a nominal 5 percent level. A five-run comparison also declared two samples from the same DDPG implementation significantly different. Welch's t-test was closer to the nominal rate in that experiment but still exceeded it at small \(N\), leading the authors to suggest a significance level below 0.05 when the goal is to keep the realized rate below 0.05. This is a study-specific calibration warning, not a universal preference for one test.
 
 Welch's t-test does not assume that the two configurations have equal variance, which makes it a more defensible default than the equal-variance t-test for independent small samples. Its advantage at low run counts is empirical and conditional. When the design pairs observations across matched tasks or nuisance realizations, the analysis should preserve that pairing rather than treat the samples as independent. No test removes the need to inspect the score distribution, and no test can repair samples that fail to represent the intended population.
 
@@ -112,7 +112,7 @@ The variance of the mean difference contains the covariance between the two syst
 
 When the systems respond similarly to item difficulty, the covariance is positive and reduces the variance of the comparison. An independent analysis omits this term. It treats the two systems as though they had been evaluated on unrelated samples and counts the variation between easy and hard tasks twice. The resulting uncertainty estimate is therefore unnecessarily large when item-level outcomes move together.
 
-![Illustrative, unmeasured geometry shows item scores for systems A and B rising together, while paired and independent mean-difference distributions share zero but pairing produces narrower uncertainty.](/book-figures/ch01-paired-comparison.svg)
+![Schematic of correlated item scores for systems A and B and the narrower uncertainty obtained by analyzing their matched differences.](/book-figures/ch01-paired-comparison.svg)
 
 Item-level subtraction removes shared task difficulty, so the remaining variation better represents system disagreement. Positive covariance narrows uncertainty without changing the mean difference.
 
@@ -148,7 +148,7 @@ The table below gives directional guidance. The recommendations for language-gen
 
 A later chapter on retrieval freshness uses McNemar's test for this reason. Both systems receive the same items, and each item produces a pass or fail outcome.
 
-The companion catalog covers designs that this basic framework does not. Clustered items require correlation-aware standard errors. Estimating pass@(k) from repeated attempts requires the appropriate combinatorial estimator. Claims spanning many tasks or metrics require multiplicity correction. Ranking several systems rather than comparing two requires paired-comparison ranking models with uncertainty intervals.
+The companion catalog covers designs that this basic framework does not. Clustered items require correlation-aware standard errors. Estimating \(\mathrm{pass}@k\) from repeated attempts requires the appropriate combinatorial estimator. Claims spanning many tasks or metrics require multiplicity correction. Ranking several systems rather than comparing two requires paired-comparison ranking models with uncertainty intervals.
 
 The catalog also covers profiling benchmark noise before making decisions, declaring the decoding configuration, aggregating scarce repetitions with interquartile means and resampled intervals, reducing an evaluation around a specific decision, using precommitted confirmatory designs, and measuring sensitivity across prompt variants. Each addresses a narrower problem than the core decisions developed in this chapter.
 
@@ -178,33 +178,32 @@ When a provider exposes no stable model version, I record the evaluation window 
 
 The observed difference belongs beside the complete run distribution and the engineering threshold written before execution. I do not credit a difference that remains smaller than the measured variation. I return no verdict when the experiment lacked the power to resolve the difference that would have changed the decision.
 
-
 ## Sources and evidence
 
-### Taught entry 1: never-report-a-single-run
+### Never report a single run
 
-- lit/strong: Ouyang, Zhang, Harman & Wang (2023). An Empirical Study of the Non-determinism of ChatGPT in Code Generation. arXiv:2308.02828. Nominally identical requests, different programs and outcomes.
-- lit/strong: Bjarnason, Silva & Monperrus (2026). On Randomness in Agentic Evals. arXiv:2602.07150. The 60,000-trajectory result: 2.2 to 6.0 pp single-run spread, SD above 1.5 pp at temperature 0, early-token divergence.
-- lit/strong: Reimers & Gurevych (2018). Why Comparing Single Performance Scores Does Not Allow to Draw Conclusions About Machine Learning Approaches. arXiv:1803.09578. The 26% result.
-- lit/strong: Bouthillier et al. (2021). Accounting for Variance in Machine Learning Benchmarks. MLSys 2021. arXiv:2103.03098. The ~51x result and the fixed-seed critique.
-- lit/strong: Henderson et al. (2017). Deep Reinforcement Learning that Matters. AAAI 2018. arXiv:1709.06560. Five-seed splits and unreported researcher degrees of freedom.
-- lit/strong: Dodge et al. (2020). Fine-Tuning Pretrained Language Models: Weight Initializations, Data Orders, and Early Stopping. arXiv:2002.06305. The 2,100-trial seed result, scoped to small-data fine-tuning of pretrained encoders.
-- lit/strong: Sclar et al. (2023), FormatSpread, arXiv:2310.11324. Meaning-preserving prompt-format changes produced a median 7.5-point accuracy spread across the tested tasks, with larger task-level spreads.
-- lit/strong: Mizrahi et al. (2024), TACL, arXiv:2401.00595. Individual templates reversed some model comparisons even where aggregate comparisons were more stable.
-- lit/strong: Salinas and Morstatter (2024), arXiv:2401.03729. Trivial prompt edits changed more than 10 percent of predictions on some tested tasks.
+- Strong evidence: Ouyang, Zhang, Harman & Wang (2023). An Empirical Study of the Non-determinism of ChatGPT in Code Generation. arXiv:2308.02828. Nominally identical requests, different programs and outcomes.
+- Strong evidence: Bjarnason, Silva & Monperrus (2026). On Randomness in Agentic Evals. arXiv:2602.07150. The 60,000-trajectory result: 2.2 to 6.0 pp single-run spread, SD above 1.5 pp at temperature 0, early-token divergence.
+- Strong evidence: Reimers & Gurevych (2018). Why Comparing Single Performance Scores Does Not Allow to Draw Conclusions About Machine Learning Approaches. arXiv:1803.09578. The 26% result.
+- Strong evidence: Bouthillier et al. (2021). Accounting for Variance in Machine Learning Benchmarks. MLSys 2021. arXiv:2103.03098. The ~51x result and the fixed-seed critique.
+- Strong evidence: Henderson et al. (2017). Deep Reinforcement Learning that Matters. AAAI 2018. arXiv:1709.06560. Five-seed splits and unreported researcher degrees of freedom.
+- Strong evidence: Dodge et al. (2020). Fine-Tuning Pretrained Language Models: Weight Initializations, Data Orders, and Early Stopping. arXiv:2002.06305. The 2,100-trial seed result, scoped to small-data fine-tuning of pretrained encoders.
+- Strong evidence: Sclar et al. (2023), FormatSpread, arXiv:2310.11324. Meaning-preserving prompt-format changes produced a median 7.5-point accuracy spread across the tested tasks, with larger task-level spreads.
+- Strong evidence: Mizrahi et al. (2024), TACL, arXiv:2401.00595. Individual templates reversed some model comparisons even where aggregate comparisons were more stable.
+- Strong evidence: Salinas and Morstatter (2024), arXiv:2401.03729. Trivial prompt edits changed more than 10 percent of predictions on some tested tasks.
 
-### Taught entry 2: power-analyze-before-running
+### Analyze statistical power before running
 
-- lit/strong: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640 (Anthropic). The 13.2% to 7.5% minimum-detectable-effect example and the response-count lever.
-- lit/strong: Card et al. (2020). With Little Power Comes Great Responsibility. EMNLP 2020. arXiv:2010.06595. GLUE underpowering and effect-size exaggeration.
-- lit/strong: Colas, Sigaud & Oudeyer (2018). How Many Random Seeds? arXiv:1806.08295. The pilot floor, the bootstrap false-positive rate at small N, the DDPG case, and the preference for Welch's t-test.
+- Strong evidence: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640 (Anthropic). The 13.2% to 7.5% minimum-detectable-effect example and the response-count lever.
+- Strong evidence: Card et al. (2020). With Little Power Comes Great Responsibility. EMNLP 2020. arXiv:2010.06595. GLUE underpowering and effect-size exaggeration.
+- Strong evidence: Colas, Sigaud & Oudeyer (2018). How Many Random Seeds? arXiv:1806.08295. The pilot floor, the bootstrap false-positive rate at small N, the DDPG case, and the preference for Welch's t-test.
 
-### Taught entry 3: use-paired-tests-matched-to-metric
+### Use paired tests matched to the metric
 
-- lit/strong: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640. Paired per-item differences with paired standard error and score correlation.
-- lit/directional: Dror & Reichart (2018). Appendix, Recommended Statistical Significance Tests for NLP Tasks. arXiv:1809.01448. The per-metric test selection; directional, so the table is guidance, not a measured result.
-- reference/standard method: McNemar, Q. (1947). Psychometrika 12(2), 153-157. DOI: 10.1007/BF02295996. The paired pass/fail test used in the binary-outcome row.
+- Strong evidence: Miller (2024). Adding Error Bars to Evals. arXiv:2411.00640. Paired per-item differences with paired standard error and score correlation.
+- Directional evidence: Dror & Reichart (2018). Appendix, Recommended Statistical Significance Tests for NLP Tasks. arXiv:1809.01448. The per-metric test selection; directional, so the table is guidance, not a measured result.
+- Foundational method: McNemar, Q. (1947). Psychometrika 12(2), 153-157. DOI: 10.1007/BF02295996. The paired pass/fail test used in the binary-outcome row.
 
-### Author artifact cited inline
+### Author-system illustration cited inline
 
 - Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the task-family run and rerun described in the opening, which are narrative illustration.

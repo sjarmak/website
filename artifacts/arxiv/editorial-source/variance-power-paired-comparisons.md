@@ -68,7 +68,7 @@ This is what reduced the minimum detectable effect from 13.2 percent to 7.5 perc
 
 Lowering temperature is not a substitute for sampling more responses when the deployed system will run at the original temperature. It changes the distribution being measured rather than estimating that distribution more precisely. A lower temperature is a legitimate system change when the deployed configuration will use it, but it cannot serve as free variance reduction in an experiment intended to evaluate another configuration.
 
-Small run counts also affect which inferential procedure is defensible. A **bootstrap** estimates uncertainty by resampling the observed data. In a paired comparison, it resamples the observed pairs. In experiments on reinforcement-learning systems, Colas et al. (2018) found that the bootstrap produced a realized false-positive rate of about 10 percent at small sample sizes despite a nominal rate of 5 percent. Two identical implementations of DDPG, a continuous-control reinforcement-learning algorithm, also appeared significantly different when evaluated with only five runs. Under those measured conditions, Welch's t-test performed better than the bootstrap, and the evidence supported using a false-positive threshold below 0.05.
+Small run counts also affect which inferential procedure is defensible. A **bootstrap** estimates uncertainty by resampling the observed data; in a paired comparison, it resamples whole pairs. In Colas et al.'s (2018) reinforcement-learning experiment, the bootstrap's realized false-positive rate was about 10 percent for fewer than ten runs despite a nominal 5 percent level. A five-run comparison also declared two samples from the same DDPG implementation significantly different. Welch's t-test was closer to the nominal rate in that experiment but still exceeded it at small \(N\), leading the authors to suggest a significance level below 0.05 when the goal is to keep the realized rate below 0.05. This is a study-specific calibration warning, not a universal preference for one test.
 
 Welch's t-test does not assume that the two configurations have equal variance, which makes it a more defensible default than the equal-variance t-test for independent small samples. Its advantage at low run counts is empirical and conditional. When the design pairs observations across matched tasks or nuisance realizations, the analysis should preserve that pairing rather than treat the samples as independent. No test removes the need to inspect the score distribution, and no test can repair samples that fail to represent the intended population.
 
@@ -103,7 +103,7 @@ The variance of the mean difference contains the covariance between the two syst
 
 When the systems respond similarly to item difficulty, the covariance is positive and reduces the variance of the comparison. An independent analysis omits this term. It treats the two systems as though they had been evaluated on unrelated samples and counts the variation between easy and hard tasks twice. The resulting uncertainty estimate is therefore unnecessarily large when item-level outcomes move together.
 
-![Illustrative, unmeasured geometry shows item scores for systems A and B rising together, while paired and independent mean-difference distributions share zero but pairing produces narrower uncertainty.](/book-figures/ch01-paired-comparison.svg)
+![Schematic of correlated item scores for systems A and B and the narrower uncertainty obtained by analyzing their matched differences.](/book-figures/ch01-paired-comparison.svg)
 
 Item-level subtraction removes shared task difficulty, so the remaining variation better represents system disagreement. Positive covariance narrows uncertainty without changing the mean difference.
 
@@ -139,7 +139,7 @@ The table below gives directional guidance. The recommendations for language-gen
 
 A later chapter on retrieval freshness uses McNemar's test for this reason. Both systems receive the same items, and each item produces a pass or fail outcome.
 
-The companion catalog covers designs that this basic framework does not. Clustered items require correlation-aware standard errors. Estimating pass@(k) from repeated attempts requires the appropriate combinatorial estimator. Claims spanning many tasks or metrics require multiplicity correction. Ranking several systems rather than comparing two requires paired-comparison ranking models with uncertainty intervals.
+The companion catalog covers designs that this basic framework does not. Clustered items require correlation-aware standard errors. Estimating \(\mathrm{pass}@k\) from repeated attempts requires the appropriate combinatorial estimator. Claims spanning many tasks or metrics require multiplicity correction. Ranking several systems rather than comparing two requires paired-comparison ranking models with uncertainty intervals.
 
 The catalog also covers profiling benchmark noise before making decisions, declaring the decoding configuration, aggregating scarce repetitions with interquartile means and resampled intervals, reducing an evaluation around a specific decision, using precommitted confirmatory designs, and measuring sensitivity across prompt variants. Each addresses a narrower problem than the core decisions developed in this chapter.
 

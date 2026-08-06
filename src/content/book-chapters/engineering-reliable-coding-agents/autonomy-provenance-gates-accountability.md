@@ -180,7 +180,7 @@ A provenance control that disappears during the ordinary merge path creates a co
 
 My authorship-measurement project illustrates why provenance counts must remain narrow. I measured a 14.5 percent trailer-signed floor, a lower bound on visible trailer-marked authorship, because every detected trailer was treated as a true positive. The figure says nothing about total agent contribution and cannot be averaged with an inferred share.
 
-An earlier exploratory range was superseded when a preregistered replication returned `Not identified`. The estimator targeted agent authorship beyond the trailer-marked floor and failed to identify that quantity under the specified design. Only the measured floor remains defensible.
+A preregistered replication could not estimate the share of agent-authored code beyond commits carrying the trailer. I therefore discard the earlier exploratory range and report only the directly observed trailer-marked floor.
 
 Provenance is also distinct from answerability. In my maintainer practice, an adoption pull request can preserve a contributor’s commits while stating:
 
@@ -191,7 +191,7 @@ Credit: original fix by @X (commit preserved with original authorship)
 
 The original author remains attached to the work. The maintainer who adopts and submits it becomes answerable for the integration decision. Both facts survive in the artifact.
 
-The format does not establish correctness. It removes the need for a later reviewer to infer who produced the change and who accepted responsibility for putting it forward.
+The format establishes attribution rather than correctness. It removes the need for a later reviewer to infer who produced the change and who accepted responsibility for putting it forward.
 
 Persistent provenance also supports incident reconstruction. A reviewer investigating a regression can ask whether the failure arose during generation, human modification, integration, or a later environmental change. That distinction is harder when provenance exists only in an editor and disappears before merge.
 
@@ -199,7 +199,7 @@ The companion entry `record-steps-in-hash-chained-ledger` describes one tamper-e
 
 Tang et al.’s measured workload cost limits the recommendation. Increased cognitive effort may be acceptable when a marker directs attention to occasional generated work. In a codebase where nearly every change carries the label, constant exposure may tax reviewers and lose salience.
 
-The study does not establish how large diffs, persistent queues, or experienced teams respond over time. Local evaluation should therefore measure reviewer behavior and repair, not label coverage alone.
+Large diffs, persistent queues, and experienced teams may respond differently over time. Local evaluation should therefore measure reviewer behavior and repair, not label coverage alone.
 
 Useful observations include whether reviewers:
 
@@ -341,7 +341,7 @@ Leaving the responsibility label in place while operational control remains else
 
 The check should include the identity that executes the action. In my enterprise data-access service, mutations are unavailable, requests use the caller’s identity, and the audit log records that person. The agent cannot silently accumulate authority beyond what its operator already holds.
 
-This design aligns execution and identity more closely than a shared privileged service account. It does not establish that every read is justified or that the caller understands the returned information.
+This design aligns execution and identity more closely than a shared privileged service account. Access justification and caller understanding remain separate checks.
 
 Identity passthrough also carries a cost. It improves attribution and limits silent privilege expansion, but it can reduce availability when the caller lacks a permission that a service account previously supplied. The system should first determine which authority the action genuinely requires, then measure:
 
@@ -361,7 +361,7 @@ Tracking asks whether system behavior follows the relevant and justified reasons
 
 These concepts become operational only after the team translates them into observable behavior for its own system.
 
-Suryana et al. applied tracking and tracing through interviews with 103 users of Tesla Autopilot and Full Self-Driving features. The interviews revealed expectation-reality gaps and inconsistent adherence to operating protocols. The findings do not establish equivalent failure rates or causes in software delivery. They show that interviews can reveal an operational control model different from the one described in design documents.
+Suryana et al. applied tracking and tracing through interviews with 103 users of Tesla Autopilot and Full Self-Driving features. The interviews revealed expectation-reality gaps and inconsistent adherence to operating protocols. This evidence comes from driving rather than software delivery; its transferable contribution is the interview method for revealing an operational control model different from the one described in design documents.
 
 For an agent that prepares production changes, a tracking interview might ask:
 
@@ -515,26 +515,26 @@ Do not adopt a pass rate borrowed from another system. Decide in advance which f
 
 ## Sources and evidence
 
-Support is thin across the chapter: 4 taught entries carry 7 evidence items, of which 2 are strong and 5 directional; 6 are literature and 1 is practitioner. `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control` carry no strong evidence item.
+Support is thin across the chapter: four developed practices carry seven evidence items, of which two are strong and five directional; six are scholarly sources and one is a practitioner source. `audit-human-gates-for-effectiveness` and `align-accountability-with-actual-control` carry no strong evidence item.
 
 ### graduate-autonomy-per-action-track-record
 
-- practitioner/directional: "When Should a DevOps Agent Act Without Human Approval?", Bala Priya C, DevOps.com, 2026-05-11, [article](https://devops.com/when-should-a-devops-agent-act-without-human-approval/). Supports action-type autonomy promotion at roughly 95% unmodified approval, permanent approval floors for irreversible or high-blast-radius actions, and decision-ready gates with timeout plans. The protocol comes from one practitioner article; the threshold is stated, not measured.
-- lit/strong: Chen, V., Talwalkar, A., Brennan, R., Neubig, G. (2025). Code with Me or for Me? How Increasing AI Automation Transforms Developer Workflows. arXiv:2507.08149. In the controlled study, users' failure to understand agent behavior, not capability, limited broader adoption.
+- Directional evidence: "When Should a DevOps Agent Act Without Human Approval?", Bala Priya C, DevOps.com, 2026-05-11, [article](https://devops.com/when-should-a-devops-agent-act-without-human-approval/). Supports action-type autonomy promotion at roughly 95% unmodified approval, permanent approval floors for irreversible or high-blast-radius actions, and decision-ready gates with timeout plans. The protocol comes from one practitioner article; the threshold is stated, not measured.
+- Strong evidence: Chen, V., Talwalkar, A., Brennan, R., Neubig, G. (2025). Code with Me or for Me? How Increasing AI Automation Transforms Developer Workflows. arXiv:2507.08149. In the controlled study, users' failure to understand agent behavior, not capability, limited broader adoption.
 - Corroboration (narrative only): a demoted author-distilled field note about a 2025 lights-off agent factory failure, the operator policy, and an essay describing per-action autonomy with a batched morning decision ledger. The field note is not independent support.
 
 ### label-ai-provenance
 
-- lit/strong: Tang, N., Chen, M., Ning, Z., Bansal, A., Huang, Y., McMillan, C., Li, T. J.-J. (2024). A Study on Developer Behaviors for Validating and Repairing LLM-Generated Code Using Eye Tracking and IDE Actions. arXiv:2405.16081. Supports improved repair performance and greater verification effort with provenance disclosure; recognition without disclosure was unreliable. Limited by a small laboratory sample and code chunks of tens of lines; the attention cost may not scale to constant exposure.
+- Strong evidence: Tang, N., Chen, M., Ning, Z., Bansal, A., Huang, Y., McMillan, C., Li, T. J.-J. (2024). A Study on Developer Behaviors for Validating and Repairing LLM-Generated Code Using Eye Tracking and IDE Actions. arXiv:2405.16081. Supports improved repair performance and greater verification effort with provenance disclosure; recognition without disclosure was unreliable. Limited by a small laboratory sample and code chunks of tens of lines; the attention cost may not scale to constant exposure.
 - Corroboration: none on record.
 
 ### audit-human-gates-for-effectiveness
 
-- lit/directional: Sterz, S., et al. (2024). On the Quest for Effectiveness in Human Oversight: Interdisciplinary Perspectives. ACM FAccT 2024. arXiv:2404.04059. Supports four conditions for effective oversight persons; gates failing any condition are compliance theater. The framework is motivated by EU AI Act Article 14, not empirically validated.
-- lit/directional: Green, B. (2022). The Flaws of Policies Requiring Human Oversight of Government Algorithms. Computer Law & Security Review 45, 105681. arXiv:2109.05067. Compares 41 policies with the human-computer interaction record and shifts the burden of proof to the deploying institution. The negative claim transfers only where reviewers lack real verification surfaces; code review differs in verifiability.
+- Directional evidence: Sterz, S., et al. (2024). On the Quest for Effectiveness in Human Oversight: Interdisciplinary Perspectives. ACM FAccT 2024. arXiv:2404.04059. Supports four conditions for effective oversight persons; gates failing any condition are compliance theater. The framework is motivated by EU AI Act Article 14, not empirically validated.
+- Directional evidence: Green, B. (2022). The Flaws of Policies Requiring Human Oversight of Government Algorithms. Computer Law & Security Review 45, 105681. arXiv:2109.05067. Compares 41 policies with the human-computer interaction record and shifts the burden of proof to the deploying institution. The negative claim transfers only where reviewers lack real verification surfaces; code review differs in verifiability.
 - Corroboration (narrative only, contrary): the human-approval queue audit found fail-open scripts and unvalidated command construction, while the reproduction-before-mutation hook stops enforcing when a required binary is absent.
 
 ### align-accountability-with-actual-control
 
-- lit/directional: Cavalcante Siebert, L., et al. (2023). Meaningful human control: actionable properties for AI system development. AI and Ethics 3, 241-255. arXiv:2112.01298. Supports responsibility commensurate with ability and authority to control, the framework's third actionable property.
-- lit/directional: Suryana, L. E., Nordhoff, S., Calvert, S., Zgonnikov, A., van Arem, B. (2025). Meaningful human control of partially automated driving systems: Insights from interviews with Tesla users. Transportation Research Part F 113, 213-236. Applies tracking and tracing criteria to 103 users to localize expectation-reality gaps and inconsistent protocol adherence. The method requires case-specific operationalization, yields failure localization rather than a compliance score, and is evidenced here in the driving domain. No arXiv identifier or DOI is carried in the catalog record, so the inline citation is unlinked.
+- Directional evidence: Cavalcante Siebert, L., et al. (2023). Meaningful human control: actionable properties for AI system development. AI and Ethics 3, 241-255. arXiv:2112.01298. Supports responsibility commensurate with ability and authority to control, the framework's third actionable property.
+- Directional evidence: Suryana, L. E., Nordhoff, S., Calvert, S., Zgonnikov, A., van Arem, B. (2025). Meaningful human control of partially automated driving systems: Insights from interviews with Tesla users. Transportation Research Part F 113, 213-236. Applies tracking and tracing criteria to 103 users to localize expectation-reality gaps and inconsistent protocol adherence. The method requires case-specific operationalization, yields failure localization rather than a compliance score, and is evidenced here in the driving domain. No arXiv identifier or DOI is carried in the catalog record, so the inline citation is unlinked.

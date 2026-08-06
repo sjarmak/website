@@ -20,7 +20,7 @@ The organizing argument is a dependency chain. Measurement determines whether a 
 
 Each layer determines what the next may trust. A weak measurement can become a confident grade; a weak grade can admit unsafe work; an incomplete recovery record can enter retrieval as if it were complete; missing context can make review appear ineffective; and an invalid review signal can steer more work toward the wrong configuration. Downstream confidence cannot repair evidence lost upstream.
 
-![The reliability dependency chain runs from measurement through grading, containment and recovery, retrieval and context, review and accountability, and allocation and cost. Each layer supplies the evidence boundary on which the next relies.](/book-figures/dependency-chain.svg)
+![Argument map for the reliability dependency chain: measurement, grading, containment and recovery, retrieval and context, review and accountability, and allocation and cost. Each layer supplies the evidence boundary on which the next relies.](/book-figures/dependency-chain.svg)
 
 The six parts follow this order. It is not a progression from easy to difficult. It is an account of how an apparently local defect can propagate into later operational decisions while retaining the appearance of a clean score, verdict, or artifact.
 
@@ -63,6 +63,8 @@ Three selection passes ranked the catalog by different criteria: teachability th
 
 The consequence ranking also supplies the operational-urgency calculation used later in the monograph. Among its 52 ranked practices, the Spearman correlation between urgency rank and a binary indicator for whether the practice carried at least one strong evidence item was -0.004. The phrase *nearly uncorrelated* refers to this calculation, not to all 192 catalog entries or to a latent universal measure of importance.
 
+The resulting chapter set is an authorial engineering judgment, not an evidence-derived consensus. The near-zero correlation makes that distinction visible. Some practices are included because a controlled comparison measured their effect; others are engineering controls justified by a structural failure mechanism, an observable check, and an asymmetric cost of waiting for trial evidence. Separating a recovery identity from a production identity, for example, can be tested directly against the authority boundary even when no study estimates how often shared credentials cause loss. Imperative section titles name the control or observation to implement; they do not imply a universal effect size or settled prevalence estimate. Where the argument is mechanistic rather than experimental, the chapter supplies a local test and avoids a numerical target.
+
 ### Author-system cases and limitations
 
 Cases from systems operated by the author expose mechanisms, original measurements, and reproducible failure cases. They are always treated as illustrations or local measurements. They are not counted as independent external evidence and do not by themselves support a general recommendation.
@@ -71,7 +73,7 @@ An **unverified working artifact** is an author-system record whose source was u
 
 Evidence remains uneven across topics. Several operational questions have only case-level support, recent capability measurements can age quickly, and practitioner reports are vulnerable to selection, survivorship, and reporting bias. The review excludes model-comparison and prompt-engineering literatures except where they bear directly on system reliability. Transfer is especially substantial in Part VI, where observatory scheduling, compute-cluster scheduling, and adjacent multi-agent studies motivate testable designs for coding-agent fleets. That part should be read partly as a research agenda, not as a body of settled deployment guidance.
 
-This section establishes the standard evidence legend for the whole monograph. Later chapters repeat a limitation only when it is specific enough to change the interpretation of that chapter's claim.
+This section establishes the standard evidence legend for the whole monograph. Later chapters repeat a limitation only when it changes how a particular result may be used.
 
 ## Contributions
 

@@ -346,7 +346,7 @@ Historical replay also preserves historical selection. Work absent from the ledg
 - requests users never submitted because the old system was slow;
 - tasks operators diverted manually;
 - work rejected before entering the queue; and
-- difficult requests routed to another pool.
+- difficult requests routed to another worker group.
 
 A route may therefore contain an artificially easy trace because the incumbent policy sent hard work elsewhere. The companion entry `log-scheduling-decisions-for-selection-effect-modeling` adds the reason each item entered a route, allowing later analysis to model selection. It cannot reconstruct demand that was never observed.
 
@@ -457,25 +457,25 @@ Until the ledger can answer those questions, choosing a more sophisticated polic
 
 ### Re-decide cheaply and ship the incumbent
 
-- lit/directional: Bellm, E. C., et al. (2019), "The Zwicky Transient Facility: Surveys and Scheduler," PASP 131, 068003, arXiv:1905.02209.
-- lit/directional: Naghib, E., et al. (2019), "A Framework for Telescope Schedulers: With Applications to the Large Synoptic Survey Telescope," AJ 157, 151, arXiv:1810.04815. Framework and simulation evidence.
-- lit/directional: Parazin, B., et al. (2022), "Foraging with MUSHROOMS: A Mixed-integer Linear Programming Scheduler for Multimessenger Target of Opportunity Searches with the Zwicky Transient Facility," ApJ 935, 87, arXiv:2203.00013.
+- Directional evidence: Bellm, E. C., et al. (2019), "The Zwicky Transient Facility: Surveys and Scheduler," PASP 131, 068003, arXiv:1905.02209.
+- Directional evidence: Naghib, E., et al. (2019), "A Framework for Telescope Schedulers: With Applications to the Large Synoptic Survey Telescope," AJ 157, 151, arXiv:1810.04815. Framework and simulation evidence.
+- Directional evidence: Parazin, B., et al. (2022), "Foraging with MUSHROOMS: A Mixed-integer Linear Programming Scheduler for Multimessenger Target of Opportunity Searches with the Zwicky Transient Facility," ApJ 935, 87, arXiv:2203.00013.
 - No strong result and no software-fleet measurement support this entry; all three items are observatory scheduling, and the cadence, cap, and churn charge remain deployment decisions.
 - Corroboration (narrative only): the author's transfer notes on observatory scheduling restate the same ZTF and MUSHROOMS results already carried above as literature evidence.
 
 ### Route each request to the cheapest sufficient model
 
-- lit/directional: Cayci, S., Eryilmaz, A., & Srikant, R. (2020), "Budget-Constrained Bandits over General Cost and Reward Distributions," arXiv:2003.00365. Asymptotic guarantee under stated moment conditions.
-- lit/directional: Somerstep, S., et al. (2025), "CARROT: A Cost Aware Rate Optimal Router," arXiv:2502.03261. Static model pool assumed.
-- lit/directional: Li, Y. (2025), "LLM Bandit: Cost-Efficient LLM Generation via Preference-Conditioned Dynamic Routing," arXiv:2502.02743. Single-author preprint, benchmark evidence.
+- Directional evidence: Cayci, S., Eryilmaz, A., & Srikant, R. (2020), "Budget-Constrained Bandits over General Cost and Reward Distributions," arXiv:2003.00365. Asymptotic guarantee under stated moment conditions.
+- Directional evidence: Somerstep, S., et al. (2025), "CARROT: A Cost Aware Rate Optimal Router," arXiv:2502.03261. Static model pool assumed.
+- Directional evidence: Li, Y. (2025), "LLM Bandit: Cost-Efficient LLM Generation via Preference-Conditioned Dynamic Routing," arXiv:2502.02743. Single-author preprint, benchmark evidence.
 - Three directional items and zero strong results; none evaluates a production software-agent fleet, so the entry defines a decision and its measurements rather than establishing a cost reduction.
-- explorer/directional for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional.
+- Directional evidence for this developed practice: CascadeDebate (Chang 2026), arXiv:2604.12262. Its confidence-gated cascade comparison strongly supports the narrower companion-catalog claim in the tested setting; transfer to production software-agent routing remains directional.
 - Corroboration (narrative only): the author's transfer notes restate the budgeted-bandit formulation already carried above.
 
 ### Replay fixed arrival traces before changing policy
 
-- explorer/strong for the cheap-baseline comparison only: SWAY, Chen, J., et al. (2016), "Sampling as a Baseline Optimizer for Search-Based Software Engineering," arXiv:1608.07617. The study supports requiring a candidate optimizer to beat a cheap baseline; fixed-arrival replay is a transfer beyond its experiment.
-- explorer/directional: Decima, Mao, H., et al. (2018), "Learning Scheduling Algorithms for Data Processing Clusters," arXiv:1810.01963. Measures learned scheduling under stochastic arrivals, not fixed-arrival replay; the replay transfer is the explorer's.
-- explorer/directional: Lampoudi, S., Saunders, E., & Eastman, J. (2015), "An Integer Linear Programming Solution to the Telescope Network Scheduling Problem," arXiv:1503.07170. Supports validating a scheduling kernel on instances with known optima.
+- Strong evidence for the cheap-baseline comparison only: SWAY, Chen, J., et al. (2016), "Sampling as a Baseline Optimizer for Search-Based Software Engineering," arXiv:1608.07617. The study supports requiring a candidate optimizer to beat a cheap baseline; fixed-arrival replay is a transfer beyond its experiment.
+- Directional evidence: Decima, Mao, H., et al. (2018), "Learning Scheduling Algorithms for Data Processing Clusters," arXiv:1810.01963. Measures learned scheduling under stochastic arrivals, not fixed-arrival replay; the replay transfer is the synthesis's.
+- Directional evidence: Lampoudi, S., Saunders, E., & Eastman, J. (2015), "An Integer Linear Programming Solution to the Telescope Network Scheduling Problem," arXiv:1503.07170. Supports validating a scheduling kernel on instances with known optima.
 - Fixed-arrival replay itself is a reasoned transfer, not a directly controlled fleet result, and per-class starvation must be checked separately because a policy can improve the mean by starving one class.
-- Corroboration (narrative only): the author's eleven-week replay of 1,286 work items across 22 execution pools, and the author's shadow, canary, then fleet rollout design. Corroboration, never an admitting basis.
+- Corroboration (illustration only): the author's eleven-week replay of 1,286 work items across 22 execution pools, and the author's shadow, canary, then fleet rollout design. These cases do not count as independent external evidence.

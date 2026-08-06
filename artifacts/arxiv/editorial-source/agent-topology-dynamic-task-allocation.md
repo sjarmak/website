@@ -416,106 +416,21 @@ Dynamic graphs are most useful when they expose decisions that were previously i
 
 If those answers cannot be reconstructed, the graph has become another hidden coordinator rather than an observable allocation mechanism.
 
-## Promote topology from a recorded comparison
+## Promote topology from a topology-specific record
 
-A structural redesign should end in a reproducible allocation decision. A diagram and a promising demonstration are not enough. The following protocol is narrow enough to apply to an existing workflow while preserving the distinctions developed in this chapter.
+Chapter 1 defines the paired comparison, Chapter 2 the baseline and cost coordinates, Chapter 9 the fault-injection method, and Chapter 10 the first-upstream-failure label. A topology experiment should reuse those protocols rather than restating them.
 
-### Select one persistent failure class
+Begin with one recurring failure class and draw the smallest boundary at which it could have become observable and stoppable. Change one structural element at that boundary: a verification loop, specialist role, handoff, communication route, aggregation rule, or dependency-aware dispatcher. Preserve the live single-agent workflow as the cheapest credible baseline.
 
-Use repeated paired runs across the current and upgraded model configurations. Preserve the first-upstream-failure assignment from Chapter 10.
+The promotion record adds three topology-specific conditions:
 
-Do not begin from a broad objective such as “improve collaboration.” Name the failure class whose path the structural change is expected to interrupt.
+- **Mechanism entry:** a delegated result was consumed, independent nodes actually overlapped, or the proposed aggregation rule selected among real candidates.
+- **Fault containment:** an omitted artifact, delayed worker, contradictory finding, late completion, or dependency error remained visible and did not release downstream work as complete.
+- **Coordination return:** any gain in the target failure class cleared the predeclared success, reliability, latency, review-burden, and total-cost limits.
 
-### Draw the current causal path
+Run the baseline and treatment on identical task versions and preserve the complete configuration identity. Promote only if all three conditions hold. Retain the baseline when added structure does not earn its coordination cost; redesign when the mechanism executed but left the target failure path intact.
 
-Mark:
-
-- where evidence originates;
-- where interpretation occurs;
-- where state becomes durable;
-- where authority changes hands;
-- where verification occurs; and
-- where the final decision converges.
-
-Identify the smallest boundary at which the target failure could have become observable and stoppable.
-
-### Preserve the live single-agent baseline
-
-Replay the existing single-agent workflow on the current golden set. Record:
-
-- \(\mathrm{pass}^{k}\) or the selected reliability measure;
-- the chosen cost axis;
-- elapsed time;
-- tool and model use;
-- failures by class; and
-- the complete configuration identity.
-
-Keep this baseline executable for later model releases. A topology should not receive permanent credit from a comparison against an obsolete single-agent system.
-
-### Specify one structural treatment
-
-The treatment may be:
-
-- a deterministic verification loop;
-- a specialized role;
-- a structured handoff;
-- a different communication topology;
-- a new aggregation rule; or
-- a dependency-aware dispatcher.
-
-State which boundary changes and which causal path the change is expected to interrupt. Avoid combining several architectural changes unless the experiment is explicitly evaluating the combined system.
-
-### Record the promotion rule before execution
-
-The rule should include:
-
-- a task-success floor;
-- a reliability requirement;
-- a cost ceiling;
-- a latency limit where relevant;
-- a mechanism condition; and
-- any required fault-containment result.
-
-A mechanism condition might require at least one delegated result to be consumed by the aggregator or require the scheduler to dispatch at least one pair of independent nodes concurrently. When candidates are voted on or synthesized, add a check for whether an oracle-correct candidate was retained or discarded.
-
-### Inject a representative fault
-
-Choose a fault matched to the proposed structure:
-
-- For a pipeline, corrupt or omit an upstream artifact.
-- For an orchestrator, delay one worker or return contradictory findings.
-- For a hierarchy, place a critical result in a minority branch.
-- For a blackboard, submit conflicting updates and inspect ordering and provenance.
-- For a task graph, omit a dependency, introduce a false conflict, expire a worker attempt, or return a late completion.
-
-Verify that incomplete or disputed state remains visible and that downstream work does not proceed as though the missing evidence existed.
-
-### Run paired repeated trials
-
-Run baseline and treatment on the same task versions. Keep the model, harness, permissions, evaluator, and execution environment fixed except for the declared structural change.
-
-Report separately:
-
-- correctness;
-- reliability;
-- latency;
-- total computation;
-- monetary or token cost;
-- coordination failures;
-- usability or review burden; and
-- target failure-class frequency.
-
-Inspect traces to confirm that delegation, scheduling, coordination, and aggregation actually occurred. A configured mechanism that never enters the execution path has not been evaluated.
-
-### Promote, retain, or redesign
-
-Promote only when the treatment clears the recorded success, reliability, cost, mechanism, and fault-containment conditions.
-
-Retain the baseline when additional structure does not earn its coordination cost.
-
-Redesign when the trace shows that the treatment changed a boundary but left the target failure path intact. The next experiment may require a narrower specialist role, another handoff field, a different aggregation rule, a corrected dependency model, or no additional worker.
-
-The resulting record should be understandable without trusting the architecture’s name. Promotion depends on whether the observed execution supports the claimed benefit, not on whether the design can be described as dynamic, hierarchical, multi-agent, or dependency-aware.
+The record should remain intelligible without the architecture's label. “Hierarchical,” “dynamic,” and “multi-agent” describe arrangements; mechanism entry, containment, and measured return decide whether the arrangement earned adoption.
 
 ## Sources and evidence
 

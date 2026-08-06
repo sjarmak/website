@@ -89,7 +89,7 @@ The points on the plot should be configurations. Architecture names are too coar
 
 This rule is stronger than ranking by score per dollar alone. A ratio can favor a configuration that is cheap but below the minimum acceptable accuracy, or hide how much accuracy the additional spending returns at the high end of the curve. The frontier preserves the actual coordinates. Deployment constraints apply afterward: a minimum pass rate, a maximum per-task cost, or a latency ceiling measured for the workload.
 
-![In this illustrative set of unmeasured configurations, five connected points form the accuracy-cost frontier and nine open points are dominated; a shaded region demonstrates domination, while minimum-accuracy and cost-ceiling guides bound feasibility.](/book-figures/ch02-cost-accuracy-frontier.svg)
+![Schematic of a cost-accuracy frontier, dominated configurations, and minimum-accuracy and cost-ceiling feasibility constraints.](/book-figures/ch02-cost-accuracy-frontier.svg)
 
 Dominating configurations remove weaker alternatives unless an omitted property is measured separately. Deployment constraints then narrow the frontier.
 
@@ -129,16 +129,16 @@ Reserve the iteration holdout before the first scaffold change. Decide who can i
 
 ### Run ablation controls
 
-- explorer/directional: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117). The underlying study measures no-skill and raw-trajectory controls in its setting; coverage matching, one-factor sweeps, and the writer information-flow constraint are transfers within the broader protocol.
-- explorer/directional: evaluation-design material from the code-retrieval corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here.
-- explorer/directional: *TIAP* (arXiv:2605.24060), direction only; no figure carried.
-- explorer/directional: *MemConflict* (arXiv:2605.20926), direction only; no figure carried.
+- Directional evidence: *SkillEvolBench* (Lei et al. 2026, arXiv:2605.24117), through the agentic-memory source synthesis. The underlying study measures no-skill and raw-trajectory controls in its setting; coverage matching, one-factor sweeps, and the writer information-flow constraint are transfers within the broader protocol.
+- Directional evidence: evaluation-design material from the code-retrieval source corpus. CoIR (Li et al. 2024, arXiv:2407.02883) supplies code-retrieval tasks and metrics, but it does not test the no-tool baseline, tool-access control, or ground-truth-tautology checks recommended here.
+- Directional evidence: *TIAP* (arXiv:2605.24060); no figure carried.
+- Directional evidence: *MemConflict* (arXiv:2605.20926); no figure carried.
 
 ### Report cost-accuracy tradeoffs
 
-- lit/directional: Kapoor, Stroebl, Siegel, Nadgir, and Narayanan (2024), *AI Agents That Matter*, arXiv:2407.01502, a re-evaluation study.
-- lit/directional: the iteration-holdout section rests on the same study, carried in the companion catalog as a separate record on holdout design split by generalization level.
+- Directional evidence: Kapoor, Stroebl, Siegel, Nadgir, and Narayanan (2024), *AI Agents That Matter*, arXiv:2407.01502, a re-evaluation study.
+- Directional evidence: the iteration-holdout section rests on the same study, carried in the companion catalog as a separate record on holdout design split by generalization level.
 
-### Author artifact cited inline
+### Author-system illustration cited inline
 
 - Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the end-to-end run and the score-per-dollar reporting described above, both of which are narrative illustration.

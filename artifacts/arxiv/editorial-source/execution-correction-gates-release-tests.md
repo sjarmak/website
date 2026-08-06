@@ -255,7 +255,7 @@ Keep tasks without executable checks in a separate lane. They are not lesser tas
 ### `ground-evaluation-in-execution`
 
 - Directional evidence: AgentForge (Kumar et al. 2026, arXiv:2604.13120). Execution-grounded evaluation in resource-bounded, network-isolated sandboxes, with propagation gated on execution results. Unrefereed preprint; single configuration; one sample per agent.
-- Directional evidence: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. Direction only; no figure carried.
+- Directional evidence: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. No figure carried.
 
 ### `gate-self-correction-on-external-feedback`
 
@@ -264,8 +264,8 @@ Keep tasks without executable checks in a separate lane. They are not lesser tas
 ### `golden-set-pass-k`
 
 - Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \(\mathrm{pass}^{k}\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings.
-- Directional evidence: SWE-bench (arXiv:2310.06770). Direction only.
-- Directional evidence: MultiAgentBench (Zhu 2025, arXiv:2503.01935). Direction only.
+- Directional evidence: SWE-bench (arXiv:2310.06770).
+- Directional evidence: MultiAgentBench (Zhu 2025, arXiv:2503.01935).
 
 ### Author-system illustration cited inline
 

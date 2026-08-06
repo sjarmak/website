@@ -19,7 +19,7 @@ Each decision carries a different cost. A funnel adds handoffs, and an early omi
 
 Hierarchical localization determines where each comparison occurs and what evidence crosses the boundary between stages. Xia et al. ([2024](https://arxiv.org/abs/2407.01489)) removed open-ended tool-use autonomy from repository repair and retained three fixed phases: hierarchical localization, repair, and patch validation. On SWE-bench Lite, a curated subset of SWE-bench, that pipeline outperformed the autonomous agents evaluated alongside it while costing substantially less.
 
-Each phase received bounded input, produced a bounded artifact, and handed that artifact to the next phase. The result showed that staged narrowing could recover much of the value then attributed to open-ended agency. Later systems built on stronger models moved ahead of that fixed pipeline, which limits the conclusion. The durable design is not the original pipeline or the claim that agency is unnecessary. It is the separation of narrowing decisions, with validation between them.
+Each phase received bounded input, produced a bounded artifact, and handed that artifact to the next phase. The result showed that staged narrowing could recover much of the value then attributed to open-ended agency. Later systems built on stronger models moved ahead of that fixed pipeline, which limits the conclusion. The transferable design principle is to separate narrowing decisions and validate the transition between them; neither the original pipeline nor a general claim against agency follows from the result.
 
 Repository structure may identify the correct region without identifying the function or statement that owns a failure. In a disconnect case, search may return a response writer, several transport adapters, and a lifecycle callback. The state transition responsible for the malformed response may sit behind that callback in another package.
 
@@ -121,9 +121,7 @@ Ma et al. ([2024](https://arxiv.org/abs/2406.01422)) measured this tension in Li
 
 The patch-application rate, which measured whether generated diffs applied cleanly, peaked at 200 iterations and then declined through 600. Clean application was necessary but not sufficient for resolution. Fewer patches could apply while more tasks were resolved if the patches that did apply were more often correct. The result suggests that additional exploration continued to improve localization while making the downstream generation problem harder.
 
-![Separate axes reflect different denominators; resolution rises from 16.0% at zero iterations to 21.3% at 600 on a zero-based scale, while unquantified patch application peaks at 200 and declines through 600.](/book-figures/ch12-exploration-budget.svg)
-
-Both curves come from one benchmark configuration. The 200-iteration application peak is configuration-specific, and the application curve reports shape without published values.
+Both measurements come from one benchmark configuration. The paper reports the 200-iteration location of the application-rate peak but not the curve's values, so the peak is useful only as a prompt to measure the local stopping point.
 
 A traversal budget must therefore be evaluated against both localization and patch application. It may stop after a fixed number of expansions, when no new relationship type appears, or when the candidate set reaches the repair budget. The literature does not identify one stopping rule that dominates across repositories.
 
@@ -259,23 +257,23 @@ Chapter 13 turns from which evidence the system retrieves to how much of that ev
 
 ## Sources and evidence
 
-### Taught entry 1: staged-localization-funnel
+### Stage localization before repair
 
-- lit/strong: Xia, C. S., et al. (2024), "Agentless: Demystifying LLM-based Software Engineering Agents," arXiv:2407.01489.
-- lit/directional: Chang, J., et al. (2025), "BugCerberus: Bridging Bug Localization and Issue Fixing," arXiv:2502.15292. (Per-hierarchy-level specialization; direction only.)
-- lit/strong: Sepidband, M., Viet Pham, H., Hemmati, H. (2026), "On the Role of Fault Localization Context for LLM-Based Program Repair," arXiv:2604.05481.
+- Strong evidence: Xia, C. S., et al. (2024), "Agentless: Demystifying LLM-based Software Engineering Agents," arXiv:2407.01489.
+- Directional evidence: Chang, J., et al. (2025), "BugCerberus: Bridging Bug Localization and Issue Fixing," arXiv:2502.15292. (Per-hierarchy-level specialization.)
+- Strong evidence: Sepidband, M., Viet Pham, H., Hemmati, H. (2026), "On the Role of Fault Localization Context for LLM-Based Program Repair," arXiv:2604.05481.
 - Corroboration: none on record.
 
-### Taught entry 2: index-repository-as-knowledge-graph
+### Index the repository as a knowledge graph
 
-- lit/strong: Chen, Z., et al. (2025), "LocAgent: Graph-Guided LLM Agents for Code Localization," arXiv:2503.09089.
-- lit/directional: Yang, B., et al. (2025), "Enhancing Repository-Level Software Repair via Repository-Aware Knowledge Graphs" (KGCompass), arXiv:2503.21710. (The 69.7 percent multi-hop figure is carried from v1; later versions report different headline values, so the inline link pins v1.)
-- lit/strong: Ma, Y., et al. (2024), "Alibaba LingmaAgent: Improving Automated Issue Resolution via Comprehensive Repository Exploration," arXiv:2406.01422.
-- lit/directional: Liu, X., et al. (2024), "CodexGraph: Bridging Large Language Models and Code Repositories via Code Graph Databases," ICLR 2025, arXiv:2408.03910.
-- lit/strong: Ouyang, S., et al. (2024), "RepoGraph: Enhancing AI Software Engineering with Repository-level Code Graph," arXiv:2410.14684.
-- explorer/strong: AOCI AI-oriented code indexing (Liu 2026), arXiv:2605.02421.
-- explorer/directional: MAGIS (Tao 2024), arXiv:2403.17927. Direction only.
+- Strong evidence: Chen, Z., et al. (2025), "LocAgent: Graph-Guided LLM Agents for Code Localization," arXiv:2503.09089.
+- Directional evidence: Yang, B., et al. (2025), "Enhancing Repository-Level Software Repair via Repository-Aware Knowledge Graphs" (KGCompass), arXiv:2503.21710. (The 69.7 percent multi-hop figure is carried from v1; later versions report different headline values, so the inline link pins v1.)
+- Strong evidence: Ma, Y., et al. (2024), "Alibaba LingmaAgent: Improving Automated Issue Resolution via Comprehensive Repository Exploration," arXiv:2406.01422.
+- Directional evidence: Liu, X., et al. (2024), "CodexGraph: Bridging Large Language Models and Code Repositories via Code Graph Databases," ICLR 2025, arXiv:2408.03910.
+- Strong evidence: Ouyang, S., et al. (2024), "RepoGraph: Enhancing AI Software Engineering with Repository-level Code Graph," arXiv:2410.14684.
+- Strong evidence: AOCI AI-oriented code indexing (Liu 2026), arXiv:2605.02421.
+- Directional evidence: MAGIS (Tao 2024), arXiv:2403.17927.
 
-### Taught entry 3: gate-retrieval-on-freshness
+### Gate retrieval on freshness
 
-- lit/directional: Weng, H., et al. (2026), "When Retrieval Hurts Code Completion: A Diagnostic Study of Stale Repository Context," arXiv:2605.14478.
+- Directional evidence: Weng, H., et al. (2026), "When Retrieval Hurts Code Completion: A Diagnostic Study of Stale Repository Context," arXiv:2605.14478.

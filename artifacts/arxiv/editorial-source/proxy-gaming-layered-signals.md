@@ -18,7 +18,7 @@ This is an optimization failure. The plurality-vote oracle gap in Chapter 5 was 
 
 The distinction changes the remedy. Better reference labels can repair a grader. Layered controls limit the damage when a once-useful measure becomes an optimization target.
 
-Skalse et al. ([2022](https://arxiv.org/abs/2209.13085)) made the underlying limit precise. Consider two reward functions evaluated across all stochastic policies, where a policy may assign probabilities to any available action. Call the rewards mutually unhackable when optimizing either one cannot reduce expected reward under the other. Across that unrestricted policy set, mutual unhackability is possible only when at least one reward is constant.
+Skalse et al. ([2022](https://arxiv.org/abs/2209.13085)) made one formal limit precise. In their linear expected-return formulation, consider two reward functions over the set of all stochastic policies, where a policy may assign probabilities to any available action. Call the rewards mutually unhackable when improving either expected return cannot reduce the other. Under those assumptions, mutual unhackability is possible only when at least one reward is constant. The theorem does not cover every deployed scoring or policy system; it shows why unrestricted optimization against two nonconstant linear rewards offers no general compatibility guarantee.
 
 A constant reward expresses no preference among behaviors and therefore cannot guide useful optimization.
 
@@ -67,7 +67,7 @@ That regularity makes monitoring possible, but the evidence has a narrow boundar
 
 The observed pattern does transfer: proxy improvement can precede, accompany, and eventually conceal deterioration as optimization pressure increases.
 
-![In illustrative shape without reported coefficients, proxy performance keeps rising as optimization pressure increases, but independent quality peaks and then declines throughout the shaded region beyond that peak.](/book-figures/ch06-proxy-divergence.svg)
+![Schematic of proxy performance continuing to rise after independent quality has peaked.](/book-figures/ch06-proxy-divergence.svg)
 
 Independent quality can rise, peak, and then fall while the optimized proxy continues to improve. The exact curve belongs to the source study, but the possibility of divergence transfers beyond it.
 

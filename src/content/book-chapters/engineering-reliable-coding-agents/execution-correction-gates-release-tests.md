@@ -15,7 +15,7 @@ The study provides directional evidence rather than a general estimate of coding
 
 Submission, consistency, and self-assessment are all produced by the process under evaluation. A model can repeatedly generate the same incorrect patch, describe it with stable confidence, and end each run cleanly. Those signals characterize the trajectory, but they do not show that the repository moved from a failing state to a working one. Acceptance therefore requires evidence of an observable state transition, verified by a system outside the inference process that proposed the change.
 
-The evidence base for this chapter is thin. The actions below therefore ask readers to execute and measure work on their own systems rather than adopt a reported threshold. Six evidence items support the three entries taught here. Five are explorer-class syntheses, and one is a controlled experiment. One entry has no strong supporting evidence item.
+The evidence base for this chapter is thin. The actions below therefore ask readers to execute and measure work on their own systems rather than adopt a reported threshold. Six evidence items support the three practices developed here. Five are source syntheses, and one is a controlled experiment. One entry has no strong supporting evidence item.
 
 The practical unit is a gate that can stop candidate work from propagating. The candidate runs under explicit constraints, any correction attempt receives the evidence produced by verification, and a compact set of representative tasks is replayed whenever the system changes.
 
@@ -23,7 +23,7 @@ Four adjacent controls appear in the companion catalog rather than in this chapt
 
 ## Make execution decide whether work moves
 
-Two explorer-class directional items support execution-gated evaluation, but neither is a controlled estimate of its effect. AgentForge, from Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), describes an evaluator that runs candidate work in resource-bounded, network-isolated sandboxes and permits propagation only after successful execution. SWE-bench, from Jimenez et al. ([2023](https://arxiv.org/abs/2310.06770)), establishes executable repository repair as an evaluation form.
+Two directional synthesis items support execution-gated evaluation, but neither is a controlled estimate of its effect. AgentForge, from Kumar et al. ([2026](https://arxiv.org/abs/2604.13120)), describes an evaluator that runs candidate work in resource-bounded, network-isolated sandboxes and permits propagation only after successful execution. SWE-bench, from Jimenez et al. ([2023](https://arxiv.org/abs/2310.06770)), establishes executable repository repair as an evaluation form.
 
 The AgentForge preprint is unrefereed, evaluates a single configuration, and reports one sample from each agent. Its headline result also conflicts with the published range for that configuration and has not been independently replicated, so I omit the number. These limits prevent either source from establishing a general failure rate or a measured advantage for execution gating. They do not weaken the mechanism worth testing: run the artifact in a constrained environment, and let the observed result determine whether it can proceed.
 
@@ -31,7 +31,7 @@ A plausible patch is only text until the repository accepts it. It may fail to c
 
 This changes the acceptance question. A confidence score asks the process that produced an answer to characterize its own answer. An execution check asks a compiler, test runner, package builder, schema validator, or deployment probe whether a specified transition occurred.
 
-The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. The observation matters because it is produced causally downstream of the candidate artifact rather than by the process that proposed it.
+The result is an oracle only for the behavior the check observes. A passing unit test does not establish safe deployment, and a successful build does not establish semantic correctness. Its evidentiary value comes from being produced causally downstream of the candidate artifact rather than by the process that proposed it.
 
 The architecture has three owners:
 
@@ -259,23 +259,23 @@ Keep tasks without executable checks in a separate lane. They are not lesser tas
 
 ### Motivating observation and companion entry
 
-- lit/directional: Mehta, A. (2026). Confident and Wrong: Silent Semantic Failures in Coding Agents. arXiv:2603.25764. Analysis of 1,750 trajectories across 50 tasks and four models; single-author, limited-sample observational finding. Supports the untaught companion entry on scoring verified resolution separately from submission.
+- Directional evidence: Mehta, A. (2026). Confident and Wrong: Silent Semantic Failures in Coding Agents. arXiv:2603.25764. Analysis of 1,750 trajectories across 50 tasks and four models; single-author, limited-sample observational finding. Supports the companion-only entry on scoring verified resolution separately from submission.
 
 ### `ground-evaluation-in-execution`
 
-- explorer/directional: AgentForge (Kumar et al. 2026, arXiv:2604.13120). Execution-grounded evaluation in resource-bounded, network-isolated sandboxes, with propagation gated on execution results. Unrefereed preprint; single configuration; one sample per agent.
-- explorer/directional: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. Direction only; no figure carried.
+- Directional evidence: AgentForge (Kumar et al. 2026, arXiv:2604.13120). Execution-grounded evaluation in resource-bounded, network-isolated sandboxes, with propagation gated on execution results. Unrefereed preprint; single configuration; one sample per agent.
+- Directional evidence: SWE-bench (arXiv:2310.06770), from Jimenez et al. 2023. No figure carried.
 
 ### `gate-self-correction-on-external-feedback`
 
-- lit/strong: Huang, J., et al. (2023). Large Language Models Cannot Self-Correct Reasoning Yet. ICLR 2024. arXiv:2310.01798.
+- Strong evidence: Huang, J., et al. (2023). Large Language Models Cannot Self-Correct Reasoning Yet. ICLR 2024. arXiv:2310.01798.
 
 ### `golden-set-pass-k`
 
-- explorer/strong: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \(\mathrm{pass}^{k}\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings.
-- explorer/directional: SWE-bench (arXiv:2310.06770). Direction only.
-- explorer/directional: MultiAgentBench (Zhu 2025, arXiv:2503.01935). Direction only.
+- Strong evidence: τ-bench (Yao, Shinn, Razavi & Narasimhan 2024, arXiv:2406.12045). Introduces and measures \(\mathrm{pass}^{k}\) on interactive, multi-turn tool-use tasks with executable oracles. Using a team's own tasks and replaying the set per release are transfers beyond the measured findings.
+- Directional evidence: SWE-bench (arXiv:2310.06770).
+- Directional evidence: MultiAgentBench (Zhu 2025, arXiv:2503.01935).
 
-### Author artifact cited inline
+### Author-system illustration cited inline
 
 - Not an evidence item: CodeProbe, the author's task-mining evaluation tool, [public repository](https://github.com/sjarmak/codeprobe). Named inline for the consecutive-release acceptance gate described above, which is narrative illustration.

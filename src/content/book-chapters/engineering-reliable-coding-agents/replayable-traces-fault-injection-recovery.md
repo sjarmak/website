@@ -284,12 +284,12 @@ A trace detailed enough to replay is also the artifact a person reads when recov
 
 ### Make every run a structured, replayable trace
 
-- explorer/directional: Shepherd runtime substrate (Yu et al. 2026, arXiv:2605.10913); companion material named in the same synthesis without a paper identifier: OpenTelemetry GenAI conventions (CNCF 2025).
-- explorer/directional: AgentSight eBPF observability (Zheng et al. 2025, arXiv:2508.02736).
-- lit/directional: Chan, A., et al. (2024), "Visibility into AI Agents," ACM FAccT 2024, arXiv:2401.13138.
+- Directional evidence: Shepherd runtime substrate (Yu et al. 2026, arXiv:2605.10913); companion material named in the same synthesis without a paper identifier: OpenTelemetry GenAI conventions (CNCF 2025).
+- Directional evidence: AgentSight eBPF observability (Zheng et al. 2025, arXiv:2508.02736).
+- Directional evidence: Chan, A., et al. (2024), "Visibility into AI Agents," ACM FAccT 2024, arXiv:2401.13138.
 
 ### Benchmark recovery with fault injection
 
-- lit/strong: Vogel et al. (2024), "A Comprehensive Benchmarking Analysis of Fault Recovery in Stream Processing Frameworks," arXiv:2404.06203 (JSS line).
+- Strong evidence: Vogel et al. (2024), "A Comprehensive Benchmarking Analysis of Fault Recovery in Stream Processing Frameworks," arXiv:2404.06203 (JSS line).
 
 Author-system cases are narrative illustration, not evidence. The kill demonstration and publish-gate protocol are local artifacts.
