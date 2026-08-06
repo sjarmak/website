@@ -62,6 +62,7 @@ test("parses all companion practices with their explicit teaching class", () => 
   assert.equal(practices.filter((practice) => practice.classification === "taught").length, 55);
   assert.equal(practices.filter((practice) => practice.classification === "untaught").length, 137);
   assert.equal(practices[0].id, "never-report-a-single-run");
+  assert.equal(practices[0].practiceId, "ERCA-020");
   assert.equal(practices[0].title, "Compare distributions across randomized repeated runs");
   assert.equal(practices[0].chapter, 1);
   assert.equal(practices[0].classification, "taught");
@@ -102,7 +103,7 @@ test("every chapter and practice node links to its canonical source", () => {
 
 test("rejects malformed practice blocks and chapter-count drift", () => {
   assert.throws(
-    () => parseCompanionPractices(companionSource.replace("`never-report-a-single-run`", "missing-id")),
+    () => parseCompanionPractices(companionSource.replace("`ERCA-020` · `never-report-a-single-run`", "missing-id")),
     /stable identifier|practice count/i,
   );
   assert.throws(

@@ -7,6 +7,12 @@ kind: chapter
 number: 7
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 0 strong · 4 directional · 3 corroborating evidence items across 3 developed practices (ERCA-068, ERCA-069, ERCA-105).
+>
+> **Chapter claim.** Authority, not instruction, defines blast radius.
+<!-- reader-metadata:end -->
+
 In spring 2026, a practitioner [reported](https://www.reddit.com/r/devops/comments/1tbbls4/) that an agent deleted a production database in nine seconds. The backups could not be recovered because the same credentials reached both the live database and the backup store. The account is self-reported, but the authority defect is directly testable: one credential could reach resources that were expected to fail independently.
 
 The containment evidence available for this chapter consists of incident reports and accounts from individual organizations; it contains no controlled comparison of the three practices developed here. Across the 52 practices ranked by operational consequence during selection, rank and the presence of strong evidence had a Spearman correlation of -0.004. Sparse prevalence evidence therefore does not resolve the urgency of an exposed production boundary. The practices below specify observable boundaries and checks rather than unsupported numerical targets.
@@ -184,6 +190,8 @@ Each control should map to a named threat category. The map can remain small:
 | Unauthorized tool selection | Gateway-enforced allowlist | Tool-request audit | Unavailable tools cannot be invoked |
 | High-impact external effects | Typed proposal and approval | Read-back and audit log | Narrow, expiring execution identity |
 
+*Table: Threats, preventive and detecting controls, and the enforcement boundary.*
+
 An empty cell is an observable gap for review.
 
 Injection cases belong in continuous integration because filters, prompts, tool schemas, and retrieval pipelines change. AgentDojo supplies reusable tasks in which attacks and defenses can be exercised separately. I adapt representative cases to the system’s actual sources and tools and retain them as regression tests. The result establishes whether a named control behaved as expected on those cases. It does not estimate resistance to attacks outside them.
@@ -206,14 +214,20 @@ Move one routinely write-capable identity to read-only access and add a narrow e
 
 Finally, select one recent completion claim and verify it against the workspace or system of record. Compare the starting and ending revisions, inspect the artifact, rerun the relevant check, and store the result with the attempt identity. Any discrepancy becomes a concrete regression case for the resume and review workflow.
 
+The repository artifact [`protocols/authority-boundary-test.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/authority-boundary-test.md) makes the boundary test, pass condition, and retained evidence explicit.
+
 Containment limits the damage a live process can cause. Chapter 8 turns to what must survive when that process dies.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Authority, not instruction, defines blast radius.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 
 ### Contain agent blast radius
 
-- Corroborating case: ["What actually broke when we put AI agents into real production workflows"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08.
-- Corroborating case: ["AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?"](https://www.reddit.com/r/devops/comments/1tbbls4/), /u/Upstairs_Safe2922, r/devops, 2026-05-12.
+- Corroborating case: ["What actually broke when we put AI agents into real production workflows"](https://www.reddit.com/r/LLMDevs/comments/1q7avil/), /u/saurabhjain1592, r/LLMDevs, 2026-01-08. [Archived snapshot](https://web.archive.org/web/20260806014103/https://www.reddit.com/r/LLMDevs/comments/1q7avil/what_actually_broke_when_we_put_ai_agents_into/).
+- Corroborating case: ["AI agent wiped Railway DB in 9 seconds. How do you separate destructive from legit curl calls in prod?"](https://www.reddit.com/r/devops/comments/1tbbls4/), /u/Upstairs_Safe2922, r/devops, 2026-05-12. [Archived snapshot](https://web.archive.org/web/20260806014121/https://www.reddit.com/r/devops/comments/1tbbls4/ai_agent_wiped_railway_db_in_9_seconds_how_do_you/).
 
 ### Separate completion from runtime safety
 
@@ -223,7 +237,7 @@ Containment limits the damage a live process can cause. Chapter 8 turns to what 
 
 - Corroborating case: "My AI Agent Said It Was Done. It Hadn't Done Anything", Push to Prod substack, 2026-02.
 - Directional evidence: Tang et al., "How Coding Agents Fail Their Users: A Large-Scale Analysis of Developer-Agent Misalignment in 20,574 Real-World Sessions", arXiv:2605.29442, 2026.
-- Folded per PC-3 from the excluded self-attestation pattern:
+- Excluded from support because it is self-attestation rather than an independent observation:
   - Strong evidence: Perry, Srivastava, Kumar, Boneh (2022/2023), "Do Users Write More Insecure Code with AI Assistants?", ACM CCS 2023, arXiv:2211.03622.
 
 ### Defense in depth for indirect prompt injection

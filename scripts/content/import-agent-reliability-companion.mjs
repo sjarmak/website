@@ -9,11 +9,35 @@ import {
 import { renderAuthoredMath } from "./book-markdown.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const PRACTICE_ID_MAP = JSON.parse(
+  readFileSync(path.join(REPO_ROOT, "artifacts/arxiv/practice-id-map.json"), "utf8"),
+);
 
 export const COMPANION_SOURCE = path.join(BOOK_SOURCE, "COMPANION.md");
 
 const practiceIds = (text) =>
-  [...text.matchAll(/^`([a-z0-9]+(?:-[a-z0-9]+)*)`$/gm)].map((match) => match[1]);
+  [...text.matchAll(/^(?:`ERCA-\d{3}` · )?`([a-z0-9]+(?:-[a-z0-9]+)*)`$/gm)].map(
+    (match) => match[1],
+  );
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function addStablePracticeIds(body, slugs) {
+  let taggedBody = body;
+  for (const slug of slugs) {
+    const practiceId = PRACTICE_ID_MAP[slug];
+    if (!practiceId) throw new Error(`Missing stable practice id for ${slug}`);
+    const tagged = new RegExp(
+      `^\`${escapeRegExp(practiceId)}\` · \`${escapeRegExp(slug)}\`$`,
+      "m",
+    );
+    if (tagged.test(taggedBody)) continue;
+    const bare = new RegExp(`^\`${escapeRegExp(slug)}\`$`, "m");
+    if (!bare.test(taggedBody)) throw new Error(`Could not tag companion entry ${slug}`);
+    taggedBody = taggedBody.replace(bare, `\`${practiceId}\` · \`${slug}\``);
+  }
+  return taggedBody;
+}
 
 export function analyzeCompanion(source) {
   const heading = source.match(/^# (.+)\n/);
@@ -97,6 +121,12 @@ export function transformCompanion(source) {
   const firstBreak = source.indexOf("\n");
   let body = firstBreak === -1 ? "" : source.slice(firstBreak + 1);
   if (body.startsWith("\n")) body = body.slice(1);
+  body = body
+    .replace(/\buntaught\b/gi, "companion-only")
+    .replace(/\btaught\b/gi, "developed")
+    .replace(/\bteaches\b/gi, "develops")
+    .replace(/\bteaching\b/gi, "development");
+  body = addStablePracticeIds(body, analysis.practiceIds);
 
   return {
     ...analysis,

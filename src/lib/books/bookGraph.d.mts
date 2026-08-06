@@ -95,6 +95,7 @@ export function buildBookReferences(input: {
 
 export function parseCompanionPractices(source: string): Array<{
   id: string;
+  practiceId: string;
   title: string;
   chapter: number;
   classification: PracticeClassification;

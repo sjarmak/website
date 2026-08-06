@@ -7,7 +7,15 @@ kind: chapter
 number: 18
 ---
 
-A fleet can increase throughput while also increasing the cost of each accepted result. Only the fleet’s own traces can establish which happened. Concurrent execution, together with a willingness to attempt work a human team might have left queued, exposes more tasks to model inference, verification, review, and recovery. Throughput alone therefore does not establish an economic gain.
+<!-- reader-metadata:start -->
+> **Evidence profile.** 2 strong · 8 directional · 0 corroborating evidence items across 3 developed practices (ERCA-171, ERCA-187, ERCA-191).
+>
+> **Chapter claim.** Re-decide from observed state, then ship the best feasible incumbent on time.
+<!-- reader-metadata:end -->
+
+In an eleven-week replay of my fleet ledger, 1,286 work items crossed 22 execution pools. Age-only first-come scheduling produced 6.84 hours of priority-weighted flow time; a hybrid rule, plain priority, and a four-feature weighted index each produced 6.70 hours, within 0.1 percent of one another. I had fixed a 15 percent promotion requirement before the replay, so none of the more elaborate policies shipped.
+
+A fleet can increase throughput while also increasing the cost of each accepted result. Its own traces must distinguish the two. Concurrent execution, together with a willingness to attempt work a human team might have left queued, exposes more tasks to model inference, verification, review, and recovery. Throughput alone therefore does not establish an economic gain.
 
 The evidence is largely transferred from other fields. One strong software-engineering result concerns cheap baselines; observatory and compute-cluster scheduling, search-based software engineering, budget-constrained bandit theory, and router calibration supply directional mechanisms. My fleet replay remains a narrative illustration.
 
@@ -26,7 +34,7 @@ A cheaper model call can trigger enough repair and review to cost more per accep
 
 Production traces also show that coding-agent traffic differs from chatbot traffic. Liu et al. ([2026](https://arxiv.org/abs/2608.00101)) sampled GitHub Copilot activity from 3.2 million users, 13 million sessions, 761 million model calls, and 95 trillion tokens. KV-cache hit rates averaged 90 percent within a turn and 55 percent across turn boundaries; a lightweight predictor captured 86 to 90 percent of total user idle time. The study strongly characterizes one production workload and directionally supports measuring turn boundaries and idle periods in capacity policy.
 
-## Define the allocation decision before choosing the algorithm
+## What allocation decision is the system making?
 
 **Cheapest-sufficient routing** selects, for each request, the least expensive worker predicted to satisfy that request’s declared requirement. The worker may be a model tier, a model-plus-tool configuration, or another execution pool with a known price.
 
@@ -65,7 +73,7 @@ These terms identify the decisions that must be made before selecting an algorit
 
 The companion catalog contains algorithmic patterns. The narrower question here is whether these decisions lower accepted-result cost or improve flow on the fleet’s own workload.
 
-## Recompute from current state and stop solving on time
+## When should the scheduler recompute, and when should it stop?
 
 An observatory scheduler can spend the night improving a plan that clouds have already invalidated, or compute another imperfect plan from the sky that remains observable. Bellm et al. ([2019](https://arxiv.org/abs/1905.02209)) describe the Zwicky Transient Facility taking the second approach in production since 2018. When changing conditions invalidate the schedule, it resolves the nightly integer program again rather than enumerating every weather scenario in advance.
 
@@ -146,7 +154,7 @@ The design becomes auditable when the following are explicit:
 
 Its value remains an empirical question until the fleet’s traces answer it.
 
-## Route to the cheapest worker predicted to meet the requirement
+## Which worker is cheapest and sufficient?
 
 Cheapest-sufficient routing has support from three directional literature items and one recent benchmark-bound controlled result. Cayci, Eryilmaz, and Srikant ([2020](https://arxiv.org/abs/2003.00365)) developed budget-constrained online learning under broad cost and reward distributions. Somerstep et al. ([2025](https://arxiv.org/abs/2502.03261)) analyzed a calibrated static router. Li ([2025](https://arxiv.org/abs/2502.02743)) reported preference-conditioned dynamic routing in a single-author preprint.
 
@@ -263,7 +271,7 @@ Evaluation should report cost per accepted result and failure rates by request c
 
 Cheapest-sufficient routing is useful because it makes the economic policy explicit: what is being predicted, what requirement must be met, and which tradeoff is being selected. It cannot repair an unrepresentative calibration set, a reward that measures the wrong outcome, or a task whose true cost appears only after repair and review.
 
-## Replay identical arrivals before changing allocation policy
+## Does the policy survive a fixed-arrival replay?
 
 In one replay of my agent fleet, the interesting scheduling idea lost to a one-word configuration change. Across eleven weeks of recorded traffic, a four-feature weighted index performed within 0.1 percent of plain priority banding.
 
@@ -331,11 +339,7 @@ These measures describe different failures. A lower fleet-wide mean can coexist 
 
 **Starvation** is persistent denial or extreme delay to a class because other eligible work repeatedly moves ahead of it. Report outcomes by class and define a starvation guard before running the comparison. An aggregate gain is not acceptable when one class pays for it through unbounded delay.
 
-My fleet ledger contained 1,286 work items across 22 execution pools over eleven weeks. Age-only first-come scheduling produced 6.84 hours of priority-weighted flow time. A hybrid rule, plain priority rule, and four-feature weighted index each produced 6.70 hours, within 0.1 percent of one another. P1 tail latency moved from 20.4 hours to 18.8 hours without triggering the starvation guard.
-
-I had recorded a 15 percent improvement requirement before running the replay. The weighted index therefore failed its gate. It was the more interesting design, and replay is why it did not ship.
-
-Those figures explain what this protocol prevented me from building. They do not establish an expected gain for another fleet.
+The opening replay also moved P1 tail latency from 20.4 hours to 18.8 hours without triggering the starvation guard. Those figures explain what the protocol prevented me from building; they are not an expected gain for another fleet.
 
 Capacity distribution explained more than the aggregate result. The visible improvement concentrated in one **contended pool**, where eligible work regularly exceeded available capacity. An **uncontended pool**, where capacity usually met demand, showed almost no difference across policies.
 
@@ -391,71 +395,41 @@ Replay cheapest-sufficient routes from logged estimates when counterfactual outc
 
 Build the trace, hold arrivals fixed, make the cheap policy compete, and let the fleet produce the evidence its allocation policy requires.
 
-## Instrument decisions before optimizing them
+## What must be recorded before optimization?
 
-When the ledger does not preserve decision state, begin with events the system can record without prediction:
+When the ledger does not preserve decision state, add fields in dependency order.
 
-- arrival time;
-- priority;
-- claim and release events;
-- observed duration;
-- completion or failure outcome; and
-- review verdict.
+| Stage | Fields |
+|---|---|
+| Observed events | Arrival time, priority, claim and release events, observed duration, completion or failure outcome, and review verdict. |
+| Decision state | Available capacity, eligible execution pools, work already running, leases or locks, deadlines, model or tool compatibility, reviewer availability, and constraints that excluded an otherwise eligible item. |
+| Policy estimates | Predicted cost, predicted task performance, routing uncertainty, expected duration, solver objective value, and optimality gap. |
 
-These fields reconstruct demand, occupancy, and accepted work. They also expose missing or contradictory histories before policy-specific estimates complicate the schema.
+*Table: Allocation-ledger fields in the order they become interpretable.*
 
-Next, record the resource state visible at every dispatch decision:
-
-- available capacity;
-- eligible execution pools;
-- work already running;
-- leases or locks held;
-- deadlines;
-- model or tool compatibility;
-- reviewer availability; and
-- constraints that made an otherwise eligible item unavailable.
+The observed fields reconstruct demand, occupancy, and accepted work. They also expose missing or contradictory histories before policy-specific estimates complicate the schema.
 
 Record the route selected and the reason for that route in the same decision event. State and reason need a shared decision identity and timestamp. Without them, later analysis cannot determine which alternatives were feasible or distinguish worker performance from the policy that selected the work.
-
-Only after those observations are complete should the ledger add estimates such as:
-
-- predicted cost;
-- predicted task performance;
-- routing uncertainty;
-- expected duration;
-- solver objective value; and
-- optimality gap.
 
 Estimates belong last because they are outputs of a policy rather than observations of what happened. Store the policy, model, feature, and reward versions that produced them. Recalibration should create a new estimate record rather than rewrite the historical one.
 
 The first operating comparison can remain descriptive. Ask whether high-throughput intervals under the incumbent policy also have a higher accepted-result cost than lower-throughput intervals. Report both measures by request class and constrained resource.
 
-That comparison cannot establish:
-
-- the counterfactual effect of a new router;
-- the correct re-decision cadence;
-- the correct solver limit;
-- an exploration guarantee;
-- the effect of demand that never entered the ledger; or
-- the causal effect of throughput on accepted-result cost.
+That comparison cannot establish the counterfactual effect of a new router, the correct re-decision cadence or solver limit, an exploration guarantee, the effect of demand absent from the ledger, or the causal effect of throughput on accepted-result cost.
 
 Those questions still require replay, shadow execution, or controlled rollout on the fleet’s workload. None of the cited studies reports results from a software-agent fleet.
 
 My replay supplies no default cadence, threshold, or cost ratio. Do not import an observatory schedule, a bandit guarantee, or my 15 percent promotion rule.
 
-The useful outcome is an allocation record that can answer:
-
-- What arrived?
-- What was eligible?
-- What resources were available?
-- Which alternatives existed?
-- Which policy made the decision?
-- Why did it choose that route?
-- What did the work cost?
-- What outcome survived review?
-- Which later events changed the interpretation of that result?
+The useful outcome is an allocation record that reconstructs what arrived, what was eligible, which resources and alternatives existed, which policy selected the route and why, what the work cost, what outcome survived review, and which later events changed the interpretation of the result.
 
 Until the ledger can answer those questions, choosing a more sophisticated policy is premature.
+
+The repository artifact [`protocols/allocation-policy-replay.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/allocation-policy-replay.md) defines the replay comparison, promotion rule, and retained decision record.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Re-decide from observed state, then ship the best feasible incumbent on time.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

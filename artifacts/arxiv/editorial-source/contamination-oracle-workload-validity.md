@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 7 strong · 7 directional · 1 corroborating evidence items across 4 developed practices (ERCA-001, ERCA-003, ERCA-004, ERCA-066).
+>
+> **Chapter claim.** A passing score is only as valid as its workload, exposure boundary, and oracle.
+<!-- reader-metadata:end -->
+
 In February 2026, OpenAI ([Feb 2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified)) stopped reporting results on a benchmark subset it had helped create. In July 2026, it retracted its subsequent recommendation to use SWE-Bench Pro after an audit estimated that roughly 30 percent of its tasks were broken ([Jul 2026](https://openai.com/index/separating-signal-from-noise-coding-evaluations/)). SWE-bench Verified had become one of the most cited measures of coding-agent performance. Its 500 tasks had survived screening by 93 paid professional developers, a process intended to remove ambiguous issues and defective tests. The sponsor later reported that 59.4 percent of 138 audited tasks had flawed tests: about 82 tasks, or 16.4 percent of the full 500-task subset. The same audit showed frontier models reproducing solution details verbatim when given only a task identifier.
 
 Human screening had improved the original collection, but it could not control what happened after publication. **Contamination** is exposure to evaluation material before testing. Once tasks, issue discussions, reference patches, tests, and leaderboard results are public, they can enter training corpora, retrieval systems, fine-tuning sets, prompt libraries, and repeated development cycles. A clean review at release establishes nothing about those later paths.
@@ -196,6 +202,10 @@ The next time you encounter a public benchmark number, identify the answers to t
 4. What does the same protocol report on tasks mined from your team's merged work? Preserve the original instruction, pre-change state, acceptance evidence, and repeated-run uncertainty.
 
 These answers do not yield a universal correction formula. They turn one impressive-looking score into a bounded claim: performance by a named system, under a named apparatus, on work with a known exposure history, judged by tests with observed power to reject wrong patches. The local replay tests that claim on the work the system will actually be asked to do.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** A passing score is only as valid as its workload, exposure boundary, and oracle.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

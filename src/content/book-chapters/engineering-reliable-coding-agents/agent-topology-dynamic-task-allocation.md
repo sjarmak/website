@@ -7,6 +7,12 @@ kind: chapter
 number: 17
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 6 strong · 12 directional · 1 corroborating evidence items across 4 developed practices (ERCA-044, ERCA-093, ERCA-101, ERCA-107).
+>
+> **Chapter claim.** Coordination must earn its cost against a live single-agent baseline.
+<!-- reader-metadata:end -->
+
 In one CodeProbe rerun ([public repository](https://github.com/sjarmak/codeprobe)), I changed an agent’s preamble to correct a retrieval behavior I had already diagnosed. The patch reduced cost while leaving the motivating failure intact.
 
 On the affected task family, cost fell by 28 percent, while the primary reward difference was +0.0048 with a t statistic of 0.27, indistinguishable from noise in that comparison. The wall-clock prediction failed in both direction and magnitude. I had predicted a 40 percent reduction, but elapsed time increased by 3.9 percent. The agent still accepted a false-negative retrieval result and constructed its answer around missing evidence.
@@ -15,7 +21,7 @@ The patch changed the wrong variable. The preamble instructed the agent to synth
 
 Prompt changes are cheap, visible, and easy to isolate in an experiment. Structural changes alter component boundaries: which worker retrieves evidence, which worker interprets it, what crosses the handoff, and which component can reject the result. They are more expensive to implement and harder to evaluate because several causal paths may move together. They are also sometimes the only intervention aimed at the point where the failure is produced.
 
-## Move from prompt changes to structural repair only after persistence
+## When does a persistent failure require structural repair?
 
 A failure class does not become persistent merely because it occurred more than once. I call a class persistent only after a paired comparison across model versions, with repeated trials, shows that it survives. One successful run on the newer model proves no more than one failed run on the older one.
 
@@ -107,7 +113,7 @@ The repair criterion is causal and comparative:
 
 If the class does not change, the new structure added coordination without repairing the cause.
 
-## Require fan-out to beat the live single-agent baseline
+## When does fan-out beat the live single-agent baseline?
 
 Every proposal to add debate, delegation, or parallel workers needs a live single-agent control.
 
@@ -227,7 +233,7 @@ decision:
 
 This gate answers whether to divide the work. Topology selection answers how. A multi-agent design that cannot clear the gate should return to structural diagnosis. The next experiment may require a narrower specialist boundary, a different aggregator, or no additional worker.
 
-## Choose topology by task shape and fault propagation
+## Which topology fits the task and contains its faults?
 
 Jia et al. ([2026](https://arxiv.org/abs/2602.19843)) injected synthetic faults into three multi-agent architectures in MAS-FIRE. Closed-loop architectures neutralized more than 40 percent of faults that caused the linear pipeline to collapse, and stronger foundation models did not uniformly produce greater robustness.
 
@@ -345,7 +351,7 @@ The acceptable topology is the simplest one that:
 - keeps aggregation failures observable; and
 - clears the live single-agent gate on the target workload.
 
-## Dispatch only work whose dependencies are satisfied
+## Which work is eligible to dispatch?
 
 In a narrative reconstruction from my workflow harness, six planned work items initially appeared ready to run together. A pre-dispatch overlap check showed that four touched the same adapter file and its test. The schedule therefore became two waves. Three items could run in parallel, including two disjoint changes and one low-risk item from the colliding group. The remaining three ran sequentially in increasing risk order.
 
@@ -427,7 +433,7 @@ Dynamic graphs are most useful when they expose decisions that were previously i
 
 If those answers cannot be reconstructed, the graph has become another hidden coordinator rather than an observable allocation mechanism.
 
-## Promote topology from a topology-specific record
+## What evidence should promote a topology?
 
 Chapter 1 defines the paired comparison, Chapter 2 the baseline and cost coordinates, Chapter 9 the fault-injection method, and Chapter 10 the first-upstream-failure label. A topology experiment should reuse those protocols rather than restating them.
 
@@ -442,6 +448,10 @@ The promotion record adds three topology-specific conditions:
 Run the baseline and treatment on identical task versions and preserve the complete configuration identity. Promote only if all three conditions hold. Retain the baseline when added structure does not earn its coordination cost; redesign when the mechanism executed but left the target failure path intact.
 
 The record should remain intelligible without the architecture's label. “Hierarchical,” “dynamic,” and “multi-agent” describe arrangements; mechanism entry, containment, and measured return decide whether the arrangement earned adoption.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Coordination must earn its cost against a live single-agent baseline.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

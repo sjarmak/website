@@ -61,7 +61,9 @@ In each case, the added machinery is evaluated using the instrument the earlier 
 
 ## Engineering controls can precede trial evidence
 
-Evidence strength varies across the dependency chain and does not track operational consequence. Strong-graded items account for 59 percent of the evidence in Part I but 14 percent in Part III. Chapter 7 has no strong-graded or direct scholarly evidence item, even though its containment practices may be the first controls needed by a system with production write access. Among the 52 practices ranked by consequence, Spearman's rho between urgency rank and the presence of at least one strong item was -0.004.
+Evidence strength varies across the dependency chain and does not track operational consequence. Strong-graded items account for 56 percent of the evidence in Part I but 10 percent in Part III. Chapter 7 has no strong-graded or direct scholarly evidence item, even though its containment practices may be the first controls needed by a system with production write access. Among the 52 practices ranked by consequence, Spearman's rho between urgency rank and the presence of at least one strong item was -0.004.
+
+The catalog makes that mismatch concrete. *Contain agent blast radius* ranked first by consequence, yet its incident support consists of two corroborating Reddit accounts: a [production-workflow report](https://www.reddit.com/r/LLMDevs/comments/1q7avil/) and a [database-deletion report](https://www.reddit.com/r/devops/comments/1tbbls4/). Both have archived snapshots in the companion. They show that the failure can occur, not how often it occurs. I still recommend the control because the current authority boundary can be inspected directly, a prohibited write can be exercised safely against a test resource, and separating ordinary from recovery authority is reversible. The recommendation is mechanism-justified rather than prevalence-justified.
 
 This is not evidence-derived consensus. It is an authorial selection among controls supported in different ways. Some recommendations follow measured effects. Others follow a structural failure argument: the failure is possible under the current authority or state model, its consequence is material, the proposed control is reversible, and the boundary can be tested directly. A denied write, a durable completion record, and a replay in which the same arrivals face two schedulers are observations rather than prevalence claims.
 
@@ -83,6 +85,8 @@ The literature does not supply universal values for repeat count, inter-rater ag
 | Context restart | Restart or consolidate at 60 percent of the shortest context length at which the weakest required task shows material degradation in a local sweep. | New models, tools, instruction files, or task mix require a new sweep. |
 | Freshness | Require exact repository-revision identity for code-bearing retrieval and reject an index with an unknown source revision. | A coarser content-addressed equivalence is acceptable only when it is proved by the indexer. |
 
+*Table: Personal starting points for a new system. These values are author defaults, not transferred effect estimates.*
+
 I account for the apparatus as part of system cost. Each comparison records inference and tool cost, elapsed time, labeling and adjudication hours, reviewer queue time, storage, and maintenance work. The denominator is accepted work, not model calls. A control whose ongoing measurement cost is invisible will eventually be bypassed or defended with stale evidence.
 
 When capacity is constrained, I remove apparatus in this order:
@@ -97,20 +101,7 @@ I keep four elements until last: an executable acceptance check, separation betw
 
 Several questions remain research problems rather than missing defaults. No controlled result in the reviewed set shows that a dynamic dependency graph beats a well-designed fixed schedule for repository work. Propagation of deletion through summaries, embeddings, caches, and graph edges is largely unmeasured. Current context, attribution, grader, and routing results are dated snapshots. The structural claims are more durable: one run is one draw; a component that did not execute did not cause the result; a stale artifact can remain fluent after losing authority; and one identity that reaches production data and recovery material defines one failure domain.
 
-## A minimum pass through the dependency chain
-
-For an existing system, one compact pass produces the minimum record on which later decisions can build:
-
-1. Reopen one decision based on an aggregate score. Run the cheapest credible baseline and the candidate on identical task versions, initially three times per item, and preserve per-item outcomes.
-2. Record success, reliability, cost, latency, model, harness, prompt, permissions, and pricing snapshot separately.
-3. Exercise one permitted and one prohibited action with the ordinary identity, including the boundary between primary and recovery resources.
-4. Verify one recent completion claim from repository or system state and rerun the executable check that makes it true.
-5. Read twenty failed or unverifiable runs, label the first upstream failure where the trace permits it, and repair the first ordinary causal question the schema cannot answer.
-6. Before the next promotion run, record the success floor, cost ceiling, task and baseline versions, mechanism condition, and fault-containment guard.
-
-The result is not a reliability certificate. It is a set of challengeable artifacts: a paired distribution, a cost-quality record, an observed authority boundary, an independently verified state transition, a seed failure corpus, and a decision rule fixed before the result was known.
-
-Begin with the comparison you currently trust most. Keep the per-item record even when the rerun agrees with you.
+The six-step minimum pass now appears in the introduction because it is the shortest path into the dependency chain. Begin with the comparison you currently trust most, and keep the per-item record even when the rerun agrees with you.
 
 ## Sources and evidence
 
@@ -121,4 +112,4 @@ No evidence is introduced here. Each identifier below is carried by the chapter 
 - Directional evidence: Kapoor, Stroebl, Siegel, Nadgir & Narayanan (2024). AI Agents That Matter. arXiv:2407.01502. Chapter 2, `report-cost-accuracy-pareto`.
 - Strong evidence: Chen, J., et al. (2016). Sampling as a Baseline Optimizer for Search-Based Software Engineering. arXiv:1608.07617. Chapter 18, `replay-traces-before-policy-changes`.
 
-The part-level and chapter-level evidence shares restated above were recomputed from the companion catalog: Part I has 19 of 32 items grouped as strong, Part III has 4 of 29, Part IV has 20 of 38, and Part VI has 6 of 27. Chapter 7 has no strong or direct scholarly evidence item.
+The part-level and chapter-level evidence shares restated above were recomputed from the companion catalog: Part I has 18 of 32 items grouped as strong, Part III has 3 of 30, Part IV has 20 of 42, and Part VI has 8 of 29. Chapter 7 has no strong or direct scholarly evidence item.

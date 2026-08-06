@@ -33,6 +33,7 @@ interface Props {
 const { book, chapters } = Astro.props;
 const introduction = chapters.find((chapter) => chapter.data.kind === "introduction");
 const closing = chapters.find((chapter) => chapter.data.kind === "closing");
+const glossary = chapters.find((chapter) => chapter.data.kind === "glossary");
 const chaptersByPart = book.data.parts.map((part) => ({
   ...part,
   chapters: chapters.filter(
@@ -128,6 +129,14 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
           <a class="contents__edge contents__edge--closing" href={hrefFor(closing)}>
             <span class="contents__marker">Closing</span>
             <span>{closing.data.title.replace(/^Closing:\s*/, "")}</span>
+          </a>
+        )
+      }
+      {
+        glossary && (
+          <a class="contents__edge contents__edge--closing" href={hrefFor(glossary)}>
+            <span class="contents__marker">Reference</span>
+            <span>{glossary.data.title}</span>
           </a>
         )
       }

@@ -1,5 +1,5 @@
 const CHAPTER_HEADING = /^## Chapter (\d+): (.+)$/gm;
-const PRACTICE_BLOCK = /^### (.+)\n\n`([a-z0-9]+(?:-[a-z0-9]+)*)`\n\n([\s\S]*?)(?=\n### |\n## Chapter |$)/gm;
+const PRACTICE_BLOCK = /^### (.+)\n\n(?:`(ERCA-\d{3})` · )?`([a-z0-9]+(?:-[a-z0-9]+)*)`\n\n([\s\S]*?)(?=\n### |\n## Chapter |$)/gm;
 const MARKDOWN_LINK = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g;
 const ARXIV_REFERENCE = /\barXiv:\s*(\d{4}\.\d{4,5})(?:v\d+)?\b/gi;
 const DOI_REFERENCE = /\bDOI:\s*(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)/gi;
@@ -50,6 +50,10 @@ function cleanCitation(markdown) {
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/^\s*(?:[-*+]\s+|#{1,6}\s+)/, "")
     .replace(/^(?:lit|explorer|research|field)\/[a-z-]+:\s*/i, "")
+    .replace(
+      /^(?:strong evidence|directional evidence|corroborating (?:evidence|case)|corroboration(?:\s*\([^)]*\))?|author-system (?:case|artifact)|null or conflicting evidence):\s*/i,
+      "",
+    )
     .replace(/[`*_]/g, "")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
@@ -208,12 +212,12 @@ export function buildBookReferences({ bookId, chapters, companionSource }) {
   });
 
   const practiceHeadings = [
-    ...companionSource.matchAll(/^### (.+)\n\n`([a-z0-9]+(?:-[a-z0-9]+)*)`/gm),
+    ...companionSource.matchAll(/^### (.+)\n\n(?:`(ERCA-\d{3})` · )?`([a-z0-9]+(?:-[a-z0-9]+)*)`/gm),
   ];
   for (let index = 0; index < practiceHeadings.length; index += 1) {
     const heading = practiceHeadings[index];
-    const practice = practiceMetadata.get(heading[2]);
-    if (!practice) throw new Error(`Missing companion metadata for ${heading[2]}`);
+    const practice = practiceMetadata.get(heading[3]);
+    if (!practice) throw new Error(`Missing companion metadata for ${heading[3]}`);
     const start = (heading.index ?? 0) + heading[0].length;
     const end = practiceHeadings[index + 1]?.index ?? companionSource.length;
     sources.push({
@@ -310,10 +314,11 @@ export function parseCompanionPractices(source) {
 
     for (const match of parsed) {
       const position = match.index ?? 0;
-      const summary = plainText(match[3]);
-      if (!summary) throw new Error(`Practice ${match[2]} has no summary`);
+      const summary = plainText(match[4]);
+      if (!summary) throw new Error(`Practice ${match[3]} has no summary`);
       practices.push({
-        id: match[2],
+        id: match[3],
+        practiceId: match[2] ?? match[3],
         title: plainText(match[1]),
         chapter,
         classification: position < untaughtMarker ? "taught" : "untaught",

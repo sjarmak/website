@@ -83,18 +83,18 @@ test("extracts linked, plain arXiv, DOI, and raw references without MathML noise
 test("builds the complete deduplicated book and companion reference index", () => {
   const index = buildBookReferences(fixture());
   assert.deepEqual(index.counts, {
-    references: 334,
-    citations: 403,
-    papers: 311,
-    articles: 15,
-    repositories: 1,
-    discussions: 7,
+    references: 368,
+    citations: 440,
+    papers: 331,
+    articles: 21,
+    repositories: 8,
+    discussions: 8,
   });
-  assert.equal(index.references.length, 334);
-  assert.equal(new Set(index.references.map((reference) => reference.url)).size, 334);
+  assert.equal(index.references.length, 368);
+  assert.equal(new Set(index.references.map((reference) => reference.url)).size, 368);
   assert.equal(
     index.references.reduce((total, reference) => total + reference.citedBy.length, 0),
-    403,
+    440,
   );
   assert.ok(index.references.every((reference) => reference.url.startsWith("https://")));
 });

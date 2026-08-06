@@ -51,15 +51,17 @@ export default function remarkCompanionCatalog() {
 
       if (node.type !== "heading" || node.depth !== 3 || !practiceClass) continue;
       const idParagraph = tree.children[index + 1];
-      const idNode =
-        idParagraph?.type === "paragraph" &&
-        idParagraph.children?.length === 1 &&
-        idParagraph.children[0]?.type === "inlineCode"
-          ? idParagraph.children[0]
-          : undefined;
+      const idNodes = idParagraph?.type === "paragraph"
+        ? idParagraph.children?.filter((child) => child.type === "inlineCode") ?? []
+        : [];
+      const practiceIdNode = idNodes.find((child) => /^ERCA-\d{3}$/.test(child.value));
+      const idNode = idNodes.find((child) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(child.value));
       const id = idNode?.value;
       if (!id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) {
         throw new Error(`Companion practice "${nodeText}" is missing its stable id`);
+      }
+      if (idNodes.length > 1 && !practiceIdNode) {
+        throw new Error(`Companion practice "${nodeText}" is missing its ERCA practice id`);
       }
 
       properties(node).id = id;
@@ -68,13 +70,11 @@ export default function remarkCompanionCatalog() {
         `catalog-practice--${practiceClass}`,
       ];
       properties(idParagraph).className = ["catalog-practice-id"];
-      idParagraph.children = [
-        {
-          type: "link",
-          url: `#${id}`,
-          children: [idNode],
-        },
-      ];
+      idParagraph.children = idParagraph.children.map((child) =>
+        child === idNode
+          ? { type: "link", url: `#${id}`, children: [idNode] }
+          : child,
+      );
     }
   };
 }

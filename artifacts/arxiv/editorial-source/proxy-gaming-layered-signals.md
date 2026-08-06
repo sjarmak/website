@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 3 strong · 2 directional · 0 corroborating evidence items across 3 developed practices (ERCA-038, ERCA-039, ERCA-042).
+>
+> **Chapter claim.** Any optimized proxy needs an independent signal.
+<!-- reader-metadata:end -->
+
 ## When perfect recall rewards returning everything
 
 CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) scores agent runs on tasks mined from our own repositories. For one day, its scorer included a recall-family reward under which an agent could earn a “perfect” 1.0 by returning the entire repository. A response containing everything cannot omit a relevant item. The strategy was degenerate, but it was correct under the proxy because recall measures how much relevant material was returned and ignores how much irrelevant material accompanied it.
@@ -164,6 +170,10 @@ I also audit every feedback path around the monitor. Automatic retries, candidat
 The rebuilt path will still make mistakes. Its advantage is that signals owned at different points leave disagreements visible after a failure. The team can inspect a base-branch invariant that rejected an apparent pass, an external outcome that stopped tracking the launch score, or a trace warning attached to an otherwise acceptable patch.
 
 Part III begins at that observable boundary and turns to containing what happens after an agent crosses it.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Any optimized proxy needs an independent signal.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

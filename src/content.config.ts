@@ -216,7 +216,7 @@ const bookChapters = defineCollection({
     book: reference("books"),
     order: z.number().int().nonnegative(),
     part: z.number().int().nonnegative(),
-    kind: z.enum(["introduction", "chapter", "closing"]),
+    kind: z.enum(["introduction", "chapter", "closing", "glossary"]),
     number: z.number().int().positive().optional(),
   }),
 });

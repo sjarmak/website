@@ -76,15 +76,15 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
         <p class="kicker">Knowledge graph</p>
         <h1>Explore the book</h1>
         <p class="lead">
-          Browse by part and chapter, compare the {graph.counts.taught} practices taught in the book with the {graph.counts.untaught} carried in the companion, and trace the evidence to {referenceIndex.counts.references} sources.
+          Browse by part and chapter, compare the {graph.counts.taught} practices developed in the monograph with the {graph.counts.untaught} companion-only practices, and trace the evidence to {referenceIndex.counts.references} sources.
         </p>
       </div>
       <dl class="book-explorer__counts" aria-label="Explorer contents">
         <div><dt>Parts</dt><dd>{graph.counts.parts}</dd></div>
         <div><dt>Chapters</dt><dd>{graph.counts.chapters}</dd></div>
         <div><dt>Practices</dt><dd>{graph.counts.practices}</dd></div>
-        <div><dt>Taught</dt><dd>{graph.counts.taught}</dd></div>
-        <div><dt>Companion</dt><dd>{graph.counts.untaught}</dd></div>
+        <div><dt>Developed</dt><dd>{graph.counts.taught}</dd></div>
+        <div><dt>Companion-only</dt><dd>{graph.counts.untaught}</dd></div>
         <div><dt>References</dt><dd>{referenceIndex.counts.references}</dd></div>
       </dl>
     </header>
@@ -106,8 +106,8 @@ const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
         </label>
 
         <div class="book-graph__filters" role="group" aria-label="Practice type">
-          <button type="button" data-practice-filter="taught" aria-pressed="true">Taught</button>
-          <button type="button" data-practice-filter="untaught" aria-pressed="true">Companion</button>
+          <button type="button" data-practice-filter="taught" aria-pressed="true">Developed</button>
+          <button type="button" data-practice-filter="untaught" aria-pressed="true">Companion-only</button>
         </div>
 
         <div class="book-graph__views" role="group" aria-label="Explorer view">

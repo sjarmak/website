@@ -51,7 +51,7 @@ const practices = nodes.filter((node) => node.kind === "practice");
                     );
                     return (
                       <section data-practice-group={classification}>
-                        <h4>{classification === "taught" ? "Taught in the chapter" : "Carried in the companion"}</h4>
+                        <h4>{classification === "taught" ? "Developed in the chapter" : "Companion-only"}</h4>
                         <ul role="list">
                           {matches.map((practice) => (
                             <li

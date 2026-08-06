@@ -16,14 +16,17 @@ const chapterMapPath = path.join(researchRoot, "catalog_v2/companion-chapter-map
 const taughtMapPath = path.join(researchRoot, "catalog_v2/companion-taught-map.json");
 const benchmarkRoot = path.join(researchRoot, "benchmarks");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
+const practiceIdMapPath = path.join(root, "artifacts/arxiv/practice-id-map.json");
+const calibrationAnalysisPath = path.join(root, "scripts/arxiv/analyze-reliable-coding-agents-external-grading.mjs");
+const seCoverageRoot = path.join(root, "artifacts/arxiv/supplementary-se-search");
 const websiteCompanionPath = path.join(root, "src/content/book-companions/engineering-reliable-coding-agents.md");
 const outputRoot = path.join(root, "artifacts/arxiv/companion-release");
-const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.9.zip");
+const releaseZip = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-companion-1.0.0-rc.11.zip");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
 const websiteCompanionUrl = "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion";
 const skillsUrl = `${repositoryUrl}/tree/main/skills`;
 
-const version = "1.0.0-rc.9";
+const version = "1.0.0-rc.11";
 const sourceKinds = {
   lit: "scholarly",
   explorer: "synthesis",
@@ -64,6 +67,10 @@ const evidenceCorrections = new Map([
   ["retain-raw-distill-separately:2605.12978", {
     evidenceGroup: "strong",
     claimSupport: "The controlled study measures degradation under repeated LLM memory updates and supports preserving episodic source material. It does not compare immutable-source and rebuildable-distillate system architectures.",
+  }],
+  ["use-durable-workflow-engine:https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953", {
+    evidenceGroup: "corroborating",
+    claimSupport: "The adopting team reports a service-local failure-rate change after a broader migration to durable workflow orchestration. The vendor-adjacent self-report was not independently audited and does not isolate the workflow engine's causal contribution or establish transfer to coding-agent workloads.",
   }],
 ]);
 
@@ -122,6 +129,32 @@ const supplementalEvidence = new Map([
     evidenceGroup: "directional",
     claimSupport: "Production traces from GitHub Copilot characterize turn-boundary cache loss and long user-idle periods at scale. They motivate measuring these workload features but do not test an allocation policy.",
   }]],
+  ["hybrid-retrieval-fused-on-ranks", [{
+    doi: "10.1145/3607179",
+    url: "https://doi.org/10.1145/3607179",
+    citation: "Rahman, M. M., et al. (2023). A Systematic Review of Automated Query Reformulations in Source Code Search. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3607179.",
+    evidenceGroup: "directional",
+    claimSupport: "The review screened 2,970 candidates and synthesized 70 primary studies on code-search query reformulation. It supports treating query formation as a distinct retrieval stage and documents vocabulary mismatch, but it does not test the chapter's rank-fusion protocol.",
+  }, {
+    doi: "10.1145/3656341",
+    url: "https://doi.org/10.1145/3656341",
+    citation: "Liu, C., et al. (2024). A Survey of Source Code Search: A 3-Dimensional Perspective. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3656341.",
+    evidenceGroup: "directional",
+    claimSupport: "The systematic survey of 68 works separates query, code, and matching components. It supports stage-aware code-search analysis without establishing one retrieval architecture for coding agents.",
+  }]],
+  ["make-verification-cheaper-than-acceptance", [{
+    doi: "10.1109/TSE.2023.3348172",
+    url: "https://doi.org/10.1109/TSE.2023.3348172",
+    citation: "Tufano, M., et al. (2024). Code Review Automation: Strengths and Weaknesses of the State of the Art. IEEE Transactions on Software Engineering. DOI:10.1109/TSE.2023.3348172.",
+    evidenceGroup: "directional",
+    claimSupport: "A qualitative inspection of 2,291 predictions identifies task-specific success and failure classes and dataset defects in code-review automation. It motivates inspectable review evidence but does not evaluate the chapter's interface design.",
+  }, {
+    doi: "10.1145/3772370",
+    url: "https://doi.org/10.1145/3772370",
+    citation: "Drosos, I., et al. (2025). Facilitating Trust in AI-assisted Software Tools. ACM Transactions on Software Engineering and Methodology. DOI:10.1145/3772370.",
+    evidenceGroup: "directional",
+    claimSupport: "Eighteen interviews and a 368-response Microsoft survey identify factors shaping trust in traditional and AI-assisted tools. The study supports designing review surfaces around inspectable evidence and user control, while transfer to autonomous patch gates remains directional.",
+  }]],
 ]);
 
 const updateScreeningDecisions = [
@@ -164,6 +197,18 @@ const updateScreeningDecisions = [
   ["2026-08-05", "2608.01347", "Prompt-Induced Waste in Large Reasoning Models: A Preregistered Two-Harness Benchmark of Coding Agents", "deferred", "", "update queue", "Important cost study is reserved for a later edition because it would require a broader cost-section revision."],
   ["2026-08-05", "2608.02499", "SWE-Touch: Benchmarking Coding Agents When Users Touch the Code", "deferred", "", "update queue", "Shared-workspace benchmark is important but needs dedicated treatment of concurrent user edits."],
   ["2026-08-06", "2608.04804", "Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First", "admitted", "strong", "Chapter 18; route-work-to-the-cheapest-sufficient-model", "Benchmark-bound cost result admitted together with its no-router ablation, which locates the gain in the handoff."],
+];
+
+const seCoverageAdmissions = [
+  ["10.1016/j.infsof.2018.09.006", "Guidelines for including grey literature and conducting multivocal literature reviews in software engineering", "methods", "Defines multivocal review design and source-independence criteria for software engineering."],
+  ["10.1109/TSE.2022.3165938", "How Should Software Engineering Secondary Studies Include Grey Material?", "methods", "Qualifies what mutable practitioner material can support in a secondary study."],
+  ["10.1109/TSE.2022.3174092", "SEGRESS: Software Engineering Guidelines for REporting Secondary Studies", "methods", "Supplies reporting vocabulary and flow expectations for software-engineering secondary studies."],
+  ["10.1145/3241743", "The ABC of Software Engineering Research", "methods", "Frames tradeoffs among actors, behavior measurement, and realistic context."],
+  ["10.1109/TSE.2022.3176725", "Construct Validity in Software Engineering", "methods; Chapter 3", "Supports explicit separation between operational indicators and conceptual claims."],
+  ["10.1109/TSE.2023.3348172", "Code Review Automation: Strengths and Weaknesses of the State of the Art", "Chapter 15", "Manual analysis of 2,291 predictions supplies software-engineering evidence on inspectable review-tool capability boundaries."],
+  ["10.1145/3772370", "Facilitating Trust in AI-assisted Software Tools", "Chapter 15", "Practitioner interviews and a survey supply software-engineering evidence on trust factors in AI-assisted tools."],
+  ["10.1145/3607179", "A Systematic Review of Automated Query Reformulations in Source Code Search", "Chapter 11", "Separates query formulation from later retrieval stages and documents code-search vocabulary mismatch."],
+  ["10.1145/3656341", "A Survey of Source Code Search: A 3-Dimensional Perspective", "Chapter 11", "Separates query, code, and matching components in source-code search."],
 ];
 
 const threadDefinitions = [
@@ -237,6 +282,10 @@ function renderReviewableLearnings(source) {
       /<span class="katex">[\s\S]*?<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>[\s\S]*?<\/span>/g,
       (_match, tex) => `$${tex.trim()}$`,
     )
+    .replace(/\buntaught\b/gi, "companion-only")
+    .replace(/\btaught\b/gi, "developed")
+    .replace(/\bteaches\b/gi, "develops")
+    .replace(/\bteaching\b/gi, "development")
     .trim();
   return `# Companion learnings\n\nThis human-readable edition presents all 192 practices in chapter context. For navigation, filtering, and graph exploration, use the [website companion](${websiteCompanionUrl}).\n\n${body}\n`;
 }
@@ -271,6 +320,14 @@ function sha256(content) {
   return createHash("sha256").update(content).digest("hex");
 }
 
+function deterministicPracticeSample(catalog, count, seed) {
+  return catalog
+    .map((practice) => ({ practice, key: sha256(`${seed}:${practice.id}`) }))
+    .sort((left, right) => left.key.localeCompare(right.key))
+    .slice(0, count)
+    .map(({ practice }, index) => ({ ...practice, sample_order: index + 1 }));
+}
+
 function parseThreadSourceIndex(thread, source) {
   const matches = [...source.matchAll(/^### \[(\d+)\] (.+)$/gm)];
   return matches.map((match, index) => {
@@ -288,13 +345,14 @@ function parseThreadSourceIndex(thread, source) {
 }
 
 async function main() {
-  const [catalogSource, chapterMapSource, taughtMapSource, benchmarkSource, referenceAudit, websiteCompanionSource] = await Promise.all([
+  const [catalogSource, chapterMapSource, taughtMapSource, benchmarkSource, referenceAudit, websiteCompanionSource, practiceIdMap] = await Promise.all([
     readFile(catalogPath, "utf8"),
     readFile(chapterMapPath, "utf8"),
     readFile(taughtMapPath, "utf8"),
     readFile(path.join(benchmarkRoot, "benchmarks.json"), "utf8"),
     readFile(referenceAuditPath, "utf8").then(JSON.parse),
     readFile(websiteCompanionPath, "utf8"),
+    readFile(practiceIdMapPath, "utf8").then(JSON.parse),
   ]);
   const catalog = JSON.parse(catalogSource);
   const companionMap = JSON.parse(chapterMapSource);
@@ -324,10 +382,12 @@ async function main() {
   const publicCatalog = catalog.map((practice) => {
     const location = assignment.get(practice.id);
     if (!location) throw new Error(`No chapter assignment for ${practice.id}`);
+    const practiceId = practiceIdMap[practice.id];
+    if (!practiceId) throw new Error(`No stable practice ID for ${practice.id}`);
     const evidence = (practice.evidence ?? [])
       .filter((item) => !excludedEvidenceUrls.has(item.url))
       .map((item, index) => {
-      const correction = evidenceCorrections.get(`${practice.id}:${item.arxiv ?? ""}`);
+      const correction = evidenceCorrections.get(`${practice.id}:${item.arxiv ?? item.url ?? ""}`);
       const record = {
         evidence_id: `${practice.id}:e${index + 1}`,
         source_kind: sourceKinds[item.class] ?? "other",
@@ -340,29 +400,32 @@ async function main() {
         resolved_metadata: item.arxiv ? arxivMetadata.get(item.arxiv) ?? null : null,
       };
       evidenceRows.push({
-        practice_id: practice.id,
+        practice_id: practiceId,
+        practice_slug: practice.id,
         ...record,
         independent_external_evidence: true,
       });
         return record;
       });
     for (const [index, item] of (supplementalEvidence.get(practice.id) ?? []).entries()) {
-      const metadata = arxivMetadata.get(item.arxiv);
-      if (!metadata) throw new Error(`Missing audited metadata for supplemental arXiv:${item.arxiv}`);
+      const metadata = item.arxiv ? arxivMetadata.get(item.arxiv) : null;
+      if (item.arxiv && !metadata) throw new Error(`Missing audited metadata for supplemental arXiv:${item.arxiv}`);
       const record = {
         evidence_id: `${practice.id}:supplement-${index + 1}`,
         source_kind: "scholarly",
         evidence_group: item.evidenceGroup,
-        citation: cleanCitation(`arXiv:${item.arxiv}`, metadata, item.arxiv),
+        citation: item.citation ?? cleanCitation(`arXiv:${item.arxiv}`, metadata, item.arxiv),
         bibcode: null,
-        arxiv: item.arxiv,
-        url: `https://arxiv.org/abs/${item.arxiv}`,
+        arxiv: item.arxiv ?? null,
+        doi: item.doi ?? null,
+        url: item.url ?? `https://arxiv.org/abs/${item.arxiv}`,
         claim_support: item.claimSupport,
-        resolved_metadata: metadata,
+        resolved_metadata: metadata ?? null,
       };
       evidence.push(record);
       evidenceRows.push({
-        practice_id: practice.id,
+        practice_id: practiceId,
+        practice_slug: practice.id,
         ...record,
         independent_external_evidence: true,
         limitation: "Post-consolidation source admitted during the bounded August 6 update audit; claim scope is recorded in claim_support.",
@@ -386,10 +449,11 @@ async function main() {
             ? "Illustrative author-system case; not counted as independent external evidence."
             : "Corroborating material; not counted as independent evidence.",
       };
-      evidenceRows.push({ practice_id: practice.id, ...record });
+      evidenceRows.push({ practice_id: practiceId, practice_slug: practice.id, ...record });
       return record;
     });
     return {
+      practice_id: practiceId,
       id: practice.id,
       name: practice.name,
       practice: sanitizeProse(practice.do),
@@ -412,24 +476,47 @@ async function main() {
   const crosswalk = Object.entries(chapterTitles).map(([number, title]) => ({
     chapter: Number(number),
     title,
-    developed_practices: taughtMap[number],
-    companion_practices: companionMap[number],
+    developed_practices: taughtMap[number].map((slug) => ({ practice_id: practiceIdMap[slug], slug })),
+    companion_practices: companionMap[number].map((entry) => ({ practice_id: practiceIdMap[entry.id], ...entry })),
   }));
 
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(path.join(outputRoot, "schemas"), { recursive: true });
   await mkdir(path.join(outputRoot, "methodology"), { recursive: true });
+  await mkdir(path.join(outputRoot, "methodology/external-grading"), { recursive: true });
+  await mkdir(path.join(outputRoot, "methodology/software-engineering-coverage"), { recursive: true });
 
   const files = new Map();
+  const calibrationSeed = "ERCA-2026-08-external-calibration-v1";
+  const calibrationSample = deterministicPracticeSample(publicCatalog, 20, calibrationSeed);
+  const blindedItems = calibrationSample.flatMap((practice) =>
+    practice.evidence.map((item) => ({
+      sample_order: practice.sample_order,
+      practice_id: practice.practice_id,
+      practice_slug: practice.id,
+      practice_claim: practice.practice,
+      boundary_conditions: practice.boundary_conditions,
+      evidence_id: item.evidence_id,
+      source_kind: item.source_kind,
+      citation: item.citation,
+      source_url: item.url,
+      claim_support: item.claim_support,
+      label: "",
+      rationale: "",
+    })));
+  const responseTemplate = blindedItems.map(({ evidence_id, practice_id, practice_slug }) => ({
+    evidence_id, practice_id, practice_slug, label: "", rationale: "",
+  }));
   files.set("methodology/source-snapshot.json", `${JSON.stringify({
     schema_version: "1.0",
     companion_version: version,
     consolidated_at: "2026-07-26",
     update_cutoff: "2026-08-06",
     manuscript_source_counts: {
-      scholarly: 129,
+      scholarly: 138,
       scholarly_at_consolidation: 118,
       scholarly_admitted_in_update: 11,
+      scholarly_admitted_in_se_coverage_probe: 9,
       practitioner: 91,
       benchmarks: 29,
       author_system_cases: 17,
@@ -477,6 +564,20 @@ async function main() {
     })),
     provenance_boundary: "Retrieval systems ordered candidates. The author made final inclusion, evidence-group, practice, chapter, and prose decisions.",
   }, null, 2)}\n`);
+  files.set("methodology/external-grading/README.md", `# Blinded external evidence-grading calibration\n\nThis packet supports an independent calibration of the evidence groups used by the monograph. It samples 20 practice records deterministically from the edition catalog using SHA-256 ordering with seed \`${calibrationSeed}\`. Because evidence groups attach to scoped evidence items rather than whole practices, reviewers label every evidence item associated with the sampled practices.\n\n## Reviewer procedure\n\n1. Work independently and do not consult \`catalog.json\`, \`evidence-ledger.csv\`, or another reviewer's response. Those files reveal the author's labels.\n2. Read \`blinded-evidence-items.json\`. Open the cited source when the supplied claim and boundary are insufficient to grade it.\n3. Copy \`response-template.json\` to a reader-specific file. For every item, assign exactly one of \`strong\`, \`directional\`, \`corroborating\`, or \`null_or_conflicting\`, and add a short rationale.\n4. Return the completed response without discussing individual labels with the other reviewers.\n\nThe categories use the definitions in the manuscript. Judge whether the cited item supports the scoped claim written in \`claim_support\`; do not grade the prestige of the venue or the general quality of the source. A controlled result can be strong for a narrow measured claim and directional for a broader recommendation. When ambiguity remains, use the lower group and explain why.\n\nAfter at least two readers respond, run:\n\n\`node analyze-grades.mjs reader-a.json reader-b.json [reader-c.json]\`\n\nReport pairwise Cohen's kappa, Fleiss's kappa when three readers participate, observed agreement, and the disagreement pattern. Agreement is not correctness. The result measures reproducibility of this classification instrument and identifies definitions that need adjudication. Do not use the author label as ground truth; compare it separately after the blinded pass.\n\nNo external labels or kappa value are included in this release candidate because the review has not yet occurred. The first archival edition is conditional on completing and reporting this calibration.\n`);
+  files.set("methodology/external-grading/practice-sample.json", `${JSON.stringify(calibrationSample.map((practice) => ({
+    sample_order: practice.sample_order,
+    practice_id: practice.practice_id,
+    practice_slug: practice.id,
+    practice_claim: practice.practice,
+    chapter: practice.chapter,
+  })), null, 2)}\n`);
+  files.set("methodology/external-grading/blinded-evidence-items.json", `${JSON.stringify(blindedItems, null, 2)}\n`);
+  files.set("methodology/external-grading/response-template.json", `${JSON.stringify(responseTemplate, null, 2)}\n`);
+  files.set("methodology/external-grading/analyze-grades.mjs", await readFile(calibrationAnalysisPath, "utf8"));
+  for (const name of ["protocol-and-status.json", "candidate-records.json", "candidate-records.csv", "scix-doi-coverage-sample.json"]) {
+    files.set(`methodology/software-engineering-coverage/${name}`, await readFile(path.join(seCoverageRoot, name), "utf8"));
+  }
   files.set("methodology/search-log.csv", toCsv([
     ...threadDefinitions.map((thread) => ({
       record_type: "protocol_reconstruction",
@@ -516,15 +617,33 @@ async function main() {
       deferred_or_excluded: 0,
       notes: "Admitted with its no-router ablation because the ablation changes the interpretation of the routing claim.",
     },
+    {
+      record_type: "software_engineering_coverage_probe",
+      date: "2026-08-06",
+      source: "OpenAlex metadata scoped to eight core software-engineering and CSCW venues",
+      scope_or_query: "Eight preserved topic queries across ICSE, FSE, ASE, ISSTA, EMSE, TSE, TOSEM, and CSCW; years 2018 through 2026-08-06",
+      exact_query_preserved: true,
+      candidates_screened: 148,
+      admitted: 9,
+      already_present: 0,
+      deferred_or_excluded: 139,
+      notes: "Coverage probe and title/abstract triage, not a substitute for the pending publisher-native ACM Digital Library, IEEE Xplore, and Scopus search. Full records appear under methodology/software-engineering-coverage/.",
+    },
   ], [
     "record_type", "date", "source", "scope_or_query", "exact_query_preserved", "candidates_screened", "admitted", "already_present", "deferred_or_excluded", "notes",
   ]));
-  files.set("methodology/screening-decisions.csv", toCsv(updateScreeningDecisions.map(([
-    surfaced_at, arxiv, title, decision, evidence_group, placement, bounded_claim_or_reason,
-  ]) => ({
-    surfaced_at, arxiv, title, url: `https://arxiv.org/abs/${arxiv}`, decision, evidence_group, placement, bounded_claim_or_reason,
-  })), [
-    "surfaced_at", "arxiv", "title", "url", "decision", "evidence_group", "placement", "bounded_claim_or_reason",
+  files.set("methodology/screening-decisions.csv", toCsv([
+    ...updateScreeningDecisions.map(([
+      surfaced_at, arxiv, title, decision, evidence_group, placement, bounded_claim_or_reason,
+    ]) => ({
+      surfaced_at, identifier: `arXiv:${arxiv}`, arxiv, doi: "", title, url: `https://arxiv.org/abs/${arxiv}`, decision, evidence_group, placement, bounded_claim_or_reason,
+    })),
+    ...seCoverageAdmissions.map(([doi, title, placement, bounded_claim_or_reason]) => ({
+      surfaced_at: "2026-08-06", identifier: `doi:${doi.toLowerCase()}`, arxiv: "", doi: doi.toLowerCase(), title,
+      url: `https://doi.org/${doi}`, decision: "admitted", evidence_group: "directional", placement, bounded_claim_or_reason,
+    })),
+  ], [
+    "surfaced_at", "identifier", "arxiv", "doi", "title", "url", "decision", "evidence_group", "placement", "bounded_claim_or_reason",
   ]));
   files.set("methodology/thread-source-index.csv", toCsv(threadSourceRows, [
     "thread_id", "source_order", "heading", "arxiv", "bibcode",
@@ -571,6 +690,24 @@ The review followed this sequence:
 
 Automated systems assisted with retrieval, normalization, duplicate detection, bounded claim extraction, metadata checks, and challenge passes. The cited source remained authoritative. The author made the final inclusion, evidence-group, practice-admission, chapter-placement, and prose decisions. Ambiguous evidence defaulted to the lower group unless the narrower directly measured claim could be stated.
 
+| Review step | Mode | Human decision retained |
+| --- | --- | --- |
+| Candidate retrieval and ranking | Automated and assisted | The author defined each thread question and search boundary, then read the admitted sources. |
+| Identity resolution, normalization, and duplicate checks | Automated checks with human resolution | The author resolved ambiguous identities and practitioner independence keys. |
+| Bounded-claim extraction | Assisted | The author checked the source, revised the extracted claim, and accepted or rejected it. |
+| Initial evidence-group proposal | Assisted | The author assigned the final label to the scoped claim. |
+| Challenge pass | Assisted | Automated passes flagged composite claims, contrary findings, duplicate support, and label inconsistencies; the author reread the source and adjudicated every change. |
+| Practice admission, chapter selection, and prose | Human | The author made the selection and writing decisions. |
+| Schema, checksum, identifier, and cross-reference gates | Automated verification | Failures blocked the release until the underlying record was corrected. |
+
+Here, *automated* means the operation ran without item-level prompting, *assisted* means a system proposed or flagged material for a human decision, and *human* means the substantive choice was made without an automated verdict. The challenge pass was an error-finding aid, not an independent grader.
+
+## Practice-record accounting
+
+The working extraction produced 244 candidate records across six shards. An admission gate retained 214 and rejected 30. Later adjudication cut 26 records, demoted 13 to asides, split eight bundled records, added three records, and reinstated one after a provenance correction, producing 192 records in this edition. That total is a bookkeeping consequence of claim granularity and editorial boundaries, not a count of practices that exist in the world. Stable identifiers preserve this edition's records even if a later edition splits, merges, or retires one.
+
+The final admission gate required at least one scholarly item, a non-author synthesis with a resolvable scholarly identity, or two practitioner items with distinct independence keys. Three selection passes considered teachability, consequence, and coverage of fourteen mechanism clusters. Practices chosen by at least two passes formed the base of the developed set; individual adjudication repaired thin mechanism coverage and one provenance defect. The main manuscript retains these admission and selection rules while leaving the record arithmetic here.
+
 ## Independence and deduplication
 
 Research records found through Code Intelligence Digest entered the scholarly lane and were deduplicated by bibliographic identity. Practitioner accounts were deduplicated by incident or originating claim. Several pages repeating one incident did not count as several independent observations.
@@ -578,6 +715,8 @@ Research records found through Code Intelligence Digest entered the scholarly la
 ## Update policy
 
 The consolidation cutoff was July 26, 2026. A bounded audit through August 6 screened 39 candidate records: 38 surfaced in published Digest editions and one in a targeted release check. Eleven new works were admitted, one was already present, and 27 were deferred. Newness alone did not justify admission. The source had to correct, materially qualify, or directly strengthen a claim already in scope. Later records enter the next-edition queue unless they correct a factual error.
+
+A separate software-engineering coverage probe searched eight preserved topic formulations across metadata for ICSE, FSE, ASE, ISSTA, EMSE, TSE, TOSEM, and CSCW. It surfaced 148 unique candidates and admitted nine methodologically material records after title-and-abstract screening. A deterministic 40-DOI comparison found eight exact matches in SciX. This is a coverage diagnosis rather than a recall estimate or a replacement for the pending publisher-native ACM Digital Library, IEEE Xplore, and Scopus search. The full probe appears under \`software-engineering-coverage/\`.
 
 ## Reproducibility boundary
 
@@ -606,11 +745,11 @@ Two unstable records identified during review were removed rather than preserved
     web_sources: referenceAudit.urls.map(({ url, status, http_status, final_url, title }) => ({ url, status, http_status, final_url, title })),
   }, null, 2)}\n`);
   files.set("evidence-ledger.csv", toCsv(evidenceRows, [
-    "practice_id", "evidence_id", "source_kind", "evidence_group", "citation", "bibcode", "arxiv", "url", "claim_support", "independent_external_evidence", "limitation",
+    "practice_id", "practice_slug", "evidence_id", "source_kind", "evidence_group", "citation", "bibcode", "arxiv", "doi", "url", "claim_support", "independent_external_evidence", "limitation",
   ]));
   files.set("CITATION.cff", `cff-version: 1.2.0\nmessage: "Please cite the archived release of this companion and the associated manuscript."\ntitle: "Engineering Reliable Coding Agents: Companion Research Artifact"\ntype: dataset\nauthors:\n  - family-names: Jarmak\n    given-names: Stephanie\nversion: "${version}"\nrepository-code: "${repositoryUrl}"\nurl: "${websiteCompanionUrl}"\nabstract: >-\n  Human-readable and machine-readable practice catalog, evidence ledger,\n  chapter crosswalk, and benchmark records accompanying Engineering Reliable\n  Coding Agents.\nkeywords:\n  - AI coding agents\n  - software engineering\n  - evaluation\n  - reliability\n  - agent operations\n`);
-  files.set("README.md", `# Engineering Reliable Coding Agents: companion research artifact\n\nRelease candidate ${version}, prepared August 6, 2026.\n\nThis package accompanies *Engineering Reliable Coding Agents: Evaluation, Recovery, Context, and Control Beyond the Model*. It is designed to be archived as a separate, citable research artifact. The final archival release should receive its own DOI and should be cited alongside the manuscript.\n\nReview the interactive [website companion](${websiteCompanionUrl}), or read the complete chapter-organized catalog in [\`LEARNINGS.md\`](LEARNINGS.md).\n\nReusable agent workflows derived from selected practices are published separately in the repository's [\`skills/\` collection](${skillsUrl}). They are implementation artifacts, not additional evidence.\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\n## Contents\n\n- \`LEARNINGS.md\`: human-readable, chapter-organized presentation of all 192 practices, including actions, mechanisms, evidence, and boundaries.\n- \`catalog.json\`: all 192 bounded practices in machine-readable form, including the bounded August 6 evidence additions.\n- \`evidence-ledger.csv\`: one row per evidence item or corroborating item.\n- \`chapter-crosswalk.json\`: the 55 practices developed in the manuscript and the 137 companion-only entries.\n- \`benchmark-catalog.json\`: 29 coding-agent benchmark records.\n- \`reference-metadata.json\`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n- \`methodology/\`: corpus snapshots, thread protocols and source identities, search records, record-level update decisions, and the human/automated adjudication boundary.\n- \`schemas/\`: JSON Schemas for the catalog and benchmark records.\n- \`PROVENANCE.md\`: source snapshot, transformations, evidence definitions, and release exclusions.\n- \`CITATION.cff\`: citation metadata for GitHub and archival services.\n- \`SHA256SUMS\`: checksums for the release files.\n\n## Evidence vocabulary\n\n\`strong\` directly supports the stated claim through a controlled comparison, validated benchmark result, or comparably specific measurement. \`directional\` supports the mechanism or direction without establishing magnitude or broad transfer. \`corroborating\` establishes plausibility through a case or convergent observation. \`null_or_conflicting\` records a result that did not support the expected effect or limits another claim.\n\nAuthor-system cases are labeled \`author_system_illustration\` and set \`independent_external_evidence\` to \`false\`. They illustrate mechanisms and failure cases but do not support general claims independently.\n\n## Before public release\n\nReplace this release-candidate version with \`1.0.0\`, add the selected license, publish a tagged release in the canonical repository, archive that exact tag with Zenodo or another DOI-granting repository, and add the resulting DOI to this file and \`CITATION.cff\`. Do not archive internal review notes, rejected candidates, private receipts, or unpublished operational data.\n`);
-  files.set("PROVENANCE.md", `# Provenance\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\nInteractive companion: [${websiteCompanionUrl}](${websiteCompanionUrl})\n\nDerived agent skills: [${skillsUrl}](${skillsUrl})\n\n## Source snapshot\n\n- Public manuscript chapter snapshot: packaged with companion version \`${version}\` in the canonical repository.\n- Human-readable companion input SHA-256: \`${sha256(websiteCompanionSource)}\`.\n- Practice catalog input SHA-256: \`${sha256(catalogSource)}\`.\n- Companion chapter-map input SHA-256: \`${sha256(chapterMapSource)}\`.\n- Developed-practice map input SHA-256: \`${sha256(taughtMapSource)}\`.\n- Benchmark catalog input SHA-256: \`${sha256(benchmarkSource)}\`.\n\nCorpus counts, retrieval revisions, and retained thread hashes appear in \`methodology/source-snapshot.json\`. The hashes identify exact retained inputs without exposing workstation paths or unpublished repository contents.\n\n## Transformations\n\n\`LEARNINGS.md\` is generated from the website companion source by removing site frontmatter and replacing rendered MathML spans with ordinary inline LaTeX. Internal evidence shorthand and editorial workflow notes were replaced by reader-facing \`source_kind\` and \`evidence_group\` fields in the machine-readable catalog. Internal derivation pointers were omitted. Four public-release evidence records were narrowed to the claim tested by the cited study: the SkillEvolBench and CoIR records under \`run-ablation-controls\`, the CodeSearchNet record under \`hybrid-retrieval-fused-on-ranks\`, and the memory-degradation record under \`retain-raw-distill-separately\`. Eleven post-consolidation scholarly records were added with claim-specific evidence groups; their record-level rulings appear in \`methodology/screening-decisions.csv\`. The known DynTaskMAS author-name defect in the source catalog was corrected from “Yin” to Yu, Ding, and Sato using the official arXiv record. Official arXiv metadata captured during the manuscript reference audit supplies citations and appears under \`resolved_metadata\`.\n\nThe separately packaged skills retain their own practice maps and evidence boundaries. They are derived operational artifacts and are not counted as independent evidence.\n\nCorroborating author-system records remain available for reproducibility but are explicitly excluded from independent external evidence. Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.\n\n## Excluded material\n\nThe package excludes private working notes, detailed selection deliberations beyond the published update rulings, rejected catalog entries, private comments, unpublished raw operational data, local configuration, and internal receipts. The release is a public research artifact, not a mirror of the working directory.\n`);
+  files.set("README.md", `# Engineering Reliable Coding Agents: companion research artifact\n\nRelease candidate ${version}, prepared August 6, 2026.\n\nThis package accompanies *Engineering Reliable Coding Agents: Evaluation, Recovery, Context, and Control Beyond the Model*. It is designed to be archived as a separate, citable research artifact. The final archival release should receive its own DOI and should be cited alongside the manuscript.\n\nReview the interactive [website companion](${websiteCompanionUrl}), or read the complete chapter-organized catalog in [\`LEARNINGS.md\`](LEARNINGS.md).\n\nReusable agent workflows derived from selected practices are published separately in the repository's [\`skills/\` collection](${skillsUrl}). They are implementation artifacts, not additional evidence.\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\n## Contents\n\n- \`LEARNINGS.md\`: human-readable, chapter-organized presentation of the 192 practice records in this edition, including stable IDs, actions, mechanisms, evidence, and boundaries.\n- \`catalog.json\`: the 192 bounded practice records in this edition in machine-readable form, including the bounded August 6 evidence additions. The count reflects this edition's granularity decisions; it is not an estimate of how many reliability practices exist.\n- \`evidence-ledger.csv\`: one row per evidence item or corroborating item.\n- \`chapter-crosswalk.json\`: the 55 practices developed in the manuscript and the 137 companion-only entries.\n- \`benchmark-catalog.json\`: 29 coding-agent benchmark records.\n- \`reference-metadata.json\`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n- \`methodology/\`: corpus snapshots, thread protocols and source identities, search records, record-level update decisions, the external-grading packet, and the human/automated adjudication boundary.\n- \`schemas/\`: JSON Schemas for the catalog and benchmark records.\n- \`PROVENANCE.md\`: source snapshot, transformations, evidence definitions, and release exclusions.\n- \`CITATION.cff\`: citation metadata for GitHub and archival services.\n- \`SHA256SUMS\`: checksums for the release files.\n\n## Evidence vocabulary\n\n\`strong\` directly supports the stated claim through a controlled comparison, validated benchmark result, or comparably specific measurement. \`directional\` supports the mechanism or direction without establishing magnitude or broad transfer. \`corroborating\` establishes plausibility through a case or convergent observation. \`null_or_conflicting\` records a result that did not support the expected effect or limits another claim.\n\nAuthor-system cases are labeled \`author_system_illustration\` and set \`independent_external_evidence\` to \`false\`. They illustrate mechanisms and failure cases but do not support general claims independently.\n\n## Before public release\n\nComplete the blinded external calibration described in \`methodology/external-grading/README.md\` and report its agreement and disagreement pattern in the manuscript. Then replace this release-candidate version with \`1.0.0\`, add the selected license, publish a tagged release in the canonical repository, archive that exact tag with Zenodo or another DOI-granting repository, and add the resulting DOI to this file and \`CITATION.cff\`. Do not archive internal review notes, rejected candidates, private receipts, or unpublished operational data.\n`);
+  files.set("PROVENANCE.md", `# Provenance\n\nCanonical repository: [${repositoryUrl}](${repositoryUrl})\n\nInteractive companion: [${websiteCompanionUrl}](${websiteCompanionUrl})\n\nDerived agent skills: [${skillsUrl}](${skillsUrl})\n\n## Source snapshot\n\n- Public manuscript chapter snapshot: packaged with companion version \`${version}\` in the canonical repository.\n- Human-readable companion input SHA-256: \`${sha256(websiteCompanionSource)}\`.\n- Practice catalog input SHA-256: \`${sha256(catalogSource)}\`.\n- Companion chapter-map input SHA-256: \`${sha256(chapterMapSource)}\`.\n- Developed-practice map input SHA-256: \`${sha256(taughtMapSource)}\`.\n- Benchmark catalog input SHA-256: \`${sha256(benchmarkSource)}\`.\n\nCorpus counts, retrieval revisions, and retained thread hashes appear in \`methodology/source-snapshot.json\`. The hashes identify exact retained inputs without exposing workstation paths or unpublished repository contents.\n\n## Transformations\n\n\`LEARNINGS.md\` is generated from the website companion source by removing site frontmatter and replacing rendered MathML spans with ordinary inline LaTeX. Internal evidence shorthand and editorial workflow notes were replaced by reader-facing \`source_kind\` and \`evidence_group\` fields in the machine-readable catalog. Internal derivation pointers were omitted. Five public-release evidence records were narrowed or reclassified to match the claim tested by the cited source: the SkillEvolBench and CoIR records under \`run-ablation-controls\`, the CodeSearchNet record under \`hybrid-retrieval-fused-on-ranks\`, the memory-degradation record under \`retain-raw-distill-separately\`, and the Netflix migration record under \`use-durable-workflow-engine\`. Eleven post-consolidation scholarly records were added with claim-specific evidence groups; their record-level rulings appear in \`methodology/screening-decisions.csv\`. The known DynTaskMAS author-name defect in the source catalog was corrected from “Yin” to Yu, Ding, and Sato using the official arXiv record. Official arXiv metadata captured during the manuscript reference audit supplies citations and appears under \`resolved_metadata\`.\n\nThe separately packaged skills retain their own practice maps and evidence boundaries. They are derived operational artifacts and are not counted as independent evidence.\n\nCorroborating author-system records remain available for reproducibility but are explicitly excluded from independent external evidence. Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.\n\n## Excluded material\n\nThe package excludes private working notes, detailed selection deliberations beyond the published update rulings, rejected catalog entries, private comments, unpublished raw operational data, local configuration, and internal receipts. The release is a public research artifact, not a mirror of the working directory.\n`);
   files.set("schemas/catalog.schema.json", `${JSON.stringify({
     $schema: "https://json-schema.org/draft/2020-12/schema",
     title: "Engineering Reliable Coding Agents practice catalog",
@@ -619,8 +758,9 @@ Two unstable records identified during review were removed rather than preserved
     maxItems: 192,
     items: {
       type: "object",
-      required: ["id", "name", "practice", "rationale", "boundary_conditions", "chapter", "treatment", "evidence"],
+      required: ["practice_id", "id", "name", "practice", "rationale", "boundary_conditions", "chapter", "treatment", "evidence"],
       properties: {
+        practice_id: { type: "string", pattern: "^ERCA-[0-9]{3}$" },
         id: { type: "string", pattern: "^[a-z0-9][a-z0-9-]*$" },
         name: { type: "string" },
         practice: { type: "string" },
@@ -641,9 +781,17 @@ Two unstable records identified during review were removed rather than preserved
     "- `reference-metadata.json`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n",
     "- `reference-metadata.json`: resolved arXiv, DOI, and web-source metadata from the manuscript audit.\n- `WEB-SOURCE-PRESERVATION.md`: canonical and archived URLs for retained practitioner sources on mutable hosts.\n",
   ));
+  files.set("README.md", files.get("README.md").replace(
+    "Complete the blinded external calibration described in `methodology/external-grading/README.md` and report its agreement and disagreement pattern in the manuscript.",
+    "Complete the publisher-native ACM Digital Library, IEEE Xplore, and Scopus search described under `methodology/software-engineering-coverage/`, then complete the blinded external calibration described in `methodology/external-grading/README.md` and report both results in the manuscript.",
+  ));
   files.set("PROVENANCE.md", files.get("PROVENANCE.md").replace(
     "Records previously removed from supporting evidence are retained as null or conflicting material with their limitation.",
     "Records previously removed from supporting evidence are retained as null or conflicting material with their limitation. Mutable practitioner pages retained by the manuscript have canonical and archived locations in `WEB-SOURCE-PRESERVATION.md`; unstable unsupported records removed during review are named there for auditability.",
+  ));
+  files.set("PROVENANCE.md", files.get("PROVENANCE.md").replace(
+    "Eleven post-consolidation scholarly records were added with claim-specific evidence groups; their record-level rulings appear in `methodology/screening-decisions.csv`.",
+    "Eleven post-consolidation scholarly records and nine software-engineering coverage-probe records were added with claim-specific evidence groups; their record-level rulings appear in `methodology/screening-decisions.csv`. The OpenAlex probe is published as a coverage diagnosis and is not represented as a substitute for the pending publisher-native ACM, IEEE, and Scopus search.",
   ));
 
   for (const [name, content] of files) await writeFile(path.join(outputRoot, name), content);

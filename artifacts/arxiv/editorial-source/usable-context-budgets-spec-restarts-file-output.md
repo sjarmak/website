@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 6 strong · 2 directional · 0 corroborating · 2 null or conflicting evidence items across 4 developed practices (ERCA-072, ERCA-088, ERCA-143, ERCA-178).
+>
+> **Chapter claim.** Advertised capacity is not usable context.
+<!-- reader-metadata:end -->
+
 Guidance I had placed in a system prompt remained inside the context window twenty turns later but appeared nowhere in the model’s stated reasoning. Across 1,705 visible thinking blocks in 199 traces from my trace-diagnostics corpus, that instruction appeared zero times.
 
 Visible reasoning is an incomplete observation of model state, so absence from those blocks does not prove that the instruction had no influence. It does show that material can remain inside the context window without remaining visibly active in the run. Benchmark evidence exposes the same gap through measured performance.
@@ -370,6 +376,10 @@ Together, these controls establish:
 - which instructions deserve permanent residence in every run.
 
 Chapter 14 turns to what survives between sessions and in what form.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Advertised capacity is not usable context.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

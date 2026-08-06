@@ -7,6 +7,12 @@ kind: chapter
 number: 10
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 2 strong · 4 directional · 1 corroborating evidence items across 3 developed practices (ERCA-045, ERCA-046, ERCA-047).
+>
+> **Chapter claim.** Attribute the first upstream failure the trace can support.
+<!-- reader-metadata:end -->
+
 In a peer-reviewed study, Zhang et al. ([2025](https://arxiv.org/abs/2505.00212)) collected expert-annotated failure logs from 127 multi-agent systems, in which several model-driven workers passed work among one another. They then gave the attribution task to the strongest automated methods they could evaluate. The best method identified the responsible agent in 53.5 percent of cases but found the decisive step in only 14.2 percent. Some methods performed below random.
 
 The logs already existed before the attribution problem was posed. Chapter 9 established that recording what happened is necessary, but a complete record does not establish why a run failed. The same trace may support several causal explanations. One worker may introduce a planning error, another may act reasonably on corrupted state, and a third may expose the defect when verification finally runs. Assigning responsibility to the last visible error confuses detection with cause.
@@ -226,10 +232,15 @@ The first question the trace cannot answer becomes an instrumentation requiremen
 
 A completed review should state both what the evidence supports and what remains unresolved.
 
+The repository artifact [`protocols/failure-trace-review.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/failure-trace-review.md) provides the blinded review sequence, pass condition, and adjudication record.
+
 The failure corpus remains an operating asset after Part III. Chapter 14 uses it to tune compaction policy, because compression should preserve the evidence that prior investigations found decisive.
 
 Part IV turns to the evidence available when the model acts: retrieval, context budgets, and memory. Chapter 11 begins by measuring repository retrieval, the first step in deciding which parts of a codebase enter that evidence.
 
+<!-- chapter-claim-close:start -->
+**Portable claim.** Attribute the first upstream failure the trace can support.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 1 strong · 5 directional · 0 corroborating evidence items across 2 developed practices (ERCA-012, ERCA-114).
+>
+> **Chapter claim.** A component that never executes cannot explain the result.
+<!-- reader-metadata:end -->
+
 In one end-to-end run of CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)), the plain baseline came out ahead of the tool-augmented arm on both score and score per dollar. The configuration with the retrieval machinery in it lost to the configuration with none. That outcome was visible only because the run included a baseline at all. Reported alone, the tool arm's score would have had nothing to be read against, and a reader could have credited the retrieval machinery with whatever the number implied.
 
 Published comparisons frequently omit the inexpensive arm. Kapoor et al. ([2024](https://arxiv.org/abs/2407.01502)) re-evaluated published agent architectures and found that on HumanEval, retrying the model could match more elaborate architectures at a fraction of their inference cost. When they optimized cost and accuracy jointly, they reduced cost without giving up accuracy.
@@ -117,6 +123,10 @@ Pilot the tasks before treating them as trials. Inspect each treatment trajector
 Carry the per-task record from Chapter 1 into the cost analysis. For every arm, preserve correctness, input tokens, output tokens, priced cache quantities, call count, component usage, and wall-clock latency. Convert usage to dollars with a dated pricing snapshot. Plot accuracy against cost with confidence intervals, and prefer a configuration only when no cheaper configuration matches or exceeds its accuracy within the resolution of the evaluation.
 
 Reserve the iteration holdout before the first scaffold change. Decide who can inspect it, when it can be opened, which aggregate results will be returned, and what event ends the comparison. Once developers have used its failures to revise the system, it has become development material. The boundary cannot be created retroactively around tasks the team has already learned to optimize.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** A component that never executes cannot explain the result.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

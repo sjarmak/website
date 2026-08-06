@@ -17,24 +17,31 @@ export async function getStaticPaths() {
   return chapters.map((chapter) => {
     const book = booksById.get(chapter.data.book.id);
     if (!book) throw new Error(`Missing book for chapter ${chapter.id}`);
-    const ordered = chapters
-      .filter((candidate) => candidate.data.book.id === book.id)
-      .sort((a, b) => a.data.order - b.data.order);
 
     return {
       params: { book: book.id, slug: bookChapterSlug(chapter.id) },
-      props: { book, chapter, ordered },
+      props: { bookId: book.id, chapterId: chapter.id },
     };
   });
 }
 
 interface Props {
-  book: CollectionEntry<"books">;
-  chapter: CollectionEntry<"bookChapters">;
-  ordered: CollectionEntry<"bookChapters">[];
+  bookId: string;
+  chapterId: string;
 }
 
-const { book, chapter, ordered } = Astro.props;
+const { bookId, chapterId }: Props = Astro.props;
+const [books, chapters] = await Promise.all([
+  getCollection("books"),
+  getCollection("bookChapters"),
+]);
+const book = books.find((candidate) => candidate.id === bookId);
+const chapter = chapters.find((candidate) => candidate.id === chapterId);
+if (!book) throw new Error(`Missing book ${bookId}`);
+if (!chapter) throw new Error(`Missing book chapter ${chapterId}`);
+const ordered = chapters
+  .filter((candidate) => candidate.data.book.id === book.id)
+  .sort((a, b) => a.data.order - b.data.order);
 const { Content } = await render(chapter);
 const index = ordered.findIndex((candidate) => candidate.id === chapter.id);
 const previous = index > 0 ? ordered[index - 1] : undefined;
@@ -45,6 +52,8 @@ const kicker =
     ? "Introduction"
     : chapter.data.kind === "closing"
       ? "Closing"
+      : chapter.data.kind === "glossary"
+        ? "Reference"
       : `Part ${chapter.data.part} · Chapter ${chapter.data.number}`;
 const hrefFor = (entry: CollectionEntry<"bookChapters">) =>
   bookChapterHref(book.id, bookChapterSlug(entry.id));

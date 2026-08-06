@@ -17,7 +17,7 @@ const previewPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding
 const zipPath = path.join(root, "artifacts/arxiv/engineering-reliable-coding-agents-arxiv-source.zip");
 const referenceAuditPath = path.join(root, "artifacts/arxiv/reference-audit/reference-audit.json");
 const repositoryUrl = "https://github.com/sjarmak/engineering-reliable-coding-agents";
-const expectedFigureCount = 16;
+const expectedFigureCount = 17;
 const pandoc = process.env.RELIABLE_AGENTS_PANDOC ?? "/tmp/arxiv-tools/bin/pandoc";
 const pandocDataDir = process.env.RELIABLE_AGENTS_PANDOC_DATA_DIR;
 const tectonic = process.env.RELIABLE_AGENTS_TECTONIC ?? "/tmp/arxiv-tools/tectonic";
@@ -51,10 +51,18 @@ const parts = [
     ["verification-interfaces-risk-based-escalation.md", "Efficient verification interfaces and risk-based human escalation"],
     ["autonomy-provenance-gates-accountability.md", "Autonomy calibration, provenance, effective gates, and accountability"],
   ]],
-  ["Work allocation and cost engineering", [
+  ["Research agenda: work allocation and cost engineering", [
     ["agent-topology-dynamic-task-allocation.md", "Agent topology selection and dynamic task allocation"],
     ["cost-aware-fleet-scheduling-model-routing.md", "Cost-aware fleet scheduling and model routing"],
   ]],
+];
+const partRunningTitles = [
+  "Part I: Evaluation",
+  "Part II: Grading",
+  "Part III: Containment and recovery",
+  "Part IV: Context",
+  "Part V: Human review",
+  "Part VI: Research agenda",
 ];
 
 function decodeXml(text) {
@@ -66,7 +74,7 @@ function decodeXml(text) {
     .replaceAll("&quot;", '"');
 }
 
-function preprocessMarkdown(source, { introduction = false } = {}) {
+function preprocessMarkdown(source, { introduction = false, sourcesEndmatter = true } = {}) {
   let output = source;
   output = output.replace(
     /<div class="book-math book-math--display">[\s\S]*?<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>[\s\S]*?<\/div>/g,
@@ -81,12 +89,13 @@ function preprocessMarkdown(source, { introduction = false } = {}) {
   output = output.replaceAll("κ", "kappa").replaceAll("≈", "approximately");
   output = output.replace(/\(\/book-figures\/([a-z0-9-]+)\.svg\)/g, "(figures/$1.pdf)");
   output = output.replace("(figures/dependency-chain.pdf)", "(figures/dependency-chain.pdf){width=100%}");
+  output = output.replace("(figures/review-flow.pdf)", "(figures/review-flow.pdf){width=100%}");
   output = output.replace(
     /^(.+:)\n\n(?=(?:- |\d+\. ))/gm,
     "\\Needspace{5\\baselineskip}\n$1\n\n",
   );
   if (introduction) output = output.slice(output.indexOf("## Problem and scope"));
-  if (!introduction) {
+  if (!introduction && sourcesEndmatter) {
     const marker = "## Sources and evidence";
     const markerIndex = output.lastIndexOf(marker);
     if (markerIndex === -1) throw new Error("Chapter is missing its sources end matter");
@@ -192,6 +201,12 @@ function renderReferences(audit) {
     "https://cursor.com/blog/dynamic-context-discovery": ["Cursor", "2026", "Dynamic context discovery", "Cursor Blog"],
     "https://devops.com/when-should-a-devops-agent-act-without-human-approval/": ["Bala Priya C", "2026", "When should a DevOps agent act without human approval?", "DevOps.com"],
     "https://github.com/sjarmak/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: manuscript and companion repository", "GitHub repository"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/minimum-reliability-pass.md": ["Stephanie Jarmak", "2026", "Minimum reliability pass", "Engineering Reliable Coding Agents protocol"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/evaluation-comparison.md": ["Stephanie Jarmak", "2026", "Evaluation comparison protocol", "Engineering Reliable Coding Agents protocol"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/authority-boundary-test.md": ["Stephanie Jarmak", "2026", "Authority-boundary test", "Engineering Reliable Coding Agents protocol"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/recovery-fault-injection.md": ["Stephanie Jarmak", "2026", "Recovery fault-injection protocol", "Engineering Reliable Coding Agents protocol"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/failure-trace-review.md": ["Stephanie Jarmak", "2026", "Failure-trace review", "Engineering Reliable Coding Agents protocol"],
+    "https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/allocation-policy-replay.md": ["Stephanie Jarmak", "2026", "Allocation-policy replay", "Engineering Reliable Coding Agents protocol"],
     "https://github.com/sjarmak/codeprobe": ["Stephanie Jarmak", "2026", "CodeProbe", "GitHub repository"],
     "https://martinfowler.com/articles/exploring-gen-ai/harness-engineering.html": ["Birgitta Bockeler", "2026", "Harness engineering for coding agent users", "martinfowler.com"],
     "https://netflixtechblog.com/how-temporal-powers-reliable-cloud-operations-at-netflix-73c69ccb5953": ["Jacob Meyers and Rob Zienert", "2025", "How Temporal powers reliable cloud operations at Netflix", "Netflix Technology Blog"],
@@ -208,6 +223,8 @@ function renderReferences(audit) {
     "https://www.reddit.com/r/devops/comments/1tbbls4/": ["Upstairs_Safe2922", "2026", "AI agent wiped Railway DB in 9 seconds", "Reddit, r/devops"],
     "https://www.reddit.com/r/devops/comments/1touxz4/": ["Prateek Jain", "2026", "Harness engineering: the new DevOps layer for AI agents", "Reddit, r/devops"],
     "https://www.reddit.com/r/LLMDevs/comments/1q7avil/": ["saurabhjain1592", "2026", "What actually broke when we put AI agents into real production workflows", "Reddit, r/LLMDevs"],
+    "https://web.archive.org/web/20260806014103/https://www.reddit.com/r/LLMDevs/comments/1q7avil/what_actually_broke_when_we_put_ai_agents_into/": ["Internet Archive", "2026", "Archived snapshot of the LLMDevs production-workflow account", "Wayback Machine"],
+    "https://web.archive.org/web/20260806014121/https://www.reddit.com/r/devops/comments/1tbbls4/ai_agent_wiped_railway_db_in_9_seconds_how_do_you/": ["Internet Archive", "2026", "Archived snapshot of the DevOps destructive-agent account", "Wayback Machine"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: web edition", "sjarmak.ai"],
     "https://sjarmak.ai/books/engineering-reliable-coding-agents/companion": ["Stephanie Jarmak", "2026", "Engineering Reliable Coding Agents: companion catalog", "sjarmak.ai"],
     "https://www.sjarmak.ai/projects/code-intelligence-digest": ["Stephanie Jarmak", "2026", "Code Intelligence Digest", "sjarmak.ai"],
@@ -358,8 +375,10 @@ async function main() {
 
   const inputLines = [];
   let chapterNumber = 1;
-  for (const [partTitle, chapters] of parts) {
-    inputLines.push(`\\part{${texEscape(partTitle)}}`);
+  for (const [partIndex, [partTitle, chapters]] of parts.entries()) {
+    inputLines.push(
+      `\\part{${texEscape(partTitle)}}\n\\gdef\\currentparttitle{${texEscape(partRunningTitles[partIndex])}}`,
+    );
     for (const [file, title] of chapters) {
       const stem = `ch${String(chapterNumber).padStart(2, "0")}-${path.basename(file, ".md")}`;
       const markdown = preprocessMarkdown(await readFile(path.join(editorialRoot, file), "utf8"));
@@ -379,13 +398,22 @@ async function main() {
   const closingBody = await readFile(path.join(chapterRoot, `${closingStem}.tex`), "utf8");
   assertSourcesAreEndmatter(closingBody, "closing.md");
   await writeFile(path.join(chapterRoot, `${closingStem}.tex`), `\\chapter{Closing: the evidence chain behind reliable agents}\n\\label{closing-evidence-chain}\n${closingBody}`);
-  inputLines.push("\\input{chapters/closing}");
+  inputLines.push("\\gdef\\currentparttitle{Closing}\n\\input{chapters/closing}");
 
-  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured search and bounded update audit assembled 129 scholarly works, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened for identifiable claims, graded by the strength and independence of their support, and challenged through targeted evidence audits; ambiguous classifications defaulted to the lower grade. The study contributes an evidence audit, a catalog of 192 bounded practices with 55 developed in depth, a dependency chain across evaluation and operation, scoped measurements and failure cases from author-operated systems, and runnable protocols for local evaluation and fault testing. The review is structured rather than exhaustive, evidence is uneven across topics, and capability results remain time- and workload-dependent. Author-system cases are reported as illustrations, not as independent external evidence.\n");
+  const glossaryStem = "glossary";
+  const glossary = preprocessMarkdown(
+    await readFile(path.join(editorialRoot, "glossary.md"), "utf8"),
+    { sourcesEndmatter: false },
+  );
+  await pandocConvert(glossary, path.join(chapterRoot, `${glossaryStem}.tex`));
+  const glossaryBody = await readFile(path.join(chapterRoot, `${glossaryStem}.tex`), "utf8");
+  await writeFile(path.join(chapterRoot, `${glossaryStem}.tex`), `\\chapter*{Glossary}\n\\addcontentsline{toc}{chapter}{Glossary}\n${glossaryBody}`);
+
+  await writeFile(path.join(sourceRoot, "abstract.tex"), "AI coding agents are commonly evaluated as models but deployed as systems whose behavior also depends on evaluation harnesses, execution state, retrieval, permissions, review interfaces, and resource allocation. This technical review and engineering monograph examines reliability at those system boundaries. A structured multivocal search, bounded update audit, and software-engineering coverage probe assembled 138 scholarly works, 91 practitioner records, 29 benchmark records, and 17 author-system case records. Sources were screened through stated inclusion and exclusion criteria, assigned claim-scoped quality assessments, and challenged through targeted audits; ambiguous classifications defaulted to the lower group. The study contributes an evidence ledger, a versioned catalog of 192 practice records with 55 developed in depth, a dependency chain and repair asymmetry across evaluation and operation, scoped measurements and failure cases from author-operated systems, runnable protocols, and five reusable skills with evidence maps. The search is structured rather than exhaustive. Publisher-native ACM, IEEE, and Scopus searching and blinded external calibration of a 20-practice sample remain release gates for archival v1. Evidence is uneven across topics, capability results remain time- and workload-dependent, and author-system cases are illustrations rather than independent external evidence.\n");
 
   await writeFile(path.join(sourceRoot, "references.tex"), references.latex);
 
-  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, source snapshots, thread protocols and source identities, update-screening decisions, provenance record, and checksums. The repository also packages five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. No archival DOI had been assigned when this edition was prepared; until one is issued, cite the tagged repository release. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
+  await writeFile(path.join(sourceRoot, "materials.tex"), `The version-controlled manuscript source and companion research artifact are available at \\url{${repositoryUrl}}. The companion contains the machine-readable 192-record practice catalog, evidence ledger, chapter crosswalk, benchmark catalog, schemas, source snapshots, thread protocols and source identities, update-screening decisions, software-engineering coverage probe, blinded external-grading packet, provenance record, and checksums. The repository also packages six named runnable protocols and five reusable agent skills derived from selected practices, with practice-level evidence maps; these workflows are implementation artifacts rather than independent evidence. A browser-based catalog is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents/companion}, and the web edition is available at \\url{https://sjarmak.ai/books/engineering-reliable-coding-agents}. The final replication package should be archived with a DOI; no archival DOI had been assigned when this release candidate was prepared. The evidence ledger is scheduled for annual review, with out-of-cycle releases for material factual or citation corrections. The 199-trace diagnostic corpus, the 1,286-item fleet ledger, and the 370-task retrieval evaluation are not redistributed. They contain private repository material, service and operational identifiers, prompts or tool outputs, and third-party task content that was not collected with redistribution consent. De-identification would remove state and grouping information required to audit the reported causal and dependence structure. Their aggregate results are therefore identified in the text as author-system illustrations rather than independently reproducible external evidence.\n`);
 
   await writeFile(path.join(sourceRoot, "00README"), `Top-level file: main.tex\nEngine: pdfLaTeX\nPrepared for arXiv from the verified August 6, 2026 chapter revisions.\nThe archive contains only TeX source, ${references.count} full reference entries, and the ${expectedFigureCount} required PDF figures.\nCanonical project repository: ${repositoryUrl}\nThe companion research artifact is released and archived separately.\n`);
 
@@ -410,6 +438,7 @@ async function main() {
 \\usepackage[htt]{hyphenat}
 \\usepackage{xcolor}
 \\usepackage{xurl}
+\\usepackage{fancyhdr}
 \\usepackage[hidelinks,breaklinks=true]{hyperref}
 
 \\hypersetup{
@@ -420,11 +449,12 @@ async function main() {
 
 \\setlength{\\emergencystretch}{6em}
 \\setlength{\\parindent}{1.25em}
-\\setlength{\\parskip}{0.08\\baselineskip plus 0.03\\baselineskip minus 0.02\\baselineskip}
+\\setlength{\\parskip}{0.14\\baselineskip plus 0.04\\baselineskip minus 0.03\\baselineskip}
 \\setcounter{secnumdepth}{2}
 \\setcounter{tocdepth}{1}
 \\makeatletter
 \\renewcommand*\\l@section{\\@dottedtocline{1}{1.5em}{3.3em}}
+\\renewcommand*{\\@pnumwidth}{2.2em}
 \\makeatother
 \\setlist{
   topsep=0.62\\baselineskip,
@@ -445,7 +475,17 @@ async function main() {
 \\setlength{\\abovecaptionskip}{0.45\\baselineskip}
 \\setlength{\\belowcaptionskip}{0.15\\baselineskip}
 \\fvset{fontsize=\\small}
-\\pagestyle{plain}
+\\newcommand{\\currentparttitle}{}
+\\providecommand{\\partmark}[1]{}
+\\renewcommand{\\partmark}[1]{\\gdef\\currentparttitle{#1}}
+\\renewcommand{\\chaptermark}[1]{\\markboth{Chapter \\thechapter}{}}
+\\pagestyle{fancy}
+\\fancyhf{}
+\\fancyhead[L]{\\small\\nouppercase{\\leftmark}}
+\\fancyhead[R]{\\small\\nouppercase{\\currentparttitle}}
+\\fancyfoot[C]{\\thepage}
+\\renewcommand{\\headrulewidth}{0.3pt}
+\\fancypagestyle{plain}{\\fancyhf{}\\fancyfoot[C]{\\thepage}\\renewcommand{\\headrulewidth}{0pt}}
 
 \\providecommand{\\tightlist}{%
   \\setlength{\\itemsep}{0.16\\baselineskip}\\setlength{\\parskip}{0.04\\baselineskip}}
@@ -471,7 +511,7 @@ async function main() {
   \\vspace{2.5em}
   {\\large Stephanie Jarmak\\par}
   \\vfill
-  {\\large August 2026\\par}
+  {\\large Version 1.0.0-rc.11 --- August 2026\\par}
 \\end{titlepage}
 
 \\chapter*{Abstract}
@@ -479,12 +519,17 @@ async function main() {
 \\input{abstract}
 
 \\tableofcontents
+\\listoffigures
+\\listoftables
 \\input{frontmatter}
 
 \\mainmatter
 ${inputLines.join("\n\n")}
 
 \\backmatter
+\\markboth{Reference material}{}
+\\gdef\\currentparttitle{}
+\\input{chapters/glossary}
 \\renewcommand{\\bibname}{References}
 \\input{references}
 
@@ -499,7 +544,7 @@ ${inputLines.join("\n\n")}
   await run(tectonic, ["--keep-logs", "--keep-intermediates", "main.tex"], { cwd: sourceRoot, maxBuffer: 20 * 1024 * 1024 });
   await copyFile(path.join(sourceRoot, "main.pdf"), previewPath);
 
-  for (const name of ["main.aux", "main.log", "main.out", "main.pdf", "main.toc", "main.xdv", "main.synctex.gz"]) {
+  for (const name of ["main.aux", "main.log", "main.lof", "main.lot", "main.out", "main.pdf", "main.toc", "main.xdv", "main.synctex.gz"]) {
     await rm(path.join(sourceRoot, name), { force: true });
   }
   await rm(zipPath, { force: true });

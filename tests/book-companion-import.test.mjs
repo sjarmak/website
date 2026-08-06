@@ -44,6 +44,7 @@ test("companion transform removes only its page H1 and renders authored math", (
   assert.doesNotMatch(transformed.body, /^# /m);
   assert.match(transformed.body, /<math/);
   assert.doesNotMatch(transformed.body, /\\\(|\\\)/);
+  assert.match(transformed.body, /`ERCA-020` · `never-report-a-single-run`/);
 });
 
 test("companion importer writes one generated entry without touching chapter output", () => {

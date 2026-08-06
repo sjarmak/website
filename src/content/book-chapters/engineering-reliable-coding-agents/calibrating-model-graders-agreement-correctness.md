@@ -7,6 +7,12 @@ kind: chapter
 number: 5
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 5 strong · 7 directional · 0 corroborating evidence items across 2 developed practices (ERCA-096, ERCA-111).
+>
+> **Chapter claim.** Agreement is a calibration result, not a correctness verdict.
+<!-- reader-metadata:end -->
+
 Two graders that mark every submission PASS will agree on every item. Their agreement is 100 percent, but their usefulness is zero. In an easy stream, most submissions may genuinely pass, yet neither grader has shown that it can distinguish a defect from a success.
 
 This failure is easy to ship when the graders are models. An **LLM-as-judge** is a model used to evaluate another system’s output. My migration-evaluation framework gates its two judges on Cohen’s kappa rather than raw agreement because percent agreement can overstate grader quality when one label dominates the sample. The agreement floor, kappa threshold, and minimum trial count were fixed before either judge ran. The gate has been exercised only against replay fixtures, not a live evaluation, so it illustrates a design decision rather than supplying a field result.
@@ -211,6 +217,10 @@ A change in domain, rubric, response format, or model generation reopens the cal
 The first build does not require the complete corpus. Begin with one rubric category and a small set of expert-labeled cases from the score band where that decision turns. Keep those cases outside both the judge prompt and threshold-selection data. Evaluate the judge at the intended deployment threshold and report class-specific rates rather than percent agreement.
 
 That first stratum tests one grading decision and identifies which category should be labeled next. The broader calibration gate remains unmet until the full instrument satisfies its requirements.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Agreement is a calibration result, not a correctness verdict.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

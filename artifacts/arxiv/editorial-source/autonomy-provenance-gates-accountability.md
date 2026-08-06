@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 2 strong · 5 directional · 0 corroborating evidence items across 4 developed practices (ERCA-145, ERCA-149, ERCA-154, ERCA-165).
+>
+> **Chapter claim.** A gate that cannot change execution records assent and nothing more.
+<!-- reader-metadata:end -->
+
 I built a human-approval queue to hold decisions an agent was not permitted to make. The architecture appeared conservative: the agent could prepare an action, but execution stopped at a human-only boundary.
 
 An audit found paths around that boundary. Some scripts failed open when a required component was missing, and command construction reached execution without the validation the gate was supposed to enforce. The system could report that approval existed while allowing an action to bypass the person. The conservative appearance of the apparatus had concealed a material difference between policy and execution.
@@ -247,6 +253,8 @@ Evaluate those conditions against an execution trace rather than the policy docu
 | Self-control | Can the person decide without a forced default or impossible queue constraint? | Default acceptance, time pressure, and override use | The workflow substitutes acquiescence for judgment |
 | Fitting intentions | Is the role expected and prepared to inspect the named risk? | Review actions, escalation behavior, and interviews | The role is ceremonial or aimed at another risk |
 
+: Conditions under which a human gate can exercise effective control.
+
 The acceptance criteria must be system-specific. One team may require a deployment approver to cancel a queued release before the first production mutation and to see the exact artifact digest being deployed. Another may require a migration reviewer to revise the plan while withholding direct execution authority.
 
 Name the claimed oversight function, build a trace capable of falsifying it, and decide in advance what observation would establish control.
@@ -408,13 +416,7 @@ Run four checks against one defined action class and one real repository workflo
 
 ### Test the autonomy transfer
 
-Define:
-
-- the action class;
-- the current autonomy rung;
-- a correct outcome;
-- the material difference that would justify wider authority; and
-- the failures that would prevent promotion.
+Define the action class, current autonomy rung, correct outcome, material difference that would justify wider authority, and failures that would prevent promotion.
 
 Record every proposed transfer, including rejected, modified, timed-out, abandoned, and executed proposals. Do not combine action classes or autonomy rungs, and do not build the record from executed actions alone.
 
@@ -424,15 +426,7 @@ Calculate uncertainty around approval, modification, and outcome rates. Test whe
 
 Choose the smallest provenance unit that can survive the repository workflow while still representing the review decision it is intended to affect.
 
-Exercise that marker through:
-
-- rebases;
-- cherry-picks;
-- squash merges;
-- file moves;
-- copied patches;
-- partial adoption; and
-- later human modification.
+Exercise that marker through rebases, cherry-picks, squash merges, file moves, copied patches, partial adoption, and later human modification.
 
 Verify that a reviewer can distinguish generation, human revision, and integration responsibility after each transformation.
 
@@ -442,17 +436,7 @@ Keep the count semantics narrow. The 14.5 percent trailer-signed floor described
 
 Run the gate audit in a contained environment. Name the action, gate, and decision owner, then capture the complete execution trace.
 
-Remove or fail each gate dependency in turn. Exercise:
-
-- approval;
-- rejection;
-- modification;
-- cancellation;
-- timeout;
-- missing validation;
-- missing binaries or services;
-- stale approval tokens; and
-- attempts to execute through alternate paths.
+Remove or fail each gate dependency in turn. Exercise approval, rejection, modification, cancellation, timeout, missing validation, missing binaries or services, stale approval tokens, and attempts to execute through alternate paths.
 
 Inspect the evidence available to the reviewer and verify the durable state produced by each decision. A rejected action must fail to execute through every path. A modified action must receive renewed review when the modification changes the authorized state transition.
 
@@ -464,14 +448,7 @@ Interview the assigned reviewer about the risk they believe they are checking, t
 
 For each role named as accountable, select a real action and test the role’s deployed permissions.
 
-Exercise whether the role can:
-
-- reject the action;
-- alter its scope;
-- stop execution;
-- inspect the relevant evidence;
-- initiate recovery; and
-- reverse the result where reversal is part of the claimed control.
+Exercise whether the role can reject the action, alter its scope, stop execution, inspect the relevant evidence, initiate recovery, and reverse the result where reversal is part of the claimed control.
 
 Record the state transitions outside that role’s authority, the information it cannot access, the tools it lacks, and the point after which intervention becomes ineffective.
 
@@ -481,30 +458,17 @@ Where control is missing, either repair the role within least-privilege constrai
 
 Interview actual users, operators, reviewers, and owners using tracking and tracing questions. Compare their justified expectations with policy and execution traces.
 
-Record as separate findings:
-
-- expectation mismatches;
-- protocol deviations;
-- actions without a traceable execution identity;
-- reviewers who cannot explain the decision they approved;
-- roles assigned responsibility without intervention power;
-- ineffective escalation routes; and
-- delays that allowed the action to become irreversible before review.
+Record expectation mismatches separately from protocol deviations, untraceable actions, reviewers who cannot explain an approval, responsibility assigned without intervention power, ineffective escalation routes, and delays that allowed an action to become irreversible before review.
 
 Repeat the first pass whenever permissions, action classes, execution paths, or recovery mechanisms change. Repeat the second when the user population, operating protocol, interface, or escalation policy changes.
 
-Measure the findings that carry operational weight, such as:
-
-- untraceable actions;
-- failed stops;
-- unauthorized execution paths;
-- expectation mismatches;
-- dead-end escalations;
-- stale approvals;
-- interventions that arrive too late; and
-- time lost before someone with effective control becomes involved.
+Measure the findings that carry operational weight: untraceable actions, failed stops, unauthorized execution paths, expectation mismatches, dead-end escalations, stale approvals, late interventions, and time lost before someone with effective control becomes involved.
 
 Do not adopt a pass rate borrowed from another system. Decide in advance which failures invalidate the accountability claim and preserve the identities, traces, interviews, and execution evidence required to reproduce that decision.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** A gate that cannot change execution records assent and nothing more.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

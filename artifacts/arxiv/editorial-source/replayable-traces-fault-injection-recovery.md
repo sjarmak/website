@@ -1,3 +1,9 @@
+<!-- reader-metadata:start -->
+> **Evidence profile.** 1 strong · 3 directional · 0 corroborating evidence items across 2 developed practices (ERCA-097, ERCA-127).
+>
+> **Chapter claim.** Recovery is a measured property.
+<!-- reader-metadata:end -->
+
 Vogel et al. ([2024](https://arxiv.org/abs/2404.06203)) injected pod kills and recurring failures into Apache Flink, Kafka Streams, and Spark Structured Streaming on a Kubernetes testbed under representative load. Flink was the most stable of the three and had one of the strongest recovery profiles, contradicting earlier published comparisons. The effect of failure also changed across successive injections. A test that stopped after one successful restart would not have detected that variation.
 
 Fault tolerance is often inferred from an architecture diagram. A checkpoint appears before a restart arrow, and the system is described as fault tolerant. The diagram is a hypothesis about the running system. Only measurement can establish whether recovery behaves as claimed.
@@ -269,7 +275,13 @@ This protocol does not establish that an engine is universally reliable. It supp
 
 That claim can be challenged, repeated, and revised when the system changes.
 
+The repository artifact [`protocols/recovery-fault-injection.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/recovery-fault-injection.md) supplies the bounded run sequence, pass condition, and output manifest.
+
 A trace detailed enough to replay is also the artifact a person reads when recovery fails. Even a complete trace, however, does not establish which action caused the failure or how a person can defend that attribution.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Recovery is a measured property.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

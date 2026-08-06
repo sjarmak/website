@@ -7,6 +7,12 @@ kind: chapter
 number: 12
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 6 strong · 5 directional · 0 corroborating evidence items across 3 developed practices (ERCA-078, ERCA-084, ERCA-174).
+>
+> **Chapter claim.** Evidence without revision identity is stale, not current.
+<!-- reader-metadata:end -->
+
 In one evaluation of my memory system, run across four seeds, the task required passing a recalled value exactly as a tool argument. Retrieval by stable memory identity scored 1.0. Retrieval by token similarity returned superseded values and scored 0.0.
 
 The similarity lane had not malfunctioned. It returned real, highly ranked records that described a state the system had already left behind. This author-system case carries no evidentiary weight, but it separates two questions that a retrieval score can collapse into one: whether a result ranks well, and whether it still describes the repository or system the worker is acting on.
@@ -228,7 +234,7 @@ Event-driven refresh can shorten the stale window after ordinary edits, although
 
 My session-snapshot system illustrates a strict version of this gate. It pins cryptographic hashes for all in-scope files together with the repository commit. Any drift marks the snapshot stale, and the system regenerates it rather than branching from it. Remotely sourced repository knowledge is excluded because the system cannot bind it to the same content check.
 
-My published literature-review index provides the less flattering example. One surface advertised a paper count that disagreed with the linked page, and synchronized copies diverged further. The index continued to appear authoritative after it stopped describing its own contents. This contrary case exposes the maintenance cost of the prescription: a freshness policy that no one operates becomes another stale artifact.
+My published literature-review index provides the counterexample. One surface advertised a paper count that disagreed with the linked page, and synchronized copies diverged further. The index continued to appear authoritative after it stopped describing its own contents. This contrary case exposes the maintenance cost of the prescription: a freshness policy that no one operates becomes another stale artifact.
 
 Freshness does not determine authorization. Permission policy requires separate identities, rules, and audit records. The evidence here supports refusing obsolete repository states. It does not establish who may retrieve a current one.
 
@@ -254,6 +260,10 @@ Every index, snapshot, and cache should carry a commit or content identity. Comp
 A freshness refusal is visible and recoverable. A stale result can silently become the basis of a plausible patch.
 
 Chapter 13 turns from which evidence the system retrieves to how much of that evidence the model can use.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** Evidence without revision identity is stale, not current.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 

@@ -17,5 +17,5 @@ parts:
   - number: 5
     title: Human review and accountability engineering
   - number: 6
-    title: Work allocation and cost engineering
+    title: "Research agenda: work allocation and cost engineering"
 ---

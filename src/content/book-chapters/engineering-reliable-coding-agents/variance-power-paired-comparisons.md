@@ -7,6 +7,12 @@ kind: chapter
 number: 1
 ---
 
+<!-- reader-metadata:start -->
+> **Evidence profile.** 10 strong · 1 directional · 0 corroborating evidence items across 3 developed practices (ERCA-020, ERCA-024, ERCA-025).
+>
+> **Chapter claim.** One run is one draw.
+<!-- reader-metadata:end -->
+
 ## One run is one draw
 
 I created an evaluation tool called CodeProbe ([public repository](https://github.com/sjarmak/codeprobe)) that mines tasks from a repository's merged pull requests. In one run, one configuration led another by +0.054 on a task family, with a single task contributing a +0.300 advantage. The scoring code reported three decimal places, but the experiment contained no repeated runs from which to estimate stability.
@@ -17,7 +23,7 @@ The original observation could not support a configuration-level effect. One unu
 
 This task family scores through a deterministic test-suite oracle, under which the end state either passes the fixed tests or does not. That oracle collapses different trajectories onto the same score, so the tight repeat scores are a certification of scorer stability rather than agent determinism. The conclusion covers these five fixed tasks and no wider population.
 
-It is critical to record repeated independent runs before declaring a meaningful difference between agent systems. A single score is one outcome from a variable execution process, even when the configuration appears deterministic. Without repeats, the observed difference mixes the system change I intended to test with variation from model execution, infrastructure, task ordering, and the other choices built into the evaluation apparatus.
+Record repeated independent runs before declaring a meaningful difference between agent systems. A single score is one outcome from a variable execution process, even when the configuration appears deterministic. Without repeats, the observed difference mixes the system change I intended to test with variation from model execution, infrastructure, task ordering, and the other choices built into the evaluation apparatus.
 
 Agent evaluations usually arrive as a table with one row per system and one score per row, which suppresses the execution history behind each cell. A score can aggregate hundreds of tasks and still be a single run, if each task was attempted once under one instantiation of the surrounding conditions.
 
@@ -146,6 +152,8 @@ The table below gives directional guidance. The recommendations for language-gen
 | Metrics computed nonlinearly from aggregate counts, including corpus-level F-score and BLEU | Full metric recomputed on resampled or relabeled item pairs | Paired bootstrap or paired permutation test |
 | Pass or fail outcomes on the same items | Discordant pairs in which only one system passes | McNemar's test |
 
+*Table: Outcome structure, paired estimand, and corresponding test guidance.*
+
 A later chapter on retrieval freshness uses McNemar's test for this reason. Both systems receive the same items, and each item produces a pass or fail outcome.
 
 The companion catalog covers designs that this basic framework does not. Clustered items require correlation-aware standard errors. Estimating \(\mathrm{pass}@k\) from repeated attempts requires the appropriate combinatorial estimator. Claims spanning many tasks or metrics require multiplicity correction. Ranking several systems rather than comparing two requires paired-comparison ranking models with uncertainty intervals.
@@ -177,6 +185,12 @@ Repeated trials remain interpretable only while the apparatus is pinned:
 When a provider exposes no stable model version, I record the evaluation window and treat later reruns as potentially affected by model drift.
 
 The observed difference belongs beside the complete run distribution and the engineering threshold written before execution. I do not credit a difference that remains smaller than the measured variation. I return no verdict when the experiment lacked the power to resolve the difference that would have changed the decision.
+
+The repository artifact [`protocols/evaluation-comparison.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/evaluation-comparison.md) packages this sequence, pass condition, and retained files.
+
+<!-- chapter-claim-close:start -->
+**Portable claim.** One run is one draw.
+<!-- chapter-claim-close:end -->
 
 ## Sources and evidence
 
