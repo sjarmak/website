@@ -511,7 +511,7 @@ async function main() {
   \\vspace{2.5em}
   {\\large Stephanie Jarmak\\par}
   \\vfill
-  {\\large Version 1.0.0-rc.12 --- August 2026\\par}
+  {\\large Version 1.0.0-rc.13 --- August 2026\\par}
 \\end{titlepage}
 
 \\chapter*{Abstract}
