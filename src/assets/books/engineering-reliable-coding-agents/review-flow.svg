@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-labelledby="figtitle-review-flow" class="bookfig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-labelledby="figtitle-review-flow" class="bookfig">
   <title id="figtitle-review-flow">Flow of source review and practice synthesis. The source lane distinguishes the base review, bounded update audit, SE coverage probe, and unexecuted provider plans retained for future updates. The practice lane reports the admission gate and overlapping hardening operations without treating their counts as an arithmetic decomposition.</title>
   <desc id="desc">A two-lane flow. The scholarly lane shows the base corpus, update audit, software-engineering coverage probe, and release-candidate source set. The practice lane shows candidate extraction, the admission gate, nonexclusive hardening operations, and the 192 edition records divided between 55 developed practices and 137 companion practices.</desc>
   <defs>
@@ -10,7 +10,7 @@
       <path d="M 0 0 L 10 5 L 0 10 z" class="f-ink"/>
     </marker>
   </defs>
-  <rect width="1200" height="760" class="f-bg"/>
+  <rect width="1200" height="800" class="f-bg"/>
 
   <text x="70" y="58" class="label f-ink">Source review</text>
   <text x="70" y="87" class="small f-mid">Numbers describe this release candidate, not universal corpus sizes.</text>
@@ -20,55 +20,57 @@
   <text x="95" y="190" class="body f-ink">118 scholarly works</text>
   <text x="95" y="218" class="small f-mid">SciX, arXiv, citation audit</text>
 
-  <path d="M320 180 H385" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="390" y="110" width="280" height="140" rx="8" class="f-wash s-mid line"/>
-  <text x="415" y="146" class="label f-ink">Bounded update audit</text>
-  <text x="415" y="178" class="body f-ink">39 screened</text>
-  <text x="415" y="206" class="small f-mid">11 admitted · 1 already present</text>
-  <text x="415" y="230" class="small f-mid">27 deferred or excluded</text>
+  <path d="M320 180 H375" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="380" y="110" width="300" height="140" rx="8" class="f-wash s-mid line"/>
+  <text x="405" y="146" class="label f-ink">Bounded update audit</text>
+  <text x="405" y="178" class="body f-ink">39 screened</text>
+  <text x="405" y="206" class="small f-mid">11 admitted · 1 already present</text>
+  <text x="405" y="230" class="small f-mid">27 deferred or excluded</text>
 
-  <path d="M670 180 H735" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="740" y="92" width="390" height="176" rx="8" class="f-wash s-mid line"/>
+  <path d="M680 180 H735" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="740" y="88" width="390" height="192" rx="8" class="f-wash s-mid line"/>
   <text x="765" y="128" class="label f-ink">SE coverage probe</text>
   <text x="765" y="160" class="body f-ink">148 unique metadata candidates</text>
   <text x="765" y="188" class="small f-mid">9 methodologically material works admitted</text>
   <text x="765" y="212" class="small f-mid">40-DOI SciX probe: 8 exact matches</text>
-  <text x="765" y="242" class="small f-mid">Provider searches not run · limitation disclosed</text>
+  <text x="765" y="240" class="small f-mid">Provider searches not run</text>
+  <text x="765" y="262" class="small f-mid">Source limitation disclosed</text>
 
-  <path d="M935 268 V312" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="740" y="318" width="390" height="92" rx="8" class="f-accent"/>
-  <text x="765" y="354" class="label white">138 scholarly works in RC</text>
-  <text x="765" y="382" class="small white">Late candidates deferred to the next edition</text>
+  <path d="M935 280 V316" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="740" y="322" width="390" height="96" rx="8" class="f-accent"/>
+  <text x="765" y="358" class="label white">138 scholarly works in RC</text>
+  <text x="765" y="388" class="small white">Late candidates deferred to the next edition</text>
 
-  <line x1="70" y1="450" x2="1130" y2="450" class="s-mid line"/>
-  <text x="70" y="500" class="label f-ink">Practice synthesis</text>
-  <text x="70" y="529" class="small f-mid">Hardening operations overlap; their counts are not an arithmetic decomposition.</text>
+  <path d="M715 302 C625 342 510 375 390 394" class="s-mid line dash"/>
+  <text x="390" y="424" class="small f-mid">source inclusion and practice admission</text>
+  <text x="390" y="446" class="small f-mid">are separate decisions</text>
 
-  <rect x="70" y="565" width="210" height="92" rx="8" class="f-wash s-mid line"/>
-  <text x="95" y="601" class="label f-ink">244 candidates</text>
-  <text x="95" y="631" class="small f-mid">six extraction shards</text>
+  <line x1="70" y1="482" x2="1130" y2="482" class="s-mid line"/>
+  <text x="70" y="532" class="label f-ink">Practice synthesis</text>
+  <text x="70" y="561" class="small f-mid">Hardening operations overlap; their counts are not an arithmetic decomposition.</text>
 
-  <path d="M280 611 H335" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="340" y="553" width="220" height="116" rx="8" class="f-wash s-mid line"/>
-  <text x="365" y="589" class="label f-ink">Admission gate</text>
-  <text x="365" y="620" class="body f-ink">214 retained</text>
-  <text x="365" y="648" class="small f-mid">30 rejected</text>
+  <rect x="70" y="616" width="210" height="100" rx="8" class="f-wash s-mid line"/>
+  <text x="95" y="654" class="label f-ink">244 candidates</text>
+  <text x="95" y="686" class="small f-mid">six extraction shards</text>
 
-  <path d="M560 611 H615" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="620" y="532" width="310" height="158" rx="8" class="f-wash s-mid line"/>
-  <text x="645" y="568" class="label f-ink">Hardening ledger</text>
-  <text x="645" y="600" class="small f-mid">26 removed · 13 demoted</text>
-  <text x="645" y="626" class="small f-mid">8 split · 3 added</text>
-  <text x="645" y="652" class="small f-mid">1 reinstated after provenance repair</text>
-  <text x="645" y="678" class="small f-mid">nonexclusive record operations</text>
+  <path d="M280 666 H335" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="340" y="604" width="220" height="124" rx="8" class="f-wash s-mid line"/>
+  <text x="365" y="642" class="label f-ink">Admission gate</text>
+  <text x="365" y="674" class="body f-ink">214 retained</text>
+  <text x="365" y="704" class="small f-mid">30 rejected</text>
 
-  <path d="M930 611 H955" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="960" y="543" width="170" height="136" rx="8" class="f-accent"/>
-  <text x="985" y="582" class="label white">192 records</text>
-  <text x="985" y="616" class="body white">55 developed</text>
-  <text x="985" y="646" class="body white">137 companion</text>
-  <text x="985" y="670" class="small white">stable IDs</text>
+  <path d="M560 666 H615" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="620" y="590" width="310" height="174" rx="8" class="f-wash s-mid line"/>
+  <text x="645" y="628" class="label f-ink">Hardening ledger</text>
+  <text x="645" y="660" class="small f-mid">26 removed · 13 demoted</text>
+  <text x="645" y="686" class="small f-mid">8 split · 3 added</text>
+  <text x="645" y="712" class="small f-mid">1 reinstated after provenance repair</text>
+  <text x="645" y="738" class="small f-mid">nonexclusive record operations</text>
 
-  <path d="M740 270 C660 315 555 360 390 392" class="s-mid line dash"/>
-  <text x="390" y="420" class="small f-mid">source inclusion and practice admission are separate decisions</text>
+  <path d="M930 666 H955" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="960" y="603" width="170" height="154" rx="8" class="f-accent"/>
+  <text x="985" y="642" class="label white">192 records</text>
+  <text x="985" y="678" class="body white">55 developed</text>
+  <text x="985" y="710" class="body white">137 companion</text>
+  <text x="985" y="740" class="small white">stable IDs</text>
 </svg>
