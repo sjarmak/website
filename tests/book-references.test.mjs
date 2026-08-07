@@ -47,6 +47,18 @@ function fixture() {
   };
 }
 
+test("published monograph discloses that v1 external grading was not performed", () => {
+  const introduction = readFileSync(
+    path.join(ROOT, "src/content/book-chapters", SLUG, "introduction.md"),
+    "utf8",
+  );
+
+  assert.match(introduction, /did not commission external graders/i);
+  assert.match(introduction, /does not claim independent calibration/i);
+  assert.match(introduction, /companion\/methodology\/external-grading\/status\.json/);
+  assert.doesNotMatch(introduction, /At least two external readers must complete.*before archival v1/i);
+});
+
 test("normalizes equivalent scholarly destinations", () => {
   assert.equal(
     normalizeReferenceUrl("http://www.arxiv.org/pdf/2411.00640v2.pdf#page=3"),
