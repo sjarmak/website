@@ -1,22 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260326667S",
-      "arxiv": "2603.26667",
-      "title": "M-RAG: Semantic Key-Value Indexing for Retrieval-Augmented Generation",
-      "targets": [
-        {
-          "explorerId": "agentic-information-retrieval",
-          "branches": [
-            "foundations"
-          ]
-        }
-      ],
-      "firstSeen": "2026-07-24",
-      "lastAttempt": "2026-08-05",
-      "attempts": 11
-    },
-    {
       "bibcode": "2026arXiv260401527J",
       "arxiv": "2604.01527",
       "title": "REAP: Automatic Curation of Coding Agent Benchmarks from Interactive Production Usage",
@@ -35,8 +19,8 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-08-05",
-      "attempts": 6,
+      "lastAttempt": "2026-08-08",
+      "attempts": 7,
       "note": "arXiv v4 (April 2026 id, updated 2026-07-30); SciX still has no record for this bibcode on 2026-08-04."
     },
     {
@@ -53,41 +37,32 @@
         }
       ],
       "firstSeen": "2026-08-01",
-      "lastAttempt": "2026-08-05",
-      "attempts": 4,
+      "lastAttempt": "2026-08-08",
+      "attempts": 5,
       "note": "read_paper returns 'Paper not found' as of 2026-08-04; ADS has the bibcode but SciX has not ingested the body yet."
     },
     {
-      "bibcode": "2026arXiv260801347W",
-      "arxiv": null,
-      "title": "Prompt-Induced Waste in Large Reasoning Models: A Preregistered Two-Harness Benchmark of Coding Agents",
+      "bibcode": "2026arXiv260805573H",
+      "arxiv": "2608.05573",
+      "title": "SkillTV-Bench: Benchmarking How Well Judges Perform on Skill-Augmented Agentic Execution",
       "targets": [
         {
           "explorerId": "enterprise-reliability",
           "branches": [
-            "routing"
+            "eval"
           ]
-        }
-      ],
-      "firstSeen": "2026-08-05",
-      "lastAttempt": "2026-08-05",
-      "attempts": 1
-    },
-    {
-      "bibcode": "2026arXiv260801913L",
-      "arxiv": "2608.01913",
-      "title": "Diagnosing Search Behavior and Failure Modes in Long-Horizon Search Agents",
-      "targets": [
+        },
         {
-          "explorerId": "agentic-information-retrieval",
+          "explorerId": "agentic-memory",
           "branches": [
-            "agentic-loops"
+            "procedural-skills"
           ]
         }
       ],
-      "firstSeen": "2026-08-05",
-      "lastAttempt": "2026-08-05",
-      "attempts": 1
+      "firstSeen": "2026-08-08",
+      "lastAttempt": "2026-08-08",
+      "attempts": 1,
+      "note": "SciX has no record for this bibcode on 2026-08-08 (read_paper and get_paper both return 'Paper not found'); ADS resolved the bibcode but SciX has not ingested metadata or body yet."
     }
   ]
 }

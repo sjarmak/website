@@ -506,6 +506,25 @@
           "why": "The branch collects the case for reasoning about relevance rather than embedding it, and this is that case argued on cost and on freshness rather than on accuracy alone. Because ranking happens at query time, the corpus is whatever the live search returns, so there is no index-refresh problem and no staleness window, and the operational commitment shrinks from hundreds of gigabytes of embeddings to LLM calls that scale with traffic instead of with corpus size. The inspectability point deserves carrying into any reranker discussion: a fielded query is a stated hypothesis about what would answer the question, which can be read and corrected, and a vector neighbourhood is not."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260801913L",
+      "title": "Diagnosing Search Behavior and Failure Modes in Long-Horizon Search Agents",
+      "firstAuthor": "Liu, Qi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.01913",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260801913L",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "A trajectory-level audit of what the retrieve-reason loop actually buys, run with the retriever and harness held fixed so behavioral differences cannot hide in setup. Six agents (gpt-oss-120b, Tongyi-DeepResearch, Qwen3.5-35B-A3B, Deepseek V4 Pro, Kimi K2.6, GLM 5.1) run the same ReAct loop over BrowseComp-Plus, whose 830 questions carry human document-level relevance judgments, so every step can be scored against gold evidence rather than an LLM judge. Effort does not track accuracy: search volume runs the wrong way at Spearman rho = -0.77, and the weakest agent issues the most searches. Cumulative gold recall tracks accuracy instead. Failures split into a retrieval gap (evidence never surfaced) and a utilization gap (surfaced, answer still wrong), and the split is not implied by the score -- Kimi K2.6 and Deepseek V4 Pro sit within a point of each other in accuracy on opposite sides of it, so equal leaderboard positions call for opposite fixes. Because all six share one retriever at top-K=5 yet spread 52.0% to 78.7% in gold recall, the retrieval gap is query-side, not retriever-side. The episode-level picture is stark: only 6-23% of episodes add new evidence and 77.5-93.6% add none; the median trajectory has 2-3 productive episodes; by roughly 25 episodes every agent is within 4-10 points of its gold-hit plateau. Incorrect trajectories run 1.9-2.9x longer than correct ones yet their last productive step arrives only 0.6-6.7 episodes later, so the extra length is a wasted tail 3.0-6.1x longer -- and since 48-64% of failing runs never surface a gold document at any budget, that tail is rational continuation under failed retrieval, not a broken stopping rule. Redundant re-querying is the cleanest behavioral marker of failure (rho = -0.83; the one genuine offender repeats on 5.0% of moves against 1.5% or below elsewhere), while query style is not decisive -- anchor-then-verify and enumerate-then-check each win and lose a documented case.",
+          "why": "The branch treats retrieval as an action the model chooses; this paper measures the choices and finds most of them are not paying. Two consequences matter for anyone building the loop. First, the diagnosis has to come before the fix: more search repairs a retrieval gap and does nothing for a utilization gap, and the paper's oracle ladder bounds how much is even reachable -- swapping in a strong reader over the full evidence set lifts 59.5% to 87.5%, leaving 12.5% hard utilization failure that no retrieval change touches. Second, the loop's real cost centre is not where it looks. Accumulated search snippets fill 66-85% of the context budget while visited documents take only 2-16%, so visit gating buys precision but little headroom, and the lever is upstream snippet management -- deduplication, top-K trimming, aging out snippets whose evidence is already integrated. The prescriptions split by diagnosis rather than by leaderboard rank: reformulate queries when the trajectory saturates without gold, stop on evidence sufficiency rather than a fixed step budget, and shift the strongest agents' effort to verification, where one already sits near the oracle-reader ceiling. A free win sits alongside them -- 18-20% of the wrong answers from the three strongest agents differ from gold only in casing, punctuation, or markdown wrapping, recoverable by normalization without touching search or reasoning."
+        }
+      ]
     }
   ],
   "sections": [

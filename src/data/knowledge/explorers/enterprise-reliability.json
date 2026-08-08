@@ -2059,6 +2059,63 @@
           "why": "This branch's premise is that you need the failure taxonomy before you scale, and this paper makes the taxonomy actionable rather than descriptive: the fault side tells you whether the fix is model post-training, harness engineering, environment redesign, or benchmark repair. Its worked examples — a compaction summary that keeps a goal but drops the rationale so the agent redoes forbidden edits, a wrapper that branches on code==0 and silently drops a partial-failure field — are precisely the harness-vs-model confusions that outcome-level labels collapse."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260801347W",
+      "title": "Prompt-Induced Waste in Large Reasoning Models: A Preregistered Two-Harness Benchmark of Coding Agents",
+      "firstAuthor": "Weinberger, Sarel",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.01347",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260801347W",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "A preregistered benchmark that separates three things usually reported as one number: what a prompt makes an agent think, what a harness makes it re-transmit, and what a provider decides to bill. Six reasoning models on one provider, two real harnesses (PI.DEV speaking chat completions directly, Claude Code speaking Anthropic Messages through a pinned LiteLLM gateway), 24 deterministic coding tasks with hidden evaluators, 4,643 valid runs at roughly $166 of billed compute. Three orders of effect fall out. The harness is the largest lever: Claude Code transmits a 15,983-20,330 token fixed prefix against PI.DEV's 1,147-1,642 (12-15x) and re-sends it over 2-7x more turns, so identical model-task-prompt triples cost 5-30x more per success at equal success rates (Nemotron: $0.32 vs $0.018). Prompt wording is the second lever and it is large: the instruction to develop several approaches and compare multiplies reasoning tokens 2.4-7.4x on every model at zero correctness gain, holdout-confirmed on 8 unseen tasks; deep-thinking incantations replicate at 1.6-2.2x across three collection days; misleading architectural hints are the costliest input defect at 2.61x while irrelevant prose is nearly free at 1.03x. Prompt length is not a lever at all -- the user prompt is under 5% of logical input under PI.DEV and under 1% under Claude Code, and verbose repetition of requirements measures ~1.0x. A bounded-efficiency template (explicit scope, acceptance criteria, stop condition) is free on all six models and halves reasoning on GLM-5.2 (0.48x). The effects survive a cross-provider reversal on claude-sonnet-5 against the first-party Anthropic API with Claude Code native: solution-tournament wording still costs 2.5-2.7x, though certainty pressure becomes the worst family there (4.13x output tokens, 2.7x cost per success) and deep-thinking cues the mildest (1.25-1.30x), absorbed by adaptive thinking.",
+          "why": "This branch's rule is to record cost facts before optimizing routing and never to treat unknown cost as zero, and the paper supplies both halves. The cost facts invert the usual ordering: the harness decision outweighs the model decision, which outweighs any prompt effect, so routing that optimizes model choice while leaving a 16k-token prefix re-sent every turn is optimizing the small term. The unknown-cost half is sharper. Provider-side prefix caching rebated ~61% of the bill ($390 estimated no-cache vs $153 actual) while leaving every behavioral metric unchanged, which makes cache savings the purest available example of a number that looks like efficiency and is not; the authors' rule is to price prompts and harnesses at no-cache cost. Two measurement traps come with it. The gateway preserved input/output totals but dropped reasoning detail and re-derived cache fields, and the harness-side cost report, using its own price table for aliased models, read 3.5x the true cost -- so cost telemetry taken from the harness rather than the provider would have been wrong by a factor. And one model-route pair received zero cached tokens for three days, a provider-side anomaly that would silently distort any cost comparison that assumed caching applies uniformly."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260806301U",
+      "title": "HarnessOpt-Bench: Evaluating LLMs at Harness Optimization",
+      "firstAuthor": "Ursekar, Varun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.06301",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260806301U",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Scale AI's benchmark for the task of improving an agent's harness, built so that apparent improvement cannot come from the measurement. An optimizer (an LLM in a coding harness) gets a target agent's seed harness, graded feedback, and a fixed target-evaluation budget; it edits the harness as a codebase and nominates one final candidate, scored as normalized gain over the pinned seed on a held-out test partition it never touches. The disclosure policy is graded by partition -- development reveals per-case outcomes and execution traces for diagnosis, validation reveals only an aggregate score for selection, test reveals nothing -- and the boundary is enforced by a trusted execution environment rather than by instruction: held-out state, provider credentials, and budget enforcement are simply absent from the optimizer's sandbox, every candidate is versioned for audit, and every model call on both sides passes a gateway with per-scope allow-lists and token budgets. Five frontier models run under a shared harness and their native ones across four tasks, 111 scored runs. Model choice moves gain 0.142 on average against 0.079 for coding-harness choice, about 1.8x larger, and native harnesses win 9 of 20 paired model-task cells against the shared harness's 11 -- no consistent advantage, so evaluating each model only in its own tooling would not estimate the capability. Two process findings cut against intuition: breadth of search across eight pre-registered harness levers is positively associated with gain on all four tasks (rho +0.34 to +0.88), while the share of actions spent reading evaluation traces is negatively associated on all four (-0.31 to -0.64), with detailed trace spans requested just 16 times across 111 cells.",
+          "why": "The branch's discipline is an honest baseline, evaluation grounded in execution, and eval as risk reduction rather than proof, and this benchmark is a worked example of all three plus the failure each guards against. The honest baseline is the pinned seed with recorded off-the-shelf comparators, and gain is the fraction of headroom above it, so a harness that was already good cannot be credited twice. Grounding in execution is what makes the held-out split necessary rather than decorative: most submitted candidates score below the best validation score seen during search, so the visible number is optimistic and only the held-out partition measures realized gain. Risk-reduction framing shows in two places worth copying. The paper estimates its own measurement noise by scoring the same candidate twice and publishes a per-task resolution band (+/-0.045 on OfficeQA), then declines to rank configurations whose differences fall inside it -- reporting tiers instead of a leaderboard. And the limitations say the design is hack-resistant, not hack-proof: repeated development feedback can still reward strategies specific to a fixed evaluator, so future versions should jitter cases, tool behavior, and verifier implementation. One operational fact transfers directly to anyone budgeting an agent evaluation: the binding constraint was case passes, not call count -- the median optimizer used 8 of 200 permitted evaluation calls but 82% of its case allowance."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260805797K",
+      "title": "Predicting Task Difficulty Without Rollouts",
+      "firstAuthor": "Krsteski, Stefan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.05797",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260805797K",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "An argument that a benchmark's tasks should be screened before they are trusted, and a demonstration that the metric the prior work screened them with does not work. The authors fit a one-parameter IRT model to 415,470 agent-task outcomes across 17 agentic benchmarks (5,230 tasks, 497 agent configurations built from 216 models and 90 scaffolds), giving each task a difficulty on a scale shared with agent ability, then ask how much of it is predictable from the task description alone. The negative result comes first: response AUC, used by prior work to validate difficulty predictors, conflates agent-ability differences with task-difficulty differences, so a predictor that assigns every task the same difficulty -- carrying no task information whatsoever -- still scores 0.715 AUC against an oracle's 0.937, and assigning each task its benchmark average scores 0.806 with a within-benchmark pairwise ordering accuracy of exactly 0.000. Under rank metrics the honest picture is modest: token-level entropy over a bounded reasoning trace is the strongest single feature family (Spearman rho 0.193 in-distribution), the combined feature set reaches 0.399 under K-fold but only 0.225 leave-one-benchmark-out, and text embeddings add almost nothing (0.107 / 0.017). The shape of the entropy trajectory -- slope, deciles, total variation -- beats its mean, which suggests difficulty shows up as a local spike at a hard condition rather than a uniformly elevated level. The residual is the part that pays off now: the gap between rollout-observed and predicted difficulty flags tasks that are wrong rather than hard. On two SWE-bench Verified items an OpenAI audit had already flagged, the signs come out right -- django-14725, cited for missing prompt information, sits at +1.41 with a 0.090 success rate, and django-11451, cited as a contamination case, at -0.56 with 0.718.",
+          "why": "This branch treats evaluation as risk reduction rather than proof, and the paper is a direct attack on a benchmark's own credibility rather than on the agents it scores. Its central caution generalizes past difficulty prediction: a headline metric can stay high while the estimate underneath is degenerate, because the metric is averaging over a second source of variation (here, which agent attempted the item). Any eval whose score pools across heterogeneous agents or tasks inherits that failure mode, and the fix -- score the ordering within the stratum you actually care about -- is cheap. The residual diagnostic is the practical contribution: unexpectedly hard tasks point at infeasibility or evaluator mismatch, unexpectedly easy ones at familiarity or contamination, and the OpenAI audit the authors cite found material test-design or problem-description issues in 59.4% of 138 frequently-failed SWE-bench Verified tasks, so the population being screened is not rare. The authors are explicit about the limit: because the residual uses empirical difficulty from full rollouts, it supports post-hoc detection, not pre-rollout auditing, and cross-benchmark transfer is weak enough that the near-term use is ranking new candidate tasks against an already-executed suite rather than validating a benchmark from scratch. The cost argument still holds -- roughly 25x fewer tokens than establishing difficulty empirically at ten outcomes per task."
+        }
+      ]
     }
   ],
   "sections": [
