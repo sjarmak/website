@@ -1931,6 +1931,31 @@
           "why": "The branch's claim is that a cascade earns its place by putting each technique where its cost is justified, and this is a clean instance with the cost accounted on both axes. The generalizable pattern is that a draft from a small model is a better query than the original request, because it is expressed in the vocabulary of the code being written rather than the vocabulary of the request, which is the query-code mismatch this explorer opens with. The RepoFormer comparison marks the boundary: skipping retrieval is always the cheapest option and the cost axis alone will always prefer it, so a cascade has to be judged on both numbers at once."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260804804B",
+      "title": "Scrouting: Cost-Aware Routing of Coding Agents by Scouting the Repository First",
+      "firstAuthor": "Bhola, Ishaan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.04804",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260804804B",
+      "branches": [
+        "repo-scale",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "A trained 7B searcher, not a retrieval index, is the navigation layer here. SuperScout-7B is Qwen2.5-Coder-7B fine-tuned with LoRA on a single GPU over 19,905 search trajectories sliced from openly licensed agent traces, each ending in a synthesized handoff-emission turn where the file list is extracted deterministically from the trace and the reproduction record copied verbatim, with only free-form notes model-written. Traces are success-filtered against the gold patch and deduplicated to two per issue so the corpus counts distinct bugs. The handoff it emits is a structured, deliberately short artifact: implicated files with line regions ranked by confidence, a reproduction attempt naming file, command, and observed output, dead ends already tried, and repository notes. Two findings about the searcher stand out. Decoding dominates training: greedy decoding finds the right files at 0.110 while a single sampled draw at temperature 0.9 reaches 0.306, because sampling raises the searcher's willingness to commit to a handoff from 0.213 to 0.718 at an 18% cost in per-handoff recall. And localization transfers across languages it never saw -- file-level F1 of 0.630 on six untrained languages against 0.455 on the three trained ones.",
+          "why": "The branch's fork is between retrieving better snippets and querying a structured model of the repository, with agentic navigation walking between them, and this is the agentic lane made cheap enough to run on every task. The design choice worth arguing with is that the navigation product is a document rather than a set of retrieved chunks: files with line regions, a runnable reproduction, and an explicit list of dead ends, sized at about a page so it fits in front of any downstream fixer. Prior small localizers train comparable models but terminate in one predetermined consumer; here the artifact is portable across a four-model pool. The decoding result is the practical warning for anyone deploying a small navigator: the failure mode was not that the model could not find files but that greedy decoding made it reluctant to declare a result, and the fix was an inference setting, not more training. Contamination control is handled at the corpus level with a 23-repository blocklist covering all 11 SWE-bench Pro repositories and 12 Verified ones, verified by a programmatic gate -- which is what makes the cross-language transfer claim readable at all."
+        },
+        {
+          "branch": "frontier",
+          "takeaway": "The verify-then-strip gate is the paper's answer to a scout that hallucinates. Before any fixer sees the handoff, a sandbox replays the claimed reproduction command against the unpatched repository; if the command does not genuinely fail, both the claim and its generated test file are removed, and if it does, the test is materialized so the fixer can run it directly. Calibration found that most of the searcher's reproduction claims are in fact false, so the gate is load-bearing rather than a safety flourish -- without it the handoff would inject confident, wrong context into every downstream attempt. Injection is blanket: whichever fixer is selected receives the surviving handoff identically, and when no handoff is produced at all the fixer proceeds from the issue text alone, which defines the system's floor as fixer-solo performance. The whole trajectory is a single pass, with no parallel sampling and no mid-task escalation between models.",
+          "why": "The branch's framing is that the bottleneck has moved from model capability to the infrastructure problem of putting fresh, authorized, build-grounded context in front of an agent, and this is a concrete instance: the context is grounded by execution in a sandbox at the moment it is assembled, and anything that fails to reproduce is deleted rather than downweighted. That is a stronger contract than confidence scoring, and it is worth contrasting with concurrent escalation-based routers, which restart the strong model from scratch and throw away the cheap model's evidence at exactly the moment it becomes expensive to recompute. The measured payoff supports the framing over the routing story: the handoff is what moves the numbers, and it moves them by lifting cheaper fixers toward the frontier rather than by raising the ceiling. The open question the paper leaves is scope -- verification here covers reproduction claims only, while implicated files and notes pass through unverified, so the gate proves the one part of the handoff that happens to be executable."
+        }
+      ]
     }
   ],
   "sections": [

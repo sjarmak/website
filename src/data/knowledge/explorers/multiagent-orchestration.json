@@ -2182,6 +2182,25 @@
           "why": "Names exactly the runtime property this branch tracks for deployment survival: a stable, cross-runtime governance substrate for 'what action was actually approved,' with measured wrapper-bypass and tamper-detection numbers rather than a policy statement alone."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260802764P",
+      "title": "Stateful Governance for Concurrent Agentic Systems",
+      "firstAuthor": "Peng, Yuxiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.02764",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260802764P",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A runtime architecture for the case where several agents act concurrently on the same shared resources -- budgets, inventory, quotas -- and the governance decision must survive until the effect commits. Provenact sits between the policy engine and the tool call: policy authors write bounded stateful policies over certified policy-state views, providers declare the governed effects and the logical scopes they touch, and a coordinator protects the interval between decision and commit using PostgreSQL transactions and transaction-scoped advisory locks. The prototype is Python with PostgreSQL and SQLite backends and a thin adapter shaped for Microsoft Agent Framework that maps framework function calls into governed action requests, which is the paper's claim to deployability: governed operations pass through the boundary without replacing the surrounding orchestration. Measured against request-local baselines, it removes stale authorization in both a two-agent race and a 256-operation full-conflict workload, and against a global critical section it recovers most of the throughput lost to coarse serialization once governed work takes real time.",
+          "why": "The branch is about the runtime properties that decide whether demo agents survive deployment, and shared mutable state is where the demo-to-production gap usually opens. A single-agent prototype never sees stale authorization; a fleet of agents sharing a team budget sees it immediately, and the paper shows the standard integration pattern -- pass the current budget as request context, get a decision, then act -- silently produces it. The engineering position is deliberately unambitious in a useful way: no new concurrency primitive, just an explicit contract that makes existing database mechanisms reachable from the governance layer, which is what lets policy stay a first-class reviewable artifact instead of migrating into trusted tool code one guard at a time. The overhead profile is the number to plan against: near parity with a hand-written fixed-policy transaction at zero service time, and 0.93x of it at 10 ms, so the cost of keeping policy first-class is small relative to the cost of serializing everything."
+        }
+      ]
     }
   ],
   "sections": [
