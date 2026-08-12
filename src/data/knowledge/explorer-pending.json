@@ -104,6 +104,24 @@
       "lastAttempt": "2026-08-10",
       "attempts": 1,
       "note": "read_paper returns 'Paper not found' on 2026-08-10; same-day arXiv paper, SciX has not ingested the body yet."
+    },
+    {
+      "bibcode": "2026arXiv260809290L",
+      "arxiv": "2608.09290",
+      "title": "OpenCodeReview: Determinism over Non-Determinism for Cost-Effective Agent-Based Code Review",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-12",
+      "lastAttempt": "2026-08-12",
+      "attempts": 1,
+      "note": "scix MCP server was unreachable all day 2026-08-12 (read_paper/get_paper/search all timed out with 'couldn't get a connection'); full-text status unknown, not confirmed as un-ingested."
     }
   ]
 }
