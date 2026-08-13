@@ -19,9 +19,9 @@
         }
       ],
       "firstSeen": "2026-07-30",
-      "lastAttempt": "2026-08-10",
-      "attempts": 9,
-      "note": "read_paper still returns 'Paper not found' on 2026-08-10; ADS has the bibcode but SciX has not ingested the body."
+      "lastAttempt": "2026-08-13",
+      "attempts": 10,
+      "note": "2026-08-13: scix MCP unreachable — root cause diagnosed: the production Postgres database 'scix' does not exist on the pg16 cluster (only scix_pilot/scix_test remain); every read_paper call fails with a pool connection timeout until the DB is restored. firstSeen is exactly 14 days ago; drops at the next failed attempt."
     },
     {
       "bibcode": "2026arXiv260727294Z",
@@ -37,9 +37,9 @@
         }
       ],
       "firstSeen": "2026-08-01",
-      "lastAttempt": "2026-08-10",
-      "attempts": 7,
-      "note": "read_paper still returns 'Paper not found' on 2026-08-10; ADS has the bibcode but SciX has not ingested the body."
+      "lastAttempt": "2026-08-13",
+      "attempts": 8,
+      "note": "2026-08-13: scix MCP unreachable — production Postgres database 'scix' missing (see REAP entry); full-text status unknown until the DB is restored."
     },
     {
       "bibcode": "2026arXiv260805573H",
@@ -60,9 +60,9 @@
         }
       ],
       "firstSeen": "2026-08-08",
-      "lastAttempt": "2026-08-10",
-      "attempts": 3,
-      "note": "read_paper still returns 'Paper not found' on 2026-08-10; ADS has the bibcode but SciX has not ingested the body."
+      "lastAttempt": "2026-08-13",
+      "attempts": 4,
+      "note": "2026-08-13: scix MCP unreachable — production Postgres database 'scix' missing (see REAP entry); full-text status unknown until the DB is restored."
     },
     {
       "bibcode": "2026arXiv260805223Y",
@@ -84,9 +84,9 @@
         }
       ],
       "firstSeen": "2026-08-09",
-      "lastAttempt": "2026-08-10",
-      "attempts": 2,
-      "note": "read_paper still returns 'Paper not found' on 2026-08-10; ADS has the bibcode but SciX has not ingested the body."
+      "lastAttempt": "2026-08-13",
+      "attempts": 3,
+      "note": "2026-08-13: scix MCP unreachable — production Postgres database 'scix' missing (see REAP entry); full-text status unknown until the DB is restored."
     },
     {
       "bibcode": "2026arXiv260806909C",
@@ -101,9 +101,9 @@
         }
       ],
       "firstSeen": "2026-08-10",
-      "lastAttempt": "2026-08-10",
-      "attempts": 1,
-      "note": "read_paper returns 'Paper not found' on 2026-08-10; same-day arXiv paper, SciX has not ingested the body yet."
+      "lastAttempt": "2026-08-13",
+      "attempts": 2,
+      "note": "2026-08-13: scix MCP unreachable — production Postgres database 'scix' missing (see REAP entry); full-text status unknown until the DB is restored."
     },
     {
       "bibcode": "2026arXiv260809290L",
@@ -119,9 +119,66 @@
         }
       ],
       "firstSeen": "2026-08-12",
-      "lastAttempt": "2026-08-12",
+      "lastAttempt": "2026-08-13",
+      "attempts": 2,
+      "note": "2026-08-13: scix MCP unreachable — production Postgres database 'scix' missing (see REAP entry); full-text status unknown until the DB is restored."
+    },
+    {
+      "bibcode": "2026arXiv260811323S",
+      "arxiv": "2608.11323",
+      "title": "Deployment Decision Reliability: A Generalizability-Theory Framework for Sizing Long-Horizon Agent Evaluations",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-13",
+      "lastAttempt": "2026-08-13",
       "attempts": 1,
-      "note": "scix MCP server was unreachable all day 2026-08-12 (read_paper/get_paper/search all timed out with 'couldn't get a connection'); full-text status unknown, not confirmed as un-ingested."
+      "note": "2026-08-13: deferred on first sight — scix production Postgres database 'scix' missing, no full text retrievable."
+    },
+    {
+      "bibcode": "2026arXiv260810178Y",
+      "arxiv": "2608.10178",
+      "title": "One Recipe, Many Harnesses: What Self-Evolution Encodes Across Languages and Models",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "reflection-experience"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-13",
+      "lastAttempt": "2026-08-13",
+      "attempts": 1,
+      "note": "2026-08-13: deferred on first sight — scix production Postgres database 'scix' missing, no full text retrievable."
+    },
+    {
+      "bibcode": "2026arXiv260727877R",
+      "arxiv": "2607.27877",
+      "title": "An Empirical Study of Coordination Mode as the First-Class Citizen in From-Scratch Multi-Agent Coding (MSEval)",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "foundations"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "topology"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-13",
+      "lastAttempt": "2026-08-13",
+      "attempts": 1,
+      "note": "2026-08-13: deferred on first sight — scix production Postgres database 'scix' missing, no full text retrievable."
     }
   ]
 }
