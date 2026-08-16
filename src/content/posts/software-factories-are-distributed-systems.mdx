@@ -31,11 +31,15 @@ The failure model changes once 1) the work has to outlive the process doing it, 
 
 Thinking about software factories this way isn't anything new. Osterweil argued in [1987](https://dl.acm.org/doi/10.5555/41765.41766) that software processes are software too. Choi and Scacchi described ["the software infrastructure for a distributed system factory"](https://www.ics.uci.edu/~wscacchi/Software-Process/Readings/DistSysFactory.pdf) in 1991, treating the coordination plane as something that had to be engineered in its own right. The CNCF's [Secure Software Factory](https://tag-security.cncf.io/community/working-groups/supply-chain-security/secure-software-factory/secure-software-factory/) reference architecture supplies much of the contemporary vocabulary.
 
-What autonomous agents change are the characteristics of the worker.
+What autonomous agents change are the characteristics of the worker. The mechanisms in this essay are not new. Fencing, leases, idempotency, reconciliation, and conditional writes have decades of distributed-systems history behind them. What surprised me was how little scale it took before I needed them. You can get stale authority, duplicate executors, conflicting effects, and split-brain records with three coding agents sharing one repository. "Distributed system" starts sounding grandiose right up until one worker dies, its child keeps editing, and the retry starts another one.
+
+The interesting boundary is not fleet size. It is the moment workers can act independently on durable or shared state while their supervisors, observations, and external effects can fail separately.
 
 Those older systems mostly coordinated deterministic tools and human developers who could, at least in principle, be asked what they had done and why (instead of "idk Claude said to do this", unless Claude happened to be that one guy hoarding the company COBOL knowledge). A compiler does not confidently explain that it compiled the program when no binary exists. An agent can absolutely tell you it completed a task whose authoritative effect never happened, often in beautifully aggravating detail, and then apologize and do it again.
 
 Current systems have arrived at similar decompositions from different directions. OpenAI's [Symphony orchestration](https://openai.com/index/open-source-codex-orchestration-symphony/), Cloudflare's [issue-triage factory](https://blog.cloudflare.com/astro-issue-triage/), and Vercel's [factory for the AI SDK repository](https://vercel.com/blog/building-a-software-factory-for-ai-sdk) all separate some version of durable work state, scheduling, disposable workers, and gated publication. Vercel records runs as success, flawed, blocked, or manual, and only success ships.
+
+Vercel is also a useful comparison because the thing its factory produces is not the factory itself. Its agents work on the AI SDK, including bug fixes, features, documentation, and backports, while a human retains the merge boundary. Four weeks after launch, Vercel reported that factory agents were authoring 25 to 35 percent of the pull requests merged each week. My incidents below come from a self-hosting system because that is the one I can instrument, break, and inspect end to end, but the coordination boundary is not unique to self-hosting.
 
 These distinctions seem like they should be relatively straightforward, until you operate many agents long enough to discover how many places in the factory can collapse "the attempt stopped" into "the work is done."
 
@@ -102,6 +106,8 @@ The rule:
 
 **A retry may create a new attempt. It must not accidentally create a second executor.**
 
+`Accidentally` is doing important work there. This is not an argument against deliberate parallel production. If the factory intentionally starts several candidates, gives them distinct identities, and keeps all of them non-authoritative until one wins publication, throwing the losers away is fine. Recovery is different. After a crash, the system may not know whether the original executor survived or which effects it already produced. Starting another executor before resolving that state converts uncertainty into duplicate execution. Cheap speculative work is cheap precisely because none of it matters yet.
+
 Underneath that are two lifecycles, and they must not share transitions. An attempt goes created, executing, outcome ready, verified. When an attempt dies, that's an event in the attempt's life and nothing more; by itself it moves the work nowhere. The work stays owned under the same epoch across a retry, and only handing it to a different executor opens a new epoch.
 
 The two lifecycles touch at exactly one place. A worker's own report can push its attempt to outcome ready, which tells the factory an artifact exists and is worth checking. Only evidence from somewhere other than the worker can finish the work. When that evidence can't be pinned down, the work parks somewhere durable with an explicit "I don't know what happened externally" instead of guessing. That's what the external-effects and reconciliation sections below are about.
@@ -131,6 +137,12 @@ So what I observed were double-claimed beads turning into duplicate pull request
 <ConceptFigure kind="fence" />
 
 What works instead is a counter that only ever goes up, the ownership epoch from earlier, checked at the place the write actually lands and keyed on something the holder can't fake or share. Every handoff bumps the counter. Every write carries the number its writer held when it took the claim. The destination compares that number and applies the write in the same operation, so there's no gap between checking and writing for ownership to move through.
+
+Git already gives you one version of this for repository state. A ref update can name the old SHA it expects and fail if the ref has moved. That is exactly the right primitive for preventing a publisher from overwriting a newer repository state. It does not answer the separate question of whether the publisher is still allowed to act. If `main` is still at commit `A`, worker 1 loses its lease to worker 2, and stale worker 1 races in first with `A -> B`, a ref compare-and-set can legitimately accept the update: `A` was still there. The repository state was current; the writer was not.
+
+So the commit SHA and the ownership epoch fence different things. The SHA says, "the destination is still in the state I observed." The epoch says, "I am still the actor authorized to change it." If authority can move independently of the ref, you need both properties.
+
+There is an important implementation catch here too. Checking an epoch in Beads and then issuing a conditional Git write does not magically make the two checks atomic. If the system that owns the authoritative mutation cannot validate the ownership token as part of that mutation, there is still a seam. A caller-side epoch check narrows the race; it does not constitute the destination-side fence I am arguing for.
 
 Well, eventually. The missing piece is a claim fence in Beads itself, which is open upstream (good reminder for me to go nudge it along). What exists today is a solid check-and-write on a single metadata key, enough to fence one publication pointer and not enough to fence arbitrary writes.
 
@@ -203,7 +215,9 @@ The commit matters as much as the epoch, because a verdict attached to a branch 
 
 Even done right, a green build says less than people treat it as saying. It tells you one check, in one configuration, against one version of the code, didn't fail. A red build doesn't tell you the change is wrong either, because the check itself can time out, flake, or run against the wrong revision.
 
-There's real scale behind this: across 1,960 open-source Java projects, 3.2 percent of GitHub Actions builds got rerun, and 67.73 percent of those reruns were flaky ([Ge and Zhang 2026](https://arxiv.org/abs/2602.02307)). Build results and code correctness are two different signals, and a factory that treats them as one either retries good changes forever or ships on a pass that proved less than it assumed.
+One large study of 1,960 open-source Java projects found flaky behavior among rerun GitHub Actions builds in 1,055 projects, or 51.28 percent of the projects studied. Its build-level result is narrower: 3.2 percent of builds were rerun, and 67.73 percent of those reruns exhibited flaky behavior ([Ge and Zhang 2026](https://arxiv.org/abs/2602.02307)). That is evidence that CI outcomes can be nondeterministic, not that most builds are flaky.
+
+More fundamentally, build results and code correctness answer different questions. A build tells you what a particular set of checks observed about one artifact in one environment. It does not establish that the code is correct, and a failure does not establish that the code is wrong. A factory that collapses the two can retry good changes forever or publish on a pass that proved less than it assumed.
 
 What the agent says it did is not part of either check. An agent reporting `done` is telling you what it believes happened. The repository, CI system, or publisher decides whether it actually did.
 
@@ -368,6 +382,10 @@ The [drill directory](https://github.com/sjarmak/software-factory-reliability/tr
 
 You can apply these changes at one boundary at a time. There are certain boundaries that are worth prioritizing first, because the early mistakes corrupt state while the later ones just waste a bit of work.
 
+And you should use the smallest mechanism that actually enforces the invariant. If one human already owns publication, keeping that human in the loop may be the right fence. If your entire failure is "a verified branch never merged," required checks plus auto-merge may solve it without an ownership protocol. If Git's expected-old-SHA conditional update is enough to protect the state you care about, use it. Add an ownership epoch when authority can move while an old worker remains capable of writing. Add durable execution when the procedure itself has state worth recovering. Add reconciliation when truth can be reconstructed more cheaply from current state.
+
+The invariant is the requirement. The machinery is an implementation choice.
+
 Before making any changes, audit one work item.
 
 Recover the work item's identity, the revision it started from, its ownership epoch, its attempt, the artifact it produced, the check that ran against that exact artifact, and the change it made to the outside world using only available records, without asking an agent directly.
@@ -422,7 +440,7 @@ The unsafe run exits nonzero and writes down the evidence: a stale epoch overwri
 
 ## Untangle your factory's responsibilities
 
-Coding agents have a new place in a much older systems problem. A software factory schedules more than CPU and memory; it schedules authority over mutable code, repository state, dependencies between changes, scarce review attention, and work that sits half-finished for hours or days.
+Coding agents have a new place in a much older systems problem. The distributed-systems remedies are old. What is new operationally is how quickly autonomous coding agents push ordinary software-development workflows into the failure regime those remedies were built for. A software factory schedules more than CPU and memory; it schedules authority over mutable code, repository state, dependencies between changes, scarce review attention, and work that sits half-finished for hours or days.
 
 Its workers outlive their supervisors, read stale versions of the codebase, duplicate each other, and produce different results from identical input. The worker changed. What the work needs from the system around it did not.
 
