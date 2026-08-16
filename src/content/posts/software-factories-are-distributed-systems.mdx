@@ -395,7 +395,7 @@ You write down the guarantees your factory claims in a contract file: identities
 
 Those rules are the shorter version of the factory contracts in [Engineering Reliable Coding Agents](/books/engineering-reliable-coding-agents/), where they're written as eleven testable obligations ([protocols/factory-contracts.yaml](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/factory-contracts.yaml)) across six groups: keeping work alive across retries, scoping authority to an epoch, keeping external effects safe, keeping records and evidence consistent, keeping stuck work visible and recovery honest, and being able to say who did what.
 
-Run it against the deliberately broken example contract and it comes back with six failures and nine warnings, including a fence enforced by the caller instead of the destination, a verdict pinned to a branch name that can move, an effect identity regenerated on every attempt, and a campaign that calls itself complete when its original children finish.
+Run it against the deliberately broken example contract and it comes back with six failures and ten warnings, including a fence enforced by the caller instead of the destination, a verdict pinned to a branch name that can move, an effect identity regenerated on every attempt, and a campaign that calls itself complete when its original children finish.
 
 Every claim sits at one of three levels. **Declared** means you say the guarantee exists. **Enforced** means someone can identify the code that provides it. **Fault-tested** means a controlled fault shows it actually holding.
 
