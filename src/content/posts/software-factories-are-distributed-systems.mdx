@@ -76,7 +76,7 @@ The failures below are different versions of that rule getting broken. More impo
 
 ## The work outlives the worker
 
-One piece of work has more identities inside it than a design usually bothers to name, and letting any two of them blur together is an incident waiting to happen. Seven are worth naming: the work itself, the state of the code the attempt started from, the ownership epoch that grants write authority, the attempt, the artifact it produced, the verification that ran against that exact artifact, and each change it made to the outside world. The factory has to be able to recover every one of those on its own, without asking the worker that just died.
+One piece of work has more identities inside it than a design usually bothers specifying, and letting any two of them blur together is an incident waiting to happen. Seven are worth naming: the work itself, the state of the code the attempt started from, the ownership epoch that grants write authority, the attempt, the artifact it produced, the verification that ran against that exact artifact, and each change it made to the outside world. The factory has to be able to recover every one of those on its own, without asking the worker that just died.
 
 <ConceptFigure kind="identity" />
 
@@ -124,7 +124,7 @@ The duplicates come from what that check compares against. It accepts the caller
 
 The fence was there the whole time, it was just keyed on a name several workers could present, which fails exactly the same way as having no fence at all.
 
-The writes next door have the same problem, this time through [`bd`](https://github.com/gastownhall/beads), the Beads CLI. `bd assign` and `bd update --assignee` overwrite whatever is there with no check at all (`issueops/update.go:277`), so a reassign steals a live claim without noticing. `bd unclaim` never compares who is asking against who holds the claim (`issueops/unclaim.go:22-60`), so any process can release any worker's work. There is lease machinery, with a five-minute expiry stamped at claim time and a path to reclaim expired work, but heartbeating is opt-in and new. That leaves a genuinely annoying choice: turn on the reclaim loop before workers heartbeat and every long task becomes systematic duplicate work; leave it off and dead workers hold their beads forever.
+The writes next door have the same problem, this time through [`bd`](https://github.com/gastownhall/beads), the Beads CLI. `bd assign` and `bd update --assignee` overwrite whatever is there with no check at all (`issueops/update.go:277`), so a reassign steals a live claim without noticing. `bd unclaim` never compares who is asking against who holds the claim (`issueops/unclaim.go:22-60`), so any process can release any worker's work. There is lease machinery, with a five-minute expiry stamped at claim time and a path to reclaim expired work, but heartbeating is opt-in and new. That leaves an annoying choice: turn on the reclaim loop before workers heartbeat and every long task becomes systematic duplicate work; leave it off and dead workers hold their beads forever.
 
 So what I observed were double-claimed beads turning into duplicate pull requests, and a bead claimed by three worker identities and closed twice by different actors.
 
