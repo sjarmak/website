@@ -1,0 +1,1148 @@
+---
+/**
+ * Diagram set for "Software factories are distributed systems".
+ *
+ * Same visual grammar as the Temporal article's ConceptFigure: a durable
+ * record wears a double outline, a crash window is a bolt on the edge it
+ * interrupts, a fence is a lock at the boundary that enforces it, and a
+ * stale/obsolete element is drawn dashed and muted. Anything animated is
+ * repeatable motion travelling in the direction the path is drawn.
+ */
+interface Props {
+  kind:
+    | "authorities"
+    | "identity"
+    | "dual-executor"
+    | "lifecycle"
+    | "fence"
+    | "publish"
+    | "signals"
+    | "topology"
+    | "promises";
+}
+
+const { kind } = Astro.props;
+const titleId = `sf-figure-${kind}`;
+const svgTitleId = `${titleId}-svg-title`;
+const svgDescId = `${titleId}-svg-desc`;
+---
+
+{
+  kind === "authorities" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 01 / Separation</p>
+        <h3 id={titleId}>Four responsibilities that must not stand in for each other</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 600"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>The four planes of a software factory</title>
+        <desc id={svgDescId}>
+          A control plane sets policy above a row of three: the work ledger
+          holding durable facts, the procedure layer holding ordering, and the
+          workers producing effects. Workers alone reach the external systems
+          below, where authority is finally enforced.
+        </desc>
+
+        <rect class="svg-box svg-box--accent" x="300" y="24" width="500" height="92" rx="10" />
+        <text class="svg-label svg-label--center" x="550" y="58">Control plane</text>
+        <text class="svg-small" x="550" y="82" text-anchor="middle">policy: admission · priority · allocation</text>
+        <text class="svg-small" x="550" y="101" text-anchor="middle">decides which work may run at all</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M550 116 V174" />
+        <path class="svg-arrow" d="M-6 -9 L0 0 L6 -9" transform="translate(550 178)" />
+
+        <rect class="svg-box svg-box--durable" x="40" y="182" width="316" height="150" rx="10" />
+        <rect class="svg-durable-inner" x="46" y="188" width="304" height="138" rx="6" />
+        <text class="svg-label" x="66" y="220">Work ledger</text>
+        <text class="svg-eyebrow" x="66" y="244">durable facts</text>
+        <text class="svg-small" x="66" y="272">identity · claims · generations</text>
+        <text class="svg-small" x="66" y="294">artifacts · recorded outcomes</text>
+        <text class="svg-small" x="66" y="316">what recovery reads first</text>
+
+        <rect class="svg-box" x="392" y="182" width="316" height="150" rx="10" />
+        <text class="svg-label" x="418" y="220">Procedure</text>
+        <text class="svg-eyebrow" x="418" y="244">ordering</text>
+        <text class="svg-small" x="418" y="272">waits · retries · cancellation</text>
+        <text class="svg-small" x="418" y="294">acknowledgements</text>
+        <text class="svg-small" x="418" y="316">what should happen next</text>
+
+        <rect class="svg-box" x="744" y="182" width="316" height="150" rx="10" />
+        <text class="svg-label" x="770" y="220">Workers</text>
+        <text class="svg-eyebrow" x="770" y="244">effects</text>
+        <text class="svg-small" x="770" y="272">processes · agent sessions</text>
+        <text class="svg-small" x="770" y="294">worktrees · commits · calls</text>
+        <text class="svg-small" x="770" y="316">nondeterministic by design</text>
+
+        <path class="svg-link svg-link--dashed" d="M356 258 H392" />
+        <path class="svg-link svg-link--dashed" d="M708 258 H744" />
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M902 332 V430" />
+        <path class="svg-arrow" d="M-6 -8 L0 0 L6 -8" transform="translate(902 432)" />
+
+        <rect class="svg-box" x="40" y="440" width="1020" height="120" rx="10" />
+        <text class="svg-label svg-label--center" x="550" y="478">External systems</text>
+        <text class="svg-small" x="550" y="502" text-anchor="middle">code hosts · CI · package registries · stores</text>
+        <text class="svg-small" x="550" y="524" text-anchor="middle">the destination decides what actually happened</text>
+
+        <g class="svg-fence" transform="translate(550 440) scale(1.6)">
+          <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+          <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+        </g>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>The control plane sets policy: what may run, at what priority, with what share of the fleet.</li>
+        <li>The work ledger holds durable facts; recovery starts there, not from worker memory.</li>
+        <li>The procedure layer holds ordering, waits, retries, and acknowledgements.</li>
+        <li>Workers produce effects and are the only layer that touches external systems.</li>
+        <li>The fence sits at the external boundary, where a mutation becomes authoritative.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Most incidents are one of these layers being read as evidence for
+        another: a running process taken for a valid claim, a completed
+        procedure taken for a published change.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "identity" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 02 / Identity</p>
+        <h3 id={titleId}>What exists underneath one logical work item</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 560"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>The identity stack under one work item</title>
+        <desc id={svgDescId}>
+          Logical work carries an ownership epoch and can have several
+          attempts, each observing a named input state. Attempts resolve to
+          one agent session, which owns a process, a worktree, an artifact
+          digest, the verification record bound to that digest, and external
+          effects.
+        </desc>
+
+        <rect class="svg-box svg-box--durable" x="30" y="170" width="220" height="94" rx="10" />
+        <rect class="svg-durable-inner" x="36" y="176" width="208" height="82" rx="6" />
+        <text class="svg-label" x="54" y="204">Logical work</text>
+        <text class="svg-small" x="54" y="230">work_id, survives</text>
+        <text class="svg-small" x="54" y="248">every executor</text>
+
+        <path class="svg-link" d="M250 190 V86 H330" />
+        <path class="svg-link" d="M250 214 H330" />
+        <path class="svg-link" d="M250 248 H310 V320 H330" />
+
+        <rect class="svg-box svg-box--durable" x="330" y="50" width="244" height="72" rx="10" />
+        <rect class="svg-durable-inner" x="336" y="56" width="232" height="60" rx="6" />
+        <text class="svg-label" x="352" y="84">Ownership epoch</text>
+        <text class="svg-small" x="352" y="106">monotonic, never reused</text>
+
+        <rect class="svg-box svg-box--stale" x="330" y="182" width="244" height="64" rx="10" />
+        <text class="svg-label" x="352" y="210">Attempt 1</text>
+        <text class="svg-small" x="352" y="232">superseded by retry</text>
+
+        <rect class="svg-box" x="330" y="288" width="244" height="64" rx="10" />
+        <text class="svg-label" x="352" y="316">Attempt 2</text>
+        <text class="svg-small" x="352" y="338">new attempt, same epoch</text>
+
+        <rect class="svg-box svg-box--durable" x="30" y="430" width="280" height="76" rx="10" />
+        <rect class="svg-durable-inner" x="36" y="436" width="268" height="64" rx="6" />
+        <text class="svg-label" x="54" y="462">Input state</text>
+        <text class="svg-small" x="54" y="486">repo @ revision observed</text>
+
+        <path class="svg-link svg-link--dashed" d="M310 460 H420 V352" />
+
+        <path class="svg-link svg-link--dashed" d="M574 214 H640 V246" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M574 320 H640 V286" />
+
+        <rect class="svg-box svg-box--accent" x="600" y="210" width="200" height="76" rx="10" />
+        <text class="svg-label" x="622" y="242">Agent session</text>
+        <text class="svg-small" x="622" y="266">one executor</text>
+
+        <path class="svg-link" d="M800 248 H860" />
+        <path class="svg-link" d="M860 248 V64 H880" />
+        <path class="svg-link" d="M860 248 V160 H880" />
+        <path class="svg-link" d="M860 248 V256 H880" />
+        <path class="svg-link" d="M860 248 V352 H880" />
+        <path class="svg-link" d="M860 248 V448 H880" />
+
+        <rect class="svg-box" x="880" y="40" width="200" height="48" rx="8" />
+        <text class="svg-small" x="900" y="70">OS process</text>
+        <rect class="svg-box" x="880" y="136" width="200" height="48" rx="8" />
+        <text class="svg-small" x="900" y="166">worktree</text>
+        <rect class="svg-box" x="880" y="232" width="200" height="48" rx="8" />
+        <text class="svg-small" x="900" y="262">artifact (digest)</text>
+        <rect class="svg-box" x="880" y="328" width="200" height="48" rx="8" />
+        <text class="svg-small" x="900" y="358">verification record</text>
+        <path class="svg-link svg-link--dashed" d="M980 280 V328" />
+        <rect class="svg-box" x="880" y="424" width="200" height="48" rx="8" />
+        <text class="svg-small" x="900" y="454">external effects</text>
+
+        <text class="svg-eyebrow" x="600" y="510">A retry may create a new attempt.</text>
+        <text class="svg-eyebrow" x="600" y="532">It must not create a second session.</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>One logical work item carries a stable identity and a monotonic ownership epoch.</li>
+        <li>It may accumulate several attempts; a retry is a new attempt under the same epoch, and only reassignment opens a new one.</li>
+        <li>Each attempt observes a named input state: the repository revision its plan was derived from.</li>
+        <li>Both attempts should resolve to the same agent session rather than starting a second one.</li>
+        <li>The session owns the process, worktree, artifact digest, the verification record bound to that exact digest, and external effects.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Collapsing any two of these into one is a latent incident. The kill
+        case below collapsed attempt identity into session identity; the
+        stranded branch from the opening collapsed a closed work item into a
+        published change.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "dual-executor" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 03 / Recovery</p>
+        <h3 id={titleId}>The worker dies; the agent does not</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 300"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Resolving a session before retrying</title>
+        <desc id={svgDescId}>
+          A worker is killed mid-task. Its agent child survives. The retry
+          resolves a stable session key, finds the surviving agent, and
+          attaches to it instead of starting a second one, so the effect
+          applies exactly once.
+        </desc>
+
+        <rect class="svg-box" x="30" y="30" width="180" height="66" rx="9" />
+        <text class="svg-small" x="52" y="62">worker</text>
+        <text class="svg-small" x="52" y="82">(attempt 1)</text>
+
+        <path class="svg-link" d="M210 63 H330" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(270 63)" />
+        <text class="svg-small" x="212" y="24">SIGKILL</text>
+
+        <rect class="svg-box" x="330" y="30" width="245" height="66" rx="9" />
+        <text class="svg-small" x="352" y="62">agent child</text>
+        <text class="svg-small" x="352" y="82">survives, keeps editing</text>
+
+        <rect class="svg-box" x="30" y="204" width="180" height="66" rx="9" />
+        <text class="svg-small" x="52" y="236">orchestrator</text>
+        <text class="svg-small" x="52" y="256">retries the step</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M210 237 H400" />
+        <g class="svg-fence" transform="translate(400 237) scale(1.6)">
+          <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+          <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+        </g>
+        <text class="svg-small" x="270" y="278">resolve session key</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M420 237 V138 H575" />
+        <text class="svg-small" x="640" y="160">attach, do not start</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M575 63 H880" />
+        <rect class="svg-box svg-box--accent" x="880" y="30" width="190" height="66" rx="9" />
+        <text class="svg-small" x="900" y="62">effect applied</text>
+        <text class="svg-small" x="900" y="82">exactly once</text>
+        <path class="svg-ack" d="M-8 0 L-2 6 L8 -7" transform="translate(1050 48)" />
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>A SIGKILL removes the worker process but not its agent child, which keeps running and keeps editing.</li>
+        <li>The retry resolves a stable session key before starting anything.</li>
+        <li>Resolving the key finds the surviving agent and attaches to it instead of launching a second one.</li>
+        <li>The effect applies exactly once, from the one executor that was ever really running.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        A retry that skips this question and starts a second agent instead
+        is the fault this mechanism closes: the same kill, without it,
+        produced two live executors and duplicate effects.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "lifecycle" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 04 / Lifecycles</p>
+        <h3 id={titleId}>Logical work and attempts live in separate lifecycles</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 540"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Separate lifecycles for logical work and for attempts</title>
+        <desc id={svgDescId}>
+          Logical work runs accepted, eligible, owned under an epoch, and
+          complete, with side states for blocked, unknown external state, and
+          reconcile required. Attempts run created, executing, outcome ready,
+          and verification; a retryable failure produces a new attempt under
+          the same epoch, and only independently observed evidence completes
+          the work.
+        </desc>
+
+        <rect class="svg-lane" x="0" y="10" width="1100" height="240" rx="12" />
+        <text class="svg-eyebrow" x="30" y="42">LOGICAL WORK · completes only on independent evidence</text>
+
+        <rect class="svg-box svg-box--durable" x="30" y="66" width="150" height="60" rx="9" />
+        <rect class="svg-durable-inner" x="36" y="72" width="138" height="48" rx="5" />
+        <text class="svg-small" x="52" y="102">accepted</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M180 96 H220" />
+        <rect class="svg-box" x="220" y="66" width="150" height="60" rx="9" />
+        <text class="svg-small" x="242" y="102">eligible</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M370 96 H410" />
+        <rect class="svg-box" x="410" y="66" width="200" height="60" rx="9" />
+        <text class="svg-small" x="432" y="102">owned (epoch n)</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M610 96 H890" />
+        <g class="svg-fence" transform="translate(740 96) scale(1.4)">
+          <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+          <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+        </g>
+        <text class="svg-small" x="655" y="150">independent evidence only</text>
+
+        <rect class="svg-box svg-box--durable" x="890" y="66" width="180" height="60" rx="9" />
+        <rect class="svg-durable-inner" x="896" y="72" width="168" height="48" rx="5" />
+        <text class="svg-small" x="912" y="102">complete</text>
+
+        <rect class="svg-box svg-box--stale" x="220" y="176" width="150" height="50" rx="9" />
+        <text class="svg-small" x="242" y="206">blocked</text>
+        <rect class="svg-box svg-box--stale" x="410" y="176" width="230" height="50" rx="9" />
+        <text class="svg-small" x="432" y="206">unknown external state</text>
+        <rect class="svg-box svg-box--stale" x="680" y="176" width="200" height="50" rx="9" />
+        <text class="svg-small" x="702" y="206">reconcile required</text>
+        <path class="svg-link svg-link--dashed" d="M880 201 H1040 V126" />
+        <text class="svg-small" x="965" y="160">resolved</text>
+
+        <text class="svg-eyebrow" x="330" y="272">verification is the only bridge: evidence crosses, testimony does not</text>
+
+        <rect class="svg-lane" x="0" y="292" width="1100" height="238" rx="12" />
+        <text class="svg-eyebrow" x="30" y="324">ATTEMPTS · an attempt dying moves the work nowhere</text>
+
+        <rect class="svg-box" x="30" y="350" width="150" height="60" rx="9" />
+        <text class="svg-small" x="52" y="386">created</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M180 380 H220" />
+        <rect class="svg-box" x="220" y="350" width="150" height="60" rx="9" />
+        <text class="svg-small" x="242" y="386">executing</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M370 380 H410" />
+        <rect class="svg-box" x="410" y="350" width="180" height="60" rx="9" />
+        <text class="svg-small" x="432" y="386">outcome ready</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M590 380 H640" />
+        <rect class="svg-box svg-box--accent" x="640" y="350" width="180" height="60" rx="9" />
+        <text class="svg-small" x="662" y="386">verification</text>
+
+        <path class="svg-link svg-link--dashed" d="M295 410 V466 H105 V414" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(295 438)" />
+        <text class="svg-small" x="120" y="496">retryable failure: new attempt, same epoch</text>
+
+        <text class="svg-small" x="432" y="440">the worker's own report</text>
+        <text class="svg-small" x="432" y="460">stops at outcome ready</text>
+
+        <text class="svg-small" x="860" y="380">reassignment opens a new</text>
+        <text class="svg-small" x="860" y="400">epoch, not new logical work</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>Logical work runs accepted, eligible, owned under an epoch, and complete, with side states for blocked, unknown external state, and reconcile required.</li>
+        <li>Attempts run created, executing, outcome ready, and verification; a retryable failure mints a new attempt under the same epoch.</li>
+        <li>Reassignment to a different executor opens a new epoch; it never creates new logical work.</li>
+        <li>A worker's own report can move its attempt only to outcome ready; only independently observed evidence completes the work.</li>
+        <li>Unresolvable outcomes park the work in unknown external state or reconcile required rather than guessing.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        The death of an attempt is an event in the attempt lifecycle. By
+        itself it moves logical work nowhere.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "fence" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 05 / Authority</p>
+        <h3 id={titleId}>Where the authority check has to happen</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 300"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>A destination-side compare-and-set fence</title>
+        <desc id={svgDescId}>
+          Two writers present their ownership generation to the destination.
+          The destination compares each generation atomically with the write
+          it is about to accept: the obsolete generation is rejected, the
+          current one is applied.
+        </desc>
+
+        <text class="svg-eyebrow" x="40" y="30">CHECKED AT THE DESTINATION, NOT THE CALLER</text>
+
+        <rect class="svg-box svg-box--stale" x="60" y="50" width="200" height="60" rx="9" />
+        <text class="svg-small" x="80" y="86">writer (gen 7)</text>
+
+        <rect class="svg-box" x="840" y="50" width="200" height="60" rx="9" />
+        <text class="svg-small" x="860" y="86">writer (gen 8)</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M160 110 V150" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M940 110 V150" />
+        <text class="svg-small" x="60" y="176">presents gen 7</text>
+        <text class="svg-small" x="820" y="176">presents gen 8</text>
+
+        <rect class="svg-box svg-box--accent" x="330" y="156" width="440" height="70" rx="10" />
+        <text class="svg-label" x="354" y="186">compare-and-set</text>
+        <text class="svg-small" x="354" y="210">generation compared atomically with the write</text>
+        <g class="svg-fence" transform="translate(730 156) scale(1.6)">
+          <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+          <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+        </g>
+
+        <path class="svg-link svg-link--dashed" d="M160 226 V254" />
+        <text class="svg-cross" x="160" y="278" text-anchor="middle">rejected</text>
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M940 226 V254" />
+        <text class="svg-small" x="940" y="278" text-anchor="middle">applied</text>
+        <path class="svg-ack" d="M-8 0 L-2 6 L8 -7" transform="translate(970 262)" />
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>Two writers present their ownership generation to the destination: an obsolete one and the current one.</li>
+        <li>The destination's compare-and-set evaluates the presented generation atomically with the write itself.</li>
+        <li>The obsolete generation is rejected; the current one is applied.</li>
+        <li>Owner names can repeat after churn; monotonic generations cannot.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        Checking a lease before writing, rather than at the write itself,
+        leaves a window in which ownership can move and a stale write still
+        lands. Locks, preflight checks, process kills, and cancellation are
+        all useful, and none of them closes that window.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "publish" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 06 / Publication</p>
+        <h3 id={titleId}>Prepare wide, verify immutably, publish narrow</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 470"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>The shape of a safe publication step</title>
+        <desc id={svgDescId}>
+          Several workers prepare candidate artifacts in parallel. One artifact
+          is verified by digest. Publication is a single conditional write
+          carrying both the generation and that digest. Losing artifacts are
+          left behind rather than deleted.
+        </desc>
+
+        <text class="svg-eyebrow" x="40" y="40">PREPARE · expensive, parallel, discardable</text>
+
+        <rect class="svg-box" x="40" y="60" width="220" height="60" rx="9" />
+        <text class="svg-small" x="60" y="96">candidate a1c4f</text>
+        <rect class="svg-box svg-box--accent" x="40" y="140" width="220" height="60" rx="9" />
+        <text class="svg-small" x="60" y="176">candidate 9be20</text>
+        <rect class="svg-box" x="40" y="220" width="220" height="60" rx="9" />
+        <text class="svg-small" x="60" y="256">candidate 71dd8</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M260 170 H400" />
+        <path class="svg-link svg-link--dashed" d="M260 90 H340 V330" />
+        <path class="svg-link svg-link--dashed" d="M260 250 H340 V330" />
+
+        <text class="svg-eyebrow" x="400" y="40">VERIFY · bound to one digest</text>
+        <rect class="svg-box svg-box--durable" x="400" y="130" width="268" height="80" rx="10" />
+        <rect class="svg-durable-inner" x="406" y="136" width="256" height="68" rx="6" />
+        <text class="svg-label" x="424" y="166">verdict</text>
+        <text class="svg-small" x="424" y="190">pass @ 9be20, not a branch</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M668 170 H790" />
+
+        <text class="svg-eyebrow" x="790" y="40">PUBLISH · one conditional write</text>
+        <rect class="svg-box svg-box--accent" x="790" y="120" width="270" height="100" rx="10" />
+        <text class="svg-label" x="812" y="152">compare-and-set</text>
+        <text class="svg-small" x="812" y="178">generation still current</text>
+        <text class="svg-small" x="812" y="200">and verdict matches 9be20</text>
+        <g class="svg-fence" transform="translate(1030 145) scale(1.5)">
+          <path d="M-4.5 -3 v-3.5 a4.5 4.5 0 0 1 9 0 V-3" />
+          <rect x="-7.5" y="-3" width="15" height="11" rx="2" />
+        </g>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M925 220 V280" />
+        <rect class="svg-box svg-box--durable" x="790" y="290" width="270" height="70" rx="10" />
+        <rect class="svg-durable-inner" x="796" y="296" width="258" height="58" rx="5" />
+        <text class="svg-small" x="812" y="322">authoritative pointer</text>
+        <text class="svg-small" x="812" y="344">now names 9be20</text>
+        <path class="svg-ack" d="M-8 0 L-2 6 L8 -7" transform="translate(1035 318)" />
+
+        <rect class="svg-box svg-box--stale" x="340" y="330" width="300" height="70" rx="9" />
+        <text class="svg-small" x="362" y="362">losing artifacts left behind</text>
+        <text class="svg-small" x="362" y="384">inspectable, collected later</text>
+
+        <text class="svg-eyebrow" x="40" y="400">Wasted production is cheap.</text>
+        <text class="svg-eyebrow" x="40" y="424">Stale authority is not.</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>Workers prepare candidate artifacts in parallel; none of them is authoritative yet.</li>
+        <li>Verification binds to an immutable digest rather than to a branch name that can move.</li>
+        <li>Publication is one conditional write asserting both that the generation is current and that the verdict applies to that exact artifact.</li>
+        <li>Losing artifacts are left behind for inspection rather than being made to matter.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        If CI verifies commit A, the branch advances to commit B, and
+        publication only asks whether "branch X passed", the factory can
+        publish code nobody verified.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "signals" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 07 / Repair</p>
+        <h3 id={titleId}>Signals advance; queries repair</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 440"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Event lane and reconciliation lane</title>
+        <desc id={svgDescId}>
+          The event lane carries change notifications quickly but can wedge,
+          drop, or duplicate without reporting an error. The reconciliation
+          lane rereads authoritative state on a cadence, compares it with the
+          recorded state, and converges the difference.
+        </desc>
+
+        <rect class="svg-lane" x="0" y="10" width="1100" height="180" rx="12" />
+        <text class="svg-eyebrow" x="30" y="42">EVENT LANE · reduces latency, cannot establish truth</text>
+
+        <rect class="svg-box" x="30" y="70" width="180" height="70" rx="9" />
+        <text class="svg-small" x="52" y="102">producer</text>
+        <text class="svg-small" x="52" y="124">emits change</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M210 105 H370" />
+        <rect class="svg-box" x="370" y="70" width="190" height="70" rx="9" />
+        <text class="svg-small" x="392" y="102">queue</text>
+        <text class="svg-small" x="392" y="124">247 messages deep</text>
+
+        <path class="svg-link svg-link--broken" d="M560 105 H630 M660 105 H710" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(645 105)" />
+        <text class="svg-small" x="580" y="162">consumer wedged, nothing reports an error</text>
+
+        <rect class="svg-box svg-box--stale" x="710" y="70" width="360" height="70" rx="9" />
+        <text class="svg-small" x="732" y="102">recorded state drifts from reality</text>
+        <text class="svg-small" x="732" y="124">and the queue still looks healthy</text>
+
+        <rect class="svg-lane" x="0" y="222" width="1100" height="200" rx="12" />
+        <text class="svg-eyebrow" x="30" y="254">RECONCILIATION LANE · establishes truth, on a cadence</text>
+
+        <rect class="svg-box svg-box--durable" x="30" y="284" width="240" height="80" rx="10" />
+        <rect class="svg-durable-inner" x="36" y="290" width="228" height="68" rx="6" />
+        <text class="svg-small" x="54" y="318">authoritative state</text>
+        <text class="svg-small" x="54" y="342">repo, code host, store</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M270 324 H430" />
+        <rect class="svg-box svg-box--accent" x="430" y="284" width="240" height="80" rx="10" />
+        <text class="svg-label" x="452" y="316">reread and compare</text>
+        <text class="svg-small" x="452" y="342">what is true now?</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M670 324 H830" />
+        <rect class="svg-box" x="830" y="284" width="240" height="80" rx="10" />
+        <text class="svg-label" x="852" y="316">converge</text>
+        <text class="svg-small" x="852" y="342">repair the difference</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M950 364 V392 H150 V364" />
+        <text class="svg-small" x="470" y="410">every pass gets another chance to notice</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>The event lane is for latency: it says something probably changed.</li>
+        <li>Events fail in more ways than loss: consumers wedge, messages duplicate, humans mutate state outside the factory, and a healthy-looking queue can carry an incomplete picture.</li>
+        <li>The reconciliation lane rereads authoritative state, compares it with the record, and converges the difference.</li>
+        <li>A reconciliation loop can fail too, but its failure is simply that the loop stopped running, which is observable.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        A failed lookup is not evidence of absence. A deduplication query that
+        errors and is read as "nothing exists" fails open and mints duplicates.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "topology" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 08 / Scheduling</p>
+        <h3 id={titleId}>Two graphs a factory scheduler needs</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 470"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Canonical code graph joined to the in-flight work graph</title>
+        <desc id={svgDescId}>
+          The canonical graph holds repositories, revisions, symbols, and
+          dependencies. The in-flight graph holds tasks, hosts, base revisions,
+          affected symbols, and intended publications. Joining them on
+          repository, revision, and symbol reveals conflicts before they land.
+        </desc>
+
+        <rect class="svg-lane" x="0" y="10" width="1100" height="180" rx="12" />
+        <text class="svg-eyebrow" x="30" y="42">CANONICAL CODE · evidence supports this half</text>
+
+        <rect class="svg-box svg-box--durable" x="30" y="70" width="230" height="76" rx="10" />
+        <rect class="svg-durable-inner" x="36" y="76" width="218" height="64" rx="6" />
+        <text class="svg-small" x="54" y="104">repo-a @ 4f19c</text>
+        <text class="svg-small" x="54" y="126">exports Session()</text>
+
+        <path class="svg-link" d="M260 108 H400" />
+        <rect class="svg-box" x="400" y="70" width="230" height="76" rx="10" />
+        <text class="svg-small" x="420" y="104">repo-b @ 88a02</text>
+        <text class="svg-small" x="420" y="126">calls Session()</text>
+
+        <path class="svg-link" d="M630 108 H770" />
+        <rect class="svg-box" x="770" y="70" width="300" height="76" rx="10" />
+        <text class="svg-small" x="790" y="104">repo-c @ d1e77</text>
+        <text class="svg-small" x="790" y="126">generated client, same symbol</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M180 190 V252" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M540 190 V252" />
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M900 190 V252" />
+        <text class="svg-eyebrow" x="210" y="226">joined by repo · revision · symbol</text>
+
+        <rect class="svg-lane" x="0" y="258" width="1100" height="200" rx="12" />
+        <text class="svg-eyebrow" x="30" y="290">IN FLIGHT · design inference, not a measured result</text>
+
+        <rect class="svg-box svg-box--accent" x="30" y="316" width="300" height="96" rx="10" />
+        <text class="svg-label" x="52" y="346">task 41 · host w3</text>
+        <text class="svg-small" x="52" y="370">base 4f19c · changes Session()</text>
+        <text class="svg-small" x="52" y="392">intends to publish repo-a</text>
+
+        <rect class="svg-box svg-box--accent" x="390" y="316" width="310" height="96" rx="10" />
+        <text class="svg-label" x="412" y="346">task 47 · host w8</text>
+        <text class="svg-small" x="412" y="370">base 88a02 · consumes Session()</text>
+        <text class="svg-small" x="412" y="392">intends to publish repo-b</text>
+
+        <rect class="svg-box svg-box--stale" x="750" y="316" width="320" height="96" rx="10" />
+        <text class="svg-label" x="772" y="346">task 52 · stale base</text>
+        <text class="svg-small" x="772" y="370">planned against 4f19c,</text>
+        <text class="svg-small" x="772" y="392">which has since moved</text>
+
+        <path class="svg-link svg-link--broken" d="M330 364 H355 M365 364 H390" />
+        <path class="svg-bolt" d="M5 -16 L-6 3 L-1 3 L-5 16 L7 -4 L1 -4 Z" transform="translate(360 364)" />
+        <text class="svg-small" x="250" y="440">conflict: disjoint files, shared symbol</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>The canonical graph answers which repositories and symbols depend on each other, at a named revision.</li>
+        <li>The in-flight graph holds worktrees, base revisions, affected symbols, and intended publications across hosts.</li>
+        <li>Joining them exposes two tasks converging on one symbol even when their file sets are disjoint.</li>
+        <li>A task planned against a base revision that has since moved needs invalidating or recomputing.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        The canonical half is supported by measurement. Extending the model
+        across the in-flight estate is a design inference, and the pattern page
+        labels it as one.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "promises" && (
+    <figure class="concept-figure" aria-labelledby={titleId}>
+      <header class="concept-figure__header">
+        <p class="concept-figure__index">Figure 09 / Observability</p>
+        <h3 id={titleId}>The promise chain, and where silence means failure</h3>
+      </header>
+
+      <svg
+        class="concept-figure__svg"
+        viewBox="0 0 1100 420"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>States and transition budgets from ready to settled</title>
+        <desc id={svgDescId}>
+          Work moves from ready through claimed, running, completed, verified,
+          and published to settled. Each transition carries a latency budget,
+          and the alert condition is a state entered and not left.
+        </desc>
+
+        <rect class="svg-box svg-box--durable" x="10" y="150" width="130" height="60" rx="9" />
+        <rect class="svg-durable-inner" x="16" y="156" width="118" height="48" rx="5" />
+        <text class="svg-small" x="36" y="186">ready</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M140 180 H190" />
+        <rect class="svg-box" x="190" y="150" width="130" height="60" rx="9" />
+        <text class="svg-small" x="212" y="186">claimed</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M320 180 H370" />
+        <rect class="svg-box svg-box--stale" x="370" y="150" width="130" height="60" rx="9" />
+        <text class="svg-small" x="392" y="186">running</text>
+        <path class="svg-hourglass" d="M-7 -10 H7 L-7 10 H7 Z" transform="translate(435 118)" />
+        <text class="svg-small" x="356" y="92">entered, never left</text>
+        <text class="svg-small" x="356" y="72">no error emitted</text>
+
+        <path class="svg-link svg-link--broken" d="M500 180 H518 M532 180 H550" />
+        <rect class="svg-box" x="550" y="150" width="140" height="60" rx="9" />
+        <text class="svg-small" x="572" y="186">completed</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M690 180 H740" />
+        <rect class="svg-box" x="740" y="150" width="130" height="60" rx="9" />
+        <text class="svg-small" x="762" y="186">verified</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M870 180 H920" />
+        <rect class="svg-box svg-box--accent" x="920" y="150" width="160" height="60" rx="9" />
+        <text class="svg-small" x="942" y="186">published</text>
+
+        <path class="svg-link svg-link--dashed svg-link--flow" d="M1000 210 V262 H700" />
+        <rect class="svg-box svg-box--durable" x="560" y="262" width="140" height="60" rx="9" />
+        <rect class="svg-durable-inner" x="566" y="268" width="128" height="48" rx="5" />
+        <text class="svg-small" x="586" y="298">settled</text>
+        <path class="svg-ack" d="M-8 0 L-2 6 L8 -7" transform="translate(676 284)" />
+
+        <text class="svg-eyebrow" x="20" y="252">every transition is a latency with a budget</text>
+
+        <rect class="svg-box" x="20" y="330" width="360" height="66" rx="9" />
+        <text class="svg-small" x="42" y="360">blocked work promises visibility</text>
+        <text class="svg-small" x="42" y="382">rather than disappearing into a queue</text>
+
+        <rect class="svg-box" x="410" y="330" width="360" height="66" rx="9" />
+        <text class="svg-small" x="432" y="360">recovery promises a drain rate</text>
+        <text class="svg-small" x="432" y="382">bounded after the dependency returns</text>
+
+        <text class="svg-eyebrow" x="800" y="360">a thousand healthy</text>
+        <text class="svg-eyebrow" x="800" y="382">processes, a dead factory</text>
+      </svg>
+
+      <ul class="concept-figure__fallback" aria-label="Figure summary">
+        <li>Work promises to move from ready through claimed, running, completed, verified, and published to settled.</li>
+        <li>Each transition is a latency with a budget, so the alert condition is a state entered and not left.</li>
+        <li>Blocked work promises to become visible; recovery promises to drain within a bounded period.</li>
+        <li>Activity metrics can look healthy through all of it, because a stopped loop and an idle loop emit the same silence.</li>
+      </ul>
+
+      <figcaption class="figure-caption">
+        The useful signal is usually not a component reporting an error. It is
+        a state that was entered and never left.
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .concept-figure {
+    --figure-rule: color-mix(in srgb, var(--color-text) 22%, transparent);
+    width: 100%;
+    max-width: 68rem;
+    min-width: 0;
+    margin: clamp(var(--space-xl), 7vw, var(--space-3xl)) auto;
+    color: var(--color-text);
+  }
+
+  /* Single column, index stacked above the title. The writing route hides
+     `.concept-figure__index` (figure numbers only make sense in the long-form
+     article), and a two-column header would leave the title stranded in a
+     narrow first column once that happens. */
+  .concept-figure__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-block-end: var(--space-s);
+    gap: var(--space-2xs);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .concept-figure__header p,
+  .concept-figure__header h3 {
+    margin: 0;
+  }
+
+  .concept-figure__header h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-tight);
+  }
+
+  .concept-figure__index {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .concept-figure__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block-start: var(--space-m);
+    color: var(--color-text);
+  }
+
+  .concept-figure__svg :global(path),
+  .concept-figure__svg :global(rect),
+  .concept-figure__svg :global(circle) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .svg-box {
+    fill: var(--color-bg-subtle);
+    stroke: currentColor;
+    stroke-width: 1.25;
+  }
+
+  .svg-box--accent {
+    fill: color-mix(in srgb, var(--color-accent) 9%, var(--color-bg));
+    stroke: var(--color-accent);
+  }
+
+  /* A superseded or stale element: still present, no longer authoritative. */
+  .svg-box--stale {
+    fill: color-mix(in srgb, var(--color-bg-subtle) 55%, transparent);
+    stroke: color-mix(in srgb, currentColor 45%, transparent);
+    stroke-dasharray: 6 5;
+  }
+
+  .svg-box--durable {
+    stroke-width: 1.5;
+  }
+
+  .svg-durable-inner {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+  }
+
+  .svg-lane {
+    fill: color-mix(in srgb, var(--color-text) 4%, transparent);
+    stroke: none;
+  }
+
+  .svg-link {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .svg-link--dashed {
+    stroke: var(--color-accent);
+    stroke-dasharray: 7 6;
+  }
+
+  .svg-link--broken {
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+
+  .svg-link--flow {
+    animation: svg-flow-dash 2.4s linear infinite;
+  }
+
+  @keyframes svg-flow-dash {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svg-link--flow {
+      animation: none;
+    }
+  }
+
+  .svg-arrow {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .svg-bolt {
+    fill: var(--color-accent);
+    stroke: var(--color-bg);
+    stroke-width: 1;
+  }
+
+  .svg-hourglass {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .svg-fence {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linejoin: round;
+  }
+
+  .svg-ack {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .svg-eyebrow,
+  .svg-small,
+  .svg-cross {
+    fill: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  .svg-eyebrow {
+    fill: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .svg-cross {
+    fill: var(--color-accent);
+  }
+
+  .svg-label {
+    fill: currentColor;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .svg-label--center {
+    text-anchor: middle;
+  }
+
+  .figure-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    margin-inline: auto;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .concept-figure__fallback {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 720px) {
+    .concept-figure__header {
+      grid-template-columns: 1fr;
+      gap: var(--space-xs);
+    }
+
+    /* The whole diagram is shown, fitted, rather than cropped to a scrolling
+       strip: a diagram cut off at the viewport edge reads as broken. Its
+       labels are too small to study at this size, so the script adds an
+       enlarge control and the bullet summary carries the same content. */
+    .concept-figure__svg {
+      min-width: 0;
+    }
+
+    .concept-figure__fallback {
+      position: static;
+      display: grid;
+      width: auto;
+      height: auto;
+      margin: var(--space-m) 0 0;
+      padding-inline-start: 1.25rem;
+      overflow: visible;
+      clip: auto;
+      gap: var(--space-xs);
+      white-space: normal;
+      color: var(--color-text-secondary);
+      font-size: var(--step--1);
+    }
+  }
+
+  :global(.concept-figure__enlarge) {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    :global(.concept-figure__enlarge) {
+      display: inline-block;
+      margin-block-start: var(--space-s);
+      padding: var(--space-2xs) var(--space-s);
+      border: var(--border-hairline);
+      border-radius: var(--radius);
+      background: var(--color-bg-subtle);
+      color: var(--color-text);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      cursor: pointer;
+    }
+  }
+
+  :global(.figure-zoom) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
+    border: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  :global(.figure-zoom::backdrop) {
+    background: color-mix(in srgb, var(--color-text) 55%, transparent);
+  }
+
+  :global(.figure-zoom__bar) {
+    display: flex;
+    padding: var(--space-xs) var(--space-s);
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+    border-block-end: var(--border-hairline);
+  }
+
+  :global(.figure-zoom__title) {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+  }
+
+  :global(.figure-zoom__close) {
+    padding: var(--space-2xs) var(--space-s);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    cursor: pointer;
+  }
+
+  /* The viewer is the one place panning is right: the reader opted into
+     reading the diagram, so the frame is explicitly a scrollable stage. */
+  :global(.figure-zoom__stage) {
+    display: grid;
+    height: calc(100dvh - 3.5rem);
+    padding: var(--space-s);
+    align-content: center;
+    justify-content: start;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  :global(.figure-zoom__stage svg.concept-figure__svg) {
+    width: 52rem;
+    max-width: none;
+    height: auto;
+    margin-block-start: 0;
+  }
+</style>
+
+<script>
+  // Phone-width diagrams are fitted, which makes their labels too small to
+  // study. This adds an explicit way to read one: the same SVG, at a size its
+  // type survives, inside a stage the reader can pan. One dialog is shared by
+  // every figure on the page.
+  const figures = document.querySelectorAll(".concept-figure");
+
+  if (figures.length > 0) {
+    const dialog = document.createElement("dialog");
+    dialog.className = "figure-zoom";
+    dialog.innerHTML = `
+      <div class="figure-zoom__bar">
+        <span class="figure-zoom__title"></span>
+        <button type="button" class="figure-zoom__close">Close</button>
+      </div>
+      <div class="figure-zoom__stage"></div>`;
+    document.body.append(dialog);
+
+    const title = dialog.querySelector(".figure-zoom__title");
+    const stage = dialog.querySelector(".figure-zoom__stage");
+    dialog
+      .querySelector(".figure-zoom__close")
+      ?.addEventListener("click", () => dialog.close());
+
+    for (const figure of figures) {
+      const svg = figure.querySelector("svg");
+      const heading = figure.querySelector("h3");
+      if (!svg || !heading) continue;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "concept-figure__enlarge";
+      button.textContent = "Enlarge diagram";
+      button.setAttribute("aria-label", `Enlarge diagram: ${heading.textContent?.trim()}`);
+      svg.after(button);
+
+      button.addEventListener("click", () => {
+        if (title) title.textContent = heading.textContent?.trim() ?? "";
+        stage?.replaceChildren(svg.cloneNode(true));
+        dialog.showModal();
+        if (stage) stage.scrollLeft = 0;
+      });
+    }
+  }
+</script>

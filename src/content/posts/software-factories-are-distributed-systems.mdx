@@ -1,0 +1,443 @@
+---
+title: "Software factories are distributed systems"
+date: 2026-08-09
+description: "What months of running coding agents as a fleet taught me about the machinery around them: work identity, expiring authority, effect contracts, narrow publication, reconciliation, and capacity policy, taught through the system where each one broke."
+tags: [agents, orchestration, reliability, distributed-systems, scheduling, observability]
+---
+
+import ConceptFigure from "../../components/software-factories/ConceptFigure.astro";
+
+*Every abstraction here is taught through [Gas City](https://github.com/gastownhall/gascity), a software factory SDK I run and help maintain.*
+
+An agent in my fleet fixed a scoring-integrity bug (yay!). It made the change in its own branch, added a regression test, ran the suite, passed automated review, recorded a verdict of `pass`, and closed the work item. Every step reported success, and every step really did succeed.
+
+Nothing merged the branch (not yay).
+
+The commits sat there, three ahead of main, with the new test present on the branch and absent from the codebase everything else was reading. This was unfortunately an embarrassingly common occurrence for me. Elsewhere in the same [rig](#my-factory) (basically a repo plus a work-items database in [Beads](https://github.com/gastownhall/beads)), audits kept reading main, finding bugs whose fixes had already been written, tested, reviewed, and closed on branches nobody merged, and filing them again.
+
+The working code existed, but the system never folded it in.
+
+Some of this amounts to a game of Agent Telephone. An agent will do what you tell it to, sometimes, except when it doesn't, or when it helpfully decides you meant something adjacent. But that wasn't the problem here. The agent did the work it was asked to do and reported accurately on what it had done, and the missing step was outside the agent entirely. Nothing owned the transition between producing a valid change and making that change part of the codebase.
+
+That meant a closed work item and merged code were allowed to stand in for the same fact when they are very much not the same fact.
+
+That distinction is what this essay is about. Agents do the work, but the factory around them has to keep track of who is allowed to act, whether an effect has already happened, what artifact was actually verified, when work is really complete, and what to do when part of that sequence dies halfway through. None of those guarantees come from the model or its toolkits. They also do not belong uniquely to a workflow engine, queue, or agent runtime. They emerge from how all of those pieces interact.
+
+## An old problem with a new worker
+
+Not every agent deployment needs a factory around it. A local assistant that reads a repository, proposes a patch in an interactive session, and exits has one process, one human, and very little durable coordination state. If it dies, the human restarts it and mostly loses some minor convenience.
+
+The failure model changes once 1) the work has to outlive the process doing it, 2) multiple workers can act concurrently on shared or versioned state, 3) components can fail independently, 4) external systems commit effects asynchronously, or 5) verification and publication happen in separate places. At that point you have acquired the usual distributed-systems problems whether or not you've thought to wrap your head around it that way: stale authority, duplicate effects, lost updates, [split-brain records](https://en.wikipedia.org/wiki/Split-brain_%28computing%29), and partial failure, to name a few.
+
+Thinking about software factories this way isn't anything new. Osterweil argued in [1987](https://dl.acm.org/doi/10.5555/41765.41766) that software processes are software too. Choi and Scacchi described ["the software infrastructure for a distributed system factory"](https://www.ics.uci.edu/~wscacchi/Software-Process/Readings/DistSysFactory.pdf) in 1991, treating the coordination plane as something that had to be engineered in its own right. The CNCF's [Secure Software Factory](https://tag-security.cncf.io/community/working-groups/supply-chain-security/secure-software-factory/secure-software-factory/) reference architecture supplies much of the contemporary vocabulary.
+
+What autonomous agents change are the characteristics of the worker.
+
+Those older systems mostly coordinated deterministic tools and human developers who could, at least in principle, be asked what they had done and why (instead of "idk Claude said to do this", unless Claude happened to be that one guy hoarding the company COBOL knowledge). A compiler does not confidently explain that it compiled the program when no binary exists. An agent can absolutely tell you it completed a task whose authoritative effect never happened, often in beautifully aggravating detail, and then apologize and do it again.
+
+Current systems have arrived at similar decompositions from different directions. OpenAI's [Symphony orchestration](https://openai.com/index/open-source-codex-orchestration-symphony/), Cloudflare's [issue-triage factory](https://blog.cloudflare.com/astro-issue-triage/), and Vercel's [factory for the AI SDK repository](https://vercel.com/blog/building-a-software-factory-for-ai-sdk) all separate some version of durable work state, scheduling, disposable workers, and gated publication. Vercel records runs as success, flawed, blocked, or manual, and only success ships.
+
+These distinctions seem like they should be relatively straightforward, until you operate many agents long enough to discover how many places in the factory can collapse "the attempt stopped" into "the work is done."
+
+Most of this essay is about those places. The short version of what I learned, before I get into the details:
+
+1. Work needs an identity that outlives whatever process happens to be working on it right now.
+2. Authority has to expire, and it has to get checked where the write actually lands, not where the writer happens to be at the moment of writing.
+3. Anything crossing out of your system needs its own identity, and it needs a real `unknown` outcome you're willing to keep.
+4. Verify one exact commit, publish through one small conditional write, and record the link between work and code somewhere the worker can't go back and edit later.
+5. Events make it fast, queries make it true, and you need both of them.
+6. None of this shows up on a dashboard that only measures activity.
+
+Everything below is how I found out about each of these, by watching my factory break.
+
+## My factory
+
+Reliability abstractions can be particularly eye-glazing, so I'll introduce each one through the thing that actually broke in my factory and generalize from there. That means a short vocabulary lesson first.
+
+**Gas City** is an open-source SDK for running fleets of coding agents ([gastownhall/gascity](https://github.com/gastownhall/gascity)). It gives you the building blocks rather than one fixed design: a durable work record, persistent agent identities, bounded worker sessions, dispatch, scheduled jobs, and messaging between agents. I help maintain it, and I run an installation of it that builds and repairs Gas City itself, which is where the incidents below come from.
+
+A **bead** is the unit of durable work, from [Beads](https://github.com/gastownhall/beads), the dependency-aware work record underneath. Nearly everything in the city is a bead: tasks, mail between agents, workflow steps, and the live agent sessions themselves. A bead has an id, a status, an assignee, labels, and metadata ([my provenance PR was merged yay!](https://github.com/gastownhall/beads/pull/4461#issuecomment-5219398013)), and it lives in a store that outlives every process that touches it.
+
+A **rig** is a project workspace with its own bead database and its own id prefix, so a bead's id tells you which rig owns it. A **worker** is an agent, usually one of a pool of interchangeable slots, that claims a bead and does the work in its own [worktree](https://git-scm.com/docs/git-worktree). A **claim** is how it takes ownership, and the mechanics get a whole section below, because that is where authority is won or lost.
+
+A **formula** is a reusable multi-step workflow, and an instance of one is a **molecule** whose steps are themselves beads, so a workflow's progress is visible in the same store as the work. An **order** is a scheduled job that fires on a cadence, basically a cron job, and my city runs about a hundred of them: compactors, sweeps, and **reapers**, the repair loops that find and fix divergence. The **mayor** is the top-level coordinating agent and the handoff point to me.
+
+## Four responsibilities a factory must not confuse
+
+A factory has four responsibilities, and Gas City keeps them separate, which is why it's easy to see when one gets confused for another. The bead store is the **work ledger**, holding durable facts: what work exists, who owns it, what came out of it. A formula is the **procedure**, deciding what happens next: ordering, waits, retries, cancellation. An agent is a **worker**, making changes in worktrees, repositories, and external services. Pool sizing and admission are the **control plane**, deciding what runs at all. None of the four can stand in for another.
+
+<ConceptFigure kind="authorities" />
+
+Mixing them up is where things break. A running agent doesn't prove its bead is still assigned to it. A completed formula doesn't prove its branch ever landed. A closed bead doesn't prove the result went anywhere at all.
+
+It's completely fine for agents to be nondeterministic, but for reliable work throughput the authority over what they produce needs determinism. Recovery has to start from durable facts rather than from what a worker remembers, what a process happens to be doing, or what a procedure thinks it asked for a while back.
+
+The failures below are different versions of that rule getting broken. More importantly, each version can be turned into a rule, deliberately broken in a test, and checked.
+
+## The work outlives the worker
+
+One piece of work has more identities inside it than a design usually bothers to name, and letting any two of them blur together is an incident waiting to happen. Seven are worth naming: the work itself, the state of the code the attempt started from, the ownership epoch that grants write authority, the attempt, the artifact it produced, the verification that ran against that exact artifact, and each change it made to the outside world. The factory has to be able to recover every one of those on its own, without asking the worker that just died.
+
+<ConceptFigure kind="identity" />
+
+The one that's specific to software work is the starting state. You can say "the tests passed, against a revision three merges old," but your records can't if nothing in them wrote down which revision the attempt actually read. This comes back in the scheduling section, where a plan built on a revision that has since moved is the same identity gone stale.
+
+In Gas City all of these are concrete. The bead id is the work. The assignee plus its lease is the ownership epoch.
+
+The agent has a durable identity too. A running session isn't a process id or a terminal name, it's a record in the same store as the work: a bead of type session, with its own id, its own open-or-closed status, and its own metadata. Assignment points at that record, so a work bead's assignee has to resolve to a real open session, and the front door turns away a closed one or anything of the wrong type. Events carry the same session id, so the logs line up later. The process, the terminal, and the worktree hang off that record instead of being the identity.
+
+What you get out of that is that "does this work already have an agent on it" becomes a database query instead of a scan of the process table, which is the only reason "attach to the one that's already running" is something you can ask for at all. What you risk is the same fact backwards: close the session record while its process is still alive, and the agent goes invisible to every repair loop looking for open sessions while keeping its credentials and its ability to claim more work.
+
+The fuzziness of this that has impacted me the most is between the session and the attempt that created it. Pool restarts mint new session identities. The worker protocol told a restarted agent to pick up where it left off from context, and never told it to check that the bead was still assigned to its current session identity. So a resumed agent can keep grinding away on a bead the supervising loop already reset and handed to someone else.
+
+I tested that boundary directly. I had a test controller SIGKILL a worker in the middle of a coding task, after it had launched a coding-agent child process but before its first checkpoint recorded the process identity recovery needs. The orchestrator retried, as designed, and the retry launched a second agent.
+
+The first agent was still running. SIGKILL had killed the worker, not its child. Rereading the process start time in `/proc/<pid>/stat` alongside the Linux boot ID confirmed the survivor was the original process and not a recycled PID. One work item, two live executors, duplicate effects, two claimed completions. The unsafe implementation had treated the agent session as something an attempt happens to create, so when the worker died, the orchestrator assumed the session had died with it.
+
+<ConceptFigure kind="dual-executor" />
+
+The protected run took the same kill and resolved a stable session key before launching anything. It found the surviving agent and attached. The orchestration attempt changed and the external executor did not, and the run ended with one executor, one set of effects, and one outcome. Both runs sat on the same durable workflow engine, so durability was not the difference.
+
+The rule:
+
+**A retry may create a new attempt. It must not accidentally create a second executor.**
+
+Underneath that are two lifecycles, and they must not share transitions. An attempt goes created, executing, outcome ready, verified. When an attempt dies, that's an event in the attempt's life and nothing more; by itself it moves the work nowhere. The work stays owned under the same epoch across a retry, and only handing it to a different executor opens a new epoch.
+
+The two lifecycles touch at exactly one place. A worker's own report can push its attempt to outcome ready, which tells the factory an artifact exists and is worth checking. Only evidence from somewhere other than the worker can finish the work. When that evidence can't be pinned down, the work parks somewhere durable with an explicit "I don't know what happened externally" instead of guessing. That's what the external-effects and reconciliation sections below are about.
+
+<ConceptFigure kind="lifecycle" />
+
+The ordering carries over to any stack. Before you create anything expensive or anything that touches the outside world, whether that's an agent session, a worktree, a cloud sandbox, a branch, or a job, ask whether this work already owns one. Starting a new one is only one acceptable answer. Attaching to what's already there is the other.
+
+Patterns: [stable work identity](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/stable-work-identity.md) and [start or attach](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/start-or-attach.md). Drill: [worker-dies-agent-survives](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/worker-dies-agent-survives/DRILL.md).
+
+## Authority has to expire cleanly
+
+Identity should survive a worker. Authority should not.
+
+A **lease** records who is currently entitled to act on some work. **[Fencing](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)** is the mechanism that stops a previous owner from acting after the lease moves. They are not the same thing: reassigning a lease changes the factory's record of authority, while something else has to prevent the old owner from exercising it. That worker may still hold open connections, a warm worktree, valid credentials, and a live child process.
+
+I used to think Gas City's duplicate claims came from a claim operation that accepted writes without checking them, with a lock out front doing the real work. But nope, not how that works. The claim is fine at both layers that implement one. Beads' `ClaimIssueInTx` does a real check-and-write in a single transaction and verifies how many rows it touched (`internal/storage/issueops/claim.go:59-72`), and `gc hook --claim` wraps that with an identity check afterward and a `bead.claim_rejected` event (`cmd/gc/cmd_hook_claim.go:197-252, 411-416`).
+
+The duplicates come from what that check compares against. It accepts the caller's own actor name, with a branch added so an agent retrying its own claim succeeds instead of erroring (`claim.go:95-100`). And actor names are resolved by falling back through `--actor`, then `BEADS_ACTOR`, then `BD_ACTOR`, then `git user.name`, then `$USER`, then the literal string `unknown`. So workers that end up sharing a name all claim the same bead successfully, and the claim degrades into a lock that locks nothing.
+
+The fence was there the whole time, it was just keyed on a name several workers could present, which fails exactly the same way as having no fence at all.
+
+The writes next door have the same problem, this time through [`bd`](https://github.com/gastownhall/beads), the Beads CLI. `bd assign` and `bd update --assignee` overwrite whatever is there with no check at all (`issueops/update.go:277`), so a reassign steals a live claim without noticing. `bd unclaim` never compares who is asking against who holds the claim (`issueops/unclaim.go:22-60`), so any process can release any worker's work. There is lease machinery, with a five-minute expiry stamped at claim time and a path to reclaim expired work, but heartbeating is opt-in and new. That leaves a genuinely annoying choice: turn on the reclaim loop before workers heartbeat and every long task becomes systematic duplicate work; leave it off and dead workers hold their beads forever.
+
+So what I observed were double-claimed beads turning into duplicate pull requests, and a bead claimed by three worker identities and closed twice by different actors.
+
+<ConceptFigure kind="fence" />
+
+What works instead is a counter that only ever goes up, the ownership epoch from earlier, checked at the place the write actually lands and keyed on something the holder can't fake or share. Every handoff bumps the counter. Every write carries the number its writer held when it took the claim. The destination compares that number and applies the write in the same operation, so there's no gap between checking and writing for ownership to move through.
+
+Well, eventually. The missing piece is a claim fence in Beads itself, which is open upstream (good reminder for me to go nudge it along). What exists today is a solid check-and-write on a single metadata key, enough to fence one publication pointer and not enough to fence arbitrary writes.
+
+The fault harness is also what convinced me the counter has to be an actual counter and not just the owner's name. In its [ABA](https://en.wikipedia.org/wiki/ABA_problem) probe, an owner got replaced and then later became the owner again, so the name on an old write matched the current owner perfectly well even though the authority behind it was two handoffs stale. Both unfenced configurations accepted four actions issued under the obsolete epoch, and both fenced ones accepted zero. Names come back around after enough churn, and a counter that only goes up can't. That's the entire reason it has to be a counter.
+
+One version of this is specific to agent fleets. The worker protocol enforced claim discipline, drain, and kill decisions through prose instructions rather than code, which the audit summarized as the model being the mutex.
+
+A prompt is not an enforcement mechanism. A worker that skips the instruction isn't violating a constraint, it's following a different plausible reading of one.
+
+Locks around callers, preflight checks, process kills, and cancellation are all useful operationally, and not one of them makes you safe from a stale writer. The check has to live where the write lands, keyed on something the writer can't spoof.
+
+Cancellation showed me this gap directly across six engine-level runs in the harness: the workflow was canceled and recorded as canceled, while the agent it had supposedly canceled stayed alive, committed its change, and produced an outcome the unfenced system happily accepted.
+
+Pattern: [fenced authority](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/fenced-authority.md). Drill: [stale-writer-completes](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/stale-writer-completes/DRILL.md).
+
+## External effects need their own contract
+
+Inside its own transactional store, a factory can make state changes atomic. The moment it crosses into a code host, CI system, cloud sandbox, or message queue, that guarantee ends, and there is an interval with no safe default:
+
+1. The factory dispatches an operation.
+2. The destination commits it.
+3. The factory records that it succeeded.
+
+Kill the worker between steps two and three and the factory no longer knows whether the operation happened. Retrying can duplicate an effect that already committed, and refusing to retry can abandon one that never did.
+
+In Gas City this interval is where a mid-dispatch crash does its damage. A dispatcher that dies mid-route leaves the bead with its routing never stamped, which poisons the claim, and the next cycle looks healthy because nothing recorded that an attempt was in flight.
+
+The fault harness placed failures inside exactly that interval across four integration styles: a direct model CLI call, a sandboxed harness, a native agent loop, and a plain activity retry. Every unsafe arm applied the external effect twice while the orchestration layer recorded one eventual completion, and every protected arm applied it once.
+
+The protection did not come from the orchestrator. It came from an **effect identity**, a stable logical name for the operation that crosses the boundary with it, letting the destination recognize a retry as the same operation and return the previous result.
+
+This is the real boundary around "exactly once." An orchestrator can retry an instruction. It cannot, on its own, make something happen exactly once on the other side of a network. That's an [end-to-end property](https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf), and it needs the destination to play along, through an [idempotency key](https://docs.stripe.com/api/idempotent_requests), a conditional write, a stable resource name, or something equivalent. If the destination won't cooperate, no amount of orchestration sophistication buys it for you.
+
+Two things follow.
+
+Write down what you're about to do before you do it, because recovery can't reason about an operation it has no record of intending.
+
+And keep `unknown` as a real outcome next to succeeded and failed. When the destination can't deduplicate and can't be asked afterward, calling it success or calling it failure both invent a fact you don't have.
+
+From a real `unknown` you still have options: return the result you already recorded, push the destination to the state you wanted, work out what happened from state you do trust, or stop and hand it to a human with the ambiguity intact.
+
+Patterns: [durable intent](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/durable-intent.md), [effect identity](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/effect-identity.md), and [explicit unknown state](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/explicit-unknown-state.md). Drill: [effect-commits-ack-is-lost](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/effect-commits-ack-is-lost/DRILL.md).
+
+## Make publication small
+
+Coding work has one real advantage over most distributed transactions: building the thing and making the thing official are separable.
+
+A worker can spend an hour producing a commit while none of it counts yet, and a worker that lost its claim can leave a branch behind that nothing depends on. Throwing away an hour of prepared work costs compute. Letting a worker that lost its claim publish costs correctness. That's a trade I'm willing to make in favor of correctness.
+
+The case this piece opened with is a workflow that separated those two steps and then never did the second one. Gas City's `mol-focus-review` formula ran seven steps, from loading context through focus, tests, simplification, and review, to a finalize step. Setup created a per-bead worktree on a `work/{{issue}}` branch. Finalize committed the stragglers, recorded diff statistics, closed the bead, and drained the worker (`formulas/mol-focus-review.formula.toml:326-360`).
+
+It never merged, never pushed, never opened a pull request, and nothing on the controller side picked up the slack. The formula's own comment admits it, defending real branches over [detached HEADs](https://git-scm.com/docs/git-checkout#_detached_head) on the grounds that "the assumed 'controller reconciles to main' does not exist". So a perfect run stranded its commits, exactly as designed.
+
+A second bug in the same formula shows what happens when the check that decides whether something is good sits somewhere other than the place that decides whether it ships. Finalize depended on review. That dependency was satisfied by the review step closing, and the review step closed on its reject path and its hard-fail path too. A rejected review armed finalize exactly like a passing one did.
+
+The fix added a `review_verdict` check, and I'll be honest about what that fix is: it's a prompt telling the worker to check. The dependency still means what it always meant, any closed step still satisfies it, and a worker that skips the check script closes the bead anyway.
+
+<ConceptFigure kind="publish" />
+
+The shape that works:
+
+1. Build candidates expensively and in parallel.
+2. Verify one exact commit that cannot change afterward.
+3. Publish through one small fenced conditional write.
+4. Leave the rest lying around to inspect or clean up later.
+
+Publication is then one conditional write against one small piece of state, where the writer has to present both the epoch it thinks it holds and the exact commit it intends to publish.
+
+The commit matters as much as the epoch, because a verdict attached to a branch name follows the branch wherever it goes. CI verifies commit `A`, the branch moves on to commit `B`, publication asks only "did branch X pass," and you have just shipped code nobody looked at. Verification has to name a specific immutable commit, and publication has to check both things in the same place.
+
+Even done right, a green build says less than people treat it as saying. It tells you one check, in one configuration, against one version of the code, didn't fail. A red build doesn't tell you the change is wrong either, because the check itself can time out, flake, or run against the wrong revision.
+
+There's real scale behind this: across 1,960 open-source Java projects, 3.2 percent of GitHub Actions builds got rerun, and 67.73 percent of those reruns were flaky ([Ge and Zhang 2026](https://arxiv.org/abs/2602.02307)). Build results and code correctness are two different signals, and a factory that treats them as one either retries good changes forever or ships on a pass that proved less than it assumed.
+
+What the agent says it did is not part of either check. An agent reporting `done` is telling you what it believes happened. The repository, CI system, or publisher decides whether it actually did.
+
+Every stranded branch above had a worker that sincerely and correctly believed it had finished its job.
+
+### Make the link to the code a record
+
+Those cases were hard to spot because the link between a work item and the code it produced was self-reported. A worker writes `gc.work_commit` about itself, whenever it likes, with whatever value it likes, including long after the bead closed. The same problem runs downstream: one of the close gates *writes* a reviewer verdict of `pass` instead of reading one, which means any coverage number built on those fields can be manufactured after the fact.
+
+That's why I added [`provenance_events`](https://github.com/gastownhall/beads/pull/4461#issuecomment-5219398013) to Beads. It's an append-only log tying an issue to a real external thing: a commit SHA, a pull request, a branch, a work id, a transcript. It's deliberately a separate table from the audit trail that tracks field changes, because they answer different questions. The audit trail says a field went from one value to another. Provenance says this work was linked to this artifact, by this producer, at this time.
+
+A few properties matter here:
+
+- **Nothing can be edited or deleted.** There's no update or delete for an individual event; one goes away only if its issue does. A reference somebody can rewrite later isn't evidence of anything.
+- **The shape is checked, the meaning is not.** `kind` and `ref_kind` come from fixed lists, and a `git-sha` has to be 40 lowercase hex characters. Past that, `bd` doesn't try to decide who the actor is or what the reference points at. Keeping references opaque lets different runtimes write to the same table without turning it into a private extension of one factory.
+- **Writing the same fact twice is harmless.** The event id is derived from the fact itself, so a producer that fires twice with the same inputs produces the same id and the second write does nothing. It's the same effect-identity trick from two sections ago, applied to the record of the thing instead of the thing.
+- **Observed facts look different from reconstructed ones.** Backfilled rows are marked separately so history reconstructed later can't quietly become indistinguishable from history you actually measured.
+
+One more separation matters: when the thing happened and when you recorded it are different facts. A git hook can record a fact about a commit made an hour ago, and any question about what the factory knew at a given moment needs both timestamps to answer.
+
+Generally, a factory needs a link from work to code that is typed, append-only, stamped with who wrote it, recorded by whoever actually saw the thing happen, and kept separate from both the work record's editable fields and the worker's own account of itself.
+
+Once you have that, "did this closed item actually land" is a query instead of an investigation, and the reconciliation loop in the next section finally has something trustworthy to check against.
+
+Pattern: [verify before publish](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/verify-before-publish.md). Drill: [artifact-changes-after-verification](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/artifact-changes-after-verification/DRILL.md).
+
+## Events make it fast; reconciliation makes it true
+
+My factory's operating rule is four words:
+
+> Signals advance. Queries repair.
+
+Events buy you speed. They tell the system that something probably changed. Reconciliation buys you correctness by going back to the source and asking what is actually true right now.
+
+You want both, and it matters enormously which one you trust when they disagree.
+
+<ConceptFigure kind="signals" />
+
+One example is when I had a supervisor wedge that stopped work flowing for about seventy minutes. The obvious explanation, that the supervisor had hung, was wrong. Its reconcile loop logged every single minute through the whole window and status checks came back in under five milliseconds the entire time.
+
+What had actually broken was event delivery. The `help-request-surface` order kept firing on schedule at 20:28, 20:40, 20:50, 21:05, and 21:19, dragging a 247-deep backlog of `bead.updated` events behind it, so the dispatcher was crawling to react to work that was ready to go. The jobs that fire on a clock kept working fine, because they don't depend on events at all, which is the only reason the city didn't stop dead.
+
+The stranded branches from the last section are the subtler version of the same thing. Every close event fired and each one got handled. The event machinery did exactly what it was built to do, and the system was still wrong, because nothing ever went back and asked whether a bead marked complete had actually landed its code.
+
+Any factory whose publishing step can crash halfway through will drift away from reality at some steady background rate. You need a reconciliation process to keep that drift bounded.
+
+An event path can also break while still looking perfectly wired up. A set of signal bridges sat in my city for 446 straight observation ticks during which not one bead carried the metadata they depended on and not one workflow ever entered the waiting phase they existed to serve. Nothing crashed and no queue backed up, so they had been dead the entire time and nothing noticed, precisely because the only thing that would have noticed is a loop that periodically rereads the city state and asks whether any of this still makes sense, and there wasn't anything like that in place.
+
+Failed reads need the same treatment. A lookup that errored has not told you that something is absent.
+
+Gas City's [tmux](https://github.com/tmux/tmux/wiki) provider returned `nil, nil` when the tmux server was unavailable (`internal/runtime/tmux/tmux.go:1005-1012`), which made "I couldn't see any sessions" and "there are no sessions" the same value. Then destructive things ran on that reading: beads closed as orphaned while their agents were alive and working, worktrees pruned, and in the orphan scan, two agents started on one bead (`internal/runtime/tmux/adapter.go:323-331`). A thirty-second cliff in the state cache meant that under memory pressure the whole city could flip to "everything is dead" in a single step (`state_cache.go:145-151`). The store half of the same codebase knew better and holds off on destructive work when a read came back partial. The runtime half never got the same treatment.
+
+Reconciliation also changes how much durable machinery you need, usually downward. A pull-request state poller was one of the things that pushed me toward durable execution in the first place. Walking through it, I found it burning roughly 72 GitHub API calls an hour to re-derive a state that hadn't changed in ten days, and the latency win it promised turned out to depend on webhook intake that doesn't exist here. Events to advance it, plus a scan to repair it, solved the whole thing without another durable procedure.
+
+Durable execution is worth the additional complexity when the procedure itself has state worth keeping: it can die halfway through a sequence, wait on something external, hold a timer for days, or do things whose recovery depends on knowing which step it reached.
+
+But when a job can reread the available data, work out what should be true, and fix the difference, reconciliation is the better tool and it's a lot less machinery.
+
+Pattern: [reconciliation](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/reconciliation.md). Drill: [event-is-lost](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/event-is-lost/DRILL.md). The negative result is captured in the [background maintenance](https://github.com/sjarmak/software-factory-reliability/blob/main/recipes/background-maintenance.md) recipe.
+
+## The same guarantees have to survive a fleet
+
+Everything so far has been about keeping one work item's state honest. Fleets break at a different scale. A shared dependency comes back from an outage, hundreds of items become retryable at once, and the factory sends a thundering herd at the service that just recovered. One tenant with a deep backlog can consume every worker slot. Recovery traffic can starve interactive work that a human is sitting there waiting on.
+
+The underlying problem is still the same one: the factory needs an authoritative answer about what is allowed to run, not just a pile of runnable things.
+
+### Capacity policy sits above the queues
+
+Four mechanisms that blur together in casual designs do different jobs. Queues hold waiting work. Schedulers decide what runs next. **Admission control** decides whether new work gets in at all, making it the layer that can actually say no. **Backpressure** carries saturation upstream so producers can slow down, defer work, or drop it.
+
+Retry ownership matters for the same reason. A workflow engine, agent harness, HTTP client, and model SDK may all retry the same failure independently. Four layers each retrying three times do not produce twelve orderly attempts. They produce a multiplier that hits hardest when a dependency is already unhealthy.
+
+One layer should own recovery, preferably the layer with the durable record of what should be running. Its decisions survive the worker that made them.
+
+Recovery also needs its own capacity budget. An undifferentiated queue cannot express "serve interactive work first and let the backlog use what remains." Nor should recovery run as fast as the dependency can technically absorb. Draining a backlog at full speed is another form of retry storm.
+
+Backlog work also has to be preemptible, not merely assigned lower priority at admission. Once a long-running job owns a worker slot, its original priority no longer helps.
+
+Scheduling cannot fix a serialized bottleneck either. Before adding workers, find the narrowest resource every successful item must pass through.
+
+In Gas City, it was a file. The bead store's `.gc/beads.json` had grown to 168 MB, and every cursor advance and run creation reloaded and parsed the entire file under a single lock. Dispatch was serialized no matter how many workers were available.
+
+That changes what's worth measuring. Fleet utilization tells you how busy the system is. What you really want to know is where work stops moving, why it stopped, and how long it waits there.
+
+Drill: [retry-storm](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/retry-storm/DRILL.md).
+
+### The scheduler has to read the code
+
+A normal compute scheduler thinks about CPU, memory, affinity, locality. A factory scheduler has a harder question to answer: can these two changes safely run at the same time?
+
+File overlap is the obvious signal, but it isn't enough. Two agents editing completely separate files can still collide through a shared schema, a generated file, an API one is changing while the other calls it, or a rule that spans both.
+
+So conflicts have to be part of how you describe the work, and you can get them wrong in both directions. Miss a conflict and you let two colliding changes run together. Invent one and you serialize work that could have gone in parallel.
+
+Answering that needs a queryable map of your code: which repositories depend on an API, which in-flight work touches callers of a function some other task is changing, whether a plan was built against a revision that has since moved. This is what code intelligence platforms like [Sourcegraph](https://sourcegraph.com) already do for humans, pointed at a different consumer: the scheduler, not the developer or individual worker agent.
+
+A model's context window can't be that map, and neither can an index that doesn't track revisions. When I fed models context drawn from an outdated revision, 15 of 17 outputs from one model and 13 of 17 from another went straight at an interface that no longer existed. Same setup, retrieval from the current revision, zero incompatible outputs.
+
+So every answer the map gives back should be pinned to a specific `repo@revision`. When the base revision moves, scheduling decisions made against the old picture may need throwing away, which is the failure the [repository-base-moves](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/repository-base-moves/DRILL.md) drill injects.
+
+Merged code is only half of what a fleet has to reason about. The fleet is constantly creating a second, temporary codebase: worktrees, unmerged commits, pending changes spread across hosts. A running city holds dozens of per-bead `work/*` branches at once, and a scheduler that only looks at merged state can't see two of them heading for the same interface.
+
+<ConceptFigure kind="topology" />
+
+The revision-tracking half of this I've measured. I haven't extended the same map across everything in flight. That part comes from operating the fleet and from collisions I watched happen or dodged by luck, and the [pattern page](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/topology-aware-scheduling.md) says as much.
+
+### Cross-repository changes are campaigns
+
+Ask a factory to strip a deprecated API out of four hundred repositories and one giant task is the wrong shape entirely.
+
+You need a **campaign**: one durable statement of what you want, a discovery pass that works out the current target list, and one independently recoverable child per repository, each with its own identity, epoch, artifact, verification, and publication state. Four hundred repositories will never commit as one transaction, so one bad repository should sit in the corner by itself rather than dragging 399 successes back to the start.
+
+The harder problem is knowing when the campaign is done. "Every worker finished" isn't enough, because the code moves while the campaign runs. A repository you found on day one may not be relevant anymore, and a caller somebody wrote on day five was never in the original list. Being done has to mean something closer to: every repository that matters right now is either published, explicitly exempted, or blocked with a reason and a name attached. Which means rerunning discovery before you close it, to catch what changed underneath you.
+
+Gas City taught me the small version of this. Its stranded workflows had to be counted against what was actually live, not against what had been dispatched, and an inventory of 37 open workflow markers sat right next to roughly 1,300 open mail, session, and conversation beads that must never be closed. A sweep written against "open and old" would have unwittingly destroyed live state.
+
+You have to compute coverage against the world as it is right now, not the world as it was when you started.
+
+The companion repository has a worked example: a five-repository migration that ends with two targets published, one blocked on an incompatible downstream API with an owning team named, and one exempted because a generated replacement is already on the way. The [campaign-coverage-drifts](https://github.com/sjarmak/software-factory-reliability/blob/main/drills/campaign-coverage-drifts/DRILL.md) drill drops a new target in partway through and checks that the campaign refuses to close until that one has an answer too.
+
+Pattern: [cross-repo campaigns](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/cross-repo-campaigns.md).
+
+## Observe the factory through its promises
+
+Agent dashboards are usually designed to capture activity: sessions running, tokens burned, tool calls per minute, worker utilization. Those numbers are all useful for diagnosing a problem once you already know you have one, but unfortunately not one of them will tell you whether the factory is actually healthy.
+
+The worst failures in my records barely moved any of them. When the host running the city died after hours of memory exhaustion, the `resource-sweep` order that exists specifically to catch that ran right on schedule and did not raise any concerns. Then jobs stopped firing, the host died, and the city was gone for over an hour.
+
+Every component was running the whole way down, and the sweep was watching a metric that uselessly stayed green.
+
+<ConceptFigure kind="promises" />
+
+You can account for these failure modes by treating the factory's own promises as the health model. Blocked work gets its own promise: it will surface rather than vanish into a queue. Recovery gets one too: the backlog will drain within some bounded time after the dependency comes back.
+
+This changes what an alert is for. The signal you want is usually a state something entered and became stuck at: work that's ready and still unclaimed, a session that's running but stopped making progress, an artifact verified and never published, recovery traffic that stopped draining.
+
+A thousand perfectly healthy agent processes can otherwise sit on top of a factory that is functionally dead.
+
+You need identity discipline in place to instrument this. Your events and records need enough shared identity to follow one work item across every system it touches: the work, its epoch, its attempt, its session, its effects, its artifact, its verification, its publication.
+
+Keep those ids out of metric labels, where every new value becomes a new time series and your metrics backend falls over. They belong in traces and queryable event records, with metrics carrying the summarized latencies.
+
+What you're aiming for is that an engineer, or an agent, who notices one late promise can walk the chain in both directions: back to the work item and the agent that handled it, the host and revision it ran against, the artifact it built, the check that ran on it, and forward to whatever happened next.
+
+The companion repository includes [event conventions](https://github.com/sjarmak/software-factory-reliability/blob/main/observability/semantic-conventions.md) and eleven [sample queries](https://github.com/sjarmak/software-factory-reliability/blob/main/observability/sample-queries.sql), including publications whose artifact differs from the one verified, work planned against a base that has moved, stale generations still producing effects, completed work with no authoritative publication, and recovery traffic consuming the interactive reserve.
+
+Pattern: [promise-oriented observability](https://github.com/sjarmak/software-factory-reliability/blob/main/patterns/promise-oriented-observability.md).
+
+## Recovery is a measurement
+
+A restart arrow on an architecture diagram is a claim, not a guarantee. You need to be able to answer what happens when the system dies at each specific point where its picture of the world can diverge from reality. To test where the failure modes show up, I injected failures at five points around one external change: before dispatch, after dispatch but before the far side commits, after it commits but before the acknowledgement gets home, after the acknowledgement but before the record is durable, and after that.
+
+The third one is where orchestration breaks down most subtly. The world has already changed but the factory has no idea.
+
+That's the window that produced duplicate effects in all four integration styles. A test that kills a worker and checks whether work eventually resumes tells you nothing about safety there. It just tells you the system restarts.
+
+Recovery also has to be measured more than once, and under realistic load rather than just against a single work item. Running the same fault repeatedly showed recovery behaving differently on successive failures, which one clean restart will never show you.
+
+The [drill directory](https://github.com/sjarmak/software-factory-reliability/tree/main/drills) has eight fault drills, each indicating where it breaks things, what rule has to hold, how you check, what the control run looks like, and what evidence to keep. If you want the long version with the raw runs attached, the [Agent Durability Lab](https://github.com/sjarmak/agent-durability-lab) findings are organized by different failure mode tests: an activity that writes to an API or a Git host, a coding-agent CLI running inside a retryable step, a canceled workflow whose agent kept going.
+
+## Adopting this in an existing factory
+
+You can apply these changes at one boundary at a time. There are certain boundaries that are worth prioritizing first, because the early mistakes corrupt state while the later ones just waste a bit of work.
+
+Before making any changes, audit one work item.
+
+Recover the work item's identity, the revision it started from, its ownership epoch, its attempt, the artifact it produced, the check that ran against that exact artifact, and the change it made to the outside world using only available records, without asking an agent directly.
+
+Anything you can't recover is something a recovery process won't have either.
+
+Then work through this list:
+
+1. **Give work a stable identity, and resolve before you create.** Cheapest change on the list, biggest drop in duplicate executors.
+2. **Add a counter that only goes up, check it where the write lands, and key it on something a worker can't share or fake.** The Gas City claim story is what happens when you don't do the last part.
+3. **Give uncertain external effects a stable identity, and write down what you intend before you do it.** Then stop mapping `unknown` onto success or failure.
+4. **Tie verification to a specific immutable commit, and shrink publishing to one conditional write.** Also: go check whether anything in your system actually merges what your workers produce. Make the work-to-code link an append-only record written by whoever saw it happen, not a field the worker fills in about itself.
+5. **Add one reconciliation loop over whatever divergence is most likely to hurt your work throughput,** which is usually completed work that never landed.
+6. **Audit your failed reads.** Find every place an error turns into a value that something destructive then believes.
+7. **Split capacity by class, and give retries a single owner.**
+8. **Instrument the promise chain,** then alert on states entered and never left.
+
+The first four protect correctness. The last four give you the observability and control needed to keep those guarantees true across a fleet.
+
+## The companion kit
+
+The [companion repository](https://github.com/sjarmak/software-factory-reliability) is a toolkit for assessing the reliability boundaries within your own software factory. It is independent of any specific workflow engine, agent runtime, queue, code host, or observability stack.
+
+You write down the guarantees your factory claims in a contract file: identities, ownership and fencing, what happens to external effects on retry, where reconciliation runs, capacity classes, what finishes a campaign, and which promises have time budgets. `factory-check review` checks that contract against the rules above. Anything you left blank comes back as a finding, rather than being read as a guarantee that exists.
+
+Those rules are the shorter version of the factory contracts in [Engineering Reliable Coding Agents](/books/engineering-reliable-coding-agents/), where they're written as eleven testable obligations ([protocols/factory-contracts.yaml](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/factory-contracts.yaml)) across six groups: keeping work alive across retries, scoping authority to an epoch, keeping external effects safe, keeping records and evidence consistent, keeping stuck work visible and recovery honest, and being able to say who did what.
+
+Run it against the deliberately broken example contract and it comes back with six failures and nine warnings, including a fence enforced by the caller instead of the destination, a verdict pinned to a branch name that can move, an effect identity regenerated on every attempt, and a campaign that calls itself complete when its original children finish.
+
+Every claim sits at one of three levels. **Declared** means you say the guarantee exists. **Enforced** means someone can identify the code that provides it. **Fault-tested** means a controlled fault shows it actually holding.
+
+There's no overall score, because a factory with seven solid boundaries and one path a stale writer can walk through is unsafe on that path, and averaging that away wouldn't be useful.
+
+Getting a claim to fault-tested takes a drill. Four of the eight run against a bundled in-memory simulator, each with a protected mode where the rule has to hold and an unsafe mode where the same fault has to visibly break it:
+
+```bash
+git clone https://github.com/sjarmak/software-factory-reliability
+cd software-factory-reliability
+
+python3 cmd/factory-check/factory_check.py review examples/unsafe-factory.yaml
+
+python3 -m adapters.in_memory.run_drill \
+  stale-writer-completes --mode unsafe
+
+python3 -m adapters.in_memory.run_drill \
+  stale-writer-completes --mode protected
+```
+
+The unsafe run exits nonzero and writes down the evidence: a stale epoch overwriting the artifact its replacement had already published. The protected run takes the same stale completion and records the destination turning it away.
+
+`factory-check init` starts a contract for a factory you already have. The first review shows you which identities aren't stable, which effects have vague retry behavior, which authority checks happen too early to matter, which completion conditions rest on a worker's word, and which promises aren't being measured at all.
+
+## Untangle your factory's responsibilities
+
+Coding agents have a new place in a much older systems problem. A software factory schedules more than CPU and memory; it schedules authority over mutable code, repository state, dependencies between changes, scarce review attention, and work that sits half-finished for hours or days.
+
+Its workers outlive their supervisors, read stale versions of the codebase, duplicate each other, and produce different results from identical input. The worker changed. What the work needs from the system around it did not.
+
+Almost every incident in this piece came from taking evidence produced at one layer and treating it as authority that belongs to another:
+
+- a running process read as a valid claim
+- a claim keyed on an identity several workers could present
+- a completed formula read as a published change
+- a failed observation read as a fact about the world
+- a closed bead read as merged code
+- a self-reported commit reference read as proof the commit exists
+- a green metric read as a healthy host
+
+You don't need to be able to predict how an agent is going to complete its work.
+
+You do need the factory around it to know which work exists, who may act on it, which artifact was actually verified, what happened outside the factory, and whether the promised change ever reached the codebase.
+
+Reliable software factories are, in large part, systems for preventing one layer's observation from becoming another layer's authority.
