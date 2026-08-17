@@ -9,9 +9,10 @@ import {
 } from "@/lib/books";
 
 export async function getStaticPaths() {
-  const [books, chapters, podcastEpisodes] = await Promise.all([
+  const [books, chapters, companions, podcastEpisodes] = await Promise.all([
     getCollection("books"),
     getCollection("bookChapters"),
+    getCollection("bookCompanions"),
     getCollection("learning", (entry) => entry.data.kind === "podcast"),
   ]);
 
@@ -22,6 +23,8 @@ export async function getStaticPaths() {
       chapters: chapters
         .filter((chapter) => chapter.data.book.id === book.id)
         .sort((a, b) => a.data.order - b.data.order),
+      practiceCount: companions.find((companion) => companion.data.book.id === book.id)?.data
+        .practiceCount,
       audiobookSeries: podcastEpisodes.find((entry) => entry.data.url?.includes(`/books/${book.id}/`))
         ?.data.series,
     },
@@ -31,10 +34,11 @@ export async function getStaticPaths() {
 interface Props {
   book: CollectionEntry<"books">;
   chapters: CollectionEntry<"bookChapters">[];
+  practiceCount?: number;
   audiobookSeries?: string;
 }
 
-const { book, chapters, audiobookSeries } = Astro.props;
+const { book, chapters, practiceCount, audiobookSeries } = Astro.props;
 
 // matches the slugify in src/pages/digest/index.astro, which anchors each podcast series
 function anchorOf(name: string): string {
@@ -86,7 +90,7 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
             )
           }
           <a href={bookCompanionHref(book.id)}>
-            Browse all 192 practices <span aria-hidden="true">→</span>
+            Browse all {practiceCount} practices <span aria-hidden="true">→</span>
           </a>
           <a href={bookExploreHref(book.id)}>
             Explore the knowledge graph <span aria-hidden="true">→</span>

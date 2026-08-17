@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-labelledby="figtitle-review-flow" class="bookfig">
   <title id="figtitle-review-flow">Flow of source review and practice synthesis. The source lane distinguishes the base review, bounded update audit, SE coverage probe, and unexecuted provider plans retained for future updates. The practice lane reports the admission gate and overlapping hardening operations without treating their counts as an arithmetic decomposition.</title>
-  <desc id="desc">A two-lane flow. The scholarly lane shows the base corpus, update audit, software-engineering coverage probe, and release-candidate source set. The practice lane shows candidate extraction, the admission gate, nonexclusive hardening operations, and the 192 edition records divided between 55 developed practices and 137 companion practices.</desc>
+  <desc id="desc">A two-lane flow. The scholarly lane shows the base corpus of 118 works, the bounded update audit, the software-engineering coverage probe, the distributed-systems synthesis, and the resulting release-candidate set of 159 scholarly works. The practice lane shows candidate extraction, the admission gate, nonexclusive hardening operations, and the 206 edition records: 193 gated records plus 13 catalog-level leads, divided between 56 developed practices and 150 companion practices.</desc>
   <defs>
     <style>.bookfig .f-bg{fill:#ffffff}.bookfig .s-bg{stroke:#ffffff}.bookfig .f-ink{fill:#1a1a1a}.bookfig .s-ink{stroke:#1a1a1a}.bookfig .f-mid{fill:#6b6b6b}.bookfig .s-mid{stroke:#6b6b6b}.bookfig .f-faint{fill:#b8b8b8}.bookfig .s-faint{stroke:#b8b8b8}.bookfig .f-wash{fill:#e2e2e2}.bookfig .s-wash{stroke:#e2e2e2}.bookfig .f-accent{fill:#8f4e1c}.bookfig .s-accent{stroke:#8f4e1c}.bookfig .f-onacc{fill:#ffffff}.bookfig .s-onacc{stroke:#ffffff}@media (prefers-color-scheme:dark){.bookfig .f-bg{fill:#232019}.bookfig .s-bg{stroke:#232019}.bookfig .f-ink{fill:#ede5d6}.bookfig .s-ink{stroke:#ede5d6}.bookfig .f-mid{fill:#9a8f7c}.bookfig .s-mid{stroke:#9a8f7c}.bookfig .f-faint{fill:#5c5346}.bookfig .s-faint{stroke:#5c5346}.bookfig .f-wash{fill:#3d382f}.bookfig .s-wash{stroke:#3d382f}.bookfig .f-accent{fill:#df9d5e}.bookfig .s-accent{stroke:#df9d5e}.bookfig .f-onacc{fill:#232019}.bookfig .s-onacc{stroke:#232019}}:where([data-theme="dark"]) .bookfig .f-bg{fill:#232019}:where([data-theme="dark"]) .bookfig .s-bg{stroke:#232019}:where([data-theme="dark"]) .bookfig .f-ink{fill:#ede5d6}:where([data-theme="dark"]) .bookfig .s-ink{stroke:#ede5d6}:where([data-theme="dark"]) .bookfig .f-mid{fill:#9a8f7c}:where([data-theme="dark"]) .bookfig .s-mid{stroke:#9a8f7c}:where([data-theme="dark"]) .bookfig .f-faint{fill:#5c5346}:where([data-theme="dark"]) .bookfig .s-faint{stroke:#5c5346}:where([data-theme="dark"]) .bookfig .f-wash{fill:#3d382f}:where([data-theme="dark"]) .bookfig .s-wash{stroke:#3d382f}:where([data-theme="dark"]) .bookfig .f-accent{fill:#df9d5e}:where([data-theme="dark"]) .bookfig .s-accent{stroke:#df9d5e}:where([data-theme="dark"]) .bookfig .f-onacc{fill:#232019}:where([data-theme="dark"]) .bookfig .s-onacc{stroke:#232019}:where([data-theme="light"]) .bookfig .f-bg{fill:#ffffff}:where([data-theme="light"]) .bookfig .s-bg{stroke:#ffffff}:where([data-theme="light"]) .bookfig .f-ink{fill:#1a1a1a}:where([data-theme="light"]) .bookfig .s-ink{stroke:#1a1a1a}:where([data-theme="light"]) .bookfig .f-mid{fill:#6b6b6b}:where([data-theme="light"]) .bookfig .s-mid{stroke:#6b6b6b}:where([data-theme="light"]) .bookfig .f-faint{fill:#b8b8b8}:where([data-theme="light"]) .bookfig .s-faint{stroke:#b8b8b8}:where([data-theme="light"]) .bookfig .f-wash{fill:#e2e2e2}:where([data-theme="light"]) .bookfig .s-wash{stroke:#e2e2e2}:where([data-theme="light"]) .bookfig .f-accent{fill:#8f4e1c}:where([data-theme="light"]) .bookfig .s-accent{stroke:#8f4e1c}:where([data-theme="light"]) .bookfig .f-onacc{fill:#ffffff}:where([data-theme="light"]) .bookfig .s-onacc{stroke:#ffffff}</style>
     <style>
@@ -13,7 +13,7 @@
   <rect width="1200" height="800" class="f-bg"/>
 
   <text x="70" y="58" class="label f-ink">Source review</text>
-  <text x="70" y="87" class="small f-mid">Numbers describe this release candidate, not universal corpus sizes.</text>
+  <text x="70" y="87" class="small f-mid">Numbers describe this edition, not universal corpus sizes.</text>
 
   <rect x="70" y="122" width="250" height="116" rx="8" class="f-wash s-mid line"/>
   <text x="95" y="158" class="label f-ink">Base review</text>
@@ -36,14 +36,19 @@
   <text x="765" y="240" class="small f-mid">Provider searches not run</text>
   <text x="765" y="262" class="small f-mid">Source limitation disclosed</text>
 
+  <rect x="70" y="300" width="380" height="124" rx="8" class="f-wash s-mid line"/>
+  <text x="95" y="336" class="label f-ink">Distributed-systems synthesis</text>
+  <text x="95" y="368" class="body f-ink">21 scholarly works admitted</text>
+  <text x="95" y="392" class="small f-mid">7 practitioner records</text>
+  <text x="95" y="414" class="small f-mid">plus 1 scholarly and 1 practitioner for repository scale</text>
+
   <path d="M935 280 V316" class="s-ink line" marker-end="url(#arrow)"/>
+  <path d="M450 362 H735" class="s-ink line" marker-end="url(#arrow)"/>
   <rect x="740" y="322" width="390" height="96" rx="8" class="f-accent"/>
-  <text x="765" y="358" class="label white">138 scholarly works in RC</text>
+  <text x="765" y="358" class="label white">160 scholarly · 99 practitioner</text>
   <text x="765" y="388" class="small white">Late candidates deferred to the next edition</text>
 
-  <path d="M715 302 C625 342 510 375 390 394" class="s-mid line dash"/>
-  <text x="390" y="424" class="small f-mid">source inclusion and practice admission</text>
-  <text x="390" y="446" class="small f-mid">are separate decisions</text>
+  <text x="70" y="454" class="small f-mid">source inclusion and practice admission are separate decisions</text>
 
   <line x1="70" y1="482" x2="1130" y2="482" class="s-mid line"/>
   <text x="70" y="532" class="label f-ink">Practice synthesis</text>
@@ -67,10 +72,11 @@
   <text x="645" y="712" class="small f-mid">1 reinstated after provenance repair</text>
   <text x="645" y="738" class="small f-mid">nonexclusive record operations</text>
 
-  <path d="M930 666 H955" class="s-ink line" marker-end="url(#arrow)"/>
-  <rect x="960" y="603" width="170" height="154" rx="8" class="f-accent"/>
-  <text x="985" y="642" class="label white">192 records</text>
-  <text x="985" y="678" class="body white">55 developed</text>
-  <text x="985" y="710" class="body white">137 companion</text>
-  <text x="985" y="740" class="small white">stable IDs</text>
+  <path d="M930 666 H950" class="s-ink line" marker-end="url(#arrow)"/>
+  <rect x="955" y="596" width="175" height="174" rx="8" class="f-accent"/>
+  <text x="976" y="634" class="label white">206 records</text>
+  <text x="976" y="668" class="body white">56 developed</text>
+  <text x="976" y="698" class="body white">150 companion</text>
+  <text x="976" y="724" class="small white">193 gated, 13 leads</text>
+  <text x="976" y="748" class="small white">stable IDs</text>
 </svg>

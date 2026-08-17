@@ -42,6 +42,11 @@ const chapterData = chapters.map((chapter) => ({
   part: chapter.data.part,
   source: chapter.body ?? "",
 }));
+const expectedCounts = {
+  total: companion.data.practiceCount,
+  taught: companion.data.taughtCount,
+  untaught: companion.data.untaughtCount,
+};
 const graph = buildBookGraph({
   book: {
     id: book.id,
@@ -52,11 +57,13 @@ const graph = buildBookGraph({
   },
   chapters: chapterData,
   companionSource: companion.body ?? "",
+  expectedCounts,
 });
 const referenceIndex = buildBookReferences({
   bookId: book.id,
   chapters: chapterData,
   companionSource: companion.body ?? "",
+  expectedCounts,
 });
 const payload = JSON.stringify(graph).replaceAll("<", "\\u003c");
 ---

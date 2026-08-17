@@ -185,10 +185,10 @@ function citationScore(reference, sourceKind, sourceSectionStart) {
   return score;
 }
 
-export function buildBookReferences({ bookId, chapters, companionSource }) {
+export function buildBookReferences({ bookId, chapters, companionSource, expectedCounts }) {
   const rootHref = `/books/${bookId}`;
   const practiceMetadata = new Map(
-    parseCompanionPractices(companionSource).map((practice) => [practice.id, practice]),
+    parseCompanionPractices(companionSource, expectedCounts).map((practice) => [practice.id, practice]),
   );
   const chapterByNumber = new Map(
     chapters
@@ -288,7 +288,10 @@ export function buildBookReferences({ bookId, chapters, companionSource }) {
   };
 }
 
-export function parseCompanionPractices(source) {
+export function parseCompanionPractices(source, expectedCounts) {
+  if (!expectedCounts) {
+    throw new Error("parseCompanionPractices requires expectedCounts from the companion frontmatter");
+  }
   const headings = [...source.matchAll(CHAPTER_HEADING)];
   const practices = [];
   for (let index = 0; index < headings.length; index += 1) {
@@ -326,21 +329,26 @@ export function parseCompanionPractices(source) {
     }
   }
 
-  if (practices.length !== 192) {
-    throw new Error(`Companion practice count must be 192; found ${practices.length}`);
+  const { total, taught: expectedTaught, untaught: expectedUntaught } = expectedCounts;
+  if (practices.length !== total) {
+    throw new Error(
+      `Companion practice count must match frontmatter practiceCount (${total}); found ${practices.length}. Update the frontmatter or the catalog body so they agree.`,
+    );
   }
   if (new Set(practices.map((practice) => practice.id)).size !== practices.length) {
     throw new Error("Companion practice identifiers must be unique");
   }
   const taught = practices.filter((practice) => practice.classification === "taught").length;
   const untaught = practices.length - taught;
-  if (taught !== 55 || untaught !== 137) {
-    throw new Error(`Companion classification count must be 55 taught and 137 untaught; found ${taught} and ${untaught}`);
+  if (taught !== expectedTaught || untaught !== expectedUntaught) {
+    throw new Error(
+      `Companion classification count must match frontmatter (${expectedTaught} taught and ${expectedUntaught} untaught); found ${taught} and ${untaught}. Update the frontmatter or the catalog body so they agree.`,
+    );
   }
   return practices;
 }
 
-export function buildBookGraph({ book, chapters, companionSource }) {
+export function buildBookGraph({ book, chapters, companionSource, expectedCounts }) {
   const numberedChapters = chapters
     .filter((chapter) => chapter.kind === "chapter" && Number.isInteger(chapter.number))
     .sort((left, right) => left.number - right.number);
@@ -351,7 +359,7 @@ export function buildBookGraph({ book, chapters, companionSource }) {
     }
   }
 
-  const practices = parseCompanionPractices(companionSource);
+  const practices = parseCompanionPractices(companionSource, expectedCounts);
   const chapterByNumber = new Map(numberedChapters.map((chapter) => [chapter.number, chapter]));
   const rootHref = `/books/${book.id}`;
   const nodes = [

@@ -80,6 +80,12 @@ export function extractReferencesFromMarkdown(source: string): Array<{
   citation: string;
 }>;
 
+export interface CompanionExpectedCounts {
+  total: number;
+  taught: number;
+  untaught: number;
+}
+
 export function buildBookReferences(input: {
   bookId: string;
   chapters: Array<{
@@ -91,9 +97,13 @@ export function buildBookReferences(input: {
     source: string;
   }>;
   companionSource: string;
+  expectedCounts: CompanionExpectedCounts;
 }): BookReferenceIndex;
 
-export function parseCompanionPractices(source: string): Array<{
+export function parseCompanionPractices(
+  source: string,
+  expectedCounts: CompanionExpectedCounts,
+): Array<{
   id: string;
   practiceId: string;
   title: string;
@@ -118,4 +128,5 @@ export function buildBookGraph(input: {
     part: number;
   }>;
   companionSource: string;
+  expectedCounts: CompanionExpectedCounts;
 }): BookGraphData;
