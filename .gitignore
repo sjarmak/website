@@ -28,7 +28,7 @@ node_modules/
 *.db
 .beads-credential-key
 
-# Large local source video (the compressed web copy lives in public/media/)
+# Large local source video (kept outside this repo; compressed web copy lives in public/media/)
 /JarmakSciXDemo.mp4
 
 # Brainstorm session working dir (local-only)
@@ -46,9 +46,20 @@ node_modules/
 # Deployed from the dedicated media branch and worktree.
 /public/media/
 
+# local project-lead audit reports
+/.gc-reports/
+
 # knowledge-sync run artifacts: candidates, library proposals, reports, logs
 # (transient — explorer edits + libraries.json are the committed outputs)
 .knowledge-sync/
 
 # python bytecode from the knowledge build scripts
 scripts/knowledge/__pycache__/
+
+# Python tool caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# audiobook TTS-prep working transcripts (intermediate; not the published transcripts/ collection)
+.audiobook-transcripts/
