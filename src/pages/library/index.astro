@@ -1,8 +1,6 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
-import LinkageExplorer from "@/components/knowledge/LinkageExplorer.astro";
 import {
-  buildKnowledge,
   getLibraries,
   getExplorers,
   getDigestStream,
@@ -16,7 +14,6 @@ import type {
 const libraries: Library[] = getLibraries();
 const explorers: Explorer[] = getExplorers();
 const digestItems: DigestItem[] = getDigestStream(30);
-const knowledge = await buildKnowledge();
 ---
 
 <PageLayout
@@ -89,16 +86,7 @@ const knowledge = await buildKnowledge();
       </ul>
     </section>
 
-    <!-- 3. Knowledge linkage -->
-    <section>
-      <LinkageExplorer
-        nodes={knowledge.nodes}
-        related={knowledge.related}
-        heading="Knowledge linkage"
-      />
-    </section>
-
-    <!-- 4. Recently added -->
+    <!-- 3. Recently added -->
     <section>
       <h2 class="sub">Recently added</h2>
       <p class="muted measure" style="margin-block-end: var(--space-m)">
