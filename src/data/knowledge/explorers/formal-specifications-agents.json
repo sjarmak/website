@@ -1,0 +1,3343 @@
+{
+ "id": "formal-specifications-agents",
+ "title": "Formal Specifications & Coding Agents",
+ "blurb": "Formal specification as the bottleneck in agent-written software: who writes the spec, how its quality is measured, and what a verifier can and cannot certify.",
+ "learningSlug": "formal-specifications-agents",
+ "homepage": "/library/explorers/formal-specifications-agents",
+ "paperCount": 161,
+ "themeCount": 9,
+ "papers": [
+  {
+   "bibcode": "1995wcre.conf...22G",
+   "title": "Strongest postcondition semantics as the formal basis for reverse engineering",
+   "firstAuthor": "Gannod",
+   "year": 1995,
+   "citationCount": 0,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Uses strongest-postcondition semantics to derive formal abstractions from existing code as the basis for reverse engineering.",
+     "why": "The oldest item in this map, naming the code-to-specification direction decades before it became a prompt."
+    }
+   ]
+  },
+  {
+   "bibcode": "2008arXiv0805.3256M",
+   "title": "Model Checking Event-B by Encoding into Alloy",
+   "firstAuthor": "Matos",
+   "year": 2008,
+   "citationCount": 1,
+   "arxiv": "0805.3256",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Encodes Event-B models into Alloy so a SAT-based finder can search for invariant counterexamples the prover cannot discharge.",
+     "why": "The clean statement of prove-it versus find-a-counterexample, the tradeoff every agent verification loop re-encounters."
+    }
+   ]
+  },
+  {
+   "bibcode": "2009arXiv0909.0884F",
+   "title": "Inferring Loop Invariants using Postconditions",
+   "firstAuthor": "Furia",
+   "year": 2009,
+   "citationCount": 1,
+   "arxiv": "0909.0884",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Infers loop invariants by weakening the loop's postcondition, using heuristics such as uncoupling.",
+     "why": "Pre-LLM statement of the idea the invariant section keeps rediscovering: an invariant is a weakened postcondition, so specification quality bounds invariant quality."
+    }
+   ]
+  },
+  {
+   "bibcode": "2010LNCS.6355..348L",
+   "title": "Dafny: An Automatic Program Verifier for Functional Correctness",
+   "firstAuthor": "Leino",
+   "year": 2010,
+   "citationCount": 70,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Introduces Dafny, an imperative language whose SMT-backed verifier checks preconditions, postconditions, loop invariants and termination as part of the build.",
+     "why": "The verification-aware language most of the agent work here targets. Read it to know what 'the verifier accepted it' actually asserts."
+    }
+   ]
+  },
+  {
+   "bibcode": "2010arXiv1011.2560C",
+   "title": "Verifying Safety Properties With the TLA+ Proof System",
+   "firstAuthor": "Chaudhuri",
+   "year": 2010,
+   "citationCount": 0,
+   "arxiv": "1011.2560",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "TLAPS is the proof system for TLA+, with declarative hierarchical proofs discharged through SMT solvers and proof assistants.",
+     "why": "The proof half of TLA+, which the natural-language-to-TLA+ work below mostly leaves implicit."
+    }
+   ]
+  },
+  {
+   "bibcode": "2014arXiv1412.4395G",
+   "title": "Dafny: Statically Verifying Functional Correctness",
+   "firstAuthor": "Gauci",
+   "year": 2014,
+   "citationCount": 0,
+   "arxiv": "1412.4395",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "A feature-by-feature tour of Dafny: pre- and postconditions, assertions, loop invariants, termination metrics, quantifiers, predicates and framing.",
+     "why": "The cheapest way to pick up the specification vocabulary the LLM papers assume you already have."
+    }
+   ]
+  },
+  {
+   "bibcode": "2018hpcs.conf...18B",
+   "title": "A Lesson on Verification of IoT Software with Frama-C",
+   "firstAuthor": "Blanchard",
+   "year": 2018,
+   "citationCount": 1,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Tutorial on Frama-C value analysis, deductive verification (WP) and runtime verification (E-ACSL), worked on real Contiki operating-system modules.",
+     "why": "ACSL annotations are the output target for several spec-generation papers here; this is where that annotation discipline comes from."
+    }
+   ]
+  },
+  {
+   "bibcode": "2018icse.conf..151S",
+   "title": "Poster: An Algorithm and Tool to Infer Practical Postconditions",
+   "firstAuthor": "Singleton",
+   "year": 2018,
+   "citationCount": 0,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Studies 2,300 methods across seven Java libraries and finds the strongest-postcondition transformer yields postconditions too unwieldy to use, motivating a different inference algorithm.",
+     "why": "Empirical warning that a formally correct specification can still be worthless, which is the gap spec-quality benchmarks now try to measure."
+    }
+   ]
+  },
+  {
+   "bibcode": "2021arXiv210213569M",
+   "title": "EvoSpex: An Evolutionary Algorithm for Learning Postconditions",
+   "firstAuthor": "Molina",
+   "year": 2021,
+   "citationCount": 0,
+   "arxiv": "2102.13569",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Learns postcondition assertions from observed executions through an evolutionary search over candidate predicates.",
+     "why": "Dynamic specification mining as it stood before language models, and the implicit baseline that LLM inference is compared against."
+    }
+   ]
+  },
+  {
+   "bibcode": "2021arXiv210707664E",
+   "title": "SMLtoCoq: Automated Generation of Coq Specifications and Proof Obligations from SML Programs with Contracts",
+   "firstAuthor": "El-Beheiry",
+   "year": 2021,
+   "citationCount": 0,
+   "arxiv": "2107.07664",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Automatically translates SML programs and their function contracts into Coq specifications and proof obligations.",
+     "why": "Contracts-to-proof-obligations as a compilation problem; the same pipeline shape Coins later exploits to grade generated specifications."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251205262N",
+   "title": "Verified VCG and Verified Compiler for Dafny",
+   "firstAuthor": "Nezamabadi",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2512.05262",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Builds a big-step semantics for an imperative Dafny subset plus a verified verification-condition generator and compiler, after soundness bugs were found in both existing tools.",
+     "why": "The verifier is part of the trusted base. If an agent's only oracle is a checker with soundness bugs, the guarantee is smaller than it reads."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250802733J",
+   "title": "What's in a Proof? Analyzing Expert Proof-Writing Processes in F* and Verus",
+   "firstAuthor": "Jain",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2508.02733",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Observational study of how expert developers actually build proofs in F* and Verus, and where the process stalls.",
+     "why": "The human baseline for proof-oriented programming, worth having before claiming an agent replaces it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260526169D",
+   "title": "ESBMC: A Survey of Its Evolution, Integration, and Future Directions in Formal Software Verification",
+   "firstAuthor": "Dantas",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2605.26169",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Traces the evolution and integrations of ESBMC across two decades of bounded model checking for software.",
+     "why": "Grounds the current wave in the tool lineage it plugs into; several invariant papers below use exactly this substrate."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260723178D",
+   "title": "Kairos: Generating Tick-Indexed Proof Obligations for Synchronous Temporal Contracts",
+   "firstAuthor": "Dabrowski",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.23178",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Generates tick-indexed proof obligations from synchronous programs and LTL assume-guarantee contracts through the automata-theoretic reduction.",
+     "why": "Concrete machinery for turning a temporal contract into something a first-order backend can actually discharge."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260701504D",
+   "title": "Kani: A Model Checker for Rust",
+   "firstAuthor": "Delmas",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.01504",
+   "url": null,
+   "branches": [
+    "foundations"
+   ],
+   "notes": [
+    {
+     "branch": "foundations",
+     "takeaway": "Kani, an open-source bounded model checker for Rust that targets unsafe-code soundness, functional correctness and panic freedom rather than bug-finding alone.",
+     "why": "Shows what a mainstream-language verifier gives you without writing proofs, which is the baseline agent-written proofs have to beat."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231001831E",
+   "title": "Can Large Language Models Transform Natural Language Intent into Formal Method Postconditions?",
+   "firstAuthor": "Endres",
+   "year": 2023,
+   "citationCount": 13,
+   "arxiv": "2310.01831",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Turns natural-language intent into formal postconditions and evaluates them both for soundness and for power to discriminate buggy programs.",
+     "why": "Introduced the two axes everything since is graded on: is the specification correct, and does it actually exclude wrong code."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240400762W",
+   "title": "Enchanting Program Specification Synthesis by Large Language Models using Static Analysis and Program Verification",
+   "firstAuthor": "Wen",
+   "year": 2024,
+   "citationCount": 9,
+   "arxiv": "2404.00762",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Decomposes a program, generates specifications per sub-component with an LLM, and validates each against the program verifier (AutoSpec).",
+     "why": "One of the first pipelines to make specification synthesis compositional instead of whole-function guessing."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241102318F",
+   "title": "Evaluating the Ability of Large Language Models to Generate Verifiable Specifications in VeriFast",
+   "firstAuthor": "Fan",
+   "year": 2024,
+   "citationCount": 9,
+   "arxiv": "2411.02318",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Measures how well LLMs write VeriFast specifications, where separation-logic auxiliary annotations dominate the actual work.",
+     "why": "Separation logic is the hardest realistic target in this map, so this is the honest difficulty reading."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251224594W",
+   "title": "A Tale of 1001 LoC: Potential Runtime Error-Guided Specification Synthesis for Verifying Large-Scale Programs",
+   "firstAuthor": "Wang",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2512.24594",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Drives specification synthesis from potential runtime errors so large programs can be verified without hand-written contracts.",
+     "why": "Takes the properties to prove from what the analyzer already fears rather than from a human wish list, which is what makes it scale."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251012702R",
+   "title": "Beyond Postconditions: Can Large Language Models infer Formal Contracts for Automatic Software Verification?",
+   "firstAuthor": "Richter",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2510.12702",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Pushes past postconditions to full contracts, including the preconditions and frame conditions automatic verification needs.",
+     "why": "Postconditions alone rarely make a verifier succeed; the missing preconditions are where verification stalls."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250215217C",
+   "title": "FormalSpecCpp: A Dataset of C++ Formal Specifications created using LLMs",
+   "firstAuthor": "Chakraborty",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2502.15217",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "A dataset of C++ programs paired with LLM-created formal specifications.",
+     "why": "One attempt to manufacture the training data whose absence KBSpec names."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250609550Y",
+   "title": "Integrating Symbolic Execution with LLMs for Automated Generation of Program Specifications",
+   "firstAuthor": "Yang",
+   "year": 2025,
+   "citationCount": 1,
+   "arxiv": "2506.09550",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Pairs symbolic execution with an LLM so path constraints ground the generated program specifications.",
+     "why": "Representative of the dominant recipe in this section: the model proposes, a sound analysis constrains."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250215441H",
+   "title": "On the Effectiveness of Large Language Models in Writing Alloy Formulas",
+   "firstAuthor": "Hong",
+   "year": 2025,
+   "citationCount": 9,
+   "arxiv": "2502.15441",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Controlled experiment on LLMs writing Alloy formulas from natural language, repairing faulty formulas, and judging equivalence.",
+     "why": "Separates three abilities usually measured as one: write, repair, and check."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260527531S",
+   "title": "Agentic Separation Logic Specification Synthesis",
+   "firstAuthor": "Suresh",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.27531",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "An agent loop that synthesizes separation-logic specifications, iterating against verifier feedback.",
+     "why": "The agentic framing applied to the least forgiving specification language here."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260626490F",
+   "title": "An Empirical Study of LLM-Generated Specifications for VeriFast",
+   "firstAuthor": "Fan",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.26490",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Follow-up empirical study of LLM-generated VeriFast specifications on larger heap-manipulating code.",
+     "why": "Shows where the failures concentrate once the toy functions are gone."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260620969Z",
+   "title": "AutoACSL: Synthesizing ACSL Specifications by Integrating LLMs with CPG-Based Static Analysis",
+   "firstAuthor": "Zhou",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.20969",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Synthesizes ACSL specifications by combining an LLM with code-property-graph static analysis (AutoACSL).",
+     "why": "Static analysis used as the retrieval mechanism for what the annotation is obliged to mention."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260112845P",
+   "title": "Automatic Generation of Formal Specification and Verification Annotations Using LLMs and Test Oracles",
+   "firstAuthor": "Pascoal Faria",
+   "year": 2026,
+   "citationCount": 4,
+   "arxiv": "2601.12845",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Generates specification and verification annotations from code with LLMs, then cross-checks them against test oracles.",
+     "why": "Tests as the cheap oracle for whether a specification is plausible, the same lever Coins formalizes with proof obligations."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260200715C",
+   "title": "Beyond Basic Specifications? A Systematic Study of Logical Constructs in LLM-based Specification Generation",
+   "firstAuthor": "Chen",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2602.00715",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Systematically studies which logical constructs (quantification, nesting, frame conditions) LLM-generated specifications actually contain.",
+     "why": "Aggregate pass rates hide that most generated specifications are shallow; this measures the shallowness directly."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260213851B",
+   "title": "Evaluating LLM-Generated ACSL Annotations for Formal Verification",
+   "firstAuthor": "Beg",
+   "year": 2026,
+   "citationCount": 2,
+   "arxiv": "2602.13851",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Evaluates LLM-written ACSL annotations for Frama-C deductive verification.",
+     "why": "The C-side counterpart to the Dafny and Verus results, on the annotation language industrial C verification actually uses."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260813077Y",
+   "title": "How Powerful are LLMs in Generating Formal Program Specifications?",
+   "firstAuthor": "Yang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.13077",
+   "url": null,
+   "branches": [
+    "spec-generation",
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Studies at scale whether LLMs can write formal program specifications in Rocq, against curated human-written specifications for HumanEval problems.",
+     "why": "The paper this explorer was built around. It puts the specification, not the code, under test."
+    },
+    {
+     "branch": "benchmarks",
+     "takeaway": "Coins scores a candidate specification by instantiating it on trusted test cases and generating concrete proof obligations, so a spec is graded by what it actually rules out.",
+     "why": "Moves specification evaluation past 'does it typecheck' and past 'does it resemble the reference', which is the measurement missing from most generation work here."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260410761B",
+   "title": "Improving Dynamic Specification Inference with LLM-Generated Counterexamples",
+   "firstAuthor": "Balestra",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2604.10761",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Improves dynamic specification inference by having an LLM propose counterexamples that kill candidate invariants overfitted to the observed runs.",
+     "why": "Counterexamples are where models add most to classical mining: they can imagine executions the test suite never produced."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260621339W",
+   "title": "KBSpec: LLM-driven Formal Specification Generation with Evolving Domain Knowledge Base",
+   "firstAuthor": "Wang",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2606.21339",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Builds an evolving domain knowledge base so specification generation is not capped by the scarcity of formal-language corpora (KBSpec).",
+     "why": "Names the data problem underneath this whole section: there is very little formal specification text to learn from."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260718555R",
+   "title": "LM2Alloy: Investigating LLM-Generated Formal Specifications for Automated Test Derivation in Production Software",
+   "firstAuthor": "Rashid",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.18555",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Generates Alloy specifications from requirements documents and from production source, then derives executable tests from them.",
+     "why": "Declarative specifications used to produce tests instead of proofs, a cheaper way into real codebases."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260313414Z",
+   "title": "Neuro-Symbolic Generation and Validation of Memory-Aware Formal Function Specifications",
+   "firstAuthor": "Zhang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2603.13414",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Neuro-symbolic generation and validation of function specifications that reason about the heap as well as about values.",
+     "why": "Heap-manipulating code is where naive specification generation quietly falls apart."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260421570M",
+   "title": "SpecSyn: LLM-based Synthesis and Refinement of Formal Specifications for Real-world Program Verification",
+   "firstAuthor": "Ma",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2604.21570",
+   "url": null,
+   "branches": [
+    "spec-generation"
+   ],
+   "notes": [
+    {
+     "branch": "spec-generation",
+     "takeaway": "Synthesizes and then refines formal specifications for real-world program verification with the model in the loop (SpecSyn).",
+     "why": "Refinement rather than one-shot generation is what lets specifications survive contact with real code."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231107948K",
+   "title": "Finding Inductive Loop Invariants using Large Language Models",
+   "firstAuthor": "Kamath",
+   "year": 2023,
+   "citationCount": 45,
+   "arxiv": "2311.07948",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Prompts LLMs for inductive loop invariants and checks each candidate with a verifier, solving instances classical tools miss.",
+     "why": "The result that opened this line. Invariant inference is guess-and-check, and models are unusually good guessers."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231004870W",
+   "title": "Lemur: Integrating Large Language Models in Automated Program Verification",
+   "firstAuthor": "Wu",
+   "year": 2023,
+   "citationCount": 29,
+   "arxiv": "2310.04870",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Formalizes LLM-plus-automated-reasoner program verification as a set of sound proof rules, so model proposals cannot make the system unsound (Lemur).",
+     "why": "The soundness discipline the rest of this section depends on, stated explicitly rather than assumed."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231009342C",
+   "title": "Ranking LLM-Generated Loop Invariants for Program Verification",
+   "firstAuthor": "Chakraborty",
+   "year": 2023,
+   "citationCount": 18,
+   "arxiv": "2310.09342",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Trains a re-ranker over LLM-generated invariant candidates so the correct one is checked early.",
+     "why": "Generation is cheap and checking is expensive, so ordering the candidates is most of the speedup."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231110483L",
+   "title": "Towards General Loop Invariant Generation: A Benchmark of Programs with Memory Manipulation",
+   "firstAuthor": "Liu",
+   "year": 2023,
+   "citationCount": 9,
+   "arxiv": "2311.10483",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "A loop-invariant benchmark built from programs that manipulate memory rather than numbers.",
+     "why": "Most invariant results are on numeric loops; this is the harder and more realistic distribution."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241210483L",
+   "title": "Enhancing Automated Loop Invariant Generation for Complex Programs with Large Language Models",
+   "firstAuthor": "Liu",
+   "year": 2024,
+   "citationCount": 4,
+   "arxiv": "2412.10483",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Targets invariant generation for programs whose complexity defeats template-based tools.",
+     "why": "Useful for seeing which program features, not which prompts, decide success."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024ase..conf..119P",
+   "title": "LLM-Generated Invariants for Bounded Model Checking Without Loop Unrolling",
+   "firstAuthor": "Pirzada",
+   "year": 2024,
+   "citationCount": 0,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Replaces loop unrolling in bounded model checking with a control-flow-graph node asserting an LLM-generated invariant.",
+     "why": "A clean integration point, where the model supplies precisely the piece the classical algorithm lacks."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024fmca.conf...23K",
+   "title": "Leveraging LLMs for Program Verification",
+   "firstAuthor": "Kamath",
+   "year": 2024,
+   "citationCount": 2,
+   "arxiv": null,
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Extends the same guess-and-check approach from safety invariants to ranking functions for termination.",
+     "why": "Termination is the half of correctness that agent papers routinely skip."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251215816K",
+   "title": "A Neurosymbolic Approach to Loop Invariant Generation via Weakest Precondition Reasoning",
+   "firstAuthor": "King",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2512.15816",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Generates invariants by reasoning backward through weakest-precondition semantics instead of pattern-matching the loop body.",
+     "why": "Ties the modern pipeline back to the calculus in the foundations section."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250800419B",
+   "title": "Loop Invariant Generation: A Hybrid Framework of Reasoning optimised LLMs and SMT Solvers",
+   "firstAuthor": "Bharti",
+   "year": 2025,
+   "citationCount": 1,
+   "arxiv": "2508.00419",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Couples reasoning-tuned LLMs with SMT solvers for loop invariant generation.",
+     "why": "A current reading on how much reasoning training changes the guess half of guess-and-check."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250921629W",
+   "title": "Quokka: Accelerating Program Verification with LLMs via Invariant Synthesis",
+   "firstAuthor": "Wei",
+   "year": 2025,
+   "citationCount": 5,
+   "arxiv": "2509.21629",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Accelerates program verification by synthesizing the invariants that let the verifier discharge its goals faster (Quokka).",
+     "why": "Invariant quality shows up as verifier runtime, which decides whether verification fits inside a build."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260527051P",
+   "title": "ConVer: Using Contracts and Loop Invariant Synthesis for Scalable Formal Software Verification",
+   "firstAuthor": "Pirzada",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.27051",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Combines contract inference with loop invariant synthesis so verification scales past a single function (ConVer).",
+     "why": "Contracts and invariants are the same problem at two granularities, and this treats them together."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260517914L",
+   "title": "Guiding LLM-based Loop Invariant Synthesis via Feedback on Local Reasoning Errors",
+   "firstAuthor": "Li",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.17914",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Has the model write a step-by-step natural-language proof, formally checks that reasoning, and feeds back the local errors.",
+     "why": "Feedback on the reasoning rather than on the final artifact, a different loop shape from verifier-only iteration."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260705478W",
+   "title": "InvWeaver: Deductive Feedback for Invariant Synthesis in Interacting-Loop Programs",
+   "firstAuthor": "Wu",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.05478",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Uses deductive feedback to synthesize invariants for programs with interacting loops (InvWeaver).",
+     "why": "Interacting loops break per-loop synthesis, which is exactly where most tools stop."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260315510P",
+   "title": "Not All Invariants Are Equal: Curating Training Data to Accelerate Program Verification with SLMs",
+   "firstAuthor": "Pinto",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2603.15510",
+   "url": null,
+   "branches": [
+    "invariants"
+   ],
+   "notes": [
+    {
+     "branch": "invariants",
+     "takeaway": "Curates training data so small models learn to produce the invariants that actually help the verifier.",
+     "why": "Evidence that this task does not need a frontier model when the data is chosen well."
+    }
+   ]
+  },
+  {
+   "bibcode": "2022arXiv220512615W",
+   "title": "Autoformalization with Large Language Models",
+   "firstAuthor": "Wu",
+   "year": 2022,
+   "citationCount": 60,
+   "arxiv": "2205.12615",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Showed that few-shot LLMs translate natural-language mathematics into formal statements at non-trivial rates.",
+     "why": "The origin point for treating formalization as translation; every requirements-to-specification paper here inherits the framing."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv230304864C",
+   "title": "nl2spec: Interactively Translating Unstructured Natural Language to Temporal Logics with Large Language Models",
+   "firstAuthor": "Cosler",
+   "year": 2023,
+   "citationCount": 18,
+   "arxiv": "2303.04864",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Interactively translates unstructured natural language into temporal logic, letting the user correct sub-translations rather than the whole formula (nl2spec).",
+     "why": "Human-in-the-loop translation with a fine-grained repair unit, still the most practical interface shape for this task."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240609757L",
+   "title": "Evaluating LLM-driven User-Intent Formalization for Verification-Aware Languages",
+   "firstAuthor": "Lahiri",
+   "year": 2024,
+   "citationCount": 3,
+   "arxiv": "2406.09757",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Evaluates LLM-driven user-intent formalization for verification-aware languages, separating soundness of the formalized intent from its completeness.",
+     "why": "The clearest statement of why intent formalization is its own evaluation problem, distinct from code correctness."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250611874B",
+   "title": "A Short Survey on Formalising Software Requirements using Large Language Models",
+   "firstAuthor": "Beg",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2506.11874",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Short survey of formalizing software requirements with LLMs.",
+     "why": "A compact entry point that separates requirements formalization from mathematical autoformalization."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250523486W",
+   "title": "Autoformalization in the Era of Large Language Models: A Survey",
+   "firstAuthor": "Weng",
+   "year": 2025,
+   "citationCount": 24,
+   "arxiv": "2505.23486",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Survey of autoformalization in the LLM era: targets, training signals, and how results are evaluated.",
+     "why": "The map of the subfield, and a good way to see how little of it evaluates semantic fidelity."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251217334M",
+   "title": "Bridging Natural Language and Formal Specification--Automated Translation of Software Requirements to LTL via Hierarchical Semantics Decomposition Using LLMs",
+   "firstAuthor": "Ma",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2512.17334",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Decomposes industrial requirements through hierarchical semantics before mapping them to LTL (Req2LTL).",
+     "why": "Decomposition is what keeps a long requirement from collapsing into one confidently wrong formula."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251112784M",
+   "title": "Evaluating Autoformalization Robustness via Semantically Similar Paraphrasing",
+   "firstAuthor": "Moore",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2511.12784",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Paraphrases the same statement in meaning-preserving ways and measures whether the formalization stays the same.",
+     "why": "If a paraphrase changes the formula, the translation was not tracking meaning. Cheap to run and hard to argue with."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250116207C",
+   "title": "From Informal to Formal -- Incorporating and Evaluating LLMs on Natural Language Requirements to Verifiable Formal Proofs",
+   "firstAuthor": "Cao",
+   "year": 2025,
+   "citationCount": 14,
+   "arxiv": "2501.16207",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Evaluates LLMs end to end on turning natural-language requirements into verifiable formal proofs.",
+     "why": "Connects the translation problem to the proof problem instead of stopping at a well-formed formula."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250818675L",
+   "title": "Requirements Development and Formalization for Reliable Code Generation: A Multi-Agent Vision",
+   "firstAuthor": "Lu",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2508.18675",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "A multi-agent vision for developing and formalizing requirements before any code is generated.",
+     "why": "Positions requirements engineering, not prompt engineering, as the reliability lever."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260421715M",
+   "title": "Automated LTL Specification Generation from Industrial Aerospace Requirements",
+   "firstAuthor": "Ma",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2604.21715",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Generates LTL specifications from industrial aerospace requirement documents.",
+     "why": "Real requirements, with the domain vocabulary and messiness that benchmark sentences lack."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260806287N",
+   "title": "Automatic Translation of Unstructured Requirements into Linear Temporal Logic through Large Language Models",
+   "firstAuthor": "Newcomb",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.06287",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Translates unstructured requirements into linear temporal logic with LLMs.",
+     "why": "A current data point on the least structured input the task has to handle."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260605792B",
+   "title": "Can LLMs Write Correct TLA+ Specifications? Evaluating Natural-Language-to-TLA+ Generation",
+   "firstAuthor": "Bisharat",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.05792",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "First systematic evaluation of whether LLMs produce semantically correct TLA+ from natural language.",
+     "why": "TLA+ carries real industrial use at Amazon and Microsoft, so the gap measured here is a gap in practice."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260501209F",
+   "title": "ClarifySTL: An Interactive LLM Agent Framework for STL Transformation through Requirements Clarification",
+   "firstAuthor": "Fang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.01209",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "An agent that asks clarifying questions before committing to a signal temporal logic formula.",
+     "why": "Ambiguity in the requirement, not weakness in the model, is often the real blocker."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260517475W",
+   "title": "Event-B Agent: Towards LLM Agent for Formal Model Synthesis and Repair",
+   "firstAuthor": "Wang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.17475",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "An agent that synthesizes and repairs Event-B formal models.",
+     "why": "Refinement-based modeling, where the specification is the primary artifact and code arrives later."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260805439W",
+   "title": "SCP-NL2TL: Selective Conformal Prediction with Semantic Verification for Natural Language to Temporal Logic Specifications",
+   "firstAuthor": "Wang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.05439",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Uses selective conformal prediction with semantic verification so the translator abstains instead of emitting an unreliable specification.",
+     "why": "Abstention is the underused answer to the fidelity problem: not every requirement should be formalized automatically."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260606133S",
+   "title": "TLA-Prover: Verifiable TLA+ Specification Synthesis via Preference-Optimized Low-Rank Adaptation",
+   "firstAuthor": "Spencer",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.06133",
+   "url": null,
+   "branches": [
+    "nl-to-formal"
+   ],
+   "notes": [
+    {
+     "branch": "nl-to-formal",
+     "takeaway": "Preference-optimized low-rank adaptation for synthesizing TLA+ specifications that check out.",
+     "why": "Training rather than prompting for the same task, which is where the cheap wins have moved."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231017807S",
+   "title": "Clover: Closed-Loop Verifiable Code Generation",
+   "firstAuthor": "Sun",
+   "year": 2023,
+   "citationCount": 26,
+   "arxiv": "2310.17807",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Closes the loop by checking code, specification and documentation against each other before accepting a generation (Clover).",
+     "why": "Consistency between artifacts as an acceptance criterion, which catches the case where code and specification are both wrong together."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241014209L",
+   "title": "Agents4PLC: Automating Closed-loop PLC Code Generation and Verification in Industrial Control Systems using LLM-based Agents",
+   "firstAuthor": "Liu",
+   "year": 2024,
+   "citationCount": 21,
+   "arxiv": "2410.14209",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Closed-loop PLC code generation and verification for industrial control systems (Agents4PLC).",
+     "why": "Safety-critical control code is a domain where verification is already mandatory, so the loop has a real customer."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241206176A",
+   "title": "AlphaVerus: Bootstrapping Formally Verified Code Generation through Self-Improving Translation and Treefinement",
+   "firstAuthor": "Aggarwal",
+   "year": 2024,
+   "citationCount": 21,
+   "arxiv": "2412.06176",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Bootstraps verified Verus code by translating from a source language and refining against the verifier (Treefinement), with no human proof data.",
+     "why": "Self-improvement where the reward is a real verifier, the cleanest version of verifiable rewards in this space."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240913082Y",
+   "title": "AutoVerus: Automated Proof Generation for Rust Code",
+   "firstAuthor": "Yang",
+   "year": 2024,
+   "citationCount": 22,
+   "arxiv": "2409.13082",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Generates Verus proof annotations for Rust with a pipeline modeled on how humans construct proofs.",
+     "why": "The reference point for automated proof generation in the Rust ecosystem."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241019736M",
+   "title": "Combining LLM Code Generation with Formal Specifications and Reactive Program Synthesis",
+   "firstAuthor": "Murphy",
+   "year": 2024,
+   "citationCount": 10,
+   "arxiv": "2410.19736",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Combines LLM code generation with formal specifications and reactive program synthesis.",
+     "why": "Pairs a generator with a synthesizer that is correct by construction, splitting the work by what each is good at."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240200247R",
+   "title": "Towards AI-Assisted Synthesis of Verified Dafny Methods",
+   "firstAuthor": "Rakib Hossain Misu",
+   "year": 2024,
+   "citationCount": 8,
+   "arxiv": "2402.00247",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Synthesizes verified Dafny methods, generating specification and code together so the pair can be proved.",
+     "why": "An early, careful statement of the generate-spec-and-code-together strategy that most later systems adopt."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240208147B",
+   "title": "VerMCTS: Synthesizing Multi-Step Programs using a Verifier, a Large Language Model, and Tree Search",
+   "firstAuthor": "Brandfonbrener",
+   "year": 2024,
+   "citationCount": 18,
+   "arxiv": "2402.08147",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Guides Monte Carlo tree search with a Dafny or Coq verifier to synthesize multi-step verified programs (VerMCTS).",
+     "why": "Uses the verifier as a partial-credit signal inside search rather than only as a final gate."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241115143P",
+   "title": "dafny-annotator: AI-Assisted Verification of Dafny Programs",
+   "firstAuthor": "Poesia",
+   "year": 2024,
+   "citationCount": 12,
+   "arxiv": "2411.15143",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Combines a language model with search to add the logical annotations Dafny needs to verify a program (dafny-annotator).",
+     "why": "Isolates annotation from code generation, which is the part that actually costs developer time."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250106283L",
+   "title": "Dafny as Verification-Aware Intermediate Language for Code Generation",
+   "firstAuthor": "Li",
+   "year": 2025,
+   "citationCount": 7,
+   "arxiv": "2501.06283",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Generates Dafny as an intermediate language, verifies it, and compiles from there to the target language.",
+     "why": "Verification as a compilation stage rather than a separate discipline, and one of the more transferable ideas in this section."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250205344Z",
+   "title": "RAG-Verus: Repository-Level Program Verification with LLMs using Retrieval Augmented Generation",
+   "firstAuthor": "Zhong",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2502.05344",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Uses retrieval-augmented generation and context-aware prompting for multi-module proof synthesis, with RepoVBench as the yardstick (RagVerus).",
+     "why": "Retrieval as the answer to repository-scale context, plus the first repository-level Verus benchmark."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250716331Y",
+   "title": "Re:Form -- Reducing Human Annotations in Scalable Formal Software Verification with RL in LLMs: A Preliminary Study on Dafny",
+   "firstAuthor": "Yan",
+   "year": 2025,
+   "citationCount": 9,
+   "arxiv": "2507.16331",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Reduces human annotation in formal software verification by training with reinforcement learning against Dafny's verifier.",
+     "why": "Formal-language reasoning as a reliable and scalable training signal, in contrast to informal-language reward models."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250703659W",
+   "title": "Specification-Guided Repair of Arithmetic Errors in Dafny Programs using LLMs",
+   "firstAuthor": "Wu",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2507.03659",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Repairs arithmetic errors in Dafny programs under the guidance of the existing specification.",
+     "why": "Repair with a specification present is a very different problem from repair against tests, and much better posed."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250925197Z",
+   "title": "Towards Repository-Level Program Verification with Large Language Models",
+   "firstAuthor": "Zhong",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2509.25197",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Resolves cross-module dependencies and global context for repository-scale program verification.",
+     "why": "Function-level results do not transfer to repositories, and this states why."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250207728C",
+   "title": "Verifying LLM-Generated Code in the Context of Software Verification with Ada/SPARK",
+   "firstAuthor": "Cramer",
+   "year": 2025,
+   "citationCount": 3,
+   "arxiv": "2502.07728",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Explores using SPARK for Ada to verify LLM-generated code.",
+     "why": "Ada/SPARK is where high-assurance industry already lives, so it is a realistic adoption path rather than a research language."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260527485Y",
+   "title": "Automating Formal Verification with Agent-Guided Tree Search",
+   "firstAuthor": "Yao",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.27485",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Evaluates vericoding in Lean and develops agent-guided search methods over the space of verification attempts.",
+     "why": "Verification failure is cheap to detect and expensive to fix, which makes search a natural fit for the loop."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260632007B",
+   "title": "AxDafny: Agentic Verified Code Generation in Dafny",
+   "firstAuthor": "Breen",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.32007",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Agentic verified code generation in Dafny.",
+     "why": "A recent read on what the agent loop adds over single-shot generation in a verification-aware language."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260105385B",
+   "title": "DafnyPro: LLM-Assisted Automated Verification for Dafny Programs",
+   "firstAuthor": "Banerjee",
+   "year": 2026,
+   "citationCount": 7,
+   "arxiv": "2601.05385",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Adds a diff-checker, an invariant pruner and retrieved proof strategies at inference time for Dafny verification (DafnyPro).",
+     "why": "The diff-checker matters beyond Dafny, because it stops the model quietly editing the program it was asked to prove."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260325810Y",
+   "title": "ExVerus: Verus Proof Repair via Counterexample Reasoning",
+   "firstAuthor": "Yang",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2603.25810",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Turns failed proofs into concrete counterexamples so the model reasons about behavior rather than about verifier text (ExVerus).",
+     "why": "Verifier error messages are weak feedback; counterexamples are the strongest signal the tool can give back."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260411556D",
+   "title": "FM-Agent: Scaling Formal Methods to Large Systems via LLM-Based Hoare-Style Reasoning",
+   "firstAuthor": "Ding",
+   "year": 2026,
+   "citationCount": 2,
+   "arxiv": "2604.11556",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Hoare-style decomposition that lets formal methods reach large systems (FM-Agent).",
+     "why": "Decomposition is the scaling story for deductive verification, and this is a concrete instance of it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260622413W",
+   "title": "Formal-Method-Guided Vibe Coding: Closing the Verification Loop on AI-Generated Safety-Critical Software Through Model-Driven Engineering",
+   "firstAuthor": "Wei",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2606.22413",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Closes the verification loop on AI-generated safety-critical software through model-driven engineering.",
+     "why": "One of the few papers taking the vibe-coding workflow seriously and asking what formal gate belongs inside it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260503822L",
+   "title": "KVerus: Scalable and Resilient Formal Verification Proof Generation for Rust Code",
+   "firstAuthor": "Liu",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.03822",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Scalable and resilient proof generation for Rust code across large, evolving systems (KVerus).",
+     "why": "Focuses on proof maintenance under change, which is where verification effort actually accumulates."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260721957W",
+   "title": "KaPilot: LLM-Assisted Generation of Kani Specifications for Unsafe Rust Verification",
+   "firstAuthor": "Wang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.21957",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Generates Kani specifications for unsafe Rust and assesses their quality rather than assuming code-derived specs are right (KaPilot).",
+     "why": "Specifications derived from an implementation inherit its bugs, and this confronts that directly."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260725333C",
+   "title": "Specula: Scaling formal specifications for autonomous model checking of system code",
+   "firstAuthor": "Cheng",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.25333",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Scales specification writing so a model checker can be run autonomously over systems code (Specula).",
+     "why": "Targets the real bottleneck in model checking, which is the specifications it needs rather than the checker."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260704232L",
+   "title": "Teaching Code LLMs to Reason with Intermediate Formal Specifications",
+   "firstAuthor": "Le-Anh",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.04232",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Targets the intermediate executable assertions a programmer relies on mid-algorithm, after finding that prompted assertions are often invalid, trivial, or too weak to reject a behavior-changing fault.",
+     "why": "Specification as a reasoning scaffold rather than a downstream deliverable, and a clean statement of how weak default generated assertions are."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260714340P",
+   "title": "The Prover Is the Judge: Verified Security Software from AI Coding Agents in Ada/SPARK",
+   "firstAuthor": "Philipp",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.14340",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "Coding agents producing verified security software in Ada/SPARK, with the prover as the acceptance criterion.",
+     "why": "Makes the verifier the judge of agent output, which is the strongest available form of automated review."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260208384Z",
+   "title": "Towards Real-World Industrial-Scale Verification: LLM-Driven Theorem Proving on seL4",
+   "firstAuthor": "Zhang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2602.08384",
+   "url": null,
+   "branches": [
+    "verified-codegen"
+   ],
+   "notes": [
+    {
+     "branch": "verified-codegen",
+     "takeaway": "LLM-driven theorem proving applied to the seL4 verified microkernel.",
+     "why": "The most demanding real target available, with industrial scale and existing human proofs to compare against."
+    }
+   ]
+  },
+  {
+   "bibcode": "2021arXiv210900110Z",
+   "title": "MiniF2F: a cross-system benchmark for formal Olympiad-level mathematics",
+   "firstAuthor": "Zheng",
+   "year": 2021,
+   "citationCount": 181,
+   "arxiv": "2109.00110",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "A cross-system benchmark of 488 Olympiad-level formal statements across Metamath, Lean, Isabelle and HOL Light (miniF2F).",
+     "why": "The standard yardstick for prover capability. It is mathematics, so treat transfer to software verification as an open question rather than a given."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv230304910F",
+   "title": "Baldur: Whole-Proof Generation and Repair with Large Language Models",
+   "firstAuthor": "First",
+   "year": 2023,
+   "citationCount": 38,
+   "arxiv": "2303.04910",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Generates whole proofs with a language model and repairs them using the proof assistant's error messages (Baldur).",
+     "why": "Established whole-proof generation plus repair as an alternative to single-tactic prediction."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv230615626Y",
+   "title": "LeanDojo: Theorem Proving with Retrieval-Augmented Language Models",
+   "firstAuthor": "Yang",
+   "year": 2023,
+   "citationCount": 106,
+   "arxiv": "2306.15626",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Extracts a Lean dataset and provides retrieval-augmented premise selection with an interactive proving environment (LeanDojo).",
+     "why": "The infrastructure a large share of neural proving work is built on."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv230212433A",
+   "title": "ProofNet: Autoformalizing and Formally Proving Undergraduate-Level Mathematics",
+   "firstAuthor": "Azerbayev",
+   "year": 2023,
+   "citationCount": 186,
+   "arxiv": "2302.12433",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "371 undergraduate mathematics problems with paired informal and formal statements for autoformalization and proving (ProofNet).",
+     "why": "The benchmark that made autoformalization measurable, and the template later software-specification benchmarks copy."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241019940K",
+   "title": "Cobblestone: A Divide-and-Conquer Approach for Automating Formal Verification",
+   "firstAuthor": "Kasibatla",
+   "year": 2024,
+   "citationCount": 13,
+   "arxiv": "2410.19940",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Divide-and-conquer proof automation that accepts partial progress toward a Coq proof (Cobblestone).",
+     "why": "Partial proofs are useful; treating verification as all-or-nothing throws away most of the work."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240514333X",
+   "title": "DeepSeek-Prover: Advancing Theorem Proving in LLMs through Large-Scale Synthetic Data",
+   "firstAuthor": "Xin",
+   "year": 2024,
+   "citationCount": 175,
+   "arxiv": "2405.14333",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Scales formal proving with large-scale synthetic data generated by autoformalizing informal problems (DeepSeek-Prover).",
+     "why": "Showed that the data bottleneck in formal proving is partly solvable by generation."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240312627F",
+   "title": "Enhancing Formal Theorem Proving: A Comprehensive Dataset for Training AI Models on Coq Code",
+   "firstAuthor": "Florath",
+   "year": 2024,
+   "citationCount": 3,
+   "arxiv": "2403.12627",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "A dataset for training models on Coq code.",
+     "why": "Training data for proof assistants is scarce and idiosyncratic; this is one of the open corpora."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240412534S",
+   "title": "Lean Copilot: Large Language Models as Copilots for Theorem Proving in Lean",
+   "firstAuthor": "Song",
+   "year": 2024,
+   "citationCount": 75,
+   "arxiv": "2404.12534",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Runs LLM inference natively inside Lean for tactic suggestion, premise selection and proof search (Lean Copilot).",
+     "why": "The interactive framing, where the model is a copilot inside the prover rather than a prover itself."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241214063T",
+   "title": "Rango: Adaptive Retrieval-Augmented Proving for Automated Software Verification",
+   "firstAuthor": "Thompson",
+   "year": 2024,
+   "citationCount": 10,
+   "arxiv": "2412.14063",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Retrieval-augmented proof synthesis that adapts to the project's own lemmas and proof style (Rango).",
+     "why": "Proof automation is project-specific, and retrieval is what makes it so."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240107663Z",
+   "title": "Selene: Pioneering Automated Proof in Software Verification",
+   "firstAuthor": "Zhang",
+   "year": 2024,
+   "citationCount": 11,
+   "arxiv": "2401.07663",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Automated proof for software verification in Isabelle, built on a project-scale corpus (Selene).",
+     "why": "One of the first attempts at software, rather than mathematics, as the proof-automation target."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250718885X",
+   "title": "A Minimalist Proof Language for Neural Theorem Proving over Isabelle/HOL",
+   "firstAuthor": "Xu",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2507.18885",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "A minimalist proof language for neural theorem proving over Isabelle/HOL.",
+     "why": "Changes the target language to fit the model rather than the other way around."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250421801R",
+   "title": "DeepSeek-Prover-V2: Advancing Formal Mathematical Reasoning via Reinforcement Learning for Subgoal Decomposition",
+   "firstAuthor": "Ren",
+   "year": 2025,
+   "citationCount": 212,
+   "arxiv": "2504.21801",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Reinforcement learning over subgoal decomposition for formal mathematical reasoning (DeepSeek-Prover-V2).",
+     "why": "The current capability ceiling for open proving models, and the reference point when a software-verification agent claims strong results."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250515740H",
+   "title": "HybridProver: Augmenting Theorem Proving with LLM-Driven Proof Synthesis and Refinement",
+   "firstAuthor": "Hu",
+   "year": 2025,
+   "citationCount": 7,
+   "arxiv": "2505.15740",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Augments theorem proving by combining LLM-driven proof synthesis with refinement (HybridProver).",
+     "why": "Synthesis and refinement as separate stages, mirroring the generate-then-repair pattern in verified code generation."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260103768X",
+   "title": "Agentic Proof Automation: A Case Study",
+   "firstAuthor": "Xu",
+   "year": 2026,
+   "citationCount": 3,
+   "arxiv": "2601.03768",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Case study of agentic proof automation, where the model explores the codebase rather than seeing one goal at a time.",
+     "why": "Proof engineering is a codebase task, and this is what changes when the agent can look around."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260813459W",
+   "title": "CAPRI: Contract-Aware Proof Repair for Isabelle",
+   "firstAuthor": "Woodcock",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.13459",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Contract-aware proof repair for Isabelle, with an independent checker enforcing a machine-readable edit contract and retained audit records (CAPRI).",
+     "why": "A build that succeeds does not show the model changed only what it was authorized to change; this closes that hole."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260805420R",
+   "title": "Can Open-Weight LLMs Produce Kernel-Verified Coq Proofs? A Pilot Study",
+   "firstAuthor": "Ryan",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.05420",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Pilot study of whether open-weight models can produce kernel-verified Coq proofs.",
+     "why": "Resemblance to a proof is not a proof, and the kernel is the only judge that settles it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260604883R",
+   "title": "Optimizing the Cost-Quality Tradeoff of Agentic Theorem Provers in Lean",
+   "firstAuthor": "Rögnvaldsson",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2606.04883",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Measures and optimizes the cost-quality tradeoff of agentic theorem provers in Lean, where much compute is spent on attempts that never land.",
+     "why": "The economics paper this area needs, since proof search is easy to make expensive and hard to make cheap."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260405399A",
+   "title": "PROMISE: Proof Automation as Structural Imitation of Human Reasoning",
+   "firstAuthor": "Ahn",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2604.05399",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Proof automation framed as structural imitation of how humans reason (PROMISE).",
+     "why": "An argument that proof structure, not token-level tactic prediction, is the transferable unit."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260617981Z",
+   "title": "Planning to Hammer: Difficulty-Aware Decomposition for Automating Rocq Proofs",
+   "firstAuthor": "Zhang",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2606.17981",
+   "url": null,
+   "branches": [
+    "proof-agents"
+   ],
+   "notes": [
+    {
+     "branch": "proof-agents",
+     "takeaway": "Difficulty-aware decomposition for automating Rocq proofs.",
+     "why": "Spends proof-search budget where the goal is actually hard, which is most of the cost control in agentic proving."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240608467L",
+   "title": "DafnyBench: A Benchmark for Formal Software Verification",
+   "firstAuthor": "Loughridge",
+   "year": 2024,
+   "citationCount": 42,
+   "arxiv": "2406.08467",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Over 750 Dafny programs, about 53,000 lines, testing whether a model can supply enough hints for the verifier to succeed.",
+     "why": "The largest Dafny yardstick, and the one most later Dafny systems report against."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240611915L",
+   "title": "miniCodeProps: a Minimal Benchmark for Proving Code Properties",
+   "firstAuthor": "Lohn",
+   "year": 2024,
+   "citationCount": 15,
+   "arxiv": "2406.11915",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "A minimal benchmark for proving properties of code in Lean (miniCodeProps).",
+     "why": "The smallest honest bridge between mathematical proving benchmarks and software properties."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250922908B",
+   "title": "A benchmark for vericoding: formally verified program synthesis",
+   "firstAuthor": "Bursuc",
+   "year": 2025,
+   "citationCount": 12,
+   "arxiv": "2509.22908",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "A benchmark for vericoding: formally verified program synthesis from specifications.",
+     "why": "Names the task cleanly and separates it from proof-only and code-only evaluation."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250513938T",
+   "title": "CLEVER: A Curated Benchmark for Formally Verified Code Generation",
+   "firstAuthor": "Thakur",
+   "year": 2025,
+   "citationCount": 23,
+   "arxiv": "2505.13938",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "A curated benchmark for formally verified code generation with human-checked ground truth (CLEVER).",
+     "why": "Small and hand-verified rather than large and noisy, which is what makes its numbers interpretable."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250304779L",
+   "title": "Can LLMs Reason About Program Semantics? A Comprehensive Evaluation of LLMs on Formal Specification Inference",
+   "firstAuthor": "Le-Cong",
+   "year": 2025,
+   "citationCount": 8,
+   "arxiv": "2503.04779",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Evaluates LLM reasoning about program semantics through formal specification inference (FormalBench).",
+     "why": "Treats specification inference as a probe of semantic understanding, which reframes what a failure means."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251115403A",
+   "title": "MutDafny: A Mutation-Based Approach to Assess Dafny Specifications",
+   "firstAuthor": "Amaral",
+   "year": 2025,
+   "citationCount": 1,
+   "arxiv": "2511.15403",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Applies mutation testing to Dafny specifications to reveal weaknesses in the specifications themselves (MutDafny).",
+     "why": "Specifications are as buggy as implementations, and mutation is the cheapest way to see it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250420964L",
+   "title": "OSVBench: Benchmarking LLMs on Specification Generation Tasks for Operating System Verification",
+   "firstAuthor": "Li",
+   "year": 2025,
+   "citationCount": 11,
+   "arxiv": "2504.20964",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Specification generation for operating-system verification (OSVBench).",
+     "why": "Systems code with real invariants, far away from the function-sized tasks most benchmarks use."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250205714D",
+   "title": "Proving the Coding Interview: A Benchmark for Formally Verified Code Generation",
+   "firstAuthor": "Dougherty",
+   "year": 2025,
+   "citationCount": 8,
+   "arxiv": "2502.05714",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Formally verified code generation over competitive-programming problems in Lean (FVAPPS).",
+     "why": "Takes a familiar code benchmark and raises the bar from passing tests to carrying a proof."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250523135Y",
+   "title": "VERINA: Benchmarking Verifiable Code Generation",
+   "firstAuthor": "Ye",
+   "year": 2025,
+   "citationCount": 32,
+   "arxiv": "2505.23135",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Benchmarks verifiable code generation on Lean tasks that require code, specification and proof together, each graded separately (VERINA).",
+     "why": "Separating the three deliverables is what exposes systems that write code well and specifications badly."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251023350C",
+   "title": "Validating Formal Specifications with LLM-generated Test Cases",
+   "firstAuthor": "Cunha",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2510.23350",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Validates formal specifications with LLM-generated test cases.",
+     "why": "Tests as a validity check on the specification inverts the usual direction and is a practical review technique."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251006296Z",
+   "title": "VeriEquivBench: An Equivalence Score for Ground-Truth-Free Evaluation of Formally Verifiable Code",
+   "firstAuthor": "Zeng",
+   "year": 2025,
+   "citationCount": 1,
+   "arxiv": "2510.06296",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Scores formally verifiable code by equivalence rather than against a reference solution (VeriEquivBench).",
+     "why": "Ground-truth-free evaluation matters because there is rarely one right specification."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250519271D",
+   "title": "VerifyThisBench: Generating Code, Specifications, and Proofs All at Once",
+   "firstAuthor": "Deng",
+   "year": 2025,
+   "citationCount": 8,
+   "arxiv": "2505.19271",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Requires code, specification and proof to be produced at once, following the VerifyThis competition format.",
+     "why": "The joint task is much harder than any of its parts, and this measures the joint task."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260209464Z",
+   "title": "AlgoVeri: An Aligned Benchmark for Verified Code Generation on Classical Algorithms",
+   "firstAuthor": "Zhao",
+   "year": 2026,
+   "citationCount": 7,
+   "arxiv": "2602.09464",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "An aligned benchmark for verified code generation on classical algorithms (AlgoVeri).",
+     "why": "Algorithms with known invariants make a good controlled setting for comparing systems."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260705076D",
+   "title": "Can Code Specify a System Precisely Enough to Formally Verify It?",
+   "firstAuthor": "Dubray",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2607.05076",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Evaluates code-derived and LLM-written specifications on a production point-of-sale payment workflow, grading them against traces captured from the running system.",
+     "why": "Finds reliability governed by the structure of the specification contract rather than by the specification language, and reframes the economics of having a model at all."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260318334X",
+   "title": "Can LLMs Reason Like Automated Theorem Provers for Rust Verification? VCoT-Bench: Evaluating via Verification Chain of Thought",
+   "firstAuthor": "Xie",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2603.18334",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Evaluates Rust verification through the chain of reasoning rather than binary pass or fail on proof hints (VCoT-Bench).",
+     "why": "Pass rates hide whether the model understood the proof obligation or got lucky."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260719407W",
+   "title": "ITPEval: Benchmarking Formal Translation Across Interactive Theorem Provers",
+   "firstAuthor": "Wu",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.19407",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Benchmarks formal translation across interactive theorem provers (ITPEval).",
+     "why": "Cross-prover transfer is a good test of whether a model learned the mathematics or the syntax."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260501394X",
+   "title": "LiveFMBench: Unveiling the Power and Limits of Agentic Workflows in Specification Generation",
+   "firstAuthor": "Xu",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2605.01394",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "A live benchmark of agentic workflows on specification generation (LiveFMBench).",
+     "why": "Live construction is the current defense against contamination, which quietly inflates every static benchmark here."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260503356Z",
+   "title": "POSTCONDBENCH: Benchmarking Correctness and Completeness in Formal Postcondition Inference",
+   "firstAuthor": "Zhang",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.03356",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Benchmarks formal postcondition inference on both correctness and completeness rather than correctness alone.",
+     "why": "A postcondition that is true but weak passes most evaluations; completeness is what catches that."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260723425B",
+   "title": "TLA+-Bench: An Execution-Grounded Benchmark and Dataset for Natural-Language to TLA Specification Generation",
+   "firstAuthor": "Bisharat",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.23425",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Grades natural-language-to-TLA+ generation by running the model checker over the full reachable state space, not by resemblance to a reference (TLA+-Bench).",
+     "why": "Execution-grounded grading is the correct answer to 'does it parse' and 'does it look like the gold spec'."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260813522Y",
+   "title": "Vero: Can AI Agents Build Formally Verified Software Repositories?",
+   "firstAuthor": "Ye",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.13522",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "Asks whether agents can build formally verified software repositories, not single functions (Vero).",
+     "why": "Repository scale is where specification, proof and engineering all have to hold at once."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260526457A",
+   "title": "Verus-SpecGym: An Agentic Environment for Evaluating Specification Autoformalization",
+   "firstAuthor": "Agarwal",
+   "year": 2026,
+   "citationCount": 2,
+   "arxiv": "2605.26457",
+   "url": null,
+   "branches": [
+    "benchmarks"
+   ],
+   "notes": [
+    {
+     "branch": "benchmarks",
+     "takeaway": "An agentic environment for evaluating specification autoformalization in Verus (Verus-SpecGym).",
+     "why": "Environment rather than static dataset, so agent behavior is part of what gets measured."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv230704346V",
+   "title": "Can Large Language Models Write Good Property-Based Tests?",
+   "firstAuthor": "Vikram",
+   "year": 2023,
+   "citationCount": 52,
+   "arxiv": "2307.04346",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Studies whether LLMs can write good property-based tests, including inventing the properties.",
+     "why": "Properties are lightweight specifications, and this is the honest read on the model's ability to invent them."
+    }
+   ]
+  },
+  {
+   "bibcode": "2023arXiv231006770J",
+   "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+   "firstAuthor": "Jimenez",
+   "year": 2023,
+   "citationCount": 1236,
+   "arxiv": "2310.06770",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Evaluates whether models can resolve real GitHub issues, judged by the repository's own tests (SWE-bench).",
+     "why": "The benchmark that defined what a coding agent is measured on, and the definition of correctness this explorer argues with."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240701489X",
+   "title": "Agentless: Demystifying LLM-based Software Engineering Agents",
+   "firstAuthor": "Xia",
+   "year": 2024,
+   "citationCount": 384,
+   "arxiv": "2407.01489",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Shows a simple localize-repair-validate pipeline matches or beats complex agent scaffolds on SWE-bench (Agentless).",
+     "why": "A standing caution against attributing to agency what belongs to the model and the test harness."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240400971L",
+   "title": "Beyond Functional Correctness: Exploring Hallucinations in LLM-Generated Code",
+   "firstAuthor": "Liu",
+   "year": 2024,
+   "citationCount": 215,
+   "arxiv": "2404.00971",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Builds a taxonomy of hallucinations in LLM-generated code, past whether tests pass.",
+     "why": "Names the failure modes formal specifications are supposed to catch, in the vocabulary of the code-generation literature."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241214137S",
+   "title": "Design choices made by LLM-based test generators prevent them from finding bugs",
+   "firstAuthor": "Saji Mathews",
+   "year": 2024,
+   "citationCount": 5,
+   "arxiv": "2412.14137",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Finds that LLM-based test generators validate faulty code rather than finding bugs, by design choice.",
+     "why": "The oracle problem stated plainly. Tests written from the implementation cannot detect the implementation being wrong."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241101789J",
+   "title": "Generating executable oracles to check conformance of client code to requirements of JDK Javadocs using LLMs",
+   "firstAuthor": "Jiang",
+   "year": 2024,
+   "citationCount": 5,
+   "arxiv": "2411.01789",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Generates executable oracles that check client code against the requirements stated in JDK Javadocs.",
+     "why": "Documentation as an existing specification source, already sitting in most codebases."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241006992A",
+   "title": "SWE-Bench+: Enhanced Coding Benchmark for LLMs",
+   "firstAuthor": "Aleithan",
+   "year": 2024,
+   "citationCount": 74,
+   "arxiv": "2410.06992",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Audits SWE-bench and finds solution leakage and weak tests behind a substantial share of reported passes.",
+     "why": "If the oracle is weak, so is every claim measured through it, which is the case for formal specifications in miniature."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240802232R",
+   "title": "SpecRover: Code Intent Extraction via LLMs",
+   "firstAuthor": "Ruan",
+   "year": 2024,
+   "citationCount": 60,
+   "arxiv": "2408.02232",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Extracts developer intent from the repository to guide issue resolution and to justify the patch (SpecRover).",
+     "why": "Intent recovery inside a mainstream agent, meeting the formal-specification work from the other direction."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240610279S",
+   "title": "We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs",
+   "firstAuthor": "Spracklen",
+   "year": 2024,
+   "citationCount": 25,
+   "arxiv": "2406.10279",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Quantifies package hallucination in code-generating models as a supply-chain threat.",
+     "why": "A failure that no functional test catches and no functional specification describes."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250112934B",
+   "title": "Correctness Assessment of Code Generated by Large Language Models Using Internal Representations",
+   "firstAuthor": "Bui",
+   "year": 2025,
+   "citationCount": 12,
+   "arxiv": "2501.12934",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Assesses correctness of generated code from the model's internal representations rather than post-hoc checking.",
+     "why": "A cheap confidence signal for when the expensive verification step is worth running."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250700057V",
+   "title": "Incoherence as Oracle-less Measure of Error in LLM-Based Code Generation",
+   "firstAuthor": "Valentin",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2507.00057",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Estimates the probability that a generated program is correct without any oracle, using incoherence across samples.",
+     "why": "The oracle-free setting is the common one, and this is a principled way to act in it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251003029G",
+   "title": "Investigating The Smells of LLM Generated Code",
+   "firstAuthor": "Ghosh Paul",
+   "year": 2025,
+   "citationCount": 2,
+   "arxiv": "2510.03029",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Scenario-based evaluation of code smells in LLM-generated code.",
+     "why": "Maintainability is the quality axis that survives long after the tests pass."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250617812S",
+   "title": "Is Your Automated Software Engineer Trustworthy?",
+   "firstAuthor": "Saji Mathews",
+   "year": 2025,
+   "citationCount": 5,
+   "arxiv": "2506.17812",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Argues automated software engineers should abstain on uncertain inputs instead of always emitting a patch.",
+     "why": "Abstention as a reliability primitive, matching the conformal-prediction move in the translation section."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv251110271S",
+   "title": "Quality Assurance of LLM-generated Code: Addressing Non-Functional Quality Characteristics",
+   "firstAuthor": "Sun",
+   "year": 2025,
+   "citationCount": 3,
+   "arxiv": "2511.10271",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Addresses non-functional quality characteristics of LLM-generated code, which functional benchmarks ignore.",
+     "why": "Correctness is not the only property that ships, and specifications rarely cover the rest."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260528500B",
+   "title": "Functional Entropy: Predicting Functional Correctness in LLM-Generated Code with Uncertainty Quantification",
+   "firstAuthor": "Bouchard",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.28500",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Predicts functional correctness of generated code through uncertainty quantification.",
+     "why": "Routes verification effort toward the generations most likely to be wrong."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260705139K",
+   "title": "On the risk of coding before testing: An empirical study on LLM-based test generation workflow",
+   "firstAuthor": "Konstantinou",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.05139",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Empirical study of test-first and agentic workflows where one model both writes and validates the code.",
+     "why": "Self-validation is the structural weakness in agent loops, and formal verification is one way out of it."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260813292L",
+   "title": "Refine After Generation: Toward Correct and Concise Patches in LLM-based Program Repair",
+   "firstAuthor": "Luo",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.13292",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Identifies patch verbosity in agentic program repair, where patches pass tests while doing far more than asked.",
+     "why": "Passing tests permits large unintended changes, which is exactly what a frame condition would rule out."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260315691W",
+   "title": "VibeContract: The Missing Quality Assurance Piece in Vibe Coding",
+   "firstAuthor": "Wang",
+   "year": 2026,
+   "citationCount": 2,
+   "arxiv": "2603.15691",
+   "url": null,
+   "branches": [
+    "agent-quality"
+   ],
+   "notes": [
+    {
+     "branch": "agent-quality",
+     "takeaway": "Proposes contracts as the missing quality-assurance step in vibe coding.",
+     "why": "The bridge between the contract literature and the way code is actually produced now."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv240100963S",
+   "title": "Leveraging Large Language Models to Boost Dafny's Developers Productivity",
+   "firstAuthor": "Silva",
+   "year": 2024,
+   "citationCount": 2,
+   "arxiv": "2401.00963",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Proposes using LLMs to reduce the cost that keeps verification-aware languages out of ordinary practice.",
+     "why": "States the adoption thesis this whole area rests on, so it is worth reading as a claim to be tested."
+    }
+   ]
+  },
+  {
+   "bibcode": "2024arXiv241206512Z",
+   "title": "The Fusion of Large Language Models and Formal Methods for Trustworthy AI Agents: A Roadmap",
+   "firstAuthor": "Zhang",
+   "year": 2024,
+   "citationCount": 20,
+   "arxiv": "2412.06512",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "A roadmap for fusing LLMs with formal methods toward trustworthy AI agents.",
+     "why": "Useful as an agenda, and useful for seeing which of its proposed steps have since been attempted."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250622370C",
+   "title": "Can Large Language Models Help Students Prove Software Correctness? An Experimental Study with Dafny",
+   "firstAuthor": "Carreira",
+   "year": 2025,
+   "citationCount": 0,
+   "arxiv": "2506.22370",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Experimental study of whether LLMs help students prove software correctness in Dafny.",
+     "why": "Learnability data, which decides adoption more than raw capability does."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250520047G",
+   "title": "Grammars of Formal Uncertainty: When to Trust LLMs in Automated Reasoning Tasks",
+   "firstAuthor": "Ganguly",
+   "year": 2025,
+   "citationCount": 4,
+   "arxiv": "2505.20047",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Investigates failure modes when probabilistic models produce formal specifications that deterministic verification then trusts.",
+     "why": "The epistemological problem underneath every pipeline here, studied rather than asserted."
+    }
+   ]
+  },
+  {
+   "bibcode": "2025arXiv250811824N",
+   "title": "Rethinking Autonomy: Preventing Failures in AI-Driven Software Engineering",
+   "firstAuthor": "Navneet",
+   "year": 2025,
+   "citationCount": 6,
+   "arxiv": "2508.11824",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Examines failure prevention in AI-driven software engineering and where autonomy should stop.",
+     "why": "Argues the control question directly instead of assuming more autonomy is the goal."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260222302P",
+   "title": "Agent Behavioral Contracts: Formal Specification and Runtime Enforcement for Reliable Autonomous AI Agents",
+   "firstAuthor": "Pratap Bhardwaj",
+   "year": 2026,
+   "citationCount": 12,
+   "arxiv": "2602.22302",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Formal specification and runtime enforcement of behavioral contracts for autonomous agents.",
+     "why": "Points the tooling at the agent itself rather than at the code it produces."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260805179D",
+   "title": "Autonomous Research Agents: A Survey of AI Scientists and the Verification Gap",
+   "firstAuthor": "Ding",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2608.05179",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Surveys autonomous research agents and names verification as the unclosed gap.",
+     "why": "The same specification gap seen from the science-automation side, which shows it is not a software-engineering quirk."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260113727J",
+   "title": "Foundational VeriFast: Pragmatic Certification of Verification Tool Results through Hinted Mirroring",
+   "firstAuthor": "Jacobs",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2601.13727",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Certifies the results of a verification tool by mirroring them into a foundational setting (Foundational VeriFast).",
+     "why": "Who verifies the verifier, answered pragmatically. The trusted base matters more once proofs are machine-written."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260317150L",
+   "title": "Intent Formalization: A Grand Challenge for Reliable Coding in the Age of AI Agents",
+   "firstAuthor": "Lahiri",
+   "year": 2026,
+   "citationCount": 4,
+   "arxiv": "2603.17150",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Frames the gap between informal intent and precise program behavior as the grand challenge for reliable coding with agents.",
+     "why": "The best single statement of why this explorer exists. The bottleneck moved from writing code to saying what the code should do."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260202881B",
+   "title": "Learning-Infused Formal Reasoning: From Contract Synthesis to Artifact Reuse and Formal Semantics",
+   "firstAuthor": "Beg",
+   "year": 2026,
+   "citationCount": 1,
+   "arxiv": "2602.02881",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "A research vision for the next generation of formal methods built around learning, from contract synthesis to formal semantics.",
+     "why": "Sets out what a formal-methods agenda looks like when learned components are assumed rather than resisted."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260523951M",
+   "title": "Methods for Formal Verification of Agent Skills: Three Layers Toward a Mechanically Checkable Capability-Containment Proof",
+   "firstAuthor": "Metere",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2605.23951",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Gives a mechanically checkable capability-containment argument for agent skill manifests.",
+     "why": "The strongest current attempt at proving something about what an agent is allowed to do."
+    }
+   ]
+  },
+  {
+   "bibcode": "2026arXiv260716499T",
+   "title": "Show Me The Money: An Exercise in Proof-Driven Software Understanding",
+   "firstAuthor": "Tafese",
+   "year": 2026,
+   "citationCount": 0,
+   "arxiv": "2607.16499",
+   "url": null,
+   "branches": [
+    "open-questions"
+   ],
+   "notes": [
+    {
+     "branch": "open-questions",
+     "takeaway": "Applies formal reasoning to a mature industrial C++ codebase rather than to a designed-for-verification system.",
+     "why": "Most formal methods case studies start at design time; this is the retrofit case almost everyone actually faces."
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "key": "foundations",
+   "label": "Specification foundations",
+   "summary": "What a formal specification is before any model writes one: verification-aware languages and their verifiers, contracts and proof obligations, and the pre-LLM work on inferring specifications from code and from executions. The vocabulary here is assumed by everything that follows.",
+   "themes": [
+    "Verification-aware languages put pre- and postconditions, invariants and termination metrics in the source (Dafny, SPARK, Verus, Frama-C/ACSL).",
+    "Prove it or find a counterexample: deductive verification and model checking answer the same question with different failure modes (Event-B into Alloy, Kani, ESBMC).",
+    "Specification inference predates language models: strongest-postcondition abstraction, postcondition-weakened invariants, evolutionary assertion mining.",
+    "A verifier is part of the trusted base, and both Dafny's verifier and its compiler have had soundness bugs."
+   ],
+   "gaps": [
+    "Almost none of this literature measures the cost of keeping a specification correct as the code changes.",
+    "The empirical study of how experts actually write proofs is a single recent paper, so the human baseline agents are compared against is thin."
+   ]
+  },
+  {
+   "key": "spec-generation",
+   "label": "Writing the specification",
+   "summary": "Models producing the formal artifact itself: postconditions, contracts, ACSL and VeriFast annotations, separation-logic assertions, Alloy formulas. The recurring recipe is that the model proposes and a sound analysis or verifier constrains, and the recurring finding is that generated specifications are shallower than their pass rates suggest.",
+   "themes": [
+    "Static analysis, symbolic execution and test oracles supply the grounding the model lacks (AutoSpec, AutoACSL, symbolic-execution pipelines).",
+    "Correctness and discriminating power are separate axes: a true but weak specification excludes nothing (nl2postcond, POSTCONDBENCH).",
+    "Postconditions are the easy part; preconditions and frame conditions are what let a verifier close the proof.",
+    "Heap and memory reasoning, not arithmetic, is where generated specifications break down (VeriFast and separation-logic studies).",
+    "Formal specification text is scarce, so several systems manufacture corpora or knowledge bases rather than relying on pretraining."
+   ],
+   "gaps": [
+    "Specifications derived from an implementation inherit its bugs, and only a few papers (KaPilot, MutDafny) confront that directly.",
+    "Frame conditions are largely absent from both generation systems and their evaluations."
+   ]
+  },
+  {
+   "key": "invariants",
+   "label": "Invariants and proof obligations",
+   "summary": "The oldest bottleneck in deductive verification, and the first place language models paid off. Invariant inference is guess-and-check, models are strong guessers, and most of the engineering is in ranking candidates, feeding back the right failure signal, and keeping the whole loop sound.",
+   "themes": [
+    "Guess-and-check with a verifier as the judge lets an unsound generator drive a sound pipeline (Lemur states the proof rules explicitly).",
+    "Candidate ranking matters more than candidate quality, because checking dominates the cost.",
+    "Feedback shape is a design choice: verifier errors, counterexamples, or checks on the model's own natural-language reasoning.",
+    "Weakest-precondition reasoning connects the modern pipelines back to the classical calculus.",
+    "Small curated models can match large ones on this task when the training data is chosen for verifier usefulness."
+   ],
+   "gaps": [
+    "Termination and ranking functions get a fraction of the attention safety invariants get.",
+    "Benchmarks skew numeric; memory-manipulating and interacting-loop programs are far less covered."
+   ]
+  },
+  {
+   "key": "nl-to-formal",
+   "label": "Requirements to formal statements",
+   "summary": "Turning informal intent into a formal statement: autoformalization as it came from mathematics, and requirements-to-LTL, STL, TLA+, Event-B and Alloy as it lands in software. The hard part is not syntax, it is knowing whether the formula still means what the sentence meant.",
+   "themes": [
+    "Autoformalization arrived from mathematics and was inherited wholesale by requirements work (Wu et al., then the survey literature).",
+    "Semantic fidelity, not parseability, is the real metric; paraphrase robustness is a cheap way to expose the difference.",
+    "Interactive and clarifying interfaces beat one-shot translation when the requirement is ambiguous (nl2spec, ClarifySTL).",
+    "Abstention through conformal prediction lets a translator decline instead of emitting an unreliable specification.",
+    "TLA+ has genuine industrial use, which makes the measured natural-language-to-TLA+ gap a practical gap."
+   ],
+   "gaps": [
+    "Almost all evaluation uses short sentences; industrial requirement documents appear in only a handful of papers.",
+    "Nobody measures the cost of a wrong formalization downstream, so abstention thresholds have no principled setting."
+   ]
+  },
+  {
+   "key": "verified-codegen",
+   "label": "Verification-aware code generation",
+   "summary": "Agents that emit code and proof together and let a verifier decide. Dafny, Verus, Lean, Ada/SPARK and PLC code all appear, along with the two moves that make it work at scale: decomposition, and using verifier feedback as a training or search signal rather than as a final gate.",
+   "themes": [
+    "The verifier is a genuine verifiable reward, which makes bootstrapping and reinforcement learning possible without human proof data (AlphaVerus, Re:Form).",
+    "Verification as a compilation stage: generate a verification-aware intermediate language, prove it, then compile out (Dafny-as-IL).",
+    "Repository scale needs retrieval and cross-module context, and function-level results do not transfer (RagVerus, KVerus, repo-level verification).",
+    "A diff-checker that stops the model editing the program it was asked to prove is a small guardrail with large consequences.",
+    "Industrial targets are appearing (seL4, Ada/SPARK, PLC control code), which is where the cost argument gets settled."
+   ],
+   "gaps": [
+    "Proof maintenance across refactors is nearly unstudied compared to first-time proof generation.",
+    "Most systems assume the specification is given; the end-to-end case where the agent also writes the specification is much weaker."
+   ]
+  },
+  {
+   "key": "proof-agents",
+   "label": "Proof automation and prover agents",
+   "summary": "The proof-assistant side: whole-proof generation and repair, retrieval-augmented premise selection, tree search over tactics, and the cost of running any of it. Most capability here was built on mathematics benchmarks, and the transfer to software proofs is the open question.",
+   "themes": [
+    "Whole-proof generation plus error-message repair competes with step-by-step tactic prediction (Baldur, HybridProver).",
+    "Retrieval makes proof automation project-specific, which is what software verification demands (Rango, LeanDojo).",
+    "Partial proofs are worth keeping; treating verification as all-or-nothing discards most of the work (Cobblestone).",
+    "Search burns compute on attempts that never land, which makes cost a design parameter rather than an afterthought.",
+    "Auditability is emerging as its own requirement, with edit contracts and retained records around what the model changed (CAPRI)."
+   ],
+   "gaps": [
+    "Capability is measured on mathematics (miniF2F, ProofNet) and applied to software, with no controlled study of the drop across that boundary.",
+    "Proof repair after a specification changes is much less studied than proof generation from scratch."
+   ]
+  },
+  {
+   "key": "benchmarks",
+   "label": "Benchmarks for specification and proof quality",
+   "summary": "How this field grades itself. The interesting movement is away from reference matching and pass rates toward execution-grounded scoring, equivalence, completeness, mutation and live construction, because a specification can be correct, verifiable and still say nothing.",
+   "themes": [
+    "Grade by what a specification excludes: proof obligations from trusted tests (Coins), mutation (MutDafny), state-space execution (TLA+-Bench).",
+    "Score code, specification and proof separately, because systems fail asymmetrically across the three (VERINA, VerifyThisBench).",
+    "Ground-truth-free evaluation through equivalence sidesteps the fact that there is rarely one right specification.",
+    "Scale is moving from functions to systems and repositories (OSVBench, Vero, RepoVBench).",
+    "Live and contamination-resistant construction is becoming standard practice (LiveFMBench)."
+   ],
+   "gaps": [
+    "Dafny and Verus corpora are small and heavily reused, so training and evaluation sets overlap more than reported numbers admit.",
+    "Almost no benchmark scores the maintenance of a specification, only its first production."
+   ]
+  },
+  {
+   "key": "agent-quality",
+   "label": "Correctness beyond proofs",
+   "summary": "What coding agents are actually judged by today, and why that is not enough. Tests as oracle, the leakage and weakness inside those tests, hallucination taxonomies, patch verbosity, uncertainty signals, and the non-functional qualities no functional benchmark measures.",
+   "themes": [
+    "Tests are the working oracle, and their weakness is measurable: leakage, weak assertions, and generators that validate faulty code.",
+    "Self-validation is the structural flaw in agent loops, since the same model writes and checks the artifact.",
+    "Passing tests permits large unrelated edits, which is a frame-condition problem in disguise.",
+    "Uncertainty signals (internal representations, entropy, incoherence across samples) can route expensive verification where it pays.",
+    "Non-functional quality, maintainability and supply-chain hazards such as package hallucination sit outside every functional specification."
+   ],
+   "gaps": [
+    "Very little work connects these quality signals to the formal pipelines in the other sections, despite the obvious routing use.",
+    "Abstention is proposed repeatedly and evaluated almost nowhere."
+   ]
+  },
+  {
+   "key": "open-questions",
+   "label": "Open questions and limits",
+   "summary": "The arguments that are not settled: whether the specification bottleneck can be automated at all, what a probabilistic writer of deterministic specifications means for trust, who verifies the verifier, and whether any of this is cheap enough to adopt.",
+   "themes": [
+    "The bottleneck moved from writing code to stating what the code should do, and the field has not agreed on whose job that is.",
+    "A probabilistic model producing specifications that a deterministic verifier then trusts is an epistemological problem, not only an engineering one.",
+    "The trusted base grows in importance as proof volume becomes machine-written.",
+    "Adoption evidence is thin: learnability studies, productivity claims and industrial retrofits are each one or two papers deep.",
+    "The tools are turning back on the agents themselves, with behavioral contracts and capability-containment proofs for agent skills."
+   ],
+   "gaps": [
+    "No study measures the end-to-end cost of a verified agent workflow against the cost of the review it replaces.",
+    "Retrofit onto mature codebases, the situation most teams are in, is represented by a single case study here."
+   ]
+  }
+ ],
+ "reading": [
+  [
+   "2026arXiv260317150L",
+   "Intent Formalization: A Grand Challenge",
+   "Start here"
+  ],
+  [
+   "2026arXiv260813077Y",
+   "How Powerful are LLMs in Generating Formal Program Specifications?",
+   "Start here"
+  ],
+  [
+   "2010LNCS.6355..348L",
+   "Dafny: An Automatic Program Verifier",
+   "Foundations"
+  ],
+  [
+   "2009arXiv0909.0884F",
+   "Inferring Loop Invariants using Postconditions",
+   "Foundations"
+  ],
+  [
+   "2023arXiv231001831E",
+   "NL Intent to Formal Postconditions",
+   "Writing the specification"
+  ],
+  [
+   "2025arXiv251012702R",
+   "Beyond Postconditions: Inferring Formal Contracts",
+   "Writing the specification"
+  ],
+  [
+   "2023arXiv231107948K",
+   "Finding Inductive Loop Invariants using LLMs",
+   "Invariants"
+  ],
+  [
+   "2023arXiv231004870W",
+   "Lemur: LLMs in Automated Program Verification",
+   "Invariants"
+  ],
+  [
+   "2022arXiv220512615W",
+   "Autoformalization with Large Language Models",
+   "Requirements to formal"
+  ],
+  [
+   "2023arXiv230304864C",
+   "nl2spec: NL to Temporal Logics",
+   "Requirements to formal"
+  ],
+  [
+   "2024arXiv241206176A",
+   "AlphaVerus: Bootstrapping Verified Code Generation",
+   "Verified code generation"
+  ],
+  [
+   "2025arXiv250106283L",
+   "Dafny as Verification-Aware Intermediate Language",
+   "Verified code generation"
+  ],
+  [
+   "2023arXiv230304910F",
+   "Baldur: Whole-Proof Generation and Repair",
+   "Proof agents"
+  ],
+  [
+   "2025arXiv250523135Y",
+   "VERINA: Benchmarking Verifiable Code Generation",
+   "Benchmarks"
+  ],
+  [
+   "2026arXiv260723425B",
+   "TLA+-Bench: Execution-Grounded Grading",
+   "Benchmarks"
+  ],
+  [
+   "2024arXiv241214137S",
+   "Test Generators That Cannot Find Bugs",
+   "Correctness beyond proofs"
+  ],
+  [
+   "2025arXiv250520047G",
+   "Grammars of Formal Uncertainty",
+   "Open questions"
+  ]
+ ],
+ "opportunities": [
+  [
+   "Port exclusion-based grading past Rocq",
+   "Coins scores a Rocq specification by instantiating it on trusted tests and discharging concrete proof obligations, and POSTCONDBENCH adds completeness alongside correctness. Nothing comparable exists for ACSL, VeriFast or Verus, where evaluation is still pass-the-verifier. The same instantiate-and-discharge trick should port, and it would separate the specifications that constrain behavior from the ones that merely typecheck."
+  ],
+  [
+   "Frame conditions as the missing half of generated contracts",
+   "Richter shows postconditions alone rarely let a verifier close a proof, and the patch-verbosity work shows agents change more than they were asked to. Both point at frame conditions, which almost no generation paper produces and no benchmark scores. An agent that stated what it will not modify would be checkable in a way that a test suite cannot express."
+  ],
+  [
+   "Counterexamples, not error strings, as the feedback channel",
+   "ExVerus turns failed Verus proofs into concrete counterexamples and Balestra uses model-invented counterexamples to kill overfitted invariants. Most loops still feed raw verifier text back to the model. A shared counterexample-feedback layer across Dafny, Verus and Frama-C would let those results be compared rather than re-derived per tool."
+  ],
+  [
+   "Measure whether proving skill transfers from mathematics to programs",
+   "miniF2F, ProofNet and the DeepSeek-Prover line define proving capability on mathematics, while miniCodeProps and Vero define it on code. No study holds the model fixed and measures the drop across that boundary, so it is unclear whether software verification needs different training or only different retrieval."
+  ],
+  [
+   "A shared trusted base for machine-written proofs",
+   "The verified Dafny verification-condition generator and Foundational VeriFast both react to soundness bugs in production verifiers. As proof volume becomes machine-generated, the checker becomes the only thing standing between an agent and a false guarantee, and a cross-tool statement of what is actually trusted does not exist."
+  ],
+  [
+   "Abstention as a first-class output",
+   "SCP-NL2TL abstains on unreliable temporal-logic translations and Saji Mathews argues repair agents should decline uncertain issues. Both are isolated. A specification generator with a calibrated 'I cannot state this formally' output would be more useful than one with a higher average score, and would make human review targetable."
+  ],
+  [
+   "Specification maintenance under change",
+   "KVerus and RagVerus reach repository scale, but the literature is almost entirely about producing a proof once. Nothing measures the cost of keeping specifications and proofs alive across refactors, which is where verification effort actually accumulates in practice."
+  ],
+  [
+   "Contamination-resistant evaluation for verification tasks",
+   "SWE-Bench+ found leakage and weak tests behind a large share of reported passes, and LiveFMBench answers with live construction. Verification benchmarks have the same exposure with smaller corpora, and Dafny and Verus training sets overlap heavily with the benchmarks used to score them."
+  ]
+ ],
+ "practices": []
+}

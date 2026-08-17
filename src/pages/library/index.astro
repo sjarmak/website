@@ -1,6 +1,8 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
+import LinkageExplorer from "@/components/knowledge/LinkageExplorer.astro";
 import {
+  buildKnowledge,
   getLibraries,
   getExplorers,
   getDigestStream,
@@ -14,12 +16,13 @@ import type {
 const libraries: Library[] = getLibraries();
 const explorers: Explorer[] = getExplorers();
 const digestItems: DigestItem[] = getDigestStream(30);
+const knowledge = await buildKnowledge();
 ---
 
 <PageLayout
   title="Library"
   kicker="Research"
-  intro="The collections I read from: ADS paper libraries I curate on NASA ADS, five thematic literature explorers that map recent work into themes, and a feed of what's been added lately. The sources; what I publish from them lives in the Digest."
+  intro={`The collections I read from: ADS paper libraries I curate on NASA ADS, ${explorers.length} thematic literature explorers that map recent work into themes, and a feed of what's been added lately. The sources; what I publish from them lives in the Digest.`}
 >
   <div class="stack stack-l">
 
@@ -86,7 +89,16 @@ const digestItems: DigestItem[] = getDigestStream(30);
       </ul>
     </section>
 
-    <!-- 3. Recently added -->
+    <!-- 3. Knowledge linkage -->
+    <section>
+      <LinkageExplorer
+        nodes={knowledge.nodes}
+        related={knowledge.related}
+        heading="Knowledge linkage"
+      />
+    </section>
+
+    <!-- 4. Recently added -->
     <section>
       <h2 class="sub">Recently added</h2>
       <p class="muted measure" style="margin-block-end: var(--space-m)">
