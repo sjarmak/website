@@ -9,9 +9,10 @@ import {
 } from "@/lib/books";
 
 export async function getStaticPaths() {
-  const [books, chapters] = await Promise.all([
+  const [books, chapters, podcastEpisodes] = await Promise.all([
     getCollection("books"),
     getCollection("bookChapters"),
+    getCollection("learning", (entry) => entry.data.kind === "podcast"),
   ]);
 
   return books.map((book) => ({
@@ -21,6 +22,8 @@ export async function getStaticPaths() {
       chapters: chapters
         .filter((chapter) => chapter.data.book.id === book.id)
         .sort((a, b) => a.data.order - b.data.order),
+      audiobookSeries: podcastEpisodes.find((entry) => entry.data.url?.includes(`/books/${book.id}/`))
+        ?.data.series,
     },
   }));
 }
@@ -28,9 +31,15 @@ export async function getStaticPaths() {
 interface Props {
   book: CollectionEntry<"books">;
   chapters: CollectionEntry<"bookChapters">[];
+  audiobookSeries?: string;
 }
 
-const { book, chapters } = Astro.props;
+const { book, chapters, audiobookSeries } = Astro.props;
+
+// matches the slugify in src/pages/digest/index.astro, which anchors each podcast series
+function anchorOf(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 const introduction = chapters.find((chapter) => chapter.data.kind === "introduction");
 const closing = chapters.find((chapter) => chapter.data.kind === "closing");
 const glossary = chapters.find((chapter) => chapter.data.kind === "glossary");
@@ -82,6 +91,13 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
           <a href={bookExploreHref(book.id)}>
             Explore the knowledge graph <span aria-hidden="true">→</span>
           </a>
+          {
+            audiobookSeries && (
+              <a href={`/digest#${anchorOf(audiobookSeries)}`}>
+                Listen to the audiobook <span aria-hidden="true">→</span>
+              </a>
+            )
+          }
           {
             book.data.repository && (
               <a href={book.data.repository}>
