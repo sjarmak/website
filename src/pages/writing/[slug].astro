@@ -29,6 +29,7 @@ const kicker = isFieldNotes
     <header class="post__head stack stack-s">
       <p class="kicker">{kicker}</p>
       <h1>{data.title}</h1>
+      {data.subtitle && <p class="post__dek">{data.subtitle}</p>}
       <p class="muted">
         {fullDate(data.date)}
         {data.updated ? ` · updated ${fullDate(data.updated)}` : ""}
@@ -46,6 +47,12 @@ const kicker = isFieldNotes
 <style>
   .post {
     padding-block: clamp(var(--space-l), 6vw, var(--space-2xl));
+  }
+  .post__dek {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    text-wrap: balance;
+    color: var(--color-text-muted);
   }
   .post__body {
     margin-block: var(--space-l);

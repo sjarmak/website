@@ -198,6 +198,7 @@ const books = defineCollection({
     author: z.string(),
     description: z.string(),
     repository: z.string().url().optional(),
+    arxiv: z.string().url().optional(),
     pageCount: z.number().int().positive(),
     parts: z.array(
       z.object({
@@ -237,7 +238,7 @@ const bookCompanions = defineCollection({
         title: z.string(),
         taughtCount: z.number().int().nonnegative(),
         untaughtCount: z.number().int().nonnegative(),
-        totalCount: z.number().int().positive(),
+        totalCount: z.number().int().nonnegative(),
       }),
     ),
   }),
@@ -252,6 +253,9 @@ const posts = defineCollection({
       date: z.coerce.date(),
       updated: z.coerce.date().optional(),
       description: z.string(),
+      // Optional dek rendered under the title. Separate from `description`,
+      // which is meta/index copy and is often too long to sit under an H1.
+      subtitle: z.string().optional(),
       cover: image().optional(),
       draft: z.boolean().default(false),
       // Document type. Drives the on-page kicker: "essay" (default) renders
