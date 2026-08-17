@@ -33,8 +33,9 @@ const TTS_RENDER = path.join(REPO_ROOT, "scripts/digest/tts-render.mjs");
 const SERIES = "Engineering Reliable Coding Agents (Audiobook)";
 const BOOK_ID = "engineering-reliable-coding-agents";
 const SITE_ORIGIN = "https://www.sjarmak.ai";
-const VOICE = "am_onyx";
-const SPEED = "0.85";
+// Same female voice the digest episodes use (tts-render.mjs default), at 1x.
+const VOICE = "af_heart";
+const SPEED = "1.0";
 
 function mediaRoot() {
   const root = process.env.WEBSITE_MEDIA_ROOT;
