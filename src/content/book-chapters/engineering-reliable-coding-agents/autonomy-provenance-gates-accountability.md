@@ -1,10 +1,10 @@
 ---
 title: "Autonomy calibration, provenance, effective gates, and accountability"
 book: engineering-reliable-coding-agents
-order: 16
+order: 17
 part: 5
 kind: chapter
-number: 16
+number: 17
 ---
 
 <!-- reader-metadata:start -->
@@ -268,7 +268,7 @@ The acceptance criteria must be system-specific. One team may require a deployme
 
 Name the claimed oversight function, build a trace capable of falsifying it, and decide in advance what observation would establish control.
 
-Removing a dependency from a gate is itself a state change, so this failure test belongs in a contained environment. Chapter 7 supplies that boundary. Auditing a production gate by allowing its negative result to mutate production converts a test into an incident.
+Removing a dependency from a gate is itself a state change, so this failure test belongs in a contained environment. Chapter 8 supplies that boundary. Auditing a production gate by allowing its negative result to mutate production converts a test into an incident.
 
 My approval queue failed this audit. Missing components allowed scripts to bypass the path that should have waited for a person. Unvalidated command construction weakened the connection between the reviewed proposal and the executed command. The existence of the queue did not establish causal power.
 
@@ -313,7 +313,7 @@ That negative conclusion is bounded. Code review can offer unusually strong epis
 
 The gate must be tested in its own domain. These sources establish no universal conclusion about either human incapacity or human benefit.
 
-Chapter 7 also showed why a control cannot be accepted merely because the harness reports that it ran. The governance extension asks whether a person can independently inspect the relevant state and interrupt the path that changes it. An override button without an independent signal provides nominal authority without usable control.
+Chapter 8 also showed why a control cannot be accepted merely because the harness reports that it ran. The governance extension asks whether a person can independently inspect the relevant state and interrupt the path that changes it. An override button without an independent signal provides nominal authority without usable control.
 
 Three companion entries sit beside this practice: `separate-control-from-oversight`, `write-an-oversight-card`, and `keep-override-authority-real`. Each rests on one evidence item and can help distinguish control before action, observation after action, stated reviewer duties, and override paths.
 

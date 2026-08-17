@@ -1,7 +1,7 @@
 ---
 title: "Closing: the evidence chain behind reliable agents"
 book: engineering-reliable-coding-agents
-order: 19
+order: 20
 part: 7
 kind: closing
 ---
@@ -61,7 +61,7 @@ In each case, the added machinery is evaluated using the instrument the earlier 
 
 ## Engineering controls can precede trial evidence
 
-Evidence strength varies across the dependency chain and does not track operational consequence. Strong-graded items account for 56 percent of the evidence in Part I but 10 percent in Part III. Chapter 7 has no strong-graded or direct scholarly evidence item, even though its containment practices may be the first controls needed by a system with production write access. Among the 52 practices ranked by consequence, Spearman's rho between urgency rank and the presence of at least one strong item was -0.004.
+Evidence strength varies across the dependency chain and does not track operational consequence. Strong-graded items account for 56 percent of the evidence in Part I but 10 percent in Part III. Chapter 8 has no strong-graded or direct scholarly evidence item, even though its containment practices may be the first controls needed by a system with production write access. Among the 52 practices ranked by consequence, Spearman's rho between urgency rank and the presence of at least one strong item was -0.004.
 
 The catalog makes that mismatch concrete. *Contain agent blast radius* ranked first by consequence, yet its incident support consists of two corroborating Reddit accounts: a [production-workflow report](https://www.reddit.com/r/LLMDevs/comments/1q7avil/) and a [database-deletion report](https://www.reddit.com/r/devops/comments/1tbbls4/). Both have archived snapshots in the companion. They show that the failure can occur, not how often it occurs. I still recommend the control because the current authority boundary can be inspected directly, a prohibited write can be exercised safely against a test resource, and separating ordinary from recovery authority is reversible. The recommendation is mechanism-justified rather than prevalence-justified.
 
@@ -108,8 +108,8 @@ The six-step minimum pass now appears in the introduction because it is the shor
 No evidence is introduced here. Each identifier below is carried by the chapter named, and the evidence grouping comes from that chapter’s record.
 
 - Strong evidence: Skalse, Howe, Krasheninnikov & Krueger (2022). Defining and Characterizing Reward Hacking. NeurIPS 2022. arXiv:2209.13085. Chapter 6, `layer-signals-beyond-single-proxy`.
-- Strong evidence: Zhang, S., et al. (2025). Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems. ICML 2025. arXiv:2505.00212. Chapter 10, `keep-humans-in-failure-attribution`.
+- Strong evidence: Zhang, S., et al. (2025). Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems. ICML 2025. arXiv:2505.00212. Chapter 11, `keep-humans-in-failure-attribution`.
 - Directional evidence: Kapoor, Stroebl, Siegel, Nadgir & Narayanan (2024). AI Agents That Matter. arXiv:2407.01502. Chapter 2, `report-cost-accuracy-pareto`.
-- Strong evidence: Chen, J., et al. (2016). Sampling as a Baseline Optimizer for Search-Based Software Engineering. arXiv:1608.07617. Chapter 18, `replay-traces-before-policy-changes`.
+- Strong evidence: Chen, J., et al. (2016). Sampling as a Baseline Optimizer for Search-Based Software Engineering. arXiv:1608.07617. Chapter 19, `replay-traces-before-policy-changes`.
 
-The part-level and chapter-level evidence shares restated above were recomputed from the companion catalog: Part I has 18 of 32 items grouped as strong, Part III has 3 of 30, Part IV has 20 of 42, and Part VI has 8 of 29. Chapter 7 has no strong or direct scholarly evidence item.
+The part-level and chapter-level evidence shares restated above were recomputed from the companion catalog: Part I has 18 of 32 items grouped as strong, Part III has 3 of 30, Part IV has 20 of 42, and Part VI has 8 of 29. Chapter 8 has no strong or direct scholarly evidence item.

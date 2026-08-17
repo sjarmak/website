@@ -1,10 +1,10 @@
 ---
 title: "Replayable traces and fault-injection recovery testing"
 book: engineering-reliable-coding-agents
-order: 9
+order: 10
 part: 3
 kind: chapter
-number: 9
+number: 10
 ---
 
 <!-- reader-metadata:start -->
@@ -21,7 +21,7 @@ Agent runtimes present the same problem. A design may preserve state, retry inte
 
 Four items support the chapter's two entries: two synthesized sources and two direct scholarly sources. Only the fault-recovery benchmark is a strong study; no strong study supports the trace argument. Typed traces are therefore treated as an instrumentation design supported by demonstrations and a specification, with recovery established by measurement rather than a universal threshold.
 
-Chapter 8 established that recorded state can make a run resumable. Replay imposes a stricter requirement. The system must know which events produced that state, which work may safely repeat, and where a changed decision invalidates the prior path. Recovery testing adds a third requirement: the runtime must demonstrate the claimed behavior when faults occur at inconvenient points, not only when a demonstration script stops a worker at a clean boundary.
+Chapter 9 established that recorded state can make a run resumable. Replay imposes a stricter requirement. The system must know which events produced that state, which work may safely repeat, and where a changed decision invalidates the prior path. Recovery testing adds a third requirement: the runtime must demonstrate the claimed behavior when faults occur at inconvenient points, not only when a demonstration script stops a worker at a clean boundary.
 
 ## What a transcript cannot answer
 
@@ -165,7 +165,7 @@ Recurring failures should retain their sequence position in the data. If the thi
 
 ### Strike the interval the design claims to protect
 
-The most informative fault point is rarely the boundary between steps. Chapter 8 identified the execute-then-log interval: an external system may commit an effect after receiving the request but before the runtime durably records completion. A design that claims safe retry or exactly-once visible effects must hold when the process dies inside that gap.
+The most informative fault point is rarely the boundary between steps. Chapter 9 identified the execute-then-log interval: an external system may commit an effect after receiving the request but before the runtime durably records completion. A design that claims safe retry or exactly-once visible effects must hold when the process dies inside that gap.
 
 The test should place the kill there deliberately.
 

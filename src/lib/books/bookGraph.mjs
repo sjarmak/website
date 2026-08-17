@@ -290,16 +290,15 @@ export function buildBookReferences({ bookId, chapters, companionSource }) {
 
 export function parseCompanionPractices(source) {
   const headings = [...source.matchAll(CHAPTER_HEADING)];
-  if (headings.length !== 18) {
-    throw new Error(`Companion must contain 18 chapters; found ${headings.length}`);
-  }
-
   const practices = [];
   for (let index = 0; index < headings.length; index += 1) {
     const chapter = Number(headings[index][1]);
     const start = headings[index].index;
     const end = headings[index + 1]?.index ?? source.length;
     const section = source.slice(start, end);
+    const practiceHeadingCount = [...section.matchAll(/^### /gm)].length;
+    if (practiceHeadingCount === 0) continue;
+
     const taughtMarker = section.indexOf("The following pointer entries");
     const untaughtMarker = section.indexOf("The following compact entries");
     if (taughtMarker < 0 || untaughtMarker < taughtMarker) {
@@ -345,10 +344,8 @@ export function buildBookGraph({ book, chapters, companionSource }) {
   const numberedChapters = chapters
     .filter((chapter) => chapter.kind === "chapter" && Number.isInteger(chapter.number))
     .sort((left, right) => left.number - right.number);
-  if (numberedChapters.length !== 18) {
-    throw new Error(`Book graph requires 18 chapters; found ${numberedChapters.length}`);
-  }
-  for (let number = 1; number <= 18; number += 1) {
+  const chapterCount = numberedChapters.length;
+  for (let number = 1; number <= chapterCount; number += 1) {
     if (numberedChapters[number - 1]?.number !== number) {
       throw new Error(`Book graph is missing chapter ${number}`);
     }

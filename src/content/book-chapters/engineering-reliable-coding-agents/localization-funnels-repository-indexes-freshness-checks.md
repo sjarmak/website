@@ -1,10 +1,10 @@
 ---
 title: "Localization funnels, repository indexes, and freshness checks"
 book: engineering-reliable-coding-agents
-order: 12
+order: 13
 part: 4
 kind: chapter
-number: 12
+number: 13
 ---
 
 <!-- reader-metadata:start -->
@@ -53,7 +53,7 @@ Sepidband et al. ([2026](https://arxiv.org/abs/2604.05481)) measured this asymme
 
 The same experiment found that successful repairs clustered around approximately six to ten relevant files for the model family studied. That range is useful as a diagnostic band, not as a quota for other models, repositories, or task distributions. Both findings come from one benchmark and one sweep of context configurations.
 
-The practical implication is to measure file selection before adding more reasoning downstream. Chapter 11's decomposed scoring makes that diagnosis possible. When file Recall@k is low, a stronger patch generator is being evaluated on a candidate set that often excludes the answer. When file recall is already high and repair still fails, additional localization machinery may move cost into a stage that is no longer limiting the system.
+The practical implication is to measure file selection before adding more reasoning downstream. Chapter 12's decomposed scoring makes that diagnosis possible. When file Recall@k is low, a stronger patch generator is being evaluated on a candidate set that often excludes the answer. When file recall is already high and repair still fails, additional localization machinery may move cost into a stage that is no longer limiting the system.
 
 The funnel also constrains what context should cross each boundary. A file-selection stage should not silently pass its complete search transcript downstream, because doing so recreates the mixed-granularity problem inside a larger prompt. Its handoff should identify:
 
@@ -240,7 +240,7 @@ Freshness does not determine authorization. Permission policy requires separate 
 
 ## Choose the next retrieval intervention
 
-Begin with Chapter 11's decomposed measurements and determine which stage is limiting the operated system. Inspect file-level retrieval before changing the agent architecture.
+Begin with Chapter 12's decomposed measurements and determine which stage is limiting the operated system. Inspect file-level retrieval before changing the agent architecture.
 
 File Recall@k asks whether the repair stage receives the necessary files at all. When those files rarely appear, improve file selection and staged localization before adding more open-ended reasoning. A stronger repair model cannot act on evidence the retrieval path excluded.
 
@@ -259,7 +259,7 @@ Every index, snapshot, and cache should carry a commit or content identity. Comp
 
 A freshness refusal is visible and recoverable. A stale result can silently become the basis of a plausible patch.
 
-Chapter 13 turns from which evidence the system retrieves to how much of that evidence the model can use.
+Chapter 14 turns from which evidence the system retrieves to how much of that evidence the model can use.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Evidence without revision identity is stale, not current.

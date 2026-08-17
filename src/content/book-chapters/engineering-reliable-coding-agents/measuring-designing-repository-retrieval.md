@@ -1,10 +1,10 @@
 ---
 title: "Measuring and designing repository retrieval"
 book: engineering-reliable-coding-agents
-order: 11
+order: 12
 part: 4
 kind: chapter
-number: 11
+number: 12
 ---
 
 <!-- reader-metadata:start -->
@@ -169,7 +169,7 @@ Fusion does not make agreement equivalent to relevance. Two lanes may share an i
 
 Filters also belong in each lane’s record. Restrictions by language, repository area, branch, generated-code status, or modification time can improve isolation. A mistaken filter makes relevant evidence unreachable. When lanes apply different filters, their measured retrieval quality includes a corpus-selection difference as well as a ranking difference. A useful comparison either holds the eligible corpus fixed or declares corpus selection part of the lane being evaluated.
 
-Versioned corpora create a particular risk for semantic retrieval. An obsolete implementation may be extremely close to the query and structurally similar to current code while prescribing an invalid interface. Such a result becomes harmful when the generator treats similarity as authority. I record source revision and freshness with every result so the freshness gate in Chapter 12 can reject evidence whose semantic closeness exceeds its authority.
+Versioned corpora create a particular risk for semantic retrieval. An obsolete implementation may be extremely close to the query and structurally similar to current code while prescribing an invalid interface. Such a result becomes harmful when the generator treats similarity as authority. I record source revision and freshness with every result so the freshness gate in Chapter 13 can reject evidence whose semantic closeness exceeds its authority.
 
 Every added lane also adds cost. It requires index construction, storage, query compute, operational monitoring, and another source of distractors. Parallel execution can reduce wall-clock latency relative to sequential search, but it does not remove compute or maintenance cost. A lane belongs in the stack when it recovers useful evidence on the operated workload or supplies resilience the system needs.
 
@@ -292,7 +292,7 @@ This decomposition narrows the next intervention without treating any one retrie
 
 The retrieval depths, fusion constants, and chunk sizes in this chapter are not recommended defaults. Each is a parameter whose effect must be measured under the repository distribution, task mix, model, and context budget in operation.
 
-Chapter 12 turns to the architecture around these measurements: cheap retrieval funnels, typed indexes, and the conditions under which apparently relevant context should be rejected as stale.
+Chapter 13 turns to the architecture around these measurements: cheap retrieval funnels, typed indexes, and the conditions under which apparently relevant context should be rejected as stale.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Retrieval can improve while task outcomes do not.

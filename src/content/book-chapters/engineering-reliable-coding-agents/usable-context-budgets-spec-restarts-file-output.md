@@ -1,10 +1,10 @@
 ---
 title: "Usable context budgets, consolidated-spec restarts, and file-based tool output"
 book: engineering-reliable-coding-agents
-order: 13
+order: 14
 part: 4
 kind: chapter
-number: 13
+number: 14
 ---
 
 <!-- reader-metadata:start -->
@@ -384,7 +384,7 @@ Together, these controls establish:
 - where bulk evidence lives; and
 - which instructions deserve permanent residence in every run.
 
-Chapter 14 turns to what survives between sessions and in what form.
+Chapter 15 turns to what survives between sessions and in what form.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Advertised capacity is not usable context.

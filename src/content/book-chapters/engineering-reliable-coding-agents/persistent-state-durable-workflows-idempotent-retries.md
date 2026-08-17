@@ -1,10 +1,10 @@
 ---
 title: "Persistent agent state, durable workflows, and idempotent retries"
 book: engineering-reliable-coding-agents
-order: 8
+order: 9
 part: 3
 kind: chapter
-number: 8
+number: 9
 ---
 
 <!-- reader-metadata:start -->
@@ -174,7 +174,7 @@ Next, select the retried step with the most dangerous external effect. Give the 
 
 On recovery, the run should do one of three things: return the previously recorded result, converge on the same external state, or stop with an explicit unknown-state escalation. It should never silently assume either success or failure.
 
-Recorded state makes a run resumable. Chapter 9 makes the recovery claim replayable and puts it under measurement.
+Recorded state makes a run resumable. Chapter 10 makes the recovery claim replayable and puts it under measurement.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Durable intent survives the worker; external effects require their own contract.

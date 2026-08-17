@@ -37,68 +37,73 @@ chapters:
     untaughtCount: 7
     totalCount: 10
   - number: 7
+    title: "The software factory as a distributed system"
+    taughtCount: 0
+    untaughtCount: 0
+    totalCount: 0
+  - number: 8
     title: "Agent isolation, injection defenses, and independent verification"
     taughtCount: 3
     untaughtCount: 6
     totalCount: 9
-  - number: 8
+  - number: 9
     title: "Persistent agent state, durable workflows, and idempotent retries"
     taughtCount: 3
     untaughtCount: 11
     totalCount: 14
-  - number: 9
+  - number: 10
     title: "Replayable traces and fault-injection recovery testing"
     taughtCount: 2
     untaughtCount: 7
     totalCount: 9
-  - number: 10
+  - number: 11
     title: "Human-auditable failure analysis and taxonomy development"
     taughtCount: 3
     untaughtCount: 7
     totalCount: 10
-  - number: 11
+  - number: 12
     title: "Measuring and designing repository retrieval"
     taughtCount: 3
     untaughtCount: 5
     totalCount: 8
-  - number: 12
+  - number: 13
     title: "Localization funnels, repository indexes, and freshness checks"
     taughtCount: 3
     untaughtCount: 8
     totalCount: 11
-  - number: 13
+  - number: 14
     title: "Usable context budgets, consolidated-spec restarts, and file-based tool output"
     taughtCount: 4
     untaughtCount: 6
     totalCount: 10
-  - number: 14
+  - number: 15
     title: "Cross-session memory, raw traces, and compaction policies"
     taughtCount: 3
     untaughtCount: 6
     totalCount: 9
-  - number: 15
+  - number: 16
     title: "Efficient verification interfaces and risk-based human escalation"
     taughtCount: 3
     untaughtCount: 8
     totalCount: 11
-  - number: 16
+  - number: 17
     title: "Autonomy calibration, provenance, effective gates, and accountability"
     taughtCount: 4
     untaughtCount: 13
     totalCount: 17
-  - number: 17
+  - number: 18
     title: "Agent topology selection and dynamic task allocation"
     taughtCount: 4
     untaughtCount: 5
     totalCount: 9
-  - number: 18
+  - number: 19
     title: "Cost-aware fleet scheduling and model routing"
     taughtCount: 3
     untaughtCount: 8
     totalCount: 11
 ---
 
-This catalog indexes all 192 practices in the book’s corpus. Fifty-five are developed in the book’s eighteen chapters, and 137 are attached to those chapters’ mechanisms without being developed there. The catalog brings both groups together so that a reader scanning one chapter’s neighborhood can see every related practice, not only those the chapter leaves to the catalog. It also makes visible the difference between practices the book argues in full and practices it records as additional possibilities.
+This catalog indexes all 192 practices in the book’s corpus. Fifty-five are developed in the book’s nineteen chapters, and 137 are attached to those chapters’ mechanisms without being developed there. The catalog brings both groups together so that a reader scanning one chapter’s neighborhood can see every related practice, not only those the chapter leaves to the catalog. It also makes visible the difference between practices the book argues in full and practices it records as additional possibilities.
 
 Read the relevant chapter before using its catalog section. The chapter establishes the mechanism, develops the reasoning, examines the evidence, and sets the boundaries needed to judge whether a practice fits a measured problem or operating constraint. The catalog helps locate and compare practices around that mechanism, but it does not make the chapter’s argument optional. Begin with a problem you have observed, not with a practice you would like to adopt.
 
@@ -700,7 +705,11 @@ As an investigatory variant, you could retain tests, diff size, coverage delta, 
 
 A survey by Chen and colleagues ([2020](https://arxiv.org/abs/2001.08236)) provides directional support for the selection mechanism: weighted-search solutions can be dominated by Pareto-search alternatives, while fixed weights can over-constrain search and create a burdensome weight-specification problem. The same survey also reports that plain Pareto dominance loses discriminating power as the number of objectives grows. Separate-author verification and multi-model checking appear in project and vendor records, but those records provide illustration rather than independent empirical support. The vendor figure of 44% fewer AI-derived outages remains unverified, and another production record shows a scalar score of 950 / 1000 against a threshold of 850 still operating as the shipped gate. The support is therefore too thin to recommend this practice. It should remain a lead for investigation in agent-generated changes, automated refactoring, and eval-driven optimization, with any adoption evaluated against scalar gates under local conditions.
 
-## Chapter 7: Agent isolation, injection defenses, and independent verification
+## Chapter 7: The software factory as a distributed system
+
+This chapter develops no practice of its own. It supplies the system model that the practices in the following chapters attach to: logical work, ownership epochs, attempts, and the six factory contracts that keep authoritative facts on the work side of every boundary.
+
+## Chapter 8: Agent isolation, injection defenses, and independent verification
 
 3 developed in the chapter, 6 carried here. 9 practices in total.
 
@@ -776,7 +785,7 @@ In a controlled study, Perry and colleagues ([2022/2023](https://arxiv.org/abs/2
 
 The controlled result came from security tasks using the suggestion-era codex-davinci-002 assistant, and effects varied by task. It cannot quantify the gap for current agents or ordinary application development. It does establish that confidence and quality can move in opposite directions under the studied conditions, making self-certification unsuitable as an acceptance criterion.
 
-## Chapter 8: Persistent agent state, durable workflows, and idempotent retries
+## Chapter 9: Persistent agent state, durable workflows, and idempotent retries
 
 3 developed in the chapter, 11 carried here. 14 practices in total.
 
@@ -912,7 +921,7 @@ Singh Parmar ([2026](https://arxiv.org/abs/2605.00827)) reports one production K
 
 The support is too thin to recommend this practice, making the entry a lead for investigation only. The reported engine was single-process, and its language deliberately excluded conditionals, so branching would still require agent involvement. A task that changes shape between runs would offer little amortization and could make a frozen blueprint stale or incomplete.
 
-## Chapter 9: Replayable traces and fault-injection recovery testing
+## Chapter 10: Replayable traces and fault-injection recovery testing
 
 2 developed in the chapter, 7 carried here. 9 practices in total.
 
@@ -1002,7 +1011,7 @@ Jia and colleagues ([2026](https://arxiv.org/abs/2602.19843)) performed semantic
 
 Synthetic injection cannot establish the production frequency of any fault or certify tolerance to omitted classes. Real fault distributions may differ, agent-specific menus remain immature, and closed loops consume additional latency and tokens. The practitioner report is self-promotional and does not show that its chaos distribution matches deployed systems.
 
-## Chapter 10: Human-auditable failure analysis and taxonomy development
+## Chapter 11: Human-auditable failure analysis and taxonomy development
 
 3 developed in the chapter, 7 carried here. 10 practices in total.
 
@@ -1092,7 +1101,7 @@ If you are investigating consistency as a risk signal, you could run an agent re
 
 The support is too thin to recommend this practice; this entry is a lead for investigation. Repeated execution multiplies inference cost, and evidence from question answering does not establish that the signal transfers to coding agents. The measure reports whether paths agree, while correctness still requires an independent check. Mehta’s follow-up ([2026](https://arxiv.org/abs/2606.22936)) found that its commitment signal could not separate committed-correct from committed-wrong questions. A consistently wrong agent could therefore appear low risk. Both papers are single-author preprints from the same researcher using the same ReAct and HotpotQA setting, so they do not provide independent corroboration. Any experimental use for review routing or confidence estimation would need evaluation against an external correctness check in the target system.
 
-## Chapter 11: Measuring and designing repository retrieval
+## Chapter 12: Measuring and designing repository retrieval
 
 3 developed in the chapter, 5 carried here. 8 practices in total.
 
@@ -1162,7 +1171,7 @@ For code localization, Suresh and colleagues ([2024](https://arxiv.org/abs/2412.
 
 Sweep shortlist depth against first-stage recall, final localization quality, and latency instead of treating 20-30 as universal. Gains also depend on how well the retriever’s training languages and issue distribution match the target repositories. Interactive systems may find the extra reranking stage too slow, while a weak candidate generator leaves expensive reranking with an irreducible ceiling.
 
-## Chapter 12: Localization funnels, repository indexes, and freshness checks
+## Chapter 13: Localization funnels, repository indexes, and freshness checks
 
 3 developed in the chapter, 8 carried here. 11 practices in total.
 
@@ -1262,7 +1271,7 @@ Benchmark file paths, raw source, and role-aware file summaries before fixing wh
 
 Strong evidence from file-level localization experiments by Caumartin and colleagues ([2026](https://arxiv.org/abs/2607.11046)) found that role-aware summaries outperformed file-path representations by up to 40% Hit@5 while using a representation footprint 10.4-20.9x smaller than raw source. Combining complementary representations added up to 31.9% further, and LLM re-ranking added up to 42.0% further. The comparisons covered LCA and SWE-bench Verified and found no single winner across retrievers and datasets; raw source still performed best in some settings at substantially higher cost. These results apply to file-level localization and do not establish function-level or line-level precision, so representation choice must be measured again when retrieval granularity changes.
 
-## Chapter 13: Usable context budgets, consolidated-spec restarts, and file-based tool output
+## Chapter 14: Usable context budgets, consolidated-spec restarts, and file-based tool output
 
 4 developed in the chapter, 6 carried here. 10 practices in total.
 
@@ -1354,7 +1363,7 @@ One reported production case from Henry Vu ([2026](https://www.reddit.com/r/LLMD
 
 Neither account provides a controlled comparison between budgeted and unbudgeted assembly, and the 10x figure comes from a single incident. An explicit budget is also meaningful only relative to the model’s measured effective context length. Accounting against the advertised maximum can produce a precise inventory while leaving the operating window overloaded. Re-audit whenever models, tools, retrieval policies, or permanent rules change.
 
-## Chapter 14: Cross-session memory, raw traces, and compaction policies
+## Chapter 15: Cross-session memory, raw traces, and compaction policies
 
 3 developed in the chapter, 6 carried here. 9 practices in total.
 
@@ -1436,7 +1445,7 @@ A directional vendor-authored study by Dillon ([2026](https://arxiv.org/abs/2605
 
 The added substrate inherits every maintenance problem of an agent memory store. Decisions become stale, duplicate explanations diverge, and authoritative-looking records can outlive the systems or policies they describe. Ownership, source links, expiry review, and consolidation are therefore part of its operating cost. Where the repository already captures rationale reliably, a separate store may add more synchronization burden than useful context.
 
-## Chapter 15: Efficient verification interfaces and risk-based human escalation
+## Chapter 16: Efficient verification interfaces and risk-based human escalation
 
 3 developed in the chapter, 8 carried here. 11 practices in total.
 
@@ -1542,7 +1551,7 @@ Sarkar and colleagues ([2022](https://arxiv.org/abs/2208.06213)) offer anecdotal
 
 The support is too thin to recommend planning or staffing around this hypothesis, so this aside should serve only as a lead for local investigation. The source predates coding agents, does not quantify the magnitude of the shift, and cannot establish that verification dominates across teams or tasks. Problem formulation, integration, or other work may remain the larger cost. Any budgeting change would need evidence from the team’s own workflow.
 
-## Chapter 16: Autonomy calibration, provenance, effective gates, and accountability
+## Chapter 17: Autonomy calibration, provenance, effective gates, and accountability
 
 4 developed in the chapter, 13 carried here. 17 practices in total.
 
@@ -1692,7 +1701,7 @@ Require a developer to approve recommendations from metric-optimizing search bef
 
 Apply the same separation to LLM-generated refactors, dependency-update bots, configuration tuning, and agent patch pipelines: automation proposes and ranks; an authorized reviewer decides whether the result enters the system. The project dossier illustrates this separation through metric-improving moves that created fresh modules, but that account is corroboration rather than independent evidence. The study does not establish that the modularity metric was invalid, that developer preference measures architectural truth, or that human review will reliably catch every harmful change. Its finding concerns acceptance within one organization, and recommendation quality was partly tied to developer perception. Review also consumes scarce attention, so the gate needs enough context, authority, and capacity to make rejection or revision operationally meaningful.
 
-## Chapter 17: Agent topology selection and dynamic task allocation
+## Chapter 18: Agent topology selection and dynamic task allocation
 
 4 developed in the chapter, 5 carried here. 9 practices in total.
 
@@ -1764,7 +1773,7 @@ When investigating a failed run, identify the earliest error supported by the tr
 
 Zhu and colleagues ([2025](https://arxiv.org/abs/2509.25370)) reported that AgentDebug’s root-cause isolation and targeted feedback outperformed retry-from-scratch baselines on trajectories from ALFWorld, GAIA, and WebShop. This is directional evidence from one author group that constructed AgentErrorBench, defined the taxonomy, built the debugging system, and evaluated it. It has no independent replication and does not establish effectiveness for repository-scale coding. The support is too thin to recommend this method as a general retry policy; it is a lead for investigation in agent harnesses and human-assisted run repair. The approach also depends on reliable classification across memory, reflection, planning, action, and system errors, plus the ability to restore relevant state. When the earliest cause is ambiguous, state cannot be reconstructed, or several independent errors coexist, a targeted rerun may preserve the wrong diagnosis.
 
-## Chapter 18: Cost-aware fleet scheduling and model routing
+## Chapter 19: Cost-aware fleet scheduling and model routing
 
 3 developed in the chapter, 8 carried here. 11 practices in total.
 

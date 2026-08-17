@@ -1,10 +1,10 @@
 ---
 title: "Human-auditable failure analysis and taxonomy development"
 book: engineering-reliable-coding-agents
-order: 10
+order: 11
 part: 3
 kind: chapter
-number: 10
+number: 11
 ---
 
 <!-- reader-metadata:start -->
@@ -15,7 +15,7 @@ number: 10
 
 In a peer-reviewed study, Zhang et al. ([2025](https://arxiv.org/abs/2505.00212)) collected expert-annotated failure logs from 127 multi-agent systems, in which several model-driven workers passed work among one another. They then gave the attribution task to the strongest automated methods they could evaluate. The best method identified the responsible agent in 53.5 percent of cases but found the decisive step in only 14.2 percent. Some methods performed below random.
 
-The logs already existed before the attribution problem was posed. Chapter 9 established that recording what happened is necessary, but a complete record does not establish why a run failed. The same trace may support several causal explanations. One worker may introduce a planning error, another may act reasonably on corrupted state, and a third may expose the defect when verification finally runs. Assigning responsibility to the last visible error confuses detection with cause.
+The logs already existed before the attribution problem was posed. Chapter 10 established that recording what happened is necessary, but a complete record does not establish why a run failed. The same trace may support several causal explanations. One worker may introduce a planning error, another may act reasonably on corrupted state, and a third may expose the defect when verification finally runs. Assigning responsibility to the last visible error confuses detection with cause.
 
 Attribution is the scarce capability in this sequence. Logging preserves evidence. Attribution claims that one action materially changed the run’s prospects. That claim determines what engineers instrument, which component they repair, whether a benchmark case remains valid, and sometimes who is held accountable. With weak attribution, a complete trace can become a precise record attached to the wrong explanation.
 
@@ -136,7 +136,7 @@ When the evidence cannot distinguish among plausible causes, the correct verdict
 
 Aggregating several automated readers does not by itself make attribution reliable. Agreement among weak or dependent readers is a triage signal, not a causal verdict. The same applies to consistency across repeated runs: both signals may direct attention, while the signed attribution remains a human decision.
 
-Repeated local categories can expose a structural defect. When the same failure class survives prompt patches and model upgrades, the remedy is likely architectural, and Chapter 17 develops how to test that redesign. Recurrence identifies the problem; an intervention still requires its own evaluation.
+Repeated local categories can expose a structural defect. When the same failure class survives prompt patches and model upgrades, the remedy is likely architectural, and Chapter 18 develops how to test that redesign. Recurrence identifies the problem; an intervention still requires its own evaluation.
 
 ## Design the record for a skeptical reader
 
@@ -146,7 +146,7 @@ These results span different tasks and benchmarks. The first two use one annotat
 
 The model scores will change as trace readers improve, and production workloads will differ. The more durable implication comes from the structure of the task: a record built for human audit should expose the units a causal investigation requires. Raw chronological text forces every reader, human or model, to reconstruct those units before diagnosis begins.
 
-Chapter 9’s typed event stream supported replay and recovery. Human audit adds a different requirement. A reviewer must be able to follow step boundaries, decisions, inputs, state transitions, retries, and outcomes without inferring their identities from prose. The same event stream can support both purposes when its schema records semantic boundaries. Timestamps on messages alone do not preserve them.
+Chapter 10’s typed event stream supported replay and recovery. Human audit adds a different requirement. A reviewer must be able to follow step boundaries, decisions, inputs, state transitions, retries, and outcomes without inferring their identities from prose. The same event stream can support both purposes when its schema records semantic boundaries. Timestamps on messages alone do not preserve them.
 
 At minimum, I retain:
 
@@ -234,9 +234,9 @@ A completed review should state both what the evidence supports and what remains
 
 The repository artifact [`protocols/failure-trace-review.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/failure-trace-review.md) provides the blinded review sequence, pass condition, and adjudication record.
 
-The failure corpus remains an operating asset after Part III. Chapter 14 uses it to tune compaction policy, because compression should preserve the evidence that prior investigations found decisive.
+The failure corpus remains an operating asset after Part III. Chapter 15 uses it to tune compaction policy, because compression should preserve the evidence that prior investigations found decisive.
 
-Part IV turns to the evidence available when the model acts: retrieval, context budgets, and memory. Chapter 11 begins by measuring repository retrieval, the first step in deciding which parts of a codebase enter that evidence.
+Part IV turns to the evidence available when the model acts: retrieval, context budgets, and memory. Chapter 12 begins by measuring repository retrieval, the first step in deciding which parts of a codebase enter that evidence.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Attribute the first upstream failure the trace can support.

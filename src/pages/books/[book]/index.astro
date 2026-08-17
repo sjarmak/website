@@ -34,6 +34,7 @@ const { book, chapters } = Astro.props;
 const introduction = chapters.find((chapter) => chapter.data.kind === "introduction");
 const closing = chapters.find((chapter) => chapter.data.kind === "closing");
 const glossary = chapters.find((chapter) => chapter.data.kind === "glossary");
+const chapterCount = chapters.filter((chapter) => chapter.data.kind === "chapter").length;
 const chaptersByPart = book.data.parts.map((part) => ({
   ...part,
   chapters: chapters.filter(
@@ -65,7 +66,7 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
         <p class="book-head__author">By {book.data.author}</p>
         <p class="lead">{book.data.description}</p>
         <p class="muted">
-          18 chapters · {book.data.parts.length} parts · approximately {book.data.pageCount.toLocaleString("en-US")} pages
+          {chapterCount} chapters · {book.data.parts.length} parts · approximately {book.data.pageCount.toLocaleString("en-US")} pages
         </p>
         <nav class="book-head__links" aria-label="Book resources">
           {
@@ -85,6 +86,13 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
             book.data.repository && (
               <a href={book.data.repository}>
                 Source and companion files <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+          {
+            book.data.arxiv && (
+              <a href={book.data.arxiv}>
+                Read on arXiv <span aria-hidden="true">↗</span>
               </a>
             )
           }

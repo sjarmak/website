@@ -1,10 +1,10 @@
 ---
 title: "Agent isolation, injection defenses, and independent verification"
 book: engineering-reliable-coding-agents
-order: 7
+order: 8
 part: 3
 kind: chapter
-number: 7
+number: 8
 ---
 
 <!-- reader-metadata:start -->
@@ -216,7 +216,7 @@ Finally, select one recent completion claim and verify it against the workspace 
 
 The repository artifact [`protocols/authority-boundary-test.md`](https://github.com/sjarmak/engineering-reliable-coding-agents/blob/main/protocols/authority-boundary-test.md) makes the boundary test, pass condition, and retained evidence explicit.
 
-Containment limits the damage a live process can cause. Chapter 8 turns to what must survive when that process dies.
+Containment limits the damage a live process can cause. Chapter 9 turns to what must survive when that process dies.
 
 <!-- chapter-claim-close:start -->
 **Portable claim.** Authority, not instruction, defines blast radius.

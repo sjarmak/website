@@ -1,10 +1,10 @@
 ---
 title: "Cost-aware fleet scheduling and model routing"
 book: engineering-reliable-coding-agents
-order: 18
+order: 19
 part: 6
 kind: chapter
-number: 18
+number: 19
 ---
 
 <!-- reader-metadata:start -->
@@ -188,7 +188,7 @@ The sufficiency requirement must be operational rather than rhetorical. “Good 
 
 Each defines a different routing problem.
 
-The roughly 15-fold token premium reported for some fan-out configurations in Chapter 17 makes this choice economically consequential. Token count is still not the final objective. A cheap model that triggers repeated repair, verification, and review can cost more per accepted result than a stronger model would have cost initially.
+The roughly 15-fold token premium reported for some fan-out configurations in Chapter 18 makes this choice economically consequential. Token count is still not the final objective. A cheap model that triggers repeated repair, verification, and review can cost more per accepted result than a stronger model would have cost initially.
 
 When sufficient outcome data accumulates, the router can update through a budget-constrained bandit, such as Thompson sampling, with the algorithmic details left to the companion catalog. Cayci, Eryilmaz, and Srikant establish an asymptotic regret guarantee under moment conditions that permit heavy-tailed, correlated, and even negative cost-reward pairs.
 
@@ -281,7 +281,7 @@ Fixed-arrival replay itself remains a reasoned transfer rather than a controlled
 
 An **arrival trace** is a time-ordered record of work entering the system, including the information available when each item arrived. A **dispatch policy** decides which eligible item receives a resource next. **First-come scheduling** orders eligible work by arrival time, subject to constraints that make an item impossible to run.
 
-A **replay harness** re-executes the recorded arrivals under a candidate dispatch policy without changing production state. It differs from the single-run replay used for debugging in Chapter 9. That replay reconstructs one execution. This harness holds an entire workload sequence fixed while replacing the policy that allocates it.
+A **replay harness** re-executes the recorded arrivals under a candidate dispatch policy without changing production state. It differs from the single-run replay used for debugging in Chapter 10. That replay reconstructs one execution. This harness holds an entire workload sequence fixed while replacing the policy that allocates it.
 
 The trace needs, at minimum:
 

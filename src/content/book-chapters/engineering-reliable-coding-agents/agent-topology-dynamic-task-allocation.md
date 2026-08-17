@@ -1,10 +1,10 @@
 ---
 title: "Agent topology selection and dynamic task allocation"
 book: engineering-reliable-coding-agents
-order: 17
+order: 18
 part: 6
 kind: chapter
-number: 17
+number: 18
 ---
 
 <!-- reader-metadata:start -->
@@ -27,7 +27,7 @@ A failure class does not become persistent merely because it occurred more than 
 
 Chapter 1’s variance discipline still applies when the proposed treatment is a model upgrade. Analyze paired per-item differences rather than comparing two aggregate scores.
 
-Once persistence is established, Chapter 10’s taxonomy and first-upstream-failure method locate the earliest supported cause. That location constrains the repair. If retrieval produced an incomplete candidate set, adding a stronger instruction for the final writer to cite sources attacks the last visible symptom. The relevant repair belongs where the candidate set is formed, checked, or handed off.
+Once persistence is established, Chapter 11’s taxonomy and first-upstream-failure method locate the earliest supported cause. That location constrains the repair. If retrieval produced an incomplete candidate set, adding a stronger instruction for the final writer to cite sources attacks the last visible symptom. The relevant repair belongs where the candidate set is formed, checked, or handed off.
 
 The companion catalog states the broader rule as repairing the supported root cause rather than the final visible error. Its evidence is thin, so I use it here only as a diagnostic reminder.
 
@@ -168,7 +168,7 @@ Cost measurement must include the full topology:
 
 Measure latency separately from total computation. Parallel execution may reduce wall-clock time while increasing tokens and monetary cost. That trade may be justified for a high-consequence incident and unacceptable for routine maintenance.
 
-Chapter 18 develops routing and cost engineering in more detail. The minimum requirement here is to choose the cost axis that matters, measure it end to end, and record the acceptable increase before seeing the treatment result. A ceiling selected afterward can always be adjusted to preserve the favored architecture.
+Chapter 19 develops routing and cost engineering in more detail. The minimum requirement here is to choose the cost axis that matters, measure it end to end, and record the acceptable increase before seeing the treatment result. A ceiling selected afterward can always be adjusted to preserve the favored architecture.
 
 One validity check comes before any outcome comparison: the multi-agent mechanism must actually execute.
 
@@ -435,7 +435,7 @@ If those answers cannot be reconstructed, the graph has become another hidden co
 
 ## What evidence should promote a topology?
 
-Chapter 1 defines the paired comparison, Chapter 2 the baseline and cost coordinates, Chapter 9 the fault-injection method, and Chapter 10 the first-upstream-failure label. A topology experiment should reuse those protocols rather than restating them.
+Chapter 1 defines the paired comparison, Chapter 2 the baseline and cost coordinates, Chapter 10 the fault-injection method, and Chapter 11 the first-upstream-failure label. A topology experiment should reuse those protocols rather than restating them.
 
 Begin with one recurring failure class and draw the smallest boundary at which it could have become observable and stoppable. Change one structural element at that boundary: a verification loop, specialist role, handoff, communication route, aggregation rule, or dependency-aware dispatcher. Preserve the live single-agent workflow as the cheapest credible baseline.
 

@@ -1,10 +1,10 @@
 ---
 title: "Efficient verification interfaces and risk-based human escalation"
 book: engineering-reliable-coding-agents
-order: 15
+order: 16
 part: 5
 kind: chapter
-number: 15
+number: 16
 ---
 
 <!-- reader-metadata:start -->
@@ -223,7 +223,7 @@ Forcing functions also need explicit escape paths. An emergency may justify bypa
 
 A gate with no exception can become unsafe when delay carries greater cost. A gate whose exception leaves no durable record becomes optional whenever pressure rises.
 
-Chapter 16 examines how to determine whether documented gates continue to affect execution. The narrower conclusion here is that friction is unpopular by construction. Its existence and actual use cannot be inferred from the workflow diagram.
+Chapter 17 examines how to determine whether documented gates continue to affect execution. The narrower conclusion here is that friction is unpopular by construction. Its existence and actual use cannot be inferred from the workflow diagram.
 
 ## Allocate review where it can change the outcome
 

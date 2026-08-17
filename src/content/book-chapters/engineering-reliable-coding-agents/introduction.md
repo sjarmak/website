@@ -6,7 +6,7 @@ part: 0
 kind: introduction
 ---
 
-*Evaluation, Recovery, Context, and Control Beyond the Model*
+*Evaluating and Operating the System Around the Model*
 
 Stephanie Jarmak
 
@@ -60,7 +60,7 @@ It is also not a construction guide for coding agents. No chapter covers prompt 
 
 ## How the monograph is organized
 
-The monograph has six parts and eighteen chapters. Measurement comes first because every later practice is adopted or rejected through a measured comparison. Nineteen developed practices in Parts II through VI also require a method introduced in Part I. Interleaving those methods with their uses would scatter each method across four or five chapters.
+The monograph has six parts and nineteen chapters. Measurement comes first because every later practice is adopted or rejected through a measured comparison. Nineteen developed practices in Parts II through VI also require a method introduced in Part I. Interleaving those methods with their uses would scatter each method across four or five chapters.
 
 This order places roughly three chapters of experiment design before the agent-specific operating chapters. The alternative would make later recommendations easier to reach but harder to assess. Definitions would arrive after their first use, and repeated fragments would replace a coherent method.
 
@@ -179,7 +179,7 @@ The machine-readable edition status in `companion/methodology/external-grading/s
 
 Candidate practices were derived through bounded-claim extraction and synthesis, then passed through a separate admission gate. A record qualified at the final gate through at least one scholarly item, a non-author synthesis with a resolvable scholarly identity, or at least two practitioner items with distinct independence keys. Hardening separated bundled claims, removed redundant or self-defeating records, preserved contrary findings, and repaired provenance. The resulting catalog contains 192 edition records, each with a stable identifier. That total reflects the chosen claim granularity and editorial boundaries; it is not an estimate of how many reliability practices exist. The companion preserves the full record arithmetic and identifies which hardening operations overlap.
 
-Three selection passes ranked the catalog by different criteria: teachability through a bounded case, consequence for an engineering decision, and coverage of the fourteen mechanism clusters. Practices selected by at least two passes formed the base of the developed set. Individual adjudication then repaired thin mechanism coverage and one provenance defect. The resulting 55 practices receive full treatment in the 18 chapters; the remaining 137 appear in the companion catalog.
+Three selection passes ranked the catalog by different criteria: teachability through a bounded case, consequence for an engineering decision, and coverage of the fourteen mechanism clusters. Practices selected by at least two passes formed the base of the developed set. Individual adjudication then repaired thin mechanism coverage and one provenance defect. The resulting 55 practices receive full treatment in the 19 chapters; the remaining 137 appear in the companion catalog.
 
 The consequence ranking also supplies the operational-urgency calculation used later in the monograph. Among its 52 ranked practices, the Spearman correlation between urgency rank and a binary indicator for whether the practice carried at least one strong evidence item was -0.004. The phrase *nearly uncorrelated* refers to this calculation, not to all 192 catalog entries or to a latent universal measure of importance.
 
