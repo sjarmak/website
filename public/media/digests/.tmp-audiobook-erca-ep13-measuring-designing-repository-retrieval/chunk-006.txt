@@ -1,0 +1,23 @@
+1. the existing lane;
+2. the added lane alone; and
+3. fused results under the same retrieval and context budgets.
+
+Because outcomes are paired by task, the analysis uses per-task differences rather than comparing aggregate recall values alone. I sweep retrieval depth for each original list and the fused list because fusion can move the point where recall plateaus. The per-task record identifies targets found only lexically, only semantically, by both lanes, or by neither.
+
+Identifier-heavy tasks need their own stratum. Aggregate recall can conceal a fusion policy that helps prose queries while demoting exact symbols. I identify these tasks from task construction and repository artifacts before inspecting outcomes. Error-string lookup, symbol navigation, configuration lookup, and natural-language behavior queries may benefit from different mixtures. The strata should remain measurements of the workload rather than becoming routing rules justified by a small result.
+
+The companion catalog contains more elaborate retrieval paths: explicit recovery across lexical gaps, iterative re-querying when a draft exposes missing context, retrieval gates based on expected benefit, investment in whichever end of the retrieval-and-generation pipeline is limiting, and a cheap-first funnel followed by reranking. Each is useful only when the operated system exhibits a failure that calls for it. None repairs an unobserved channel outage or makes raw scores commensurate.
+
+The operational test is whether fusion recovers relevant evidence that the current lane systematically misses without consuming more context than the generator can use. I inspect the recovered items, their ranks, and the tasks whose outcomes they change. A lane that contributes only duplicates and stale neighbors has added cost without adding usable evidence, regardless of its semantic sophistication.
+
+Preserve code structure inside the retrieval unit
+
+Replacing fixed line windows with syntax-aware chunks increased Recall@5 by 4.3 percentage points on RepoEval, a repository-level retrieval and completion benchmark, in the cAST study from Zhang et al. (2025). The same study reported a 2.67-percentage-point Pass@1 gain on SWE-bench generation across languages.
+
+These are modest end-to-end changes. They are still large enough to investigate at the chunking-policy layer because the intervention changes neither the model nor the information present in the repository.
+
+The chunking policy defines the units a retriever can rank and a context builder can select. An index rarely stores an entire repository as one document. It divides files into spans, attaches identifiers and metadata, and represents each span for lexical or semantic search. Those spans become the objects over which Recall@k is measured. A relevant function cannot rank as one coherent item when the chunker separates its signature, body, and surrounding contract into unrelated records.
+
+Fixed windows choose boundaries by line or token count. They are simple, deterministic, and applicable to any text format. Their weakness follows from ignoring code structure. A 100-line window may end after a function signature and place its body in the next chunk. Another may combine the end of one class, several imports, and the beginning of an unrelated helper merely because those lines are adjacent.
+
+Overlap reduces some boundary damage without eliminating it. Repeating twenty lines between windows may preserve a short definition, but it also duplicates imports, comments, and boilerplate across many indexed records. Long methods still split. Repeated spans can crowd result lists and distort fusion unless the system deduplicates them. Overlap trades index size and redundancy for fewer severed boundaries.

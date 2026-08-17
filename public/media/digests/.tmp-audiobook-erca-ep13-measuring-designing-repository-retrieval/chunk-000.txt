@@ -1,0 +1,29 @@
+Chapter 12: Measuring and designing repository retrieval.
+
+In my benchmark built from tasks across 73 repositories, two instruments gave different accounts of the same retrieval tool. Precision@10, the proportion of the first ten results judged relevant, rose from 0.095 to 0.313. Recall@k, the fraction of judged necessary items found among the first \(k\) results, rose at \(k = 10\) from 0.120 to 0.272. The share of tasks for which at least one needed file appeared rose from 0.33 to 0.56.
+
+The paired end-to-end reward across 370 tasks moved by only +0.0349, with a bootstrap 95 percent confidence interval of [+0.0130, +0.0579], \(n = 370\).
+
+That interval treated all 370 task-level differences as independent. The tasks came from 73 repositories and were also grouped into 20 suites, but the resampling represented neither structure. The interval therefore likely understates uncertainty and should not be read as a valid bound on it.
+
+Chapter 1’s rule about choosing the resampling unit applies directly, but promoting the unit from task to repository or suite is not sufficient by itself. Repositories and suites are two groupings over the same tasks. Whether they are nested or crossed determines whether one clustered unit is adequate or whether the analysis requires hierarchical or multiway resampling.
+
+The retrieval measures showed that the tool had become substantially better at placing relevant repository evidence in front of the agent. The end-to-end score showed that the system as a whole changed little. The instruments estimated different events.
+
+That disagreement changed the engineering question. Had I retained only the final reward, I would have treated retrieval as a weak intervention and looked elsewhere. The stage measurements showed that retrieval improved while much of the additional evidence failed to become correct edits. The next investigation therefore belonged downstream, in context assembly, evidence use, generation, or verification.
+
+The reverse pattern would require another explanation. An end-to-end gain without a retrieval gain could come from a model change, a prompt difference, or another uncontrolled part of the pipeline.
+
+Repository retrieval belongs to a causal chain. A task becomes one or more queries, each query searches an index, and ranked results enter a context budget. A model interprets that context before execution and verification turn its output into a scored result. Pass rate records only the state at the end of the chain and cannot identify which transition produced it.
+
+Score retrieval and generation separately
+
+Chapter 2 used ablations to isolate a component by removing it while holding the surrounding system fixed. Stage-level scoring applies the same attribution discipline within a run. I measure whether the retriever surfaced the evidence the task required, where that evidence appeared, whether it survived the context cutoff, and whether the generator used it. I report those measurements beside final task completion because each describes a different condition for success.
+
+The first condition is availability. The relevant file, symbol, documentation block, or prior decision must exist in the searchable corpus and its index. A retriever cannot return a file omitted by an indexing rule, a generated tree excluded as noise, or a recent change still waiting for an asynchronous update. Treating those cases as ranking failures directs the investigation toward query tuning when the actual defect is corpus coverage or freshness.
+
+The second condition is retrieval. Given an indexed target, the query must return it.
+
+The third is placement. A relevant item can appear too low in the ranking to survive a fixed result depth or token budget.
+
+The fourth is contextual sufficiency. A method signature may be relevant but insufficient when the implementation, callers, or type definition determine the correct edit.

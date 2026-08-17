@@ -1,0 +1,25 @@
+Retrieval metrics
+
+When a task requires one item, its Recall@k value is binary: the item either appears among the first \(k\) results or it does not. When several items are required, Recall@k is the fraction found within those results.
+
+The aggregate may be computed as the mean of per-task recall values or as the pooled fraction across all required items. These are different estimands when tasks require unequal numbers of items, so the report should name which one it uses. It must also state what counts as relevant.
+
+A file-level measure asks whether the needed file appeared. A chunk-level measure may require the particular definition, implementation, or surrounding block. Those targets answer different questions and should not share one unlabeled score.
+
+The rank of a needed item is its position in the ordered results, with position one returned first. Items at positions one and ten both count as retrieved at \(k = 10\), although the first consumes less context and is less vulnerable to truncation. Recall@k does not preserve that difference.
+
+When several items are required, I retain each position or report a declared aggregate. One rank value rarely describes the full set.
+
+Retrieval depth is an experimental variable. I sweep \(k\) across a range and plot recall against depth. The recall plateau is the region in which the curve flattens and additional results recover little more required evidence. Fixing \(k\) before inspecting the curve can distort the comparison.
+
+A shallow cutoff can make a viable retriever appear incapable. A deep cutoff can conceal poor ranking because a disordered list still contains the target somewhere among many returned items. The plateau does not determine the operating point by itself. Latency, context consumption, and distractors may justify stopping earlier. It shows the recall the ranker can reach and the marginal number of returned items required to reach it.
+
+Multiple retrieval channels produce ordered lists whose numeric scores may have incompatible meanings. BM25, a lexical ranking function based on term occurrence and document statistics, can produce values well above one. Cosine similarity between embedding vectors usually occupies a bounded interval. Adding or averaging their raw scores gives arbitrary influence to whichever implementation emits larger numbers.
+
+Reciprocal-rank fusion combines lists by position instead. Each item receives a contribution such as \(1/(c+r)\) from each channel, where \(r\) is its rank and \(c\) is a fixed damping constant. The fused order reflects agreement and placement across lists without assuming comparable score scales.
+
+Each metric remains incomplete. Recall@10 does not show whether ten falls before or after the recall plateau. Mean rank excludes or obscures tasks in which the target never appeared unless missing results receive an explicit convention. A fused list may preserve coverage when one channel fails, but that failure remains visible only if the original channel results are retained.
+
+Stage-level evaluation requires relevance judgments. In a curated benchmark, maintainers may identify the file, symbol, span, or dependency set needed for each task. In a production repository, relevance may be plural and conditional. One correct patch may rely on an interface declaration and a caller. Another may use the implementation and a test. Declaring only one path relevant can penalize an equally valid evidence route.
+
+When the evaluation warrants the expense, I construct judgments from the accepted solution, dependency structure, and expert review. I retain graded labels when an item can be useful without being sufficient. A class declaration might be relevant, while the concrete override is necessary for sufficiency. Whatever schema is used, the record should state what qualified an item and which valid solution paths the reviewers considered.

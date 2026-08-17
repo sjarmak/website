@@ -1,0 +1,35 @@
+The 2.67-percentage-point generation gain is smaller and farther downstream. Better retrieval must survive context selection and then alter the model’s output. The attenuation is consistent with the stage chain developed earlier, although the study does not identify one cause for it. Some newly retrieved chunks may be redundant, appear below the usable cutoff, or fail to change generation.
+
+I compare chunking policies on identical repository revisions and tasks. The fixed-window and syntax-aware indexes use the same:
+
+- eligible files;
+- retrieval methods;
+- queries;
+- filters; and
+- top-\(k\) sweeps.
+
+Relevance judgments identify both the required symbol and acceptable supporting neighbors. I then compare chunk recall, target rank, returned tokens, duplicated content, parse-failure coverage, and final task completion.
+
+Chunk recall requires a declared unit. If the target is a method, a chunk containing one line from that method should not count as fully relevant. The chunk must contain the task-specific evidence named in the judgment, such as the complete signature and relevant branch. Partial matches can be reported separately when they help explain a failure. File-level recall remains useful for corpus and coarse-retrieval diagnosis, but it cannot establish that the returned chunk is interpretable.
+
+Chunk size needs its own sweep. Very small syntax-aware chunks improve isolation but can remove relationships required to understand state changes. Very large chunks preserve local structure while consuming more context and reducing the number of distinct candidates the model can inspect. I sweep size together with retrieval depth because the two controls interact. Ten 200-token chunks and ten 1,500-token chunks impose different costs even though both are reported as Recall@10.
+
+The implementation should also preserve ordering and provenance. When several chunks from one file enter context, source order can help the model reconstruct control flow. Every chunk should identify its file, symbol path, source revision, and line range so a failed completion can be traced back to the exact indexed representation.
+
+Structural chunking is justified when its measured benefit covers parser maintenance and indexing complexity for the supported languages. A repository dominated by languages with reliable parsers and long structured files is a strong candidate. A heterogeneous corpus containing templates, notebooks, generated fragments, and proprietary languages may require mixed policies. The appropriate retrieval unit follows the workload and the structure available within it.
+
+The final comparison returns to decomposed scoring. I measure whether syntax-aware chunks recover the required evidence and where they rank, then whether those chunks improve completion under the same context budget. Better chunk recall with unchanged completion remains a useful diagnostic result. It shows that the chunker repaired its stage and that the remaining limitation lies elsewhere in the path.
+
+Run the retrieval protocol on the operated workload
+
+Begin with the stack that serves real tasks. The first version can use a small sample from one query class, sized to the available annotation budget and stratified across the repositories or task shapes relevant to the decision. Judge the evidence each task requires and instrument the production retrieval path. A retrieval-depth sweep on that stratum can answer one question: whether the current top-\(k\) cutoff should change for that query class.
+
+For each task, identify the file, symbol, or evidence set that a competent solution could use. Record:
+
+- every retrieval query;
+- the index revision;
+- returned item identities and ranks;
+- which items entered model context; and
+- the final task outcome.
+
+When the system exposes citations or another credible evidence-use signal, preserve it. Do not treat context exposure alone as proof that the model used the evidence.
