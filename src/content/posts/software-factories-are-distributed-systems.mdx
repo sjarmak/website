@@ -21,7 +21,7 @@ Some of this amounts to a game of Agent Telephone. An agent will do what you tel
 
 That meant a closed work item and merged code were allowed to stand in for the same fact when they are very much not the same fact.
 
-That distinction, between what one layer observes and what another is allowed to treat as authoritative, is what this essay is about. Agents fail on their own too, and later sections have plenty of them: workers skipping a check the protocol told them to run, closing work the instructions said to leave open. But those aren't failures you fix by writing a better instruction, which is the actual problem. A prompt can't hold an invariant. So the factory around the agent has to keep track of who is allowed to act, whether an effect has already happened, what artifact was actually verified, when work is really complete, and what to do when part of that sequence dies halfway through. None of those guarantees come from the model or its toolkits. They also do not belong uniquely to a workflow engine, queue, or agent runtime. They emerge from how all of those pieces interact.
+One layer observed something, another layer treated it as authority, and nearly every failure below is a version of that. Agents fail on their own too, and later sections have plenty of them: workers skipping a check the protocol told them to run, closing work the instructions said to leave open. But those aren't failures you fix by writing a better instruction, which is the actual problem. A prompt can't hold an invariant. So the factory around the agent has to keep track of who is allowed to act, whether an effect has already happened, what artifact was actually verified, when work is really complete, and what to do when part of that sequence dies halfway through. None of those guarantees come from the model or its toolkits. They also do not belong uniquely to a workflow engine, queue, or agent runtime. They emerge from how all of those pieces interact.
 
 ## An old problem with a new worker
 
@@ -71,7 +71,7 @@ A factory has four responsibilities, and Gas City keeps them separate, which is 
 
 <ConceptFigure kind="authorities" />
 
-Mixing them up is where things break, and the mistake has one shape. One layer produces evidence that another layer accepts as authoritative. A running process doesn't prove the work is still assigned to it. A completed procedure doesn't prove its branch ever landed. A closed work item doesn't prove the result went anywhere at all.
+Mixing them up is where things break, usually because one layer's evidence gets treated as another layer's authority. A running process doesn't prove the work is still assigned to it. A completed procedure doesn't prove its branch ever landed. A closed work item doesn't prove the result went anywhere at all.
 
 It's completely fine for agents to be nondeterministic, but for reliable work throughput the authority over what they produce needs determinism. Recovery has to start from durable facts rather than from what a worker remembers, what a process happens to be doing, or what a procedure thinks it asked for a while back.
 
