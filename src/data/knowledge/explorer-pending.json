@@ -1,24 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260727294Z",
-      "arxiv": "2607.27294",
-      "title": "AgentS4D: Benchmarking Runtime Risks across the Execution Lifecycle of LLM-Based Workspace Agents",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "security",
-            "eval"
-          ]
-        }
-      ],
-      "firstSeen": "2026-08-01",
-      "lastAttempt": "2026-08-14",
-      "attempts": 9,
-      "note": "2026-08-14: scix MCP still unreachable — read_paper and get_paper both time out after 30s waiting for a Postgres connection; production 'scix' database still not restored."
-    },
-    {
       "bibcode": "2026arXiv260805573H",
       "arxiv": "2608.05573",
       "title": "SkillTV-Bench: Benchmarking How Well Judges Perform on Skill-Augmented Agentic Execution",
@@ -37,9 +19,9 @@
         }
       ],
       "firstSeen": "2026-08-08",
-      "lastAttempt": "2026-08-14",
-      "attempts": 5,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 6,
+      "note": "2026-08-17: scix MCP still unreachable — read_paper returns 'canceling statement due to statement timeout'; production 'scix' database still not restored."
     },
     {
       "bibcode": "2026arXiv260805223Y",
@@ -61,9 +43,9 @@
         }
       ],
       "firstSeen": "2026-08-09",
-      "lastAttempt": "2026-08-14",
-      "attempts": 4,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 5,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260806909C",
@@ -78,9 +60,9 @@
         }
       ],
       "firstSeen": "2026-08-10",
-      "lastAttempt": "2026-08-14",
-      "attempts": 3,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 4,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260809290L",
@@ -96,9 +78,9 @@
         }
       ],
       "firstSeen": "2026-08-12",
-      "lastAttempt": "2026-08-14",
-      "attempts": 3,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 4,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260811323S",
@@ -113,9 +95,9 @@
         }
       ],
       "firstSeen": "2026-08-13",
-      "lastAttempt": "2026-08-14",
-      "attempts": 2,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 3,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260810178Y",
@@ -130,9 +112,9 @@
         }
       ],
       "firstSeen": "2026-08-13",
-      "lastAttempt": "2026-08-14",
-      "attempts": 2,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 3,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260727877R",
@@ -153,9 +135,9 @@
         }
       ],
       "firstSeen": "2026-08-13",
-      "lastAttempt": "2026-08-14",
-      "attempts": 2,
-      "note": "2026-08-14: scix MCP still unreachable — production 'scix' database still not restored."
+      "lastAttempt": "2026-08-17",
+      "attempts": 3,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
     },
     {
       "bibcode": "2026arXiv260808654A",
@@ -171,9 +153,103 @@
         }
       ],
       "firstSeen": "2026-08-14",
-      "lastAttempt": "2026-08-14",
+      "lastAttempt": "2026-08-17",
+      "attempts": 2,
+      "note": "2026-08-17: scix MCP still unreachable — statement timeout on read_paper."
+    },
+    {
+      "bibcode": "2026arXiv260813662A",
+      "arxiv": "2608.13662",
+      "title": "Ontology-Grounded Project Memory for Coding Agents",
+      "targets": [
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "representation",
+            "temporal"
+          ]
+        },
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "architectures"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-17",
+      "lastAttempt": "2026-08-17",
       "attempts": 1,
-      "note": "2026-08-14: deferred on first sight — scix MCP unreachable, no full text retrievable."
+      "note": "2026-08-17: deferred on first sight — scix MCP unreachable, no full text retrievable."
+    },
+    {
+      "bibcode": "2026arXiv260814131R",
+      "arxiv": "2608.14131",
+      "title": "LegacyWorld: Atomicity-Aware Evaluation of GUI Agents for Legacy Workflows",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "recovery",
+            "reliability"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-17",
+      "lastAttempt": "2026-08-17",
+      "attempts": 1,
+      "note": "2026-08-17: deferred on first sight — scix MCP unreachable, no full text retrievable."
+    },
+    {
+      "bibcode": "2026arXiv260813566S",
+      "arxiv": "2608.13566",
+      "title": "Don't Claim Benchmark-Oriented Optimization Improves General Coding Capability -- Diverse Evaluation Is Required",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-17",
+      "lastAttempt": "2026-08-17",
+      "attempts": 1,
+      "note": "2026-08-17: deferred on first sight — scix MCP unreachable, no full text retrievable."
+    },
+    {
+      "bibcode": "2026arXiv260813867J",
+      "arxiv": "2608.13867",
+      "title": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-17",
+      "lastAttempt": "2026-08-17",
+      "attempts": 1,
+      "note": "2026-08-17: deferred on first sight — scix MCP unreachable. Authored by this site's author; flag the conflict when writing explorer notes."
+    },
+    {
+      "bibcode": "2026arXiv260814352L",
+      "arxiv": "2608.14352",
+      "title": "ATLAS: Discovering Agent Strategies through LLM-Guided Abstraction and Automata Learning",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "observability"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-17",
+      "lastAttempt": "2026-08-17",
+      "attempts": 1,
+      "note": "2026-08-17: deferred on first sight — scix MCP unreachable, no full text retrievable."
     }
   ]
 }
