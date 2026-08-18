@@ -147,6 +147,13 @@ export interface Explorer {
   title: string;
   /** One-line description, for parity with research-library cards. */
   blurb?: string;
+  /**
+   * Short description for <meta name="description"> and link previews, where
+   * anything past ~160 characters is truncated. Falls back to blurb, so it is
+   * only worth setting when the blurb is longer than that or reads as on-page
+   * prose rather than a summary.
+   */
+  metaDescription?: string;
   homepage: string;
   learningSlug: string;
   paperCount: number;

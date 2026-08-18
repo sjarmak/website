@@ -54,7 +54,12 @@ function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
 }
 ---
 
-<PageLayout title={explorer.title} kicker="Thematic explorer" intro={explorer.blurb}>
+<PageLayout
+  title={explorer.title}
+  kicker="Thematic explorer"
+  intro={explorer.blurb}
+  description={explorer.metaDescription}
+>
   <div class="stack stack-l">
     <div class="ex-head">
       <p class="ex-count">

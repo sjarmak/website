@@ -1,5 +1,6 @@
 // Assertions over the BUILT explorer pages: every note string a section
-// carries in committed data (themes / gaps / questions) reaches its page.
+// carries in committed data (themes / gaps / questions) reaches its page, and
+// the head description follows the committed metaDescription/blurb pair.
 // Expected values are read from the committed JSON the pages render, never
 // hardcoded. Regression guard for sjai-6nvv: `questions` was declared in
 // types.ts and carried through build_explorers.py, but [id].astro rendered
@@ -112,4 +113,53 @@ test("section notes: every authored string renders under its own toggle", () => 
     }
   }
   assert.ok(sawQuestions, "expected at least one section carrying questions");
+});
+
+test("head description: metaDescription wins, blurb is the fallback", () => {
+  // <meta name="description"> is the reason metaDescription exists: the physics
+  // explorer's blurb is on-page prose, and search results cut it mid-sentence.
+  const META_LIMIT = 160;
+  let sawOverride = false;
+
+  for (const explorer of explorerSources()) {
+    const html = page(explorer.id);
+    const expected = explorer.metaDescription ?? explorer.blurb;
+
+    if (explorer.metaDescription) {
+      sawOverride = true;
+      assert.ok(
+        explorer.metaDescription.length <= META_LIMIT,
+        `${explorer.id}: metaDescription is ${explorer.metaDescription.length} chars, over the ${META_LIMIT} that survive truncation`,
+      );
+      assert.notEqual(
+        explorer.metaDescription,
+        explorer.blurb,
+        `${explorer.id}: metaDescription duplicates blurb, so it buys nothing`,
+      );
+    }
+
+    // No blurb and no override: the page inherits the site default, which is
+    // not this test's business.
+    if (!expected) continue;
+
+    for (const [attr, name] of [
+      ["name", "description"],
+      ["property", "og:description"],
+      ["name", "twitter:description"],
+    ]) {
+      const rendered = html.match(
+        new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`),
+      )?.[1];
+      assert.equal(rendered, escapeText(expected), `${explorer.id}: ${name}`);
+    }
+
+    // The blurb still carries the page's own intro line, override or not.
+    if (explorer.blurb) {
+      assert.ok(
+        html.includes(`<p class="lead measure"`) && html.includes(escapeText(explorer.blurb)),
+        `${explorer.id}: blurb missing from the page body`,
+      );
+    }
+  }
+  assert.ok(sawOverride, "expected at least one explorer setting metaDescription");
 });
