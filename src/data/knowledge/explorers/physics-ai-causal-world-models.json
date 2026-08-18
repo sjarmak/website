@@ -1,0 +1,1708 @@
+{
+  "id": "physics-ai-causal-world-models",
+  "title": "Physics AI & Causal World Models",
+  "blurb": "Learned models of physical systems, from observations through prediction to intervention: what the evidence supports, where predictive skill stops being physical understanding, and which claims still have no experiment behind them.",
+  "learningSlug": "physics-ai-causal-world-models",
+  "homepage": "/library/explorers/physics-ai-causal-world-models",
+  "paperCount": 0,
+  "themeCount": 0,
+  "papers": [
+    {
+      "bibcode": "1994JGR....9910143E",
+      "title": "Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics",
+      "firstAuthor": "Evensen",
+      "year": 1994,
+      "citationCount": 2922,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Replaces the linearized error-covariance evolution of the extended Kalman filter with a Monte Carlo ensemble, so the forecast error statistics are sampled from the nonlinear model itself rather than approximated around a trajectory.",
+          "why": "The ensemble Kalman filter is the reference point every learned assimilation method is measured against, and the reason state estimation in geophysics is already a probabilistic problem."
+        }
+      ]
+    },
+    {
+      "bibcode": "2002QJRMS.128.1367L",
+      "title": "The interaction between model resolution, observation resolution and observation density in data assimilation: A one-dimensional study",
+      "firstAuthor": "Liu",
+      "year": 2002,
+      "citationCount": 133,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Works out, in a one-dimensional analysis system, what an extra observation is worth once representativeness error and observation-error correlation are carried through the analysis-error formulation. Denser observations keep helping an optimal scheme, but for the suboptimal schemes operational centres run in practice, density past a threshold stops paying, and thinning observations with correlated error improves the analysis.",
+          "why": "The quantitative form of the point that observation volume and assimilable information are different quantities, with the gap set by error correlation rather than by collection rate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2005QJRMS.131.3323D",
+      "title": "Bias and data assimilation",
+      "firstAuthor": "Dee",
+      "year": 2005,
+      "citationCount": 461,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Formalizes what happens when observations and the model are both biased: the analysis absorbs the bias into the state, variational bias correction can only work against an anchor of unbiased observations, and model bias and observation bias are not separately identifiable from the residuals alone.",
+          "why": "The clearest statement of why an analysis product is not ground truth, which is the assumption almost every learned Earth-system model is trained and scored on."
+        }
+      ]
+    },
+    {
+      "bibcode": "2009QJRMS.135..239C",
+      "title": "Monitoring the observation impact on the short-range forecast",
+      "firstAuthor": "Cardinali",
+      "year": 2009,
+      "citationCount": 206,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Uses adjoint forecast sensitivity to attribute 24-hour forecast error reduction to individual observations across the full ECMWF observing system, checked against observing-system experiments over a summer and a winter month. The assimilated observations reduce forecast error in aggregate while specific subsets degrade it, traceable either to data quality or to suboptimality in the assimilation.",
+          "why": "The field already measures the marginal forecast value of each observation, so an argument from raw data abundance has a per-observation measurement to answer to."
+        }
+      ]
+    },
+    {
+      "title": "Score-based Data Assimilation",
+      "firstAuthor": "Rozet",
+      "year": 2023,
+      "arxiv": "2306.10574",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Trains a score model on short state trajectories, then samples the posterior over the full trajectory given arbitrary observations by conditioning at inference time, avoiding both linearization and the sequential structure of a filter.",
+          "why": "Reframes assimilation as generative sampling rather than optimization, which is the template most learned-DA work has followed since."
+        }
+      ]
+    },
+    {
+      "title": "FengWu-4DVar: Coupling the Data-driven Weather Forecasting Model with 4D Variational Assimilation",
+      "firstAuthor": "Xiao",
+      "year": 2023,
+      "arxiv": "2312.12455",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Couples a learned forecast model to a four-dimensional variational assimilation scheme, using the model's differentiability to get the adjoint for free and cycling the system on simulated observations.",
+          "why": "Shows the learned forecaster can supply the piece 4D-Var is most expensive in, and marks the point where AI models stopped depending on someone else's analysis to run."
+        }
+      ]
+    },
+    {
+      "title": "Aardvark Weather: end-to-end data-driven weather forecasting",
+      "firstAuthor": "Vaughan",
+      "year": 2024,
+      "arxiv": "2404.00411",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Replaces the entire operational pipeline (assimilation, forecast model, post-processing) with a single network trained from raw heterogeneous observations to station-level forecasts, at a fraction of the compute.",
+          "why": "The first end-to-end demonstration that the analysis step is not structurally necessary, which changes what 'the model' is being evaluated on."
+        }
+      ]
+    },
+    {
+      "bibcode": "GraphDOP2024",
+      "title": "GraphDOP: Towards skilful data-driven medium-range weather forecasts learnt and initialised directly from observations",
+      "firstAuthor": "Alexe",
+      "year": 2024,
+      "arxiv": "2412.15687",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Trains a graph model purely on Earth-system observations, with no reanalysis and no physical state variables in the loss, and produces skilful medium-range forecasts of observed quantities directly in observation space.",
+          "why": "The cleanest existence proof that useful forecast skill can be learned without ever seeing an analysis, which separates the model's competence from the assimilation system's."
+        }
+      ]
+    },
+    {
+      "title": "Learning from nature: insights into GraphDOP's representations of the Earth System",
+      "firstAuthor": "Lean",
+      "year": 2025,
+      "arxiv": "2508.18018",
+      "url": null,
+      "branches": [
+        "observations",
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Probes what GraphDOP's latent state contains and finds structure corresponding to physical fields the model was never given, recovered from observation sequences alone.",
+          "why": "Turns the observation-only architecture into an argument about representation: the sensor stream carries enough information to reconstruct the physics."
+        },
+        {
+          "branch": "causality",
+          "takeaway": "Shows a model trained only on instrument measurements develops internal representations aligned with unobserved physical variables, examined through targeted probing rather than output skill.",
+          "why": "The strongest current evidence on the side that prediction pressure induces physically meaningful internal structure."
+        }
+      ]
+    },
+    {
+      "title": "A Neural-Network Observation Operator for Weather Radar Reflectivity",
+      "firstAuthor": "Stefanelli",
+      "year": 2025,
+      "arxiv": "2512.18289",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Learns the map from model state to radar reflectivity, replacing a forward operator whose microphysical assumptions are a known source of representativeness error in convective-scale assimilation.",
+          "why": "Makes the observation operator itself a learned, differentiable component, which is where instrument-specific error is introduced and where it can now be diagnosed."
+        }
+      ]
+    },
+    {
+      "title": "Probabilistic Emulation of the Community Radiative Transfer Model",
+      "firstAuthor": "Howard",
+      "year": 2025,
+      "arxiv": "2504.16192",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Emulates CRTM with calibrated uncertainty on the emulated radiances, so the surrogate reports where it disagrees with the physical forward model rather than silently substituting for it.",
+          "why": "Sets the standard for surrogate observation operators: the useful artifact is the error distribution, not the speedup."
+        }
+      ]
+    },
+    {
+      "title": "WeatherReal: A Benchmark Based on In-Situ Observations for Evaluating Weather Models",
+      "firstAuthor": "Jin",
+      "year": 2024,
+      "arxiv": "2409.09371",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Builds a quality-controlled global station dataset and scores AI and physical models against real in-situ measurements instead of reanalysis, documenting how much of the apparent skill ordering depends on which truth is used.",
+          "why": "Makes the choice of verification truth an explicit experimental variable, which is the precondition for separating model error from analysis error."
+        }
+      ]
+    },
+    {
+      "title": "SPECTRA: Cross-Sensor Fine-Tuning for Satellite Observation Foundation Models",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "arxiv": "2608.01751",
+      "url": null,
+      "branches": [
+        "observations"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Studies what breaks when a model pretrained on one instrument's spectral response and geometry is transferred to another, and what adaptation is needed to recover performance.",
+          "why": "Names the failure mode that instrument scientists expect and machine-learning evaluations rarely isolate: degradation caused by the sensor, not the physics."
+        }
+      ]
+    },
+    {
+      "title": "Skillful high-resolution weather forecasting independent of physical models",
+      "firstAuthor": "Zhao",
+      "year": 2026,
+      "arxiv": "2605.28153",
+      "url": null,
+      "branches": [
+        "observations",
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "observations",
+          "takeaway": "Builds a high-resolution forecasting system that does not depend on NWP analyses at any stage, initializing and training from observational sources.",
+          "why": "Extends the observation-only line from medium-range global fields to the high-resolution regime where analysis dependence has been hardest to shed."
+        },
+        {
+          "branch": "prediction",
+          "takeaway": "Reports skilful high-resolution forecasts without a physics-based model anywhere in the pipeline, at resolutions where learned models previously relied on physical downscaling or analysis input.",
+          "why": "Tests whether the 'AI models only work because NWP feeds them' objection survives at the scales that matter operationally."
+        }
+      ]
+    },
+    {
+      "title": "FourCastNet: A Global Data-driven High-resolution Weather Model using Adaptive Fourier Neural Operators",
+      "firstAuthor": "Pathak",
+      "year": 2022,
+      "arxiv": "2202.11214",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Trains an adaptive Fourier neural operator on ERA5 to produce global forecasts at 0.25 degrees, running a full forecast in seconds and generating large ensembles at negligible marginal cost.",
+          "why": "The first system to make the cost argument undeniable, which is what put learned forecasting on operational centres' agendas."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023Natur.619..533B",
+      "title": "Accurate medium-range global weather forecasting with 3D neural networks (Pangu-Weather)",
+      "firstAuthor": "Bi",
+      "year": 2022,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "A 3D Earth-specific transformer with a hierarchical temporal aggregation strategy that beats the operational IFS on deterministic scores across most upper-air and surface variables.",
+          "why": "The result that ended the argument about whether a purely learned model could beat the operational deterministic forecast."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023Sci...382.1416L",
+      "title": "Learning skillful medium-range global weather forecasting (GraphCast)",
+      "firstAuthor": "Lam",
+      "year": 2022,
+      "arxiv": "2212.12794",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "An encode-process-decode graph neural network on a multi-mesh icosahedral grid, autoregressively rolled out during training, outperforming IFS on the large majority of evaluated variable and lead-time combinations, including several severe-event proxies.",
+          "why": "Set the benchmark protocol as much as the score: the paper other systems are compared against, and the first with a serious treatment of extreme-event proxies."
+        }
+      ]
+    },
+    {
+      "bibcode": "GenCast2023",
+      "title": "GenCast: Diffusion-based ensemble forecasting for medium-range weather",
+      "firstAuthor": "Price",
+      "year": 2023,
+      "arxiv": "2312.15796",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "A conditional diffusion model over 15-day trajectories that produces sharp, physically plausible ensemble members and beats the ECMWF ensemble on the large majority of CRPS-scored targets.",
+          "why": "Moves the learned-forecasting claim from deterministic scores, where blurring is rewarded, into the probabilistic setting where operational value is defined."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024Natur.632.1060K",
+      "title": "Neural general circulation models for weather and climate (NeuralGCM)",
+      "firstAuthor": "Kochkov",
+      "year": 2023,
+      "arxiv": "2311.07222",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Couples a differentiable dynamical core to learned physics parameterizations, trained end to end, matching learned-model skill at medium range while staying stable over decades-long integrations and reproducing emergent phenomena like tropical cyclone statistics.",
+          "why": "The strongest evidence that the pure-learned versus physics-based framing is wrong: the hybrid gets the skill and keeps the properties that make a model usable for climate."
+        }
+      ]
+    },
+    {
+      "title": "Aurora: A Foundation Model of the Atmosphere",
+      "firstAuthor": "Bodnar",
+      "year": 2024,
+      "arxiv": "2405.13063",
+      "url": null,
+      "branches": [
+        "prediction",
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Pretrains a single atmospheric model on a heterogeneous mixture of reanalyses, forecasts and climate simulations, then fine-tunes it to tasks including air pollution and ocean waves where dedicated operational systems are the baseline.",
+          "why": "The first credible demonstration that Earth-system pretraining transfers across variables and domains rather than only across lead times."
+        },
+        {
+          "branch": "foundations",
+          "takeaway": "Uses a 1.3B-parameter 3D Swin backbone with perceiver-style encoders that accept heterogeneous inputs at different resolutions and variable sets, so downstream tasks reuse the pretrained representation rather than the architecture alone.",
+          "why": "The reference point for what an Earth-system foundation model has to show: fine-tuning that beats task-specific operational systems, not just other neural networks."
+        }
+      ]
+    },
+    {
+      "title": "AIFS - ECMWF's data-driven forecasting system",
+      "firstAuthor": "Lang",
+      "year": 2024,
+      "arxiv": "2406.01465",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "ECMWF's own graph-transformer forecast system, developed inside the operational verification and initialization environment rather than against a published reanalysis benchmark.",
+          "why": "Marks the transition from external claims about beating IFS to an operational centre running a learned model in its own suite."
+        }
+      ]
+    },
+    {
+      "title": "Scaling Laws of Global Weather Models",
+      "firstAuthor": "Yu",
+      "year": 2026,
+      "arxiv": "2602.22962",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Fits empirical scaling relations between validation loss and model size, dataset size, and compute across several learned global weather models. Aurora shows the strongest data scaling, where a tenfold larger training set cuts validation loss by up to 3.2x; under a fixed compute budget, spending on data beats spending on parameters; and these models favor width over depth, the opposite of the language-model result.",
+          "why": "Puts measured exponents under the proposition that physical prediction improves with scale, and locates the return in training data rather than model size."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024BAMS..105E.864B",
+      "title": "The Rise of Data-Driven Weather Forecasting: A First Statistical Assessment of Machine Learning-Based Weather Forecasts in an Operational-Like Context",
+      "firstAuthor": "Ben Bouallègue",
+      "year": 2024,
+      "citationCount": 131,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Evaluates Pangu-Weather and GraphCast inside ECMWF's operational verification framework, initialized from operational analyses and scored against the metrics and baselines the centre itself uses, finding real headline gains alongside deficiencies in near-surface fields, small scales, and extremes.",
+          "why": "The independent replication that turned the published claims into a calibrated statement about where the skill is and is not."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024GeoRL..5107377B",
+      "title": "On Some Limitations of Current Machine Learning Weather Prediction Models",
+      "firstAuthor": "Bonavita",
+      "year": 2024,
+      "citationCount": 21,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Documents that learned models produce spatially over-smoothed fields with deficient variance at small scales, that their apparent RMSE advantage is partly an artifact of that smoothing, and that they depend on an assimilation system they neither model nor own.",
+          "why": "The most-cited statement of the gap between winning on aggregate scores and being a forecast model, written from inside the operational centre."
+        }
+      ]
+    },
+    {
+      "title": "Hybrid weather prediction using spectral nudging",
+      "firstAuthor": "Polichtchouk",
+      "year": 2026,
+      "arxiv": "2604.22522",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Nudges the large scales of a physical model toward a learned forecast while leaving the small scales to the physics, so each component is used where it is strongest.",
+          "why": "Represents the convergence the field arrived at after the pure-learned versus physical argument: the interesting question is the coupling, not the winner."
+        }
+      ]
+    },
+    {
+      "title": "Challenges of learning multi-scale dynamics with AI weather models: Implications for stability and one solution",
+      "firstAuthor": "Chattopadhyay",
+      "year": 2023,
+      "arxiv": "2304.07029",
+      "url": null,
+      "branches": [
+        "prediction"
+      ],
+      "notes": [
+        {
+          "branch": "prediction",
+          "takeaway": "Analyses why data-driven emulators of multiscale chaotic systems become unstable or lose small-scale variance during long autoregressive rollouts, and what training and spectral interventions delay the failure.",
+          "why": "Explains the mechanism behind the smoothing that operational evaluations later measured, rather than treating it as an implementation detail."
+        }
+      ]
+    },
+    {
+      "title": "DeepONet: Learning nonlinear operators for identifying differential equations based on the universal approximation theorem of operators",
+      "firstAuthor": "Lu",
+      "year": 2019,
+      "arxiv": "1910.03193",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Proves and instantiates an operator universal-approximation result with a branch-trunk architecture that learns mappings between function spaces from input-function and query-location pairs.",
+          "why": "One of the two canonical formulations of operator learning, and the one that makes the function-space claim explicit rather than architectural."
+        }
+      ]
+    },
+    {
+      "title": "Fourier Neural Operator for Parametric Partial Differential Equations",
+      "firstAuthor": "Li",
+      "year": 2020,
+      "arxiv": "2010.08895",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Parameterizes the integral kernel directly in Fourier space, giving a resolution-invariant operator that can be trained at low resolution and evaluated at high resolution, with large speedups over spectral solvers on Navier-Stokes.",
+          "why": "The architecture that made 'learn the solution operator, not the solution' concrete, and the direct ancestor of FourCastNet."
+        }
+      ]
+    },
+    {
+      "title": "Learning to Simulate Complex Physics with Graph Networks",
+      "firstAuthor": "Sanchez-Gonzalez",
+      "year": 2020,
+      "arxiv": "2002.09405",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Learns particle-based dynamics as message passing over a neighborhood graph, generalizing across materials, geometries, and orders of magnitude more particles than seen in training.",
+          "why": "Established the inductive bias (local interactions on a graph) that GraphCast later carried onto the sphere."
+        }
+      ]
+    },
+    {
+      "title": "ClimaX: A foundation model for weather and climate",
+      "firstAuthor": "Nguyen",
+      "year": 2023,
+      "arxiv": "2301.10343",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Pretrains on heterogeneous CMIP6 climate simulations with variable tokenization and aggregation, then fine-tunes to forecasting, downscaling, and climate projection tasks with different variables and resolutions.",
+          "why": "The first paper to argue that Earth-system tasks share a backbone, and the one that fixed the transfer-across-tasks evaluation shape."
+        }
+      ]
+    },
+    {
+      "title": "Multiple Physics Pretraining for Physical Surrogate Models",
+      "firstAuthor": "McCabe",
+      "year": 2023,
+      "arxiv": "2310.02994",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Pretrains one transformer on several distinct PDE systems simultaneously via shared normalized field embeddings, then transfers to physics not in the pretraining set, beating from-scratch training in the low-data regime.",
+          "why": "The most direct test of whether pretraining across physics produces reusable structure, and the honest answer it gives is 'yes, in the small-data regime'."
+        }
+      ]
+    },
+    {
+      "title": "Poseidon: Efficient Foundation Models for PDEs",
+      "firstAuthor": "Herde",
+      "year": 2024,
+      "arxiv": "2405.19101",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Scales multi-physics pretraining with an operator transformer and an all2all training scheme that exploits the semigroup structure of time-dependent PDEs, reporting large sample-efficiency gains on unseen equations.",
+          "why": "The strongest quantitative transfer result in operator learning, and a demonstration that the useful pretraining signal comes from time-evolution structure."
+        }
+      ]
+    },
+    {
+      "bibcode": "McGreivy2024",
+      "title": "Weak baselines and reporting biases lead to overoptimism in machine learning for fluid-related partial differential equations",
+      "firstAuthor": "McGreivy",
+      "year": 2024,
+      "arxiv": "2407.07218",
+      "url": null,
+      "branches": [
+        "foundations",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Reviews the literature claiming machine-learning speedups over numerical PDE solvers and finds that the large majority compare against weak baselines, and that reporting biases suppress negative results.",
+          "why": "The paper that puts a number on how much of the operator-learning speedup literature does not survive a fair comparison."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "Identifies two systematic failures in scientific machine-learning evaluation: baselines that are weaker than the state of the art in the target field, and a publication process that does not surface failed comparisons.",
+          "why": "Generalizes beyond PDEs to any claim that a learned model beats a domain-standard method, which is the claim structure this whole explorer is about."
+        }
+      ]
+    },
+    {
+      "title": "The Well: a Large-Scale Collection of Diverse Physics Simulations for Machine Learning",
+      "firstAuthor": "Ohana",
+      "year": 2024,
+      "arxiv": "2412.00568",
+      "url": null,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Releases 15TB of numerical simulations across 16 physical systems, from biological flows to supernova explosions, with a common interface and baseline results.",
+          "why": "Reframes the bottleneck as data rather than architecture, and supplies the diversity that makes cross-physics transfer claims testable."
+        }
+      ]
+    },
+    {
+      "bibcode": "1993WtFor...8..281M",
+      "title": "What Is a Good Forecast? An Essay on the Nature of Goodness in Weather Forecasting",
+      "firstAuthor": "Murphy",
+      "year": 1993,
+      "citationCount": 461,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Separates three kinds of forecast goodness: consistency with the forecaster's true belief, quality as correspondence with observation, and value as the benefit realized by the user, and shows they can move in opposite directions.",
+          "why": "Thirty years before the AI weather literature re-derived it, this is the framework that says a headline score is one of three axes and not the one that matters most."
+        }
+      ]
+    },
+    {
+      "bibcode": "GneitingRaftery2007",
+      "title": "Strictly Proper Scoring Rules, Prediction, and Estimation",
+      "firstAuthor": "Gneiting",
+      "year": 2007,
+      "arxiv": null,
+      "url": "https://doi.org/10.1198/016214506000001437",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Develops the theory of scoring rules that are maximized only by reporting the true predictive distribution, covering CRPS, the logarithmic score, and the Brier score as instances of one framework.",
+          "why": "The formal reason CRPS is the right target for ensemble systems and why a score that can be improved by hedging cannot certify a probabilistic model."
+        }
+      ]
+    },
+    {
+      "bibcode": "GneitingCalibration2007",
+      "title": "Probabilistic Forecasts, Calibration and Sharpness",
+      "firstAuthor": "Gneiting",
+      "year": 2007,
+      "arxiv": null,
+      "url": "https://doi.org/10.1111/j.1467-9868.2007.00587.x",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Proposes the paradigm of maximizing sharpness subject to calibration, distinguishes probabilistic, exceedance and marginal calibration, and gives diagnostic tools including the PIT histogram.",
+          "why": "Makes 'the ensemble is calibrated' and 'the ensemble is useful' two separate measurable claims, which is exactly the distinction diffusion-based forecasting is now argued over."
+        }
+      ]
+    },
+    {
+      "bibcode": "Ebert2008Fuzzy",
+      "title": "Fuzzy verification of high-resolution gridded forecasts: a review and proposed framework",
+      "firstAuthor": "Ebert",
+      "year": 2008,
+      "arxiv": null,
+      "url": "https://doi.org/10.1002/met.25",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Reviews neighborhood-based verification methods and organizes them by the decision model each implies, showing how a high-resolution forecast can be penalized by point matching while being more useful than a smooth one.",
+          "why": "The canonical answer to the double-penalty problem, and the reason a smoother field can score better while being physically worse."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024JAMES..1604019R",
+      "title": "WeatherBench 2: A benchmark for the next generation of data-driven global weather models",
+      "firstAuthor": "Rasp",
+      "year": 2024,
+      "citationCount": 78,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Defines a common evaluation framework with fixed ground truth, baselines and headline scores across deterministic and probabilistic metrics, and reports every major learned model against operational IFS on the same footing.",
+          "why": "The shared scoreboard that made cross-paper comparison possible, and the artifact whose choices now shape what the field optimizes."
+        }
+      ]
+    },
+    {
+      "title": "A Practical Probabilistic Benchmark for AI Weather Models",
+      "firstAuthor": "Brenowitz",
+      "year": 2024,
+      "arxiv": "2401.15305",
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Shows that deterministic learned models with equal RMSE can have very different spread and skill when used to generate ensembles, and proposes a lagged-ensemble protocol that exposes the difference cheaply.",
+          "why": "Demonstrates concretely that deterministic scores do not rank models the way probabilistic use does, using models the field had already declared equivalent."
+        }
+      ]
+    },
+    {
+      "bibcode": "CharltonPerez2024Ciaran",
+      "title": "Do AI models produce better weather forecasts than physics-based models? A quantitative evaluation case study of Storm Ciaran",
+      "firstAuthor": "Charlton-Perez",
+      "year": 2024,
+      "arxiv": null,
+      "url": "https://doi.org/10.1038/s41612-024-00638-w",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Compares learned and physical models on a single damaging windstorm and finds the learned models captured the synoptic evolution well while under-representing the near-surface wind extremes that caused the damage.",
+          "why": "The case study that shows aggregate skill and the property a forecast user cares about can come apart on the one event that matters."
+        }
+      ]
+    },
+    {
+      "bibcode": "SunGraySwan2024",
+      "title": "Can AI weather models predict out-of-distribution gray swan tropical cyclones?",
+      "firstAuthor": "Sun",
+      "year": 2024,
+      "arxiv": "2410.14932",
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Removes the most intense cyclones from training and tests whether learned models can still forecast them, finding they cannot extrapolate to unseen intensity even though the governing physics is unchanged.",
+          "why": "Isolates out-of-distribution generalization as the mechanism behind extreme-event failures, by experiment rather than by argument."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025JGRH....2..496U",
+      "title": "Recommendations for Comprehensive and Independent Evaluation of Machine Learning-Based Earth System Models",
+      "firstAuthor": "Ullrich",
+      "year": 2025,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Sets out what an evaluation has to include before a learned Earth-system model can be trusted: physical consistency checks, out-of-sample and out-of-distribution testing, and independence between the developers and the evaluators.",
+          "why": "The community's explicit statement that self-reported benchmark wins are not sufficient evidence, and the closest thing to an agreed standard."
+        }
+      ]
+    },
+    {
+      "title": "Forecasting the Future with Yesterday's Climate: Distribution Shift in AI Weather Prediction",
+      "firstAuthor": "Landsberg",
+      "year": 2025,
+      "arxiv": "2509.22359",
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Examines how a model trained on a historical reanalysis period behaves as the climate it was trained on drifts away from the climate it is forecasting, and how much apparent skill change is attributable to the evaluation period rather than the model.",
+          "why": "Identifies a confound that grows silently over time and that no standard benchmark protocol currently controls for."
+        }
+      ]
+    },
+    {
+      "title": "Do AI weather models miss extremes?",
+      "firstAuthor": "Gabler",
+      "year": 2026,
+      "arxiv": "2608.09972",
+      "url": null,
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "Tests learned models specifically on extreme events across variables and regions, quantifying how much of the reported skill advantage survives when the evaluation is restricted to the tails.",
+          "why": "Converts a widely repeated suspicion about smoothing and extremes into a measured, variable-by-variable result."
+        }
+      ]
+    },
+    {
+      "bibcode": "2012Sci...338..496S",
+      "title": "Detecting Causality in Complex Ecosystems",
+      "firstAuthor": "Sugihara",
+      "year": 2012,
+      "citationCount": 1222,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Introduces convergent cross mapping, which detects causal coupling in deterministic dynamical systems by testing whether one variable's attractor reconstruction can recover the other, and shows Granger causality fails in exactly this regime.",
+          "why": "Establishes that causal inference in coupled nonlinear dynamics needs a different test than in stochastic time series, which is the setting every Earth-system causal claim lives in."
+        }
+      ]
+    },
+    {
+      "title": "Causal inference using invariant prediction: identification and confidence intervals",
+      "firstAuthor": "Peters",
+      "year": 2015,
+      "arxiv": "1501.01332",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Exploits the fact that the conditional distribution of a target given its true causal parents is invariant across environments, turning causal discovery into a hypothesis test with confidence statements about the recovered parent set.",
+          "why": "Supplies the operational definition of causal that survives distribution shift, which is the only definition that helps when a model is deployed outside its training climate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019SciA....5.4996R",
+      "title": "Detecting and quantifying causal associations in large nonlinear time series datasets",
+      "firstAuthor": "Runge",
+      "year": 2019,
+      "citationCount": 436,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Introduces PCMCI, a two-stage conditional-independence method that controls false positives in high-dimensional autocorrelated time series where standard conditioning inflates them, with validation on nonlinear synthetic systems and climate data.",
+          "why": "The method the Earth-system causal-discovery literature runs in practice, and the one whose assumptions define what its results can and cannot support."
+        }
+      ]
+    },
+    {
+      "title": "Towards Causal Representation Learning",
+      "firstAuthor": "Schölkopf",
+      "year": 2021,
+      "arxiv": "2102.11107",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Argues that the variables over which causal structure is defined must themselves be learned from low-level observations, and connects that requirement to out-of-distribution generalization, transfer, and the independent-mechanisms principle.",
+          "why": "The programmatic statement of why 'the model learned physics' is a representation claim, not a prediction claim, and what would be needed to establish it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023GeoRL..5005747S",
+      "title": "Can Artificial Intelligence-Based Weather Prediction Models Simulate the Butterfly Effect?",
+      "firstAuthor": "Selz",
+      "year": 2023,
+      "citationCount": 22,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Applies tiny localized perturbations to a learned model's initial state and finds the error growth does not exhibit the upscale propagation from convective scales that defines intrinsic predictability limits in the real atmosphere.",
+          "why": "A direct test of whether high forecast skill implies correct dynamics, and the answer for this property is no."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024AIES....330090H",
+      "title": "Dynamical Tests of a Deep Learning Weather Prediction Model",
+      "firstAuthor": "Hakim",
+      "year": 2024,
+      "citationCount": 21,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Subjects a learned model to classical dynamical-meteorology experiments (steady tropical heating, extratropical cyclone development, geostrophic adjustment) and finds it reproduces some canonical responses while getting others qualitatively wrong.",
+          "why": "Introduces the right evaluation instrument for mechanism claims: not held-out forecasts, but controlled experiments the physics already has known answers to."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025AMS...10552480B",
+      "title": "Are AI Data-Driven Weather Models Learning Atmospheric Physics? Initial Condition Sensitivity Analysis of Cyclone Xynthia",
+      "firstAuthor": "Bano Medina",
+      "year": 2025,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Uses gradient-based sensitivity analysis on a learned model during a well-studied explosive cyclogenesis case and compares the resulting influence patterns to the physical precursors identified in the meteorological literature.",
+          "why": "Tests physical understanding through the model's own sensitivities rather than its outputs, which is the closest available proxy for asking what it is using."
+        }
+      ]
+    },
+    {
+      "title": "A Mechanistic Interpretability Tool for AI Weather Models",
+      "firstAuthor": "Tempest",
+      "year": 2026,
+      "arxiv": "2604.20467",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Builds tooling to inspect internal circuits and activations of learned weather models and attribute predictions to identifiable internal computations rather than to input regions alone.",
+          "why": "Moves the interpretability of physical models from saliency maps toward the circuit-level evidence that mechanism claims would require."
+        }
+      ]
+    },
+    {
+      "title": "A Unifying Perspective on Causal World Models",
+      "firstAuthor": "Kori",
+      "year": 2026,
+      "arxiv": "2608.13456",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Formalizes the relationship between learned world models and structural causal models, setting out what a world model must satisfy before its rollouts can be read as interventions rather than as conditional predictions.",
+          "why": "Names the exact gap between the world-model literature and the causal literature, which is the gap most 'causal AI' claims step over."
+        }
+      ]
+    },
+    {
+      "bibcode": "Vafa2025WorldModelProbe",
+      "title": "What Has a Foundation Model Found? Using Inductive Bias to Probe for World Models",
+      "firstAuthor": "Vafa",
+      "year": 2025,
+      "arxiv": "2507.06952",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Tests whether a model that predicts a domain well has acquired the structure generating it, by measuring how its inductive bias transfers to synthetic tasks built from a postulated world model. Models trained on orbital trajectories predict those orbits accurately and then fail to apply Newtonian mechanics when adapted to new physics tasks, behaving as though they had learned task-specific heuristics.",
+          "why": "Runs the Kepler-to-Newton premise as a controlled experiment, and finds that predictive accuracy on a physical system did not deliver the law underneath it."
+        }
+      ]
+    },
+    {
+      "title": "How Far is Video Generation from World Model: A Physical Law Perspective",
+      "firstAuthor": "Kang",
+      "year": 2024,
+      "arxiv": "2411.02385",
+      "url": null,
+      "branches": [
+        "causality"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Trains diffusion video models on 2D mechanics with an unlimited supply of simulated data, and separates in-distribution, combinatorial, and out-of-distribution generalization. Generalization is perfect in-distribution and scales measurably for combinatorial cases but fails out of distribution, and the failure is diagnostic: the models match the nearest training example, prioritizing color over size over velocity over shape rather than abstracting a rule.",
+          "why": "Scaling a generative predictor on clean, unlimited physics data did not recover the law that generated it, which bounds what observational pretraining alone can be expected to produce."
+        }
+      ]
+    },
+    {
+      "title": "Causal Confusion in Imitation Learning",
+      "firstAuthor": "de Haan",
+      "year": 2019,
+      "arxiv": "1905.11979",
+      "url": null,
+      "branches": [
+        "causality",
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "causality",
+          "takeaway": "Behavioral cloning fits a discriminative model with no access to the causal structure of the expert-environment interaction, which produces causal misidentification: giving the policy more information can make it worse, because confounded cues that correlate with expert actions are easier to fit than the causes. Resolving it takes targeted intervention, either environment interaction or expert queries.",
+          "why": "The clean demonstration that fitting behaviour is not learning what causes what, and that adding observations can move a policy in the wrong direction."
+        },
+        {
+          "branch": "control",
+          "takeaway": "Shows causal misidentification in benchmark control domains and in driving: a policy cloned from demonstrations degrades as its observation set grows, and only interventional data disambiguates which model is right.",
+          "why": "Names the standing failure mode of any perceive-predict-plan stack learned from logged behaviour rather than from intervention."
+        }
+      ]
+    },
+    {
+      "bibcode": "2000QJRMS.126..649R",
+      "title": "Skill and relative economic value of the ECMWF ensemble prediction system",
+      "firstAuthor": "Richardson",
+      "year": 2000,
+      "citationCount": 323,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Computes the relative economic value of ensemble and deterministic forecasts across the full range of user cost-loss ratios, showing the ensemble is more valuable for most users even at lead times where its deterministic scores are unremarkable.",
+          "why": "The original demonstration that forecast ranking depends on the user, and the framework that would settle most current arguments about learned ensembles if anyone applied it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2002QJRMS.128..747P",
+      "title": "The economic value of ensemble forecasts as a tool for risk assessment: From days to decades",
+      "firstAuthor": "Palmer",
+      "year": 2002,
+      "citationCount": 173,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Extends the cost-loss framing across time scales from weather to climate and argues that the probabilistic forecast, not the best-guess trajectory, is the object with decision value.",
+          "why": "Connects the decision argument to seasonal and climate horizons, where the deterministic forecast has no defensible meaning at all."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016ApEn..184..696W",
+      "title": "The value of improved wind power forecasting: Grid flexibility quantification, ramp capability analysis, and impacts of electricity market operation timescales",
+      "firstAuthor": "Wang",
+      "year": 2016,
+      "citationCount": 41,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Runs production-cost simulation over 480 scenarios on an IEEE 118-bus system configured to emulate the Midcontinent, California, and New England balancing authorities, and prices what a given improvement in wind power forecast accuracy is worth at each market timescale. The value tracks generation mix and available ramp capability rather than forecast error alone.",
+          "why": "Converts a forecast improvement into money on a named system, and shows the same improvement is worth different amounts depending on what the system can do about it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2017HESS...21.2967M",
+      "title": "Moving beyond the cost-loss ratio: economic assessment of streamflow forecasts for a risk-averse decision maker",
+      "firstAuthor": "Matte",
+      "year": 2017,
+      "citationCount": 23,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Replaces the cost-loss ratio with a constant-absolute-risk-aversion utility when valuing ensemble streamflow forecasts, on the grounds that the standard framework assumes a risk-neutral decision maker and operational users are not.",
+          "why": "The standard forecast-value metric encodes a preference assumption, so a system tuned to it can be optimizing for a decision maker who does not exist."
+        }
+      ]
+    },
+    {
+      "title": "Task-based End-to-end Model Learning in Stochastic Optimization",
+      "firstAuthor": "Donti",
+      "year": 2017,
+      "arxiv": "1703.04529",
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Differentiates through a stochastic optimization problem so the predictive model is trained on the resulting task cost, demonstrated on load forecasting for electricity scheduling and battery storage.",
+          "why": "The first end-to-end demonstration that a model with worse predictive accuracy can produce strictly better decisions."
+        }
+      ]
+    },
+    {
+      "title": "Smart \"Predict, then Optimize\"",
+      "firstAuthor": "Elmachtoub",
+      "year": 2017,
+      "arxiv": "1710.08005",
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Defines the SPO loss, which measures decision regret rather than prediction error, and gives a convex surrogate with consistency guarantees for linear optimization problems.",
+          "why": "Gives the decision-first framing a loss function with theory attached, which is why it became the reference formulation."
+        }
+      ]
+    },
+    {
+      "title": "Decision-Focused Learning: When and Why Traditional Prediction Models Fail",
+      "firstAuthor": "Liu",
+      "year": 2026,
+      "arxiv": "2606.21773",
+      "url": null,
+      "branches": [
+        "decisions"
+      ],
+      "notes": [
+        {
+          "branch": "decisions",
+          "takeaway": "Characterizes the conditions under which a standard accuracy-trained predictor is already decision-optimal and the conditions where the decision-focused objective is necessary, rather than assuming the latter always helps.",
+          "why": "Answers the question the survey left open, and prevents 'train on the decision' from becoming an unconditional recommendation."
+        }
+      ]
+    },
+    {
+      "title": "World Models",
+      "firstAuthor": "Ha",
+      "year": 2018,
+      "arxiv": "1803.10122",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Learns a compressed latent representation of observations and a recurrent forward model of its dynamics, then trains a small controller entirely inside the learned model and transfers it back to the real environment.",
+          "why": "The paper that made 'train the policy in the model's imagination' a concrete architecture, and the origin of the term this explorer is partly about."
+        }
+      ]
+    },
+    {
+      "title": "ChauffeurNet: Learning to Drive by Imitating the Best and Synthesizing the Worst",
+      "firstAuthor": "Bansal",
+      "year": 2018,
+      "arxiv": "1812.03079",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Trains a driving policy by imitation and reports that thirty million real expert examples were not sufficient on their own, even with a perception system upstream and a controller downstream. Synthesized perturbations of expert trajectories, including collisions and road departures, together with explicit losses penalizing those events, were required before the model drove a real vehicle.",
+          "why": "The perceive-predict-plan stack at industrial scale, carrying its own authors' evidence that observational expert data alone did not yield a usable policy."
+        }
+      ]
+    },
+    {
+      "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+      "firstAuthor": "Schrittwieser",
+      "year": 2019,
+      "arxiv": "1911.08265",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "MuZero learns a latent dynamics model trained only to predict reward, policy, and value, then runs tree search inside it, matching AlphaZero at Go, chess, and shogi without being told the rules and setting a new state of the art on Atari.",
+          "why": "The strongest form of learn-the-dynamics-then-plan, and the clearest statement of its preconditions: a resettable environment, cheap exact rollouts, and a scalar reward, none of which a continental atmosphere supplies."
+        }
+      ]
+    },
+    {
+      "title": "Deep Reinforcement Learning in a Handful of Trials using Probabilistic Dynamics Models (PETS)",
+      "firstAuthor": "Chua",
+      "year": 2018,
+      "arxiv": "1805.12114",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Separates aleatoric from epistemic uncertainty using an ensemble of probabilistic dynamics models and plans with trajectory sampling, matching model-free asymptotic performance with orders of magnitude fewer samples.",
+          "why": "Establishes that what makes a learned model safe to plan against is its uncertainty representation, not its one-step accuracy."
+        }
+      ]
+    },
+    {
+      "title": "Mastering Diverse Domains through World Models (DreamerV3)",
+      "firstAuthor": "Hafner",
+      "year": 2023,
+      "arxiv": "2301.04104",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Trains a single latent world model and actor-critic with fixed hyperparameters across more than 150 tasks spanning continuous control, Atari, and Minecraft, including collecting diamonds from scratch.",
+          "why": "The current reference point for how far world-model planning generalizes when the environment is simulated, well-instrumented, and resettable."
+        }
+      ]
+    },
+    {
+      "title": "Learning to Control PDEs with Differentiable Physics",
+      "firstAuthor": "Holl",
+      "year": 2020,
+      "arxiv": "2001.07457",
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Uses a differentiable PDE solver to train a predictor-corrector control network end to end, achieving long-horizon control of fluid systems by planning through the solver rather than around it.",
+          "why": "The clearest demonstration of learned control on PDE-governed dynamics, and a useful upper bound: it works with full state access and an exact simulator."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020Natur.588...77B",
+      "title": "Autonomous navigation of stratospheric balloons using reinforcement learning",
+      "firstAuthor": "Bellemare",
+      "year": 2020,
+      "citationCount": 127,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Deploys a reinforcement-learning controller that steers stratospheric balloons by choosing altitudes to ride differing wind layers, outperforming the hand-engineered controller in flight over the Pacific under real wind uncertainty.",
+          "why": "The rare case of learned control acting on a real atmospheric system, and it works by exploiting the atmosphere rather than changing it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022Natur.602..414D",
+      "title": "Magnetic control of tokamak plasmas through deep reinforcement learning",
+      "firstAuthor": "Degrave",
+      "year": 2022,
+      "citationCount": 313,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "control"
+      ],
+      "notes": [
+        {
+          "branch": "control",
+          "takeaway": "Trains a controller in a physics simulator of the TCV tokamak and deploys it on the real device, sustaining and shaping plasma configurations including ones that had not been demonstrated before.",
+          "why": "The strongest sim-to-real result in physical control, and it depended on a trusted simulator, dense diagnostics, and millisecond actuation, none of which exist for the open atmosphere."
+        }
+      ]
+    },
+    {
+      "bibcode": "1985BAMS...66..505W",
+      "title": "Project STORMFURY: A Scientific Chronicle 1962-1983",
+      "firstAuthor": "Willoughby",
+      "year": 1985,
+      "citationCount": 46,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Chronicles two decades of hurricane-seeding experiments and the observational findings that ended them: hurricanes contain too little supercooled water for the hypothesized mechanism, and the apparent successes were within the range of natural intensity fluctuation.",
+          "why": "The reference case for how an intervention program fails, and it fails on the physical premise and the counterfactual, not on execution."
+        }
+      ]
+    },
+    {
+      "bibcode": "2001BAMS...82..903S",
+      "title": "A Critical Assessment of Glaciogenic Seeding of Convective Clouds for Rainfall Enhancement",
+      "firstAuthor": "Silverman",
+      "year": 2001,
+      "citationCount": 36,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Reviews the randomized convective seeding experiments against explicit criteria for statistical and physical evidence and concludes the accumulated results do not establish an effect, with several apparently positive results failing on replication.",
+          "why": "Sets the evidentiary bar the field itself adopted, and shows that decades of operational activity coexisted with no demonstrated effect."
+        }
+      ]
+    },
+    {
+      "bibcode": "NRC2003WeatherMod",
+      "title": "Critical Issues in Weather Modification Research",
+      "firstAuthor": "National Research Council",
+      "year": 2003,
+      "arxiv": null,
+      "url": "https://doi.org/10.17226/10829",
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Assesses the state of weather modification and concludes there is no convincing scientific proof of efficacy for intentional modification, while arguing the underlying questions remain scientifically legitimate and are limited by experimental design, statistical power, and the unobservable counterfactual.",
+          "why": "The authoritative statement that separates 'not demonstrated' from 'disproven', and the framing that makes better prediction and state estimation relevant to the problem."
+        }
+      ]
+    },
+    {
+      "bibcode": "2018PNAS..115.1168F",
+      "title": "Precipitation formation from orographic cloud seeding",
+      "firstAuthor": "French",
+      "year": 2018,
+      "citationCount": 98,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Uses airborne and ground radar during the SNOWIE campaign to track the full chain from silver iodide release through ice initiation and growth to snowfall reaching the ground, with seeding lines visible in the radar field.",
+          "why": "The one case where the physical chain of a weather intervention has been observed end to end rather than inferred statistically."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020PNAS..117.5190F",
+      "title": "Quantifying snowfall from orographic cloud seeding",
+      "firstAuthor": "Friedrich",
+      "year": 2020,
+      "citationCount": 46,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Puts numbers on the SNOWIE cases, estimating the mass of snow attributable to seeding over specific areas and durations, on the order of fractions of a millimeter of water equivalent.",
+          "why": "Converts the demonstrated mechanism into an effect size, which is what shows how far the demonstrated case is from an operationally meaningful one."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021ACP....2114507W",
+      "title": "Assessing the potential efficacy of marine cloud brightening for cooling Earth using a simple heuristic model",
+      "firstAuthor": "Wood",
+      "year": 2021,
+      "citationCount": 33,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Estimates the achievable radiative forcing from marine cloud brightening using a transparent heuristic model, and shows the result is dominated by uncertainties in aerosol-cloud interaction rather than by deployment scale.",
+          "why": "A model of how to bound an intervention's plausible effect before proposing to test it, on the intervention modality with the most active research program."
+        }
+      ]
+    },
+    {
+      "title": "Steering Tropical Cyclones Using Small Perturbations in an AI Weather Model",
+      "firstAuthor": "Huang",
+      "year": 2026,
+      "arxiv": "2605.29248",
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Uses gradients through a learned weather model to find small initial-condition perturbations that redirect a tropical cyclone track within the model.",
+          "why": "The clearest instance of the genre this explorer exists to bound: an optimization result about a surrogate, presented in the vocabulary of intervention."
+        }
+      ]
+    },
+    {
+      "title": "Instability-Aware Steering of an Extreme Atmospheric River in an AI Weather Foundation Model",
+      "firstAuthor": "Liu",
+      "year": 2026,
+      "arxiv": "2604.18906",
+      "url": null,
+      "branches": [
+        "intervention"
+      ],
+      "notes": [
+        {
+          "branch": "intervention",
+          "takeaway": "Targets perturbations at the dynamically unstable directions of the flow to steer an atmospheric river in a learned model, using instability structure rather than brute-force gradient search.",
+          "why": "The most physically motivated of the steering studies, and still evidence about the model's sensitivity rather than about the atmosphere's."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "observations",
+      "label": "Observations, assimilation & the sensor boundary",
+      "summary": "A learned atmospheric model never sees the atmosphere. It sees instruments measuring transformations of it: radiances in satellite channels, reflectivity at radar wavelengths, station reports with inconsistent siting and quality control, radiosondes launched twice a day into a field that varies continuously. Classical data assimilation exists to solve that inverse problem and carries decades of accumulated machinery for observation operators, error covariances, and bias correction. This theme tracks what happens when learning is pushed into that layer: assimilation as generative sampling, forecast systems trained on raw observations instead of reanalysis, and neural observation operators standing in for radiative transfer. It also collects the papers that keep the sensor honest, because the truth almost every learned Earth-system model is trained and graded on is an analysis product that already contains a model. It also holds the measurements of how much of that observation stream is informative once error correlation is accounted for, which is the quantity at stake whenever raw data volume is offered as evidence of headroom.",
+      "themes": [
+        "Reanalysis is not ground truth. It is a model-observation fusion, so a system trained and scored on it inherits the assimilating model's biases, and observation bias that varies with the state is not separable from model error without an anchor (Dee).",
+        "Learned assimilation arrived as a sampling problem: score-based and diffusion methods treat the posterior over states as something to generate rather than to optimize, and the learned forecaster supplies the adjoint that made 4D-Var expensive (Rozet; Xiao).",
+        "Observation-driven forecasting removed the analysis from the loop entirely. Aardvark and GraphDOP forecast from raw observations end to end, and GraphDOP's internal state recovers physical structure it was never given (Vaughan; Alexe; Lean).",
+        "The observation operator is now learnable, which turns a slow hand-derived map into a differentiable one and makes the surrogate's error distribution the useful artifact rather than its speed. Cross-sensor generalization is where it breaks: a model tuned to one instrument's spectral response and geometry degrades on another's, and that degradation looks exactly like model error unless the evaluation separates them (Howard; Stefanelli; Li; Jin).",
+        "Observation volume and assimilable information are different quantities. Past a density threshold, correlated observation error means additional data stops paying in the schemes operational centres actually run, and per-observation forecast impact is concentrated enough that some assimilated subsets measurably degrade the forecast (Liu; Cardinali)."
+      ]
+    },
+    {
+      "key": "prediction",
+      "label": "Learned weather & Earth-system prediction",
+      "summary": "The claim that settled between 2022 and 2024 is narrow and real: a neural network trained on reanalysis beats the operational deterministic forecast on standard headline scores at a fraction of the inference cost. FourCastNet made it plausible, Pangu-Weather and GraphCast made it undeniable under ECMWF's own verification, and GenCast moved the result into the probabilistic setting where operational value lives. What did not settle is what that skill is made of. These systems are initialized from analyses produced by physics-based assimilation, scored against those same analyses, and their advantage concentrates in the smooth, large-scale, well-observed part of the problem. This theme holds the capability line and the papers that mark its edges together, because separating fast high-skill prediction from physical understanding is the whole point.",
+      "themes": [
+        "The 2022-2023 jump was architectural and then immediately commoditized: transformers on a lat-lon grid and message passing on an icosahedral mesh both beat IFS, after which the gains came from training strategy and scale rather than architecture. The scaling analysis that followed puts the return in training data rather than parameter count, and finds these models prefer width where language models prefer depth (Pathak; Bi; Lam; Yu).",
+        "Deterministic training produces blurry forecasts. The move to diffusion and to direct CRPS optimization is the field conceding that a mean-squared-error forecast is a conditional mean, not a forecast (Price; Lang).",
+        "Hybrid systems did not lose. NeuralGCM keeps a differentiable dynamical core with learned parameterizations, matches learned-model skill at medium range, and stays stable over climate-length runs; spectral nudging pushes the same convergence from the physical side (Kochkov; Polichtchouk).",
+        "The skill is conditional on an initialization pipeline the models do not own. Run them in an operational setting, from operational analyses, and the advantage narrows and becomes variable-specific (Ben Bouallègue; Bonavita).",
+        "Learned models under-represent small scales and error growth, which is how a system can win at day-5 RMSE while being wrong about how uncertainty propagates (Bonavita; Chattopadhyay)."
+      ]
+    },
+    {
+      "key": "foundations",
+      "label": "Foundation models & learned physical operators",
+      "summary": "Operator learning made a specific promise: learn the solution map of a family of equations, not one solution, so a trained model transfers across initial conditions, resolutions, and eventually across equations. FNO and DeepONet are the two canonical formulations, and graph-network simulators made the same argument for particle and mesh dynamics. The physics foundation model generalizes the claim again, to pretraining on many systems at once and transferring to unseen ones. Real transfer results exist and they are narrower than the framing suggests: they show up most clearly in the low-data regime, and the speedup literature they sit next to has a documented baseline problem. This theme keeps two things apart that get conflated constantly: what has been shown to transfer, and what has only been shown to fit.",
+      "themes": [
+        "Resolution invariance is the reusable property. FNO gets it by parameterizing the kernel in Fourier space and DeepONet by construction; accuracy on one grid is not the claim (Li; Lu).",
+        "Multi-physics pretraining does transfer to held-out systems, and the honest version of the result is that it transfers in the low-data regime, where sample efficiency rather than asymptotic accuracy is the gain (McCabe; Herde).",
+        "'Foundation model' names two different things: a pretrained backbone with demonstrated downstream transfer, and a large task-specific simulator with a label. Only the first is a testable claim, and Aurora is the case that argues it by beating dedicated operational systems on tasks outside forecasting (Bodnar).",
+        "Reported speedups over numerical solvers are systematically inflated. A review of the fluid-PDE literature found most comparisons run against baselines weaker than the domain standard, with negative results underreported (McGreivy).",
+        "The bottleneck moved from architecture to data, which is why the most consequential recent artifacts in this line are datasets with common interfaces rather than models (Ohana)."
+      ]
+    },
+    {
+      "key": "evaluation",
+      "label": "Evaluation, uncertainty & physical validity",
+      "summary": "This is the theme that decides whether the others are true. Forecast verification settled its foundations long before machine learning arrived: Murphy's decomposition of what goodness means, proper scoring rules that cannot be improved by hedging, calibration and sharpness as separate axes, scale-aware spatial scores for fields whose point values are not the quantity of interest. Learned forecasting largely re-derived a headline-RMSE culture on top of that work. The papers here are the correction, and they share a structure: an aggregate score that hides the failure that matters, a benchmark that rewards the wrong behavior, a tail the training distribution barely contains, a comparison whose baseline or evaluation period is doing the work.",
+      "themes": [
+        "Murphy's three kinds of goodness (consistency, quality, value) still sorts most disputes, and a headline score answers only the second, partially.",
+        "A deterministic score cannot certify a probabilistic system. Proper scoring rules, calibration, and sharpness are the minimum, they are not interchangeable, and models tied on RMSE can differ sharply in ensemble behavior (Gneiting; Brenowitz).",
+        "Aggregate skill and extreme-event skill dissociate. Models that beat IFS on mean scores fail on unseen-intensity cyclones, under-represent damaging near-surface winds in the one storm that mattered, and lose much of their margin when the evaluation is restricted to the tails (Sun; Charlton-Perez; Gabler).",
+        "Benchmarks reward what they measure, and a headline gain can come from the evaluation period rather than from the model: scored against a climatology the atmosphere has already drifted away from, every system trained on the past looks better than it is (Landsberg).",
+        "Independent standardized evaluation is now an explicit community ask, because self-reported comparisons against different baselines, initializations, and truth datasets are not comparable (Rasp; Ullrich; McGreivy)."
+      ],
+      "gaps": [
+        "No benchmark attributes a learned model's error between the observing system, the assimilation, and the forecast model, so 'the model is wrong' and 'the analysis is wrong here' remain indistinguishable in every reported score.",
+        "Extreme-event evaluation has no agreed power analysis: nobody states how many events are needed before a tail-behavior improvement is a result rather than a sample."
+      ]
+    },
+    {
+      "key": "causality",
+      "label": "Causal structure & mechanistic understanding",
+      "summary": "The interesting question is whether prediction pressure forces a model to learn mechanism, and the literature supports both answers depending on which claim is being made. Five things get collapsed into the word causal and they carry different burdens of proof: a predictive relationship, an internal representation that encodes a physical variable, an identified causal structure, a valid counterfactual, and a model that supports intervention. The causal-inference literature for dynamical systems supplies the standards, and it is explicit that its assumptions are strong. The interpretability work on learned weather models supplies the current evidence, and it cuts both ways: these models do develop internal structure aligned with physical fields they were never given, and they also fail dynamical tests that a physical model passes by construction. Outside weather the same question has been posed as a controlled experiment, on orbital mechanics and on simulated collisions, and both times the model that predicted well did not carry the law.",
+      "themes": [
+        "Causal discovery in coupled nonlinear dynamics needs different machinery than in stochastic time series, and the methods that work depend on assumptions (causal sufficiency, stationarity, adequate sampling) that Earth-system data routinely breaks (Sugihara; Runge).",
+        "Invariance is the bridge that survives distribution shift: relationships that hold across environments are the ones with a claim to being causal, and the variables themselves have to be learned before that claim can be made (Peters; Schölkopf).",
+        "Evidence for mechanism is accumulating from the inside: probing recovers physically meaningful structure from internal activations, sensitivity analysis on a well-studied cyclone reproduces known precursors, and an observation-only model builds Earth-system representations from instrument data alone (Lean; Bano Medina; Tempest).",
+        "Evidence against is equally concrete: learned models do not reproduce the upscale error growth that defines atmospheric predictability, and they get some classical dynamical responses qualitatively wrong while getting others right (Selz; Hakim).",
+        "Being excellent at predicting a chaotic system and modeling it causally are different targets, and where the test has been run directly it returns a negative: a model trained on orbital trajectories predicts orbits accurately yet fails to apply Newtonian mechanics when adapted, and video models trained on clean 2D mechanics match the nearest training example rather than abstracting the rule (Kori; Vafa; Kang)."
+      ],
+      "gaps": [
+        "Which internal representations of a learned forecaster are load-bearing for its skill, and which are correlates that probing can find but ablation does not disturb?"
+      ]
+    },
+    {
+      "key": "decisions",
+      "label": "Forecast to decision",
+      "summary": "A forecast has no value until something is decided with it, and the map from score to value is not monotone. The meteorological version of this argument is old and quantitative: relative economic value curves show the ranking of two forecast systems flips depending on the user's cost-loss ratio, so better is a property of the pair, not of the forecast. The machine-learning version arrived independently as decision-focused learning, where the training loss is downstream decision regret rather than prediction error. Both literatures land on the same uncomfortable point from opposite directions: reducing prediction error in the wrong place leaves decisions unchanged, and can make them worse. Almost none of the learned-weather literature reports the downstream value of its own improvement.",
+      "themes": [
+        "Relative economic value is user-specific. The same ensemble beats the deterministic forecast for some cost-loss ratios and loses for others, at the same lead time and the same headline skill (Richardson; Palmer).",
+        "Training on the decision objective beats training on accuracy when the optimization problem is the bottleneck, and a model with worse predictive error can produce strictly better decisions (Donti; Elmachtoub).",
+        "The decision-focused gain is conditional, not universal: recent work characterizes when a plain accuracy-trained predictor is already decision-optimal (Liu).",
+        "The problems in this literature are small and well-specified, with known cost structures. Operational weather decisions are neither, which is where the gap between the two traditions sits.",
+        "Where the value has been computed at industrial scale it belongs to the system, not to the forecast: the same wind-forecast improvement is worth different amounts to different grids depending on generation mix and ramp capability, and the cost-loss framework underneath most value claims assumes a risk-neutral decision maker that operational users are not (Wang; Matte)."
+      ]
+    },
+    {
+      "key": "control",
+      "label": "World models, planning & physical control",
+      "summary": "Model-based control is where a learned dynamics model has to survive being acted on, and the reinforcement-learning line established the failure mode precisely: a planner will find the region where the model is wrong and optimistic. The methods that work are the ones that quantify and respect model uncertainty, not the ones that fit the dynamics best. Two demonstrations matter for large physical systems, and both are instructive for what they required rather than what they achieved: the stratospheric balloon controller and the tokamak plasma controller worked because the plant was densely instrumented, the actuation was characterized, and the loop closed fast enough to correct model error before it compounded. None of those conditions hold for a continental-scale atmosphere, which is the relevant fact whenever this literature is cited in support of intervention. The autonomous-driving stack is the other transfer argument in circulation, and its own literature is the check on it: imitation at thirty-million-example scale needed synthesized failures before the policy could drive, and policies cloned from logged behaviour are vulnerable to causal misidentification, where more observation makes them worse.",
+      "themes": [
+        "Model exploitation is the central problem, and the fix is epistemic: ensembles that separate what is uncertain from what is stochastic, and rollouts short enough that the bound on policy improvement still holds (Chua).",
+        "Planning inside a learned model reached superhuman play without being given the rules, which is the strongest version of the argument. It also states its own preconditions: a resettable environment, cheap exact rollouts, and a scalar reward (Schrittwieser).",
+        "Differentiable simulation makes control of PDE-governed systems trainable end to end, with full state access and an exact solver, which is the ceiling rather than the operating point (Holl).",
+        "The two real deployments had tight sensing-actuation loops and bounded state spaces. Transfer to open natural systems is an assumption, and the balloon case is notable for exploiting the atmosphere rather than modifying it (Bellemare; Degrave).",
+        "The perceive-predict-plan stack that works in driving was not obtained by imitation alone. Thirty million expert examples needed synthesized failures and explicit penalties before the policy could drive, and cloned policies suffer causal misidentification, where adding observations degrades them (Bansal; de Haan)."
+      ]
+    },
+    {
+      "key": "intervention",
+      "label": "Intervention & the boundary of evidence",
+      "summary": "Weather modification has a seventy-year record, and the summary is that the physical chain has been observed end to end in one narrow case while operational effect sizes remain mostly unresolved. SNOWIE closed that chain for glaciogenic seeding of orographic clouds: seeding material tracked to ice initiation to snowfall reaching the ground, visible in radar, with the mass quantified. Convective seeding and hurricane modification have the opposite record, and both ended on the same two problems rather than on execution: a physical premise that did not hold, and a counterfactual that does not exist in a chaotic field. Against that background, AI weather models have produced a new genre of steering studies that find small perturbations redirecting a storm inside the model. This theme separates what has been demonstrated, what remains untestable, and what is being asserted, and treats the live question as one of experimental design: does better prediction, state estimation, and causal inference make any of these effects measurable for the first time?",
+      "themes": [
+        "One case has a closed physical chain, observed rather than inferred, and the quantified effect is fractions of a millimeter of water equivalent over a limited area (French; Friedrich).",
+        "The failures are informative and specific: STORMFURY's premise was wrong about how much supercooled water hurricanes contain, and convective seeding assessments repeatedly could not separate effect from natural variability (Willoughby; Silverman).",
+        "The recurring obstacle is the counterfactual, not the intervention. The unseeded control does not exist, and the assessments that ended these programs failed on statistical power rather than on physics (NRC 2003).",
+        "Steering studies in AI weather models are optimization results about a surrogate. They establish that the model is sensitive to small perturbations in a targeted direction, which is a statement about the model (Huang; Liu).",
+        "Bounding a proposed intervention's plausible effect before testing it is a discipline that exists and is rarely applied outside the climate-intervention literature (Wood)."
+      ],
+      "gaps": [
+        "No AI-era steering study has been paired with a field-testable hypothesis, an actuation model that connects the perturbation to something physically deliverable, or a power analysis for detecting the claimed effect.",
+        "There is no validation protocol for a learned model's response to interventions absent from its training distribution, which is the exact regime every steering result occupies."
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "1994JGR....9910143E",
+      "Sequential data assimilation with a nonlinear quasi-geostrophic model",
+      "Observations"
+    ],
+    [
+      "2005QJRMS.131.3323D",
+      "Bias and data assimilation",
+      "Observations"
+    ],
+    [
+      "2412.15687",
+      "GraphDOP: forecasts learnt and initialised directly from observations",
+      "Observations"
+    ],
+    [
+      "2212.12794",
+      "Learning skillful medium-range global weather forecasting (GraphCast)",
+      "Prediction"
+    ],
+    [
+      "2312.15796",
+      "GenCast: diffusion-based ensemble forecasting",
+      "Prediction"
+    ],
+    [
+      "2024GeoRL..5107377B",
+      "On Some Limitations of Current Machine Learning Weather Prediction Models",
+      "Prediction"
+    ],
+    [
+      "2010.08895",
+      "Fourier Neural Operator for Parametric PDEs",
+      "Physical representations"
+    ],
+    [
+      "2407.07218",
+      "Weak baselines and reporting biases in ML for fluid-related PDEs",
+      "Physical representations"
+    ],
+    [
+      "1993WtFor...8..281M",
+      "What Is a Good Forecast?",
+      "Evaluation"
+    ],
+    [
+      "GneitingRaftery2007",
+      "Strictly Proper Scoring Rules, Prediction, and Estimation",
+      "Evaluation"
+    ],
+    [
+      "2024JAMES..1604019R",
+      "WeatherBench 2",
+      "Evaluation"
+    ],
+    [
+      "2019SciA....5.4996R",
+      "Detecting and quantifying causal associations in large nonlinear time series",
+      "Causality"
+    ],
+    [
+      "2023GeoRL..5005747S",
+      "Can AI-Based Weather Prediction Models Simulate the Butterfly Effect?",
+      "Causality"
+    ],
+    [
+      "2508.18018",
+      "Learning from nature: GraphDOP's representations of the Earth System",
+      "Causality"
+    ],
+    [
+      "2507.06952",
+      "What Has a Foundation Model Found? Probing for world models",
+      "Causality"
+    ],
+    [
+      "2000QJRMS.126..649R",
+      "Skill and relative economic value of the ECMWF EPS",
+      "Decisions and control"
+    ],
+    [
+      "1710.08005",
+      "Smart \"Predict, then Optimize\"",
+      "Decisions and control"
+    ],
+    [
+      "2022Natur.602..414D",
+      "Magnetic control of tokamak plasmas through deep RL",
+      "Decisions and control"
+    ],
+    [
+      "2018PNAS..115.1168F",
+      "Precipitation formation from orographic cloud seeding",
+      "Intervention"
+    ],
+    [
+      "NRC2003WeatherMod",
+      "Critical Issues in Weather Modification Research",
+      "Intervention"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Attribute forecast error between the observing system, the analysis, and the model",
+      "Every reported score folds three error sources into one number. WeatherReal and the Ullrich recommendations both push evaluation toward in-situ observations, and neither supplies a decomposition. The experiment is available: hold the model fixed and vary the observing system (drop a satellite channel, inject a realistic calibration drift, degrade station coverage to a historical density), then measure how much of the score change is attributable to each. Instrument-level provenance exists in the assimilation systems; nothing currently connects it to learned-model verification. The same design answers the marginal-information question the field keeps assuming away: operational assimilation already measures forecast impact per observation, and no published curve shows where a learned model's skill saturates as observing density rises."
+    ],
+    [
+      "Test whether physics foundation models encode reusable structure or only fit the target family",
+      "Transfer is currently argued from held-out-PDE accuracy in the low-data regime. That is consistent with a model learning a good initialization rather than physical structure. A representation-level protocol would test the properties that would have to be there: conserved quantities recoverable by linear probe, correct dimensional scaling under nondimensionalization, and composition of learned operators matching composition of the underlying ones. The Well supplies the system diversity to run it; the protocol does not exist."
+    ],
+    [
+      "Establish negative controls for spatiotemporal causal discovery",
+      "PCMCI-family methods are applied at scale to Earth-system data whose properties violate their assumptions, and the results are reported without an empirical false-positive rate. What is missing is the equivalent of a scrambled-label control: surrogate fields with matched autocorrelation, spatial structure, and seasonality but no causal coupling, run through the same pipeline, so a discovered network can be compared against what the method finds in the absence of causation."
+    ],
+    [
+      "Validate counterfactuals from learned models against a physical simulator",
+      "AI steering studies optimize perturbations inside a model trained only on unperturbed reanalysis, so the intervention is exactly the regime with no training support. The validation is straightforward to specify and has not been run: apply the perturbation the learned model recommends inside a physics-based model, compare the trajectories, and characterize how the disagreement grows with perturbation size, lead time, and how far the perturbed state sits from the training distribution."
+    ],
+    [
+      "Give extreme-event evaluation a power analysis",
+      "Extreme-event benchmarks are proliferating without a stated answer to how many events are needed to detect a given improvement in tail behavior. Large ensembles help with sampling and do not resolve the question, because the reanalysis truth for the rarest events is itself model-dependent. A worked power analysis, with an explicit treatment of truth uncertainty in the tail, would tell the field which of its extreme-event comparisons are currently informative."
+    ],
+    [
+      "Report the value curve, not just the score",
+      "The relative-economic-value framework is twenty-five years old, takes an ensemble and a cost-loss ratio as input, and has not been applied publicly to GenCast-class systems for any named user. Running it for a specific decision (a grid operator's reserve commitment, an airline's fuel loading) would convert a CRPS improvement into a statement about outcomes, and would show which parts of the learned-forecasting advantage a real user can access."
+    ],
+    [
+      "Produce an error bound a controller can consume",
+      "Safe learning-based control requires a bound on model error over the reachable state set. No learned Earth-system model publishes anything of that form, which means every proposal to act on one is missing the input its own control theory requires. Even a restricted result (a calibrated bound for one variable, one region, one lead time, one class of perturbations) would be the first honest interface between this literature and the intervention literature."
+    ],
+    [
+      "Design a weather intervention experiment that could actually detect its effect",
+      "The programs that ended did so on statistical power, not physics: the unseeded counterfactual does not exist, and natural variability swamped the signal. Better state estimation and observation-driven modeling change the terms of that problem for the first time since the NRC assessment. The open question is concrete: given current observing density and a learned model's demonstrated sensitivity, what randomization design, sample size, and detection threshold would make a seeding effect of the SNOWIE magnitude measurable, and is that number reachable?"
+    ]
+  ],
+  "practices": []
+}

@@ -37,6 +37,19 @@ async function runScript(script, args, home) {
   }
 }
 
+// Names of any uncommitted files under the paths the pipeline must never
+// write to. Asks git for the file list rather than the diff text: explorers.json
+// is a single ~800KB line, so `git diff` over src/data/knowledge/ can exceed
+// execFile's 1MB default buffer and mask the assertion behind a RangeError.
+async function dirtyCommittedPaths() {
+  const { stdout } = await execFileP(
+    "git",
+    ["diff", "--name-only", "--", "src/data/knowledge/", "src/content/concepts/"],
+    { cwd: REPO_ROOT },
+  );
+  return stdout.trim();
+}
+
 async function tempDir(t, label) {
   const dir = await mkdtemp(path.join(os.tmpdir(), `concepts-backfill-${label}-`));
   t.after(() => rm(dir, { recursive: true, force: true }));
@@ -226,7 +239,7 @@ test("a kill mid-LLM-pass leaves the repo and the pipeline home clean", async (t
   assert.deepEqual(await readProposals(path.join(fx.home, "inbox.jsonl")), []);
 
   // Committed files untouched (acceptance criterion).
-  await execFileP("git", ["diff", "--exit-code", "src/data/knowledge/", "src/content/concepts/"], { cwd: REPO_ROOT });
+  assert.equal(await dirtyCommittedPaths(), "", "pipeline must not modify committed paths");
 });
 
 test("prep + assign against the real repo leaves the repo tree unchanged", async (t) => {
@@ -281,7 +294,7 @@ test("prep + assign against the real repo leaves the repo tree unchanged", async
 
   const after = (await execFileP("git", ["status", "--porcelain"], { cwd: REPO_ROOT })).stdout;
   assert.equal(after, before, "repo tree must be unchanged after prep+assign");
-  await execFileP("git", ["diff", "--exit-code", "src/data/knowledge/", "src/content/concepts/"], { cwd: REPO_ROOT });
+  assert.equal(await dirtyCommittedPaths(), "", "pipeline must not modify committed paths");
 });
 
 test("validate passes valid assignments, and --apply writes assignments + heartbeat to the data dir", async (t) => {
