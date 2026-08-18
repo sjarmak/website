@@ -149,33 +149,31 @@ function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
       {
         explorer.sections.map((s: ExplorerSection) => {
           const papers = papersByKey.get(s.key) ?? [];
+          // Every authored note list a section can carry. Omitting one here
+          // silently drops committed content from the page: `questions` was
+          // absent until 2026-08-18, which hid all 33 of memory-design's.
+          const notes = [
+            { label: "Key threads", items: s.themes ?? [] },
+            { label: "Open gaps", items: s.gaps ?? [] },
+            { label: "Open questions", items: s.questions ?? [] },
+          ].filter((n) => n.items.length > 0);
           return (
             <section class="theme" data-key={s.key} id={`theme-${s.key}`}>
               <h2 class="theme__label">{s.label}</h2>
               {s.summary && <p class="theme__summary measure">{s.summary}</p>}
 
-              {((s.themes?.length ?? 0) > 0 || (s.gaps?.length ?? 0) > 0) && (
+              {notes.length > 0 && (
                 <div class="theme__notes">
-                  {(s.themes?.length ?? 0) > 0 && (
+                  {notes.map((n) => (
                     <details class="note">
-                      <summary class="note__toggle">Key threads</summary>
+                      <summary class="note__toggle">{n.label}</summary>
                       <ul role="list" class="note__list">
-                        {s.themes!.map((t) => (
-                          <li class="measure">{t}</li>
+                        {n.items.map((item) => (
+                          <li class="measure">{item}</li>
                         ))}
                       </ul>
                     </details>
-                  )}
-                  {(s.gaps?.length ?? 0) > 0 && (
-                    <details class="note">
-                      <summary class="note__toggle">Open gaps</summary>
-                      <ul role="list" class="note__list">
-                        {s.gaps!.map((g) => (
-                          <li class="measure">{g}</li>
-                        ))}
-                      </ul>
-                    </details>
-                  )}
+                  ))}
                 </div>
               )}
 
