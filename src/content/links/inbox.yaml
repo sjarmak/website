@@ -225,3 +225,17 @@
     instead of $/1M tokens.
   tags: [agents, benchmarks, cost, harness]
   added: 2026-07-27
+
+- title: "The Hitchhiker's Guide to Agentic AI: From Foundations to Systems"
+  url: https://arxiv.org/abs/2606.24937
+  category: Agentic coding
+  kind: paper
+  note: >-
+    A practitioner's guide spanning the full agentic AI stack: transformer
+    architecture, GPU systems, and inference optimization; alignment via
+    RLHF/PPO/DPO; then agentic systems proper (RAG, memory architectures,
+    agent design patterns, inter-agent coordination); closing with dev
+    frameworks, UI design, evaluation, and production deployment. Useful as a
+    single-reference map across the stack rather than for any one novel result.
+  tags: [agents, survey, rag, memory, evaluation]
+  added: 2026-08-18
