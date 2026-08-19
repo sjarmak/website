@@ -239,3 +239,55 @@
     single-reference map across the stack rather than for any one novel result.
   tags: [agents, survey, rag, memory, evaluation]
   added: 2026-08-18
+
+- title: Physics-based Deep Learning
+  url: https://physicsbaseddeeplearning.org/intro.html
+  category: Physics AI
+  kind: article
+  note: >-
+    Free hands-on book (v0.3, "GenAI edition") pairing theory with runnable
+    Colab notebooks: neural surrogates/operators, physics-informed losses,
+    differentiable physics solvers, diffusion/flow-matching for uncertainty
+    quantification, RL control of physical systems. A solid reference map
+    across the field rather than a single result.
+  tags: [physics-ml, differentiable-physics, diffusion, surrogates]
+  added: 2026-08-18
+
+- title: "Towards a Physics Foundation Model"
+  url: https://arxiv.org/html/2509.13805v4
+  category: Physics AI
+  kind: paper
+  note: >-
+    General Physics Transformer (GPhyT), trained on 1.8TB of simulation data
+    across fluid-solid interaction, shock waves, thermal convection, and
+    multi-phase dynamics. Claims 7x over specialized architectures and
+    in-context generalization to unseen systems without being told the
+    governing equations — a physics analog to the LLM foundation-model bet.
+  tags: [physics-ml, foundation-model, transformer, simulation]
+  added: 2026-08-18
+
+- title: "Earth Science Foundation Models: From Perception to Reasoning and Discovery"
+  url: https://arxiv.org/html/2605.12542v1
+  category: Physics AI
+  kind: paper
+  note: >-
+    Survey of foundation models applied to Earth science, tracking the
+    progression from image-recognition-level perception to scientific
+    reasoning and autonomous workflows. Catalogs 200+ datasets/benchmarks
+    across weather, water, geology, ecosystems, and ice, and names the open
+    challenges (multimodal data, scientific accuracy, infra scaling).
+  tags: [physics-ml, foundation-model, earth-science, survey]
+  added: 2026-08-18
+
+- title: "Machine Learning with Physics Knowledge for Prediction: A Survey"
+  url: https://arxiv.org/abs/2408.09840
+  category: Physics AI
+  kind: paper
+  note: >-
+    Survey of two complementary strategies for injecting physics into ML
+    forecasting of PDE-governed systems: embedding physics into loss
+    functions/architectures/synthetic data, versus treating data itself as
+    encoded physics via multi-task/meta/contextual learning. Includes an
+    industrial-applications angle and a map of open-source PIML tooling.
+  tags: [physics-ml, survey, pde, physics-informed]
+  added: 2026-08-18
