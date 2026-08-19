@@ -1508,6 +1508,31 @@
           "why": "The working-memory question is whether a persistent, always-resident document earns its slot in the context window. On these tasks it costs cache tokens and returns nothing measurable on correctness, which is the shape the lost-in-the-middle result the paper cites would predict: material parked mid-prompt every turn is not necessarily material the model uses. It also sharpens what this branch should argue about. If the binding constraint is implementation skill rather than retrievable repository knowledge, then better selection of what the model sees each step has a ceiling on work like this, and the interesting variable shifts to which tasks fall inside a given agent's informative band at all."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260813662A",
+      "title": "Ontology-Grounded Project Memory for Coding Agents",
+      "firstAuthor": "Adam, James",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.13662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260813662A",
+      "branches": [
+        "representation",
+        "temporal"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Project memory is treated as a modeling problem, not a note-keeping problem: typed records (decision, constraint, rationale, lesson, anti-pattern) carry lifecycle status, provenance, and supersession links in a queryable knowledge graph, rather than flat text or vector chunks.",
+          "why": "A worked example of layered semantic representation for coding-agent memory specifically, with a head-to-head evaluation against vector memory that isolates exactly which query classes need the richer representation."
+        },
+        {
+          "branch": "temporal",
+          "takeaway": "Supersession is a first-class relationship: records that supersede earlier ones are excluded from current-guidance retrieval by construction. Across four real-world reversal pairs, four models, and two delivery regimes, the graph served the current answer in all 40 trials, while a free-text retrieval baseline surfaced the superseded answer in 12 of 13 trials when the superseded record outranked the current one.",
+          "why": "A sharp, measured demonstration of why 'currency by construction' beats retrieval-rank luck for keeping a fact's timeline straight — directly on point for this branch's validity-interval and contradiction-resolution concerns."
+        }
+      ]
     }
   ],
   "sections": [

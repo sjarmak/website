@@ -2185,6 +2185,195 @@
           "why": "This branch's rules are that cascades beat always-on fan-out, that cost facts get recorded before routing is optimized, and that unknown cost is never treated as zero -- and this paper is unusually disciplined about all three, including where the discipline undercuts its own headline. It defines the yardstick before running experiments (total cost per solve at matched solve rate) and names the trivial baseline that any router must beat: the blind-mixing line achievable by randomly splitting traffic between a cheap and a strong model. It counts the searcher's GPU time and sandbox cost inside the system's price rather than reporting fixer API spend alone. Most usefully, its own ablation contradicts the framing: always sending the cheapest fixer with the handoff ties the routed system, so the verified handoff, not the routing decision, carries the result. The paired calibration study explains why -- the handoff appears to redistribute rather than add solving ability, lifting the three cheaper fixers while slightly hurting the strongest, though at N=99 the per-fixer effects are directional only. For anyone building a cascade, the transferable conclusion is that the cheap stage earns its keep by producing evidence the expensive stage consumes, not by deciding which expensive stage to call."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260806909C",
+      "title": "Long-Horizon Agent Trajectory Attribution: A Unified Benchmark and Fine-Grained Annotation Framework",
+      "firstAuthor": "Chen, Jing",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.06909",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260806909C",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Introduces trajectory attribution as a component-level ranking problem: given a target agent behavior, identify the primary preceding trajectory component responsible plus an ordered attribution chain. A benchmark of 1,300+ annotated trajectories spans task-aligned actions, unsafe actions, and safety refusals, with two evaluation tasks (primary-attribution localization, attribution-chain recovery) and reference baselines.",
+          "why": "Gives the eval branch a concrete, reusable protocol for attributing agent behavior to specific trajectory components rather than only scoring final outcomes — the annotation schema and reusable annotation skill let new agent trajectories be standardized under the same framework."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260811323S",
+      "title": "Deployment Decision Reliability: A Generalizability-Theory Framework for Sizing Long-Horizon Agent Evaluations",
+      "firstAuthor": "Srinivasan, Vasundra",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.11323",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260811323S",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A four-facet Generalizability Theory variance decomposition across three open agent-trace benchmarks (TheAgentCompany, tau2-bench, AppWorld) finds the agent main effect accounts for under 3% of total variance while the agent-by-task interaction accounts for 7-23% — leaderboards rank task specialization, not capability. Aggregate reliability collapses on the hardest task quartile, and training-cell reliability estimates negatively correlate with held-out reliability (r=-0.90).",
+          "why": "Quantifies precisely why a headline benchmark score is a poor guide to deployment: the packaged 'Deployment Decision Reliability' discipline turns the variance-component table into a defensible task-sizing and holdout-reporting checklist for enterprise buyers."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260727877R",
+      "title": "An Empirical Study of Coordination Mode as the First-Class Citizen in From-Scratch Multi-Agent Coding",
+      "firstAuthor": "Ren, Yanyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27877",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727877R",
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "MSEval, a benchmark of 10 real full-stack projects run under 10 collaboration topologies with deployment-grounded, iterative-feedback grading, finds that for identical tasks and models, varying topology shifts scores by over 30 points and doubles wall-clock time. Structured pipelines converge fastest with highest quality; heavy managerial (PM) oversight degrades performance.",
+          "why": "Direct empirical evidence that organizational topology rivals model capability in shaping the speed-cost-quality tradeoff for multi-agent coding — a topology choice is a production decision, not an implementation detail."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260808654A",
+      "title": "The Scaffolding Matters More Than the Interface: A Controlled Comparison of MCP and CLI Tool Use Across Seven Agent Scaffoldings, Five Language Models, and One Software Task",
+      "firstAuthor": "Alier Forment, Marc",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260808654A",
+      "branches": [
+        "routing",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "A controlled comparison of MCP versus CLI tool access, holding one fixed six-step git task constant across seven agent scaffoldings and five models, finds the scaffolding dominates cost far more than the interface: two CLI-only scaffoldings were 5-28x cheaper than five MCP-capable ones, and thirteen paired MCP-to-CLI cost ratios span 0.43x to 29x depending on scaffolding.",
+          "why": "Undercuts a widely-cited '35x MCP token tax' figure with a reproducible harness — routing/cost decisions about tool-interface choice should be measured per-scaffolding, not assumed as a fixed protocol property."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Completion was verified against actual repository state, not agent self-report, and the study found agents frequently ignored the interface they were assigned — comparisons that don't verify actual tool-call behavior measure an unknown mixture of interfaces.",
+          "why": "A methodology lesson for the eval branch: self-reported tool use is not ground truth, and interface-comparison studies need behavioral verification, not configuration alone."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260814131R",
+      "title": "LegacyWorld: Atomicity-Aware Evaluation of GUI Agents for Legacy Workflows",
+      "firstAuthor": "Reintjes, Thilo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.14131",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260814131R",
+      "branches": [
+        "recovery",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "LegacyWorld evaluates six computer-use agents on 28 domain-expert-informed Windows GUI legacy workflows (healthcare, admin, enterprise) using atomicity: a run should either complete the workflow correctly or fail without leaving persistent invalid state. Outcomes are classified into four independent classes — valid success, invalid success, valid failure, invalid failure — verified against independent post-run state snapshots, not agent self-report.",
+          "why": "Operationalizes 'recovery' for GUI/computer-use agents specifically: a model can be highly atomic (fails safely, low task completion) or complete many workflows while still causing unacceptable non-atomic side effects, and these move independently — exactly the durable-state discipline this branch tracks."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "Demonstration-derived prompts (generated from a single expert screen recording) are compared against expert-crafted procedural prompts under the same fixed task contract, testing whether procedures reconstructed from video approximate hand-written ones.",
+          "why": "A concrete instance of the reliability question 'does fan-out/automation actually help', applied to workflow specification rather than agent count: only measured comparison under a fixed acceptance test tells you."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813566S",
+      "title": "Don't Claim Benchmark-Oriented Optimization Improves General Coding Capability -- Diverse Evaluation Is Required",
+      "firstAuthor": "Shibaev, Egor",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.13566",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260813566S",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Building a Django-based case-study benchmark (code editing, generation, completion) as a control, the authors show SWE-bench-optimized checkpoints show little or no cross-task transfer to their Django tasks or to LiveCodeBench, and models fine-tuned on one Django task modality don't improve on other Django tasks either.",
+          "why": "Direct evidence for the eval branch's core claim: a benchmark score under optimization pressure measures task-specific performance, not the latent 'general coding capability' construct it's routinely used to justify — the paper names this the 'meaning gap' and argues for differentiated, maintained evaluation suites instead of leaderboard rankings."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813867J",
+      "title": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model",
+      "firstAuthor": "Jarmak, Stephanie",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.13867",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260813867J",
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "A technical monograph synthesizing 164 scholarly works, 100 practitioner records, 29 benchmark records, and 17 author-system case records through a structured multivocal review, organizing coding-agent reliability as a dependency chain: measurement and grading validity constrain what containment/recovery engineering can claim, which constrains what retrieval/context and human-review layers can be trusted to do, down to allocation and cost. Contributes a versioned catalog of 206 reliability records (193 gated practices, 13 research leads).",
+          "why": "Gives this explorer's own organizing frame — that reliability failures compound across system layers rather than living in the model — a systematically-sourced, citable counterpart. Note: authored by this site's author; flagged here for transparency rather than treated as an independent source."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Frames evaluation and operation as a dependency chain in which weaknesses in task construction, execution environments, retrieval, state management, verification, or observability can invalidate conclusions drawn downstream — so many apparent model failures originate elsewhere in the system, and layer-level improvements often fail to propagate to end-to-end task outcomes.",
+          "why": "Reinforces the eval branch's calibration theme with an explicit chain-of-custody argument for evaluation validity, complementing the narrower empirical findings from the G-theory and benchmark-transfer papers in this same branch."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260814352L",
+      "title": "ATLAS: Discovering Agent Strategies through LLM-Guided Abstraction and Automata Learning",
+      "firstAuthor": "Lopez-Miguel, Ignacio D.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.14352",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260814352L",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "ATLAS recovers interpretable Markov-chain behavioral models from raw agent trajectories by first using an LLM to abstract concrete actions and observations into semantically meaningful categories, then applying automata learning (Alergia) to infer states and transition probabilities. Applied to a penetration-testing agent, the learned chain exposes recurring strategies, decision points, and inefficient-choice loops that raw execution traces do not make visible.",
+          "why": "A concrete technique for turning an opaque transcript into an inspectable, queryable behavioral model — moves the observability branch from 'capture a trace' to 'make the trace analyzable', including model-based auditing and symbolic knowledge transfer to smaller models."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813900S",
+      "title": "Agentic Transaction: Towards ACID-Compliant Agent Systems",
+      "firstAuthor": "Sun (agentic-transaction lead author)",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": null,
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260813900S",
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Reinterprets classical ACID guarantees for agent execution as four semantic properties (Semantic Atomicity, Consistency, Isolation, Durability), instantiated in a data agent via transactional exploration-execution-validation cycles, transactional skill hubs, confidence-divergence validation, and transaction-aware state management. Reports a 10.6% improvement over state-of-the-art agents including Claude Code on standard benchmarks.",
+          "why": "A direct framing of retries-around-side-effects-as-transactions for durable state — the recovery branch's core claim, given a formal transactional vocabulary and a working implementation rather than an ad hoc retry loop."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2201,6 +2201,44 @@
           "why": "The branch is about the runtime properties that decide whether demo agents survive deployment, and shared mutable state is where the demo-to-production gap usually opens. A single-agent prototype never sees stale authorization; a fleet of agents sharing a team budget sees it immediately, and the paper shows the standard integration pattern -- pass the current budget as request context, get a decision, then act -- silently produces it. The engineering position is deliberately unambitious in a useful way: no new concurrency primitive, just an explicit contract that makes existing database mechanisms reachable from the governance layer, which is what lets policy stay a first-class reviewable artifact instead of migrating into trusted tool code one guard at a time. The overhead profile is the number to plan against: near parity with a hand-written fixed-policy transaction at zero service time, and 0.93x of it at 10 ms, so the cost of keeping policy first-class is small relative to the cost of serializing everything."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260727877R",
+      "title": "An Empirical Study of Coordination Mode as the First-Class Citizen in From-Scratch Multi-Agent Coding",
+      "firstAuthor": "Ren, Yanyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27877",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727877R",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "MSEval grounds 10 collaboration topologies (feature squads, layer specialists, pipeline handoff, swarming, PM oversight, QA-first, PR-style review, adversarial testing, competitive teams, rotation) in real full-stack software delivery with deployment-grounded scoring and cost accounting, rather than abstract communication-pattern simulation.",
+          "why": "A topology taxonomy tested against actual deployed software rather than a simulated collaboration surface — the foundations branch's 'what a multi-agent system is as a topology' question gets an empirical answer instead of a design-time one."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260816801D",
+      "title": "When Agents Coordinate: Measuring Coordination in Multi-Agent AI Coding",
+      "firstAuthor": "Destefanis, Giuseppe",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.16801",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260816801D",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Represents each of 1,902 coding-agent runs as a temporal network (agents and files as nodes; timestamped, costed messages/reads/writes as edges) to measure coordination directly instead of only task success and cost. Direct messaging grows near-quadratically with team size before leveling off as agents shift to broadcast; shared-spec tasks produce dense teams while pipeline tasks produce sparse, interface-local ones; shared files cut output tokens ~42% at eight agents on message-heavy work; naming a coordinator creates no communication hub and gives no reliable success improvement.",
+          "why": "A reusable measurement instrument for what a coordination topology actually looks like in practice, complementing this branch's higher-level topology taxonomies with a quantitative network-analysis lens on the same question."
+        }
+      ]
     }
   ],
   "sections": [

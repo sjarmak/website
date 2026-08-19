@@ -2893,6 +2893,44 @@
           "why": "Most skill libraries in this branch admit an entry on the agent's own judgment that a trajectory went well, which is what makes them unreliable to reuse and hard to evaluate. Here admission is a deterministic execution gate, so the catalog can only accumulate mutations that provably preserved cross-language parity, and skill induction becomes a byproduct of a verification pipeline rather than a separate self-assessment step. That also puts a clean boundary on what the model is trusted to do: propose the move into unreachable state, never certify it. The separation is worth reading against the branch's Voyager lineage, where the same capture-and-reuse structure runs without an oracle behind it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260810178Y",
+      "title": "One Recipe, Many Harnesses: What Self-Evolution Encodes Across Languages and Models",
+      "firstAuthor": "Yang, Siqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.10178",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260810178Y",
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Holding a diagnostic-routed self-evolution recipe (TRIAGE) fixed across a grid of 8 programming languages x 3 base models, the evolved harnesses' prompt/hook/memory/tool edits are shown to compensate for recoverable execution defects (test-file collisions, non-compiling code, skipped test runs) rather than encode deep language expertise — which defect dominates is cell-specific, not a fixed rule. Evolved harnesses share an abstract playbook across languages but instantiate it with almost disjoint ecosystem-specific machinery (20-40% of each harness), and a distilled universal harness recovers only 48-68% of native gains on some ecosystems.",
+          "why": "A mechanistic account of what self-evolving reflection/experience memory actually encodes — not opaque benchmark tuning but a legible compensation layer shaped jointly by language demands and the base model's behavioral gaps, with clear limits on cross-context transfer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813662A",
+      "title": "Ontology-Grounded Project Memory for Coding Agents",
+      "firstAuthor": "Adam, James",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.13662",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260813662A",
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "MOOSEDev grounds project memory in two small OWL ontologies (9 and 11 classes) with SHACL-validated typed records for decisions, lessons, constraints, and rationales, exposed to agents via MCP and reasoned over by a neurosymbolic engine that treats the LLM as a narrow, declared-point sensor rather than the primary reasoning substrate. Against a production vector-memory tool on a neutral 835-record corpus, it returned near-complete answer sets (0.98-1.00) on supersession, set-completeness, and negation questions versus 6-27% for the baseline, while tying on simple relevance retrieval.",
+          "why": "Concrete evidence for a structural architecture claim: questions requiring completeness, absence, or supersession reasoning need typed graph structure, not just better embeddings — vector retrieval's ceiling on this class of query is categorical, not a tuning gap."
+        }
+      ]
     }
   ],
   "sections": [

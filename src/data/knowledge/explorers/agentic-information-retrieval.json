@@ -525,6 +525,25 @@
           "why": "The branch treats retrieval as an action the model chooses; this paper measures the choices and finds most of them are not paying. Two consequences matter for anyone building the loop. First, the diagnosis has to come before the fix: more search repairs a retrieval gap and does nothing for a utilization gap, and the paper's oracle ladder bounds how much is even reachable -- swapping in a strong reader over the full evidence set lifts 59.5% to 87.5%, leaving 12.5% hard utilization failure that no retrieval change touches. Second, the loop's real cost centre is not where it looks. Accumulated search snippets fill 66-85% of the context budget while visited documents take only 2-16%, so visit gating buys precision but little headroom, and the lever is upstream snippet management -- deduplication, top-K trimming, aging out snippets whose evidence is already integrated. The prescriptions split by diagnosis rather than by leaderboard rank: reformulate queries when the trajectory saturates without gold, stop on evidence sufficiency rather than a fixed step budget, and shift the strongest agents' effort to verification, where one already sits near the oracle-reader ceiling. A free win sits alongside them -- 18-20% of the wrong answers from the three strongest agents differ from gold only in casing, punctuation, or markdown wrapping, recoverable by normalization without touching search or reasoning."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260815191S",
+      "title": "When Deep Research Agents Stagnate: Enhancing Reasoning with Retrieval-Aware Agent Control",
+      "firstAuthor": "Soudani, Heydar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.15191",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260815191S",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Analyzing reasoning trajectories of deep research agents shows most iterations contribute little or no improvement to the final answer, because agents lack awareness of their own trajectory and so can't tell when to change strategy or stop. The proposed Retrieval-Aware Agent Controller adds unsupervised search-novelty and information-coverage signals to pick the next action, cutting search calls by an average of 14 while improving the best DRA's accuracy by up to 10% (3% average) on BrowseComp-Plus.",
+          "why": "A direct instance of retrieval becoming a controlled action rather than fixed preprocessing — trajectory-awareness signals (novelty, coverage) let the agent decide when the retrieve-reason loop has stopped paying off, the exact question this branch tracks."
+        }
+      ]
     }
   ],
   "sections": [
