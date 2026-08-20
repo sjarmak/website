@@ -2239,6 +2239,25 @@
           "why": "A reusable measurement instrument for what a coordination topology actually looks like in practice, complementing this branch's higher-level topology taxonomies with a quantitative network-analysis lens on the same question."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260816178H",
+      "title": "Agent-Native Telemetry: Verifiable State-Delta Evidence for Autonomous Operations",
+      "firstAuthor": "He, Jun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.16178",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260816178H",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Structures operational telemetry into signed, hash-chained state-delta primitives with a dual access layer (a compact positional-tuple decoder and a stateful semantic gateway), cutting LLM context tokens by 88.8% and cloud query-scan cost by 96.4% on distributed microservice benchmarks versus OpenTelemetry JSON, with zero successful prompt injections across adversarial trials.",
+          "why": "Production multi-agent systems are graded on whether they can be operated, not just built; this is a concrete answer to the observability and cost line of that question, with a security property (injection resistance, provable non-occurrence) baked into the wire format rather than bolted on after."
+        }
+      ]
     }
   ],
   "sections": [

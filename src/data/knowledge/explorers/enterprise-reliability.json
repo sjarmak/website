@@ -2374,6 +2374,25 @@
           "why": "A direct framing of retries-around-side-effects-as-transactions for durable state — the recovery branch's core claim, given a formal transactional vocabulary and a working implementation rather than an ad hoc retry loop."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260816178H",
+      "title": "Agent-Native Telemetry: Verifiable State-Delta Evidence for Autonomous Operations",
+      "firstAuthor": "He, Jun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.16178",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260816178H",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Proposes the Agent Telemetry Protocol (ATP): operational facts are structured into four evidence primitives (transitions, observations, relations, state checkpoints) with content-addressed schemas and hash-chained signed batches, instead of verbose human-oriented log text. On AIOpsLab and OpenTelemetry Astronomy Shop benchmarks, ATP cuts wire payload and modeled cloud query-scan cost by 96.4%, LLM context tokens by 88.8%, and query operations by 66.2%, while detecting all 500 tested adversarial storage mutations and yielding zero successful prompt injections across 50 adversarial trials.",
+          "why": "Reframes observability itself as agent-native: a trace format designed to be read by an autonomous operator rather than an SRE, with cryptographic provenance and a formal proof that non-occurrence of an event is verifiable from the ledger, not just inferred from absence of a log line."
+        }
+      ]
     }
   ],
   "sections": [

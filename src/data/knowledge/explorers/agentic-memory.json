@@ -2931,6 +2931,31 @@
           "why": "Concrete evidence for a structural architecture claim: questions requiring completeness, absence, or supersession reasoning need typed graph structure, not just better embeddings — vector retrieval's ceiling on this class of query is categorical, not a tuning gap."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260818066Y",
+      "title": "On the Fragility of Self-Improving Agents: Variance, Task Order, and Underspecification",
+      "firstAuthor": "Ye, Qinyuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18066",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818066Y",
+      "branches": [
+        "reflection-experience",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Re-evaluating two memory-based self-improving agents (Agent Workflow Memory, ReasoningBank) across WebArena, VisualWebArena, and SCUBA with multiple runs and shuffled task orders shows the reported gains are fragile: under the default (implicitly easy-to-hard) task order ReasoningBank gains 1.5%, but under random shuffling it degrades by 4.5%, and run-to-run variance grows in 71% of settings, in one case widening the best/worst gap from 4.4% to 7.8%.",
+          "why": "The reflection-to-experience gains this branch tracks were largely measured single-run under a hidden curriculum; this paper shows the same method can look like improvement or degradation depending on task order and which run you report, which is a reliability problem for the whole self-evolving-memory line, not a tuning detail."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Identifies task and environment underspecification as a driver of fragility: without clear specifications, agents write plausible but inapplicable memories (e.g. recommending API usage in a browser-only environment) that distract later attempts. Adding rubrics and environment feedback to memory construction partially closes the degradation gap but does not eliminate it.",
+          "why": "A concrete, mechanistic account of why single-run, fixed-order evaluation overstates self-improving-memory methods, and a proposed fix (multi-run reporting, shuffled task order, richer task specification) that any future benchmark in this branch should adopt."
+        }
+      ]
     }
   ],
   "sections": [

@@ -19,9 +19,9 @@
         }
       ],
       "firstSeen": "2026-08-08",
-      "lastAttempt": "2026-08-19",
-      "attempts": 7,
-      "note": "2026-08-19: scix MCP is reachable again but this paper returns 'Paper not found' — not indexed in SciX, still no full text."
+      "lastAttempt": "2026-08-20",
+      "attempts": 8,
+      "note": "2026-08-20: still 'Paper not found' in SciX, no full text."
     },
     {
       "bibcode": "2026arXiv260805223Y",
@@ -43,9 +43,9 @@
         }
       ],
       "firstSeen": "2026-08-09",
-      "lastAttempt": "2026-08-19",
-      "attempts": 6,
-      "note": "2026-08-19: scix MCP is reachable again but this paper returns 'Paper not found' — not indexed in SciX, still no full text."
+      "lastAttempt": "2026-08-20",
+      "attempts": 7,
+      "note": "2026-08-20: still 'Paper not found' in SciX, no full text."
     },
     {
       "bibcode": "2026arXiv260809290L",
@@ -61,9 +61,56 @@
         }
       ],
       "firstSeen": "2026-08-12",
-      "lastAttempt": "2026-08-19",
-      "attempts": 5,
-      "note": "2026-08-19: scix MCP is reachable again but this paper returns 'Paper not found' — not indexed in SciX, still no full text."
+      "lastAttempt": "2026-08-20",
+      "attempts": 6,
+      "note": "2026-08-20: still 'Paper not found' in SciX, no full text."
+    },
+    {
+      "bibcode": "2026arXiv260814680Z",
+      "arxiv": "2608.14680",
+      "title": "When Agentic Executions Fail: Detecting and Localizing Runtime Faults from Telemetry",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "observability",
+            "eval"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-20",
+      "lastAttempt": "2026-08-20",
+      "attempts": 1,
+      "note": "2026-08-20: 'Paper not found' in SciX, no full text yet."
+    },
+    {
+      "bibcode": "2026arXiv260818575L",
+      "arxiv": "2608.18575",
+      "title": "Beyond LLM-Based Reasoning: Lightweight GNNs for Agent Failure Attribution",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-20",
+      "lastAttempt": "2026-08-20",
+      "attempts": 1,
+      "note": "2026-08-20: 'Paper not found' in SciX, no full text yet."
     }
   ]
 }
