@@ -11,6 +11,10 @@ const { src, alt } = Astro.props;
 ---
 
 <figure class="dashboard-capture">
+  <header class="dashboard-capture__header">
+    <p>Figure 01 / Omni control room</p>
+  </header>
+
   <div class="dashboard-capture__frame">
     <Image
       src={src}
@@ -29,11 +33,25 @@ const { src, alt } = Astro.props;
 
 <style>
   .dashboard-capture {
+    --figure-rule: color-mix(in srgb, var(--color-text) 22%, transparent);
     width: min(100%, 68rem);
     margin: clamp(var(--space-xl), 6vw, var(--space-3xl)) auto;
   }
 
+  .dashboard-capture__header {
+    padding-block-end: var(--space-s);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .dashboard-capture__header p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
   .dashboard-capture__frame {
+    margin-block-start: var(--space-m);
     padding: clamp(0.35rem, 1vw, 0.7rem);
     border: var(--border-hairline);
     border-radius: calc(var(--radius) + 2px);
