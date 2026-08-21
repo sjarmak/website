@@ -2393,6 +2393,44 @@
           "why": "Reframes observability itself as agent-native: a trace format designed to be read by an autonomous operator rather than an SRE, with cryptographic provenance and a formal proof that non-occurrence of an event is verifiable from the ledger, not just inferred from absence of a log line."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260818575L",
+      "title": "Beyond LLM-Based Reasoning: Lightweight GNNs for Agent Failure Attribution",
+      "firstAuthor": "Li, Ting-Wei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18575",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818575L",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Attributing a multi-agent failure to a specific agent and error type is cheap if you stop treating it as a reasoning task. AFANet scores agent-level and pair-level (agent plus error type) attribution from a turn graph using a 65K-parameter GCN, matching or beating prompted, fine-tuned, and proprietary LLM baselines on average while cutting inference from 199-367s to 1.16s. The measurement context matters as much as the method: a random baseline averages 4.08 across the six reported metrics, pre-trained LLMs land between 10.12 and 15.85, and proprietary models including o3 and Gemini-2.5-Pro reach only 20.24 and 18.35 -- so every system in this comparison is closer to chance than to solved.",
+          "why": "This theme's rule is to know the failure taxonomy before scaling. AFANet is evidence that the taxonomy is learnable from interaction structure, and evidence about how weak the current state of the art is: the paper notes existing methods are sometimes beaten by random baselines, which is a warning about trusting any single attribution verdict in production. Its robustness argument is the practically useful one -- structural signals hold up under distribution shift on Who&When where post-trained models appear to overfit to dataset-specific failure distributions, and entropy-minimization test-time adaptation improves the OOD case without retraining or new labels."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260818092Y",
+      "title": "Position: Multi-Agent Systems Should Prioritize Concurrency Control",
+      "firstAuthor": "Yang, Xin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18092",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818092Y",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Argues the standard MAS failure taxonomy is cut along the wrong axis: failures filed as coordination or communication breakdowns are classical concurrency anomalies over shared mutable state. Four are named and worked through -- stale read (agent A reads utils.py, reasons for a minute, and writes main.py importing a function B renamed in the interim), lost update (two agents edit different parts of one file from the same base version, the later write silently discards the earlier), stale correction (a plan correction is broadcast but not applied atomically, so a third agent executes the superseded plan), and action-message desynchronization (an agent acts on a message describing world state another agent already invalidated). The tabulated re-attribution: premature submission 37.2% and consensus failure 29.9% on Silo-Bench, inter-agent misalignment 36.9% on MAST, against reported MAS failure rates of 41% to 86.7% overall.",
+          "why": "Directly answers whether fan-out helps, and the collected evidence says only with isolation. CAID scores 63.3% with worktree isolation and merge validation but 55.5% without -- below its own 57.2% single-agent baseline, meaning unisolated fan-out was a net loss. CodeR resolves 22% with a dependency task graph and 10% with it removed; MegaAgent runs 800s with parallel group execution against 4505s without. The paper also scopes its own claim honestly: it applies to systems where agents read or write shared mutable state during long inference windows, and systems with disjoint inputs face lower concurrency risk and are bottlenecked elsewhere."
+        }
+      ]
     }
   ],
   "sections": [

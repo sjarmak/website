@@ -2258,6 +2258,44 @@
           "why": "Production multi-agent systems are graded on whether they can be operated, not just built; this is a concrete answer to the observability and cost line of that question, with a security property (injection resistance, provable non-occurrence) baked into the wire format rather than bolted on after."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260818575L",
+      "title": "Beyond LLM-Based Reasoning: Lightweight GNNs for Agent Failure Attribution",
+      "firstAuthor": "Li, Ting-Wei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18575",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818575L",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Agent failure attribution does not need an LLM. AFANet turns a failed multi-agent trajectory into a turn-level heterogeneous graph -- bidirectional temporal edges between adjacent turns plus same-agent edges linking non-adjacent turns by the same speaker -- with node features concatenating per-conversation TF-IDF/truncated-SVD deviation statistics, positional statistics, and all-MiniLM-L6-v2 sentence embeddings. A 2-layer GCN with 65K trainable parameters reaches 74.16 agent-level micro-F1 and 17.42/16.35 pair-level micro/macro-F1 on AEGIS-Bench, which the authors report as top-1 pair-level, and stays highly ranked on the out-of-distribution Who&When set. Training takes 1.1 hours and inference 1.16s in-domain / 0.37s OOD, against 6 to over 74 hours of training and 199-367s of inference for Qwen2.5-7B/14B SFT and SFT+GRPO variants.",
+          "why": "The frontier theme is the 2026 reliability reckoning, and causal attribution is its first named problem. This is a counter-argument to the assumption that attribution requires a reasoning model: the discriminating signal turns out to be structural -- how a turn deviates from its conversational context and how one agent's contributions cohere over time -- not semantic. Ablations back this: removing the deviation and statistical features drops pair-level micro-F1 from 17.42 to 14.00, a larger hit than removing sentence embeddings, and removing all edges degrades performance across the board."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260818092Y",
+      "title": "Position: Multi-Agent Systems Should Prioritize Concurrency Control",
+      "firstAuthor": "Yang, Xin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18092",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818092Y",
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "Formalizes the shared substrate rather than describing it. A MAS is n agents with private internal states acting on one shared environment E; every action is classified side-effect-free (a read: reading a file, observing game state, retrieving messages) or side-effecting (a write: writing a file, placing an object, broadcasting a message); and state is split by who may mutate it -- agent-local state (context window, reasoning trace) versus environment state (anything another agent can write). That cut puts a message-passing mailbox on the environment side, not the private side, because other agents write to it. Governance is then two ACID-derived properties over that substrate: consistency, a global property requiring concurrent effects to be mutually compatible, and isolation, an agent-centric property requiring that no agent observe another's incomplete operation sequence, with serializability as its strongest form.",
+          "why": "This theme asks what a team writes to and who governs it. The paper supplies the vocabulary that answer has been missing: the database isolation hierarchy from Read Uncommitted through Snapshot Isolation to Strict Serializable, applied to blackboard memories, shared repositories, and message buffers. It also names the reason shared memory is harder for agents than for databases -- LLM inference is side-effect-free but runs for seconds to minutes while tool execution finishes in milliseconds, so the window in which another agent can invalidate a read is orders of magnitude wider than classical concurrency control was designed for."
+        }
+      ]
     }
   ],
   "sections": [
