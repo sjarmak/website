@@ -17,19 +17,17 @@ Both are plausible values that could be cited in an answer to “how is our soft
 
 “Closed” is a producer claim: a worker, controller, or cleanup path moved a record to `closed`. “Acknowledged” means an outcome traveled through the coordinator-agent’s ownership and reached an `acknowledged` state.
 
-I wanted to see how an agent would reconcile this kind of ambiguity when asking questions about my system. I launched an [Amp](https://ampcode.com/news/agents-in-orbs) agent in a fresh [Orb](https://ampcode.com/what-are-orbs) and gave it the whole job: turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
+I wanted to see how an agent would reconcile this kind of ambiguity while turning my system into something we could analyze. I launched an [Amp](https://ampcode.com/news/agents-in-orbs) agent in a fresh [Orb](https://ampcode.com/what-are-orbs) and gave it the whole job: turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
 
-Agents are very capable of writing correct SQL, but I wanted to see if the SQL would correctly decide which of those two numbers actually meant successful work.
+Agents are very capable of writing correct SQL. The harder problem is deciding which definitions that SQL should encode. As agents take on more of the analytics implementation loop, I think semantic approval becomes one of the places where human review matters most.
 
-I don’t want my agent deciding that for me in unpredictable ways.
-
-I'll gladly let my agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But, when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for my review rather than collapsed into a metric.
+I'll gladly let my agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for my review rather than collapsed into a metric.
 
 ## The factory had a model. Analytics needed another.
 
 My source system runs on [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I help maintain. I took an August 20 snapshot containing 17,110 work items, 13,035 scheduled-order runs, and 14,544 agent runs.
 
-The data tables I used for this little experiment weren't designed for business intelligence analytics, they exist because the factory needs them to coordinate work. Claims record ownership, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
+The data tables I used for this little experiment weren't designed for business intelligence analytics. They exist because the factory needs them to coordinate work. Claims record ownership, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
 
 That gives anyone plenty to analyze, but the field names don't necessarily mean what an analytics engineer might assume.
 
@@ -77,11 +75,11 @@ But the row was not bad data. The roughly four-hour inversion matched the mixed 
 
 I sent the correction back to the agent, and it updated the model and the rendered dashboard.
 
-This is the boundary I was trying to preserve. The agent had enough information to make a reasonable choice, implement it, test it, and explain what it had done. I still needed to decide whether that choice matched what I was willing to claim about the data.
+This is the boundary I wanted to preserve. The agent had enough information to make a reasonable choice, implement it, test it, and explain what it had done. I still needed to decide whether that choice matched what I was willing to claim about the data.
 
 ## From agent inference to shared definition
 
-Approved definitions also need to survive beyond one agent run.
+Approved definitions also need to survive beyond one agent run. This is where I think the semantic layer becomes more important in an agent-authored analytics stack, not less. Agents can generate implementations cheaply; the scarce thing becomes an agreed definition of what the organization means by `successful`, `active`, `cost`, or whatever else people are going to make decisions from.
 
 Omni’s [dbt integration](https://docs.omni.co/integrations/dbt) can carry dbt models and metadata into its semantic layer. The resulting dimensions, measures, joins, descriptions, and permissions can then serve dashboards, human exploration, [Omni’s AI](https://docs.omni.co/ai), and external agents through [Omni MCP](https://docs.omni.co/ai/mcp).
 
@@ -94,5 +92,7 @@ If I approve it and merge it, the interpretation is no longer something one agen
 <ControlPlaneFigure kind="semantic-substrate" />
 
 The agent can trace the source system, build and test the transformations, propose the semantic definitions, assemble the dashboard, inspect it in the browser, and revise it.
+
+As more of that work becomes agent-authored, I expect the semantic model to become one of the main interfaces between automation and human judgment.
 
 What I want to sign off on is the meaning.
