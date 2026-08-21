@@ -24,7 +24,7 @@ const kicker = isFieldNotes
     : "Essay";
 ---
 
-<BaseLayout title={data.title} description={data.description} type="article">
+<BaseLayout title={data.title} description={data.description} noindex={data.unlisted} type="article">
   <article class="container container-narrow post">
     <header class="post__head stack stack-s">
       <p class="kicker">{kicker}</p>

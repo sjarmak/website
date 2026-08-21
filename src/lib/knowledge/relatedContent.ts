@@ -78,12 +78,12 @@ function requireTitle(fm: Record<string, unknown>, context: string): string {
   return fm.title;
 }
 
-/** On-site posts (essays). Drafts are excluded — they have no built page. */
+/** On-site posts (essays). Drafts and direct-link-only posts are excluded. */
 export function loadPostDocs(dir: string = POSTS_DIR, resolve?: FacetResolver): RelatedDoc[] {
   const docs: RelatedDoc[] = [];
   for (const slug of contentSlugs(dir)) {
     const fm = readFrontmatter(dir, slug);
-    if (fm.draft === true) continue;
+    if (fm.draft === true || fm.unlisted === true) continue;
     docs.push({
       kind: "essay",
       id: slug,
