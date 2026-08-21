@@ -17,7 +17,7 @@ These are numbers from the same snapshot in time, and both are plausible values 
 
 The “work items closed” value is a producer claim: a worker, controller, or cleanup path had moved a record to `closed`. The second goes a step further and describes an outcome that traveled through a coordinator-agent’s ownership and reached an `acknowledged` state. They don’t describe the same fact.
 
-I decided to test how an agent would reconcile semantic ambiguity like this. I launched an Amp agent in a new Orb and had it turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
+I decided to test how an agent would reconcile semantic ambiguity like this. I launched an [Amp](https://ampcode.com/) agent in a new [Orb](https://ampcode.com/what-are-orbs) and had it turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
 
 Agents are totally capable of writing correct SQL, but I wanted to see what happened when the agent also had to decide which of those two numbers meant **successful work**.
 
@@ -43,7 +43,7 @@ So the hard part of agent-authored analytics starts before the agent ever opens 
 
 ## I gave the agent the whole job
 
-I used [Amp Orbs](https://ampcode.com/news/agents-in-orbs) because I wanted to see how much of this workflow a cloud agent could actually own. I launched an Amp agent in a fresh Orb with a checkout containing the factory snapshot, dbt project, relevant source code, and some basic guidance about how I wanted the final dashboard to look.
+I used [Amp Orbs](https://ampcode.com/news/agents-in-orbs) because I wanted to see how much of this workflow a cloud agent could actually own. I launched an Amp agent in a fresh Orb with a checkout containing the factory snapshot, dbt project, relevant source code, and a lightweight style guide for the final dashboard: KPI hierarchy, layout, labels, and visual treatment.
 
 Its job was not just to write a few transformations. It had to understand the source system well enough to model it, turn that model into something usable in Omni, and then use Omni itself to build and inspect the resulting dashboard.
 
@@ -109,7 +109,7 @@ The same applies to permissions. An external agent using MCP should not get a di
 
 For this experiment I kept the dbt project, Omni model files, evidence, and review artifacts together in one repository. Omni’s [dbt setup guidance](https://docs.omni.co/integrations/dbt/setup) recommends separating the dbt and Omni repositories in production, so I would not assume this repo layout is the one I would keep long term.
 
-In this experiment, I left the Omni branch unmerged. The repository also could not prove that the committed export still matched the live factory at review time. Those are both part of the result, not cleanup for later.
+In this experiment, I left the Omni branch unmerged. The repository also could not prove that the committed export still matched the live factory at review time. Both are important limits on what this experiment actually demonstrated.
 
 ## The review packet I want
 
