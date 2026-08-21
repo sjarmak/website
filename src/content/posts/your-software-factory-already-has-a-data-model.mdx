@@ -51,7 +51,7 @@ The agent recovered a defensible semantic interpretation from implementation evi
 
 For this experiment I kept the dbt project, exported Omni model files, dashboard specification, decision ledger, and evidence in one review repository. The Orb established grains, normalized timestamps, joined outcomes on `work_id`, and carried pricing coverage through dbt. It exposed those facts in Omni with descriptions and topic instructions—including the prohibition against calling `status = 'closed'` success.
 
-Then it used Omni. Through the browser, the Orb opened an isolated model branch, loaded the semantic files, built the dashboard tiles, arranged three sections, and checked the result against the style guide. The first screen now puts “claimed closed,” “coordinator acknowledged,” and the 12,109-record definition gap side by side, with their definitions visible. A provenance tile shows the snapshot instant, row count, and 4,379 rows carrying clock uncertainty. Categorical comparisons use zero-based bars, and aggregates drill to `work_id` rather than ending at a reassuring number.
+Then it used Omni. Through the browser, the Orb opened an isolated model branch, loaded the semantic files, built the dashboard tiles, arranged three sections, and checked the result against the style guide. The first screen now puts “claimed closed,” “coordinator acknowledged,” and the 12,109-record definition gap in large type, then makes the roughly 105× disparity visible on a zero-based bar. Amber marks the producer claim; blue marks coordinator evidence; the labels repeat that meaning without relying on color. A provenance tile shows the snapshot instant, row count, and 4,379 rows carrying clock uncertainty. Every aggregate drills to `work_id` rather than ending at a reassuring number.
 
 The browser pass catches failures that compilation cannot. A measure can point at the wrong field. A correct definition can disappear below the fold. A tile can query the wrong grain. A cloud agent that stops at the model files has not authored the analytical experience.
 
@@ -61,8 +61,8 @@ I required three-way parity: direct SQL against the dbt-built relations in Mothe
   src={omniControlRoom}
   alt="Omni control room showing 12,225 claimed closures, 116 coordinator acknowledgements, their 12,109-record gap, and snapshot provenance."
 >
-  The Orb built and styled this in Omni's browser UI. The gap and provenance
-  stay on the first screen because a number without either is easy to overtrust.
+  The Orb built and styled this in Omni's browser UI. Large KPIs establish the
+  hierarchy; the zero-based comparison, gap, and provenance keep it honest.
 </DashboardCapture>
 
 ## What the reviewer caught
