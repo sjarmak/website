@@ -142,14 +142,16 @@ const svgDescId = `${titleId}-svg-desc`;
 
         <text class="svg-eyebrow" x="36" y="48">AUTHORITATIVE INPUTS</text>
         <rect class="svg-box" x="36" y="76" width="252" height="94" rx="9" />
-        <text class="svg-label" x="60" y="110">dbt relations</text>
-        <text class="svg-small" x="60" y="138">grain · joins · tested columns</text>
+        <text class="svg-label" x="60" y="104">dbt relations</text>
+        <text class="svg-small" x="60" y="130">grain · joins</text>
+        <text class="svg-small" x="60" y="151">tested columns</text>
 
         <rect class="svg-box svg-box--durable" x="36" y="214" width="252" height="118" rx="9" />
         <rect class="svg-durable-inner" x="42" y="220" width="240" height="106" rx="6" />
-        <text class="svg-label" x="60" y="252">Metric ledger</text>
-        <text class="svg-small" x="60" y="280">approved · unresolved · refused</text>
-        <text class="svg-small" x="60" y="304">human-owned definitions</text>
+        <text class="svg-label" x="60" y="250">Metric ledger</text>
+        <text class="svg-small" x="60" y="276">approved · unresolved</text>
+        <text class="svg-small" x="60" y="297">refused</text>
+        <text class="svg-small" x="60" y="318">human-owned definitions</text>
 
         <path class="svg-link svg-link--accent" d="M288 123 H408 V232" />
         <path class="svg-link svg-link--accent" d="M288 273 H408" />
@@ -160,7 +162,8 @@ const svgDescId = `${titleId}-svg-desc`;
         <text class="svg-small svg-small--inverse" x="438" y="258">dimensions · measures · joins</text>
         <text class="svg-small svg-small--inverse" x="438" y="286">descriptions · permissions</text>
         <path class="svg-rule" d="M438 316 H682" />
-        <text class="svg-small svg-small--inverse" x="438" y="346">branch review · validation · evals</text>
+        <text class="svg-small svg-small--inverse" x="438" y="344">branch review · validation</text>
+        <text class="svg-small svg-small--inverse" x="438" y="368">evals</text>
         <g class="svg-lock svg-lock--inverse" transform="translate(666 220)">
           <path d="M-6 -4 v-5 a6 6 0 0 1 12 0 v5" />
           <rect x="-10" y="-4" width="20" height="16" rx="2" />
@@ -202,9 +205,8 @@ const svgDescId = `${titleId}-svg-desc`;
       </ul>
 
       <figcaption>
-        The semantic layer becomes control infrastructure when every human and
-        machine reader reaches the same definitions through the same permission
-        boundary.
+        One reviewed definition reaches dashboards, human exploration, Omni's
+        agents, and external agents over MCP.
       </figcaption>
     </figure>
   )

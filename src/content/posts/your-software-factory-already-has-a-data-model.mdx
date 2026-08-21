@@ -1,162 +1,90 @@
 ---
 title: "Your software factory already has a data model"
 date: 2026-08-21
-description: "My factory said 12,225 jobs were closed. Its coordinator could prove 116 outcomes. I sent Amp Orbs through dbt, MotherDuck, and Omni to decide what a dashboard should be allowed to call success."
-subtitle: "My factory said 12,225 jobs were closed. Its coordinator could prove 116 outcomes. I sent Amp Orbs through dbt, MotherDuck, and Omni to decide what a dashboard should be allowed to call success."
+description: "A cloud agent built the dbt models, Omni semantics, and dashboard. The interesting part was deciding which definition it was allowed to publish."
+subtitle: "The agent can build the model. You still decide what to trust."
 unlisted: true
 tags: [agents, analytics, dbt, omni, semantic-layer, observability]
 ---
 
-import Illustration from "../../components/software-factory-data-model/Illustration.astro";
 import ControlPlaneFigure from "../../components/software-factory-data-model/ControlPlaneFigure.astro";
 import DashboardCapture from "../../components/software-factory-data-model/DashboardCapture.astro";
-import closedVersusAcknowledged from "../../components/software-factory-data-model/img/closed-versus-acknowledged.png";
 import omniControlRoom from "../../components/software-factory-data-model/img/omni-control-room.png";
-import semanticAuthorizationKey from "../../components/software-factory-data-model/img/semantic-authorization-key.png";
 
 My software factory had closed 12,225 work items. Its coordinator had acknowledged 116 outcomes.
 
-Both statements came from the same snapshot. Both queries were correct.
+Both statements came from the same committed snapshot. Both queries were correct.
 
-The first number described a producer claim. A worker, controller, or cleanup path had moved a work item to `closed`. The second described an effect that had traveled through a coordinator-owned outcome envelope and reached `acknowledged`. Those events can coincide. The data does not make them synonyms.
+The first number was a producer claim: a worker, controller, or cleanup path moved a record to `closed`. The second was an effect that traveled through a coordinator-owned outcome envelope and reached `acknowledged`. Those events can coincide. The data does not make them synonyms.
 
-I had handed a cloud agent an apparently straightforward job: model the factory's work history in dbt, connect it to Omni, build a control-room dashboard in the browser, and follow a style guide. The job became interesting as soon as the agent had to choose which of those numbers meant success.
+I gave an Amp Orb an apparently straightforward job: model the factory's work history in dbt, connect it to Omni, build a control-room dashboard in the browser, and follow a style guide. The job became interesting as soon as the agent had to choose which number meant success.
 
-I want a human to authorize that choice.
-
-I am happy to let an agent write SQL, tests, semantic-model files, documentation, and dashboard content. I want it to drive the application too. A browser is another execution surface, and skipping it leaves a large part of an analytical system untested. I do not want the agent quietly deciding what the business means so the dashboard has a tidy headline.
+I want a human to authorize that choice. I am happy to let the agent write the SQL, tests, semantic model, documentation, and dashboard—and drive the application that renders it. I do not want it quietly deciding what the business means so the dashboard gets a tidy headline.
 
 **Agents can author the analytical system. They should not become the authority on what the business means.**
 
-<Illustration
-  src={closedVersusAcknowledged}
-  alt="A blob worker stamps an enormous stack of closure slips while a second worker at a small service window holds a few signed receipts; a reviewer compares them in an open ledger."
-  loading="eager"
->
-  The stack on the left is a producer claim. The receipts on the right passed
-  through the coordinator. A useful model keeps both.
-</Illustration>
-
 ## The factory had already modeled itself
 
-My source system is [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I run and help maintain. Its work ledger records durable tasks, attempts, leases, events, scheduled orders, agent runs, usage facts, and outcome envelopes. The export for this experiment contains 17,110 operational work items, 13,035 order runs, and 14,544 agent runs.
+My source system is [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I run and help maintain. The August 20 snapshot for this experiment contains 17,110 work items, 13,035 scheduled-order runs, and 14,544 agent runs. Its tables were built to run the factory, long before I planned to point a BI tool at them. Claims coordinate workers. Events preserve transitions. Outcome envelopes record whether produced work reached an independent coordinator. Usage journals account for model calls.
 
-Those tables were built to run the factory, long before I planned a business-intelligence project. Claims let workers take work. Events preserve history. Leases support recovery. The outcome envelope records whether a produced effect reached the coordinator. Usage journals account for model calls. The operational control plane had already encoded a series of data-model decisions. Analytics forced me to name them.
+That is a latent data model, complete with traps.
 
-The database under an agent orchestrator is a latent semantic model. Its grains and transitions answer real operating questions long before anyone opens a BI tool. Which work has never been claimed? Which items were retried? Which scheduled jobs failed? Which costs are complete enough to sum? Which terminal mark came from the worker, and which came from an independent authority?
+Every scheduled order in the snapshot has `status = 'closed'`, including 2,837 whose dispatcher result is `failed` and eight that are incomplete. Here, `status` describes the record's lifecycle. Dispatcher labels describe what the job did. The pricing data supports $373.20 of fully priced spend and a separate $68.60 lower bound from partially priced runs, but no trustworthy join from a run to a work item. “Cost per successful task” would require the agent to invent one. Timestamps are mixed between UTC and Eastern wall clock according to which client wrote the row, an encoding the value itself cannot recover.
 
-The field names are a poor substitute for those answers. In this snapshot, every scheduled order has `status = 'closed'`, including 2,837 whose dispatcher result is `failed` and eight that are `incomplete`. The result lives in dispatcher-written labels. The status column describes the order record's lifecycle. A metric built from the friendliest-looking column would report perfect order health.
-
-Spend has a different trap. The export records $441.80 across 14,544 runs, but only 3,618 of 64,978 model requests have a price. The sum is a lower bound. Runs also carry no work-item, attempt, or order-run key. Fleet spend is supported. Cost per successful work item would require an invented join.
-
-Those refusals keep a plausible query from becoming a false metric.
+A field name can suggest an interpretation. The implementation supplies the evidence. Authorization comes from a human decision.
 
 ## I ran the job twice
 
-I used [Amp Orbs](https://ampcode.com/news/agents-in-orbs) because each Orb starts in a remote machine with a fresh checkout, can work unattended, and has a browser for the application leg. Amp reads repository guidance from `AGENTS.md`, so I could put the operating contract beside the data and code. That kept the prompt short and the contract durable. Amp's [manual](https://ampcode.com/manual) recommends naming the checks an Orb should run, which is exactly what this repository does in one command: `./scripts/orb_check.sh`.
+I used [Amp Orbs](https://ampcode.com/news/agents-in-orbs) because an Orb can take a fresh checkout, work unattended, and use a browser for the application leg. The repository held the checksummed Parquet snapshot, dbt scaffolding, relevant source code, an authorization ledger, and a dashboard style guide. One command checked the export, built dbt, ran the tests, and executed every dashboard query.
 
-The repository contains a committed Parquet export, checksums for every file, a dbt project, the source code that writes outcome fields, a metric-decision ledger, and the dashboard style guide. It deliberately cannot reach the live factory. The first stage checks the export's digests; every later stage reads those checked bytes. Three live-store reconciliations must remain skipped, and the final report has to say so.
+Then I ran the same assignment two ways.
 
-I cut two arms from the same export.
+The first Orb received the operational interpretation: coordinator acknowledgement was the authorized terminal result, while the eligible denominator and human-intervention rate remained unresolved. The second received the data and the source that implements outcome delivery, but not that answer. It had to recover the distinction from behavior: an outcome starts pending, moves through delivery under a fence, and becomes authoritative when the coordinator acknowledges it.
 
-The first Orb received the operational interpretation. It could read how each subsystem writes its fields and a decision ledger that said coordinator acknowledgement is the authoritative terminal result. The ledger left `reliability`, its eligible denominator, and human-intervention rate unresolved. This arm tested whether an agent would obey a definition boundary even when a dashboard wanted a headline.
+The first browser attempt stopped at Google SSO, which proved nothing about the model. I supplied a serialized Omni session through Amp's secret store and reran it.
 
-The second Orb received the raw data and the source files that implement the outcome envelope, with the answer removed from the operating notes. This arm tested whether the agent could recover the distinction from behavior. An outcome starts pending, moves through delivery under a fence, and becomes authoritative when the coordinator records an acknowledgement. The agent could propose an interpretation in an unresolved ledger entry. It could not change an entry to `approved`.
+The discovery run arrived at the same boundary. It defined `is_successful` from `coordinator_state = 'acknowledged'`, kept closure and acknowledgement as separate facts, treated partially priced spend as a lower bound, and refused to interpret an absent `needs-human` label as proof that no person intervened. It could add evidence to an unresolved ledger entry. It could not mark one `approved`.
 
-The first attempt at the second arm stopped at Omni login. That was an infrastructure result, exit code 2 in this repository's vocabulary. It said nothing about the models. I provisioned a serialized browser storage state as an Orb secret, validated that it reached Omni without a login bounce, and reran the arm from its clean branch. The credential was infrastructure I had to engineer before the experiment could answer anything.
-
-The handoff was deliberately narrow. I captured the storage state on the operator's machine, put it in Amp's secret store, materialized it only inside the Orb, checked cookie origin and expiration, and opened an authenticated Omni route before starting the browser work. I then ran a real SQL query through Omni to prove the session could do the job. The temporary state stayed out of Git and was removed at the end of the run.
-
-The static bootstrap authenticated the first browser process. I had started that process with a named session but without Agent Browser's `--restore` persistence. Omni refreshed the session while the Orb worked. When the browser daemon died, the refreshed cookie died with it, and replaying the original storage snapshot landed at login. The corrected rail starts a stable restore session from the short-lived bootstrap, saves refreshed state while the browser is alive, and validates an authenticated route again after a restart. A service account or short-lived workload identity would be better in production. Authentication still needs a named stage, renewable state, restart evidence, and a distinct could-not-run result.
-
-The discovery arm found the same fault lines from source and data. It defined `is_successful` from `coordinator_state = 'acknowledged'`. It kept producer closure, outcome creation, and acknowledgement as separate facts. It classified partially priced spend as a lower bound and declined to allocate it to work. It modeled the `needs-human` label as an observable flag while refusing to turn the flag's absence into proof that no human intervened. It did not approve a metric.
-
-The agent inferred a defensible semantic boundary from implementation evidence, then stopped before converting that inference into business authority.
+The agent recovered a defensible semantic interpretation from implementation evidence, then stopped before turning inference into authority.
 
 ## The browser belongs in the test
 
-The Orb authored dbt and Omni files in the same branch. dbt established grains, normalized timestamps, joined outcomes on `work_id`, and carried pricing coverage. The Omni files exposed dimensions and measures with their caveats, including a topic instruction that forbids treating `status = 'closed'` as success. The browser then loaded those files in Omni's model IDE, built the dashboard, arranged the sections, applied the style guide, and captured the result.
+For this experiment I kept the dbt project, exported Omni model files, dashboard specification, decision ledger, and evidence in one review repository. The Orb established grains, normalized timestamps, joined outcomes on `work_id`, and carried pricing coverage through dbt. It exposed those facts in Omni with descriptions and topic instructions—including the prohibition against calling `status = 'closed'` success.
 
-Omni gives this workflow an explicit boundary with dbt. Its [dbt integration](https://docs.omni.co/integrations/dbt) reads the manifest, brings in descriptions, tests, and tags, and can switch between development and production schemas during branch review and content validation. Published dashboard [exposures can flow back into dbt](https://docs.omni.co/integrations/dbt/exposures), so the dependency graph can include the content people use.
+Then it used Omni. Through the browser, the Orb opened an isolated model branch, loaded the semantic files, built the dashboard tiles, arranged three sections, and checked the result against the style guide. The first screen now puts “claimed closed,” “coordinator acknowledged,” and the 12,109-record definition gap side by side, with their definitions visible. A provenance tile shows the snapshot instant, row count, and 4,379 rows carrying clock uncertainty. Categorical comparisons use zero-based bars, and aggregates drill to `work_id` rather than ending at a reassuring number.
 
-The code path still leaves room for UI-specific failure. A measure can compile while pointing at the wrong field picker. A dashboard tile can use an unintended grain. A definition can disappear below the fold. A theme can make a caveat illegible. Computer use lets the same cloud agent traverse that last path. The browser work then produces evidence a reviewer can inspect.
+The browser pass catches failures that compilation cannot. A measure can point at the wrong field. A correct definition can disappear below the fold. A tile can query the wrong grain. A cloud agent that stops at the model files has not authored the analytical experience.
 
-The style pass used the repository guide as an input artifact: trust candidates above the fold, visible definitions and denominators, zero-based categorical bars, drill paths to stable identifiers, and provenance close to the claims. Omni supports [reusable dashboard themes](https://docs.omni.co/visualize-present/dashboards/theming) for shared CSS values, fonts, and palettes. Reusable themes make the style guide inspectable and repeatable.
-
-I required three parity legs:
-
-1. A direct query against the dbt-built relations in MotherDuck.
-2. Equivalent SQL through Omni's SQL runner.
-3. The same counts rebuilt from fields in an Omni topic.
-
-The first leg verifies the transformation. The second catches connection and schema mistakes. The third catches semantic-model mistakes. The dashboard screenshot verifies the final composition and visible definitions. Each leg answers a narrower question than “the dashboard works,” which makes a mismatch diagnosable.
-
-The repaired run finished all seven tiles on an isolated Omni branch and returned the same nine reference values through MotherDuck, Omni SQL, and governed topics. dbt passed 13 models and eight tests. Each assertion had its own red mutation and green restoration. The dashboard retained all 17,110 work rows, surfaced 4,379 clock-uncertain items, and published no duration metric.
+I required three-way parity: direct SQL against the dbt-built relations in MotherDuck, equivalent SQL through Omni's SQL runner, and the same values assembled from fields in an Omni topic. The first path checks the transformation, the second the connection and schema, and the third the semantic model. [The final run](https://github.com/sjarmak/gas-city-observability/blob/orb/20260821-014623-control-room/VERIFICATION.md) returned the same nine reference values through all three. It built 13 dbt models, passed eight contract tests after proving each one red, and completed all seven dashboard tiles.
 
 <DashboardCapture
   src={omniControlRoom}
-  alt="Omni dashboard trust section showing 12,225 producer-claimed closed items beside 116 coordinator-acknowledged outcomes, plus provenance for 17,110 work items and 4,379 clock-uncertain items."
+  alt="Omni control room showing 12,225 claimed closures, 116 coordinator acknowledgements, their 12,109-record gap, and snapshot provenance."
 >
-  The first screen keeps the producer claim, coordinator acknowledgement,
-  full work population, and clock uncertainty in one reviewable frame.
+  The Orb built and styled this in Omni's browser UI. The gap and provenance
+  stay on the first screen because a number without either is easy to overtrust.
 </DashboardCapture>
-
-<ControlPlaneFigure kind="authoring-loop" />
-
-The monorepo matters here. The dbt model, Omni topic, decision ledger, dashboard specification, red and green test output, parity table, and screenshot can travel in one review. That review preserves the correspondence between each UI edit and its SQL revision.
 
 ## What the reviewer caught
 
-The disclosed arm made a modeling decision I would reject. It removed one work item, `gc:dr-tc7052`, because its `closed_at` and `started_at` appeared earlier than `created_at`. The exclusion was documented, and the full build passed.
+The disclosed run removed a work item because its close and start times appeared earlier than its creation time. The build was green and the exclusion was documented. It was also wrong. A roughly four-hour inversion is evidence of the mixed clock encoding, not a corrupt row. The row should remain, carrying `clock_uncertainty_seconds = 14400`; the dashboard should show the uncertain population instead of silently improving a duration metric.
 
-The repository's incident record explains that the event log mixes UTC and Eastern wall-clock timestamps by writer. A roughly four-hour inversion is evidence of that encoding split. Rows whose encoding cannot be settled must carry `clock_uncertainty_seconds = 14400` and remain in the metric. The discovery arm kept the row and showed clock uncertainty alongside the full work population.
+The discovery run bundled eight assertions into one SQL test, then proved the file red by breaking only the acknowledgement branch. The red run demonstrated only that assertion. I sent it back. The Orb split them into named tests, made a minimal breaking mutation for each, captured the red output, reverted it, and captured eight green runs before repeating the full build.
 
-The green build established that the disclosed model was internally consistent with its exclusion. Authorization remained an open review question. Resolving it required reading the operational contract and challenging a plausible choice.
-
-The discovery arm gave me a second reviewer finding. It wrote one SQL test containing eight assertions joined with `union all`, then proved the file red by breaking the acknowledgement assertion. The repository requires every new assertion to be observed failing before it is trusted. One red filename proved only the acknowledgement branch. A mechanical harvester that counted test files would accept the evidence; a reviewer reading the mutation would see seven untested assertions.
-
-I sent the findings back to the same Orb. It split the composite into eight named tests, made a minimal mutation for each contract, captured eight red runs, reverted each mutation, and captured eight green runs before repeating the full build. I also rejected its first browser pass because it had loaded the discovery files into an Omni branch left by the disclosed arm. The Orb exited that draft, created a new branch from production, applied only the discovery semantic files, and repeated the dashboard and parity work. Human review set a stricter acceptance standard, and the agent carried the correction through every execution surface.
-
-The agent produced legible code, explicit assumptions, and a review packet. The human found three consequential issues without having to redo the implementation. I judge this workflow by whether mistakes arrive in a form a reviewer can detect and send back.
+Neither correction required me to redo the implementation. The agent had already assembled the code and the evidence. My job was to notice where “computes” had been allowed to masquerade as “means.”
 
 ## Omni becomes the control substrate
 
-Agents turn a semantic catalog into control infrastructure because they query it, edit it, and build against it.
+Omni's useful differentiation here is a shared semantic layer. Its [dbt integration](https://docs.omni.co/integrations/dbt) can bring models, descriptions, tests, and tags into that layer. [Branch Mode](https://docs.omni.co/content/develop/branch-mode) keeps model and content changes isolated until review. The same governed dimensions, measures, joins, descriptions, and permissions then serve a person exploring a topic, a dashboard, Omni's own [AI features](https://docs.omni.co/ai), and an external agent using [MCP](https://docs.omni.co/ai/mcp) within the user's access.
 
-Omni's [AI features](https://docs.omni.co/ai) are grounded in the semantic model and honor the same permissions as human users. The [MCP server](https://docs.omni.co/ai/mcp) lets external agents query a scoped model or topic while user-level permissions continue through the semantic layer. Omni's [Modeling Agent](https://docs.omni.co/ai/model-assistant) offers sandbox and review modes where changes remain proposed until someone accepts them. [Branch Mode](https://docs.omni.co/content/develop/branch-mode) isolates model and content changes, supports pull-request review, and publishes them when the branch is approved and merged.
+That turns the semantic layer from a catalog into a control substrate. The model governs only the readers that use it. Bringing every human and machine reader through the reviewed model lets one corrected measure or tightened permission reach all of them.
 
-Omni extends that review system beyond modeling. [Agent Skills](https://omni.co/blog/introducing-omnis-agent-skills) package repeatable analytical instructions on top of the governed model. Omni's [AI eval workflow](https://omni.co/blog/run-your-agent-like-a-data-product-with-ai-evals) runs a prompt set with expected results before an agent change reaches users. Definitions, instructions, permissions, and evaluations can therefore move through one reviewable surface.
-
-Omni's differentiation in agentic analytics is that the same definitions can govern a dashboard reader, an analyst in a workbook, Omni's native agent, and an external coding agent over MCP. A permissions rule or corrected measure moves once and reaches every reader. Review branches and content validation give semantic changes a software-development lifecycle.
-
-Omni describes a useful division between its layer and dbt's [Semantic Layer integration](https://docs.omni.co/integrations/dbt/semantic-layer). Stable, widely shared metrics can live in dbt, while Omni remains a faster workspace for iteration and AI context. I would treat that as a promotion path. A proposed measure can begin in an Omni branch beside the dashboard that needs it. Tests, usage, and review can harden it. Definitions that become universal can move into dbt. The decision ledger records who authorized the move.
+This is also where the authority boundary can become operational instead of aspirational. The agent may propose a measure on an isolated branch, build content against it, run content validation, and return the result for review. Publication is a separate state transition. In my experiment the branch remains unmerged, and the repository's offline checks did not reconcile the committed export against the live factory. A polished screenshot does not erase either limit.
 
 <ControlPlaneFigure kind="semantic-substrate" />
 
-The model has to reach every analytical reader. A metric definition has limited value if a dashboard obeys it while an agent bypasses it with warehouse SQL. In this setup, topics scope what agents can ask, permissions scope what they can see, and the reviewed semantic model supplies the vocabulary. Raw SQL serves verification and model development; business definitions stay on the reviewed semantic path.
+## The review packet I want
 
-<Illustration
-  src={semanticAuthorizationKey}
-  alt="A blob worker on scaffolding has assembled a large analytics machine whose final pipe is locked; a reviewer's hand holds the small key that opens the last gate to a bank of gauges."
->
-  Publication authority sits in one small gate with one definition, one
-  reviewer, and one explicit state change.
-</Illustration>
+The reusable workflow is pleasantly boring: pin the input and its provenance; keep consequential definitions in a human-owned ledger; prove new tests red before trusting their green; verify warehouse SQL, Omni SQL, and the governed topic independently; have the agent build and inspect the dashboard in the browser; and return the model diff, source trace, parity table, screenshots, unresolved definitions, and checks that could not run.
 
-## A review contract you can reuse
-
-The useful artifact from this experiment is the review packet. I would give any cloud agent working on analytics five concrete obligations.
-
-First, make the evidence portable. Give the agent a pinned snapshot or a reproducible read-only source, commit its digests, and make the first check verify provenance. A transformation suite cannot tell you whether its input was copied from the right system. Keep live reconciliation as a separate named check, and report when it could not run.
-
-Second, keep definitions in an authorization ledger. Each consequential metric needs a status such as `approved`, `unresolved`, or `refused`, plus the source evidence and competing interpretations. Let the agent add evidence and propose unresolved definitions. Reserve the approval transition for a named human. Enforce that rule in the repository and in the semantic-model publication path.
-
-Third, require tests to demonstrate their own failure. For every new assertion, record the mutation, the red output, the reversion, and the green output. This catches inert tests and prevents a large composite test from borrowing credibility from one working branch.
-
-Fourth, verify every execution surface. Query the warehouse relation, the BI tool's SQL path, and the semantic topic. Rebuild the dashboard through the browser, then check visible titles, denominators, units, caveats, filters, and screenshot cleanliness against a style guide. A dashboard is executable analytical content.
-
-Fifth, ask for a review packet with limits. I want the pull request to name the model grain, source traces, decision-ledger changes, red and green evidence, parity results, dashboard captures, and every claim the agent could not verify. “Could not run” deserves its own state; it should never collapse into pass or fail.
-
-The data engineer's job shifts toward sampling and verification because the agent has already assembled the evidence. The human can spend time on the small number of decisions with consequences: whether acknowledgement is the definition we will publish, which work belongs in the denominator, whether a sparse flag can support a rate, and whether an uncertain clock permits a latency claim.
-
-The pull request I want is pleasantly boring: model diff, source trace, a red and green record for every assertion, an A/B/C parity table, a clean dashboard capture, unresolved definitions, and the live checks that did not run. The agent can prepare that packet and revise it after review. I publish only after signing the relevant line in the metric ledger.
+That is substantially more than “AI drafts some SQL while a data engineer watches.” The Orb can assemble, implement, test, present, and revise the analytical system. I publish after signing the definition in the metric ledger.
