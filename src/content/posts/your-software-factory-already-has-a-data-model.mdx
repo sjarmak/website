@@ -13,63 +13,51 @@ import omniControlRoom from "../../components/software-factory-data-model/img/om
 
 My software factory had closed 12,225 work items, and my agent coordinating the flow of work had acknowledged 116 of their outcomes.
 
-These are numbers from the same snapshot in time, and both are plausible values that could be returned for a question like, “how is our software factory doing?”
+Both are plausible answers to “how is our software factory doing?” They are also different facts.
 
-The “work items closed” value is a producer claim: a worker, controller, or cleanup path had moved a record to `closed`. The second goes a step further and describes an outcome that traveled through a coordinator-agent’s ownership and reached an `acknowledged` state. They don’t describe the same fact.
+“Closed” is a producer claim: a worker, controller, or cleanup path moved a record to `closed`. “Acknowledged” means an outcome traveled through the coordinator-agent’s ownership and reached an `acknowledged` state.
 
-I decided to test how an agent would reconcile semantic ambiguity like this. I launched an [Amp](https://ampcode.com/) agent in a new [Orb](https://ampcode.com/what-are-orbs) and had it turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
+I wanted to see what a cloud agent would do with distinctions like that. I launched an [Amp](https://ampcode.com/news/agents-in-orbs) agent in a fresh [Orb](https://ampcode.com/what-are-orbs) and gave it the whole job: turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
 
-Agents are totally capable of writing correct SQL, but I wanted to see what happened when the agent also had to decide which of those two numbers meant **successful work**.
+Agents are totally capable of writing correct SQL, but I wanted to see if the SQL would correctly decide which of those two numbers meant successful work.
 
 I don’t really want my agent deciding that for me in unpredictable ways.
 
-I am happy to let the agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for review rather than collapsed into a metric.
+I am happy to let the agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But, when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for review rather than collapsed into a metric.
 
 ## The factory had already modeled itself
 
-My source system runs using [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I help maintain. For this experiment, I took an August 20 snapshot containing 17,110 work items, 13,035 scheduled-order runs, and 14,544 agent runs.
+My source system runs on [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I help maintain. I took an August 20 snapshot containing 17,110 work items, 13,035 scheduled-order runs, and 14,544 agent runs.
 
-None of the data tables from my factory’s operational history were designed for business intelligence. They exist because the factory needs them to coordinate work: claims tell workers what they own, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
+The data tables I used in my experiment weren't designed for business intelligence analytics, they exist because the factory needs them to coordinate work. Claims record ownership, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
 
-There was plenty of structure there to build an analytical model, and plenty of ways to get the meaning wrong.
+That gives you plenty to analyze, but the field names do not necessarily mean what an analytics engineer might assume.
 
-For example, every scheduled order in the snapshot has `status = 'closed'`. That sounds promising until you notice that 2,837 of those same records have a dispatcher result of `failed`, and another eight are incomplete. Here, `closed` tells me that the record reached the end of its lifecycle. It does not tell me that the work succeeded.
+Every scheduled order in the snapshot, for example, has `status = 'closed'`. But 2,837 also have a dispatcher result of `failed`, and eight are incomplete. Here, `closed` means the record reached the end of its lifecycle. It does not mean the work succeeded.
 
-Cost has a different problem. I can account for $373.20 of fully priced model usage and another $68.60 as a lower bound from runs where only some of the usage is priced. But I can’t reliably join every run back to a specific work item. An agent could still produce a “cost per successful task” metric, but doing so would require inventing a relationship the source system doesn’t actually contain.
+Cost has a different problem. I can account for $373.20 of fully priced model usage and another $68.60 as a lower bound from partially priced runs, but I cannot reliably join every run to a specific work item. I could still calculate something called “cost per successful task.” The source system does not support that claim.
 
-Time is messy too. Some clients wrote UTC timestamps while others wrote Eastern wall-clock time. Once those values are sitting next to each other in a column, there isn’t enough information in the timestamp alone to recover which convention produced each row.
+Time is messy too. Some clients wrote UTC timestamps while others wrote Eastern wall-clock time. Once those values share a column, the timestamp alone cannot tell me which convention produced each row.
 
-So the hard part of agent-authored analytics starts before the agent ever opens Omni. The source system already contains a lot of structure, but structure is not the same thing as meaning. A field name can suggest an interpretation; the implementation and surrounding system behavior are what tell me whether I should trust it.
+The structure is already there. The work is deciding which interpretations of that structure are actually justified.
 
 ## I gave the agent the whole job
 
-I used [Amp Orbs](https://ampcode.com/news/agents-in-orbs) because I wanted to see how much of this workflow a cloud agent could actually own. I launched an Amp agent in a fresh Orb with a checkout containing the factory snapshot, dbt project, relevant source code, and a lightweight style guide for the final dashboard: KPI hierarchy, layout, labels, and visual treatment.
+For the experiment, I kept the dbt project, Omni model files, source evidence, and review artifacts together in one monorepo. The Orb received that checkout plus a lightweight dashboard style guide covering KPI hierarchy, layout, labels, and visual treatment.
 
-Its job was not just to write a few transformations. It had to understand the source system well enough to model it, turn that model into something usable in Omni, and then use Omni itself to build and inspect the resulting dashboard.
+It built the analytical layer while keeping the distinctions I cared about. `closed` and coordinator acknowledgement remained separate facts. Partially priced usage stayed a lower bound. Questions the evidence could not resolve stayed unresolved.
 
-That included working through the ambiguities in the underlying data. The agent kept `closed` and coordinator acknowledgement as separate facts rather than treating them as synonyms. It treated partially priced model usage as a lower bound rather than a complete cost number. When the source system did not contain enough evidence to support a definition, it left the question unresolved instead of inventing one.
+The agent then carried those decisions into Omni. It created the analytical fields and descriptions, exposed them through an [Omni topic](https://docs.omni.co/modeling/topics), opened an isolated model branch with [Branch Mode](https://docs.omni.co/content/develop/branch-mode), and used Omni’s browser UI to assemble and style the dashboard.
 
-Then it carried those decisions forward into Omni.
+The first screen puts 12,225 claimed closures beside 116 coordinator acknowledgements, makes the 12,109-record gap hard to miss, and shows snapshot provenance and clock uncertainty alongside the operational KPIs. Measures have descriptions, joins have explicit grains, and aggregates can drill back to `work_id`.
 
-The agent created the analytical fields and descriptions, connected them into a usable [Omni topic](https://docs.omni.co/modeling/topics), and encoded guidance about how those fields should be interpreted. It then opened Omni in the browser and built the control-room dashboard a person would actually use.
+I also wanted the agent working in the application, not stopping at generated model code. A model can be technically correct while the dashboard built from it is misleading. Labels, comparisons, grains, and visual hierarchy all affect what a person thinks the data says.
 
-An agent is capable of much more than generating raw SQL. It can move from source code and operational data, through dbt and Omni’s semantic layer, to the dashboard someone actually uses.
+So the Orb changed the model, built with those fields in Omni, inspected the rendered dashboard, and revised it.
 
-The boundary I care about is approval. The agent can propose and implement a definition, but a human should decide when that definition becomes authoritative.
+I checked the important values directly against the dbt-built relations in MotherDuck, through Omni’s SQL runner, and through fields exposed by the Omni topic. All three returned the same reference values.
 
-## The browser belongs in the test
-
-Once the model existed, the agent used Omni to turn it into something a person could verify.
-
-It opened an isolated model branch using [Branch Mode](https://docs.omni.co/content/develop/branch-mode), loaded the semantic files, built the dashboard tiles, and arranged the control room around the distinctions that mattered most. The first screen puts “claimed closed” next to “coordinator acknowledged,” shows the 12,109-record gap between them, and makes the roughly 105× difference hard to miss. A provenance tile shows when the snapshot was taken, how many rows it contains, and how much of the data carries clock uncertainty.
-
-The same definitions also live below the dashboard. Measures have descriptions, joins have explicit grains, and the topic includes guidance about what fields such as `closed` do and do not mean. Every aggregate can drill back to `work_id`.
-
-A correct dbt model can still turn into a misleading dashboard. A measure can be defined correctly and then mislabeled, compared at the wrong grain, or presented without enough context to interpret it. So I wanted the agent to work in Omni itself: change the underlying model, use those fields in the dashboard, inspect the rendered result, and revise what it had built.
-
-I checked the important values three ways: directly against the dbt-built relations in MotherDuck, through Omni’s SQL runner, and from fields exposed through the Omni topic. All three returned the same reference values.
-
-By the end of the run, the agent had built 13 dbt models, passed the model tests, created the semantic layer, and assembled all seven dashboard tiles in Omni.
+By the end, the agent had built 13 dbt models, passed the model tests, created the semantic layer, and assembled seven dashboard tiles.
 
 <DashboardCapture
   src={omniControlRoom}
@@ -79,46 +67,34 @@ By the end of the run, the agent had built 13 dbt models, passed the model tests
   hierarchy; the zero-based comparison, gap, and provenance keep it honest.
 </DashboardCapture>
 
-## What the reviewer caught
+## What I changed
 
-The agent made one decision I would not have approved.
+The agent still made one decision I would not have approved.
 
-It excluded a work item because its close and start times appeared earlier than its creation time. The model built successfully, the exclusion was documented, and the result was internally consistent.
+It excluded a work item because its close and start times appeared earlier than its creation time. The exclusion was documented and internally consistent.
 
-But the row was not bad data. The roughly four-hour inversion matched the mixed UTC and Eastern timestamp problem in the source system. The right treatment was to keep the row, mark it with `clock_uncertainty_seconds = 14400`, and expose that uncertainty in the dashboard.
+But the row was not bad data. The roughly four-hour inversion matched the mixed UTC/Eastern timestamp problem. I wanted the row kept, marked with `clock_uncertainty_seconds = 14400`, and that uncertainty exposed in the dashboard.
 
-I sent the correction back to the agent, and it updated the model and the rendered dashboard.
+I sent the correction back to the agent. It updated the model and the rendered dashboard.
 
-This is the boundary I was trying to preserve. The agent had enough information to make a reasonable choice, implement it, test it, and explain what it had done. I still needed to decide whether that choice matched what I was willing to claim about the data.
+The agent’s first choice was reasonable. I still changed it.
 
-## Omni becomes the control substrate
+That is the part of this workflow I do not want to delegate away. The agent can trace what the code does and propose how that behavior should become a metric. I still need to decide whether I am willing to attach that meaning to the data.
 
-I wanted those definitions to live somewhere shared.
+## Putting the definition somewhere shared
 
-Omni’s [dbt integration](https://docs.omni.co/integrations/dbt) can bring dbt models, descriptions, tests, and tags into its semantic layer. From there, the same dimensions, measures, joins, descriptions, and permissions can be used by a person exploring the data, by dashboards, by [Omni’s AI features](https://docs.omni.co/ai), and by external agents using [Omni MCP](https://docs.omni.co/ai/mcp).
+Approved definitions also need to survive beyond one agent run.
 
-This is where I can separate what the agent is allowed to build from what I have actually approved.
+Omni’s [dbt integration](https://docs.omni.co/integrations/dbt) can carry dbt models and metadata into its semantic layer. The resulting dimensions, measures, joins, descriptions, and permissions can then serve dashboards, human exploration, [Omni’s AI](https://docs.omni.co/ai), and external agents through [Omni MCP](https://docs.omni.co/ai/mcp).
 
-In practice, I can let the agent resolve an ambiguity as far as the evidence takes it: propose the measure, define its SQL and description, expose it through an Omni topic, and build dashboard content against it on a branch. I can then review the definition in the context where it will actually be used before deciding whether to merge it into the shared model. If the evidence is not good enough, the agent has still done the implementation work; the definition just does not become authoritative.
+That means the agent can take an ambiguity pretty far before I need to intervene. It can propose a measure, define its SQL and description, expose it through a topic, and build dashboard content against it on a branch.
 
-Once approved, that definition is no longer an agent-specific interpretation. It becomes part of the same semantic layer used by dashboards, human exploration, Omni’s AI, and external agents over MCP.
+Then I can review the definition where it will actually be used.
 
-The same applies to permissions. An external agent using MCP should not get a different interpretation of the data from the person looking at the dashboard, and it should not get access to more than that person would.
+If I approve it and merge it, the interpretation is no longer something one agent inferred for one task. It becomes part of the shared semantic model used by the rest of the system.
 
 <ControlPlaneFigure kind="semantic-substrate" />
 
-For this experiment I kept the dbt project, Omni model files, evidence, and review artifacts together in one repository. Omni’s [dbt setup guidance](https://docs.omni.co/integrations/dbt/setup) recommends separating the dbt and Omni repositories in production, so I would not assume this repo layout is the one I would keep long term.
-
-In this experiment, I left the Omni branch unmerged. The repository also could not prove that the committed export still matched the live factory at review time. Both are important limits on what this experiment actually demonstrated.
-
-## The review packet I want
-
-What I want back from an agent is not just a dashboard.
-
-I want the model diff, the source evidence behind consequential definitions, the values it used to validate the result, screenshots of what it actually built, the questions it could not resolve, and any checks it could not complete.
-
-The workflow is fairly simple: pin the input and its provenance, keep important metric definitions somewhere reviewable, test the transformations, verify that the values agree across dbt and Omni, then have the agent build and inspect the dashboard in the browser.
-
-The agent can do almost all of that work, from tracing the source system through building and revising the dashboard.
+The agent can trace the source system, build and test the transformations, propose the semantic definitions, assemble the dashboard, inspect it in the browser, and revise it.
 
 What I want to sign off on is the meaning.
