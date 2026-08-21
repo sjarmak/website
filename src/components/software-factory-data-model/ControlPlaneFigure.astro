@@ -1,0 +1,411 @@
+---
+interface Props {
+  kind: "authoring-loop" | "semantic-substrate";
+}
+
+const { kind } = Astro.props;
+const titleId = `data-model-figure-${kind}`;
+const svgTitleId = `${titleId}-svg-title`;
+const svgDescId = `${titleId}-svg-desc`;
+---
+
+{
+  kind === "authoring-loop" && (
+    <figure class="control-figure" aria-labelledby={titleId}>
+      <header class="control-figure__header">
+        <p>Figure 01 / Authoring loop</p>
+        <h3 id={titleId}>One repository, three independent query paths</h3>
+      </header>
+
+      <svg
+        class="control-figure__svg"
+        viewBox="0 0 1100 570"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>The cloud agent authoring and verification loop</title>
+        <desc id={svgDescId}>
+          An Amp Orb edits dbt models, Omni semantic files, dashboard
+          specifications, and the metric decision ledger in one repository.
+          dbt builds in MotherDuck. The same measures are queried directly in
+          MotherDuck, through Omni SQL, and through an Omni topic. The browser
+          then builds and checks the dashboard. A pull request returns the code,
+          test evidence, parity table, and screenshots to a human reviewer.
+        </desc>
+
+        <rect class="svg-lane" x="16" y="16" width="360" height="500" rx="12" />
+        <text class="svg-eyebrow" x="40" y="50">ONE MONOREPO</text>
+
+        <rect class="svg-box svg-box--accent" x="40" y="76" width="312" height="78" rx="9" />
+        <text class="svg-label" x="62" y="108">Amp Orb</text>
+        <text class="svg-small" x="62" y="132">fresh machine · branch · browser</text>
+
+        <path class="svg-link svg-link--accent" d="M196 154 V196" />
+        <path class="svg-arrow" d="M-6 -8 L0 0 L6 -8" transform="translate(196 196)" />
+
+        <rect class="svg-box svg-box--durable" x="40" y="204" width="312" height="246" rx="9" />
+        <rect class="svg-durable-inner" x="46" y="210" width="300" height="234" rx="6" />
+        <text class="svg-label" x="64" y="240">Reviewable change</text>
+        <text class="svg-code" x="64" y="278">dbt/</text>
+        <text class="svg-small" x="132" y="278">models · tests · docs</text>
+        <text class="svg-code" x="64" y="318">omni/</text>
+        <text class="svg-small" x="132" y="318">views · topics · measures</text>
+        <text class="svg-code" x="64" y="358">context/</text>
+        <text class="svg-small" x="154" y="358">decision ledger · style guide</text>
+        <text class="svg-code" x="64" y="398">evidence/</text>
+        <text class="svg-small" x="164" y="398">red/green · parity · captures</text>
+
+        <path class="svg-link" d="M352 278 H394 V132 H438" />
+        <path class="svg-link" d="M352 318 H410 V282 H438" />
+        <path class="svg-link" d="M410 318 V432 H438" />
+        <path class="svg-link svg-link--accent" d="M352 358 H386 V520 H918 V488" />
+        <path class="svg-link svg-link--accent" d="M352 398 H386" />
+        <text class="svg-eyebrow" x="652" y="545" text-anchor="middle">context and evidence travel with the review</text>
+
+        <text class="svg-eyebrow" x="450" y="50">THREE LEGS</text>
+
+        <rect class="svg-box" x="438" y="76" width="260" height="112" rx="9" />
+        <text class="svg-index" x="462" y="108">A</text>
+        <text class="svg-label" x="500" y="108">MotherDuck</text>
+        <text class="svg-small" x="462" y="138">dbt build, then direct SQL</text>
+        <text class="svg-small" x="462" y="160">warehouse grain and counts</text>
+
+        <rect class="svg-box" x="438" y="226" width="260" height="112" rx="9" />
+        <text class="svg-index" x="462" y="258">B</text>
+        <text class="svg-label" x="500" y="258">Omni SQL</text>
+        <text class="svg-small" x="462" y="288">same warehouse, new path</text>
+        <text class="svg-small" x="462" y="310">connection and schema check</text>
+
+        <rect class="svg-box" x="438" y="376" width="260" height="112" rx="9" />
+        <text class="svg-index" x="462" y="408">C</text>
+        <text class="svg-label" x="500" y="408">Omni topic</text>
+        <text class="svg-small" x="462" y="438">semantic fields through Explore</text>
+        <text class="svg-small" x="462" y="460">browser-created dashboard tiles</text>
+
+        <path class="svg-bracket" d="M730 76 H752 V488 H730" />
+        <text class="svg-eyebrow" x="776" y="244">PARITY</text>
+        <text class="svg-small" x="776" y="270">grain · counts</text>
+        <text class="svg-small" x="776" y="292">canaries · time</text>
+
+        <path class="svg-link svg-link--accent" d="M836 312 V354" />
+        <path class="svg-arrow" d="M-6 -8 L0 0 L6 -8" transform="translate(836 354)" />
+
+        <rect class="svg-box svg-box--durable" x="776" y="362" width="286" height="126" rx="9" />
+        <rect class="svg-durable-inner" x="782" y="368" width="274" height="114" rx="6" />
+        <text class="svg-label" x="800" y="398">Human review</text>
+        <text class="svg-small" x="800" y="428">code · definitions · evidence</text>
+        <text class="svg-small" x="800" y="450">merge and publish authority</text>
+        <g class="svg-lock" transform="translate(1024 402)">
+          <path d="M-5 -4 v-4 a5 5 0 0 1 10 0 v4" />
+          <rect x="-9" y="-4" width="18" height="14" rx="2" />
+        </g>
+      </svg>
+
+      <ul class="control-figure__fallback" aria-label="Figure summary">
+        <li>The Orb changes dbt, Omni, context, and evidence files in one branch.</li>
+        <li>Leg A queries the dbt build directly in MotherDuck.</li>
+        <li>Leg B runs equivalent SQL through Omni.</li>
+        <li>Leg C rebuilds the counts through semantic fields in an Omni topic.</li>
+        <li>The pull request returns all three legs and the browser evidence for human review.</li>
+      </ul>
+
+      <figcaption>
+        A green dbt build covers the first path. The browser leg checks
+        that the semantic fields survived the trip into the dashboard a person
+        will read.
+      </figcaption>
+    </figure>
+  )
+}
+
+{
+  kind === "semantic-substrate" && (
+    <figure class="control-figure" aria-labelledby={titleId}>
+      <header class="control-figure__header">
+        <p>Figure 02 / Control substrate</p>
+        <h3 id={titleId}>The semantic layer serves every analytical reader</h3>
+      </header>
+
+      <svg
+        class="control-figure__svg"
+        viewBox="0 0 1100 570"
+        role="img"
+        aria-labelledby={`${svgTitleId} ${svgDescId}`}
+      >
+        <title id={svgTitleId}>Omni as the shared semantic control substrate</title>
+        <desc id={svgDescId}>
+          dbt relations and a human-owned metric decision ledger feed the Omni
+          semantic model. That model governs dashboards, human exploration,
+          Omni's native agents, and external agents using MCP. Branch review,
+          content validation, evaluations, and permissions surround the model.
+        </desc>
+
+        <text class="svg-eyebrow" x="36" y="48">AUTHORITATIVE INPUTS</text>
+        <rect class="svg-box" x="36" y="76" width="252" height="94" rx="9" />
+        <text class="svg-label" x="60" y="110">dbt relations</text>
+        <text class="svg-small" x="60" y="138">grain · joins · tested columns</text>
+
+        <rect class="svg-box svg-box--durable" x="36" y="214" width="252" height="118" rx="9" />
+        <rect class="svg-durable-inner" x="42" y="220" width="240" height="106" rx="6" />
+        <text class="svg-label" x="60" y="252">Metric ledger</text>
+        <text class="svg-small" x="60" y="280">approved · unresolved · refused</text>
+        <text class="svg-small" x="60" y="304">human-owned definitions</text>
+
+        <path class="svg-link svg-link--accent" d="M288 123 H408 V232" />
+        <path class="svg-link svg-link--accent" d="M288 273 H408" />
+
+        <rect class="svg-substrate" x="408" y="146" width="304" height="254" rx="18" />
+        <text class="svg-eyebrow svg-eyebrow--inverse" x="438" y="184">OMNI SEMANTIC LAYER</text>
+        <text class="svg-label svg-label--inverse" x="438" y="226">Shared meaning</text>
+        <text class="svg-small svg-small--inverse" x="438" y="258">dimensions · measures · joins</text>
+        <text class="svg-small svg-small--inverse" x="438" y="286">descriptions · permissions</text>
+        <path class="svg-rule" d="M438 316 H682" />
+        <text class="svg-small svg-small--inverse" x="438" y="346">branch review · validation · evals</text>
+        <g class="svg-lock svg-lock--inverse" transform="translate(666 220)">
+          <path d="M-6 -4 v-5 a6 6 0 0 1 12 0 v5" />
+          <rect x="-10" y="-4" width="20" height="16" rx="2" />
+        </g>
+
+        <path class="svg-link" d="M712 196 H752 V116 H792" />
+        <path class="svg-link" d="M712 252 H760 V220 H792" />
+        <path class="svg-link" d="M712 308 H760 V324 H792" />
+        <path class="svg-link" d="M712 364 H752 V428 H792" />
+
+        <text class="svg-eyebrow" x="792" y="48">READERS</text>
+        <rect class="svg-box" x="792" y="76" width="272" height="80" rx="9" />
+        <text class="svg-label" x="816" y="108">Dashboards</text>
+        <text class="svg-small" x="816" y="132">published analytical content</text>
+
+        <rect class="svg-box" x="792" y="180" width="272" height="80" rx="9" />
+        <text class="svg-label" x="816" y="212">Human exploration</text>
+        <text class="svg-small" x="816" y="236">workbooks · SQL · topics</text>
+
+        <rect class="svg-box" x="792" y="284" width="272" height="80" rx="9" />
+        <text class="svg-label" x="816" y="316">Omni agents</text>
+        <text class="svg-small" x="816" y="340">modeled context and skills</text>
+
+        <rect class="svg-box" x="792" y="388" width="272" height="80" rx="9" />
+        <text class="svg-label" x="816" y="420">External agents</text>
+        <text class="svg-small" x="816" y="444">MCP with user permissions</text>
+
+        <rect class="svg-review" x="408" y="446" width="304" height="82" rx="41" />
+        <text class="svg-small svg-small--center" x="560" y="480">The reviewer authorizes meaning</text>
+        <text class="svg-small svg-small--center" x="560" y="504">once, at the shared layer</text>
+      </svg>
+
+      <ul class="control-figure__fallback" aria-label="Figure summary">
+        <li>dbt contributes tested relations and explicit grains.</li>
+        <li>The human-owned ledger contributes the status of each metric definition.</li>
+        <li>Omni binds those inputs into dimensions, measures, joins, descriptions, and permissions.</li>
+        <li>Dashboards, human exploration, native Omni agents, and external MCP agents read the same layer.</li>
+        <li>Branch review, content validation, and evaluations protect changes before publication.</li>
+      </ul>
+
+      <figcaption>
+        The semantic layer becomes control infrastructure when every human and
+        machine reader reaches the same definitions through the same permission
+        boundary.
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .control-figure {
+    --figure-rule: color-mix(in srgb, var(--color-text) 22%, transparent);
+    width: 100%;
+    max-width: 68rem;
+    min-width: 0;
+    margin: clamp(var(--space-xl), 7vw, var(--space-3xl)) auto;
+    color: var(--color-text);
+  }
+
+  .control-figure__header {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block-end: var(--space-s);
+    border-block-end: 1px solid var(--figure-rule);
+  }
+
+  .control-figure__header p,
+  .control-figure__header h3 {
+    margin: 0;
+  }
+
+  .control-figure__header p {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .control-figure__header h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: var(--leading-tight);
+  }
+
+  .control-figure__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block-start: var(--space-m);
+  }
+
+  .control-figure__svg :global(path),
+  .control-figure__svg :global(rect) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .svg-box {
+    fill: var(--color-bg-subtle);
+    stroke: currentColor;
+    stroke-width: 1.25;
+  }
+
+  .svg-box--accent {
+    fill: color-mix(in srgb, var(--color-accent) 9%, var(--color-bg));
+    stroke: var(--color-accent);
+  }
+
+  .svg-box--durable {
+    stroke-width: 1.5;
+  }
+
+  .svg-durable-inner {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+  }
+
+  .svg-lane {
+    fill: color-mix(in srgb, var(--color-text) 4%, transparent);
+  }
+
+  .svg-substrate {
+    fill: var(--color-accent);
+    stroke: var(--color-accent);
+    stroke-width: 1.5;
+  }
+
+  .svg-review {
+    fill: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
+    stroke: var(--color-accent);
+    stroke-width: 1.25;
+  }
+
+  .svg-link,
+  .svg-bracket,
+  .svg-rule {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .svg-link--accent,
+  .svg-bracket {
+    stroke: var(--color-accent);
+  }
+
+  .svg-rule {
+    stroke: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  }
+
+  .svg-arrow {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .svg-lock {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .svg-lock--inverse {
+    stroke: var(--color-bg);
+  }
+
+  .svg-label {
+    fill: currentColor;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .svg-small,
+  .svg-eyebrow,
+  .svg-code,
+  .svg-index {
+    fill: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  .svg-eyebrow {
+    fill: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .svg-code,
+  .svg-index {
+    fill: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .svg-index {
+    font-size: 18px;
+  }
+
+  .svg-label--inverse,
+  .svg-small--inverse,
+  .svg-eyebrow--inverse {
+    fill: var(--color-bg);
+  }
+
+  .svg-small--center {
+    text-anchor: middle;
+  }
+
+  .control-figure figcaption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    margin-inline: auto;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .control-figure__fallback {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 720px) {
+    .control-figure__fallback {
+      position: static;
+      display: grid;
+      width: auto;
+      height: auto;
+      margin: var(--space-m) 0 0;
+      padding-inline-start: 1.25rem;
+      overflow: visible;
+      clip: auto;
+      gap: var(--space-xs);
+      white-space: normal;
+      color: var(--color-text-secondary);
+      font-size: var(--step--1);
+    }
+  }
+</style>
