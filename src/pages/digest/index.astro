@@ -20,7 +20,12 @@ const recentIssues = digests.filter((d) => d.date.getTime() >= cutoff);
 
 // Conference field notes: essays tagged "field-notes" plus their companion podcast
 // episodes (learning entries with hub: field-notes). The hub overview pins first.
-const fieldNotePosts = (await getCollection("posts", (p) => !p.data.draft && p.data.tags.includes("field-notes"))).sort(
+const fieldNotePosts = (
+  await getCollection(
+    "posts",
+    (p) => !p.data.draft && !p.data.unlisted && p.data.tags.includes("field-notes"),
+  )
+).sort(
   (a, b) =>
     (b.id === "wf2026-field-notes" ? 1 : 0) - (a.id === "wf2026-field-notes" ? 1 : 0) ||
     a.data.title.localeCompare(b.data.title),

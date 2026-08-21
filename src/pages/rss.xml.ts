@@ -4,9 +4,12 @@ import type { APIContext } from "astro";
 import { site } from "@/data/site";
 
 export async function GET(context: APIContext) {
-  const posts = [...(await getCollection("posts", (p: CollectionEntry<"posts">) => !p.data.draft))].sort(
-    (a, b) => +b.data.date - +a.data.date || a.id.localeCompare(b.id),
-  );
+  const posts = [
+    ...(await getCollection(
+      "posts",
+      (p: CollectionEntry<"posts">) => !p.data.draft && !p.data.unlisted,
+    )),
+  ].sort((a, b) => +b.data.date - +a.data.date || a.id.localeCompare(b.id));
 
   return rss({
     title: `${site.name} — Writing`,

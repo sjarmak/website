@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  loading?: "eager" | "lazy";
+}
+
+const { src, alt, loading = "lazy" } = Astro.props;
+---
+
+<figure class="illustration">
+  <Image
+    src={src}
+    alt={alt}
+    widths={[640, 960, 1360, src.width]}
+    sizes="(max-width: 720px) 100vw, min(100vw, 68rem)"
+    loading={loading}
+    class="illustration__image"
+  />
+
+  <figcaption class="figure-caption">
+    <slot />
+  </figcaption>
+</figure>
+
+<style>
+  .illustration {
+    width: min(100%, 68rem);
+    margin: clamp(var(--space-l), 5vw, var(--space-2xl)) auto;
+  }
+
+  .illustration__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+  }
+
+  :global([data-theme="dark"]) .illustration__image {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
+  }
+
+  @media (prefers-contrast: more) {
+    .illustration__image,
+    :global([data-theme="dark"]) .illustration__image {
+      mix-blend-mode: normal;
+    }
+  }
+
+  .figure-caption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    margin-inline: auto;
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    text-align: center;
+  }
+</style>

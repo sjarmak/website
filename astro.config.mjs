@@ -17,6 +17,7 @@ export default defineConfig({
         !page.includes("/durable-podcast-render") &&
         !page.includes("/temporal-research-agent") &&
         !page.includes("/temporal-agent-orchestration") &&
+        !page.includes("/writing/your-software-factory-already-has-a-data-model") &&
         !page.includes("/books/the-system-around-the-model"),
     }),
   ],

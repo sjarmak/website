@@ -258,6 +258,9 @@ const posts = defineCollection({
       subtitle: z.string().optional(),
       cover: image().optional(),
       draft: z.boolean().default(false),
+      // Direct-link-only posts still build at /writing/<slug>, but stay out of
+      // navigation, feeds, related-content surfaces, and search indexes.
+      unlisted: z.boolean().default(false),
       // Document type. Drives the on-page kicker: "essay" (default) renders
       // "Essay", "technical-report" renders "Technical report".
       kind: z.enum(["essay", "technical-report"]).default("essay"),

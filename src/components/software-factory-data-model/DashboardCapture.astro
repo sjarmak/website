@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+}
+
+const { src, alt } = Astro.props;
+---
+
+<figure class="dashboard-capture">
+  <div class="dashboard-capture__frame">
+    <Image
+      src={src}
+      alt={alt}
+      widths={[640, 960, 1360, src.width]}
+      sizes="(max-width: 720px) 100vw, min(100vw, 68rem)"
+      loading="lazy"
+      class="dashboard-capture__image"
+    />
+  </div>
+
+  <figcaption>
+    <slot />
+  </figcaption>
+</figure>
+
+<style>
+  .dashboard-capture {
+    width: min(100%, 68rem);
+    margin: clamp(var(--space-xl), 6vw, var(--space-3xl)) auto;
+  }
+
+  .dashboard-capture__frame {
+    padding: clamp(0.35rem, 1vw, 0.7rem);
+    border: var(--border-hairline);
+    border-radius: calc(var(--radius) + 2px);
+    background: var(--color-bg-subtle);
+    box-shadow: 0 0.45rem 1.8rem color-mix(in srgb, var(--color-text) 8%, transparent);
+  }
+
+  .dashboard-capture__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+
+  figcaption {
+    max-width: var(--measure);
+    margin-block-start: var(--space-s);
+    margin-inline: auto;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    text-align: center;
+  }
+</style>

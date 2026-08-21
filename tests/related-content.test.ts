@@ -43,7 +43,7 @@ test("resolveConcepts: default resolver uses the committed registry aliases", ()
   assert.deepEqual(resolveConcepts(["agents", "not-a-real-facet"]), ["ai-agents"]);
 });
 
-test("loadPostDocs: skips drafts, resolves tags, builds /writing urls", () => {
+test("loadPostDocs: skips drafts and unlisted posts, resolves tags, builds /writing urls", () => {
   const docs = loadPostDocs(path.join(FIXTURES, "posts"), resolve);
   assert.deepEqual(
     docs.map((d) => d.id),
