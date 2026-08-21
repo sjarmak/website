@@ -192,8 +192,8 @@ const svgDescId = `${titleId}-svg-desc`;
         <text class="svg-small" x="816" y="444">MCP with user permissions</text>
 
         <rect class="svg-review" x="408" y="446" width="304" height="82" rx="41" />
-        <text class="svg-small svg-small--center" x="560" y="480">The reviewer authorizes meaning</text>
-        <text class="svg-small svg-small--center" x="560" y="504">once, at the shared layer</text>
+        <text class="svg-small svg-small--center svg-small--review" x="560" y="480">The reviewer authorizes meaning</text>
+        <text class="svg-small svg-small--center svg-small--review" x="560" y="504">once, at the shared layer</text>
       </svg>
 
       <ul class="control-figure__fallback" aria-label="Figure summary">
@@ -309,7 +309,7 @@ const svgDescId = `${titleId}-svg-desc`;
   }
 
   .svg-rule {
-    stroke: color-mix(in srgb, var(--color-bg) 70%, transparent);
+    stroke: color-mix(in srgb, var(--ink-900) 52%, transparent);
   }
 
   .svg-arrow {
@@ -328,7 +328,7 @@ const svgDescId = `${titleId}-svg-desc`;
   }
 
   .svg-lock--inverse {
-    stroke: var(--color-bg);
+    stroke: var(--ink-900);
   }
 
   .svg-label {
@@ -365,11 +365,15 @@ const svgDescId = `${titleId}-svg-desc`;
   .svg-label--inverse,
   .svg-small--inverse,
   .svg-eyebrow--inverse {
-    fill: var(--color-bg);
+    fill: var(--ink-900);
   }
 
   .svg-small--center {
     text-anchor: middle;
+  }
+
+  .svg-small--review {
+    fill: var(--color-text);
   }
 
   .control-figure figcaption {
