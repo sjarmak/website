@@ -13,25 +13,25 @@ import omniControlRoom from "../../components/software-factory-data-model/img/om
 
 My software factory had closed 12,225 work items, and my agent coordinating the flow of work had acknowledged 116 of their outcomes.
 
-Both are plausible answers to “how is our software factory doing?” They are also different facts.
+Both are plausible values that could be cited in an answer to “how is our software factory doing?” They are also different facts.
 
 “Closed” is a producer claim: a worker, controller, or cleanup path moved a record to `closed`. “Acknowledged” means an outcome traveled through the coordinator-agent’s ownership and reached an `acknowledged` state.
 
-I wanted to see what a cloud agent would do with distinctions like that. I launched an [Amp](https://ampcode.com/news/agents-in-orbs) agent in a fresh [Orb](https://ampcode.com/what-are-orbs) and gave it the whole job: turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
+I wanted to see how an agent would reconcile this kind of ambiguity when asking questions about my system. I launched an [Amp](https://ampcode.com/news/agents-in-orbs) agent in a fresh [Orb](https://ampcode.com/what-are-orbs) and gave it the whole job: turn my factory’s operational history into a dbt project, model it in Omni, then use Omni in the browser to build and inspect a control-room dashboard.
 
-Agents are totally capable of writing correct SQL, but I wanted to see if the SQL would correctly decide which of those two numbers meant successful work.
+Agents are very capable of writing correct SQL, but I wanted to see if the SQL would correctly decide which of those two numbers actually meant successful work.
 
-I don’t really want my agent deciding that for me in unpredictable ways.
+I don’t want my agent deciding that for me in unpredictable ways.
 
-I am happy to let the agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But, when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for review rather than collapsed into a metric.
+I'll gladly let my agent trace the implementation, write the transformations and tests, propose the semantic model, document its reasoning, build the dashboard, and use the application to check what a person will actually see. But, when the evidence supports more than one defensible interpretation, I want the ambiguity surfaced for my review rather than collapsed into a metric.
 
-## The factory had already modeled itself
+## The factory had a model. Analytics needed another.
 
 My source system runs on [Gas City](https://github.com/gastownhall/gascity), a software-factory SDK I help maintain. I took an August 20 snapshot containing 17,110 work items, 13,035 scheduled-order runs, and 14,544 agent runs.
 
-The data tables I used in my experiment weren't designed for business intelligence analytics, they exist because the factory needs them to coordinate work. Claims record ownership, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
+The data tables I used for this little experiment weren't designed for business intelligence analytics, they exist because the factory needs them to coordinate work. Claims record ownership, events preserve transitions, outcome envelopes track whether produced work made it back to the coordinating agent, and usage journals record model calls.
 
-That gives you plenty to analyze, but the field names do not necessarily mean what an analytics engineer might assume.
+That gives anyone plenty to analyze, but the field names don't necessarily mean what an analytics engineer might assume.
 
 Every scheduled order in the snapshot, for example, has `status = 'closed'`. But 2,837 also have a dispatcher result of `failed`, and eight are incomplete. Here, `closed` means the record reached the end of its lifecycle. It does not mean the work succeeded.
 
@@ -39,9 +39,9 @@ Cost has a different problem. I can account for $373.20 of fully priced model us
 
 Time is messy too. Some clients wrote UTC timestamps while others wrote Eastern wall-clock time. Once those values share a column, the timestamp alone cannot tell me which convention produced each row.
 
-The structure is already there. The work is deciding which interpretations of that structure are actually justified.
+The structure is already there, but you still need to decide which interpretations of that structure are actually justified.
 
-## I gave the agent the whole job
+## From dbt model to Omni dashboard
 
 For the experiment, I kept the dbt project, Omni model files, source evidence, and review artifacts together in one monorepo. The Orb received that checkout plus a lightweight dashboard style guide covering KPI hierarchy, layout, labels, and visual treatment.
 
@@ -75,13 +75,11 @@ It excluded a work item because its close and start times appeared earlier than 
 
 But the row was not bad data. The roughly four-hour inversion matched the mixed UTC/Eastern timestamp problem. I wanted the row kept, marked with `clock_uncertainty_seconds = 14400`, and that uncertainty exposed in the dashboard.
 
-I sent the correction back to the agent. It updated the model and the rendered dashboard.
+I sent the correction back to the agent, and it updated the model and the rendered dashboard.
 
-The agent’s first choice was reasonable. I still changed it.
+This is the boundary I was trying to preserve. The agent had enough information to make a reasonable choice, implement it, test it, and explain what it had done. I still needed to decide whether that choice matched what I was willing to claim about the data.
 
-That is the part of this workflow I do not want to delegate away. The agent can trace what the code does and propose how that behavior should become a metric. I still need to decide whether I am willing to attach that meaning to the data.
-
-## Putting the definition somewhere shared
+## From agent inference to shared definition
 
 Approved definitions also need to survive beyond one agent run.
 
