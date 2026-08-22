@@ -2296,6 +2296,50 @@
           "why": "This theme asks what a team writes to and who governs it. The paper supplies the vocabulary that answer has been missing: the database isolation hierarchy from Read Uncommitted through Snapshot Isolation to Strict Serializable, applied to blackboard memories, shared repositories, and message buffers. It also names the reason shared memory is harder for agents than for databases -- LLM inference is side-effect-free but runs for seconds to minutes while tool execution finishes in milliseconds, so the window in which another agent can invalidate a read is orders of magnitude wider than classical concurrency control was designed for."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260819263W",
+      "title": "The Evaluation Context Protocol (ECP): A Portable Contract for AI Agent Evaluation",
+      "firstAuthor": "Wattamwar, Aniket",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19263",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819263W",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "A vendor-neutral evaluation contract that sits beneath the orchestration frameworks rather than inside one: plain Python, LangChain, LlamaIndex, CrewAI and PydanticAI agents are wrapped by thin adapters that normalize each framework's native notion of intermediate reasoning and tool invocation into a single result object, without rewriting the agent. The adapters differ because the frameworks do (LangChain registers a callback handler, LlamaIndex bridges an async workflow into a synchronous step interface, CrewAI maps a kickoff's task output, PydanticAI extracts from the structured message history it already keeps), and the paper argues their thinness is the evidence that the contract is genuinely separable from the platform. The protocol layer is plain JSON-RPC 2.0, so the SDK and runtime shipped with it are reference implementations rather than mandatory components.",
+          "why": "This branch tracks the interop protocols stitching coordination patterns together, and ECP's most useful contribution here is the gap it exposes. The repository's two-agent example, a planner and a writer, records the handoffs between them as ordinary tool calls: it works and it is gradeable, but it means a multi-agent system is expressed in the vocabulary of a single agent that happens to call other agents. ECP has no native representation of delegation, and the authors list a delegation identifier that would make multi-agent attribution possible as a plausible addition that would change the shape of the graded surface. Evaluation contracts written for the single-agent case do not extend to teams for free, and attribution is the specific thing that breaks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260818167Q",
+      "title": "Adversarial Review: Structured Disagreement for Grounded Agentic Code Review",
+      "firstAuthor": "Qiu, Eric S.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18167",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818167Q",
+      "branches": [
+        "foundations",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Builds a code-review protocol one design choice at a time on LiveCodeBench (105 stdin-style tasks, 57 hard-tagged), each step motivated by a measured failure of the previous one, with Claude Sonnet 4.5 at medium reasoning throughout. Zero-shot, Self-Refine, single-reviewer and two-reviewers all cluster at 75-77% pass and 34-36 of 57 hard: adding a self-critique that shares the generator's blind spots buys nothing, and a second independent reviewer is within noise of one. MARS breaks the cluster at 82% and 39/57 using five agents (one author, three parallel reviewers, one meta-reviewer). Adversarial Review then beats it at 87% and 43/57 with three agents total and two reviewing roles, a main agent M plus a reviewer R and a critic C that audits R's review. The structural separation is that the inner loop exchanges review text only over a frozen artifact, capped at five rounds, while artifact edits happen only in the outer loop. On SWE-bench Verified, expressed as a pure-text SKILL.md protocol under Claude Code rather than a Python orchestrator, AR reaches 75.2% against 72.6% for MARS and 71.6% zero-shot on all 500 tasks, at roughly 4.5x zero-shot's token cost.",
+          "why": "The branch's question is when collaborative synergy actually beats coordination overhead, and this is a clean controlled answer on that axis: two interacting reviewing agents outperform four non-interacting ones, and the four cheapest methods are indistinguishable from each other. Scaling agent count is not the lever; constraining the communication channel to a single explicit disagreement exchange is. The worked matplotlib case shows the mechanism concretely, where zero-shot and MARS both patch the caller and re-apply tick visibility after the reset has destroyed it (45 and 50 lines, both failing hidden tests) while the critic catches the reviewer's identical first-round mistake and AR patches the callee in about 20 lines, the only patch that passes."
+        },
+        {
+          "branch": "frontier",
+          "takeaway": "Names and measures a failure mode of cooperative agent systems: agents optimize for agreement rather than correctness. On SWE-PRBench (100 real GitHub PR diffs, F1 over comments matched against human reviewer feedback by a GPT-5.2 judge agreeing with human annotators at Cohen's kappa 0.75), naive AR is the worst of the four methods tested at F1 0.457, below single-reviewer (0.495), MARS (0.501) and two-reviewers (0.503). Two case studies locate why. In over-decomposition, the reviewer hedges, the critic confirms most hedges and adds a speculative bug, and the judge marks 3 of 5 comments fabricated (F1 0.250 on that task). In yielding, the critic raises a real concern, the reviewer rebuts with a file-level argument citing no code, and the critic flips to AGREE, dropping the genuine bug (F1 0.286, against MARS at 0.667 on the same task). The fix is one prompt iteration with no structural change: the critic must choose among three verdicts rather than two, AGREE, DISAGREE EVIDENCE with a code citation that contradicts the flag, or DISAGREE CONCERN for an objection that cannot point to contradicting code, and on a CONCERN the reviewer must cite code in the diff that confirms the bug or drop the flag. That lifts AR to F1 0.533, the highest in the subset.",
+          "why": "Calibrated consensus is one of this branch's open problems, and here it is with a named system and real numbers on both sides of the fix. The result that matters is not that structured disagreement works but that it does not come for free from the topology: the same R-plus-C structure produces the worst reviews in the field and then the best, with the number of agents and the way they connect unchanged and only the prompts different. Consensus among LLM reviewers is not evidence of correctness unless disagreement is forced to name the code it rests on, and the LiveCodeBench win did not predict the SWE-PRBench behavior, so a protocol validated on code generation cannot be assumed to hold as a review protocol."
+        }
+      ]
     }
   ],
   "sections": [

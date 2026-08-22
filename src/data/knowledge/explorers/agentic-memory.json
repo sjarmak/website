@@ -2956,6 +2956,31 @@
           "why": "A concrete, mechanistic account of why single-run, fixed-order evaluation overstates self-improving-memory methods, and a proposed fix (multi-run reporting, shuffled task order, richer task specification) that any future benchmark in this branch should adopt."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260803392Z",
+      "title": "Self-Evolving Coding Agents",
+      "firstAuthor": "Zhou, Hao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.03392",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260803392Z",
+      "branches": [
+        "reflection-experience",
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A survey that defines self-evolving coding agents as agents updating their framework, memory, skills, tools, models, or workflow and topology from prior coding attempts, and separates them from both conventional coding agents and general self-evolving agents. The organizing move is an object-centered taxonomy, what changes when the agent learns, crossed with two orthogonal dimensions: when evolution occurs (task-time, post-task, stage-wise) and what software-specific evidence drives it (outcome, environmental, trajectory-derived). The memory branch is worked out in detail. SWE-Exp builds an experience bank from prior issue-resolution trajectories including failed repair attempts, so localization strategies and failure lessons transfer to new issues. EvoCoder separates general from repository-specific experience in a hierarchical pool. Structurally Aligned Subtask-Level Memory stores and retrieves at the granularity of analysis, localization, editing and validation, avoiding coarse matching over whole trajectories. Repository Memory is built from historical commits, linked issues and functionality summaries of frequently modified regions. SAGE abstracts an initial rollout into a concise plan and reuses it as context for a later execution. Framework-level self-evolution is catalogued separately (SICA, SIFT, STOP, Darwin/Mendel/Huxley Godel Machine variants).",
+          "why": "This is the Reflection-to-Experience frontier with the one property software engineering supplies that general agent domains do not: executable feedback. Tests decide whether a remembered patching strategy was actually correct, compiler and runtime errors expose concrete failure modes, and commit history gives long-term signal about how a project changes, so an experience store can be validated rather than merely accumulated. The survey's stated challenge is the useful one for this branch: the problem is not storing more experience but evolving memory selectively, because noisy logs, misleading tests, brittle patches and repository-specific conventions all produce memories that hurt future performance when retrieved uncritically. It also flags the reliability asymmetry, that a misleading feedback signal shapes future behavior rather than one output, which is sharpest when the evolving object is the scaffold that generates future actions."
+        },
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Separates skill and tool self-evolution from memory self-evolution on actionability: memory records what happened, skills encode how to act when the situation recurs. The catalogued systems are specific about what a coding skill is. CODESKILL extracts, evolves and maintains a skill bank from agent trajectories at two granularities, task-level skills for procedures like inspecting a repository or validating a fix and event-driven skills for local responses to recurring execution events such as command failures or repeated error messages, and treats skill management itself as a learnable policy trained on both rubric-based skill-quality feedback and verifiable downstream execution feedback. gskill learns concise per-repository skill documents covering architecture, coding conventions, testing procedures, common pitfalls and typical modification patterns, generating verifiable tasks with SWE-smith and refining the documents through an evolutionary loop scored by whether agents running in isolated repository environments produce passing patches. Socratic-SWE distills an Agent Skill Registry of recurring failure modes and effective repair patterns from historical solving traces, then uses it to generate targeted repair tasks that train the solver, whose new traces feed the next round. EffiSkill mines optimization skills from slow-to-fast program pairs into a portable toolbox. Tool self-evolution is noted as the least developed: most work improves an agent's skill at using fixed tools, and Live-SWE-Agent is the exception, starting from a bash-only scaffold and creating and revising its own editors, search utilities and analyzers while solving issues.",
+          "why": "The branch tracks Voyager-style skill libraries and skill induction as they land in coding and tool-use agents, and this is the closest thing to a current map of that landing. gskill's framing is the one to carry: many coding-agent failures on unfamiliar repositories are not weak reasoning but missing project knowledge, so a learned skill document functions as an automatically generated onboarding doc validated by test outcomes. The survey also names the tension that decides whether any of this generalizes, that learned skills must stay general enough to transfer across tasks yet concrete enough to be useful in a specific repository and execution environment, and it draws the boundary where the field currently stops, at creating and maintaining project-specific tools rather than only using given ones."
+        }
+      ]
     }
   ],
   "sections": [

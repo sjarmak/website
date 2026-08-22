@@ -1533,6 +1533,31 @@
           "why": "A sharp, measured demonstration of why 'currency by construction' beats retrieval-rank luck for keeping a fact's timeline straight — directly on point for this branch's validity-interval and contradiction-resolution concerns."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260818423W",
+      "title": "FM-Bench: A Benchmark for Long-Horizon Management with Competing Agents",
+      "firstAuthor": "Wang, Tianyou",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18423",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818423W",
+      "branches": [
+        "consolidation",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "A 20 in-game-year football-management environment where an LLM agent runs a club through roughly 340 to 400 decision stops using 26 tools. Every stop is a fresh conversation with no chat history carried over, so the agent's self-written notebook is its only cross-stop state, edited through two tools, append_note and rewrite_notes. That makes memory curation a directly measured variable rather than an implementation detail. The paper reconstructs each model's notebook at every season end and takes the TF-IDF cosine similarity between consecutive snapshots, where 1 means the text never changed and 0 means a full rewrite, and finds two opposite failure regimes rather than one. At the high end sits an append-only archive in which current state drowns in history; at the low end, claude-sonnet-5 at 0.20 and qwen3.7-max at 0.23 rewrite so completely that no plan survives to be executed. The winning model sits at 0.39 against a field median of 0.31, holding a stable strategy skeleton while rewriting state each season. Similarity alone does not certify good curation: notebook size decodes it, since the same high consistency score is a 200k-character archive for one model and a 3-6k curated document for the winner.",
+          "why": "This branch is about the failure modes of letting an LLM continuously rewrite its own memory, and this is the first quantification of those failure modes as a two-sided distribution over frontier models on a shared long-horizon task. Both tails are pathological, which rules out treating either stability or freshness as the objective. The two-metric reading is the transferable part: a change-rate statistic on its own is ambiguous, and only when paired with store size does it distinguish disciplined consolidation from unbounded accumulation. Because scoring is computed cumulatively by a deterministic engine with no LLM judge or human rater anywhere, the curation regime is tied to a downstream outcome rather than to a judged notion of summary quality."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "Grades memory by what it buys over 20 simulated years rather than by recall on planted facts. The engine accumulates every quantity into one composite score at every stop, with no LLM judge or human rater in the loop, and the scalar is then decomposed into six behavioral capabilities of which memory curation is one. Three capabilities track the score on every seed: reducing slow-payoff investment as the horizon ends (Spearman -0.58), keeping cash deployed rather than idle (-0.50), and opening contract renewals early (+0.45). Token spend is uncorrelated with score under every accounting the paper runs. Baselines are honest rather than decorative: across three seeds all 15 frontier models complete every horizon while the blind scripted anchors, including a disciplined heuristic, die out in 7 of their 9 runs, and a scripted upper anchor allowed to read the hidden state scores 95.54 against the best model's 90.94. The solo track plays each model against a frozen scripted world and the Arena places all 16 seats in one shared persistent economy, where the league title rotates among ten models and mid-board solo standings do not survive adaptive rivals.",
+          "why": "The branch asks for benchmarks beyond factual recall and for production reality checks, and this supplies a long-horizon instance of both with the judge removed from the loop entirely. Two results are worth carrying past the football framing. Cost does not track quality: token spend predicts nothing, which is a direct check on the assumption that more deliberation per step buys better long-horizon behavior. And ranking is not a property of a model alone, since the order settles only late in the horizon and reshuffles once rivals adapt, so a leaderboard read at any earlier point or in the non-competitive track reports something that does not hold. Hundreds of rejected bids also never teach any model where the market's hidden prices lie, which is a blunt statement of what accumulated experience in a store does not automatically become."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2431,6 +2431,69 @@
           "why": "Directly answers whether fan-out helps, and the collected evidence says only with isolation. CAID scores 63.3% with worktree isolation and merge validation but 55.5% without -- below its own 57.2% single-agent baseline, meaning unisolated fan-out was a net loss. CodeR resolves 22% with a dependency task graph and 10% with it removed; MegaAgent runs 800s with parallel group execution against 4505s without. The paper also scopes its own claim honestly: it applies to systems where agents read or write shared mutable state during long inference windows, and systems with disjoint inputs face lower concurrency risk and are bottlenecked elsewhere."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260819760Z",
+      "title": "Credit Without Ground Truth: Auditing Step-Level Credit Assignment in LLM Agents Against Executed Replay",
+      "firstAuthor": "Zhang, Haiyue",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19760",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819760Z",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Builds causal ground truth for step-level credit by executed replay: at each decision point of a collected ALFWorld trajectory, re-sample K=4 distinct policy-supported alternatives, roll each to terminal at least three times, and define the step's replay advantage as the shift between the factual-replay outcome mean and the alternative-rollout mean. Audited against that ruler, none of the credit signals agentic RL pipelines train on ranks steps better than its own marginal-matched within-trajectory shuffle. Qwen2.5-7B implicit credit (HCAPO's outcome-conditioned logprob ratio) scores 0.0193 [-0.109, 0.081] median within-trajectory Spearman against a control interval of [0.005, 0.114]; the Qwen2.5-72B judge scores 0.1142 [0.027, 0.168] against [-0.049, 0.117]; Llama-3.1-8B replicates at -0.043 [-0.125, -0.016] against [-0.102, +0.024]. Per-step sign agreement is at chance for the implicit family (267/527 = 50.7%). The ground truth is itself sparse: 30.5% of complete Qwen turns carry measurable causal effect, and the dynamics are absorbing enough that the per-turn noise floor is zero at 86.0% of turns.",
+          "why": "The branch's position is that evaluation has to be grounded in execution and read against an honest baseline. This is that position applied to the scoring signal itself, and the honest baseline is specific enough to reuse: a marginal-matched within-trajectory shuffle, with a frozen verdict order that fires the controls gate before any effect gate. It also separates two quantities the field conflates, step correctness and step contribution, and shows they come apart -- a correct step can contribute nothing when the trajectory was already determined, an incorrect one can be pivotal. The training result is the cautionary half: across seven pre-registered arms no arm reliably beats the untrained policy, and the apparent differences between credit rules are fully explained by training dose, because sparser credit retains fewer examples and buys an order of magnitude fewer optimizer steps. Comparisons of credit rules that do not match effective sample size measure dose, not credit."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260819263W",
+      "title": "The Evaluation Context Protocol (ECP): A Portable Contract for AI Agent Evaluation",
+      "firstAuthor": "Wattamwar, Aniket",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19263",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819263W",
+      "branches": [
+        "observability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Defines a JSON-RPC 2.0 contract, carried over stdio by default or Streamable HTTP, with a deliberately small three-method core: agent/initialize returns the agent's name and capabilities, agent/step advances a multi-turn evaluation and lets the evaluator inspect state at each node, and agent/reset clears transient state so scenarios stay independent. The result envelope returned by agent/step is where the observability argument sits: public_output carries the user-visible answer, tool_calls carries each invocation with its name and arguments object, and evaluation_context carries evaluator-safe audit evidence for the decision path. The last field is drawn deliberately to avoid raw chain-of-thought, so a provider can expose trajectory-level auditability without surrendering proprietary reasoning traces; the earlier alias private_thought is retained only for backward compatibility. Reference adapters wrap LangChain (as a callback handler injected at invocation time, observing LLM and tool events as they occur rather than reconstructing them), LlamaIndex, CrewAI and PydanticAI.",
+          "why": "The branch's claim is that transcripts are not observability and that a structured, replayable trace has to correlate intent with action. ECP is a concrete attempt to make that trace a contract rather than a convention, and the paper is unusually direct about where the attempt currently falls short. Because each framework exposes intermediate reasoning differently, the evaluation_context an adapter produces is only as structured as the underlying framework allows, and in several adapters it is a concatenation of captured reasoning text rather than structured evidence. The authors name a structured schema for that field as the most important outstanding work, which is the useful lesson: the audit channel is the part that degrades to prose first, and a protocol that does not schematize it inherits whatever the framework happened to log."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Each envelope field is bound to its own declared grader in a manifest.yaml validated against published JSON Schemas: text_match (contains, equals, does_not_contain, regex) or llm_judge on public_output, tool_usage (name match plus argument subset match) on tool_calls, and text_match or llm_judge targeted at the audit channel for evaluation_context. A scenario verdict is the logical AND over every declared check, so an agent that reaches the correct answer through an invalid path is recorded as a failure rather than a pass. The runtime ships ecp init, ecp validate (schema-check a manifest without executing an agent), ecp doctor, ecp conformance (verify a candidate implementation answers the protocol methods correctly) and ecp run, which exits non-zero to break a CI build. A trend command reads a sequence of saved JSON reports and can fail a build on a degrading cross-run pass-rate window, and a pytest plugin exposes an ECP agent as an ordinary test fixture so a team can adopt the contract one test at a time.",
+          "why": "Treating eval as risk reduction means it has to run where regressions are caught, and the CI-gate framing plus incremental adoption path is the operational version of that. The conformance harness matters more than the runtime: it is what makes independent reimplementation checkable rather than aspirational. The paper is explicit that it is work in progress and that empirical validation justifying adoption is future work, and it flags a real limit for anyone reading this branch: the trend command aggregates pass rates rather than estimating pass^k, so it is a coarse first step toward statistical reliability reporting and not a substitute for it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260818167Q",
+      "title": "Adversarial Review: Structured Disagreement for Grounded Agentic Code Review",
+      "firstAuthor": "Qiu, Eric S.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18167",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818167Q",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "A direct measurement of whether adding reviewing agents helps. On LiveCodeBench, zero-shot, self-refine, one reviewer and two reviewers sit indistinguishably at 75-77% pass; the five-agent MARS configuration reaches 82%; the three-agent Adversarial Review reaches 87%, the highest with the fewest agents among methods that broke out of the cluster. The failure mode that appears when the structure is added without discipline is false consensus: on SWE-PRBench naive AR drops to F1 0.457, below every non-interacting baseline, because the reviewer hedges and the critic confirms, or the critic yields to a confident-sounding rebuttal that cites no code. Forcing the critic into a three-way verdict where disagreement must either cite contradicting code or be answered with code lifts the same structure to F1 0.533. The cost is recorded rather than assumed: AR spends about 4.5x zero-shot's tokens for its 3.6-point SWE-bench Verified gain.",
+          "why": "The branch's position is that fan-out helps mostly only when measured, and that the failure taxonomy should be known before scaling. Both hold here in a controlled comparison, and the taxonomy entry is new and specific enough to design against: agents converging on agreement without sufficient evidence, which is invisible to any metric that reads only the final consensus. The mitigation is cheap and worth carrying into practice, since it is a prompt-level constraint requiring evidence-grounded pushback rather than another agent or another round."
+        }
+      ]
     }
   ],
   "sections": [

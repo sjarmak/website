@@ -3096,6 +3096,25 @@
           "why": "Moves correctness assessment beyond raw pass rate: a coverage-of-the-bug metric plus a judged quality comparison against human-written tests, both of which surface gaps a bug-detection-rate-only benchmark would miss."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260819799X",
+      "title": "SWE-bench Science: Can Coding Agents Resolve Engineering Tasks in Science?",
+      "firstAuthor": "Xu, Zhipeng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19799",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819799X",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "119 repository-level tasks drawn from 98 GitHub repositories across 20 scientific domains, split into Issue-driven (52), Expert-exploratory (49) and Engineering-integration (18) paradigms. The evaluation deliberately separates the oracle the agent can see from the one that grades it: public tests support interactive debugging inside the workspace, while private tests, contract labels, reference patches and scientific-rationale blocks are mounted only after submission in a separate evaluator container. The gap between the two oracles is the finding. Public scores run 93-100% for every agent configuration, while exact private success stays under 50% for all eight: Claude-Opus-5 with Claude Code leads Pass@1 at 47.90%, GPT-5.6-sol with Codex leads private score (78.82%), Fail2Pass (72.30%) and Pass2Pass (97.66%), and Qwen3.5-397B trails at 14.29%. Failures are then hand-classified into four mutually exclusive scientific mechanisms rather than left as an aggregate: scientific-knowledge or abstraction deficit, misguided exploration or surface-level repair, incomplete repair coverage or system integration, and failure to generalize a scientific principle beyond the observed case.",
+          "why": "This branch is about what coding agents are actually judged by and why passing the visible tests is not enough, and the benchmark is built around exactly that gap. A near-perfect public score next to a sub-50% exact private score is a direct measurement of tests-as-oracle weakness at repository scale, and the hidden validators are designed to catch the specific evasion: alternative execution paths, state-reset tests and inter-module behavioral-contract tests, so that a patch has to hold the scientific contract across the module chain rather than make one visible assertion pass. The paired ablation adds a result worth carrying: on the 91 tasks where scientific auxiliary information can be separated, supplying it moved GPT-5.6-sol's mean private score up slightly (73.23% to 74.06%) while dropping Pass@1 from 36.26% to 31.87%, with 8 tasks solved only with the information and 12 only without it. Well-targeted domain knowledge constrains the repair; poorly aligned knowledge anchors the agent onto a supplied explanation in place of independent validation. Better-scored is not better-repaired, and the two can move in opposite directions on the same intervention."
+        }
+      ]
     }
   ],
   "sections": [
