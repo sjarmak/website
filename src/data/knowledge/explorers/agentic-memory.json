@@ -2981,6 +2981,93 @@
           "why": "The branch tracks Voyager-style skill libraries and skill induction as they land in coding and tool-use agents, and this is the closest thing to a current map of that landing. gskill's framing is the one to carry: many coding-agent failures on unfamiliar repositories are not weak reasoning but missing project knowledge, so a learned skill document functions as an automatically generated onboarding doc validated by test outcomes. The survey also names the tension that decides whether any of this generalizes, that learned skills must stay general enough to transfer across tasks yet concrete enough to be useful in a specific repository and execution environment, and it draws the boundary where the field currently stops, at creating and maintaining project-specific tools rather than only using given ones."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260819652F",
+      "title": "Can Agent Memory Systems Track Evolving State?",
+      "firstAuthor": "Fan, Xinyi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19652",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819652F",
+      "branches": [
+        "benchmarks-catalog",
+        "eval-methodology",
+        "forgetting",
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "234 multi-session scenarios across research, shopping and personal finance, in two length regimes: Set A holds 190 single-probe scenarios of 18 sessions each (median 165 turns, roughly 3k tokens), and Set B holds 44 scenarios fusing three trap threads of different failure modes into one conversation of about 38 sessions (median 599 turns, 3.6x Set A in turns, roughly 7k to 15k tokens) probed by a three-part question, for 322 graded probes in total. Scenarios are not hand-written. Each is generated as a symbolic event program of typed state operations (rule declarations, value updates, scoped exceptions, commitments, retractions) over ground, derived and declared state, and the gold answer is computed by replaying that program through a deterministic evaluator. A scenario is admitted as a trap exactly when one or more executable lazy-reader heuristics disagree with full replay, and the disagreeing policies become its failure-mode signature, yielding status, salience, sequence and compound traps plus anti-trap scenarios where the anchored answer is the correct one. A strong LLM renders each program into dialogue but supplies only surface vocabulary, and the pipeline programmatically verifies that every load-bearing fact appears in its assigned session and that no banned phrase leaks, re-rendering scenarios that fail.",
+          "why": "The catalog's usual axes are size and task type; the axis that matters here is construction. Because the failure mechanism is fixed by the generating program rather than assigned by post-hoc labeling, the benchmark can score which wrong answer a system gave and not merely that it was wrong. The anti-trap scenarios carry as much weight as the traps, since they are the only thing preventing a system from scoring well by invalidating everything it holds."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Two methodological moves. First, closed-pool grading: at generation time each probe gets a small answer pool of three to four options, never shown to the model, containing the gold answer, the value a non-state-tracking reader would anchor on, and neutral distractors. Scoring can then separate a drift answer from an off-pool wrong answer, which turns out to be necessary, because LightMem and MemoryOS land off-pool on 60 to 94% of cells and post deceptively low drift rates by construction rather than by resisting the trap; the paper therefore reports in-pool count alongside drift rate. Second, the prior labeling study is run against its own bias: a failure is assigned to drift only after every other reading is excluded, unassignable points are dropped rather than defaulted, two judge passes agree at kappa 0.67 on LongMemEval and 91.6% raw on MemoryArena-shopping, a cross-family GPT-4o judge agrees at kappa 0.37, and two human annotators, one labeling blind to the taxonomy, recover the same categories while assigning less drift, so the reported rates are stated as ceilings. On LongMemEval oracle, where recall is 1.0 by construction, 44.4% of DeepSeek-V4-Flash's 36 failures are confirmed drift, Wilson 95% CI [30%, 60%].",
+          "why": "The branch asks whether a memory evaluation measures the thing it names. This shows the two ways that fails for state tracking. Answer-level accuracy alone cannot distinguish a stale-value error from a retrieval miss or a comprehension failure, and a drift rate computed without an engagement denominator rewards systems that produce nothing usable. The oracle-retrieval control is the cleanest piece: when every gold fact is in the prompt by construction, no residual failure can be retrieval in disguise, which is the argument that state tracking is a separate axis rather than a retrieval symptom."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "State drift is defined as acting on a stale or incomplete version of a fact that is present in the assembled context, and it is measured rather than asserted. Prevalence across existing benchmarks is uneven: drift leads confirmed failures on MemoryArena-shopping at 63.5% and on LongMemEval oracle at 44.4%, but falls to 19.0% on MemoryArena-travel where comprehension failure dominates at 46.5%. Within LongMemEval oracle it concentrates where decisions integrate multiple sources, with multi-session failures drifting at nearly three times the rate of knowledge-update failures, 10 of 14 versus 2 of 8. Drift is separated from a reasoning shortfall: on 50 paired items, enabling DeepSeek-V4-Flash's reasoning trace does not help (84.0% to 76.0%, McNemar p=0.34) while explicit state maintenance on the same task does. On StateMemBench itself, drift rate sits at 61 to 66% for long-context, Mem0, BM25 and StateMem alike on the weaker Qwen-3.5-9B backbone and separates only on DeepSeek-V4-Flash, where StateMem falls from 64.3% to 49.1% and its correct-answer count rises from 75 to 117.",
+          "why": "The branch asks how, or whether, obsolescence and belief revision are actually measured. This supplies a metric with a denominator that resists gaming, plus one uncomfortable finding: retiring a superseded fact is not free. StateMem's dependency propagation, which marks dependents of a changed unit as needing recheck, helps its target modes but over-propagates on the Set B anti-traps by 12.5 points, and removing it leaves the DeepSeek configuration slightly better overall, 0.373 versus 0.363. Forgetting too eagerly and forgetting too late are the same tuning knob."
+        },
+        {
+          "branch": "architectures",
+          "takeaway": "StateMem stores memory as structured state units of the form (id, content, priority, source, deps), where priority is hard or soft, source records the originating turn and speaker, and deps are typed links (derived_from or coupled_with) to other units. One LLM call per conversational turn parses that turn into zero or more units, with the compact rendering of all active units supplied as context; the encoder may also flag existing units as at risk of supersession and volunteer replacements. Everything after that is deterministic. The store applies flagged supersessions, marking the target superseded and keeping it for auditability while withholding it from the next stage, and a rechecker walks the dependency graph marking any unit whose dependency just changed as needs_recheck. That pass runs in O(|E|) and adds no LLM calls, because the edges were recorded at ingestion. At answer time the store assembles active units into a structured block grouped by priority and source, each flagged unit shown next to the trigger that flagged it, dated units rendered with their dates as recency markers, and the model makes one call to recompute. Ablation puts supersession marking as the largest single component, 0.174 to 0.298 on DeepSeek; extraction alone recovers little, and dropping recompute guidance costs 6 points.",
+          "why": "The design decision worth carrying is the split: the LLM proposes structure at ingestion, and a deterministic layer decides what is stale and what is relevant. The paper contrasts this with the concurrent STALE, which propagates updates through an LLM adjudicator over a predefined schema, and with Zep, which attaches valid-time intervals to knowledge-graph edges and invalidates on contradiction, tracking a single fact's validity but not what was derived from it. Recording dependency edges at write time is what makes the invalidation cascade cheap enough to run on every update."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260819564L",
+      "title": "Remember, Verify, or Ask? Cross-Family Evaluation of Memory Commitment in LLM Agents",
+      "firstAuthor": "Li, Baichuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19564",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819564L",
+      "branches": [
+        "eval-methodology",
+        "benchmarks-catalog"
+      ],
+      "notes": [
+        {
+          "branch": "eval-methodology",
+          "takeaway": "The benchmark is built so its own labels can be checked. Two non-authors independently labeled the 70 primary-test and 70 contrast items while blind to author labels, categories, rationales, model outputs and each other, reaching 0.971 agreement (Cohen's kappa 0.962); a blind third non-author broke four ties, eight author labels were replaced by non-author majority, and every metric was then recomputed. Metrics are behavior-specific rather than a single accuracy: over-memory is the fraction of all items wrongly predicted persist, under-memory is the miss rate on gold-persist items, clarification and verification are recalls on their own gold subsets, and invalid outputs are kept as an always-wrong fifth state rather than mapped to a favorable class. All systems share the same items, so headline differences use exact paired McNemar tests with Holm correction applied separately within each comparison family, and per-category cells of 10 items are explicitly excluded from ranking claims. The payoff is a distinction the paper draws directly: Qwen's policy prompt raises accuracy by only 0.071, not separable from zero at p_H = 0.539, while cutting erroneous persistence from 0.243 to 0.100 at p_H = 0.038, removing 11 bare errors and introducing one.",
+          "why": "The branch's concern is scoring-target sensitivity and statistical rigor, and this is a clean worked example of both. A prompt intervention can move a safety-relevant behavior without moving total accuracy, so a benchmark that reports one number would score the intervention as noise. The non-author adjudication matters for the same reason: the labels encode a judgment call about what should be persisted, which is exactly the kind of label an author's own intuition would quietly fit the model to."
+        },
+        {
+          "branch": "benchmarks-catalog",
+          "takeaway": "140 primary scenarios split deterministically 70/70 into development and held-out by sorted identifier within category, plus a separate 70-item contrast extension frozen before inference containing 35 evidence-flip pairs including seven cue-conflicting traps. Each item is an acquire context, a candidate update and a later reuse context, labeled with one of four actions: persist, ephemeral, verify, clarify. Coverage is 20 items each across stable preferences, episodic preferences, freshness-sensitive facts, one-off corrections, policy constraints, ambiguous updates and noisy failures, and the audited test distribution is 38 persist, 40 ephemeral, 33 verify, 29 clarify. Every category contains multiple actions, so the category is not the label, and eight lexical traps place words such as always or today in contexts where their usual heuristic action is wrong. A second track, MCB-Act, removes the label vocabulary entirely and requires one structured call among memory_write, use_now, check_source and ask_user, each with a required argument checked by deterministic minimum-content and relevance rules. Reference systems include always-persist, a majority-action predictor and a keyword heuristic, all of which sit at 0.257 to 0.314 accuracy.",
+          "why": "Most benchmarks in this catalog ask what a system can retrieve. This one asks what it should write, and it supplies the candidate update so the commitment decision is isolated from retrieval. The four-way action space is the part worth reusing: verify and clarify are not interchangeable, because the world is the source of truth for changing facts and the user is the source of truth for intent and scope, and collapsing them hides the failure the paper actually finds."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260610388D",
+      "title": "SkillResolve-Bench: Measuring and Resolving Same-Capability Ambiguity in Agent Skill Retrieval",
+      "firstAuthor": "Ding, Jiandong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10388",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610388D",
+      "branches": [
+        "procedural-skills",
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Skill libraries are treated as a retrieval corpus with an execution consequence, and the failure studied is not missing the right capability but exposing the wrong member of it. Each benchmark unit pairs a helpful skill with a query-specific risky sibling that shares the capability family and procedure shape but changes the condition that makes the procedure usable: the referenced resource, temporal scope, input precondition, formula-preserving operation, unit convention, or output schema. The label is an execution relation between a query and a skill rather than an intrinsic property of the skill text, so the same skill can be helpful in one context and the risky sibling in another. The ambiguity is shown to be real in public libraries: in an audit of SkillRet using public metadata only, 4,716 of 4,997 queries have at least one non-gold skill in the gold skill's domain/action/object family, and across seven standard retrievers a top-three list surfaces such a sibling for 47.3% of queries, with 36.6% containing both the gold skill and a strict same-family sibling. The reference method resolves candidates into competing family groups, scores query-conditioned utility from confusable library negatives plus contract-profile cues (resource bindings, preconditions, API and temporal scope, output schema, procedure indicators), and exposes only the highest-utility representative per family before the final top-K ranking.",
+          "why": "The procedural-skills literature has mostly covered inducing, evolving and reusing skills. This is the layer underneath: once a library holds several skills for the same capability, retrieval quality stops being a relevance question. Removing representative selection while holding the scorer fixed raises the top-3 exposure of the risky sibling from 0 to 0.236, which locates the failure in within-family choice rather than in ranking or embedding quality, and says that a growing skill library degrades an agent through ambiguity long before it degrades it through irrelevance."
+        },
+        {
+          "branch": "security-governance",
+          "takeaway": "The paper places a trust boundary at retrieval time rather than at execution time. Its framing is that a loaded skill package can affect planning, context, permissions, scripts and local resources, and it separates itself from malicious-skill detection and permission enforcement, citing MalSkillBench for runtime-verified malicious-skill ground truth and SkillGuard for manifest-based access control and audit signals, by targeting the earlier decision of which same-capability representative is admitted to the context at all. The risky siblings are not malicious content: they are plausible library skills that point at a stale resource, skip a precondition, or apply the wrong check, so nothing in a manifest or a permission audit would flag them. The metric is harmful sibling rate, HSR@K, the fraction of queries whose top-K list contains the query-specific risky sibling, reported alongside Recall@K and NDCG@K because a relevance-only scorer can raise both at once by ranking the two siblings together. The release records source role and admission evidence, cue and leakage checks, hashes, query-disjoint splits, and a fixed candidate pool assembled around public SkillRet candidates, so the exposure figure is auditable rather than asserted.",
+          "why": "Governance for agent memory is usually written as access control over what may be read and written. This adds a class the access model does not cover: content that is authorized, non-malicious, and wrong for the current request. HSR@K is the useful export, because it is an exposure rate against a fixed library that can be recomputed whenever the library changes, which behaves more like a certificate than a leaderboard score."
+        }
+      ]
     }
   ],
   "sections": [

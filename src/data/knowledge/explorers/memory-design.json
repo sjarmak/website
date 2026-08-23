@@ -1558,6 +1558,62 @@
           "why": "The branch asks for benchmarks beyond factual recall and for production reality checks, and this supplies a long-horizon instance of both with the judge removed from the loop entirely. Two results are worth carrying past the football framing. Cost does not track quality: token spend predicts nothing, which is a direct check on the assumption that more deliberation per step buys better long-horizon behavior. And ranking is not a property of a model alone, since the order settles only late in the horizon and reshuffles once rivals adapt, so a leaderboard read at any earlier point or in the non-competitive track reports something that does not hold. Hundreds of rejected bids also never teach any model where the market's hidden prices lie, which is a blunt statement of what accumulated experience in a store does not automatically become."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260819652F",
+      "title": "Can Agent Memory Systems Track Evolving State?",
+      "firstAuthor": "Fan, Xinyi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19652",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819652F",
+      "branches": [
+        "temporal",
+        "evaluation",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "The benchmark isolates one temporal capability: given that a fact, constraint or derived quantity was revised across sessions, does the system answer from the value in force at decision time. Conflicts are supplied explicitly, with causal dependencies stated in the dialogue rather than left to commonsense inference, so what is measured is state maintenance and not conflict discovery. The paper positions this against two existing temporal designs: Zep attaches valid-time intervals to knowledge-graph edges and invalidates an edge on detecting a contradiction, which tracks the validity of a single fact but not what was derived from it, while the concurrent STALE propagates updates through an LLM adjudicator over a predefined schema and constructs its conflicts implicitly. StateMem's answer is a supersession status plus a typed dependency graph, with dated units carrying their dates as recency markers and the question date supplied as a today anchor where the benchmark provides one. Holding the whole transcript in context is not a substitute: the best long-context model reaches 0.277 overall and same-backbone long-context reaches 0.149 on both substrates.",
+          "why": "Keeping a fact's timeline straight is usually framed as a representation problem for the fact itself. The result here is that the timeline of derived quantities is the harder half. A budget stated once and computed from an input that later changed is still sitting in the store as a confident, well-retrieved, wrong answer, and no amount of validity-interval bookkeeping on the input fixes it unless the derivation edge was recorded."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "Retrieval correctness and answer correctness are separated by construction, and the separation changes the ranking. On LongMemEval oracle every gold fact is in the prompt, so no residual failure can be retrieval in disguise, and 44.4% of them are confirmed state drift. On StateMemBench, long-context stops being the strong baseline it is on recall benchmarks: GPT-5.4-Nano reaches 0.277 and same-backbone long-context 0.149, while the best memory systems land at 0.199 (A-Mem) and 0.149 (Mem0) and dense retrieval at 0.205. StateMem reaches 0.363 on DeepSeek-V4-Flash and 0.233 on Qwen-3.5-9B, beating the strongest memory baseline on both by paired McNemar at p < 0.001. Cost is controlled rather than ignored: a wrapper form of the method replaces the answer call the backend would have made anyway, adds no LLM calls, and is capped at a 155-token instruction plus a 250-word trace, compared against a length- and cost-matched control whose first stage is generic question-conditioned extraction. Across six backends the wrapper adds 31.7 to 66.6 points on StateMemBench, of which 15.0 to 31.7 survive the matched control and are attributable to state structure rather than added context.",
+          "why": "This is the branch's standard applied properly. The matched control is the part most papers skip, and without it every gain from a prompt-level addition is confounded with the tokens it introduces. It also yields a directly usable result: the wrapper improved all six backends on both benchmarks, so state structure is a separable axis you can add on top of an existing store rather than a reason to replace it. The paper also reports that state tracking does not cost recall, with StateMem leading memory systems on LongMemEval and LoCoMo and coming within a few points of long-context while reading only a bounded state."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "StateMem draws the LLM boundary at ingestion only. One call per turn parses the turn into state units and may flag existing units as at risk of supersession; after that a deterministic store applies the supersessions and a rechecker walks the dependency graph marking dependents of any changed unit as needs_recheck, in O(|E|) with no further model calls. Superseded units stay in the store for auditability but are withheld from answering, while needs_recheck units stay active but flagged and are rendered at answer time beside the trigger that flagged them, so the model recomputes rather than quotes. The component ablation locates the value: extraction alone reaches 0.174 on DeepSeek, adding supersession marking takes it to 0.298, and removing recompute guidance costs 6 points. The paper's contrast case is the concurrent STALE, which propagates updates through an LLM adjudicator over a predefined schema.",
+          "why": "The branch's live question is what happens when an LLM is allowed to continuously rewrite its own memory. The answer taken here is to not let it: the model writes and revises content, but never decides what is stale. That decision is graph traversal over edges recorded at write time, which is cheap, auditable, and cannot hallucinate an invalidation. The counterweight sits in the same paper, since deterministic propagation over-fires on the anti-trap scenarios by 12.5 points."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260819564L",
+      "title": "Remember, Verify, or Ask? Cross-Family Evaluation of Memory Commitment in LLM Agents",
+      "firstAuthor": "Li, Baichuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.19564",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260819564L",
+      "branches": [
+        "consolidation",
+        "interop"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "The write decision is treated as a four-way choice at candidate-commitment time: persist a durable preference or authorized policy, use it ephemerally when it is scoped to one artifact, session or time window, verify against the world when the fact can change or the signal is noisy, or clarify with the user when the referent, durability, scope or conflict is unresolved. When persist and a weaker action tie, the released rules prefer the weaker commitment, encoding an asymmetric cost: an unnecessary question is visible and recoverable, while a wrong durable update stays silent. Measured across Claude Haiku 4.5, Claude Sonnet 4.6 and a local Qwen3.5-9B, models verify far more readily than they ask. Claude verification recall runs 0.889 to 1.000 against clarification recall of 0.500 to 0.750; bare Qwen verifies 12 of 18 freshness items and asks on 0 of 12 clarification items, mapping those instead to persist (7), verify (4) and ephemeral (1). Few-shot prompting raises Qwen accuracy from 0.557 to 0.771 (p_H = 0.002) and clarification recall from 0 to 0.333, still missing 8 of 12.",
+          "why": "The branch's failure mode is an LLM continuously rewriting its own memory. This names the specific error behind it: source-of-truth confusion, where a model recognizes uncertainty, consults the world instead of the user who alone can resolve intent, and then silently commits an interpretation. It also shows the two levers are not the same lever. Demonstrations raise total accuracy; an explicit commitment policy barely moves accuracy but more than halves erroneous persistence. Neither removes under-asking, and the error the models substitute for asking is model-dependent, with bare Qwen over-persisting on 0.243 of all items against 0.029 for bare Haiku."
+        },
+        {
+          "branch": "interop",
+          "takeaway": "MCB-Act replaces the action label with a structured tool call (memory_write, use_now, check_source, ask_user), each carrying a required string argument checked against deterministic minimum-content and relevance rules, with the payload retained for audit. Agreement between the stated label and the tool call is 0.571 for both Claude models, so 30 of 70 decisions change when labels become tools, and only 0.229 for Qwen. Accuracy moves with it: Sonnet drops from 0.814 to 0.529 (p_H < 0.001) and Qwen from 0.557 to 0.343 (p_H = 0.047), with Qwen calling use_now on 54 of 70 items, which reduces over-memory but collapses verification recall from 0.667 to 0.056. Every emitted argument passes the well-formedness rules, including all clarification questions on gold-clarify items, so the bottleneck is tool choice rather than malformed arguments. The track scores tool-call selection only and does not execute downstream effects.",
+          "why": "Governance surfaces for memory are usually specified as a schema and then evaluated by asking a model what it would do. This shows the two answers diverge: a model that states the right commitment decision picks a different tool on 43% of the same items. Anything auditing what gets written has to read the emitted call rather than a stated intent, and a validator that checks argument shape will pass cleanly while the wrong operation is being invoked."
+        }
+      ]
     }
   ],
   "sections": [

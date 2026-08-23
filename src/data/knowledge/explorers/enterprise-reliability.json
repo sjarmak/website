@@ -2494,6 +2494,69 @@
           "why": "The branch's position is that fan-out helps mostly only when measured, and that the failure taxonomy should be known before scaling. Both hold here in a controlled comparison, and the taxonomy entry is new and specific enough to design against: agents converging on agreement without sufficient evidence, which is invisible to any metric that reads only the final consensus. The mitigation is cheap and worth carrying into practice, since it is a prompt-level constraint requiring evidence-grounded pushback rather than another agent or another round."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260815242Z",
+      "title": "LongRCA Bench: Diagnosing Responsible Roles and Root Causes in Long-Horizon Agent Failures",
+      "firstAuthor": "Zhang, Yunfei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.15242",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260815242Z",
+      "branches": [
+        "observability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "The benchmark normalizes 1,140 failed runs from five agent frameworks into one record schema: a 0-based step index, a role name, and content, with tool and verifier metadata retained where the source framework logged it. That schema is what makes the diagnosis addressable, because the raw logs are long and heterogeneous. Trajectories average 156.3 steps, 145 at the median and 728 at the maximum, and the labeled root cause is followed by a median of 48 further recorded steps, 183 at the 90th percentile and 605 at the maximum; more than 100 steps follow the root in 28.4% of runs. RCTA, the paper's method, reaches the root only by adding structure on top of the log: rule-based segmentation that preserves the original step IDs, one summarization call per segment to recall candidate error steps, then retrieval of the nearest earlier handoff message addressed to the candidate's role so the candidate's original text can be compared against the instruction that produced it. A programmatic validator afterward checks that the predicted role occurs in the trajectory and that quoted handoff text actually appears in the referenced instruction, which establishes provenance but not semantic correctness.",
+          "why": "The branch's position is that a transcript is not observability and that a trace has to correlate intent with action. This puts a number on the distance that correlation must span: the decisive instruction and the observed failure are separated by tens to hundreds of recorded steps, so a trace lacking stable step identity, an explicit emitting role, and recorded handoff edges leaves nothing to walk backward along. RCTA's backward tracing works because handoffs were logged as addressed messages of the form X (-> Y); the same method has nothing to retrieve in a system that records only a flat conversation."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Outcome-level scoring reports that a run failed and nothing more. The worked SWE-bench Pro case has a diagnostic agent issue a repair plan at step 37 using an API inconsistent with the task requirement, the executor carries it out, the system reports completion at step 163, and only the post-run evaluator reveals 0 of 47 required tests passing. Scoring role attribution and root-step localization as separate targets on the same 1,140 trajectories under a matched DeepSeek-V4-Flash backbone shows the two capabilities come apart: RCTA reaches 51.1% responsible-role accuracy but 24.1% exact root-step accuracy and 37.4% within five steps, while the strongest baseline, ECHO, reaches 27.5%, 13.2% and 24.7%. Dependency-guided search (FALAT) reaches 2.8% exact, below plain all-at-once prompting. The paper bounds its own claims: the stratification by trajectory length and root-to-end distance is descriptive because source domain, workflow and root position are correlated, and the setting is offline diagnosis of a completed run rather than online detection.",
+          "why": "The branch argues for grounding evaluation in execution and against reading a headline number as proof. Both apply here. Failures are observed rather than injected, so the difficulty is the difficulty of real runs, and a single blended attribution score would have hidden the actual result: naming which role is at fault is roughly twice as tractable as naming the step where the fault entered. Anyone wiring failure attribution into a pipeline should read 24.1% exact localization as the current state of the art on long traces and budget for a human to close the rest."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260610388D",
+      "title": "SkillResolve-Bench: Measuring and Resolving Same-Capability Ambiguity in Agent Skill Retrieval",
+      "firstAuthor": "Ding, Jiandong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.10388",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260610388D",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Retrieved skills enter the agent as procedural context before planning or execution, which makes the retrieval layer a trust boundary rather than a ranking problem. The paper measures that boundary with harmful sibling rate (HSR@K), the top-K exposure of a query-specific sibling that shares the capability family but would steer execution toward a stale resource, a skipped precondition or the wrong check. Generic lexical retrieval, SkillRouter and BGE reranking recover the helpful skill while exposing the risky sibling; an attribution-listwise method suppresses exposure but loses helpful retrieval quality. The reference method, SkillResolve, reaches Recall@3 0.766 and NDCG@3 0.699 with HSR@3 at 0 under the released family relation, improving on SkillRouter by 0.112 Recall@3 and 0.165 NDCG@3 while dropping its HSR@3 from 0.693. Ablating representative selection under the same scorer raises HSR@3 to 0.236, so exposure is controlled by the within-family choice and not by the scorer.",
+          "why": "The branch's rule is to treat tool and RAG output as untrusted. The sharper version here is that untrusted does not mean adversarial. These are ordinary library skills, correct for some other query, arriving with instructions, scripts and resource bindings attached. A system that admits its top three matches by relevance is admitting execution assumptions it never evaluated, and the recall-and-exposure pair is the honest way to report that, since any single relevance number can improve while exposure gets worse."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260820169M",
+      "title": "Task-CoEvolve: Efficient Harness Optimization via Adaptive Validation Task Selection",
+      "firstAuthor": "Miyai, Atsuyuki",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.20169",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260820169M",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Automated harness optimization rewrites the agent's control code and keeps whatever improves validation score, and existing work evaluates every candidate on the full validation set at every iteration. On Terminal-Bench 2.1, where a task occupies a sandbox for tens of minutes, that is 890 trials, 22.2 hours and $117 of GPT-5.6-Luna inference for one search. Task-CoEvolve replaces it with two pieces. Tasks are sampled with weight max(p(1-p), floor) + lambda/sqrt(n), where p is a task's historical success rate, so the budget concentrates where past candidates disagreed, with the floor keeping never-solved tasks eligible and the count term protecting tasks with few observations. Because each iteration then evaluates a different subset, raw subset means are not comparable across iterations, so full-set score is estimated from inclusion probabilities: a Hajek estimator when per-pool success rates sit near 0 or 1, and an anchored difference estimator weighting each outcome's deviation from its historical rate when they sit mid-range. At a 20% budget it reaches 61.8% and 41.6% on Terminal-Bench 2.1 against full search's 62.9% and 42.7%, a gap of about one task in 89, while cutting search cost 67 to 80%. On text classification at a 20% budget it beats full search outright, 49.3% against 48.6%, which the authors attribute to full search overfitting the fixed validation set.",
+          "why": "The branch treats evaluation as risk reduction with a cost, and this makes the cost side explicit for a loop that is otherwise easy to run unbounded. Two results transfer past harness search. First, an evaluation set is not uniformly informative and its informativeness moves as the system changes, so tasks every candidate solves or every candidate fails are budget spent for no discrimination. Second, resampling the set is only sound if the estimator corrects for it: the fixed-subset baseline overfits and the raw-mean resampling baseline produces scores that are not comparable across iterations. Worth carrying alongside the numbers is what the paper does not claim, since on Terminal-Bench it searches and evaluates on the same 89 tasks, following prior work, so these are not held-out generalization figures."
+        }
+      ]
     }
   ],
   "sections": [
