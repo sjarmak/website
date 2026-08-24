@@ -1,4 +1,5 @@
-const CHAPTER_HEADING = /^## Chapter (\d+): (.+)$/gm;
+const CHAPTER_HEADING =
+  /^(?:## Chapter (\d+): (.+)|<h2 id="chapter-(\d+)">Chapter \d+: (.+)<\/h2>)$/gm;
 const PRACTICE_BLOCK = /^### (.+)\n\n(?:`(ERCA-\d{3})` · )?`([a-z0-9]+(?:-[a-z0-9]+)*)`\n\n([\s\S]*?)(?=\n### |\n## Chapter |$)/gm;
 const MARKDOWN_LINK = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g;
 const ARXIV_REFERENCE = /\barXiv:\s*(\d{4}\.\d{4,5})(?:v\d+)?\b/gi;
@@ -295,7 +296,7 @@ export function parseCompanionPractices(source, expectedCounts) {
   const headings = [...source.matchAll(CHAPTER_HEADING)];
   const practices = [];
   for (let index = 0; index < headings.length; index += 1) {
-    const chapter = Number(headings[index][1]);
+    const chapter = Number(headings[index][1] ?? headings[index][3]);
     const start = headings[index].index;
     const end = headings[index + 1]?.index ?? source.length;
     const section = source.slice(start, end);
@@ -361,6 +362,11 @@ export function buildBookGraph({ book, chapters, companionSource, expectedCounts
 
   const practices = parseCompanionPractices(companionSource, expectedCounts);
   const chapterByNumber = new Map(numberedChapters.map((chapter) => [chapter.number, chapter]));
+  for (const practice of practices) {
+    if (!chapterByNumber.has(practice.chapter)) {
+      throw new Error(`Book graph is missing chapter ${practice.chapter}`);
+    }
+  }
   const rootHref = `/books/${book.id}`;
   const nodes = [
     {

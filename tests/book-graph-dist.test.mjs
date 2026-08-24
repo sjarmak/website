@@ -36,24 +36,24 @@ test("the canonical explorer ships the complete graph and accessible controls", 
   const payload = html.match(/<script type="application\/json" data-book-graph-data>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(payload, "graph JSON payload");
   const graph = JSON.parse(payload);
-  assert.equal(graph.nodes.length, 217);
-  assert.equal(graph.edges.length, 216);
+  assert.equal(graph.nodes.length, 232);
+  assert.equal(graph.edges.length, 231);
   assert.deepEqual(graph.counts, {
     books: 1,
     parts: 6,
-    chapters: 18,
-    practices: 192,
-    taught: 55,
-    untaught: 137,
+    chapters: 19,
+    practices: 206,
+    taught: 56,
+    untaught: 150,
   });
 });
 
 test("the server-rendered list exposes every chapter and practice without JavaScript", () => {
   const html = page("books", SLUG, "explore");
-  assert.equal((html.match(/data-book-graph-chapter/g) ?? []).length, 18);
-  assert.equal((html.match(/data-book-graph-practice/g) ?? []).length, 192);
-  const practices = html.split("data-book-graph-practice").slice(1, 193);
-  assert.equal(practices.length, 192);
+  assert.equal((html.match(/data-book-graph-chapter/g) ?? []).length, 19);
+  assert.equal((html.match(/data-book-graph-practice/g) ?? []).length, 206);
+  const practices = html.split("data-book-graph-practice").slice(1, 207);
+  assert.equal(practices.length, 206);
   practices.forEach((practice) => {
     assert.match(practice, new RegExp(`href="/books/${SLUG}/companion#`));
   });

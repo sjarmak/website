@@ -40,6 +40,7 @@ function fixture() {
   return {
     bookId: SLUG,
     chapters,
+    expectedCounts: { total: 206, taught: 56, untaught: 150 },
     companionSource: readFileSync(
       path.join(ROOT, "src/content/book-companions", `${SLUG}.md`),
       "utf8",
@@ -95,18 +96,18 @@ test("extracts linked, plain arXiv, DOI, and raw references without MathML noise
 test("builds the complete deduplicated book and companion reference index", () => {
   const index = buildBookReferences(fixture());
   assert.deepEqual(index.counts, {
-    references: 368,
-    citations: 440,
-    papers: 331,
-    articles: 21,
-    repositories: 8,
+    references: 397,
+    citations: 481,
+    papers: 333,
+    articles: 47,
+    repositories: 9,
     discussions: 8,
   });
-  assert.equal(index.references.length, 368);
-  assert.equal(new Set(index.references.map((reference) => reference.url)).size, 368);
+  assert.equal(index.references.length, 397);
+  assert.equal(new Set(index.references.map((reference) => reference.url)).size, 397);
   assert.equal(
     index.references.reduce((total, reference) => total + reference.citedBy.length, 0),
-    440,
+    481,
   );
   assert.ok(index.references.every((reference) => reference.url.startsWith("https://")));
 });
@@ -150,6 +151,6 @@ test("companion citations are attached only to the full untaught entries", () =>
   const index = buildBookReferences(fixture());
   const companionLocations = index.references.flatMap((reference) => reference.citedBy)
     .filter((location) => location.sourceKind === "practice");
-  assert.equal(companionLocations.length, 209);
+  assert.equal(companionLocations.length, 238);
   assert.ok(companionLocations.every((location) => location.classification === "untaught"));
 });

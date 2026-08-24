@@ -51,8 +51,8 @@ test("writing index links to the book exactly once", () => {
 test("book landing lists every entry once in reading order", () => {
   const html = page("books", BOOK.slug);
   assert.match(html, /<h1[^>]*>Engineering Reliable Coding Agents<\/h1>/);
-  assert.match(html, />Evaluation, Recovery, Context, and Control Beyond the Model<\/p>/);
-  assert.match(html, />\s*18 chapters · 6 parts · approximately 356 pages\s*<\/p>/);
+  assert.match(html, />Evaluating and Operating the System Around the Model<\/p>/);
+  assert.match(html, />\s*19 chapters · 6 parts · approximately 314 pages\s*<\/p>/);
   assert.doesNotMatch(html, /89,005 words/);
   const contents = html.slice(html.indexOf('<section class="contents'));
   let lastIndex = -1;
@@ -88,19 +88,39 @@ test("companion route renders all practices with stable anchors and chapter navi
 
   assert.equal(html.split("<h1").length - 1, 1);
   assert.match(html, /<h1[^>]*>Companion catalog<\/h1>/);
-  assert.equal(practiceIds.length, 192);
-  assert.equal(new Set(practiceIds).size, 192);
-  assert.equal(chapterIds.length, 18);
+  assert.equal(practiceIds.length, 206);
+  assert.equal(new Set(practiceIds).size, 206);
+  assert.equal(chapterIds.length, 19);
   assert.match(html, /href="#chapter-1"/);
   assert.match(html, /href="#never-report-a-single-run"/);
-  assert.match(html, />55 taught</);
-  assert.match(html, />137 untaught</);
+  assert.match(html, />56 developed</);
+  assert.match(html, />150 companion records</);
 
   const visibleMarkup = html.replace(
     /<annotation encoding="application\/x-tex">[\s\S]*?<\/annotation>/g,
     "",
   );
   assert.doesNotMatch(visibleMarkup, /\\binom|\\ge/);
+});
+
+test("book and companion expose the provisional 1.1 coupling analysis", () => {
+  const href = `/books/${BOOK.slug}/coupling`;
+  assert.match(page("books", BOOK.slug), new RegExp(`href="${href}"`));
+  assert.match(page("books", BOOK.slug, "companion"), new RegExp(`href="${href}"`));
+
+  const html = page("books", BOOK.slug, "coupling");
+  assert.equal(html.split("<h1").length - 1, 1);
+  assert.match(html, /<h1[^>]*>Cross-layer coupling<\/h1>/);
+  assert.match(html, /Companion 1\.1\.0/);
+  assert.match(html, /Provisional/);
+  assert.match(html, /Dependency chain/);
+  assert.match(html, /Coupling graph/);
+  assert.match(html, /24 supported common-cause/);
+  assert.match(html, /data-coupling-matrix/);
+  assert.match(html, /data-coupling-graph/);
+  assert.match(html, /10 common-cause mechanisms/);
+  assert.match(html, /8 ranked experiments/);
+  assert.match(html, /112 open review items/);
 });
 
 test("all chapter routes build with one page H1 and reading-order navigation", () => {

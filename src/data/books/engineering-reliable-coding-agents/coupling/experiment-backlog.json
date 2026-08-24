@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "design_rule": "Characterize one deterministic fault at a time. Run selected A, B, and A+B factorials only after both single-fault signatures are stable.",
+  "ranking_formula": {
+    "evidence_strength": "observed=3, derived=2, hypothesized=1; weight 3",
+    "affected_layer_count": "one point per predicted layer",
+    "controllability": "1-3; weight 2",
+    "practical_relevance": "1-3; weight 2",
+    "interpretability": "1-3; weight 2",
+    "tie_breaker": "experiment_id ascending"
+  },
+  "experiments": [
+    {
+      "rank": 1,
+      "experiment_id": "FI-02-stale-repository-state",
+      "title": "Stale retrieval and artifact-version skew",
+      "hypothesis": "One repository-version mismatch can simultaneously corrupt retrieved evidence, worker input state, verifier validity, and reviewer provenance.",
+      "mechanism_ids": [
+        "stale-repository-state"
+      ],
+      "evidence_strength": "observed",
+      "injected_fault": "Serve retrieval results and one cached verifier result from revision N after the workspace advances to N+1.",
+      "control_condition": "All retrieval, execution, verification, and review artifacts are bound to revision N+1.",
+      "treatment_condition": "Only retrieval and cached verification inputs remain bound to N; the working tree and task target are N+1.",
+      "exact_injection_point": "Atomically advance the workspace after index publication and baseline verification, before the next query and acceptance check.",
+      "predicted_affected_layers": [
+        "retrieval_and_context",
+        "containment_and_recovery",
+        "grading",
+        "review_and_accountability"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired outcome and per-gate failure vector by version-skew condition.",
+        "grading": "Rejection rate for stale verifier results and correctness of the terminal verdict.",
+        "containment_and_recovery": "Workspace, input-state, and artifact-version identity agreement at each transition.",
+        "retrieval_and_context": "Current-evidence rate and stale-call generation rate.",
+        "review_and_accountability": "Reviewer detection of version skew and provenance-version completeness.",
+        "allocation_and_cost": "Retries, re-index calls, verifier calls, latency, and token/cost delta."
+      },
+      "end_to_end_task_outcome": "Patch matches N+1 interfaces and passes version-bound verification.",
+      "retry_count": "Count re-index, regeneration, and re-verification attempts.",
+      "latency": "Time from workspace advance to accepted or failed terminal state.",
+      "token_cost": "Tokens and cost for stale work discarded plus corrective work.",
+      "expected_causal_signature": "The version-skew event precedes failures in multiple gates; a freshness/version gate blocks all of them without changing model output quality under the control.",
+      "possible_confounders": [
+        "patch compatible with both revisions",
+        "index refresh race",
+        "verifier insensitive to changed interface"
+      ],
+      "stopping_criteria": "Stop on an unauthorized publication; otherwise complete all paired revision fixtures and require exact version identities in every retained trace.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 31
+    },
+    {
+      "rank": 2,
+      "experiment_id": "FI-03-silent-tool-corruption",
+      "title": "Structurally valid silent tool corruption",
+      "hypothesis": "A semantically wrong but structurally valid tool result can damage retrieval, planning state, failure classification, and task outcome together.",
+      "mechanism_ids": [
+        "tool-output-loss-or-corruption"
+      ],
+      "evidence_strength": "observed",
+      "injected_fault": "Replace one successful search or inspection result with a schema-valid wrong result and no error flag.",
+      "control_condition": "Return the recorded correct tool result.",
+      "treatment_condition": "Return a fixed wrong result with identical schema, size class, timing, and success status.",
+      "exact_injection_point": "At the first tool response that supplies a required repository fact, before the plan event is emitted.",
+      "predicted_affected_layers": [
+        "grading",
+        "retrieval_and_context",
+        "containment_and_recovery"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired task and gate outcomes for each fixed corrupt response.",
+        "grading": "Tool-error detection, failure-classification correctness, and terminal verdict.",
+        "containment_and_recovery": "Invalid state transitions and persistence of the corrupted fact.",
+        "retrieval_and_context": "Required-evidence recall and contradiction detection on later retrieval.",
+        "review_and_accountability": "Reviewer identification of the corrupt source event.",
+        "allocation_and_cost": "Extra searches, retries, latency, and token/cost delta."
+      },
+      "end_to_end_task_outcome": "Executable task oracle passes without using the false fact.",
+      "retry_count": "Count detection, replanning, and tool retries.",
+      "latency": "Time from corrupt response to correction or terminal failure.",
+      "token_cost": "Tokens spent reasoning over the wrong result and correcting it.",
+      "expected_causal_signature": "The corrupt response appears as the first divergent event and predicts failures across retrieval, state, and grading; explicit semantic validation prevents the divergence.",
+      "possible_confounders": [
+        "agent ignores tool result",
+        "wrong result accidentally sufficient",
+        "later tool call repairs state"
+      ],
+      "stopping_criteria": "Stop if the fault escapes the declared sandbox; otherwise run every fixed corruption fixture through the paired control and treatment.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 30
+    },
+    {
+      "rank": 3,
+      "experiment_id": "FI-01-compaction-context-loss",
+      "title": "Forced compaction and context loss",
+      "hypothesis": "Removing retrieval anchors, durable task state, and verification receipts at one compaction boundary produces simultaneous retrieval, containment/recovery, and grading or review gate failures rather than a single downstream chain.",
+      "mechanism_ids": [
+        "context-compaction-loss"
+      ],
+      "evidence_strength": "derived",
+      "injected_fault": "Deterministically remove named retrieval anchors, state facts, and verification evidence while retaining matched distractors.",
+      "control_condition": "Same task, model, harness, repository revision, inputs, seed policy, and context without forced removal.",
+      "treatment_condition": "Force the declared context removal immediately after a successful intermediate verification and before the next retrieval-dependent action.",
+      "exact_injection_point": "After the compaction-ready event and durable checkpoint, before the first post-compaction retrieval call.",
+      "predicted_affected_layers": [
+        "retrieval_and_context",
+        "containment_and_recovery",
+        "grading",
+        "review_and_accountability"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired task outcome, per-gate pass vector, and co-failure correlation against the control.",
+        "grading": "Preservation and correct use of verifier command, output, verification ID, and artifact version.",
+        "containment_and_recovery": "Exact recall of established state facts, effect receipts, and recovery checkpoint identity.",
+        "retrieval_and_context": "Recall of named anchors and success of the first required post-perturbation retrieval.",
+        "review_and_accountability": "Availability of provenance anchors and the reviewer's ability to reconstruct the accepted artifact and evidence.",
+        "allocation_and_cost": "Retries, tool calls, elapsed time, input/output tokens, and priced cost when the provider reports usage."
+      },
+      "end_to_end_task_outcome": "Executable acceptance command passes on the intended artifact version.",
+      "retry_count": "Count all model, tool, verification, and recovery retries after injection.",
+      "latency": "Wall-clock and active-agent latency from injection to terminal state.",
+      "token_cost": "Prompt, completion, cached, and total tokens plus pricing snapshot; record unavailable fields as unavailable, not zero.",
+      "expected_causal_signature": "Treatment lowers retrieval-anchor recall and state or verification-evidence preservation at the same boundary; affected gates fail before or without a forced sequential retrieval-to-state-to-grading path.",
+      "possible_confounders": [
+        "provider-side automatic compaction",
+        "model nondeterminism",
+        "task solvable without removed evidence",
+        "unlogged harness retries"
+      ],
+      "stopping_criteria": "Stop for a safety violation or instrumentation gap; otherwise complete the predeclared paired run count and require a stable directional signature with uncertainty intervals before any factorial extension.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 28
+    },
+    {
+      "rank": 4,
+      "experiment_id": "FI-04-permission-drift",
+      "title": "Mid-run permission or sandbox drift",
+      "hypothesis": "A permission change can cause partial retrieval visibility, failed or unsafe state transitions, and missing review evidence from one control-plane event.",
+      "mechanism_ids": [
+        "permission-or-sandbox-drift"
+      ],
+      "evidence_strength": "observed",
+      "injected_fault": "Revoke one required read scope or redirect one operation to a stricter sandbox after initial discovery.",
+      "control_condition": "Permission and sandbox policy remain fixed for the run.",
+      "treatment_condition": "Apply the declared policy revision between discovery and the dependent action; retain an explicit policy-version event.",
+      "exact_injection_point": "After repository map creation and before the first read or write that depends on the revoked capability.",
+      "predicted_affected_layers": [
+        "containment_and_recovery",
+        "retrieval_and_context",
+        "review_and_accountability"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired gate outcomes under fixed and changed policy versions.",
+        "grading": "Correct classification as environment or authority failure rather than software defect.",
+        "containment_and_recovery": "Denied-action correctness, absence of unauthorized effects, and recovery-path validity.",
+        "retrieval_and_context": "Required-evidence recall before and after policy change.",
+        "review_and_accountability": "Policy-version visibility and reviewer reconstruction of the denial.",
+        "allocation_and_cost": "Retries, escalation calls, human interventions, latency, and token/cost delta."
+      },
+      "end_to_end_task_outcome": "Task either completes through the declared escalation path or terminates with a correct bounded reason.",
+      "retry_count": "Count denied repeats separately from authorized escalation attempts.",
+      "latency": "Time from policy change to bounded recovery or terminal state.",
+      "token_cost": "Tokens and cost spent after the permission revision, split before and after detection.",
+      "expected_causal_signature": "One policy-version event precedes visibility loss and containment or audit effects; explicit capability discovery converts silent divergence into a bounded failure.",
+      "possible_confounders": [
+        "cached file contents",
+        "platform-specific permission propagation delay",
+        "fallback tool with broader authority"
+      ],
+      "stopping_criteria": "Stop on any out-of-sandbox effect; otherwise complete the predeclared capability matrix.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 2
+      },
+      "rank_score": 28
+    },
+    {
+      "rank": 5,
+      "experiment_id": "FI-05-trace-event-loss",
+      "title": "Typed trace event loss",
+      "hypothesis": "Dropping one causal event class can simultaneously break recovery replay, failure grading, human attribution, and later scheduling analysis.",
+      "mechanism_ids": [
+        "telemetry-or-trace-loss"
+      ],
+      "evidence_strength": "derived",
+      "injected_fault": "Delete one declared event type from a copy of a complete trace while preserving event order and all other bytes.",
+      "control_condition": "Recovery, grading, review, and replay consume the complete typed trace.",
+      "treatment_condition": "The same consumers receive the trace with the selected event class removed and an unchanged envelope.",
+      "exact_injection_point": "After trace persistence and before the first recovery, grading, reviewer, or scheduling consumer reads it.",
+      "predicted_affected_layers": [
+        "containment_and_recovery",
+        "grading",
+        "review_and_accountability",
+        "allocation_and_cost"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired consumer outputs and co-failure vector by removed event class.",
+        "grading": "Failure-classification accuracy and explicit indeterminate rate.",
+        "containment_and_recovery": "Replay completeness and recovered terminal-state equivalence.",
+        "retrieval_and_context": "Availability of artifact and evidence references named by the trace.",
+        "review_and_accountability": "First-upstream-event attribution and evidence-gap detection.",
+        "allocation_and_cost": "Replay-policy divergence, retries, latency, and analysis cost."
+      },
+      "end_to_end_task_outcome": "Recovered artifact remains equivalent to control or the system fails closed with a named trace gap.",
+      "retry_count": "Count replay and diagnostic retries.",
+      "latency": "Consumer latency for complete and incomplete traces.",
+      "token_cost": "Reviewer or model tokens required to diagnose each trace version.",
+      "expected_causal_signature": "The same missing event causes multiple consumers to become wrong or indeterminate; a completeness check blocks downstream use before divergent decisions.",
+      "possible_confounders": [
+        "redundant events reconstruct missing fact",
+        "consumer silently defaults missing fields",
+        "reviewer prior knowledge"
+      ],
+      "stopping_criteria": "Run all predeclared event classes once per fixture; stop if a consumer silently treats an invalid trace as complete.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 28
+    },
+    {
+      "rank": 6,
+      "experiment_id": "FI-06-durable-state-corruption",
+      "title": "Durable handoff and state-record corruption",
+      "hypothesis": "Corrupting one durable record can damage resume state, later retrieval, and review evidence simultaneously when they share the record.",
+      "mechanism_ids": [
+        "corrupted-durable-state"
+      ],
+      "evidence_strength": "derived",
+      "injected_fault": "Alter or remove one typed state fact and one referenced artifact using a predeclared corruption fixture.",
+      "control_condition": "Resume from the intact durable state and artifact store.",
+      "treatment_condition": "Resume from the same store after the named record or reference is deterministically corrupted.",
+      "exact_injection_point": "After checkpoint commit and checksum recording, before a fresh worker loads the checkpoint.",
+      "predicted_affected_layers": [
+        "containment_and_recovery",
+        "retrieval_and_context",
+        "review_and_accountability"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired resume outcomes and per-gate failure vector.",
+        "grading": "Verifier evidence availability and terminal verdict correctness.",
+        "containment_and_recovery": "Checksum detection, state preservation, and recovery success.",
+        "retrieval_and_context": "Artifact-reference resolution and anchor recall after resume.",
+        "review_and_accountability": "Evidence completeness and corrupt-record attribution.",
+        "allocation_and_cost": "Recovery retries, rework, latency, and token/cost delta."
+      },
+      "end_to_end_task_outcome": "Resume reaches the control-equivalent accepted artifact or fails closed before mutation.",
+      "retry_count": "Count resume, reconstruction, and verification retries.",
+      "latency": "Time from worker start to corruption detection and terminal state.",
+      "token_cost": "Tokens and cost of reconstruction or repeated work.",
+      "expected_causal_signature": "Checksum or schema validation detects the common fault before use; without it, state, retrieval, and review observables diverge together after load.",
+      "possible_confounders": [
+        "record not needed by selected task",
+        "artifact replicated elsewhere",
+        "automatic repair hides fault"
+      ],
+      "stopping_criteria": "Stop on an unsafe mutation after corruption; otherwise exhaust the typed corruption fixtures.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 27
+    },
+    {
+      "rank": 7,
+      "experiment_id": "FI-07-shared-state-race",
+      "title": "Deterministic stale-worker race",
+      "hypothesis": "A fixed interleaving between reassignment, stale completion, verification, and publication can couple allocation errors to state corruption and stale grading.",
+      "mechanism_ids": [
+        "shared-state-race"
+      ],
+      "evidence_strength": "derived",
+      "injected_fault": "Pause attempt A before commit, reassign to attempt B, let B verify, then release A's stale mutation and completion.",
+      "control_condition": "Attempt A stops before reassignment and only B can mutate or complete.",
+      "treatment_condition": "A continues after losing ownership and delivers the fixed stale mutation and completion sequence.",
+      "exact_injection_point": "At the protected mutation barrier after ownership generation increments and before B publishes.",
+      "predicted_affected_layers": [
+        "allocation_and_cost",
+        "containment_and_recovery",
+        "grading"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired terminal state and gate vector for the fixed interleaving.",
+        "grading": "Artifact-version match and invalidation of B's verdict after any stale mutation.",
+        "containment_and_recovery": "Stale-write rejection, single logical completion, and effect count.",
+        "retrieval_and_context": "Input-state identity observed by A and B.",
+        "review_and_accountability": "Trace attribution of ownership generation and rejected action.",
+        "allocation_and_cost": "Duplicate dispatch, retries, wasted work, latency, and token/cost delta."
+      },
+      "end_to_end_task_outcome": "Only B's artifact can reach accepted publication.",
+      "retry_count": "Count replacement and conflict retries by logical work ID.",
+      "latency": "Time from reassignment to accepted terminal state.",
+      "token_cost": "Cost of stale and replacement attempts, reported separately.",
+      "expected_causal_signature": "Without fencing, A's release changes state or invalidates B's verdict; with generation checks, A is rejected and only allocation cost changes.",
+      "possible_confounders": [
+        "storage serialization masks race",
+        "attempt outputs are identical",
+        "verifier runs after both commits"
+      ],
+      "stopping_criteria": "Stop on any stale committed mutation; otherwise run every predeclared interleaving and generation check.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 3
+      },
+      "rank_score": 27
+    },
+    {
+      "rank": 8,
+      "experiment_id": "FI-08-retry-amplification",
+      "title": "Synchronized retry-wave recovery",
+      "hypothesis": "A synchronized retry release can jointly starve recovery, duplicate uncertain effects, delay verification, and inflate cost.",
+      "mechanism_ids": [
+        "retry-amplification"
+      ],
+      "evidence_strength": "derived",
+      "injected_fault": "Release a fixed cohort of blocked retries at the same dependency-recovery event.",
+      "control_condition": "Release the same cohort under deterministic jitter or an admission limiter with identical total demand.",
+      "treatment_condition": "Release all retries simultaneously without jitter, reservation, or admission limiting.",
+      "exact_injection_point": "At the dependency-ready transition after all logical work items have recorded retry intent.",
+      "predicted_affected_layers": [
+        "allocation_and_cost",
+        "containment_and_recovery",
+        "grading"
+      ],
+      "gate_measurements": {
+        "measurement": "Paired throughput, completion, gate vector, and uncertainty over repeated fixed-arrival replays.",
+        "grading": "Verifier queue age, missing or indeterminate verdict rate, and correctness.",
+        "containment_and_recovery": "Recovery completion, duplicate effects, and unknown external states.",
+        "retrieval_and_context": "Context or evidence fetch failures caused by dependency overload.",
+        "review_and_accountability": "Availability of complete effect and retry ledgers for sampled work.",
+        "allocation_and_cost": "Retry arrival rate, queue age, starvation, throughput, latency, tokens, and cost."
+      },
+      "end_to_end_task_outcome": "All admitted logical work reaches a valid terminal state without duplicate effects.",
+      "retry_count": "Count attempts and effects by logical work ID, including suppressed retries.",
+      "latency": "Queue, service, recovery, and end-to-end latency distributions.",
+      "token_cost": "Total and wasted retry tokens/cost under fixed demand.",
+      "expected_causal_signature": "The synchronized arm raises queue age and recovery failures together; jitter or admission limiting reduces the joint signature without changing total logical demand.",
+      "possible_confounders": [
+        "dependency autoscaling",
+        "non-identical retry payloads",
+        "provider rate-limit adaptation"
+      ],
+      "stopping_criteria": "Stop on the declared safety or queue-age limit; otherwise complete the fixed-arrival replay count.",
+      "scores": {
+        "controllability": 3,
+        "practical_relevance": 3,
+        "interpretability": 2
+      },
+      "rank_score": 25
+    }
+  ]
+}

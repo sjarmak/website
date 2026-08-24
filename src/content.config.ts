@@ -200,6 +200,13 @@ const books = defineCollection({
     repository: z.string().url().optional(),
     arxiv: z.string().url().optional(),
     pageCount: z.number().int().positive(),
+    release: z
+      .object({
+        manuscriptVersion: z.string(),
+        companionVersion: z.string(),
+        companionStatus: z.enum(["provisional", "final"]),
+      })
+      .optional(),
     parts: z.array(
       z.object({
         number: z.number().int().positive(),

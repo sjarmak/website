@@ -1,0 +1,761 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { bookCompanionHref, bookExploreHref } from "@/lib/books";
+import {
+  commonCauses,
+  couplingArtifactHref,
+  couplingGraph,
+  couplingRelease,
+  couplingSummary,
+  evidenceBreakdown,
+  experimentBacklog,
+  humanize,
+  layerLabel,
+  layers,
+  matrixRows,
+} from "@/lib/books/coupling";
+
+export async function getStaticPaths() {
+  const bookId = "engineering-reliable-coding-agents";
+  const books = await getCollection("books");
+  const book = books.find((candidate) => candidate.id === bookId);
+  if (!book) throw new Error(`Missing book ${bookId}`);
+  return [{ params: { book: bookId }, props: { book } }];
+}
+
+interface Props {
+  book: CollectionEntry<"books">;
+}
+
+const { book }: Props = Astro.props;
+const release = book.data.release;
+if (
+  release?.companionVersion !== couplingRelease.companionVersion ||
+  release.manuscriptVersion !== couplingRelease.manuscriptVersion ||
+  release.companionStatus !== couplingRelease.status
+) {
+  throw new Error("Book frontmatter and coupling release metadata disagree");
+}
+
+const layerAbbreviations = new Map([
+  ["measurement", "Measure"],
+  ["grading", "Grade"],
+  ["containment_and_recovery", "Contain"],
+  ["retrieval_and_context", "Retrieve"],
+  ["review_and_accountability", "Review"],
+  ["allocation_and_cost", "Allocate"],
+]);
+const artifactNames = [
+  "practice-layer-links.json",
+  "causal-edges.json",
+  "coupling-assessments.json",
+  "review-queue.json",
+  "coupling-matrix.json",
+  "coupling-graph.json",
+  "common-causes.json",
+  "experiment-backlog.json",
+  "METHODOLOGY.md",
+  "FINDINGS.md",
+];
+---
+
+<BaseLayout
+  title={`Cross-layer coupling · ${book.data.title}`}
+  description="A provisional evidence-aware map of how coding-agent reliability failures propagate across the six operational layers or arise from a shared cause."
+  type="article"
+>
+  <article class="coupling">
+    <header class="coupling-head container">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/writing">Writing</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/books/${book.id}`}>{book.data.title}</a>
+        <span aria-hidden="true">/</span>
+        <span>Coupling</span>
+      </nav>
+
+      <div class="coupling-head__title">
+        <p class="kicker">Companion {couplingRelease.companionVersion}</p>
+        <h1>Cross-layer coupling</h1>
+      </div>
+
+      <div class="coupling-head__intro">
+        <p class="lead">
+          The six-layer chain locates reliability obligations and repair ownership. This view records
+          how one fault may cross those boundaries, feed back into an earlier layer, or damage several
+          gates through a shared cause.
+        </p>
+        <nav class="coupling-head__links" aria-label="Coupling resources">
+          <a href={bookCompanionHref(book.id)}>Browse the 206-record catalog <span aria-hidden="true">→</span></a>
+          <a href={bookExploreHref(book.id)}>Explore chapter relationships <span aria-hidden="true">→</span></a>
+          <a href={couplingArtifactHref("README.md")}>Read the source notes <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="release-band" aria-labelledby="release-status">
+      <div class="container release-band__inner">
+        <div>
+          <p class="eyebrow">Release status</p>
+          <h2 id="release-status">Provisional annotation set</h2>
+        </div>
+        <p>
+          Automated proposals cover all {couplingSummary.recordCount} records. {couplingSummary.reviewItems} open review items
+          still require human adjudication, and only {couplingSummary.observedEdges} of
+          {couplingSummary.candidateEdges} candidate edges are directly observed. Use the graph to choose
+          experiments, not to estimate failure prevalence.
+        </p>
+        <dl class="release-ledger" aria-label="Release identity">
+          <div><dt>Manuscript</dt><dd>{couplingRelease.manuscriptVersion}</dd></div>
+          <div><dt>Companion</dt><dd>{couplingRelease.companionVersion}</dd></div>
+          <div><dt>Status</dt><dd>{humanize(couplingRelease.status)}</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <main class="coupling-body container">
+      <section class="paired-models" aria-labelledby="two-maps">
+        <header class="section-head">
+          <p class="eyebrow">Conceptual model</p>
+          <h2 id="two-maps">Two maps, two jobs</h2>
+        </header>
+        <div class="paired-models__body">
+          <article>
+            <p class="model-number">01</p>
+            <h3>Dependency chain</h3>
+            <p>Places each obligation in its primary layer and assigns repair responsibility.</p>
+          </article>
+          <article>
+            <p class="model-number">02</p>
+            <h3>Coupling graph</h3>
+            <p>Records propagation, common causes, feedback, and shared dependencies across layers.</p>
+          </article>
+        </div>
+        <p class="model-finding">
+          Current evidence supports keeping both. The chain still explains obligation placement;
+          the graph represents {couplingSummary.nonDownstreamSupportedEdges} supported common-cause,
+          feedback, or shared-dependency edges that the chain cannot express cleanly.
+        </p>
+      </section>
+
+      <section aria-labelledby="annotation-result">
+        <header class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Annotation result</p>
+            <h2 id="annotation-result">Supported edges, with uncertainty intact</h2>
+          </div>
+          <p>
+            {couplingSummary.recordsWithSupportedEdges} records have at least one observed or derived
+            cross-layer edge. {couplingSummary.noneObservedRecords} are marked <code>none_observed</code>.
+          </p>
+        </header>
+        <dl class="edge-ledger">
+          <div><dt>Supported</dt><dd>{couplingSummary.supportedEdges}</dd></div>
+          <div><dt>Observed</dt><dd>{couplingSummary.observedEdges}</dd></div>
+          <div><dt>Derived</dt><dd>{couplingSummary.supportedEdges - couplingSummary.observedEdges}</dd></div>
+          <div><dt>Hypothesized</dt><dd>{couplingSummary.hypothesizedEdges}</dd></div>
+          <div><dt>Review queue</dt><dd>{couplingSummary.reviewItems}</dd></div>
+        </dl>
+        <p class="caution">
+          Edge counts describe the current annotations. They are not effect sizes, co-failure rates,
+          or measures of causal importance.
+        </p>
+      </section>
+
+      <section aria-labelledby="matrix-heading">
+        <header class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">6 × 6 matrix</p>
+            <h2 id="matrix-heading">Ordered layer pairs</h2>
+          </div>
+          <p>Cells count observed or derived edges. Hypotheses stay outside the supported count.</p>
+        </header>
+        <div class="matrix-scroll" tabindex="0" role="region" aria-label="Scrollable coupling matrix">
+          <table data-coupling-matrix>
+            <caption>Supported causal-edge counts by source and target layer</caption>
+            <thead>
+              <tr>
+                <th scope="col">Source ↓ / target →</th>
+                {layers.map((layer) => (
+                  <th scope="col"><abbr title={layer.label}>{layerAbbreviations.get(layer.id)}</abbr></th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {matrixRows.map((row) => (
+                <tr>
+                  <th scope="row">{row.source.label}</th>
+                  {row.cells.map((cell) => (
+                    <td class:list={{ "matrix-cell--active": cell.supported_edges > 0 }}>
+                      <span>{cell.supported_edges}</span>
+                      {cell.supported_edges > 0 && (
+                        <small>{evidenceBreakdown(cell.supported_by_evidence_grade)}</small>
+                      )}
+                      {cell.hypothesized_edges > 0 && <small>{cell.hypothesized_edges} hypothesized</small>}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section aria-labelledby="graph-heading">
+        <header class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Directed graph</p>
+            <h2 id="graph-heading">Where supported links concentrate</h2>
+          </div>
+          <p>
+            Line width represents distinct supported practices. Red lines include observed support;
+            gray lines are derived only.
+          </p>
+        </header>
+        <figure class="graph-figure" data-coupling-graph>
+          <img
+            src="/data/engineering-reliable-coding-agents/coupling/coupling-graph.svg"
+            alt="Directed coupling graph across six layers. The largest edges run from measurement to grading, retrieval and context to grading, and grading to review and accountability."
+            width="840"
+            height="640"
+          />
+          <figcaption>
+            {couplingGraph.edges.length} supported ordered pairs. Weight is a practice count, not a
+            certainty or importance score.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section aria-labelledby="causes-heading">
+        <header class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Common causes</p>
+            <h2 id="causes-heading">{commonCauses.length} common-cause mechanisms</h2>
+          </div>
+          <p>Each mechanism reaches at least two layers from one fault or shared dependency.</p>
+        </header>
+        <ol class="cause-list">
+          {commonCauses.map((cause, index) => (
+            <li>
+              <div class="cause-list__heading">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>{humanize(cause.mechanism_id)}</h3>
+                  <p>{cause.affected_layers.map(layerLabel).join(" · ")}</p>
+                </div>
+              </div>
+              <div class="cause-list__body">
+                <p><strong>Fault injection.</strong> {cause.proposed_fault_injection}</p>
+                <p class="evidence-line">
+                  Evidence: {evidenceBreakdown(cause.evidence_grade_breakdown)}.
+                  Supporting records: {cause.supporting_practices.join(", ")}.
+                </p>
+                <details>
+                  <summary>Expected observables</summary>
+                  <ul>{cause.expected_observables.map((observable) => <li><code>{observable}</code></li>)}</ul>
+                </details>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="compaction-result" aria-labelledby="compaction-heading">
+        <header class="section-head">
+          <p class="eyebrow">Reference implementation</p>
+          <h2 id="compaction-heading">Compaction produced four co-failing gates</h2>
+        </header>
+        <div class="compaction-result__body">
+          <p>
+            The deterministic control passed all six gates. The treatment removed four named records
+            at one boundary, then failed retrieval and context, containment and recovery, grading,
+            and review and accountability. Every failed gate pointed to the same compaction event.
+          </p>
+          <p>
+            This fixture invoked no model and cannot estimate production frequency. It shows that the
+            trace format can distinguish one shared event with several outgoing paths from a forced
+            sequential explanation. Token and monetary cost were unavailable.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="experiments-heading">
+        <header class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Experimental backlog</p>
+            <h2 id="experiments-heading">{experimentBacklog.experiments.length} ranked experiments</h2>
+          </div>
+          <p>Single faults come first. Factorial A, B, and A+B tests follow only after both signatures stabilize.</p>
+        </header>
+        <ol class="experiment-list">
+          {experimentBacklog.experiments.map((experiment) => (
+            <li>
+              <div class="experiment-list__rank">{String(experiment.rank).padStart(2, "0")}</div>
+              <div>
+                <h3>{experiment.title}</h3>
+                <p>{experiment.hypothesis}</p>
+                <p class="experiment-list__meta">
+                  {humanize(experiment.evidence_strength)} evidence · {experiment.predicted_affected_layers.map(layerLabel).join(" · ")} · rank score {experiment.rank_score}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="downloads" aria-labelledby="downloads-heading">
+        <header class="section-head">
+          <p class="eyebrow">Source artifacts</p>
+          <h2 id="downloads-heading">Inspect the annotations</h2>
+          <p>
+            Every aggregate remains connected to the normalized records, evidence grades, review queue,
+            methodology, and pinned source commit.
+          </p>
+        </header>
+        <ul>
+          {artifactNames.map((filename) => (
+            <li><a href={couplingArtifactHref(filename)}><code>{filename}</code> <span aria-hidden="true">↗</span></a></li>
+          ))}
+        </ul>
+      </section>
+    </main>
+  </article>
+</BaseLayout>
+
+<style>
+  .coupling {
+    padding-block-end: clamp(var(--space-xl), 8vw, var(--space-3xl));
+  }
+
+  .coupling-head {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+    gap: var(--space-m) clamp(var(--space-l), 7vw, var(--space-2xl));
+    padding-block: clamp(var(--space-l), 7vw, var(--space-2xl));
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    align-items: baseline;
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .coupling-head__title h1 {
+    max-width: 12ch;
+  }
+
+  .coupling-head__intro {
+    grid-column: 2;
+    max-width: 46rem;
+  }
+
+  .coupling-head__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+    margin-block-start: var(--space-m);
+  }
+
+  .coupling-head__links a {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .release-band {
+    border-block: var(--border-hairline);
+    background: var(--color-bg-subtle);
+  }
+
+  .release-band__inner {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.5fr) minmax(18rem, 1.15fr) minmax(10rem, 0.55fr);
+    gap: var(--space-l);
+    align-items: start;
+    padding-block: var(--space-l);
+  }
+
+  .release-band h2 {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step-1);
+  }
+
+  .release-ledger {
+    display: grid;
+    gap: var(--space-xs);
+    margin: 0;
+  }
+
+  .release-ledger div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block-end: var(--space-2xs);
+    border-bottom: var(--border-hairline);
+  }
+
+  .release-ledger dt,
+  .eyebrow {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .release-ledger dd {
+    margin: 0;
+    font-family: var(--font-mono);
+  }
+
+  .coupling-body {
+    max-width: 76rem;
+  }
+
+  .coupling-body > section {
+    padding-block: clamp(var(--space-xl), 8vw, var(--space-2xl));
+    border-bottom: var(--border-hairline);
+  }
+
+  .section-head {
+    max-width: 48rem;
+  }
+
+  .section-head h2 {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .section-head > p:last-child,
+  .section-head--split > p {
+    color: var(--color-text-secondary);
+  }
+
+  .section-head--split {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 0.8fr);
+    gap: var(--space-l);
+    max-width: none;
+    align-items: end;
+  }
+
+  .paired-models__body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(var(--space-l), 7vw, var(--space-2xl));
+    margin-block-start: var(--space-xl);
+  }
+
+  .paired-models__body article {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-2xs) var(--space-s);
+    align-items: baseline;
+  }
+
+  .paired-models__body h3,
+  .paired-models__body p:last-child {
+    grid-column: 2;
+  }
+
+  .model-number {
+    grid-row: 1 / span 2;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+  }
+
+  .model-finding {
+    max-width: 72ch;
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-top: var(--border-hairline);
+  }
+
+  .edge-ledger {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin: var(--space-xl) 0 0;
+    border-block: var(--border-hairline);
+  }
+
+  .edge-ledger div {
+    padding: var(--space-m);
+  }
+
+  .edge-ledger div + div {
+    border-inline-start: var(--border-hairline);
+  }
+
+  .edge-ledger dt {
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .edge-ledger dd {
+    margin: var(--space-3xs) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-2);
+  }
+
+  .caution {
+    max-width: 72ch;
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+    font-size: var(--step--1);
+  }
+
+  .matrix-scroll {
+    margin-block-start: var(--space-l);
+    overflow-x: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+  }
+
+  table {
+    width: 100%;
+    min-width: 56rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+
+  caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  th,
+  td {
+    padding: var(--space-s);
+    border: var(--border-hairline);
+    text-align: center;
+  }
+
+  th {
+    background: var(--color-bg-subtle);
+    font-weight: var(--weight-semibold);
+  }
+
+  tbody th {
+    max-width: 12rem;
+    text-align: left;
+  }
+
+  td span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+  }
+
+  td small {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .matrix-cell--active {
+    background: color-mix(in oklch, var(--color-accent) 9%, var(--color-bg));
+  }
+
+  .graph-figure {
+    margin: var(--space-l) 0 0;
+  }
+
+  .graph-figure img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: oklch(98% 0.006 85);
+  }
+
+  .graph-figure figcaption {
+    margin-block-start: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .cause-list,
+  .experiment-list,
+  .downloads ul {
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cause-list > li {
+    display: grid;
+    grid-template-columns: minmax(15rem, 0.7fr) minmax(18rem, 1fr);
+    gap: var(--space-l);
+    padding-block: var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .cause-list__heading {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-s);
+  }
+
+  .cause-list__heading > span,
+  .experiment-list__rank {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+  }
+
+  .cause-list__heading h3,
+  .experiment-list h3 {
+    font-size: var(--step-1);
+  }
+
+  .cause-list__heading p,
+  .evidence-line,
+  .experiment-list__meta {
+    margin-block-start: var(--space-2xs);
+    color: var(--color-text-muted);
+    font-size: var(--step--1);
+  }
+
+  .cause-list__body > * + * {
+    margin-block-start: var(--space-s);
+  }
+
+  details summary {
+    min-height: 2.75rem;
+    cursor: pointer;
+    color: var(--color-accent);
+  }
+
+  details ul {
+    columns: 2;
+    margin-block-start: var(--space-xs);
+    padding-inline-start: var(--space-m);
+  }
+
+  details li {
+    break-inside: avoid;
+    margin-block-end: var(--space-2xs);
+  }
+
+  .compaction-result {
+    display: grid;
+    grid-template-columns: minmax(15rem, 0.6fr) minmax(18rem, 1fr);
+    gap: clamp(var(--space-l), 7vw, var(--space-2xl));
+  }
+
+  .compaction-result__body {
+    max-width: 70ch;
+  }
+
+  .compaction-result__body p + p {
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+  }
+
+  .experiment-list > li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-s);
+    padding-block: var(--space-m);
+    border-top: var(--border-hairline);
+  }
+
+  .experiment-list h3 + p {
+    max-width: 76ch;
+    margin-block-start: var(--space-2xs);
+  }
+
+  .downloads .section-head p:last-child {
+    margin-block-start: var(--space-s);
+  }
+
+  .downloads ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 var(--space-l);
+    border-top: var(--border-hairline);
+  }
+
+  .downloads li {
+    border-bottom: var(--border-hairline);
+  }
+
+  .downloads a {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-s);
+    align-items: center;
+    min-height: 3.25rem;
+    text-decoration: none;
+  }
+
+  @media (max-width: 52rem) {
+    .coupling-head,
+    .release-band__inner,
+    .section-head--split,
+    .paired-models__body,
+    .cause-list > li,
+    .compaction-result {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .coupling-head__intro {
+      grid-column: 1;
+    }
+
+    .edge-ledger {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .edge-ledger div + div {
+      border-inline-start: 0;
+    }
+
+    .edge-ledger div:nth-child(even) {
+      border-inline-start: var(--border-hairline);
+    }
+
+    .edge-ledger div:nth-child(n + 3) {
+      border-top: var(--border-hairline);
+    }
+
+    details ul,
+    .downloads ul {
+      columns: auto;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 32rem) {
+    .edge-ledger {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .edge-ledger div:nth-child(even) {
+      border-inline-start: 0;
+    }
+
+    .edge-ledger div + div {
+      border-top: var(--border-hairline);
+    }
+  }
+
+  @media print {
+    .coupling-head__links,
+    .downloads,
+    details:not([open]) > *:not(summary) {
+      display: none;
+    }
+
+    .matrix-scroll {
+      overflow: visible;
+    }
+  }
+</style>

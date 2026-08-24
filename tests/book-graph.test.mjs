@@ -15,6 +15,7 @@ const companionSource = readFileSync(
   path.join(ROOT, "src/content/book-companions", `${SLUG}.md`),
   "utf8",
 );
+const expectedCounts = Object.freeze({ total: 206, taught: 56, untaught: 150 });
 
 function frontmatter(source) {
   const block = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
@@ -52,15 +53,16 @@ function fixture() {
     },
     chapters,
     companionSource,
+    expectedCounts,
   };
 }
 
 test("parses all companion practices with their explicit teaching class", () => {
-  const practices = parseCompanionPractices(companionSource);
-  assert.equal(practices.length, 192);
-  assert.equal(new Set(practices.map((practice) => practice.id)).size, 192);
-  assert.equal(practices.filter((practice) => practice.classification === "taught").length, 55);
-  assert.equal(practices.filter((practice) => practice.classification === "untaught").length, 137);
+  const practices = parseCompanionPractices(companionSource, expectedCounts);
+  assert.equal(practices.length, 206);
+  assert.equal(new Set(practices.map((practice) => practice.id)).size, 206);
+  assert.equal(practices.filter((practice) => practice.classification === "taught").length, 56);
+  assert.equal(practices.filter((practice) => practice.classification === "untaught").length, 150);
   assert.equal(practices[0].id, "never-report-a-single-run");
   assert.equal(practices[0].practiceId, "ERCA-020");
   assert.equal(practices[0].title, "Compare distributions across randomized repeated runs");
@@ -74,19 +76,19 @@ test("builds only the book's explicit structural relationships", () => {
   assert.deepEqual(graph.counts, {
     books: 1,
     parts: 6,
-    chapters: 18,
-    practices: 192,
-    taught: 55,
-    untaught: 137,
+    chapters: 19,
+    practices: 206,
+    taught: 56,
+    untaught: 150,
   });
-  assert.equal(graph.nodes.length, 217);
-  assert.equal(graph.edges.length, 216);
-  assert.equal(new Set(graph.nodes.map((node) => node.id)).size, 217);
-  assert.equal(new Set(graph.edges.map((edge) => edge.id)).size, 216);
+  assert.equal(graph.nodes.length, 232);
+  assert.equal(graph.edges.length, 231);
+  assert.equal(new Set(graph.nodes.map((node) => node.id)).size, 232);
+  assert.equal(new Set(graph.edges.map((edge) => edge.id)).size, 231);
   assert.equal(graph.edges.filter((edge) => edge.kind === "book-part").length, 6);
-  assert.equal(graph.edges.filter((edge) => edge.kind === "part-chapter").length, 18);
-  assert.equal(graph.edges.filter((edge) => edge.kind === "chapter-teaches").length, 55);
-  assert.equal(graph.edges.filter((edge) => edge.kind === "chapter-carries").length, 137);
+  assert.equal(graph.edges.filter((edge) => edge.kind === "part-chapter").length, 19);
+  assert.equal(graph.edges.filter((edge) => edge.kind === "chapter-teaches").length, 56);
+  assert.equal(graph.edges.filter((edge) => edge.kind === "chapter-carries").length, 150);
 });
 
 test("every chapter and practice node links to its canonical source", () => {
@@ -103,11 +105,14 @@ test("every chapter and practice node links to its canonical source", () => {
 
 test("rejects malformed practice blocks and chapter-count drift", () => {
   assert.throws(
-    () => parseCompanionPractices(companionSource.replace("`ERCA-020` · `never-report-a-single-run`", "missing-id")),
+    () => parseCompanionPractices(
+      companionSource.replace("`ERCA-020` · `never-report-a-single-run`", "missing-id"),
+      expectedCounts,
+    ),
     /stable identifier|practice count/i,
   );
   assert.throws(
-    () => buildBookGraph({ ...fixture(), chapters: fixture().chapters.filter((chapter) => chapter.number !== 18) }),
-    /chapter 18|18 chapters/i,
+    () => buildBookGraph({ ...fixture(), chapters: fixture().chapters.filter((chapter) => chapter.number !== 19) }),
+    /chapter 19|19 chapters/i,
   );
 });

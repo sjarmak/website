@@ -18,5 +18,13 @@ export function renderAuthoredMath(body) {
         throwOnError: true,
         strict: "error",
       }),
+    )
+    .replace(/(?<!\\)\$([^$\n]+?)(?<!\\)\$/g, (_match, expression) =>
+      katex.renderToString(expression, {
+        displayMode: false,
+        output: "mathml",
+        throwOnError: true,
+        strict: "error",
+      }),
     );
 }

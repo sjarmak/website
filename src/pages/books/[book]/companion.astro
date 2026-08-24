@@ -4,7 +4,7 @@ import {
   render,
 } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { bookExploreHref } from "@/lib/books";
+import { bookCouplingHref, bookExploreHref } from "@/lib/books";
 
 export async function getStaticPaths() {
   const [books, companions] = await Promise.all([
@@ -42,7 +42,7 @@ const { Content } = await render(companion);
 
 <BaseLayout
   title={`${companion.data.title} · ${book.data.title}`}
-  description={`The complete catalog of ${companion.data.practiceCount} practices associated with ${book.data.title}.`}
+  description={`The complete catalog of ${companion.data.practiceCount} reliability records associated with ${book.data.title}.`}
   type="article"
 >
   <article class="catalog">
@@ -60,19 +60,33 @@ const { Content } = await render(companion);
 
       <div class="catalog-head__details">
         <p class="lead">
-          Every practice in the review corpus, organized beside the chapter that
+          Every reliability record in the review corpus, organized beside the chapter that
           develops its underlying mechanism.
         </p>
+        {
+          book.data.release && (
+            <p class="catalog-head__release">
+              Manuscript {book.data.release.manuscriptVersion} · Companion {book.data.release.companionVersion} · {book.data.release.companionStatus}
+            </p>
+          )
+        }
         <p class="catalog-head__counts" aria-label="Catalog coverage">
-          <span>{companion.data.practiceCount} practices</span>
+          <span>{companion.data.practiceCount} reliability records</span>
           <span>{companion.data.taughtCount} developed</span>
-          <span>{companion.data.untaughtCount} companion-only</span>
+          <span>{companion.data.untaughtCount} companion records</span>
         </p>
         <nav class="catalog-head__links" aria-label="Book companion resources">
           <a href={`/books/${book.id}`}>Return to the book <span aria-hidden="true">→</span></a>
           <a href={bookExploreHref(book.id)}>
             Explore as a graph <span aria-hidden="true">→</span>
           </a>
+          {
+            book.data.release && (
+              <a href={bookCouplingHref(book.id)}>
+                Cross-layer coupling <span aria-hidden="true">→</span>
+              </a>
+            )
+          }
           {
             book.data.repository && (
               <a href={book.data.repository}>
@@ -201,6 +215,13 @@ const { Content } = await render(companion);
     gap: var(--space-2xs) var(--space-m);
     color: var(--color-text-muted);
     font-size: var(--step--1);
+  }
+
+  .catalog-head__release {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: capitalize;
   }
 
   .catalog-head__counts span + span::before {

@@ -5,6 +5,7 @@ import {
   bookChapterHref,
   bookChapterSlug,
   bookCompanionHref,
+  bookCouplingHref,
   bookExploreHref,
 } from "@/lib/books";
 
@@ -81,6 +82,13 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
         <p class="muted">
           {chapterCount} chapters · {book.data.parts.length} parts · approximately {book.data.pageCount.toLocaleString("en-US")} pages
         </p>
+        {
+          book.data.release && (
+            <p class="book-head__release">
+              Manuscript {book.data.release.manuscriptVersion} · Companion {book.data.release.companionVersion} · {book.data.release.companionStatus}
+            </p>
+          )
+        }
         <nav class="book-head__links" aria-label="Book resources">
           {
             introduction && (
@@ -90,8 +98,15 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
             )
           }
           <a href={bookCompanionHref(book.id)}>
-            Browse all {practiceCount} practices <span aria-hidden="true">→</span>
+            Browse all {practiceCount} records <span aria-hidden="true">→</span>
           </a>
+          {
+            book.data.release && (
+              <a href={bookCouplingHref(book.id)}>
+                View provisional coupling analysis <span aria-hidden="true">→</span>
+              </a>
+            )
+          }
           <a href={bookExploreHref(book.id)}>
             Explore the knowledge graph <span aria-hidden="true">→</span>
           </a>
@@ -208,6 +223,13 @@ const hrefFor = (chapter: CollectionEntry<"bookChapters">) =>
   .book-head__details {
     grid-column: 2;
     max-width: 43rem;
+  }
+
+  .book-head__release {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: capitalize;
   }
 
   .book-head__details > * + * {

@@ -6,6 +6,10 @@ description: "The goal of this book is to enable others to build and maintain ag
 repository: "https://github.com/sjarmak/engineering-reliable-coding-agents"
 arxiv: "https://arxiv.org/abs/2608.13867"
 pageCount: 314
+release:
+  manuscriptVersion: "1.0.0"
+  companionVersion: "1.1.0"
+  companionStatus: provisional
 parts:
   - number: 1
     title: Evaluation measurement and experiment design

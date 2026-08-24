@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "weight_definition": "distinct practices with observed or derived edges",
+  "nodes": [
+    {
+      "id": "measurement",
+      "label": "Measurement",
+      "order": 1
+    },
+    {
+      "id": "grading",
+      "label": "Grading",
+      "order": 2
+    },
+    {
+      "id": "containment_and_recovery",
+      "label": "Containment and recovery",
+      "order": 3
+    },
+    {
+      "id": "retrieval_and_context",
+      "label": "Retrieval and context",
+      "order": 4
+    },
+    {
+      "id": "review_and_accountability",
+      "label": "Review and accountability",
+      "order": 5
+    },
+    {
+      "id": "allocation_and_cost",
+      "label": "Allocation and cost",
+      "order": 6
+    }
+  ],
+  "edges": [
+    {
+      "source": "measurement",
+      "target": "grading",
+      "weight_supported_practices": 43,
+      "supported_edge_count": 43,
+      "coupling_type_breakdown": {
+        "downstream_propagation": 43
+      },
+      "evidence_quality_breakdown": {
+        "derived": 43
+      }
+    },
+    {
+      "source": "grading",
+      "target": "containment_and_recovery",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "common_cause": 1
+      },
+      "evidence_quality_breakdown": {
+        "observed": 1
+      }
+    },
+    {
+      "source": "grading",
+      "target": "retrieval_and_context",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "common_cause": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1
+      }
+    },
+    {
+      "source": "grading",
+      "target": "review_and_accountability",
+      "weight_supported_practices": 21,
+      "supported_edge_count": 21,
+      "coupling_type_breakdown": {
+        "downstream_propagation": 21
+      },
+      "evidence_quality_breakdown": {
+        "derived": 21
+      }
+    },
+    {
+      "source": "containment_and_recovery",
+      "target": "grading",
+      "weight_supported_practices": 4,
+      "supported_edge_count": 4,
+      "coupling_type_breakdown": {
+        "common_cause": 2,
+        "shared_dependency": 2
+      },
+      "evidence_quality_breakdown": {
+        "derived": 3,
+        "observed": 1
+      }
+    },
+    {
+      "source": "containment_and_recovery",
+      "target": "retrieval_and_context",
+      "weight_supported_practices": 3,
+      "supported_edge_count": 3,
+      "coupling_type_breakdown": {
+        "common_cause": 3
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1,
+        "observed": 2
+      }
+    },
+    {
+      "source": "containment_and_recovery",
+      "target": "review_and_accountability",
+      "weight_supported_practices": 2,
+      "supported_edge_count": 2,
+      "coupling_type_breakdown": {
+        "common_cause": 2
+      },
+      "evidence_quality_breakdown": {
+        "derived": 2
+      }
+    },
+    {
+      "source": "containment_and_recovery",
+      "target": "allocation_and_cost",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "feedback": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1
+      }
+    },
+    {
+      "source": "retrieval_and_context",
+      "target": "grading",
+      "weight_supported_practices": 38,
+      "supported_edge_count": 38,
+      "coupling_type_breakdown": {
+        "downstream_propagation": 38
+      },
+      "evidence_quality_breakdown": {
+        "derived": 38
+      }
+    },
+    {
+      "source": "retrieval_and_context",
+      "target": "containment_and_recovery",
+      "weight_supported_practices": 3,
+      "supported_edge_count": 3,
+      "coupling_type_breakdown": {
+        "common_cause": 2,
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 2,
+        "observed": 1
+      }
+    },
+    {
+      "source": "retrieval_and_context",
+      "target": "review_and_accountability",
+      "weight_supported_practices": 2,
+      "supported_edge_count": 2,
+      "coupling_type_breakdown": {
+        "common_cause": 1,
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 2
+      }
+    },
+    {
+      "source": "retrieval_and_context",
+      "target": "allocation_and_cost",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1
+      }
+    },
+    {
+      "source": "review_and_accountability",
+      "target": "grading",
+      "weight_supported_practices": 2,
+      "supported_edge_count": 2,
+      "coupling_type_breakdown": {
+        "common_cause": 1,
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1,
+        "observed": 1
+      }
+    },
+    {
+      "source": "review_and_accountability",
+      "target": "containment_and_recovery",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1
+      }
+    },
+    {
+      "source": "allocation_and_cost",
+      "target": "measurement",
+      "weight_supported_practices": 1,
+      "supported_edge_count": 1,
+      "coupling_type_breakdown": {
+        "feedback": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 1
+      }
+    },
+    {
+      "source": "allocation_and_cost",
+      "target": "containment_and_recovery",
+      "weight_supported_practices": 2,
+      "supported_edge_count": 2,
+      "coupling_type_breakdown": {
+        "common_cause": 1,
+        "shared_dependency": 1
+      },
+      "evidence_quality_breakdown": {
+        "derived": 2
+      }
+    }
+  ]
+}

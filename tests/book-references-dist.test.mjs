@@ -27,10 +27,10 @@ test("the explorer ships a complete server-rendered reference index", () => {
   const html = explorer();
   assert.match(html, /data-book-view="references"/);
   assert.match(html, /data-book-reference-index/);
-  assert.equal((html.match(/data-book-reference=/g) ?? []).length, 334);
-  assert.equal((html.match(/data-reference-location=/g) ?? []).length, 403);
-  assert.match(html, />334 references</);
-  assert.match(html, />311 papers</);
+  assert.equal((html.match(/data-book-reference=/g) ?? []).length, 397);
+  assert.equal((html.match(/data-reference-location=/g) ?? []).length, 481);
+  assert.match(html, />397 references</);
+  assert.match(html, />333 papers</);
   assert.doesNotMatch(html, /w3\.org\/1998\/Math/);
 });
 
@@ -47,11 +47,11 @@ test("reference rows expose external sources and exact internal backlinks", () =
   );
 });
 
-test("the existing structural graph remains unchanged", () => {
+test("the structural graph reflects the complete current catalog", () => {
   const html = explorer();
   const payload = html.match(/<script type="application\/json" data-book-graph-data>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(payload);
   const data = JSON.parse(payload);
-  assert.equal(data.nodes.length, 217);
-  assert.equal(data.edges.length, 216);
+  assert.equal(data.nodes.length, 232);
+  assert.equal(data.edges.length, 231);
 });

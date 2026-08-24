@@ -21,26 +21,26 @@ import { bookChapterHref, prepareBookFigure } from "../src/lib/books.ts";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-test("book manifest covers the approved 20 entries in a stable reading order", () => {
+test("book manifest covers the approved 21 entries in a stable reading order", () => {
   assert.equal(BOOK.slug, "engineering-reliable-coding-agents");
   assert.equal(BOOK.title, "Engineering Reliable Coding Agents");
   assert.equal(
     BOOK.subtitle,
-    "Evaluation, Recovery, Context, and Control Beyond the Model",
+    "Evaluating and Operating the System Around the Model",
   );
-  assert.equal(CHAPTERS.length, 20);
+  assert.equal(CHAPTERS.length, 21);
   assert.deepEqual(
     CHAPTERS.map((chapter) => chapter.order),
-    Array.from({ length: 20 }, (_, index) => index),
+    Array.from({ length: 21 }, (_, index) => index),
   );
   assert.equal(CHAPTERS[0].kind, "introduction");
   assert.equal(CHAPTERS[0].slug, "introduction");
   assert.equal(CHAPTERS.at(-1).kind, "closing");
   assert.equal(CHAPTERS.at(-1).slug, "closing");
-  assert.equal(new Set(CHAPTERS.map((chapter) => chapter.slug)).size, 20);
+  assert.equal(new Set(CHAPTERS.map((chapter) => chapter.slug)).size, 21);
   assert.deepEqual(
     CHAPTERS.filter((chapter) => chapter.kind === "chapter").map((chapter) => chapter.number),
-    Array.from({ length: 18 }, (_, index) => index + 1),
+    Array.from({ length: 19 }, (_, index) => index + 1),
   );
 
   for (const chapter of CHAPTERS) {
@@ -67,19 +67,19 @@ test("generated chapter bodies exactly match the approved source transformation"
   }
 });
 
-test("importer writes exactly 20 Markdown entries and the 19 referenced SVGs", () => {
+test("importer writes exactly 21 Markdown entries and the 19 referenced SVGs", () => {
   const temp = mkdtempSync(path.join(os.tmpdir(), "website-book-import-"));
   const contentDir = path.join(temp, "chapters");
   const figureDir = path.join(temp, "figures");
 
   try {
     assert.deepEqual(importBook({ contentDir, figureDir }), {
-      chapterCount: 20,
+      chapterCount: 21,
       figureCount: 19,
     });
     assert.equal(
       readdirSync(contentDir).filter((name) => name.endsWith(".md")).length,
-      20,
+      21,
     );
     assert.equal(
       readdirSync(figureDir).filter((name) => name.endsWith(".svg")).length,

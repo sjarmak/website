@@ -3,7 +3,7 @@ import LegacyBookRedirect from "@/components/books/LegacyBookRedirect.astro";
 import { CHAPTERS } from "../../../../scripts/content/import-agent-reliability-book.mjs";
 
 export function getStaticPaths() {
-  const routes = ["companion", "explore", ...CHAPTERS.map((chapter) => chapter.slug)];
+  const routes = ["companion", "coupling", "explore", ...CHAPTERS.map((chapter) => chapter.slug)];
   return routes.map((path) => ({ params: { path }, props: { path } }));
 }
 

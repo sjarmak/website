@@ -1,0 +1,302 @@
+[
+  {
+    "mechanism_id": "context-compaction-loss",
+    "affected_layers": [
+      "containment_and_recovery",
+      "grading",
+      "retrieval_and_context",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-081",
+      "ERCA-082"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "hypothesized": 2
+    },
+    "confidence_breakdown": {
+      "low": 2,
+      "medium": 1
+    },
+    "proposed_fault_injection": "At a named milestone, remove specified retrieval anchors, durable-state facts, and verification receipts while preserving equal-size distractors.",
+    "expected_observables": [
+      "containment.effect_receipt_recall",
+      "containment.state_preservation",
+      "grading.verdict_correctness",
+      "grading.verification_evidence_preservation",
+      "retrieval.anchor_recall",
+      "review.attribution_success",
+      "review.evidence_completeness",
+      "review.provenance_anchor_recall",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-081:retrieval_and_context:containment_and_recovery:common_cause:context-compaction-loss",
+      "ERCA-082:retrieval_and_context:grading:common_cause:context-compaction-loss",
+      "ERCA-082:retrieval_and_context:review_and_accountability:common_cause:context-compaction-loss"
+    ]
+  },
+  {
+    "mechanism_id": "corrupted-durable-state",
+    "affected_layers": [
+      "containment_and_recovery",
+      "retrieval_and_context",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-130"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "hypothesized": 1
+    },
+    "confidence_breakdown": {
+      "low": 1,
+      "medium": 1
+    },
+    "proposed_fault_injection": "Delete or alter one typed durable-state record and its artifact reference at a named persistence boundary.",
+    "expected_observables": [
+      "containment.recovery_success",
+      "containment.state_preservation",
+      "retrieval.anchor_recall",
+      "review.artifact_version_match",
+      "review.evidence_completeness",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-130:containment_and_recovery:retrieval_and_context:common_cause:corrupted-durable-state",
+      "ERCA-130:containment_and_recovery:review_and_accountability:common_cause:corrupted-durable-state"
+    ]
+  },
+  {
+    "mechanism_id": "permission-or-sandbox-drift",
+    "affected_layers": [
+      "containment_and_recovery",
+      "retrieval_and_context",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-068"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "observed": 1
+    },
+    "confidence_breakdown": {
+      "medium": 2
+    },
+    "proposed_fault_injection": "Revoke one required read capability or change one sandbox permission after the baseline state is recorded.",
+    "expected_observables": [
+      "containment.denied_action_accuracy",
+      "containment.unauthorized_effects",
+      "retrieval.required_evidence_recall",
+      "review.attribution_success",
+      "review.evidence_completeness",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-068:containment_and_recovery:retrieval_and_context:common_cause:permission-or-sandbox-drift",
+      "ERCA-068:containment_and_recovery:review_and_accountability:common_cause:permission-or-sandbox-drift"
+    ]
+  },
+  {
+    "mechanism_id": "retry-amplification",
+    "affected_layers": [
+      "allocation_and_cost",
+      "containment_and_recovery",
+      "grading"
+    ],
+    "supporting_practices": [
+      "ERCA-205"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "hypothesized": 1
+    },
+    "confidence_breakdown": {
+      "high": 1,
+      "low": 1
+    },
+    "proposed_fault_injection": "Release a fixed cohort of retries simultaneously after dependency recovery, with and without jitter or admission limiting.",
+    "expected_observables": [
+      "allocation.recovery_queue_age",
+      "allocation.retry_arrival_rate",
+      "allocation.verifier_queue_age",
+      "containment.duplicate_effects",
+      "containment.recovery_success",
+      "grading.indeterminate_rate",
+      "grading.missing_verdict_rate"
+    ],
+    "edge_ids": [
+      "ERCA-205:allocation_and_cost:containment_and_recovery:common_cause:retry-amplification",
+      "ERCA-205:allocation_and_cost:grading:common_cause:retry-amplification"
+    ]
+  },
+  {
+    "mechanism_id": "review-time-pressure",
+    "affected_layers": [
+      "grading",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-164"
+    ],
+    "evidence_grade_breakdown": {
+      "observed": 1
+    },
+    "confidence_breakdown": {
+      "medium": 1
+    },
+    "proposed_fault_injection": "Hold the candidate and verifier output fixed while applying a predeclared shortened review deadline.",
+    "expected_observables": [
+      "grading.verdict_correctness",
+      "review.automation_bias_severity",
+      "review.time_budget"
+    ],
+    "edge_ids": [
+      "ERCA-164:review_and_accountability:grading:common_cause:review-time-pressure"
+    ]
+  },
+  {
+    "mechanism_id": "shared-state-race",
+    "affected_layers": [
+      "containment_and_recovery",
+      "grading"
+    ],
+    "supporting_practices": [
+      "ERCA-140"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1
+    },
+    "confidence_breakdown": {
+      "medium": 1
+    },
+    "proposed_fault_injection": "Schedule two attempts against the same logical state with a deterministic interleaving at the commit boundary.",
+    "expected_observables": [
+      "containment.serializability",
+      "grading.artifact_version_match",
+      "grading.verdict_correctness"
+    ],
+    "edge_ids": [
+      "ERCA-140:containment_and_recovery:grading:common_cause:shared-state-race"
+    ]
+  },
+  {
+    "mechanism_id": "stale-repository-state",
+    "affected_layers": [
+      "containment_and_recovery",
+      "retrieval_and_context",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-078"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "observed": 1
+    },
+    "confidence_breakdown": {
+      "high": 1,
+      "medium": 1
+    },
+    "proposed_fault_injection": "Pin retrieval, controller, or verifier input to revision N and mutate the working artifact to revision N+1 before consumption.",
+    "expected_observables": [
+      "containment.input_state_match",
+      "retrieval.current_evidence_rate",
+      "review.artifact_version_match",
+      "review.override_correctness",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-078:retrieval_and_context:containment_and_recovery:common_cause:stale-repository-state",
+      "ERCA-078:retrieval_and_context:review_and_accountability:common_cause:stale-repository-state"
+    ]
+  },
+  {
+    "mechanism_id": "telemetry-or-trace-loss",
+    "affected_layers": [
+      "containment_and_recovery",
+      "grading",
+      "review_and_accountability"
+    ],
+    "supporting_practices": [
+      "ERCA-097"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 2
+    },
+    "confidence_breakdown": {
+      "high": 1,
+      "medium": 1
+    },
+    "proposed_fault_injection": "Drop one declared event class from the persisted trace after execution but before recovery and review.",
+    "expected_observables": [
+      "containment.replay_completeness",
+      "grading.failure_classification",
+      "review.attribution_success",
+      "review.evidence_completeness",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-097:containment_and_recovery:grading:common_cause:telemetry-or-trace-loss",
+      "ERCA-097:containment_and_recovery:review_and_accountability:common_cause:telemetry-or-trace-loss"
+    ]
+  },
+  {
+    "mechanism_id": "tool-output-loss-or-corruption",
+    "affected_layers": [
+      "containment_and_recovery",
+      "grading",
+      "retrieval_and_context"
+    ],
+    "supporting_practices": [
+      "ERCA-064"
+    ],
+    "evidence_grade_breakdown": {
+      "derived": 1,
+      "observed": 1
+    },
+    "confidence_breakdown": {
+      "medium": 2
+    },
+    "proposed_fault_injection": "Return a structurally valid but semantically wrong tool result at a named tool-response boundary.",
+    "expected_observables": [
+      "containment.invalid_transition_rate",
+      "grading.failure_classification",
+      "grading.tool_error_detection",
+      "retrieval.required_evidence_recall",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-064:grading:containment_and_recovery:common_cause:tool-output-loss-or-corruption",
+      "ERCA-064:grading:retrieval_and_context:common_cause:tool-output-loss-or-corruption"
+    ]
+  },
+  {
+    "mechanism_id": "untrusted-retrieved-instructions",
+    "affected_layers": [
+      "containment_and_recovery",
+      "retrieval_and_context"
+    ],
+    "supporting_practices": [
+      "ERCA-105"
+    ],
+    "evidence_grade_breakdown": {
+      "observed": 1
+    },
+    "confidence_breakdown": {
+      "medium": 1
+    },
+    "proposed_fault_injection": "Insert one adversarial instruction into an otherwise relevant retrieved document while holding permissions and task inputs fixed.",
+    "expected_observables": [
+      "containment.unauthorized_effects",
+      "retrieval.untrusted_instruction_rate",
+      "task.success"
+    ],
+    "edge_ids": [
+      "ERCA-105:containment_and_recovery:retrieval_and_context:common_cause:untrusted-retrieved-instructions"
+    ]
+  }
+]
