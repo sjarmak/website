@@ -544,6 +544,25 @@
           "why": "A direct instance of retrieval becoming a controlled action rather than fixed preprocessing — trajectory-awareness signals (novelty, coverage) let the agent decide when the retrieve-reason loop has stopped paying off, the exact question this branch tracks."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260820357H",
+      "title": "Clarify-Then-Search: A Clarification Benchmark for Deep Search with End-to-End Nugget Restoration",
+      "firstAuthor": "Huang, Deqiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.20357",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260820357H",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "518 pairs built from real Baidu queries, each an intent query plus a blurred version with a constraint (time, region, entity scope, criteria) removed. A Clarifier asks k in {1,2,3} questions, a closed-book User Answerer replies only from the hidden intent and returns unknown when the intent does not state the attribute, a Rewriter that never sees the intent produces the rewritten query, and WebDancer runs deep search on it; scoring is weighted nugget recall against a gold set archived from one WebDancer run on the intent query. Every Clarifier beats the 19.43 no-clarification baseline at k=1 with paired-bootstrap 95% CIs strictly above zero, but the User Answerer returns unknown on 60.0-70.1% of single questions, so most interactions elicit no grounded constraint at all. Raising the budget to k=3 works mainly by cutting the all-unknown rate, from 0.618 to 0.189 for GPT.",
+          "why": "This branch tracks retrieval becoming an action the model chooses rather than fixed preprocessing. Clarify-Then-Search moves that decision one step earlier, to what the agent asks the user before it searches, and scores it by downstream execution instead of question fluency. It also separates a plausible question from a useful one: models ask region-only questions on 14.3-49.8% of turns and those come back unknown 75.0-86.9% of the time, spending clarification budget without changing the rewritten query."
+        }
+      ]
     }
   ],
   "sections": [

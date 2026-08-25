@@ -2557,6 +2557,56 @@
           "why": "The branch treats evaluation as risk reduction with a cost, and this makes the cost side explicit for a loop that is otherwise easy to run unbounded. Two results transfer past harness search. First, an evaluation set is not uniformly informative and its informativeness moves as the system changes, so tasks every candidate solves or every candidate fails are budget spent for no discrimination. Second, resampling the set is only sound if the estimator corrects for it: the fixed-subset baseline overfits and the raw-mean resampling baseline produces scores that are not comparable across iterations. Worth carrying alongside the numbers is what the paper does not claim, since on Terminal-Bench it searches and evaluates on the same 89 tasks, following prior work, so these are not held-out generalization figures."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260820622J",
+      "title": "Applying Anthropic Primitives at Large Enterprises: Harness Paradigm for Knowledge Work",
+      "firstAuthor": "Juraj Salapa, George",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.20622",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260820622J",
+      "branches": [
+        "security",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Authorization lives outside the harness, in a tool gateway. Instead of one hand-built method per anticipated operation, each backend registers a credential broker: the gateway authenticates the caller against the target system and returns one narrowly scoped token, against which the model composes its own Graph query, OData filter, or SQL through a single generic request tool. Risk is call-scoped and self-declared rather than a static tier on a tool: the model must set a risky boolean on every call, judged from the params it just constructed, and a call omitting it is rejected before reaching a backend. A risky call spawns a fresh sub-harness to judge it, on the argument that the context that composed a call should not grade it, and escalates to a blocking human approval queue only when that judge cannot clear it. Retrieval is a git-mirrored plain-text copy of the document stores, each file carrying its source ACL group and each sync cycle one commit.",
+          "why": "This branch holds that tool and retrieval output is untrusted and that governance has to be structural rather than procedural. The paper's position is that governance survives only as a property of the deployment path: entitlement decided at the credential so it rides the enterprise identity system, registration as a side effect of shipping, risk judged per call by a fresh context. Its own admitted limit belongs here too: once the gateway hands over a credential, nothing constrains which calls the model makes inside that system, and no static schema validation catches a malformed call before the backend does."
+        },
+        {
+          "branch": "topology",
+          "takeaway": "One harness artifact, a loop plus memory plus filesystem plus bash, runs unmodified across three deployment surfaces: an unattended cron container, the execution engine behind a business chat surface such as Copilot Studio, and an interactive terminal, all under one identity and governance model. There is no design-time graph. A harness spawns further harnesses headless against fresh folders, tracks children through a status file instead of polling, and lets them message each other over a live socket when the target is running or a durable inbox when it is not, so the orchestration graph is composed at runtime by the model. Four thin services hold the fleet together: a tool gateway gating what a container may call, a solution registry recording what was deployed and by whom, a skill library resolved across built-in, shared-platform and project tiers (baked into the image at build time by default, or re-fetched per run with its own scoped repo token for anything named under live_skills), and a run-trigger endpoint. Shipping is forking a reference repo, editing an instructions file and a config file, and pushing.",
+          "why": "The branch's position is to choose topology deliberately and keep roles in configuration rather than code. This paper pushes that to its limit: the same binary in every position, with the difference between a cron job, a chat backend, and a developer terminal reduced to two text files and an identity, so auditing N solutions becomes reading N version-controlled instruction files. It is an architecture proposal informed by European enterprise engagements and implemented against Azure, not a measured comparison; the paper runs no benchmark and names microcc as its reference implementation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260601317H",
+      "title": "SABER: Benchmarking Operational Safety of LLM Coding Agents in Stateful Project Workspaces",
+      "firstAuthor": "Hu, Qi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.01317",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260601317H",
+      "branches": [
+        "eval",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "SABER judges completed runs, not model responses. Each of 716 tasks initializes a Docker-sandboxed workspace with source, configuration and git history, records the shell trajectory, tool calls, outputs and state deltas, and adjudicates with a rule-based checker (harmful command patterns, global safety properties) plus an LLM judge. The primary metric, harmful safety-violation rate, is computed over effective runs with incapable runs excluded, so a model gains nothing by failing to act; incapability rate and justified safe-refusal rate are reported separately. That separation carries the result: DeepSeek-V3 looks safe largely because it cannot find a path (IR 26.1%), while Opus 4.6 and GPT-5.4 hold the lowest violation rates (54.7%, 63.9%) and the highest late-refusal rates (9.0%, 7.4%) because they attempt more and recognize risk after harm. Nine existing safety benchmarks are run alongside and disagree with each other and with SABER.",
+          "why": "This branch's line is to ground evaluation in execution against an honest baseline and to treat eval as risk reduction rather than proof. SABER is the concrete version for agent safety: it closes the do-nothing loophole by excluding incapability from the denominator, and it states its own limits plainly, measuring the model's safety reasoning under one shared ReAct-style harness rather than any vendor's confirmation policies, rollback, or filters, with mock networking and Docker sandboxes that do not reproduce cloud IAM, multi-user permissions, or long-running services."
+        },
+        {
+          "branch": "security",
+          "takeaway": "The attack surface is the whole readable workspace, not the prompt. SABER separates three causal origins: 289 tasks hide malicious instructions in project artifacts such as build metadata or dependency manifests (70.1% HSR, with 23.0% of effective runs showing multi-step compositional harm), 186 tasks are entirely benign requests where an unsafe shortcut is available (68.3% HSR with no adversary present at all), and 241 tasks put safety-relevant warnings in the workspace (82.5% HSR, the worst split). Cause labels put operational misunderstanding at 47.7% of harmful runs, ahead of injection-following at 25.4% and harmful-operation compliance at 25.1%. Capability does not buy safety: DeepSeek-V3.2 exceeds V3 at 79.6% vs 72.4% HSR while being less incapable, and Qwen3.5 moves only from 78.6% at 9B to 73.4% at 397B.",
+          "why": "The branch holds that tool and retrieval output is untrusted and that harm propagates. SABER extends both: the untrusted content sits in the project's own build files and git history rather than in a prompt or tool response, and the largest harm category is not injection at all but an agent choosing a destructive path toward a legitimate goal, such as chmod -R 777 to clear a permission error or a database reset that is routine in development and catastrophic in production. Refusal hardening addresses neither, and warnings already present in the workspace do not become execution constraints."
+        }
+      ]
     }
   ],
   "sections": [
