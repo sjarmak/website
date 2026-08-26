@@ -1614,6 +1614,43 @@
           "why": "Governance surfaces for memory are usually specified as a schema and then evaluated by asking a model what it would do. This shows the two answers diverge: a model that states the right commitment decision picks a different tool on 43% of the same items. Anything auditing what gets written has to read the emitted call rather than a stated intent, and a validator that checks argument shape will pass cleanly while the wrong operation is being invoked."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260821867W",
+      "title": "MemGuard: Persisting Verifier Signals for LLM-Agent Memory Governance",
+      "firstAuthor": "Wang, Haoyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.21867",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260821867W",
+      "branches": [
+        "retrieval",
+        "consolidation",
+        "forgetting",
+        "interop"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "Retrieval is scored in two channels over the same bank. A hybrid retriever combines BM25 and embedding cosine similarity over a record's title, description and content, and the verifier descriptor then adjusts that score: quality and confidence raise it, staleness and overgeneralization penalties lower it, and records still marked provisional are held back from injection. Records routed to the failure-guard pool get their own retrieval score and are rendered in a separate block of the injected prompt, so the agent reads them as constraints on what not to do rather than as strategies to imitate.",
+          "why": "This branch asks what surfaces into context at inference time. MemGuard's answer is that similarity fusion is only half the ranking problem: a record can be lexically and semantically on-target and still be wrong, because it came from an accidental success or an API version that no longer exists. Quality becomes a ranking channel alongside lexical and dense similarity, and the positive/negative split means retrieval controls not just which memory arrives but how the agent is allowed to use it."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "The write decision is a verifier gate, not a summarizer. A trajectory is decomposed into multiple criteria (completion, consistency, validity, generalizability), reward is estimated from score-token distributions across repeated views, and the result is packed into a descriptor of reward, confidence, label and uncertainty attached to the candidate before activation. That descriptor sorts the candidate three ways: rejected, kept provisional pending further evidence, or activated. Failed trajectories are not discarded but stored as constraints in a failure-guard pool.",
+          "why": "The branch's open question is when, and whether, to run a model over raw turns to produce durable memory. MemGuard argues the expensive step is not abstraction but adjudication, and that the two most common admission errors are structural: a failed run and an accidental success both look relevant to a retriever. Keeping uncertain records provisional gives consolidation a third outcome between write and drop, which a one-shot extract-and-store pipeline does not have."
+        },
+        {
+          "branch": "forgetting",
+          "takeaway": "The bank is a lifecycle-managed object under a finite active-memory budget. Governance runs after every completed task: activation, rejection, merge and conflict checks fire immediately, while summarization and archival trigger when the active budget is exceeded or when a record turns stale, low-quality or overgeneralized. Duplicates merge, conflicts are detected by structured-signature similarity above a threshold and resolved, and outdated entries are summarized or archived rather than left retrievable. Staleness is an explicit penalty term, not an emergent effect of ranking.",
+          "why": "This branch's claim is that lifecycle management is under-treated relative to writing and retrieving. MemGuard supplies the concrete failure it prevents: memory drift, where a long-running bank accumulates duplicate, conflicting and stale records that retrieval alone cannot repair, so a hint from an older API version keeps re-entering the top-k for every superficially similar query. Retirement here is budget-driven and quality-driven at once, which is a more specific policy than time-based decay."
+        },
+        {
+          "branch": "interop",
+          "takeaway": "Every record carries a fixed set of lifecycle fields — state, quality, confidence, usage statistics and conflict links — and the verifier descriptor persists as first-class metadata rather than being consumed at write time. The same descriptor is read again at retrieval, conflict resolution, summarization and archival. An ablation isolates this: a verifier-only control that filters at admission but stores no descriptor beats ReasoningBank in most cells yet loses to MemGuard in all 16 backbone-benchmark settings.",
+          "why": "The branch is about schema discipline and having a governance surface for what gets written and read. MemGuard is the argument that the schema is where the leverage is: the ablation separates the value of judging a memory from the value of recording the judgment, and the gap between them is the part attributable to a durable, auditable field on the record instead of a decision that disappears after the write."
+        }
+      ]
     }
   ],
   "sections": [

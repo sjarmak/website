@@ -2607,6 +2607,25 @@
           "why": "The branch holds that tool and retrieval output is untrusted and that harm propagates. SABER extends both: the untrusted content sits in the project's own build files and git history rather than in a prompt or tool response, and the largest harm category is not injection at all but an agent choosing a destructive path toward a legitimate goal, such as chmod -R 777 to clear a permission error or a database reset that is routine in development and catastrophic in production. Refusal hardening addresses neither, and warnings already present in the workspace do not become execution constraints."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260822063B",
+      "title": "From SQL Generation to Tool Selection: A Domain-Oriented Pattern for MCP Servers",
+      "firstAuthor": "Bogliolo, Bartolomeo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.22063",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260822063B",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "The paper's routing claim is that the model tier a workload needs is set by the tool interface, not by the workload. Replacing an MCP server's generic execute_sql tool with five domain-aligned tools whose parameterized SQL is pre-authored server-side turns the model's job from open-ended SQL synthesis into intent classification and slot filling — the authors call the effect Model Demotion. Measured over 609 completed cells (four local 3B-8B models, seventeen Sakila tasks, temperature 0, three repetitions), the domain pack scores 0.939 pooled mean against 0.666 for raw SQL, and the smallest model, llama3.2:3b, goes from 0.583 to 0.929, matching or beating every larger configuration. Cost is reported per correct answer rather than per call: 2,723 tokens and 3.4 s for the 3B model with domain tools against 31,476 tokens and 49.5 s for the same model on raw SQL, an 11.6x reduction, with 2.0x to 3.7x reductions for the larger models. Mean per-cell tokens barely move (3,056 vs 3,953), so the entire gain is in the correct-answer denominator. A third arm matters as much as the first two: a deliberately shallow table-oriented pack pools at 0.605, below raw SQL, so a tool layer without domain design can be worse than none.",
+          "why": "This branch's position is that cost facts should be recorded before routing is optimized and that unknown cost must never be treated as zero. The paper is a clean instance of both. It reports cost per correct answer, which is the metric that inverts the naive reading — per-call tokens are flat while the economics change by an order of magnitude — and it locates the lever in the server-side abstraction rather than in a cascade or a router. That is a different move than the usual cascade argument: instead of choosing a cheaper model for easy requests, it makes the requests structurally easier so a cheap model suffices, with the exceptional remainder routed to a human who commits a new YAML/SQL definition and permanently absorbs the case into the deterministic set. The failure-mode argument is the reliability half: synthesis failures are open-ended (wrong joins, invalid syntax, hallucinated columns) while selection failures are bounded (wrong tool, missing parameter) and therefore detectable and loggable."
+        }
+      ]
     }
   ],
   "sections": [
