@@ -165,7 +165,10 @@ function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
           return (
             <section class="theme" data-key={s.key} id={`theme-${s.key}`}>
               <h2 class="theme__label">{s.label}</h2>
-              {s.summary && <p class="theme__summary measure">{s.summary}</p>}
+              {s.summary &&
+                s.summary
+                  .split(/\n{2,}/)
+                  .map((para: string) => <p class="theme__summary measure">{para}</p>)}
 
               {notes.length > 0 && (
                 <div class="theme__notes">

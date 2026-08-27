@@ -66,21 +66,32 @@ interface RawThread {
 
 const libraries = librariesData.libraries as unknown as Library[];
 
-// Full-text 4-part synthesis, keyed by bibcode, generated agentically via the
-// SciX MCP. Joined onto each explorer paper at module load so pages get it for
-// free; papers without an entry simply fall back to the 2-part notes.
-const synthesisByBibcode = paperSynthesisData.synthesis as Record<string, ExplorerPaperSynthesis>;
+// Full-text 4-part synthesis, generated agentically via the SciX MCP and keyed
+// by whichever identifier the paper carries: bibcode first, then arXiv id, then
+// url. Conference papers with no ADS record (PVLDB, CIDR) and released
+// artifacts have only the last of those, and they carry the argument on several
+// explorers, so the join cannot be bibcode-only. Joined at module load so pages
+// get it for free; a paper with no entry falls back to its 2-part notes.
+const synthesisByRef = paperSynthesisData.synthesis as Record<string, ExplorerPaperSynthesis>;
 
 function hasSynthesis(s: ExplorerPaperSynthesis | undefined): s is ExplorerPaperSynthesis {
   return !!s && [s.plainAbstract, s.motivation, s.methodology, s.results].some((f) => f?.trim());
+}
+
+function lookupSynthesis(p: ExplorerPaper): ExplorerPaperSynthesis | undefined {
+  for (const ref of [p.bibcode, p.arxiv, p.url]) {
+    const s = ref ? synthesisByRef[ref] : undefined;
+    if (hasSynthesis(s)) return s;
+  }
+  return undefined;
 }
 
 function joinSynthesis(explorer: Explorer): Explorer {
   return {
     ...explorer,
     papers: explorer.papers.map((p) => {
-      const s = p.bibcode ? synthesisByBibcode[p.bibcode] : undefined;
-      return hasSynthesis(s) ? { ...p, synthesis: s } : p;
+      const s = lookupSynthesis(p);
+      return s ? { ...p, synthesis: s } : p;
     }),
   };
 }

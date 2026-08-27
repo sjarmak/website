@@ -1,0 +1,1820 @@
+{
+  "id": "where-business-meaning-lives",
+  "title": "Where Business Meaning Lives",
+  "blurb": "When an agent answers a question about a company's data, the schema tells it where the bytes are and nothing about what the business means by revenue, by churn, or by an active account. This map follows what happens to that missing meaning when it is written down as documentation, given a representation the model targets instead of SQL, compiled into a layer the model cannot bypass, or left for the model to infer while it writes the query. The sharpest measurements show that enforcement converts confident wrong answers into refusals more than it produces additional correct ones. I built this to work out which of those trades is worth making, where the studies disagree and why, and which experiments would settle the rest.",
+  "metaDescription": "Where business meaning lives in an AI analytics system: documentation, representation, enforcement, or the harness. 75 papers, six live disagreements.",
+  "learningSlug": "where-business-meaning-lives",
+  "homepage": "/library/explorers/where-business-meaning-lives",
+  "paperCount": 75,
+  "themeCount": 0,
+  "papers": [
+    {
+      "bibcode": null,
+      "title": "Towards a Theory of Natural Language Interfaces to Databases",
+      "firstAuthor": "Popescu",
+      "year": 2003,
+      "arxiv": null,
+      "url": "https://www.cs.virginia.edu/~rmw7my/papers/popescu-etzioni-kautz.pdf",
+      "branches": [
+        "boundary",
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Theorem 1 states that, given a lexicon and an attachment function, PRECISE is sound and complete for any question in a class the authors define as semantically tractable, and that it can decide for any question which side of that line it falls on. Outside the class it declines and requests a paraphrase. On Ray Mooney's question sets the tractable class covered 97 percent of restaurant questions, 88 percent of jobs and 77.5 percent of geography, and inside it the system made no mistakes on any of the three databases.",
+          "why": "The earliest fully worked version of the trade this map is about. Reliability came from narrowing what the system would attempt rather than from improving the parser, and the paper argues from user trust that a refusal is tolerable where a confident wrong answer is not."
+        },
+        {
+          "branch": "gap",
+          "takeaway": "Intractability is diagnosed against the database rather than against the sentence. A question falls outside the class because a word is not in the lexicon, because it needs a function the system does not implement, or because the fact is absent: their example is a database that stores population density for states and not for cities, which makes the city question unanswerable rather than difficult.",
+          "why": "A 2003 formalization of the claim that a schema plus a lexicon fixes which questions can be answered at all. LiveSQLBench's knowledge base makes the same claim twenty-three years later over a much larger vocabulary, without the decidability result."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Constructing an Interactive Natural Language Interface for Relational Databases",
+      "firstAuthor": "Li",
+      "year": 2014,
+      "arxiv": null,
+      "url": "https://www.vldb.org/pvldb/vol8/p73-li.pdf",
+      "branches": [
+        "representation",
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Places a query tree between the dependency parse and the SQL and shows it to the user for confirmation before anything executes, on the argument that a person can verify a query tree and cannot verify a SQL statement. The paper reports that a tree the user has verified is almost always translated correctly.",
+          "why": "The intermediate representation is chosen for the human in the loop rather than for the decoder, which is a different design rationale from the one IRNet and NatSQL give and produces a different structure."
+        },
+        {
+          "branch": "boundary",
+          "takeaway": "The user study measures what happens without the verification step. Fourteen participants on the Microsoft Academic Search database completed 88 of 98 query tasks with the interactive communicator enabled. With it disabled there were 32 failures and the participants detected 7 of them, and the paper notes the undetected ones were mostly aggregates, which cannot be checked by reading the answer.",
+          "why": "Direct measurement of the failure mode that motivates every enforcement mechanism in this map: 25 wrong answers accepted as correct by the person who asked the question."
+        }
+      ]
+    },
+    {
+      "bibcode": "2015Sci...349..636D",
+      "title": "The reusable holdout: Preserving validity in adaptive data analysis",
+      "firstAuthor": "Dwork",
+      "year": 2015,
+      "arxiv": null,
+      "url": null,
+      "branches": [
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "improvement",
+          "takeaway": "Shows that a holdout set reused across adaptively chosen analyses stops being a valid estimate of generalization, and that differentially private access to it restores validity for a quantified number of queries.",
+          "why": "Every development-set-driven agent optimization loop in this literature is an instance of the problem this paper solved in Science in 2015, and nearly none of them cite it."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "ATHENA: An Ontology-Driven System for Natural Language Querying over Relational Data Stores",
+      "firstAuthor": "Saha",
+      "year": 2016,
+      "arxiv": null,
+      "url": "https://www.vldb.org/pvldb/vol9/p1209-saha.pdf",
+      "branches": [
+        "representation",
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Translates a question into OQL over a domain ontology and only then into SQL, which decouples the semantics of the question from the physical layout of the tables. Reports 100% precision on GEO and MAS and 99% on FIN, with recall of 87.2%, 88.3% and 88.9%.",
+          "why": "Physical independence is the argument, not the accuracy: the same ontology query survives a schema migration, which is the property a semantic layer is bought for."
+        },
+        {
+          "branch": "boundary",
+          "takeaway": "Precision is defined over the questions for which the system produced any interpretation, and recall over the whole workload. ATHENA generated no interpretation for 11 of 108 finance questions, which is exactly the gap between the two figures.",
+          "why": "A 2016 system with abstention built into its architecture and measured in its reported metrics, twenty years before the term structural abstention was coined for it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2018arXiv180400401U",
+      "title": "An End-to-end Neural Natural Language Interface for Databases",
+      "firstAuthor": "Utama",
+      "year": 2018,
+      "arxiv": "1804.00401",
+      "url": null,
+      "branches": [
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Builds a neural NLIDB that operates without hand-written rules or per-database annotation, using synthesized training data and a schema-aware model.",
+          "why": "It is the cleanest early demonstration of what the schema alone supports, which is the baseline every knowledge-supplying method in the next theme is measured against."
+        }
+      ]
+    },
+    {
+      "bibcode": "2018arXiv180609029F",
+      "title": "Improving Text-to-SQL Evaluation Methodology",
+      "firstAuthor": "Finegan-Dollak",
+      "year": 2018,
+      "arxiv": "1806.09029",
+      "url": null,
+      "branches": [
+        "grading",
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Shows that splitting by question rather than by query lets a model score well by recognizing SQL templates it has already seen, and rebuilds the standard datasets with query-based splits.",
+          "why": "Eight years old, uncontested, and still not the default in every benchmark this map cites, which is the shape of most methodological progress here."
+        },
+        {
+          "branch": "generalization",
+          "takeaway": "Separates memorizing a query template from composing a new one, which is a distinct axis from transferring to a new database.",
+          "why": "Cross-database transfer and cross-template composition are routinely reported as one number, and this is the paper that showed they are not."
+        }
+      ]
+    },
+    {
+      "bibcode": "2018arXiv180908887Y",
+      "title": "Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task",
+      "firstAuthor": "Yu",
+      "year": 2018,
+      "arxiv": "1809.08887",
+      "url": null,
+      "branches": [
+        "gap",
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Establishes cross-domain text-to-SQL as the task: models are tested on databases they never saw in training, over 200 databases with multiple tables and complex SQL including joins, nesting and set operations.",
+          "why": "It set the target the rest of this literature aims at, and its schemas are clean and well-named enough that the semantic gap stays invisible, which is why later benchmarks had to be built."
+        },
+        {
+          "branch": "generalization",
+          "takeaway": "Defines generalization as transfer to unseen databases, which became the field's default meaning of the word.",
+          "why": "Cross-database transfer and cross-phrasing transfer are different properties, and Spider's framing made the first one the one everybody optimized."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019arXiv190608990A",
+      "title": "A Comparative Survey of Recent Natural Language Interfaces for Databases",
+      "firstAuthor": "Affolter",
+      "year": 2019,
+      "arxiv": "1906.08990",
+      "url": null,
+      "branches": [
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Surveys 24 natural language interfaces to databases from 2010 onward and classifies them by translation technique, from keyword matching through grammar-based parsing to neural approaches.",
+          "why": "Useful for what its taxonomy does not contain: there is no category for where business meaning is stored, which is the axis this map is organized on."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019arXiv190200031B",
+      "title": "Bridging the Semantic Gap with SQL Query Logs in Natural Language Interfaces to Databases",
+      "firstAuthor": "Baik",
+      "year": 2019,
+      "arxiv": "1902.00031",
+      "url": null,
+      "branches": [
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Names the semantic gap between how users describe their information need and how the database stores it, and proposes mining the organization's SQL query log to recover the mapping automatically.",
+          "why": "The diagnosis is pre-LLM and the proposed cure is the recurring idea of this map, that the missing knowledge already exists in artifacts the organization produced and has never been extracted with a modern model."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019arXiv191104942W",
+      "title": "RAT-SQL: Relation-Aware Schema Encoding and Linking for Text-to-SQL Parsers",
+      "firstAuthor": "Wang",
+      "year": 2019,
+      "arxiv": "1911.04942",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Encodes the schema as a graph and uses relation-aware self-attention to jointly represent schema structure and its alignment to the question.",
+          "why": "It makes explicit that binding language to schema elements is a separate problem from emitting syntax, which is the same split the semantic-layer architectures make at the system level."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019arXiv190508205G",
+      "title": "Towards Complex Text-to-SQL in Cross-Domain Database with Intermediate Representation",
+      "firstAuthor": "Guo",
+      "year": 2019,
+      "arxiv": "1905.08205",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Introduces SemQL, an intermediate representation that removes the parts of SQL with no counterpart in the natural-language question, and generates SemQL before deterministically inferring the SQL.",
+          "why": "It is the neural rediscovery of ATHENA's move, arrived at independently and framed as a mismatch problem rather than as physical independence."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "ATHENA++: Natural Language Querying for Complex Nested SQL Queries",
+      "firstAuthor": "Sen",
+      "year": 2020,
+      "arxiv": null,
+      "url": "https://www.vldb.org/pvldb/vol13/p2747-sen.pdf",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Extends ontology-driven translation to nested and aggregate business queries and introduces FIBEN, 300 natural-language queries mapping to 237 distinct complex SQL queries over 152 tables, with an ontology derived from FIBO and FRO. Reports 88.33% on FIBEN and 78.89% on Spider dev against a best reported dev accuracy of 70.6% at the time.",
+          "why": "A symbolic ontology-mediated system beating the neural leaderboard on the neural leaderboard's own benchmark is the most under-cited result in this corpus, and it has never been re-run against a modern LLM baseline."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv201212627L",
+      "title": "Bridging Textual and Tabular Data for Cross-Domain Text-to-SQL Semantic Parsing",
+      "firstAuthor": "Lin",
+      "year": 2020,
+      "arxiv": "2012.12627",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Augments the question-schema representation with anchor text drawn from the database's actual cell values, so linking can use the data and not only the column names.",
+          "why": "The values carry meaning the schema omits, which is a cheap partial substitute for documentation and a useful control when arguing that a semantic layer was necessary."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv201012725S",
+      "title": "Compositional Generalization and Natural Language Variation: Can a Semantic Parsing Approach Handle Both?",
+      "firstAuthor": "Shaw",
+      "year": 2020,
+      "arxiv": "2010.12725",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Shows that handling novel combinations of familiar structures and handling varied phrasings are separate requirements, and that approaches strong on one can be weak on the other.",
+          "why": "It is the paper that makes generalization a multi-axis question, which is what any claim about a semantic model transferring to a new domain has to be specific about."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv200307438B",
+      "title": "Duoquest: A Dual-Specification System for Expressive SQL Queries",
+      "firstAuthor": "Baik",
+      "year": 2020,
+      "arxiv": "2003.07438",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Lets the user supply a partial query sketch alongside the natural-language question, turning an underspecified request into a constrained search over candidate queries.",
+          "why": "Interaction is the resolution this literature keeps forgetting: a system that can ask rather than guess does not need to choose between a wrong answer and a refusal."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv201002840Z",
+      "title": "Semantic Evaluation for Text-to-SQL with Distilled Test Suites",
+      "firstAuthor": "Zhong",
+      "year": 2020,
+      "arxiv": "2010.02840",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Demonstrates that executing against a single database instance cannot distinguish semantically different queries that happen to agree on that instance, and distills compact test suites of databases that do distinguish them.",
+          "why": "Every execution-accuracy number reported on one instance is an upper bound on semantic correctness, and this paper supplies the correction most of this literature declines to use."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020arXiv200714435D",
+      "title": "Towards Ecologically Valid Research on Language User Interfaces",
+      "firstAuthor": "de Vries",
+      "year": 2020,
+      "arxiv": "2007.14435",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Argues that benchmark question distributions for language user interfaces are not produced by real users with real goals, so measured progress may not transfer to deployment.",
+          "why": "It is the argument that a governed analytics evaluation has to answer directly, because a semantic layer is defined against the questions an organization actually asks and benchmarks are not."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210413744S",
+      "title": "Bio-SODA: Enabling Natural Language Question Answering over Knowledge Graphs without Training Data",
+      "firstAuthor": "Sima",
+      "year": 2021,
+      "arxiv": "2104.13744",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Answers natural-language questions over scientific knowledge graphs with no training data, ranking candidate interpretations using the graph's own structure and a generic ranking algorithm.",
+          "why": "It is the precedent that a rich enough structural description of the domain can substitute for supervision entirely, which is the strongest form of the supplying-meaning claim."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210611455L",
+      "title": "KaggleDBQA: Realistic Evaluation of Text-to-SQL Parsers",
+      "firstAuthor": "Lee",
+      "year": 2021,
+      "arxiv": "2106.11455",
+      "url": null,
+      "branches": [
+        "gap",
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Uses real databases uploaded to Kaggle with their original abbreviated column names and unnormalized values, and questions written by people who had the data but not the schema. A zero-shot state-of-the-art parser scores 13.56% exact match.",
+          "why": "It isolates schema realism from question difficulty, and shows that the realism alone is worth most of the collapse."
+        },
+        {
+          "branch": "context",
+          "takeaway": "Runs the documentation ablation that nobody has bettered: 13.56% zero-shot, 17.96% with in-domain fine-tuning, 26.77% after adding column descriptions drawn from each database's own documentation.",
+          "why": "Documentation is worth 8.81 points here, roughly two thirds of the total lift and the largest measured single intervention in this literature, and it still leaves the system at 26.77%."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210905153G",
+      "title": "Natural SQL: Making SQL Easier to Infer from Natural Language Specifications",
+      "firstAuthor": "Gan",
+      "year": 2021,
+      "arxiv": "2109.05153",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Defines NatSQL, a target language that eliminates set operators and nested subqueries and reduces the number of schema items a model must predict, then compiles it back to executable SQL.",
+          "why": "It quantifies the tradeoff the whole theme depends on: a smaller target is easier to hit and can express less, and this is one of the few papers that says out loud what it gave up."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210905093S",
+      "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
+      "firstAuthor": "Scholak",
+      "year": 2021,
+      "arxiv": "2109.05093",
+      "url": null,
+      "branches": [
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Rejects token continuations that cannot extend into a parseable, schema-valid SQL query, applied at each decoding step without changing the underlying model.",
+          "why": "It is the reference implementation of constraint-as-masking, and the reference point for what Dang's bias result says about that mechanism."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210601065G",
+      "title": "Towards Robustness of Text-to-SQL Models against Synonym Substitution",
+      "firstAuthor": "Gan",
+      "year": 2021,
+      "arxiv": "2106.01065",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Substitutes synonyms for schema-related words in the questions and observes a sharp accuracy drop, showing that parsers were relying on lexical overlap between question and column names.",
+          "why": "It is the robustness-side statement of this map's first theme: a system leaning on lexical overlap has quietly assumed the schema is the business vocabulary."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021arXiv210407478H",
+      "title": "Unlocking Compositional Generalization in Pre-trained Models Using Intermediate Representations",
+      "firstAuthor": "Herzig",
+      "year": 2021,
+      "arxiv": "2104.07478",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Holds the model architecture fixed and varies only the intermediate representation, comparing reversible and lossy designs by how closely their structure corresponds to the natural language. Gains 14.8 points on CFQ and 15.0 to 19.4 points on template splits of three text-to-SQL datasets.",
+          "why": "This is the controlled experiment that makes representation a first-class variable rather than an implementation detail, and it is the reason changing the target language is not the same intervention as constraining the decoder."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221209736G",
+      "title": "Don't Generate, Discriminate: A Proposal for Grounding Language Models to Real-World Environments",
+      "firstAuthor": "Gu",
+      "year": 2022,
+      "arxiv": "2212.09736",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Proposes that the model rank candidate programs enumerated against the actual environment rather than generate them freely, so every candidate is executable and schema-valid by construction.",
+          "why": "It is the limit case of this theme: the representation becomes a finite candidate set and the model's only job is judgment, which removes the fabrication surface entirely."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv220400498R",
+      "title": "Evaluating the Text-to-SQL Capabilities of Large Language Models",
+      "firstAuthor": "Rajkumar",
+      "year": 2022,
+      "arxiv": "2204.00498",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Evaluates Codex and GPT-3 on Spider without fine-tuning and shows that how the schema is serialized into the prompt materially changes the result.",
+          "why": "The earliest text-to-SQL evidence that the scaffold is a variable, published four years before the scaffold papers, and routinely cited for the capability number rather than for the prompt-format finding."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv220111227P",
+      "title": "Synchromesh: Reliable code generation from pre-trained language models",
+      "firstAuthor": "Poesia",
+      "year": 2022,
+      "arxiv": "2201.11227",
+      "url": null,
+      "branches": [
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Combines target-similarity example retrieval with constrained semantic decoding, so generated programs satisfy semantic as well as syntactic constraints of the target language.",
+          "why": "It generalizes PICARD past syntax to semantic well-formedness, which is as close as decoding-time constraint gets to what a semantic layer enforces structurally."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221012674G",
+      "title": "Towards Generalizable and Robust Text-to-SQL Parsing",
+      "firstAuthor": "Gao",
+      "year": 2022,
+      "arxiv": "2210.12674",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Treats generalization and robustness as explicit design targets in the parser rather than as properties measured after the fact.",
+          "why": "It is where the two-axis distinction has to be made concrete, because a design cannot target both without saying which one it is trading away."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022arXiv221209994P",
+      "title": "Towards Robustness of Text-to-SQL Models Against Natural and Realistic Adversarial Table Perturbation",
+      "firstAuthor": "Pi",
+      "year": 2022,
+      "arxiv": "2212.09994",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Perturbs the table rather than the question, using natural and realistic renamings, and finds the same fragility from the other direction.",
+          "why": "Together with Spider-Syn it locates the fragility in the binding between language and schema rather than in either side alone."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231013659B",
+      "title": "Benchmarking and Improving Text-to-SQL Generation under Ambiguity",
+      "firstAuthor": "Bhaskar",
+      "year": 2023,
+      "arxiv": "2310.13659",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Constructs a benchmark where questions admit multiple valid SQL interpretations and measures how systems behave when there is no single correct query.",
+          "why": "A benchmark with one gold query per question scores a defensible alternative reading as a failure, which means ambiguity contaminates every accuracy number in this map and is invisible in all of them."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230503111L",
+      "title": "Can LLM Already Serve as A Database Interface? A BIg Bench for Large-Scale Database Grounded Text-to-SQLs",
+      "firstAuthor": "Li",
+      "year": 2023,
+      "arxiv": "2305.03111",
+      "url": null,
+      "branches": [
+        "gap",
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "12,751 question-SQL pairs over 95 databases totalling 33.4 GB across 37 professional domains, with dirty values, large table counts and efficiency as a scored dimension. ChatGPT reaches 40.08% execution accuracy where humans reach 92.96% on the same questions.",
+          "why": "The 53-point human-model gap on realistic databases is the clearest single statement that the bottleneck moved from parsing to knowledge."
+        },
+        {
+          "branch": "context",
+          "takeaway": "Ships external knowledge evidence alongside each question, making the missing business context part of the task specification rather than a confound the model has to overcome silently.",
+          "why": "It is the first major benchmark to concede that the schema alone is not a sufficient input, which is the premise the whole semantic-layer argument builds on."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv231203463W",
+      "title": "DBCopilot: Natural Language Querying over Massive Databases via Schema Routing",
+      "firstAuthor": "Wang",
+      "year": 2023,
+      "arxiv": "2312.03463",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Handles collections too large to fit any prompt by routing a question to the right databases and tables first, decoupling schema selection from SQL generation.",
+          "why": "When the unit of scale is the number of databases rather than the number of columns, context assembly stops being the right frame and routing takes over."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230108881C",
+      "title": "Dr.Spider: A Diagnostic Evaluation Benchmark towards Text-to-SQL Robustness",
+      "firstAuthor": "Chang",
+      "year": 2023,
+      "arxiv": "2301.08881",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Assembles 17 perturbation test sets spanning question, database and SQL perturbations, so a robustness failure can be attributed to a specific kind of variation.",
+          "why": "It is the closest thing the field has to a diagnostic suite, and there is no equivalent for perturbing a semantic layer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023arXiv230205965L",
+      "title": "RESDSQL: Decoupling Schema Linking and Skeleton Parsing for Text-to-SQL",
+      "firstAuthor": "Li",
+      "year": 2023,
+      "arxiv": "2302.05965",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Separates schema linking from SQL skeleton generation into distinct ranked stages so each can be optimized and inspected independently.",
+          "why": "Decoupling is the recurring structural answer in this theme, and this paper is the clearest statement of it inside a single model rather than across a system."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240208666S",
+      "title": "Improving Generalization in Semantic Parsing by Increasing Natural Language Variation",
+      "firstAuthor": "Saparina",
+      "year": 2024,
+      "arxiv": "2402.08666",
+      "url": null,
+      "branches": [
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "generalization",
+          "takeaway": "Increases the natural-language variation in training data as a direct intervention and measures the resulting generalization improvement.",
+          "why": "The constructive counterpart to the perturbation suites: having established which axis is weak, this is what it costs to strengthen it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240608426H",
+      "title": "Next-Generation Database Interfaces: A Survey of LLM-based Text-to-SQL",
+      "firstAuthor": "Hong",
+      "year": 2024,
+      "arxiv": "2406.08426",
+      "url": null,
+      "branches": [
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Organizes the LLM-era text-to-SQL literature by datasets, evaluation metrics, prompting methods and fine-tuning approaches, and identifies knowledge grounding as one of the open challenges.",
+          "why": "Read alongside Affolter it shows the field's framing did not change when the models did: both surveys are organized by translation technique, five years apart."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240611695O",
+      "title": "Optimizing Instructions and Demonstrations for Multi-Stage Language Model Programs",
+      "firstAuthor": "Opsahl-Ong",
+      "year": 2024,
+      "arxiv": "2406.11695",
+      "url": null,
+      "branches": [
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "improvement",
+          "takeaway": "Jointly optimizes instructions and few-shot demonstrations across the stages of a multi-stage language-model program, beating baseline optimizers on five of seven programs with Llama-3-8B by as much as 13 points.",
+          "why": "It establishes the multi-stage program as the unit of optimization, which is the same unit the harness theme argues is the unit of capability, and neither theme's evaluations account for the other."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv240711418P",
+      "title": "Semantic Operators: A Declarative Model for Rich, AI-based Data Processing",
+      "firstAuthor": "Patel",
+      "year": 2024,
+      "arxiv": "2407.11418",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Defines a declarative algebra whose operators are themselves model invocations, so a query plan can mix relational operations with semantic ones and be optimized as a plan.",
+          "why": "It moves the target of generation off SQL entirely, which is the strongest version of the claim that the model should emit a smaller, better-typed object."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024arXiv241107763L",
+      "title": "Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows",
+      "firstAuthor": "Lei",
+      "year": 2024,
+      "arxiv": "2411.07763",
+      "url": null,
+      "branches": [
+        "gap",
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "632 enterprise workflow problems over BigQuery and Snowflake databases that frequently exceed 1,000 columns, requiring dialect-specific SQL and multi-step transformations. An o1-preview code agent solves 21.3%, against 91.2% on Spider 1.0 and 73.0% on BIRD.",
+          "why": "It is the strongest evidence that the earlier benchmarks were measuring something other than the deployed task, and the 70-point drop from Spider 1.0 is the size of the difference."
+        },
+        {
+          "branch": "context",
+          "takeaway": "Solving these problems frequently requires searching database metadata, dialect documentation and project-level code, so context acquisition is part of the task rather than a preprocessing step.",
+          "why": "At this scale the question is not whether to supply context but how the system decides what to look at, which is the shift the 2026 retrieval work is responding to."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250814056E",
+      "title": "Confidence Estimation for Text-to-SQL in Large Language Models",
+      "firstAuthor": "Entezari Maleki",
+      "year": 2025,
+      "arxiv": "2508.14056",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Studies how well confidence signals from large language models predict whether a generated SQL query is correct.",
+          "why": "Everything in the statistical abstention line depends on this question, and the answer determines whether a low-confidence flag is a usable product surface or a false comfort."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250719457A",
+      "title": "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning",
+      "firstAuthor": "Agrawal",
+      "year": 2025,
+      "arxiv": "2507.19457",
+      "url": null,
+      "branches": [
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "improvement",
+          "takeaway": "Evolves prompts by reflecting on execution traces over a Pareto frontier of candidate attempts, outperforming GRPO by 6% on average and up to 20% with up to 35 times fewer rollouts, and beating MIPROv2 by more than 10%. Accepted at ICLR 2026 as an oral.",
+          "why": "Sample efficiency is symmetric: an optimizer that reaches a good configuration in few rollouts reaches an overfitted one just as fast, and the paper does not report a held-out generalization gap alongside the optimization gain."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "LiveSQLBench: contamination-free text-to-SQL over industrial-scale databases with a hierarchical knowledge base",
+      "firstAuthor": "BIRD team",
+      "year": 2025,
+      "arxiv": null,
+      "url": "https://github.com/bird-bench/livesqlbench",
+      "branches": [
+        "gap",
+        "context",
+        "original"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "Pairs PostgreSQL databases carrying on the order of a thousand columns with a curated knowledge base per database, and refreshes the task set to limit contamination. Public leaderboard results as of 2025-05-28 put o3-mini at 47.78% and Claude Sonnet 4 at 42.59%.",
+          "why": "It is the only public benchmark that treats the business-knowledge layer as a first-class, versioned artifact rather than as prose appended to a prompt."
+        },
+        {
+          "branch": "context",
+          "takeaway": "The hierarchical knowledge base is a directed graph of definitions that depend on other definitions, so answering a question can require composing a chain of them rather than retrieving one entry.",
+          "why": "This converts supplying meaning from a retrieval problem into a multi-hop composition problem, which is the structural argument for representation in the next theme."
+        },
+        {
+          "branch": "original",
+          "takeaway": "The public release measured for this section: 480 records over 18 PostgreSQL databases with a 1,090-entry hierarchical knowledge base connected by 945 dependency edges.",
+          "why": "Every count in this section is reproducible from this release at the pinned revision."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250311984L",
+      "title": "NL2SQL-BUGs: A Benchmark for Detecting Semantic Errors in NL2SQL Translation",
+      "firstAuthor": "Liu",
+      "year": 2025,
+      "arxiv": "2503.11984",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Builds a benchmark specifically for detecting semantic errors, queries that execute cleanly and answer a different question than the one asked.",
+          "why": "This is the error class execution-match scoring is structurally blind to, and it is the class a business-meaning layer exists to prevent."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Palimpzest: Optimizing AI-Powered Analytics with Declarative Query Processing",
+      "firstAuthor": "Liu",
+      "year": 2025,
+      "arxiv": null,
+      "url": "https://vldb.org/cidrdb/papers/2025/p12-liu.pdf",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Treats analytics over unstructured and semi-structured data as declarative query processing, with an optimizer choosing among physical implementations of semantically equivalent plans.",
+          "why": "It supplies the systems half of the semantic-operator argument: once the target is a plan rather than a query, the interesting work moves into the optimizer."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250110858C",
+      "title": "Reliable Text-to-SQL with Adaptive Abstention",
+      "firstAuthor": "Chen",
+      "year": 2025,
+      "arxiv": "2501.10858",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Abstains when schema linking is insufficiently confident and routes those cases to a human, rather than emitting a query the system cannot justify. Published in PACMMOD as a SIGMOD 2025 paper.",
+          "why": "It is the statistical counterpart to structural abstention: the candidate is generated first and the decision is whether to trust it, which means the abstention itself can be miscalibrated."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025arXiv250109310S",
+      "title": "Understanding, Detecting, and Repairing Real-World In-Context-Learning-Based Text-to-SQL Errors",
+      "firstAuthor": "Shen",
+      "year": 2025,
+      "arxiv": "2501.09310",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Characterizes the errors real in-context-learning text-to-SQL systems make in deployment and builds detection and repair for them.",
+          "why": "A deployment error taxonomy is the check on a benchmark taxonomy, and the two do not match: the failures that matter in production are semantic, not syntactic."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260605634L",
+      "title": "Bootstrapping Semantic Layer from Execution for Text-to-SQL",
+      "firstAuthor": "Lee",
+      "year": 2026,
+      "arxiv": "2606.05634",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Argues that requiring a semantic layer to specify groundings in advance fails in expert domains where conventions are under-documented, and instead keeps grounding hypotheses open, executes the parts that are grounded, and accumulates execution-grounded memory.",
+          "why": "It is the sharpest published dissent from the authored-semantic-model position, and the two camps have never been compared on a shared benchmark."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260110318T",
+      "title": "Boundary-Aware NL2SQL: Integrating Reliability through Hybrid Reward and Data Synthesis",
+      "firstAuthor": "Tian",
+      "year": 2026,
+      "arxiv": "2601.10318",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Trains the boundary into the model with a hybrid reward and synthesized data, so declining is a learned behaviour rather than a post-hoc filter.",
+          "why": "It is the third distinct mechanism for refusal in this theme, alongside structural impossibility and post-generation confidence, and the three have never been compared on one workload."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260604641D",
+      "title": "Bridge the Last-Mile Gap to Semantic Analytics: Compiling Natural-Language Queries into Semantic Operator Pipelines",
+      "firstAuthor": "Dong",
+      "year": 2026,
+      "arxiv": "2606.04641",
+      "url": null,
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Compiles a natural-language question into an executable semantic-operator pipeline in three phases, a query-data linker, a semantic planner and a code generator, reporting up to 60% higher F1 on complex cross-source workloads.",
+          "why": "It is the contemporary competitor to the semantic layer, answering the same question with a compiled pipeline of model calls instead of governed SQL, and no benchmark contains both."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260412491V",
+      "title": "Calibrated Confidence Estimation for Tabular Question Answering",
+      "firstAuthor": "Voss",
+      "year": 2026,
+      "arxiv": "2604.12491",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Targets calibration specifically, so that a stated confidence over a tabular answer corresponds to an actual frequency of correctness.",
+          "why": "Calibration is the property that makes a confidence-gated analytics product defensible, and it is a different requirement from ranking answers by confidence."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260415163L",
+      "title": "DPC: Training-Free Text-to-SQL Candidate Selection via Dual-Paradigm Consistency",
+      "firstAuthor": "Li",
+      "year": 2026,
+      "arxiv": "2604.15163",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Selects among candidate SQL queries by checking consistency across two different generation paradigms, without additional training.",
+          "why": "Consistency across paradigms is a cheap proxy for correctness when no semantic model exists, and it is the alternative that any enforcement argument has to beat."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260628601L",
+      "title": "Database Context Compression for Text-to-SQL on Real-World Large Databases",
+      "firstAuthor": "Liu",
+      "year": 2026,
+      "arxiv": "2606.28601",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Compresses the database context supplied to the model so that large real-world schemas remain usable within a context budget.",
+          "why": "It makes the cost side of the supplying-meaning argument explicit: more context is not free, and at enterprise scale the binding constraint is the budget rather than the availability of documentation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260500628W",
+      "title": "EGREFINE: An Execution-Grounded Optimization Framework for Text-to-SQL Schema Refinement",
+      "firstAuthor": "Wang",
+      "year": 2026,
+      "arxiv": "2605.00628",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Refines which schema elements are presented to the model using execution feedback rather than static similarity, treating schema selection as an optimization target.",
+          "why": "Once the schema exceeds what fits in context, deciding what to show becomes the substantive design problem, and this is one of several 2026 answers to it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813867J",
+      "title": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model",
+      "firstAuthor": "Jarmak",
+      "year": 2026,
+      "arxiv": "2608.13867",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Argues that agents are evaluated as models and deployed as systems, and that reliability depends on the harness, retrieval, verification gates and operating loop rather than on model capability alone.",
+          "why": "The claim transfers directly: a semantic layer is a harness for an analytics agent, and comparing it against raw text-to-SQL inherits every attribution problem this theme documents."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260529670Z",
+      "title": "EviLink: Multi-Path Schema Linking with Uncertainty-Guided Evidence Acquisition for Large-Scale Text-to-SQL",
+      "firstAuthor": "Zheng",
+      "year": 2026,
+      "arxiv": "2605.29670",
+      "url": null,
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Treats schema linking as evidence acquisition under uncertainty, following multiple candidate paths and gathering more evidence where the linking is least certain.",
+          "why": "It reframes context supply as an active retrieval decision rather than a fixed prompt assembly, which is the direction the enterprise-scale problem forces."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260620683G",
+      "title": "From Question Answering to Task Completion: A Survey on Agent System and Harness Design",
+      "firstAuthor": "Guo",
+      "year": 2026,
+      "arxiv": "2606.20683",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Surveys agent system and harness design as a subject in its own right rather than as an implementation detail of model evaluation.",
+          "why": "The existence of the survey is the evidence: the harness became a design space with its own literature during 2026, which is recent enough that no text-to-SQL benchmark accounts for it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260527922Y",
+      "title": "Harness-Bench: Measuring Harness Effects across Models in Realistic Agent Workflows",
+      "firstAuthor": "Yao",
+      "year": 2026,
+      "arxiv": "2605.27922",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "106 sandboxed offline tasks and 5,194 execution trajectories, finding substantial variation in completion, process quality, efficiency and failure behaviour across model-harness pairings.",
+          "why": "Its operational conclusion, that capability should be reported at the model-harness configuration level, is the standard no text-to-SQL leaderboard in this map meets."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260612882W",
+      "title": "HarnessBridge: Learnable Bidirectional Controller for LLM Agent Harness",
+      "firstAuthor": "Wang",
+      "year": 2026,
+      "arxiv": "2606.12882",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Makes the harness itself learnable, with a controller mediating between model and environment in both directions.",
+          "why": "If the harness is a learned component then the model-harness pair is the unit of both capability and overfitting, which folds this theme into the improvement theme below."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260403515R",
+      "title": "Inside the Scaffold: A Source-Code Taxonomy of Coding Agent Architectures",
+      "firstAuthor": "Rombaut",
+      "year": 2026,
+      "arxiv": "2604.03515",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Builds a taxonomy of coding agent architectures from their source code rather than from their papers.",
+          "why": "It supplies the vocabulary the implementation-versus-architecture distinction needs, which is the hypothesis that reconciles the two scaffold studies in this theme."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260410667A",
+      "title": "Learning and Enforcing Context-Sensitive Control for LLMs",
+      "firstAuthor": "Albinhassan",
+      "year": 2026,
+      "arxiv": "2604.10667",
+      "url": null,
+      "branches": [
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Learns and enforces constraints that depend on generation history rather than on a fixed context-free grammar, extending what decoding-time enforcement can express.",
+          "why": "It occupies the middle ground between advice and a compiler, which is where a governed analytics harness actually sits when the model still writes some of the query."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260601926D",
+      "title": "Mitigating Bias in Locally Constrained Decoding via Tractable Proposals",
+      "firstAuthor": "Dang",
+      "year": 2026,
+      "arxiv": "2606.01926",
+      "url": null,
+      "branches": [
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Shows that enforcing constraints by myopically masking next tokens produces biased sampling and degradation in performance, and proposes tensorized finite automata as global proposal distributions for sequential Monte Carlo instead. Evaluated on function calling, keyword-based generation and SQL generation.",
+          "why": "It is the counter-evidence that makes this theme's central distinction necessary: constraining the target language and masking tokens during decoding are opposite interventions that the literature calls by one name."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260416493H",
+      "title": "NL2SQLBench: A Modular Benchmarking Framework for LLM-Enabled NL2SQL Solutions",
+      "firstAuthor": "Hou",
+      "year": 2026,
+      "arxiv": "2604.16493",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Separates the components of a natural-language-to-SQL solution so a score can be attributed to a stage rather than to the system as a whole.",
+          "why": "Attribution by stage is the prerequisite for deciding whether reliability came from knowledge, representation, enforcement or the harness, which is the question this entire map is organized around."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260813926W",
+      "title": "Never the Number: Structural Abstention for AI Systems Whose Answers Are Consumed as Fact",
+      "firstAuthor": "Wu",
+      "year": 2026,
+      "arxiv": "2608.13926",
+      "url": null,
+      "branches": [
+        "enforcement",
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Describes a trusted deterministic kernel wrapped in a generative shell, holding one invariant: a component that can fabricate may influence which question the system answers, never which value it returns. Carries a two-year production case study and reports no datasets and no accuracy metrics.",
+          "why": "It is the architectural statement of what the dbt layer and ATHENA both do, and it should be read as a design argument rather than as evidence about accuracy."
+        },
+        {
+          "branch": "boundary",
+          "takeaway": "Argues that structural abstention requires no confidence estimate because unanswerable requests are unrepresentable, in contrast to abstention that generates a candidate and then estimates whether to trust it.",
+          "why": "This is the distinction that separates the two abstention literatures, and it also names the failure mode of the structural approach: it cannot be miscalibrated, and it can be silently wrong about scope."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Omni modeling layer documentation",
+      "firstAuthor": "Omni",
+      "year": 2026,
+      "arxiv": null,
+      "url": "https://docs.omni.co/docs/modeling/overview",
+      "branches": [
+        "enforcement",
+        "original"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Public documentation for a shared semantic model with workbook-level extension, where dimensions, measures and relationships are defined once and queries are compiled from the model rather than written as raw SQL.",
+          "why": "Included so the enforcement argument can be checked against a real production system's definition of a governed model rather than against the abstraction, and because the same product is the subject of the original benchmark work linked below."
+        },
+        {
+          "branch": "original",
+          "takeaway": "The governed modeling layer used as the enforced condition, described here from its public documentation rather than from internal material.",
+          "why": "The comparison is only interpretable against a public definition of what the modeling layer enforces."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260108778J",
+      "title": "Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards",
+      "firstAuthor": "Jin",
+      "year": 2026,
+      "arxiv": "2601.08778",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "A three-stage human-in-the-loop audit finds annotation errors in 263 of 498 BIRD Mini-Dev examples (52.8%) and 76 of 121 Spider 2.0-Snow examples (62.8%), against 36.1% previously reported for Mini-Dev. Re-evaluating the 16 open-source BIRD leaderboard agents on corrected gold changes relative execution accuracy by minus 7% to plus 31%, moves 12 of 16 upward, and shifts ranks by up to nine places; CHESS goes from 62% to 81% and from seventh to a tie for first.",
+          "why": "The rank correlation is the result that matters: uncorrected subset against full dev gives Spearman 0.85 at p = 3.26e-5, corrected subset gives 0.32 at p = 0.23. The subset and the full set agreed about who was best only while both were wrong the same way."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260606825Z",
+      "title": "Progress-SQL: Improving Reinforcement Learning for Text-to-SQL via Progressive Rewards",
+      "firstAuthor": "Zhang",
+      "year": 2026,
+      "arxiv": "2606.06825",
+      "url": null,
+      "branches": [
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "improvement",
+          "takeaway": "Shapes a denser progressive reward for text-to-SQL reinforcement learning instead of relying on sparse execution correctness.",
+          "why": "Denser reward means more effective queries against the same fixed evaluation data, which improves optimization and increases adaptive-overfitting exposure at the same time."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Rethinking coding agent benchmarks",
+      "firstAuthor": "Jarmak",
+      "year": 2026,
+      "arxiv": null,
+      "url": "https://medium.com/@steph.jarmak/rethinking-coding-agent-benchmarks-5cde3c696e4a",
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Practitioner argument that coding-agent benchmarks measure a task distribution and a retrieval setting that do not match enterprise deployment, and that stronger context retrieval changes what the score means.",
+          "why": "The same objection applies with more force to text-to-SQL, where the retrieval setting is the semantic layer and no benchmark holds it fixed."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260417771S",
+      "title": "SPENCE: A Syntactic Probe for Detecting Contamination in NL2SQL Benchmarks",
+      "firstAuthor": "Safarzadeh",
+      "year": 2026,
+      "arxiv": "2604.17771",
+      "url": null,
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Probes leakage with syntactic perturbations across Spider, SParC, CoSQL and BIRD and measures rank sensitivity with Kendall's tau and bootstrap intervals, finding a clear temporal gradient with Spider strongest and BIRD showing minimal sensitivity and appearing largely uncontaminated.",
+          "why": "Read against Jin it produces the theme's sharpest fact: the benchmark the field trusts is comparatively clean of leakage and more than half mis-annotated, and the community worries about the smaller failure mode."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260310044G",
+      "title": "Safety Under Scaffolding: How Evaluation Conditions Shape Measured Safety",
+      "firstAuthor": "Gringras",
+      "year": 2026,
+      "arxiv": "2603.10044",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Shows that measured safety, not only measured capability, shifts with the evaluation scaffold.",
+          "why": "It extends the attribution problem into the claims that carry the most weight, and the same logic applies to any governed analytics system that reports a hallucination rate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260608529S",
+      "title": "Scaffold Effects on GAIA: A Controlled Comparison",
+      "firstAuthor": "Starace",
+      "year": 2026,
+      "arxiv": "2606.08529",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Pre-registered comparison of ReAct, a Planner-Actor-Rater multi-agent scaffold and a planner-then-executor across five models on GAIA validation levels 1 and 2 with three attempts per question. Scaffold choice alone moves measured accuracy by as much as 28 points within a single model, and the pre-registered prediction that stronger models are less scaffold-sensitive is rejected in direction.",
+          "why": "Three different control structures rather than three implementations of one, on tasks where the scaffold decides what gets retrieved, which is the experimental difference that explains the disagreement with Vats and Golev."
+        }
+      ]
+    },
+    {
+      "bibcode": null,
+      "title": "Semantic Layer vs. Text-to-SQL: 2026 Benchmark Update",
+      "firstAuthor": "Ganz",
+      "year": 2026,
+      "arxiv": null,
+      "url": "https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026",
+      "branches": [
+        "enforcement",
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "11 questions run 20 times each over a 15-table insurance schema in third normal form. Through the modeled semantic layer, claude-sonnet-4-6 reaches 98.2% and gpt-5.3-codex 100.0%, against 90.0% and 84.1% writing SQL against the same modeled data. Across the full question set from 2023 to 2026, text-to-SQL moved from 32.7% to 64.5% and the semantic layer from 60.5% to 72.7%.",
+          "why": "It is the strongest published enforcement measurement and it is a vendor benchmark of 11 questions, which is the size of the evidence base underneath the loudest claim in this map."
+        },
+        {
+          "branch": "boundary",
+          "takeaway": "On questions that exceed what the semantic layer models, the layer scores 0.0% while text-to-SQL scores 70.0% and 100.0%. The stated reason is that the layer returns an error rather than wrong data.",
+          "why": "The same experiment produces the highest and the lowest number in this map, which is the clearest available demonstration that accuracy is the wrong single axis for these systems."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260425149R",
+      "title": "Semantic Layers for Reliable LLM-Powered Data Analytics: A Paired Benchmark of Accuracy and Hallucination Across Three Frontier Models",
+      "firstAuthor": "Rumiantsau",
+      "year": 2026,
+      "arxiv": "2604.25149",
+      "url": null,
+      "branches": [
+        "context",
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "100 natural-language questions over the Cleaned Contoso Retail dataset in ClickHouse, paired single-shot, three frontier models. Schema only gives 45.5% to 50.5%; schema plus a 4 KB hand-authored markdown description of measures, conventions and disambiguation rules gives 67.7% to 68.7%. Every cross-condition comparison is significant below p = 0.01.",
+          "why": "The models are statistically indistinguishable from each other within each condition, so on this workload the document matters more than the choice of frontier model."
+        },
+        {
+          "branch": "enforcement",
+          "takeaway": "Frames the mechanism as changing what the model is asked to do rather than making the model more capable, which is the same claim the compiled semantic layers make with a weaker instrument.",
+          "why": "It is a preprint with no peer review, one schema and 100 questions, so it is a strong effect on a narrow base and should be cited as such."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260710911K",
+      "title": "The Nuts and Bolts of Natural Language to SQL Translation: A Systematic Analysis of Model Pipeline Optimisations",
+      "firstAuthor": "Klubicka",
+      "year": 2026,
+      "arxiv": "2607.10911",
+      "url": null,
+      "branches": [
+        "harness",
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Systematically varies the optimisations in a natural-language-to-SQL pipeline and finds their effects depend on each other rather than composing additively.",
+          "why": "It is the text-to-SQL-specific version of the harness argument, and it explains why single-factor ablations in this literature disagree with each other so often."
+        },
+        {
+          "branch": "improvement",
+          "takeaway": "A change validated in isolation can be a regression in combination, which is a route to development-set overfitting that stage-by-stage evaluation cannot detect.",
+          "why": "Any improvement loop that accepts changes on individual ablations is accumulating interactions it never measured."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260722585V",
+      "title": "The Scaffold Effect in Coding Agents: Harness Choice as a Hidden Variable in Coding-Agent Evaluation",
+      "firstAuthor": "Vats",
+      "year": 2026,
+      "arxiv": "2607.22585",
+      "url": null,
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Runs Qwen 3.6 Plus and MiniMax M2.5 across Goose, OpenCode and OpenHands-SDK on a stratified 50-task subset of Terminal-Bench Pro. Harness choice produces up to a 40-fold difference in tokens per solved task while paired within-model pass-rate differences stay between 0 and 8 points, with 95% paired-task bootstrap intervals covering zero except at the largest gap.",
+          "why": "The three harnesses are implementations of broadly the same tool-calling loop, which is why the accuracy effect is small here and large in Starace, and the contrast is the most useful thing either paper offers."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260824145S",
+      "title": "TrustDABench: Benchmarking Reliability and Robustness of LLMs for Structured Data Analysis",
+      "firstAuthor": "Shi",
+      "year": 2026,
+      "arxiv": "2608.24145",
+      "url": null,
+      "branches": [
+        "boundary"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Scores reliability and robustness for structured data analysis rather than accuracy alone, across perturbations and failure conditions.",
+          "why": "It is the evaluation shape this theme needs, because a system that refuses well and a system that answers everything cannot be compared on a single accuracy column."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260521404N",
+      "title": "What Twelve LLM Agent Benchmark Papers Disclose About Themselves: A Pilot Audit and an Open Scoring Schema",
+      "firstAuthor": "Naser Moghadasi",
+      "year": 2026,
+      "arxiv": "2605.21404",
+      "url": null,
+      "branches": [
+        "harness",
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Audits twelve agent benchmark papers against an open scoring schema for what they disclose about their own evaluation conditions, and finds the disclosure inconsistent.",
+          "why": "If harness configuration is a first-order variable and papers do not report it, then reproduction fails and cross-paper comparison is not licensed, which is the state most numbers in this map are in."
+        },
+        {
+          "branch": "improvement",
+          "takeaway": "Provides a concrete scoring schema for evaluation-condition disclosure rather than a general call for more rigour.",
+          "why": "A schema is enforceable at review time, which is the only mechanism in this theme that does not depend on authors voluntarily reporting how many development evaluations they consumed."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "gap",
+      "label": "The schema underdetermines the question",
+      "summary": "A database schema is a description of storage. It names tables, columns, types and keys, and with respect to what the bytes are it is complete. A question is not asked in those terms. Someone asks for churn last quarter, or net revenue by region, or which accounts are at risk, and none of those phrases appears in the schema. A mapping from the second vocabulary to the first does exist, but it lives in analysts' heads, in dashboard definitions, in a wiki nobody has updated, and in the shape of queries people have already written. This literature is about what happens to that mapping when the translator is a language model.\n\nFor most of the field's history the difficulty was hidden by the benchmarks. Academic text-to-SQL datasets used small, clean, well-named schemas where a column called population really did mean population and where the question's words overlapped the schema's words. Systems trained on them looked competent. Then the benchmarks moved. KaggleDBQA kept the original column names from real uploaded datasets, and a state-of-the-art parser fell to 13.56 percent exact match. BIRD put 12,751 questions over 95 databases from 37 professional domains and named the missing ingredient in its own framing, external knowledge sitting between the question and the database contents. Spider 2.0 moved to enterprise warehouses where a single project routinely carries more than a thousand columns, and an o1-preview code agent solved 21.3 percent of those workflows after solving 91.2 percent of Spider 1.0.\n\nThe collapse is not a model deficiency in any interesting sense. The same models write correct SQL once they are told what the columns mean. What the collapse measures is that the question-to-SQL mapping is not a function of the schema. Two databases with identical structure and different business conventions require different queries for the same English sentence, and nothing in the schema distinguishes them. Every later theme here is a different answer to where that missing information should live and who is accountable for it.\n\nThe diagnosis predates the current generation of models. Baik, Jagadish and Li named the semantic gap in 2019 and proposed mining SQL query logs to close it, reasoning that the organization has already recorded the mapping in what its analysts wrote. Hold onto that proposal. The idea that the missing knowledge is recoverable from artifacts a company already produces returns three more times in this map, and it has still not been tested against a modern model.",
+      "themes": [
+        "Schema realism, not question difficulty, is what separates the benchmarks. KaggleDBQA's databases are real uploads carrying their original column names, and a zero-shot state-of-the-art parser reaches 13.56% exact match on them (Lee, Polozov and Richardson).",
+        "Spider 2.0 puts the gap at production scale: databases frequently exceeding 1,000 columns, dialect-specific SQL across BigQuery and Snowflake, and problems whose solution requires reading warehouse metadata and project code. An o1-preview code agent solves 21.3%, against 91.2% on Spider 1.0 and 73.0% on BIRD (Lei et al.).",
+        "BIRD made the missing ingredient part of the task rather than a confound, shipping the external knowledge alongside the questions. ChatGPT reached 40.08% execution accuracy where humans on the same questions reached 92.96% (Li et al.).",
+        "The gap was named before LLMs, with a data-driven answer attached: mine the SQL query log, because the organization has already recorded how business questions become physical queries (Baik, Jagadish and Li).",
+        "LiveSQLBench moves the target again by attaching a curated knowledge base to each database and structuring it as a dependency graph, so answering requires composing several definitions rather than retrieving one (BIRD team).",
+        "The surveys are most useful for what they lack. Affolter organizes classical NLIDB systems by translation technique and Hong organizes the LLM-era literature the same way, and neither taxonomy has a slot for where business meaning is stored.",
+        "Unanswerability was formalized against the database rather than the sentence in 2003: a question fails because a word is outside the lexicon, because it needs an unimplemented function, or because the fact is simply absent, as when density is stored for states and asked about cities (Popescu, Etzioni and Kautz)."
+      ],
+      "gaps": [
+        "No published study decomposes the Spider 1.0 to Spider 2.0 drop into schema scale, SQL dialect, and missing business semantics. The three are confounded in every number the field quotes, and they imply completely different fixes.",
+        "The query-log proposal has never been re-run with a modern model. If the mapping really is latent in the log, an LLM should be able to extract it, and nobody has measured what fraction of a hand-authored semantic model can be recovered that way.",
+        "Every benchmark reports accuracy against a gold query. None reports how many of its questions a competent human analyst could answer from the schema alone, which is the number that separates a model failure from an underspecified task."
+      ]
+    },
+    {
+      "key": "context",
+      "label": "Supplying meaning: what documentation buys",
+      "summary": "If the schema underdetermines the question, the obvious repair is to write the missing part down and hand it to the model. This theme is about how far that gets you, and it is the theme with the cleanest quantitative answer in the whole map.\n\nTwo measurements bracket it. KaggleDBQA ran the ablation in 2021: a zero-shot parser at 13.56 percent exact match, in-domain fine-tuning to 17.96, and then adding column descriptions taken from each database's own documentation to 26.77. Documentation contributed 8.81 points, roughly two thirds of the total lift, which is the single largest measured effect of any intervention in this literature. It also left the system at 26.77 percent. Five years later Rumiantsau and Fokeev ran a paired single-shot protocol over 100 questions on a retail schema in ClickHouse with three frontier models, and a four kilobyte hand-written markdown document describing measures, conventions and disambiguation rules moved accuracy by 17 to 23 points, with every cross-condition comparison significant below p equal to 0.01. Their sharpest result is not the lift. Within each condition the three models were statistically indistinguishable from one another, which says the document mattered more than the choice of frontier model.\n\nThose two studies disagree about whether context is sufficient, and the disagreement is informative rather than a wash. Rumiantsau's 100 questions run over one curated star schema where a four kilobyte glossary can plausibly cover the whole semantic surface. KaggleDBQA's databases carry real-world encodings that documentation describes without resolving, and Spider 2.0's thousand-column warehouses have no document of any size that is the missing piece. Documentation closes the gap when the gap is vocabulary. It does not close the gap when the gap is structure or scale.\n\nThe 2026 work has mostly moved from whether to supply context to which context to supply, because at enterprise scale the context itself no longer fits. Schema linking became an evidence-acquisition problem under uncertainty, schema refinement became execution-grounded, and database context became something to compress. The most interesting dissent comes from GATE, which argues that the premise of this entire theme is wrong for expert domains: the specification is never finished, domain conventions are chronically under-documented, and the groundings should be discovered from execution feedback rather than declared in advance.\n\nLiveSQLBench's hierarchical knowledge base is the structural version of the same idea. Rather than a flat glossary it is a directed graph of definitions that depend on other definitions, so a question can require composing a chain of them. That shifts the problem from retrieval to multi-hop composition, and it is the reason the next theme is about representation rather than about more text.",
+      "themes": [
+        "The cleanest published decomposition is still KaggleDBQA's: 13.56% zero-shot, 17.96% with in-domain fine-tuning, 26.77% once column descriptions from the database's own documentation are supplied. Documentation is worth 8.81 points and the system is still at 26.77% (Lee, Polozov and Richardson).",
+        "A four kilobyte markdown document describing measures and conventions moves three frontier models by 17 to 23 points on a retail schema, and within each condition the models are statistically indistinguishable from each other, so the document outweighs the model choice (Rumiantsau and Fokeev, preprint, not peer reviewed).",
+        "GATE inverts the premise: semantic layers are chronically incomplete in expert domains because conventions are under-documented, so it keeps grounding hypotheses open and resolves them from execution feedback instead of requiring them up front (Lee, Kim and Hwang).",
+        "At enterprise scale the constraint flips from too little context to too much. Database context compression, dual-paradigm candidate selection, execution-grounded schema refinement and uncertainty-guided schema linking are all 2026 attempts to decide what to show the model rather than how much (Liu; Li; Wang; Zheng).",
+        "Structuring the knowledge as a dependency graph rather than a glossary changes the task. LiveSQLBench's hierarchical knowledge base requires composing chained definitions, which is a multi-hop retrieval problem rather than a lookup (BIRD team).",
+        "Knowledge-graph question answering solved a version of this without training data years earlier, by exploiting the ontology's own structure to rank candidate interpretations (Sima et al., Bio-SODA).",
+        "When the database count itself is the problem, routing beats context assembly: DBCopilot treats schema selection over massive database collections as a routing task rather than a prompt-packing task (Wang et al.)."
+      ],
+      "gaps": [
+        "Nobody has published the curve. Every study reports one context configuration against no context, so the shape of the return on documentation, where it saturates and what it costs to author, is unmeasured.",
+        "The Rumiantsau result rests on 100 questions over a single schema, with a document written by someone who knew the questions existed. The same protocol has never been run where the document is authored by a domain expert blind to the evaluation set.",
+        "No experiment separates the value of knowledge content from the value of knowledge structure. Giving a model the same facts as flat text and as a dependency graph is a one-line ablation and it has not been run.",
+        "GATE and the authored-layer camp have never been compared on the same benchmark, so the cost of authoring versus the cost of discovering groundings from execution is unknown."
+      ]
+    },
+    {
+      "key": "representation",
+      "label": "Representation: the layer between language and SQL",
+      "summary": "Supplying meaning as text leaves the model doing the same job with better inputs. The alternative is to change the job: have the model produce something other than SQL, and compile that into SQL with a component that cannot make semantic mistakes. This is the oldest idea in the map and the one most often mistaken for the previous theme.\n\nATHENA made the argument in 2016 and it is worth reading for the argument rather than the numbers. The system translates a question into OQL, an ontology query language, and only then into SQL, and the stated reason is physical independence: the semantics of the question are decoupled from the physical layout of the tables. It reported 100 percent precision on two domains and 99 percent on a third. Read those numbers with the definitions attached, because ATHENA defines precision over the questions for which it produced any interpretation at all, and recall over the whole workload, at 87.2, 88.3 and 88.9 percent. The gap between the two is the questions it declined. Four years later ATHENA++ extended the ontology reasoning to nested and aggregate business queries, introduced FIBEN with 300 questions over 152 tables and an ontology derived from FIBO and FRO, and reported 88.33 percent on FIBEN and 78.89 percent on Spider development, against a best reported development accuracy of 70.6 percent at the time. A symbolic, ontology-driven system beating the neural leaderboard on the neural leaderboard's own benchmark is the most under-cited fact in this corpus.\n\nThe neural line rediscovered the same move from the other direction. IRNet emitted SemQL, an intermediate representation that removes the parts of SQL that have no counterpart in the question. NatSQL went further and stripped set operators and nested subqueries from the target. The decisive experiment is Herzig and colleagues in 2021: holding the model fixed and varying only the intermediate representation, a representation with stronger structural correspondence to the natural language gains 14.8 points on CFQ and 15.0 to 19.4 points on the template splits of three text-to-SQL datasets. The representation was the free variable all along.\n\nThe contemporary version has moved past SQL entirely. Semantic operators define a declarative algebra whose operators are themselves model calls, and NL2Pipe compiles a question into an executable pipeline of them rather than into a query, reporting up to 60 percent higher F1 on cross-source workloads. Palimpzest treats the same idea as a query optimization problem. What all of these share with ATHENA is the claim that the model should be asked for a smaller, better-typed object, and that the compiler downstream should own the rest.\n\nThe distinction that matters for the next theme: a representation constrains what the model can express, and it does so before generation begins. That is a different mechanism from constraining tokens during decoding, and the two behave differently under measurement.",
+      "themes": [
+        "ATHENA's intermediate ontology query language exists for physical independence, decoupling the semantics of a question from the physical layout of the tables. It reports 100% precision on GEO and MAS and 99% on FIN, with recall of 87.2%, 88.3% and 88.9%, where the difference between the two is the questions it declines to interpret (Saha et al.).",
+        "ATHENA++ extends ontology-driven translation to nested and aggregate business queries, introduces FIBEN (300 questions, 237 distinct SQL queries, 152 tables, ontology from FIBO and FRO), and reports 88.33% on FIBEN and 78.89% on Spider dev against the 70.6% best reported at the time (Sen et al.).",
+        "Holding architecture fixed and varying only the intermediate representation yields +14.8 on CFQ and +15.0 to +19.4 on template splits of three text-to-SQL datasets. The gain comes from structural correspondence between the representation and the language, not from model capacity (Herzig et al.).",
+        "SemQL and NatSQL make the same move inside the neural pipeline by deleting the parts of SQL that have no counterpart in the question, set operators and nested subqueries among them (Guo et al.; Gan et al.).",
+        "Schema linking as an explicit, separately optimized stage recurs across RAT-SQL, BRIDGE and RESDSQL, which is the same claim in a different place: the hard part is binding language to schema elements, not emitting syntax (Wang; Lin; Li).",
+        "The 2024 to 2026 line abandons SQL as the target. Semantic operators define a declarative algebra whose operators are model calls, NL2Pipe compiles questions into pipelines of them with up to 60% higher F1 on cross-source workloads, and Palimpzest treats the resulting plan space as a query optimization problem (Patel; Dong; Liu).",
+        "Grounding by discrimination rather than generation is the limit case: have the model rank candidate interpretations produced by a symbolic enumerator instead of writing the query itself (Gu, Deng and Su).",
+        "An intermediate can be chosen for the reader rather than the decoder. NaLIR's query tree exists because a person can verify a query tree and cannot verify a SQL statement, and a verified tree almost always translates correctly (Li and Jagadish)."
+      ],
+      "gaps": [
+        "Nobody has run ATHENA++ against a modern LLM baseline on FIBEN. The strongest published evidence that an ontology-mediated representation beats direct generation is from 2020 and has never been retested.",
+        "Herzig's experiment has not been repeated on enterprise schemas. The 15 to 19 point representation effect is measured on academic template splits, and whether it survives at 1,000 columns is unknown.",
+        "There is no measurement of what a representation costs. Every intermediate language trades expressiveness for reliability, and no paper reports the fraction of a real workload its representation cannot express.",
+        "Semantic operator pipelines and semantic layers have never been compared. They are competing answers to the same question, one compiling to model calls and the other to governed SQL, and no benchmark contains both."
+      ]
+    },
+    {
+      "key": "enforcement",
+      "label": "Enforcement: constraint instead of advice",
+      "summary": "Documentation is advice. A representation narrows what the model is asked for. Enforcement is the third position: the system is built so that a whole class of wrong answer cannot be produced, whatever the model does.\n\nThe word covers two mechanisms that behave in opposite ways, and conflating them is the most common error in discussions of this literature. The first is constrained decoding. PICARD rejects tokens that cannot continue into a parseable, schema-valid query, and Synchromesh generalizes the idea with target-similarity retrieval and constrained semantic decoding. Both report gains. The second is a compiler between the model and the database, where the model chooses among modeled entities and a deterministic component emits the SQL. The dbt Semantic Layer benchmark is the sharpest published measurement of that arrangement: 11 questions run 20 times each over a 15-table insurance schema in third normal form, where claude-sonnet-4-6 goes from 90.0 percent writing SQL to 98.2 percent through the semantic layer, and gpt-5.3-codex from 84.1 to 100.0 percent.\n\nThen Dang and colleagues in 2026 show that the first mechanism has a bias problem. Locally constrained decoding masks next tokens myopically, which produces biased sampling and degradation in performance, measured on function calling, keyword generation and SQL. Their remedy is to make the proposal distribution global rather than local. That result does not contradict PICARD; it explains the difference between PICARD and Herzig. Changing the target language changes what the model is asked to produce. Masking tokens leaves the target alone and distorts the distribution over what the model would otherwise have produced. Same word, two mechanisms, opposite sign.\n\nThe architectural statement of the second mechanism is Wu's, and it is a design argument rather than an experiment: a trusted deterministic kernel with a generative shell around it, holding one invariant, that a component which can fabricate may influence which question the system answers but never which value it returns. It carries a two-year production case study and reports no datasets and no accuracy numbers, and it should be read as a claim about system structure rather than as evidence about accuracy.\n\nRead this theme against the next one before drawing conclusions. Every number quoted above is measured inside the boundary of what the enforcing system can express, and the interesting behaviour is at the edge of that boundary.",
+      "themes": [
+        "Constrained decoding makes malformed and schema-invalid SQL unreachable by rejecting continuations during generation, and PICARD and Synchromesh both report gains from it (Scholak et al.; Poesia et al.).",
+        "Locally constrained decoding is nonetheless biased. Masking next tokens myopically produces biased sampling and degradation in performance, shown on function calling, keyword-constrained generation and SQL, with a global proposal distribution offered as the fix (Dang et al.).",
+        "The resolution is where the constraint sits. Changing the target language changes what the model is asked for; masking tokens leaves the target intact and distorts the distribution over what the model would have written. The two are routinely called the same thing.",
+        "Compiled semantic layers report the largest enforcement gains available: on a 15-table insurance schema, claude-sonnet-4-6 moves from 90.0% writing SQL to 98.2% through the semantic layer and gpt-5.3-codex from 84.1% to 100.0%, over 11 questions run 20 times each (Ganz and Perigaud, practitioner benchmark).",
+        "Two of the practitioner benchmark's own caveats matter more than its headline. The full schema was loaded into context, which does not scale, and higher reasoning effort added more than 12 seconds of latency with no accuracy gain.",
+        "The structural argument is that a trusted kernel plus a generative shell holds one invariant: a component that can fabricate may choose which question is answered, never which value is returned. This is a design claim with a production case study and no reported metrics (Wu).",
+        "Enforcement also has a learned form. Context-sensitive control learns and enforces constraints that depend on generation history rather than on a fixed grammar, which is a middle position between advice and a compiler (Albinhassan et al.)."
+      ],
+      "gaps": [
+        "The strongest enforcement evidence in this literature is a vendor benchmark of 11 questions. No peer-reviewed evaluation compares a compiled semantic layer against direct generation on a shared, independently held workload.",
+        "Constrained decoding and compiled semantic layers have never been measured against each other, despite being presented as answers to the same problem.",
+        "No study reports what enforcement costs in authoring. The semantic-layer numbers assume a model that someone built, and the person-hours per point of accuracy is not in any paper.",
+        "Dang's bias result has not been applied back to text-to-SQL specifically. Whether PICARD-style gains survive a bias-corrected comparison on Spider or BIRD is an open and cheap experiment.",
+        "Access control is absent from this entire literature. A semantic layer is where row-level security and data contracts would be enforced, and no evaluation measures what happens to accuracy or refusal when the model queries under a restricted role."
+      ]
+    },
+    {
+      "key": "boundary",
+      "label": "The boundary: wrong, uncertain, or unwilling",
+      "summary": "The previous theme's numbers were measured inside the modeled boundary. This theme is about what the same systems do outside it, and it is where the argument of this map turns.\n\nTake the dbt benchmark's other column. On questions that exceed what the semantic layer models, the layer scores 0.0 percent while unconstrained text-to-SQL scores 70.0 percent for one model and 100.0 percent for another. dbt states the reason plainly, that the layer returns an error rather than wrong data. That is the whole trade in one line, published by the party with the strongest incentive to bury it. ATHENA made the same trade twenty years earlier and measured it: no interpretation at all for 11 of 108 finance questions, which is exactly the distance between its 99 percent precision and its 88.9 percent recall. PRECISE made it thirteen years before ATHENA and proved it. Given a lexicon and an attachment function, PRECISE is sound and complete over a class of questions its authors call semantically tractable, it can decide for any question whether the question is in that class, and outside the class it asks for a paraphrase instead of guessing. The class covered 97 percent of restaurant questions, 88 percent of jobs and 77.5 percent of geography in Mooney's data, and inside it the system made no mistakes on any of the three databases.\n\nSo the two systems are not being compared on the same axis. Text-to-SQL maximizes the share of questions answered. An enforcing system maximizes the share of returned answers that are correct, and pays for it in coverage. Calling one more accurate than the other requires first deciding which of those two quantities the product is for, and that is a decision about consequences rather than about models. When an answer is pasted into a board deck, a confident wrong number costs more than a refusal. When an analyst is exploring, a refusal costs more than a number they will sanity-check anyway.\n\nThe literature has two distinct machineries for declining, and they are not interchangeable. Statistical abstention generates a candidate and then estimates whether to trust it: adaptive abstention at the schema-linking step with a human in the loop, confidence estimation over generated SQL, calibrated confidence for tabular question answering, reliability-shaped rewards. Structural abstention makes the unanswerable unrepresentable, so no confidence estimate is required, which is Wu's formulation and also what ATHENA and the dbt layer are doing without using the term. The first can be wrong about its own uncertainty. The second cannot, and instead is silently wrong about scope whenever the model is incomplete.\n\nUnderneath both sits ambiguity. Bhaskar and colleagues show that a large share of realistic questions have more than one defensible reading, which means a system with no way to say so is forced to guess, and a benchmark with one gold query per question will score the guess as a failure regardless of which reading it took.\n\nOne study measured why any of this is worth paying for. NaLIR asks the user to confirm a query tree before it executes anything. With that step, fourteen participants completed 88 of 98 tasks on the Microsoft Academic Search database. With it removed there were 32 failures and the participants caught 7, so 25 wrong answers were accepted as correct by the person who had asked the question, and Li and Jagadish note that the undetected ones were mostly aggregates, which cannot be checked by reading the number. That is the failure mode every enforcement mechanism in this map is built against, measured on people rather than argued from first principles.",
+      "themes": [
+        "The same practitioner benchmark that shows 98.2% to 100.0% inside the semantic layer's scope shows 0.0% outside it, where unconstrained text-to-SQL reaches 70.0% and 100.0%. The layer returns an error instead of wrong data (Ganz and Perigaud).",
+        "PRECISE proved the trade in 2003: sound and complete inside a decidable class of semantically tractable questions, a paraphrase request outside it, no errors on any of three benchmark databases, and a tractable class covering 77.5% to 97% of the questions depending on the domain (Popescu, Etzioni and Kautz).",
+        "ATHENA measured the same trade in 2016: no interpretation produced for 11 of 108 finance questions, which is precisely the gap between its reported precision and its reported recall (Saha et al.).",
+        "Structural and statistical abstention are different machines. Structural abstention needs no confidence estimate because unanswerable requests are unrepresentable; statistical abstention generates a candidate and then estimates whether to trust it (Wu; Chen et al.).",
+        "The statistical line is developing quickly: adaptive abstention at schema linking with a human in the loop, confidence estimation over generated SQL, calibrated confidence for tabular question answering, and hybrid rewards that train reliability into the boundary itself (Chen; Entezari Maleki; Voss; Tian).",
+        "Ambiguity is the reason a boundary is needed at all. A substantial share of realistic questions admit more than one defensible reading, and a system with no way to say so must guess (Bhaskar et al.).",
+        "Reliability benchmarks for structured data analysis are starting to score robustness and trustworthiness rather than accuracy alone, which is the evaluation shape this theme requires (Shi et al., TrustDABench).",
+        "Interaction is the other resolution. Duoquest lets the user supply a partial query alongside the question, which turns an ambiguous request into a constrained search rather than a guess (Baik et al.).",
+        "Users do not catch the wrong answers. Removing NaLIR's verification step produced 32 failures of which participants detected 7, and the undetected ones were mostly aggregates that cannot be checked by inspection (Li and Jagadish)."
+      ],
+      "gaps": [
+        "Almost no evaluation reports a three-way outcome split of correct, wrong and refused. Without it, an accuracy gain from a semantic layer cannot be separated from a coverage loss, and the two have opposite product implications.",
+        "The exchange rate between semantic-model coverage and answerable question share has never been drawn. The dbt post's observation that adding three models made all 11 questions answerable is one point on a curve nobody has plotted.",
+        "Structural and statistical abstention have not been compared on a shared workload, so whether an incomplete model refuses more or less usefully than a miscalibrated confidence score is unknown.",
+        "No study measures how users behave after a refusal. A refusal that sends the analyst to write their own SQL may have worse aggregate outcomes than a flagged low-confidence answer, and this is measurable."
+      ]
+    },
+    {
+      "key": "harness",
+      "label": "The harness became part of the system",
+      "summary": "Every result above is reported as a property of a model on a benchmark. It is a property of a model inside a scaffold, and the scaffold is rarely described in enough detail to reproduce.\n\nTwo 2026 studies measure this and appear to disagree. Vats and Golev ran two models across Goose, OpenCode and OpenHands-SDK on a stratified 50-task subset of Terminal-Bench Pro and found harness choice worth up to a 40-fold difference in tokens per solved task, while paired within-model pass-rate differences stayed between 0 and 8 points with bootstrap confidence intervals that include zero except at the largest gap. Starace pre-registered a comparison of ReAct, a Planner-Actor-Rater multi-agent scaffold, and a planner-then-executor across five models on GAIA levels 1 and 2, and found scaffold choice alone moving accuracy by as much as 28 points within a single model. The pre-registered prediction that stronger models would be less scaffold-sensitive was rejected in direction.\n\nThe two are compatible once you look at what was varied. Goose, OpenCode and OpenHands-SDK are three implementations of broadly the same tool-calling loop. ReAct, Planner-Actor-Rater and planner-then-executor are three different control structures. Terminal-Bench tasks put most of the work inside the model; GAIA tasks put much of it in deciding what to retrieve and when to stop. A defensible reading that neither paper states: harness implementation is mostly a cost variable, and harness architecture is an accuracy variable. That is testable, and nobody has tested it.\n\nHarness-Bench arrives at the operational conclusion from 5,194 execution trajectories over 106 sandboxed tasks, finding substantial variation in completion, process quality, efficiency and failure behaviour across model-harness pairings, and arguing that capability should be reported at the model-harness configuration level rather than the model level. The audit literature says the field is not close to that: a pilot audit of twelve agent benchmark papers found their self-disclosure of harness configuration inconsistent enough that reproduction is often impossible.\n\nFor this map the consequence is specific. A semantic layer is a harness. It decides what the model sees, what it is allowed to emit, and what happens to the output. Comparing a governed analytics system against a raw text-to-SQL baseline is a scaffold comparison, and it inherits every attribution problem this theme documents. Any such comparison that does not hold the model fixed and vary one element at a time is measuring the sum of the differences.",
+      "themes": [
+        "Harness choice is worth up to a 40-fold difference in tokens per solved task while paired within-model accuracy differences stay at 0 to 8 points, with bootstrap intervals covering zero except at the largest gap (Vats and Golev).",
+        "Scaffold choice alone moves measured accuracy by as much as 28 points within a single model on GAIA, in a pre-registered comparison whose prediction that stronger models are less scaffold-sensitive was rejected in direction (Starace).",
+        "The two results differ in what was varied: three implementations of one control structure versus three different control structures, on task families that place different amounts of work in the scaffold. Harness implementation reads as a cost variable and harness architecture as an accuracy variable.",
+        "Across 5,194 trajectories on 106 sandboxed tasks, completion, process quality, efficiency and failure behaviour all vary substantially by model-harness pairing, supporting the conclusion that capability should be reported per configuration rather than per model (Yao et al.).",
+        "Reported agent capability is therefore a scaffold-conditional estimate, and a pilot audit of twelve agent benchmark papers finds harness disclosure inconsistent enough that reproduction is frequently impossible (Naser Moghadasi and co-author).",
+        "The effect is not confined to capability. Measured safety also shifts with evaluation scaffolding, which means the same attribution problem applies to safety claims (Gringras).",
+        "The systems framing generalizes past coding: agent reliability depends on the harness, the retrieval layer, the verification gates and the operating loop, not on model capability alone (Jarmak).",
+        "Pipeline components interact rather than compose. A systematic analysis of natural-language-to-SQL pipeline optimisations finds the effect of each stage depends on the others, so single-factor ablations mislead (Klubicka et al.)."
+      ],
+      "gaps": [
+        "The implementation-versus-architecture reading of the two scaffold studies is a hypothesis. Re-running Vats and Golev's protocol with architecturally distinct scaffolds, and Starace's with three implementations of one architecture, would settle it.",
+        "No text-to-SQL benchmark reports harness configuration at the level Harness-Bench argues for, so every leaderboard number in this map is a model-harness pair reported as a model.",
+        "Semantic-layer comparisons are scaffold comparisons and are never analyzed as such. There is no published governed-analytics evaluation that holds the model fixed and varies knowledge, representation and enforcement one at a time.",
+        "Scaffold sensitivity has never been measured on a text-to-SQL benchmark at all. Whether the 28-point GAIA effect has an analogue on BIRD or Spider 2.0 is unknown."
+      ]
+    },
+    {
+      "key": "grading",
+      "label": "How text-to-SQL grades itself",
+      "summary": "Every claim above rests on a benchmark, and the benchmarks are in worse condition than the field's leaderboards suggest.\n\nThe result to start from is Jin, Choi, Zhu and Kang. A three-stage human-in-the-loop audit found annotation errors in 263 of 498 BIRD Mini-Dev examples, 52.8 percent, and 76 of 121 Spider 2.0-Snow examples, 62.8 percent. Earlier work had put the Mini-Dev figure at 36.1 percent. The errors are not typos: 57.79 percent of the BIRD cases are a mismatch between the question and the data or schema, 29.28 percent between the question's semantics and the gold query's logic, and 29.66 percent are questions ambiguous enough that more than one query is defensible. Re-evaluating the 16 open-source agents on the BIRD leaderboard against corrected gold changed relative execution accuracy by between minus 7 and plus 31 percent, moved 12 of 16 upward, and shifted ranks by as much as nine places. CHESS went from 62 to 81 percent and from seventh to a tie for first.\n\nThe number that should end the argument is the rank correlation. Rankings computed on the uncorrected subset track rankings on the full development set closely, Spearman 0.85 at p equal to 3.26e-5. Rankings computed on the corrected subset do not, Spearman 0.32 at p equal to 0.23. The subset and the full set agree about who is best only while both are wrong in the same way.\n\nContamination is the failure mode the field worries about instead, and it is the smaller one. SPENCE probes leakage with syntactic perturbations across Spider, SParC, CoSQL and BIRD and finds a clear temporal gradient, with Spider showing the strongest signal and BIRD showing minimal sensitivity and appearing largely uncontaminated. So the most widely used benchmark in the field is comparatively clean of leakage and more than half mis-annotated. Both statements are true, they are independent failure modes, and correcting annotations reshuffles the leaderboard far more than decontamination would.\n\nThe methodological repairs have been available for years and are unevenly adopted. Finegan-Dollak showed in 2018 that question splits measure template memorization and query splits do not. Zhong, Yu and Klein showed in 2020 that a single database instance cannot distinguish semantically different queries, and distilled test suites to fix it. de Vries and colleagues argued that the tasks themselves are not ecologically valid, in the sense that nobody outside the benchmark asks questions in that distribution. Any comparison in the earlier themes of this map that was scored by exact match on a single instance against a single gold query is carrying all four of these problems at once.",
+      "themes": [
+        "A human-adjudicated audit finds annotation errors in 52.8% of BIRD Mini-Dev and 62.8% of Spider 2.0-Snow examples, against 36.1% previously reported for Mini-Dev (Jin et al.).",
+        "Correcting the gold changes relative execution accuracy of the 16 open-source BIRD leaderboard agents by minus 7% to plus 31%, moves 12 of 16 upward, and shifts ranks by up to nine places, with CHESS going from 62% to 81% and from seventh to a tie for first (Jin et al.).",
+        "Ranking agreement between the audited subset and the full development set collapses once the gold is corrected, from Spearman 0.85 (p = 3.26e-5) to 0.32 (p = 0.23). The uncorrected subset agreed with the full set only because both were wrong the same way (Jin et al.).",
+        "Contamination is real but is the smaller problem, and it is unevenly distributed: a syntactic perturbation probe finds the strongest leakage signal on Spider and finds BIRD largely uncontaminated (Safarzadeh et al., SPENCE).",
+        "The evaluation repairs predate the LLM era. Question splits measure template memorization where query splits do not, and a single database instance cannot separate semantically different queries without distilled test suites (Finegan-Dollak et al.; Zhong, Yu and Klein).",
+        "Error taxonomies for real deployments show the failures are semantic rather than syntactic, which is what execution-match scoring is worst at detecting (Shen et al.; Liu et al., NL2SQL-BUGs).",
+        "The tasks themselves may not be ecologically valid, in the sense that the question distribution in these benchmarks is not the distribution any real user produces (de Vries, Bahdanau and Manning).",
+        "Modular benchmarking frameworks are the current response, separating the solution's components from the harness so that a score can be attributed to a stage (Hou et al., NL2SQLBench)."
+      ],
+      "gaps": [
+        "Not one headline text-to-SQL result from 2024 to 2026 has been re-reported on corrected gold. Which architectural claims survive the audit is the single most valuable open experiment in this map.",
+        "The audit covered 498 Mini-Dev and 121 Spider 2.0-Snow examples. Nobody has estimated the error rate of the full BIRD training set, which is what most systems are tuned on.",
+        "Annotation error and ambiguity are entangled in the taxonomy. A question with two defensible readings is not the same failure as a gold query that contradicts the schema, and they need different fixes.",
+        "No benchmark publishes an inter-annotator agreement figure for its gold queries, which would make the error rate estimable at construction time rather than years later."
+      ]
+    },
+    {
+      "key": "generalization",
+      "label": "What should generalize?",
+      "summary": "Cross-database generalization and cross-question generalization are different claims, and the field's headline numbers routinely conflate them.\n\nSpider made the first one the goal: test on databases never seen in training. That framing is why the benchmark mattered, and it is also why the field spent years building parsers that exploited the lexical overlap between a question's words and the target schema's column names. Spider-Syn broke that by substituting synonyms for schema words in the questions, and accuracy fell. Pi and colleagues attacked from the other side, perturbing the table rather than the question. Dr.Spider generalized both into 17 perturbation test sets spanning question, database and SQL.\n\nWhat that body of work establishes is that a system can generalize across databases while failing to generalize across ways of asking, because the two are held up by different mechanisms. Schema-word overlap gives cross-database transfer cheaply and gives nothing at all when the user's vocabulary differs from the schema's. This is the same finding as the first theme in this map, arrived at from the robustness direction: a system relying on lexical overlap has quietly assumed the schema is the business.\n\nShaw and colleagues add the third axis. Compositional generalization, the ability to handle novel combinations of familiar structures, and natural language variation are not the same requirement, and an approach that handles one may not handle the other. Saparina and Lapata take the constructive route, increasing natural language variation in training and measuring the resulting generalization gain.\n\nFor a governed analytics system the distinction is not academic. If a semantic model is authored for one warehouse and the system is evaluated on questions over that same warehouse, nothing has been shown about transfer to another company's data. Conversely, a system evaluated across many databases with the semantic layer authored per database has shown transfer of the method and nothing about the cost of authoring. Almost every evaluation in this literature, including the strongest ones, tests unseen questions rather than unseen databases, and states so only in a limitations section if at all.",
+      "themes": [
+        "Substituting synonyms for schema words in the questions drops accuracy sharply, revealing that cross-database transfer was resting on lexical overlap between question and column names (Gan et al., Spider-Syn).",
+        "Perturbing the table rather than the question produces the same failure from the other direction, so the fragility is in the binding between language and schema, not in either alone (Pi et al.).",
+        "Dr.Spider systematizes this into 17 perturbation test sets across question, database and SQL, which is the closest thing the field has to a robustness suite (Chang et al.).",
+        "Compositional generalization and natural language variation are separate requirements, and an approach that handles one need not handle the other (Shaw et al.).",
+        "Increasing natural language variation during training is a direct intervention on the weaker axis, and it measurably improves generalization in semantic parsing (Saparina and Lapata).",
+        "Robustness-oriented parsing work treats generalization as a design target rather than a diagnostic, which is where the distinction between the two axes has to be made explicit (Gao et al.)."
+      ],
+      "gaps": [
+        "No semantic-layer evaluation tests unseen databases. Every published result authors a model for the warehouse it is then evaluated on, which measures unseen-question generalization and is usually reported as though it measured more.",
+        "The authoring cost of transferring a semantic model to a new domain has never been measured, so the method's portability claim has no denominator.",
+        "Perturbation suites exist for questions, tables and SQL, and none exists for the semantic layer itself. Renaming a metric, changing a join convention or splitting an entity are the analogous perturbations and nobody has built them."
+      ]
+    },
+    {
+      "key": "improvement",
+      "label": "Improving the system without gaming the benchmark",
+      "summary": "The systems in this map get tuned rather than trained once and shipped. Prompts are rewritten, retrieval adjusted, semantic models extended, scaffolds rearranged, each change accepted or rejected on a development score. That loop is adaptive data analysis, and its statistics were settled in 2015.\n\nDwork, Feldman, Hardt, Pitassi, Reingold and Roth showed in Science that a holdout set reused across adaptively chosen analyses stops being a valid estimate of generalization, and that differentially private access to it buys back a quantified number of safe queries. Nearly every agent-optimization loop in this literature is an instance of the problem that paper solved, and nearly none of them cite it. The practical version is a metered holdout with a preregistered query budget, which is cheap to implement and almost never implemented.\n\nThe optimizers themselves have gotten good, which raises the stakes rather than lowering them. MIPRO jointly optimizes instructions and demonstrations across the modules of a language-model program and beats baselines on five of seven programs by as much as 13 points. GEPA replaces gradient-style search with reflective prompt evolution over a Pareto frontier of attempts and outperforms GRPO by 6 percent on average and up to 20 percent while using up to 35 times fewer rollouts, and beats MIPROv2 by more than 10 percent. A method that reaches a good configuration in few rollouts also reaches an overfitted one in few rollouts, and neither paper's evaluation is designed to tell those apart.\n\nReinforcement learning against execution reward has the same shape at a finer grain. Progressive rewards make the signal denser for text-to-SQL, which improves optimization and increases the number of effective queries against the same fixed evaluation data.\n\nThe defenses are known and mostly procedural: hold a sealed set that is scored once, preregister the primary endpoint before any results exist, meter the development holdout with a hard checkpoint budget, keep an append-only ledger of every accepted and rejected change, and forbid changes conditioned on specific evaluation instances. None of that is novel statistics. What is missing is any published demonstration that a metered holdout actually preserves its guarantee under a realistic agent-optimization loop, as opposed to being accepted on theory.",
+      "themes": [
+        "A holdout reused across adaptively chosen analyses stops estimating generalization, and differentially private access restores validity for a quantified number of queries. This is the statistical foundation for every development-set-driven agent loop in this map, and it is almost never cited by them (Dwork et al., Science, 2015).",
+        "Reflective prompt evolution over a Pareto frontier outperforms reinforcement learning by 6% on average and up to 20% while using up to 35 times fewer rollouts, and beats MIPROv2 by more than 10% (Agrawal et al., GEPA).",
+        "Joint optimization of instructions and demonstrations across the stages of a language-model program beats baseline optimizers on five of seven programs by as much as 13 points (Opsahl-Ong et al., MIPRO).",
+        "Sample efficiency cuts both ways. An optimizer that finds a good configuration in few rollouts finds an overfitted one just as fast, and neither optimizer paper evaluates for that.",
+        "Denser reward shaping for text-to-SQL reinforcement learning improves optimization and simultaneously increases the number of effective queries issued against fixed evaluation data (Zhang et al., Progress-SQL).",
+        "Pipeline stages interact, so a change accepted on its own ablation can be a regression in combination, which is an additional route to development-set overfitting that single-factor evaluation cannot see (Klubicka et al.).",
+        "The disclosure audit is the enforcement mechanism the field lacks: twelve agent benchmark papers audited against an open scoring schema disclose their own evaluation conditions inconsistently (Naser Moghadasi and co-author)."
+      ],
+      "gaps": [
+        "No published work demonstrates empirically that a metered holdout preserves its guarantee under a real agent-optimization loop. The theory is 2015 and the practice is untested.",
+        "Neither GEPA nor MIPRO reports a held-out generalization gap alongside its optimization gain, so the fraction of reported improvement that is overfitting is unmeasured.",
+        "Anti-reward-hacking gates are described in protocols and never evaluated. Whether a rule forbidding instance-conditioned changes actually catches the behaviour it targets has not been tested.",
+        "There is no accepted reporting standard for how many development evaluations a result consumed, which is the one number that would make adaptive-overfitting risk comparable across papers."
+      ]
+    },
+    {
+      "key": "original",
+      "label": "Original evidence: the Omni × LiveSQLBench benchmark",
+      "summary": "This section is our own work and is marked separately because it is at a different stage than everything above. As of 2026-08-27 the benchmark has produced no scored results. The experiment ledger is empty, the failure taxonomy is marked pre-baseline, and no run has been evaluated. What exists is a preregistered design and a set of original measurements of the benchmark artifact itself, and only those are reported here.\n\nThe design decomposes the thing this map keeps treating as one variable. Four conditions run over the same sealed question set: raw schema with the model writing SQL directly; schema plus a searchable copy of the raw hierarchical knowledge base; a searchable export of the Omni semantic model; and that same model queried through the production governed harness. The first two steps isolate knowledge, the second isolates representation holding knowledge fixed, and the third isolates enforcement holding representation fixed. No published study separates those three, which is why the third theme of this map and the fourth are argued from different papers with different schemas and different models.\n\nThe population is the public LiveSQLBench Large-v1 release at a pinned dataset revision: 480 records, 332 of them Query tasks and 148 Management tasks, over 18 PostgreSQL databases. A deterministic split holds out 101 questions as a sealed set scored once, leaves 231 for development, and further divides development into 154 and 77 so the second half functions as a metered holdout with a hard cap of ten checkpoints. All 18 databases appear on both sides of the split, which means the design tests unseen questions and not unseen databases, and that is preregistered as a limitation rather than discovered afterward. The primary endpoint is the mean one-shot execution accuracy of the governed condition over three sealed repetitions, with the paired difference against the raw-schema condition as the primary comparison. There is no majority vote and no best-of-three.\n\nThe measurements that do exist are of the artifact, and several of them bear on this map's other themes. Across the 18 databases the hierarchical knowledge base holds 1,090 entries, split into 430 calculation entries, 462 domain entries and 198 value illustrations, connected by 945 dependency edges. 560 entries carry at least one dependency, 344 edges point at a target that itself has dependencies, the longest chain is six edges, and multi-hop structure is present in all 18 databases, with no duplicate identifiers, dangling references, self-edges or cycles. The schemas hold 971 tables and 17,749 columns. That is the shape of the knowledge object the second theme of this map argues about, measured rather than assumed.\n\nTwo findings are about the instrument rather than the systems. Reading the public evaluator at its pinned commit shows that the Query scoring path strips standalone DISTINCT while retaining DISTINCT ON regardless of what the task's own conditions declare, replaces ROUND with its first argument including in nested calls, normalizes datetimes to dates and discards time of day, recursively rounds floats to two places without consulting the task's declared precision, fails a comparison when both result sets are empty, and compares as sets when order is not required, which discards duplicate multiplicity. Separately, the public agent's knowledge service omits the type and children_knowledge fields from what it shows the agent, which erases exactly the dependency structure the benchmark was built to test. Both are reported here as measurements of a public artifact, and both are reasons the seventh theme of this map is not a digression.",
+      "themes": [
+        "No results exist yet. The experiment ledger is empty as of 2026-08-27, and nothing in this section should be read as an outcome.",
+        "Four conditions decompose knowledge, representation and enforcement over one sealed question set, which is the ablation the third and fourth themes of this map are currently argued without.",
+        "Population: the public LiveSQLBench Large-v1 release at a pinned revision, 480 records (332 Query, 148 Management) over 18 PostgreSQL databases, split deterministically into 231 development and 101 sealed questions, with development further split 154 / 77 as a metered holdout capped at ten checkpoints.",
+        "The hierarchical knowledge base measures 1,090 entries (430 calculation, 462 domain, 198 value illustration) over 945 dependency edges, with 560 entries carrying at least one dependency, 344 edges whose target itself has dependencies, a longest chain of six edges, multi-hop structure in all 18 databases, and no duplicate identifiers, dangling references, self-edges or cycles.",
+        "Schema scale: 971 tables and 17,749 columns across the 18 databases, independently reproduced from the public release.",
+        "The public evaluator's Query path strips standalone DISTINCT regardless of the task's declared conditions, replaces ROUND with its first argument including in nested calls, normalizes datetimes to dates, rounds floats to two places without consulting declared precision, fails when both result sets are empty, and compares as sets when order is not required. Two frozen scorers are run as a prespecified sensitivity analysis.",
+        "The public agent's knowledge service omits the type and children_knowledge fields from the entries it shows the agent, erasing the dependency structure the benchmark exists to evaluate.",
+        "The development loop is a metered holdout with a preregistered checkpoint budget, an append-only ledger, proposal-before-change, and a rule forbidding changes conditioned on specific evaluation instances, which is the applied form of the 2015 reusable-holdout result."
+      ],
+      "gaps": [
+        "The governed condition and the searchable-model condition are confounded whenever model parity across the two paths is unavailable, which is preregistered and unresolved.",
+        "101 sealed questions bound the resolvable effect size. Small differences between adjacent conditions will not be distinguishable, and the design says so in advance rather than after seeing the results.",
+        "Contamination cannot be verified for a benchmark whose questions predate the models under test, so the leakage question the seventh theme raises applies here too.",
+        "Three repetitions do not identify provider-side and temporal variance, which means run-to-run stability is estimated rather than measured."
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "https://www.cs.virginia.edu/~rmw7my/papers/popescu-etzioni-kautz.pdf",
+      "Towards a Theory of Natural Language Interfaces to Databases (PRECISE)",
+      "The gap"
+    ],
+    [
+      "2023arXiv230503111L",
+      "Can LLM Already Serve as A Database Interface? (BIRD)",
+      "The gap"
+    ],
+    [
+      "2021arXiv210611455L",
+      "KaggleDBQA: Realistic Evaluation of Text-to-SQL Parsers",
+      "The gap"
+    ],
+    [
+      "2024arXiv241107763L",
+      "Spider 2.0: Real-World Enterprise Text-to-SQL Workflows",
+      "The gap"
+    ],
+    [
+      "2026arXiv260425149R",
+      "Semantic Layers for Reliable LLM-Powered Data Analytics",
+      "Supplying meaning"
+    ],
+    [
+      "2026arXiv260605634L",
+      "Bootstrapping Semantic Layer from Execution for Text-to-SQL",
+      "Supplying meaning"
+    ],
+    [
+      "https://www.vldb.org/pvldb/vol9/p1209-saha.pdf",
+      "ATHENA: Ontology-Driven Natural Language Querying",
+      "Representation"
+    ],
+    [
+      "https://www.vldb.org/pvldb/vol13/p2747-sen.pdf",
+      "ATHENA++: Natural Language Querying for Complex Nested SQL",
+      "Representation"
+    ],
+    [
+      "2021arXiv210407478H",
+      "Unlocking Compositional Generalization Using Intermediate Representations",
+      "Representation"
+    ],
+    [
+      "2024arXiv240711418P",
+      "Semantic Operators: A Declarative Model for AI-based Data Processing",
+      "Representation"
+    ],
+    [
+      "https://www.vldb.org/pvldb/vol8/p73-li.pdf",
+      "Constructing an Interactive Natural Language Interface for Relational Databases (NaLIR)",
+      "Enforcement and its boundary"
+    ],
+    [
+      "2021arXiv210905093S",
+      "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding",
+      "Enforcement and its boundary"
+    ],
+    [
+      "2026arXiv260601926D",
+      "Mitigating Bias in Locally Constrained Decoding via Tractable Proposals",
+      "Enforcement and its boundary"
+    ],
+    [
+      "https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026",
+      "Semantic Layer vs. Text-to-SQL: 2026 Benchmark Update",
+      "Enforcement and its boundary"
+    ],
+    [
+      "2026arXiv260813926W",
+      "Never the Number: Structural Abstention",
+      "Enforcement and its boundary"
+    ],
+    [
+      "2023arXiv231013659B",
+      "Benchmarking and Improving Text-to-SQL Generation under Ambiguity",
+      "Enforcement and its boundary"
+    ],
+    [
+      "2026arXiv260108778J",
+      "Pervasive Annotation Errors Break Text-to-SQL Benchmarks and Leaderboards",
+      "Measuring it"
+    ],
+    [
+      "2026arXiv260417771S",
+      "SPENCE: A Syntactic Probe for Detecting Contamination",
+      "Measuring it"
+    ],
+    [
+      "2020arXiv201002840Z",
+      "Semantic Evaluation for Text-to-SQL with Distilled Test Suites",
+      "Measuring it"
+    ],
+    [
+      "2026arXiv260608529S",
+      "Scaffold Effects on GAIA: A Controlled Comparison",
+      "The system around the model"
+    ],
+    [
+      "2026arXiv260722585V",
+      "The Scaffold Effect in Coding Agents",
+      "The system around the model"
+    ],
+    [
+      "2015Sci...349..636D",
+      "The reusable holdout: Preserving validity in adaptive data analysis",
+      "Improving it"
+    ],
+    [
+      "2025arXiv250719457A",
+      "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning",
+      "Improving it"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Separate knowledge, representation and enforcement in a single experiment",
+      "The literature argues these three from different papers using different schemas, different models and different question sets, and then compares the conclusions as though they were commensurable. The ablation is four conditions over one sealed question set: raw schema, schema plus the same knowledge as searchable text, the same knowledge as a structured semantic model, and that model behind a compiler the agent cannot bypass. The second step measures what knowledge is worth, the third what structure adds on top of the same facts, and the fourth what enforcement adds on top of the same structure. Nobody has published it. Every claim in this map about where reliability comes from is currently an inference across incomparable studies."
+    ],
+    [
+      "Re-report the 2024 to 2026 text-to-SQL results on corrected gold",
+      "Jin and colleagues corrected 498 BIRD Mini-Dev examples and 121 Spider 2.0-Snow examples and found that ranking agreement with the full development set collapses from Spearman 0.85 to 0.32. The corrections are published. The obvious next step is to take every architectural claim from the last three years, schema linking strategies, decomposition agents, self-correction loops, and re-run them on corrected gold to see which survive. This is a weekend of compute and a large fraction of the field's recent conclusions rest on it."
+    ],
+    [
+      "Report the three-way split of correct, wrong and refused",
+      "A semantic layer scoring higher than text-to-SQL may be answering more questions correctly, or may be answering fewer questions and declining the rest. Those have opposite implications for a product, and a single accuracy column cannot tell them apart. The fix is trivial: publish correct, wrong and refused as three numbers instead of one. Almost no evaluation in this map does it, including the ones whose headline claim depends on the distinction."
+    ],
+    [
+      "Test whether harness implementation and harness architecture are different variables",
+      "Vats and Golev find 0 to 8 points of accuracy difference across three harnesses that implement broadly the same tool-calling loop. Starace finds up to 28 points across three genuinely different control structures. The hypothesis that reconciles them is that implementation is a cost variable and architecture is an accuracy variable. Testing it means re-running Vats and Golev's protocol with architecturally distinct scaffolds and Starace's with three implementations of one architecture. If it holds, agent evaluation gets a much cheaper reporting standard than per-configuration capability."
+    ],
+    [
+      "Draw the coverage curve for a semantic model",
+      "The dbt benchmark notes that adding three models made all eleven of its questions answerable. That is one point. The curve, answerable question share as a function of modeling effort, is what an organization actually needs to decide whether to build a semantic layer, and it does not exist for any dataset. Constructing it needs a fixed question workload, a semantic model built in increments, and the answerable share measured at each increment."
+    ],
+    [
+      "Measure whether evaluator normalization changes rankings as well as scores",
+      "The LiveSQLBench evaluator strips standalone DISTINCT, replaces ROUND with its first argument, normalizes datetimes to dates and compares result sets as sets. Each of those is a decision about what counts as the same answer, and each is applied regardless of what the individual task declares. Running the same submissions through two scorers that differ only in those normalizations answers whether the leaderboard is measuring the systems or the normalizer. The two scorers are cheap to build and the result is a bound on how much any execution-accuracy comparison can be trusted."
+    ],
+    [
+      "Show empirically that a metered holdout survives a real agent-optimization loop",
+      "The reusable-holdout guarantee is 2015 theory about adaptively chosen analyses. Agent development is exactly that: prompts rewritten, retrieval adjusted, scaffolds rearranged, each accepted on a development score. Nobody has run the demonstration where one team optimizes against an unmetered development set and another against a metered one with a preregistered checkpoint budget, and both are then scored on the same sealed set. Until someone does, every protocol that includes a metered holdout, ours included, is applying a guarantee it has not verified transfers."
+    ],
+    [
+      "Build a perturbation suite for the semantic layer",
+      "Dr.Spider perturbs questions, databases and SQL across 17 test sets. There is no analogue for the layer itself. Renaming a metric, changing a join convention, splitting one entity into two, or leaving a measure undefined are the realistic perturbations a semantic model undergoes in a real company, and none of them appears in any evaluation. A system whose accuracy depends on a model nobody perturbs has an untested dependency at its centre."
+    ],
+    [
+      "Evaluate natural-language analytics under access control",
+      "A semantic layer is where row-level security, column masking and data contracts get enforced, and the entire literature surveyed here ignores this. The measurements do not exist: what happens to accuracy when the same question is asked by a role that cannot see the underlying rows, whether the system refuses cleanly or silently returns a filtered answer that reads as complete, and whether an agent can infer restricted values from aggregates it is permitted to run. The last of those is a security question that the reliability framing has not yet reached."
+    ]
+  ],
+  "practices": []
+}
