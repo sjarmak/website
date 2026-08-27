@@ -295,6 +295,8 @@ const talks = defineCollection({
       videoCaption: z.string().optional(), // e.g. "Live demo from the talk"
       slidesUrl: z.string().url().optional(),
       scheduleUrl: z.string().url().optional(), // session/schedule page (for upcoming talks)
+      // Companion material: agent-readable llms.txt, code repos behind the talk's data, etc.
+      links: z.array(link).default([]),
       photo: image().optional(),
       photoAlt: z.string().optional(),
       photoCard: z.boolean().default(false), // promo/speaker card: render small, not full-bleed

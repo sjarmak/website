@@ -59,7 +59,7 @@ const talks = await getTalks();
               {t.data.location && ` · ${t.data.location}`}
             </p>
             {t.data.description && <p class="secondary measure">{t.data.description}</p>}
-            {(t.data.videoUrl || t.data.slidesUrl || t.data.scheduleUrl) && (
+            {(t.data.videoUrl || t.data.slidesUrl || t.data.scheduleUrl || t.data.links.length > 0) && (
               <p class="cluster" style="--cluster-gap: var(--space-m)">
                 {t.data.videoUrl && (
                   <a href={t.data.videoUrl} rel="noopener">
@@ -76,6 +76,11 @@ const talks = await getTalks();
                     Schedule ↗
                   </a>
                 )}
+                {t.data.links.map((l) => (
+                  <a href={l.url} rel="noopener">
+                    {l.label} ↗
+                  </a>
+                ))}
               </p>
             )}
           </div>
