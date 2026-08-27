@@ -1956,6 +1956,31 @@
           "why": "The branch's framing is that the bottleneck has moved from model capability to the infrastructure problem of putting fresh, authorized, build-grounded context in front of an agent, and this is a concrete instance: the context is grounded by execution in a sandbox at the moment it is assembled, and anything that fails to reproduce is deleted rather than downweighted. That is a stronger contract than confidence scoring, and it is worth contrasting with concurrent escalation-based routers, which restart the strong model from scratch and throw away the cheap model's evidence at exactly the moment it becomes expensive to recompute. The measured payoff supports the framing over the routing story: the handoff is what moves the numbers, and it moves them by lifting cheaper fixers toward the frontier rather than by raising the ceiling. The open question the paper leaves is scope -- verification here covers reproduction claims only, while implicated files and notes pass through unverified, so the gate proves the one part of the handoff that happens to be executable."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824221P",
+      "title": "DeepRepoQA: Code Repository Question Answering with Deep Agent Exploration",
+      "firstAuthor": "Peng, Weihan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24221",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824221P",
+      "branches": [
+        "repo-scale",
+        "techniques"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "Repository question answering is posed as planning rather than retrieval. DeepRepoQA builds a Monte-Carlo search tree over the repository and runs four agents per node: Perception writes a situational report from the node's own trajectory and its siblings' attempts, so planning can avoid repeated trials without storing full sibling transcripts; Planning proposes the next action; Execution runs it and filters the raw result into curated evidence; Evaluation assigns a scalar value. Simulation is a single agent step rather than a multi-step rollout, with the evaluation output directly setting Q(s,a), and selection uses UCT with at most three children per node over 15 iterations. Evidence accumulates on the root-to-node memory path that structures the prompt, and the synthesized answer must cite at least one supporting code span. Ablations put the weight on the search machinery: removing MCTS costs 2.27 overall points, removing the Perception Agent 1.73, and removing the Evaluation Agent 3.50.",
+          "why": "This branch's split is between retrieving better snippets and navigating a repository as a structured world. DeepRepoQA is the navigation side taken to its conclusion, and its stated motivation is the specific failure of single-path ReAct agents: evidence lying outside the chosen trajectory is simply missed, so exploration has to branch and be scored. On SWE-QA, expanded here to 15 repositories and 720 question-answer pairs, that buys up to 7.08 points over SWE-agent on Qwen3-Coder-480B-A35B-Instruct."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "The action space is a deliberate layering rather than a single retrieval method. Tree-sitter ASTs back index-based lookup through FindClass, FindFunction and FindCodeSnippet, which locate classes, functions and snippets precisely without relying on fuzzy or semantic search; SemanticSearch runs over chunk embeddings for intent-shaped queries; ViewCode inspects specific spans. The RAG baselines it displaces are the standard ones: sliding-window chunks of 500 lines with 50-line overlap, and function- or class-level chunks, both indexed with voyage-code-3 and retrieved top-10. The ablation is where this gets interesting: removing semantic search costs 1.07 overall points, the smallest drop of the four components tested, while removing the Evaluation Agent costs 3.50.",
+          "why": "This branch treats lexical, dense and structural methods as an additive ladder and asks where each rung's cost is justified. DeepRepoQA puts a number on one version of that question: with precise structural lookup available and a scored search policy on top, the dense-retrieval rung contributes least. What carries the gain is deciding where to look next and judging what came back, not how the individual lookup is implemented."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1651,6 +1651,31 @@
           "why": "The branch is about schema discipline and having a governance surface for what gets written and read. MemGuard is the argument that the schema is where the leverage is: the ablation separates the value of judging a memory from the value of recording the judgment, and the gap between them is the part attributable to a durable, auditable field on the record instead of a decision that disappears after the write."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824188S",
+      "title": "Paritok-4B: Intent-Conditioned Context Compression for Coding Agents",
+      "firstAuthor": "Shi, Jiayu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24188",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824188S",
+      "branches": [
+        "context",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Compression is applied per typed segment rather than to the prompt as a whole. A gateway splits an agent request into segments (file_read, bash_command, log_output, tool_result, file_operation, directory_listing, assistant_thinking, meta_action, alongside protected system and user messages), tags each with a kind and one of four importance levels, and invokes the 4B model once per compressible segment with exactly two inputs: the agent's current task and that tagged segment. Median prompt is about 4K tokens, segments compress in parallel, unchanged segments need not be recompressed across turns, and dropping a segment entirely is a first-class output for unrelated helpers, build noise and superseded re-reads. Retention moves with intent rather than with budget: lines the model keeps score +0.067 higher on intent relevance than lines it removes (paired 95% CI [+0.056, +0.078]), while how much is retained barely shifts. The four-level budget table the design specified did not survive training, collapsing into two bands, protected/recent against stale, which the authors report as a design that did not deliver.",
+          "why": "This branch asks what competes for the context window and how the slice the model actually sees gets built each step. Paritok's answer is that the unit should be small and typed, that the selection criterion should be the agent's live intent rather than an intrinsic information score, and that the compressor must copy rather than paraphrase: 96.0% of emitted identifiers, paths and numbers already appear in the input, 96.2% on held-out SWE-bench Lite output across 212,506 emitted tokens. The constraint driving that is concrete, since an agent edits by exact string match and a paraphrased signature breaks the edit."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "End-to-end on all 300 SWE-bench Lite instances, context compresses to 25.7% of its original size against 50.2% for a gpt-4.1-mini compressor and 61.9% for gpt-5, while retaining 86.5% of uncompressed single-shot solve quality. Run instead in the cat -n line-numbered regime real agents produce, the same 300 instances compress to 27.8% and retain 89.3%, and there the paired comparison is the informative one: 30 instances solved only uncompressed, 17 only compressed, an exact McNemar p=0.079. The authors state that this harness measures comprehension under compression, not end-to-end agent cost. Cost is argued separately: the model is a 264 MB LoRA adapter that self-hosts on a single 24 GB GPU with no per-token compressor fee, and at list prices gpt-5 used as a compressor is net-negative, costing more to run than the downstream tokens it saves.",
+          "why": "This branch is about how anyone knows a context strategy works and what it costs. Two moves here are worth copying: the paper reports the trade it predicted and did not measure (harder compression at equal quality; observed slightly softer compression at higher quality), and it declines to call a p=0.079 paired difference a win. The economics argument is the sharper input to a build-versus-buy decision, since a compressor priced per token can consume more than it saves, making the compressor's own serving cost the first number to check."
+        }
+      ]
     }
   ],
   "sections": [

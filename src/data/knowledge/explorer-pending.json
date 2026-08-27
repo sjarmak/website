@@ -1,24 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv260809290L",
-      "arxiv": "2608.09290",
-      "title": "OpenCodeReview: Determinism over Non-Determinism for Cost-Effective Agent-Based Code Review",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "reliability",
-            "eval"
-          ]
-        }
-      ],
-      "firstSeen": "2026-08-12",
-      "lastAttempt": "2026-08-26",
-      "attempts": 12,
-      "note": "2026-08-26: still 'Paper not found' in SciX, no full text."
-    },
-    {
       "bibcode": "2026arXiv260814680Z",
       "arxiv": "2608.14680",
       "title": "When Agentic Executions Fail: Detecting and Localizing Runtime Faults from Telemetry",
@@ -38,9 +20,33 @@
         }
       ],
       "firstSeen": "2026-08-20",
-      "lastAttempt": "2026-08-26",
-      "attempts": 7,
-      "note": "2026-08-26: still 'Paper not found' in SciX, no full text."
+      "lastAttempt": "2026-08-27",
+      "attempts": 8,
+      "note": "2026-08-27: still 'Paper not found' in SciX, no full text."
+    },
+    {
+      "bibcode": "2026arXiv260824979S",
+      "arxiv": "2608.24979",
+      "title": "FrontierChallenge: Evaluating Scientific Workflow Completion",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability",
+            "eval"
+          ]
+        },
+        {
+          "explorerId": "formal-specifications-agents",
+          "branches": [
+            "agent-quality"
+          ]
+        }
+      ],
+      "firstSeen": "2026-08-27",
+      "lastAttempt": "2026-08-27",
+      "attempts": 1,
+      "note": "2026-08-27: 'Paper not found' in SciX (ADS has the bibcode, the SciX mirror has no record yet)."
     }
   ]
 }

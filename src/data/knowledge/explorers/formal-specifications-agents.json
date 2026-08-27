@@ -3115,6 +3115,31 @@
           "why": "This branch is about what coding agents are actually judged by and why passing the visible tests is not enough, and the benchmark is built around exactly that gap. A near-perfect public score next to a sub-50% exact private score is a direct measurement of tests-as-oracle weakness at repository scale, and the hidden validators are designed to catch the specific evasion: alternative execution paths, state-reset tests and inter-module behavioral-contract tests, so that a patch has to hold the scientific contract across the module chain rather than make one visible assertion pass. The paired ablation adds a result worth carrying: on the 91 tasks where scientific auxiliary information can be separated, supplying it moved GPT-5.6-sol's mean private score up slightly (73.23% to 74.06%) while dropping Pass@1 from 36.26% to 31.87%, with 8 tasks solved only with the information and 12 only without it. Well-targeted domain knowledge constrains the repair; poorly aligned knowledge anchors the agent onto a supplied explanation in place of independent validation. Better-scored is not better-repaired, and the two can move in opposite directions on the same intervention."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824252H",
+      "title": "SA-Bench: Evaluating Semantic Alignment in LLM-Based Paper Reproduction",
+      "firstAuthor": "Hu, Xue",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24252",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824252H",
+      "branches": [
+        "benchmarks",
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks",
+          "takeaway": "SA-Bench scores paper-to-code reproduction without running the code. Each of 30 ICLR, ICML and NeurIPS 2025 papers is decomposed into Semantic Alignment Units, atomic implementation claims that must be localizable to a concrete paper span, verifiable by static code inspection, and independently assessable; 1,491 survive human review, and roughly 17% of agent-extracted candidates are rejected outright, with recurring rejection patterns including prior-work contamination and reported result values mistaken for implementation requirements. Each SAU is scored on a five-level rubric (1.0 faithful, 0.75 minor deviation, 0.5 key omission, 0.25 core substitution, 0 absent) by a GPT-5.5 judge that first searches the repository for evidence and filters out claims with no code-level support. On 200 manually re-checked claims the judge matched the human score about 87% of the time, with disagreement concentrated on the D2 boundary between core mechanism present but incomplete and core mechanism missing.",
+          "why": "This branch tracks how the field grades itself and where reference matching and pass rates run out. Paper reproduction has no executable oracle: the authoritative specification is the paper text, and end-to-end outputs are confounded by random seeds, software environments, data processing choices and compute budgets. SA-Bench's answer is to move the unit of judgment down to the individual claim and report a per-dimension diagnostic instead of a single scalar, so a shortfall comes back classified rather than just low."
+        },
+        {
+          "branch": "agent-quality",
+          "takeaway": "Across 360 paper-level evaluations and 17,892 claim judgments the mean alignment score is 0.221 out of 1.0; the best of twelve configurations, Claude-Sonnet-4.6 with PaperCoder, reaches 0.301. The 7,034 zero-scored claims are dominated by implementation mismatch (40.8%), where the judge found code referencing the claim's keywords but implementing something unrelated under recognizable names, and stubs or TODOs (16.2%), where the agent acknowledged the requirement and deferred it. Scores fall in the same order across all twelve configurations, numerical (D1) above algorithm (D2) above ordering (D4) above protocol (D3), tracking how many sub-decisions a claim demands. Model choice moves the score more than scaffold choice (model marginal range 0.120-0.283 against scaffold range 0.193-0.249), and the dedicated paper-to-code scaffold helps the weakest model most (+0.116 for GPT-4o) while slightly regressing the strongest (-0.027 for DeepSeek-V4-Pro).",
+          "why": "The branch is about what coding agents are actually graded on and what those grades miss. A stub executes, so any harness that stops at executability scores it as working code, and the authors' conclusion is that scaffolds optimized for execution feedback provide limited leverage on scientific fidelity. The failure taxonomy also locates the gap: it is not refusal or omission but confident wrong implementation, the mode a passing test suite is least likely to catch."
+        }
+      ]
     }
   ],
   "sections": [
