@@ -3140,6 +3140,25 @@
           "why": "The branch is about what coding agents are actually graded on and what those grades miss. A stub executes, so any harness that stops at executability scores it as working code, and the authors' conclusion is that scaffolds optimized for execution feedback provide limited leverage on scientific fidelity. The failure taxonomy also locates the gap: it is not refusal or omission but confident wrong implementation, the mode a passing test suite is least likely to catch."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824979S",
+      "title": "FrontierChallenge: Evaluating Scientific Workflow Completion",
+      "firstAuthor": "Su, Liangcai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24979",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824979S",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "The specification here is the task contract, and it is the unit of grading. Every task package carries a task description, fixed inputs, a declared execution environment, an output contract listing required deliverables, and an executable evaluation procedure, with agent-visible instructions separated from evaluator-side references and scoring components. Deliverables may be reports, structured tables, diagnostic figures, executable analysis code, or simulation products, and they must be mutually consistent; completion depends on the whole bundle rather than on a plausible final answer. Under that contract, twelve frontier models topped out at a 20.6% Pass Rate against Avg. Scores up to 87.9, and 75.5% of non-passing Claude Code runs still ended by claiming they were done. Selection was narrowed deliberately: tasks with purely subjective outputs or without materials for reproducible scoring were excluded before the 300-workflow pool was formed.",
+          "why": "This branch tracks what coding agents are actually judged by and why tests-as-oracle is not enough. FrontierChallenge answers with a contract that is heterogeneous by construction, and shows that the agent's own claim of completion carries no information: it appeared in 90.1% of passing runs and 75.5% of failing ones."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1676,6 +1676,31 @@
           "why": "This branch is about how anyone knows a context strategy works and what it costs. Two moves here are worth copying: the paper reports the trade it predicted and did not measure (harder compression at equal quality; observed slightly softer compression at higher quality), and it declines to call a p=0.079 paired difference a win. The economics argument is the sharper input to a build-versus-buy decision, since a compressor priced per token can consume more than it saves, making the compressor's own serving cost the first number to check."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824060B",
+      "title": "SQLite is Enough. Lexical, Semantic, and Hybrid Search with scrydb",
+      "firstAuthor": "Breuer, Timo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24060",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824060B",
+      "branches": [
+        "substrate",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "substrate",
+          "takeaway": "scrydb puts the documents, the FTS5 lexical index, and binary, int8, and float32 embeddings in one SQLite file, with no server process, no external index, and no separate vector store to keep in sync. Installation is a wheel-only pip download: FTS5 ships inside virtually every SQLite build bundled with CPython, and sqlite-vec ships prebuilt loadable binaries, leaving numpy and tqdm as the only runtime dependencies. Every measurement in the paper runs on an M2 MacBook Air with 24 GB of memory and no GPU. Latency across eight BEIR datasets spans nearly four orders of magnitude and splits by which dimension each method scales with: BM25 runs 1.4 to 566.8 ms and tracks query length rather than corpus size, so ArguAna's 181-word queries over 8.67K documents cost more than Touche's over 382K; an exhaustive Hamming scan runs 1.9 to 81.5 ms and tracks corpus size. Scanning the same embeddings at higher precision costs 36x more for int8 cosine (822.5 versus 22.9 ms mean) and a further 2.4x for float32 (1998.1 ms), which makes binarization the main latency lever rather than merely a 32x storage saving.",
+          "why": "This branch is about where the bytes actually live, and this is the embedded end of that spectrum priced rather than assumed. The single-file property is the operational argument: one artifact to share, archive, and rerun, in a format the Library of Congress lists as preferred for datasets, against a stack of index dumps and vector-store snapshots that have to stay consistent with each other."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "Two results bound how much fusion and precision are worth. First, a coarse-to-fine cascade is free at the top of the ranking: reranking the top 1000 Hamming candidates at int8 or float32 precision yields identical P@10 and nDCG@10 to three decimals as an exhaustive scan at that precision on all eight datasets, diverging only in AP where documents below rank 1000 still count. The binary first stage already places every document a full-precision scan would rank in the top ten inside its top 1000, so Hamming plus int8 cosine matches exhaustive int8 at roughly one-fifth the latency (164.5 versus 822.5 ms). Second, reciprocal rank fusion is not a safe default. RRF is the best scrydb configuration on exactly one of eight datasets, Touche, where RRF over full-precision embeddings reaches 0.414 nDCG@10 against a 0.359 MTEB baseline; on the other seven it trails the better of the two rankings it fuses. Semantic retrieval over the binarized index beats BM25 on nDCG@10 on all eight datasets, so the two channels being fused are usually not of comparable strength.",
+          "why": "This branch treats multi-channel retrieval and RRF fusion as the design question. The finding is that fusion pays only where the lexical and semantic channels are comparably strong and make complementary errors, and that where they are not, the cheaper move is a coarse first stage refined by a precise second one."
+        }
+      ]
     }
   ],
   "sections": [

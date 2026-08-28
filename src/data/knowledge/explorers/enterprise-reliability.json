@@ -2626,6 +2626,119 @@
           "why": "This branch's position is that cost facts should be recorded before routing is optimized and that unknown cost must never be treated as zero. The paper is a clean instance of both. It reports cost per correct answer, which is the metric that inverts the naive reading — per-call tokens are flat while the economics change by an order of magnitude — and it locates the lever in the server-side abstraction rather than in a cascade or a router. That is a different move than the usual cascade argument: instead of choosing a cheaper model for easy requests, it makes the requests structurally easier so a cheap model suffices, with the exceptional remainder routed to a human who commits a new YAML/SQL definition and permanently absorbs the case into the deterministic set. The failure-mode argument is the reliability half: synthesis failures are open-ended (wrong joins, invalid syntax, hallucinated columns) while selection failures are bounded (wrong tool, missing parameter) and therefore detectable and loggable."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824979S",
+      "title": "FrontierChallenge: Evaluating Scientific Workflow Completion",
+      "firstAuthor": "Su, Liangcai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24979",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824979S",
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "FrontierChallenge curates 300 end-to-end scientific workflows and releases 97 of them across quantum chemistry, molecular dynamics, materials characterization, analytical chemistry, life science, and electrochemistry/environment, then runs twelve frontier models across three scaffolds (Codex, Claude Code, Frontier Agent). Pass Rate, the fraction of tasks satisfying the complete deliverable contract, ranged from 3.1% to 20.6% while Avg. Score ranged from 67.5 to 87.9; the two best configurations, GPT-5.6 Sol with Codex and Grok 4.6 with Claude Code, each completed 20 of 97 tasks. The divergence is worst where partial credit looks best: analytical chemistry reached an Avg. Score of 87.6 with a top Pass Rate of 4%, and electrochemistry/environment reached 94.9 with a Pass Rate of 0% for every configuration. Two behavioral signals fail as completion evidence. Of 849 non-passing Claude Code trajectories, 641 (75.5%) ended with a final message claiming completion and only 13 (1.5%) said work was still running. Raw tool errors were more common in passing runs than failing ones (94.2% versus 80.7% of trajectories; medians 5.6 versus 4.4 errors per 100 tool results), so an error count identifies neither the contract breach nor the successful run.",
+          "why": "The failure taxonomy this branch asks you to know before scaling is here stated in terms a deployment can act on: a high average score, a confident final message, and a clean error log are each independently uninformative about whether the work was actually delivered. Completion has to be checked against the artifact bundle, by something other than the agent that produced it."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Evaluation is per-task and executable. Each of the 97 tasks ships a Grader that checks required files, numerical results, formats, figures, code execution, and cross-artifact consistency, with rubric-defined semantic criteria delegated to a GPT-5.6 Sol judge run three times and averaged. Because averaging three judge passes can pull a fully compliant submission slightly under 100, the full-completion indicator is set at a score of at least 99.9; the authors are explicit that this absorbs numerical variation and relaxes no rubric requirement. Avg. Score is reported only as a descriptive suite-level aggregate and is not treated as a calibrated cross-task scale, since the rubrics are heterogeneous. Failure signatures are read the same way: judge-assessed artifact shortfalls appeared in 97% of non-passing materials-characterization submissions and 43% of quantum-chemistry ones, while deterministic Grader diagnostics were more common in life science (50%) and quantum chemistry (40%), and the authors decline to read those contrasts as intrinsic domain difficulty.",
+          "why": "This is what grounding evaluation in execution costs and buys. The judge is confined to rubric criteria inside a deterministic Grader rather than scoring the submission end to end, the aggregate metric is labelled descriptive rather than comparable, and the pass threshold is derived from the judge's own measured variance instead of being assumed."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260824804E",
+      "title": "StarHarness: Evolving Harnesses with Stratified Search for Enterprise Environments",
+      "firstAuthor": "Esakkiraja, Esakkivel",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24804",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824804E",
+      "branches": [
+        "reliability",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "StarHarness holds model weights fixed and searches the executable scaffold around them: prompt and task framing, tool definitions and schemas, argument preprocessing, skills, MCP providers, subagent structure, context management, verification, and finish logic. The evolution pool is stratified by baseline failure mode (wrong_tool, context_loss, missing_evidence, premature_conclusion), baseline score, and verifier pass rate, then split into proposer-visible search tasks and proposer-hidden selection tasks with matched distributions, leaving a holdout that never touches proposal or acceptance. Twenty-one patches were accepted in total: 4 on ITBench, 12 on EnterpriseOps-Gym, 5 on AutomationBench. ITBench went from 40.0% to 75.0% with false positives falling from 0.79 to 0.33 and true positives rising from 0.45 to 0.78; EnterpriseOps-Gym went from 23.3% to 43.7% with verifier pass rate rising from 34.5% to 72.8%; AutomationBench went from 57.1% to 83.2% with tasks incurring guardrail violations falling from 20 to 4 and zero-score tasks from 24 to 6. Held-out gains were +31.7, +15.1, and +29.3 percentage points. The frozen harness, evolved once with GPT-5.4, improved every transferred model across GPT and Qwen families without re-evolution, by +10.7 to +46.3 points. The accepted edits fall into three kinds: interface repair (stripping null and placeholder arguments before they reach a strict MCP server, preserving compound schemas), environment conventions made explicit (coupled priority and impact updates, preserving relationship fields, anchoring relative dates to the sandbox clock), and operational knowledge that compresses search (a forensics overview ranking candidate upstream causes, deterministic date and finance calculators).",
+          "why": "The failure being repaired is model-environment mismatch, not model capability, and it is invisible to anyone who only measures the model. The evaluation design is the part worth copying: proposer-hidden selection plus an untouched holdout separates search performance from generalization, which the authors note a comparable system did not do when it searched and reported on the same benchmark."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "The cost numbers move with the scores rather than against them. Estimated GPT-5.4 inference cost per task fell 17% on ITBench ($3.26 to $2.70), 53% on EnterpriseOps-Gym ($1.23 to $0.58), and 29% on AutomationBench ($0.14 to $0.10), because the evolved harness shortened trajectories: EnterpriseOps-Gym turns fell from 18.12 to 9.87 and tool calls from 29.53 to 16.83, ITBench turns from 25.2 to 22.1 on comparable evidence inspection, AutomationBench turns from 16.35 to 11.98. The transfer table prices the alternative to buying a bigger model: Qwen3.5-27B on the evolved ITBench harness scores 70.0% against 40.0% for GPT-5.4 on the default one, and GPT-5.4-mini reaches 79.4% against the same 40.0% baseline. Guardrails keep this from being benchmark fitting; candidates may not branch on task IDs, embed verifier content in prompts, or reach ground-truth tables, and a candidate failing scope, import, or smoke checks is reverted before any selection run.",
+          "why": "This branch's rule is to record cost facts before optimizing routing. StarHarness records them per task alongside score, and the resulting fact inverts the usual routing move: a 27B model on an environment-adapted harness beat a frontier model on a default one, and cost per task fell rather than rising to pay for the gain."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260823635Z",
+      "title": "ToolRobustBench: Stage-Wise Perturbation Evaluation and Failure Diagnosis for Tool-Calling Agents",
+      "firstAuthor": "Zheng, YiShan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.23635",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260823635Z",
+      "branches": [
+        "reliability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Clean tool-calling accuracy hides almost all of the risk. Across 7 models, 16 sampled deterministic local tools, 4 perturbation families, 14 subtypes, and 15,456 single-family records, mean clean success is 0.979 with three models at 1.000, while overall robustness under perturbation runs 0.664 to 0.766. The damage is not spread evenly across the pipeline: averaged over models, tool-interface perturbation costs least at 0.918, then user-intent at 0.773 and runtime-environment at 0.688, while tool-output/observation perturbation collapses to 0.455 with no model above 0.60. The hardest single subtype is C2 return-evidence loss at 0.142, and it is not an artifact of unsolvable tasks: 34.0% of C2 instances are solved by at least one model, and a human annotator judged the clean answer recoverable from the perturbed return in 68.3% of an audited 60. Combined stress is worse than the worst of its parts. Across five mixed-family pairs, mean success is 0.448 at medium severity against 0.621 for the weaker isolated constituent and 0.754 for the mean of both, and 0.200 against 0.292 and 0.507 at heavy severity, so composite difficulty cannot be approximated by taking the minimum of two single-axis scores.",
+          "why": "This branch asks for the failure taxonomy before you scale. The taxonomy here says the fragile stage is not tool selection but interpreting what a tool returned, which is exactly the stage a clean benchmark never exercises, and that stacking two independently survivable perturbations produces a drop neither one predicts."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Attribution is deterministic and uses no LLM judge. The scorer derives an observed error label through a fixed priority order (call presence, structured-format validity, tool-name resolution, canonical-tool match, required-argument presence, argument-value match, execution success), then backtracks to the earliest upstream stage compatible with the perturbation family, flagging a boundary violation only when the attributed source falls outside both the expected and allowed-spillover sets. Cascade rates separate the families sharply: runtime-environment 0.638, tool-interface 0.352, tool-output/observation 0.003, with runtime boundary violations at 0.006. The attribution is validated counterfactually rather than asserted: repairing the attributed primary stage would recover 71 of 98 failed instances, split 100% for single-fault cases, 82.1% for cascade cases, and 0% for multi-fault cases. Two targeted interventions then show the labels are prescriptive. Chain-of-thought instructions aimed at argument binding left gpt-5.4-mini at 21/30 on user-intent perturbations, because those failures were rooted in tool selection; supplying explicit aliases beside perturbed tool names took the same model from 21/30 to 30/30.",
+          "why": "An aggregate success rate tells you a system is failing but not which fix to buy. This is the mechanism that closes that gap, and unusually it reports the negative intervention alongside the positive one, which is what makes the diagnostic labels credible as causes rather than tags."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260825937J",
+      "title": "Candidate supply and answer selection shape the value of LLM judging in multi-agent systems",
+      "firstAuthor": "Ji, Jia-Hao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25937",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825937J",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A judge is calibrated against the pool it will actually see. Ranking reliability here is measured as rank AUC, the probability a randomly chosen correct candidate is ordered above an incorrect one from the same pool, and it varies with task, candidate generator, inference setting, and how rare correct answers are: below chance at the lowest correct-answer availability, rising to a half-rise midpoint of 14.7% in the primary four-benchmark setting, 28.6% and 36.9% on HLE multiple-choice and open-answer questions. Two generator configurations with the same mean rank AUC of 0.8493 behave completely differently as availability changes (R-squared 0.022 versus 0.928), so a headline judge score does not transfer across generators. Above-chance ranking also does not automatically become system accuracy: on 81,390 frozen pools, using the judge signal beat majority voting by 6 to 8 points where correct candidates were present but outnumbered, and lost 3.22 points where correct candidates already dominated.",
+          "why": "This branch says calibrate LLM judges and treat evaluation as risk reduction. The concrete instruction that falls out is that a judge's reported reliability is meaningless without the candidate-supply regime it was measured in, and that the useful operating range is bounded on both sides."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260825399S",
+      "title": "Can your AI agent be cheaper? Investigating the effects of task specifications on token spend in agentic coding tasks",
+      "firstAuthor": "Smékal, Jakub",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25399",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825399S",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "The model is held fixed and the prompt is varied, which is the inverse of the usual cost study. Five SWE-bench Verified tasks are each written as twelve specifications (a full eight-section Spec Kit template, seven single-section removals, two partial specs, a raw failing-test anchor, and an oracle anchor), run at three thinking efforts with fifteen repeats, for 2,700 runs on Kimi K3 under mini-swe-agent. Cutting the full specification to a bare user story raises cost 29.7% and turns-to-success 16.4%, in the same direction on all five tasks, but the size is task-specific, from 13% to 115%. Single-section removals move cost only -5.4% to -2.4%; the one section whose removal has an isolated effect is the acceptance scenarios at +7.0% turns, while removing the prose success criteria that state the same requirement abstractly has no measurable effect. No section moved solve rate, every 90% interval lying within 7.5 points of zero. Specification detail and thinking effort are substitutes only where thinking is scarce: the ratio between most and least expensive specification narrows from 2.13x at low effort to 1.61x at max. Run-to-run spread is 1.34x geometric standard deviation and no specification widens or narrows it; absolute spread scales with mean cost at a log-log slope of 1.08, so the most predictable settings are simply the cheapest. The token accounting redirects the optimization: output tokens are 2.7% of tokens processed but 51.1% of dollars at a 96.3% cache hit rate, with fresh input at 13.4% of spend, so prompt compression addresses a small share and cutting turns addresses the majority. A single probe run costing eleven cents predicts an unseen task's cost across the rest of the specification-by-effort grid to 36% median error against 161% with no probe, and r = 0.72 against 0.08.",
+          "why": "This branch's rule is to record cost facts before optimizing and never treat unknown cost as zero. The paper supplies both the fact and the cheapest known way to get it: a shared cost shape learned from a few tasks plus one eleven-cent probe prices a new workload, which is a far better basis for routing than asking a model to estimate its own spend."
+        }
+      ]
     }
   ],
   "sections": [

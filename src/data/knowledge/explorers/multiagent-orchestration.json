@@ -2359,6 +2359,31 @@
           "why": "The frontier branch tracks causal attribution as an open problem now attached to named systems and real numbers, and this is its long-horizon entry. It also sharpens the target: role and step have to be scored separately, because a method that reads the role off the emitter of the step it picked can look competent at attribution while localizing nothing. Practically, it says a 2026 orchestrator running planner-executor-verifier teams has roughly even odds of being told which agent broke a run, and roughly one chance in four of being told where."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825937J",
+      "title": "Candidate supply and answer selection shape the value of LLM judging in multi-agent systems",
+      "firstAuthor": "Ji, Jia-Hao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25937",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825937J",
+      "branches": [
+        "foundations",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Coordination overhead is priced against what it buys, on 2,450 MedXpertQA questions with 7,350 runs per protocol. A single response scores 39.88% at 1.00x token cost. Five-answer majority voting without any communication reaches 41.06% at 4.96x. An open committee with source-labelled peer review reaches 42.20% at 10.73x, which is +1.14 points over voting (95% CI 0.42 to 1.90). An anonymous evidence board reaches 41.89% at 6.07x, +0.83 points with a CI that includes zero. Meanwhile an oracle that scores a question correct whenever any initial response held the correct answer sits 13.13 to 14.38 points above what the systems actually reported, so the loss is after generation, not during it. Where the plurality initial answer was wrong and an outnumbered correct answer existed, the open committee still reported the popular error in 73.25% of cases and the evidence board in 59.61%. Discussion length does not help: 90.48 to 95.37% of runs converged after a single round across star, complete, ring, and hierarchical topologies, and forcing six full rounds raised token use to 33x-49x without consistent gains.",
+          "why": "This branch is about when collaborative synergy beats coordination overhead, and here it mostly does not. Doubling the token bill over plain voting bought about one point, and the specific harm is legible: unfiltered peer communication converts a generated minority correct answer into a confidently reported majority error."
+        },
+        {
+          "branch": "frontier",
+          "takeaway": "Judge reliability is a property of the candidate supply, not a fixed trait of the judge. Measured as rank AUC over 15,336 questions, 67,163 pools, and 823,988 candidate pairs, reliability rises sigmoidally with pgen, the fraction of correct candidates in the full bank, completing half its rise above chance at pgen = 14.7% (95% CI 14.3 to 15.1) and falling below 0.5 outright in the lowest-availability group. Holding the displayed pool fixed at 2 correct and 6 wrong candidates preserves the relationship (midpoint 12.2%), so pgen indexes question-level separability rather than how many correct options the judge can see. The midpoint moves to 28.6% on HLE multiple choice and 36.9% on HLE open answer, and two generator settings with identical mean rank AUC (0.8493) produce R-squared of 0.022 and 0.928 against availability. Replaying 81,390 frozen 8-candidate pools changes only the terminal selection rule: majority voting scores 63.82%, rank-power weighting at t = 2 to 4 reaches 70.82 to 70.95%, and top-ranked selection 69.04%. The gain is regime-dependent, +6.02 points when correct candidates are rare, +7.87 at intermediate availability, and -3.22 when correct candidates already dominate the bank.",
+          "why": "Calibrated consensus with real numbers, including the regime where the calibration hurts. The design isolates the claim properly: the candidate pools are frozen and replayed, so the 7-point gain is attributable to the selection rule alone rather than to more sampling or different communication."
+        }
+      ]
     }
   ],
   "sections": [
