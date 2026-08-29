@@ -1701,6 +1701,31 @@
           "why": "This branch treats multi-channel retrieval and RRF fusion as the design question. The finding is that fusion pays only where the lexical and semantic channels are comparably strong and make complementary errors, and that where they are not, the cheaper move is a coarse first stage refined by a precise second one."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825960C",
+      "title": "LivingRAG: Augmenting Graph RAG with Experience",
+      "firstAuthor": "Cui, Yuzhuo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25960",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825960C",
+      "branches": [
+        "consolidation",
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Write-back is gated, and the gate is the component whose removal costs most on average. A candidate experience is formed after every answer and stored only if it passes both checks. Grounding extracts atomic claims from the reasoning trace and final answer and scores each against the retrieved passages with an NLI model, taking the fraction entailed above a threshold. Novelty is one minus the maximum similarity to any stored experience, computed from the query's base activation vector rather than the fused one, so a candidate cannot look redundant merely because an earlier stored experience influenced its own retrieval. Novelty is evaluated first to avoid paying for NLI on candidates that will be rejected anyway, and the grounding score becomes the stored confidence that later downweights the experience during fusion. Across the five streams the gates admit only 27.4% of candidates, and the answer is still returned when a candidate is discarded, so validation never sits on the user path. Removing the gate lowers accuracy on all three ablation datasets, from 87.00 to 84.60 on 2Wiki, 58.42 to 55.52 on MuSiQue-full and 70.25 to 68.25 on WixQA. Consolidation itself costs no extra model call: the stored summary is a small set of key sentences selected from the already-generated explanation, ranked by how many highly-activated entities they mention and kept in their original order.",
+          "why": "The open question in this branch is when to run a model to consolidate, and what happens when a model is allowed to keep rewriting its own memory. This is a clean data point on both. Consolidation is free here because the summary is extracted from output the system already paid for, and the failure mode of self-writing memory is handled by refusing 72.6% of what the model proposed rather than trusting it and repairing later. The authors also name the limit the gates do not cover: nothing updates, downweights or deletes an accepted experience, so a stored experience that goes stale keeps its influence, and their fixed-corpus benchmarks contain no chronological updates or validity intervals and cannot evaluate expiration at all."
+        },
+        {
+          "branch": "retrieval",
+          "takeaway": "Retrieval over the memory store is two-channel, and the channels measurably do different jobs. A stored experience is scored against the current query as a convex combination of query-embedding cosine similarity and cosine similarity between the current query's base entity activation vector and the stored sparse activation map, so surface query similarity and evidence-neighborhood proximity remain separate signals rather than one embedding. The top-K activation maps are then fused into the retriever's initial activation vector, which means memory changes where graph propagation begins rather than being appended to the prompt; the rest of the backbone, sentence-entity propagation and Personalized PageRank over the passage-entity graph, is untouched, and the system falls back to the base retriever when the store is empty or the query yields no seed entities. Scaffold selection adds a third signal that retrieval deliberately omits, masked-template similarity, because a scaffold only enters the prompt and cannot inject historical entities into graph retrieval. A motivating measurement justifies the split: across five streams, direct entity overlap with an earlier query ranges from 4.30% on 2Wiki to 76.69% on WixQA, so an entity-keyed cache would miss most opportunities, while graph-neighborhood overlap runs 80.45% to 99.70%. Added per-query cost is linear in store size and independent of the corpus graph size, since only the top-K maps are fused.",
+          "why": "This branch is about moving past raw cosine similarity toward retrieval that knows something about the task, and the usual multi-channel answer fuses lexical with semantic. The channel added here differs in kind: it is a record of which part of the evidence graph worked last time, and it is injected upstream of the retriever rather than into the ranking. The motivating measurement generalizes past graph RAG, since an entity-keyed memory cache will miss most reuse in streams where questions overlap in evidence rather than in named entities."
+        }
+      ]
     }
   ],
   "sections": [

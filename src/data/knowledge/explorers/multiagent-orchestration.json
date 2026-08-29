@@ -2384,6 +2384,25 @@
           "why": "Calibrated consensus with real numbers, including the regime where the calibration hurts. The design isolates the claim properly: the candidate pools are frozen and replayed, so the 7-point gain is attributable to the selection rule alone rather than to more sampling or different communication."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825920L",
+      "title": "Repair or Resample? Rethinking Failure Debugging in LLM Multi-Agent Systems",
+      "firstAuthor": "Luan, Zhongwen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25920",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825920L",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Causal attribution in multi-agent failure gets a named system and a labelled dataset instead of an argument. SymFail is built from a deterministic pool of 200 tasks (33 AssistantBench development tasks plus the first 167 WebArena-Verified Hard in published order), each run once on AG2, CrewAI and Magentic-One, three coordination designs that are conversation-centric, workflow-based and orchestrator-centered; 536 of the 600 executions were evaluator-confirmed failures with complete trace and graph artifacts, split 171, 184 and 181 across the frameworks. Annotation is where the cost sits. Four trace-observable categories are consolidated from an existing 14-mode failure taxonomy, three annotators independently assign all applicable categories plus one primary and identify the earliest trace-supported actionable node with evidence and a rationale, and a fourth adjudicates with authority to revise rather than taking a majority vote or label union. Agreement among the three was Fleiss' kappa 0.62 on the primary category and 0.81 on failure-node type, with exact node agreement at 73.88% among all three and 95.90% for at least two, and the adjudicator changed the category set on 113 of 536 trajectories, or 21.08%. Diagnosis instability is shown to be a property of the systems and not only of the annotators: repeated stochastic reruns of one task produce different failure types, and some produce no detected symptom at all.",
+          "why": "This branch's 2026 theme is that reliability claims now arrive with a named system and real numbers, and failure attribution is the sub-problem where the field has been weakest. What this adds is the admission price: 21.08% of trajectories had their category revised on adjudication, and kappa 0.62 on the primary category means careful humans disagree about what went wrong. That bounds every automatic failure-attribution result built on labels of this kind, and it is why the paper's own repair signal is a trace-localized symptom rather than a claimed root cause."
+        }
+      ]
     }
   ],
   "sections": [

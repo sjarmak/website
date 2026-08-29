@@ -3159,6 +3159,31 @@
           "why": "This branch tracks what coding agents are actually judged by and why tests-as-oracle is not enough. FrontierChallenge answers with a contract that is heterogeneous by construction, and shows that the agent's own claim of completion carries no information: it appeared in 90.1% of passing runs and 75.5% of failing ones."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260727309D",
+      "title": "SIGIL: Compiling Agent Skills into Typed Harnesses",
+      "firstAuthor": "Dantanarayana, Jayanaka",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.27309",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260727309D",
+      "branches": [
+        "nl-to-formal",
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "nl-to-formal",
+          "takeaway": "The formal artifact is an agentic IR rather than a temporal logic, and the faithfulness discipline is the transferable part. AG-IR nodes carry an owner stating whether code or the model executes the step, a modality recording how binding the original instruction was, and provenance to the sentence that mandates them, so the chain from skill sentence to compiled ability is complete before any code is generated. Extraction is the only stage containing a model and admits a rule only when a verbatim quotation from the source supports it. Lowering is deterministic, with each IR primitive having a fixed translation into an Object-Spatial Programming construct, and its invariant is stated negatively: Lowering never needs to decide anything, so a construct that would require a judgment call means the IR was underspecified and the fault belongs to Extraction. Six compile gates decide admission. G1 rejects a tool or knowledge entry that points at content instead of embodying it, tested by asking whether the harness would still perform the procedure if the SKILL.md and its directory were deleted. G4 passes every candidate IR through the real Lowering stage and the language type checker on every compilation rather than as a periodic test, so an IR cannot be well-formed on paper and meaningless in practice. G6 rejects a route that consumes human feedback but leaves the decision to model judgment. A gate failure routes to a scoped repair pass in which each view fixes its own errors, and when repair fails, Extraction returns rule-level diagnostics rather than persisting a weakened artifact.",
+          "why": "The recurring problem in this branch is that a generated formal statement can be well-formed and still not mean what the sentence meant, and the usual defenses are a human read or a downstream verifier. Both mechanisms here are cheaper and mechanical: ground every admitted rule in a verbatim quotation, and make the compile oracle the production lowering path. The honest component is STRUCT-COV, which reports per rule whether the compilation realized it as a code gate, a dedicated model slot, folded into another slot's interior, or not at all, and fails the folded case because compilation appears to succeed while the rule keeps exactly the risk profile it had as prose."
+        },
+        {
+          "branch": "agent-quality",
+          "takeaway": "The paper refuses to report artifact correctness as a separate axis and argues the field's default oracle measures the wrong thing. Its metric, Applicable-Mandate Compliance, is the fraction of mandated steps that applied to a run and were actually performed, with a judge assigning each mandate exactly one of followed, violated, missed, or not applicable, and the denominator restricted to applicable steps so that a correct decision to branch away or stop early is never charged as a miss. The argument for displacing artifact tests is a concrete failure. The verification-before-completion skill names an Iron Law, states the consequence of violating it, and specifies a five-step gate function closing with a warning that skipping a step is dishonesty rather than efficiency; in the recorded runs the prose agent routinely wrote that all tests pass and the build succeeds directly into the deliverable without a fresh run, and the linter, build and zero-failure confirmations were absent on nearly every scored run while the artifact still passed output checks. Prose satisfies 30% of that skill's mandates against 84% for the harness. Because code-owned work never enters the token stream, the compiled runtime emits a node-path trace as its action log, one record per node entry naming the outcome of any code-owned action, alongside an explicit incomplete outcome when a walker never reaches its terminal node, a step budget that names the node exceeding it, and a per-call token log.",
+          "why": "This branch asks what coding agents are actually graded by and why it is not enough, and the usual answer is that tests are a weak oracle. The sharper claim here is that an output check is not a weaker measurement of the same quantity but one that cannot see the defect at all: in compliance, audit and verification work the procedure is the evidence, so a plausible report produced without retrieving the authoritative records or recalculating the totals is wrong however it scores. It also prices the switch from grading output to grading execution, which is that the harness must emit its own trace or an auditor sees less evidence of work from the arm that did more of it."
+        }
+      ]
     }
   ],
   "sections": [
