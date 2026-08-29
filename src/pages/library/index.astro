@@ -1,10 +1,12 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
+import LinkageExplorer from "@/components/knowledge/LinkageExplorer.astro";
 import {
   getLibraries,
   getExplorers,
   getExplorerEpisodeCounts,
   getDigestStream,
+  buildKnowledge,
 } from "@/lib/knowledge/build";
 import type {
   Library,
@@ -18,6 +20,7 @@ const digestItems: DigestItem[] = getDigestStream(30);
 // Companion audio moved onto the explorer pages, so the card is the only place
 // a browsing listener can see which maps have a series to listen to.
 const episodeCounts: Map<string, number> = await getExplorerEpisodeCounts();
+const knowledge = await buildKnowledge();
 ---
 
 <PageLayout
@@ -141,6 +144,15 @@ const episodeCounts: Map<string, number> = await getExplorerEpisodeCounts();
           </tbody>
         </table>
       </div>
+    </section>
+
+    <!-- 4. Knowledge linkage -->
+    <section>
+      <LinkageExplorer
+        nodes={knowledge.nodes}
+        related={knowledge.related}
+        heading="Knowledge linkage"
+      />
     </section>
 
     <!-- Cross-link -->

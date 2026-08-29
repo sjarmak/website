@@ -15,6 +15,7 @@ import thirtyPapersData from "@/data/knowledge/explorers/thirty-papers.json";
 import paperSynthesisData from "@/data/knowledge/paper-synthesis.json";
 import { byDate, byString, thenBy } from "@/lib/sorting";
 import { buildBm25, bm25Query, rrf, semanticQuery, tokenize, type Scored } from "./retrieval";
+import { onSiteReferenceId, isActiveOnSiteReferenceId } from "./onSiteReferences";
 import type {
   DigestItem,
   DigestIssue,
@@ -256,6 +257,7 @@ async function assemble(): Promise<KnowledgeGraph> {
   const addOnSite = (o: RawOnSite) => {
     const id = onSiteId(o);
     if (byId.has(id)) return;
+    if (!isActiveOnSiteReferenceId(onSiteReferenceId(o))) return;
     const r = onSite.get(id);
     if (!r) throw new Error(`knowledge: unresolved on-site node ${id}`);
     byId.set(id, { id, kind: r.kind, title: r.title, url: r.url, text: r.text, meta: r.meta, external: false });

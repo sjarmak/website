@@ -19,6 +19,7 @@ type InlineRelated = Record<string, Record<Lane, RelatedItem[]>>;
 interface ExplorerData {
   nodes: InlineNode[];
   related: InlineRelated;
+  initialId?: string;
 }
 
 // ---- constants ----
@@ -49,7 +50,7 @@ function setup(root: HTMLElement, data: ExplorerData): void {
   const nodeMap = new Map<string, InlineNode>(data.nodes.map((n) => [n.id, n]));
 
   const state: ExplorerState = {
-    selectedId: data.nodes[0]?.id ?? "",
+    selectedId: data.initialId ?? data.nodes[0]?.id ?? "",
     activeLane: "semantic",
   };
 
