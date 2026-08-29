@@ -10,6 +10,8 @@
 //      rendering audio (or transcripts), so the move loses the player.
 //   3. /digest starts listing companion episodes again, putting the same
 //      audio in two places.
+//   4. The library card stops advertising the episode count, which is the only
+//      signal on /library that an explorer carries audio at all.
 //
 // Expected values are read from the learning collection the pages render.
 
@@ -118,5 +120,35 @@ test("/digest lists the non-companion audio only", () => {
       html.includes(`<source src="${e.audioUrl}"`),
       `digest dropped non-companion episode ${e.title}`,
     );
+  }
+});
+
+test("library cards advertise the companion episode count", () => {
+  const counts = new Map();
+  for (const e of podcastEntries().filter((e) => e.explorer)) {
+    counts.set(e.explorer, (counts.get(e.explorer) ?? 0) + 1);
+  }
+
+  const html = page("library");
+  // Each explorer card's count line: "N papers · N themes[ · N episode(s)]".
+  const lines = [...html.matchAll(/<p class="lib-card__count"[^>]*>([\s\S]*?)<\/p>/g)].map((m) =>
+    m[1].replace(/\s+/g, " ").trim(),
+  );
+  assert.ok(lines.length > 0, "no lib-card count lines in /library");
+
+  for (const [id, n] of counts) {
+    const explorer = readJson(path.join(DATA, "explorers.json")).explorers.find((e) => e.id === id);
+    assert.ok(explorer, `${id}: not in explorers.json`);
+    const expected = `${explorer.paperCount} papers · ${explorer.themeCount} themes · ${n} ${n === 1 ? "episode" : "episodes"}`;
+    assert.ok(lines.includes(expected), `library card missing "${expected}"`);
+  }
+
+  // An explorer with no companion audio must not claim any.
+  const withAudio = new Set(counts.keys());
+  for (const e of readJson(path.join(DATA, "explorers.json")).explorers) {
+    if (withAudio.has(e.id)) continue;
+    const line = lines.find((l) => l.startsWith(`${e.paperCount} papers · ${e.themeCount} themes`));
+    if (!line) continue;
+    assert.ok(!line.includes("episode"), `${e.id}: card claims episodes it does not have`);
   }
 });

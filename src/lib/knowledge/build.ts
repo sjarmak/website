@@ -452,11 +452,11 @@ export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalo
 }
 
 /**
- * The companion series for one explorer, in listening order. Throws when an
- * episode names an explorer that does not exist, because a typo there would
- * otherwise drop the episode from both the digest and the library silently.
+ * Every episode that names an explorer. Throws when the id matches no explorer,
+ * because a typo there would otherwise drop the episode from both the digest
+ * and the library silently.
  */
-export async function getExplorerPodcasts(explorerId: string): Promise<PodcastSeries[]> {
+async function companionEpisodes(): Promise<PodcastEpisode[]> {
   const episodes = (await podcastEpisodes()).filter((e) => e.explorer);
   const known = new Set(getExplorers().map((ex) => ex.id));
   for (const e of episodes) {
@@ -464,7 +464,26 @@ export async function getExplorerPodcasts(explorerId: string): Promise<PodcastSe
       throw new Error(`knowledge: podcast "${e.title}" names unknown explorer ${e.explorer}`);
     }
   }
+  return episodes;
+}
+
+/** The companion series for one explorer, in listening order. */
+export async function getExplorerPodcasts(explorerId: string): Promise<PodcastSeries[]> {
+  const episodes = await companionEpisodes();
   return groupIntoSeries(episodes.filter((e) => e.explorer === explorerId));
+}
+
+/**
+ * How many companion episodes each explorer carries, keyed by explorer id.
+ * Explorers with no audio are absent rather than zero, so a card can test for
+ * the key instead of comparing against a count it would then have to hide.
+ */
+export async function getExplorerEpisodeCounts(): Promise<Map<string, number>> {
+  const counts = new Map<string, number>();
+  for (const e of await companionEpisodes()) {
+    counts.set(e.explorer!, (counts.get(e.explorer!) ?? 0) + 1);
+  }
+  return counts;
 }
 
 /** What's new: papers across all ADS libraries, newest first (deduped). */

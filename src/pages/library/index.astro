@@ -3,6 +3,7 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import {
   getLibraries,
   getExplorers,
+  getExplorerEpisodeCounts,
   getDigestStream,
 } from "@/lib/knowledge/build";
 import type {
@@ -14,6 +15,9 @@ import type {
 const libraries: Library[] = getLibraries();
 const explorers: Explorer[] = getExplorers();
 const digestItems: DigestItem[] = getDigestStream(30);
+// Companion audio moved onto the explorer pages, so the card is the only place
+// a browsing listener can see which maps have a series to listen to.
+const episodeCounts: Map<string, number> = await getExplorerEpisodeCounts();
 ---
 
 <PageLayout
@@ -70,7 +74,11 @@ const digestItems: DigestItem[] = getDigestStream(30);
           explorers.map((ex: Explorer) => (
             <li class="lib-card">
               <h3 class="lib-card__title">{ex.title}</h3>
-              <p class="lib-card__count">{ex.paperCount} papers · {ex.themeCount} themes</p>
+              <p class="lib-card__count">
+                {ex.paperCount} papers · {ex.themeCount} themes
+                {episodeCounts.has(ex.id) &&
+                  ` · ${episodeCounts.get(ex.id)} ${episodeCounts.get(ex.id) === 1 ? "episode" : "episodes"}`}
+              </p>
               {ex.blurb && <p class="lib-card__desc">{ex.blurb}</p>}
               <div class="cluster" style="--cluster-gap: var(--space-2xs)">
                 {ex.sections.map((s) => (
