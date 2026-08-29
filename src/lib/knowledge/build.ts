@@ -415,10 +415,10 @@ export function explorerOpportunities(e: Explorer): ExplorerOpportunity[] {
     .filter((o) => o.title);
 }
 
-/** Deep-dive podcasts grouped by series, with inline-playable audio. */
-export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalone: PodcastEpisode[] }> {
+/** Every podcast episode, in listening order. */
+async function podcastEpisodes(): Promise<PodcastEpisode[]> {
   const learning = await getCollection("learning");
-  const episodes = (learning as CollectionEntry<"learning">[])
+  return (learning as CollectionEntry<"learning">[])
     .filter((e) => e.data.kind === "podcast")
     .sort((a, b) => (a.data.order ?? 999) - (b.data.order ?? 999))
     .map((e) => ({
@@ -428,16 +428,43 @@ export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalo
       audioUrl: e.data.audioUrl,
       embedUrl: e.data.embedUrl,
       series: e.data.series,
+      explorer: e.data.explorer,
       hub: e.data.hub,
     }));
+}
 
-  const seriesNames = [...new Set(episodes.map((e) => e.series).filter(Boolean))] as string[];
-  const series: PodcastSeries[] = seriesNames.map((name) => ({
-    name,
-    episodes: episodes.filter((e) => e.series === name),
-  }));
-  const standalone: PodcastEpisode[] = episodes.filter((e) => !e.series);
-  return { series, standalone };
+function groupIntoSeries(episodes: PodcastEpisode[]): PodcastSeries[] {
+  const names = [...new Set(episodes.map((e) => e.series).filter(Boolean))] as string[];
+  return names.map((name) => ({ name, episodes: episodes.filter((e) => e.series === name) }));
+}
+
+/**
+ * Podcasts for the digest: everything that is not a companion to an explorer.
+ * An episode that names an explorer renders on that explorer page instead, so
+ * the literature map and the audio walking through it stay in one place.
+ */
+export async function getPodcasts(): Promise<{ series: PodcastSeries[]; standalone: PodcastEpisode[] }> {
+  const episodes = (await podcastEpisodes()).filter((e) => !e.explorer);
+  return {
+    series: groupIntoSeries(episodes),
+    standalone: episodes.filter((e) => !e.series),
+  };
+}
+
+/**
+ * The companion series for one explorer, in listening order. Throws when an
+ * episode names an explorer that does not exist, because a typo there would
+ * otherwise drop the episode from both the digest and the library silently.
+ */
+export async function getExplorerPodcasts(explorerId: string): Promise<PodcastSeries[]> {
+  const episodes = (await podcastEpisodes()).filter((e) => e.explorer);
+  const known = new Set(getExplorers().map((ex) => ex.id));
+  for (const e of episodes) {
+    if (!known.has(e.explorer!)) {
+      throw new Error(`knowledge: podcast "${e.title}" names unknown explorer ${e.explorer}`);
+    }
+  }
+  return groupIntoSeries(episodes.filter((e) => e.explorer === explorerId));
 }
 
 /** What's new: papers across all ADS libraries, newest first (deduped). */

@@ -2,6 +2,7 @@
 title: "The Memory Stack"
 kind: podcast
 series: The Agentic Memory Reading Path
+explorer: agentic-memory
 episode: 2
 description: "Why a plain baseline can beat a fancy memory system on its own benchmark, and what a real memory stack actually needs."
 audioUrl: /media/podcasts/podcast-agentic-memory-ep2-the-memory-stack.mp3

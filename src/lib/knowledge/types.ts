@@ -181,6 +181,14 @@ export interface PodcastEpisode {
   description: string;
   audioUrl?: string;
   embedUrl?: string;
+  /** Series this episode belongs to, when it is part of one. */
+  series?: string;
+  /**
+   * Explorer this episode is a companion to. Set means the episode belongs on
+   * that explorer page in the library rather than in the digest's deep-dive
+   * list, so the argument and the audio that teaches it live together.
+   */
+  explorer?: string;
   /** Page section this episode belongs to (e.g. "field-notes") instead of the deep-dive list. */
   hub?: string;
 }

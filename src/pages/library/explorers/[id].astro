@@ -1,12 +1,21 @@
 ---
+import { getCollection } from "astro:content";
 import PageLayout from "@/layouts/PageLayout.astro";
+import Transcript from "@/components/knowledge/Transcript.astro";
 import {
   getExplorers,
+  getExplorerPodcasts,
   explorerPaperUrl,
   explorerReadingPath,
   explorerOpportunities,
 } from "@/lib/knowledge/build";
-import type { Explorer, ExplorerPaper, ExplorerSection } from "@/lib/knowledge/types";
+import type {
+  Explorer,
+  ExplorerPaper,
+  ExplorerSection,
+  PodcastEpisode,
+  PodcastSeries,
+} from "@/lib/knowledge/types";
 
 export function getStaticPaths() {
   return getExplorers().map((ex: Explorer) => ({
@@ -28,6 +37,15 @@ for (const p of explorer.papers) {
 
 const reading = explorerReadingPath(explorer);
 const opportunities = explorerOpportunities(explorer);
+
+// Companion audio: the series recorded from this map. Transcripts join by
+// audioUrl so an episode can be read as well as heard, same as on /digest.
+const podcastSeries: PodcastSeries[] = await getExplorerPodcasts(explorer.id);
+const podcastEpisodeCount = podcastSeries.reduce((n, s) => n + s.episodes.length, 0);
+const showSeriesNames = podcastSeries.length > 1;
+const transcriptByAudio = new Map(
+  (await getCollection("transcripts")).map((t) => [t.data.audioUrl, t] as const),
+);
 const showFilter = explorer.sections.length > 1;
 const showSearch = explorer.papers.length > 6;
 const resultNoun = explorer.id === "thirty-papers" ? "readings" : "papers";
@@ -285,6 +303,50 @@ function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
                     </li>
                   ))}
                 </ol>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      podcastEpisodeCount > 0 && (
+        <section class="block" id="podcast">
+          <h2 class="section-head">Companion podcast</h2>
+          <p class="muted measure" style="margin-block-end: var(--space-m)">
+            {podcastEpisodeCount} {podcastEpisodeCount === 1 ? "episode" : "episodes"} walking this
+            map as an argument: what each study measured, where they disagree, and what that leaves
+            open. Listen inline or read the transcript.
+          </p>
+          <div class="stack stack-m">
+            {podcastSeries.map((s: PodcastSeries) => (
+              <div class="pod-series-block">
+                {showSeriesNames && <h3 class="pod-series">{s.name}</h3>}
+                <ul role="list" class="stack">
+                  {s.episodes.map((ep: PodcastEpisode) => {
+                    const transcript = ep.audioUrl ? transcriptByAudio.get(ep.audioUrl) : undefined;
+                    return (
+                      <li class="pod-ep">
+                        <span class="pod-ep__title">
+                          {s.episodes.length > 1 && ep.episode ? `${ep.episode}. ` : ""}
+                          {ep.title}
+                        </span>
+                        <p class="muted measure">{ep.description}</p>
+                        {ep.embedUrl ? (
+                          <iframe class="pod-ep__embed" src={ep.embedUrl} loading="lazy" title={ep.title} />
+                        ) : (
+                          ep.audioUrl && (
+                            <audio controls preload="none">
+                              <source src={ep.audioUrl} type="audio/mpeg" />
+                            </audio>
+                          )
+                        )}
+                        {transcript && <Transcript entry={transcript} />}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             ))}
           </div>
@@ -834,5 +896,34 @@ function paperSearchText(p: ExplorerPaper, section: ExplorerSection): string {
     .theme-filter {
       grid-column: 1;
     }
+  }
+
+  /* ---- companion podcast ---- */
+  .pod-series {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+
+  .pod-ep {
+    padding-block: var(--space-s);
+    border-bottom: var(--border-hairline);
+  }
+
+  .pod-ep__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .pod-ep__embed {
+    width: 100%;
+    height: 152px;
+    border: 0;
+    border-radius: var(--radius);
+    margin-block-start: var(--space-s);
+  }
+
+  .pod-ep audio {
+    width: 100%;
+    margin-block-start: var(--space-s);
   }
 </style>

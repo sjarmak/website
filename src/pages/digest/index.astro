@@ -52,7 +52,7 @@ function anchorOf(name: string): string {
     <nav class="section-nav" aria-label="Digest sections">
       <a href="#issues">Latest issues</a>
       {fieldNotePosts.length > 0 && <a href="#field-notes">Field notes</a>}
-      {(podcastSeries.length > 0 || standaloneEpisodes.length > 0) && <a href="#deep-dives">Literature deep dives</a>}
+      {(podcastSeries.length > 0 || standaloneEpisodes.length > 0) && <a href="#deep-dives">Long-form audio</a>}
       {podcastSeries.map((s: PodcastSeries) => (
         <a class="section-nav__series" href={`#${anchorOf(s.name)}`}>
           {s.name}
@@ -153,9 +153,11 @@ function anchorOf(name: string): string {
     {
       (podcastSeries.length > 0 || standaloneEpisodes.length > 0) && (
         <section class="deep-dives" id="deep-dives">
-          <h2 class="sub">Deep-dive series</h2>
+          <h2 class="sub">Long-form audio</h2>
           <p class="muted measure" style="margin-block-end: var(--space-m)">
-            Literature-survey episodes that walk a whole theme from the explorers. Listen inline, or download the audio.
+            Audio that is not tied to a single explorer. Listen inline or download the file. The
+            literature-survey series now sit on the explorer each one was recorded from, in the{" "}
+            <a href="/library">research library</a>.
           </p>
           <div class="stack stack-l">
             {podcastSeries.map((s: PodcastSeries) => (
