@@ -76,8 +76,15 @@ const episodeCounts: Map<string, number> = await getExplorerEpisodeCounts();
               <h3 class="lib-card__title">{ex.title}</h3>
               <p class="lib-card__count">
                 {ex.paperCount} papers · {ex.themeCount} themes
-                {episodeCounts.has(ex.id) &&
-                  ` · ${episodeCounts.get(ex.id)} ${episodeCounts.get(ex.id) === 1 ? "episode" : "episodes"}`}
+                {episodeCounts.has(ex.id) && (
+                  <>
+                    {" · "}
+                    <a class="lib-card__episodes" href={`/library/explorers/${ex.id}#podcast`}>
+                      {episodeCounts.get(ex.id)}{" "}
+                      {episodeCounts.get(ex.id) === 1 ? "episode" : "episodes"}
+                    </a>
+                  </>
+                )}
               </p>
               {ex.blurb && <p class="lib-card__desc">{ex.blurb}</p>}
               <div class="cluster" style="--cluster-gap: var(--space-2xs)">
@@ -211,6 +218,20 @@ const episodeCounts: Map<string, number> = await getExplorerEpisodeCounts();
     font-size: var(--step--1);
     color: var(--color-text-muted);
     margin: 0;
+  }
+
+  /* The episode count jumps to the companion podcast on the explorer page. */
+  .lib-card__episodes {
+    color: inherit;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 0.2em;
+    transition: color 0.12s ease;
+  }
+
+  .lib-card__episodes:hover,
+  .lib-card__episodes:focus-visible {
+    color: var(--color-text);
+    text-decoration-color: currentColor;
   }
 
   .lib-card__desc {

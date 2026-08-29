@@ -10,8 +10,9 @@
 //      rendering audio (or transcripts), so the move loses the player.
 //   3. /digest starts listing companion episodes again, putting the same
 //      audio in two places.
-//   4. The library card stops advertising the episode count, which is the only
-//      signal on /library that an explorer carries audio at all.
+//   4. The library card stops advertising the episode count, or its link stops
+//      landing on the podcast section. The card is the only signal on /library
+//      that an explorer carries audio at all.
 //
 // Expected values are read from the learning collection the pages render.
 
@@ -123,32 +124,44 @@ test("/digest lists the non-companion audio only", () => {
   }
 });
 
-test("library cards advertise the companion episode count", () => {
+test("library cards advertise the companion episode count and link to the audio", () => {
   const counts = new Map();
   for (const e of podcastEntries().filter((e) => e.explorer)) {
     counts.set(e.explorer, (counts.get(e.explorer) ?? 0) + 1);
   }
 
-  const html = page("library");
-  // Each explorer card's count line: "N papers · N themes[ · N episode(s)]".
-  const lines = [...html.matchAll(/<p class="lib-card__count"[^>]*>([\s\S]*?)<\/p>/g)].map((m) =>
-    m[1].replace(/\s+/g, " ").trim(),
+  // Each explorer card's count line: "N papers · N themes[ · N episode(s)]",
+  // where the episode segment is a link into the explorer's podcast section.
+  const cards = [...page("library").matchAll(/<p class="lib-card__count"[^>]*>([\s\S]*?)<\/p>/g)].map(
+    (m) => ({
+      text: m[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim(),
+      href: m[1].match(/href="([^"]*)"/)?.[1],
+    }),
   );
-  assert.ok(lines.length > 0, "no lib-card count lines in /library");
+  assert.ok(cards.length > 0, "no lib-card count lines in /library");
 
+  const explorers = readJson(path.join(DATA, "explorers.json")).explorers;
   for (const [id, n] of counts) {
-    const explorer = readJson(path.join(DATA, "explorers.json")).explorers.find((e) => e.id === id);
+    const explorer = explorers.find((e) => e.id === id);
     assert.ok(explorer, `${id}: not in explorers.json`);
+
     const expected = `${explorer.paperCount} papers · ${explorer.themeCount} themes · ${n} ${n === 1 ? "episode" : "episodes"}`;
-    assert.ok(lines.includes(expected), `library card missing "${expected}"`);
+    const card = cards.find((c) => c.text === expected);
+    assert.ok(card, `library card missing "${expected}"`);
+    assert.equal(card.href, `/library/explorers/${id}#podcast`, `${id}: episode link target`);
+    assert.ok(
+      page("library", "explorers", id).includes('id="podcast"'),
+      `${id}: explorer page has no #podcast anchor for the card to land on`,
+    );
   }
 
   // An explorer with no companion audio must not claim any.
-  const withAudio = new Set(counts.keys());
-  for (const e of readJson(path.join(DATA, "explorers.json")).explorers) {
-    if (withAudio.has(e.id)) continue;
-    const line = lines.find((l) => l.startsWith(`${e.paperCount} papers · ${e.themeCount} themes`));
-    if (!line) continue;
-    assert.ok(!line.includes("episode"), `${e.id}: card claims episodes it does not have`);
+  for (const e of explorers) {
+    if (counts.has(e.id)) continue;
+    const card = cards.find((c) =>
+      c.text.startsWith(`${e.paperCount} papers · ${e.themeCount} themes`),
+    );
+    if (!card) continue;
+    assert.ok(!card.text.includes("episode"), `${e.id}: card claims episodes it does not have`);
   }
 });
