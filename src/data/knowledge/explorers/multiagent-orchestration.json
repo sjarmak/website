@@ -2403,6 +2403,25 @@
           "why": "This branch's 2026 theme is that reliability claims now arrive with a named system and real numbers, and failure attribution is the sub-problem where the field has been weakest. What this adds is the admission price: 21.08% of trajectories had their category revised on adjudication, and kappa 0.62 on the primary category means careful humans disagree about what went wrong. That bounds every automatic failure-attribution result built on labels of this kind, and it is why the paper's own repair signal is a trace-localized symptom rather than a claimed root cause."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260824271S",
+      "title": "Observability and Fault Injection for LLM-Based Multi-Agent Systems in Software Engineering",
+      "firstAuthor": "Seyedghorban, Zahra",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24271",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824271S",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A deliberately small engineering layer for running LLM multi-agent systems in a software-engineering workflow: OpenTelemetry tracing plus configuration-driven fault injection, framework-agnostic, added by marking existing workflow boundaries rather than adopting a new orchestration model. The trace model spans session, workflow phase, agent step, A2A send and receive, tool call and LLM call, with context propagated in the message carrier so communication edges are explicit. Faults are declared in configuration and matched on boundary type plus context (phase name, acting agent, source and target agent, channel), so one workflow can be re-executed under different fault scenarios without reinstrumentation, and the faulted span retains its structural position so baseline and faulty runs remain comparable. The measured result that matters for production is where sensitivity lives: injecting a single 1,000 ms delay into ChatDev's planning-phase LLM call produced a mean 48.1x end-to-end amplification, and the same delay on an inter-agent message boundary produced 59.2x, against 1.053x and 1.295x on a two-agent demo running the same 30-task ProgramDev benchmark.",
+          "why": "The production branch is about the runtime properties that decide whether a demo survives deployment, and observability is the one that has to exist before any of the others can be argued about. This paper is useful here because it does not ask for a framework migration: it names the six boundaries worth instrumenting and the attributes each should carry, then reuses those same boundaries as injection points. The amplification result also changes how a message-heavy topology should be costed. Latency at a coordination edge is not additive in a multi-phase workflow, it multiplies through the downstream interactions, and a system that looks fine under per-call latency budgets can degrade by one to two orders of magnitude from a single slow handoff."
+        }
+      ]
     }
   ],
   "sections": [

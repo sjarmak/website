@@ -2820,6 +2820,69 @@
           "why": "Grounding evaluation in execution against an honest baseline is this branch's rule, and here the honest baseline beats the published methods. The transferable design is the controlled unit: hold the observable pre-intervention history fixed by replay so that a downstream change is attributable to the intervention rather than to upstream resampling, then report pass@1 for your own method against pass@3 for the baselines so the comparison runs against you. The warning for anyone reading repair numbers is that a passing rerun is not evidence a failure was repaired, and without prefix control the two cannot be separated."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825067Z",
+      "title": "SimVerity: When Does Simulated Agent Success Survive Physical Deployment?",
+      "firstAuthor": "Zhan, Zhonghao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25067",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825067Z",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "SimVerity measures how much a simulator's pass tells you about the deployment, and turns the answer into a disposition: clear, abstain, or escalate. It is an audit layer outside the agent harness. A versioned manifest fixes the scenario, the declared read boundary, the source and target rungs and the split assignment; adapters collect traces from an unmodified simulator (SimuHome) and from a live Home Assistant home at a software rung (virtual device edges in the real stack) and a physical rung (commodity lights and contact sensors under a camera); alignment maps each trace onto six semantic stages; monitors grade each matched pair as pass, fail or abstain. Two estimands carry the contract: Verdict Fidelity, the probability that source and target agree, and False Clearance Risk, the probability the target fails given the source cleared. Abstain is first class. A witness that fails qualification, a missing trace stage or an unsupported capability abstains rather than counting as agreement, and a camera must first prove it can separate the two outcomes (median frame brightness separation at least max(10, 20 x pooled MAD), direction frozen) before it may testify. Within the same executions the verdict depends on which property you read: reported completion failed 240/240 at its declared read boundary, observable effect 42/240, settled postcondition 0/240, over a 1,090-row calibration card and 586 trials. Two early sessions were invalidated by their own pre-registered checks, at dusk and at midday. A risk profile frozen under SHA256 before the held-out ledger opened predicted failures on a path it had never physically measured, winning all three sessions of the first cohort and 8/8 of the pre-registered second cohort against a path-only baseline (Brier 0.0878 against 0.1995, sign and exact Wilcoxon p=0.0039), while a per-device latency lookup beat it in 7 of those 8 curtain-controlled sessions. A second qualified simulator (S5-HES) never disagreed with the first on any of 160 eligible anchors; strict consensus lowered conditional FCR by 1.25 points by surrendering 25 points of coverage.",
+          "why": "This branch's rule is that evaluation is risk reduction rather than proof, grounded in execution against an honest baseline. SimVerity supplies the conditional form of that rule. A pass holds only under the coordinates that produced it (property, read boundary, path, rung, witness), and collapsing completion, reported state, observable effect and settled outcome into one word, success, is what makes a green simulator misleading. It also names the cheapest wrong move: adding a second simulator as an independent cross-check. Two judges that share blind spots never disagree, and the apparent risk reduction is forced abstention at the coarser clock, not detection. The honest-baseline discipline holds in both directions here, since the authors report that their own structured profile lost its registered secondary comparison to a per-device lookup under stationary conditions."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260824271S",
+      "title": "Observability and Fault Injection for LLM-Based Multi-Agent Systems in Software Engineering",
+      "firstAuthor": "Seyedghorban, Zahra",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.24271",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260824271S",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "llmmas-otel wraps an existing LLM multi-agent workflow instead of replacing it, and instruments a small number of boundaries with OpenTelemetry spans: a session span for one task run, segment spans per workflow phase, agent-step spans carrying the acting agent and turn index, paired a2a_send and a2a_receive spans carrying source and target agent, edge id, message id, channel, a message preview and a SHA256, plus tool_call and llm_call spans recording provider, model, request id and hashed input. Tracing context rides in the message carrier on send and is restored on receive, so a handoff between two agents is an explicit relation in the trace rather than two unlinked log lines. The fault injection layer fires at exactly those boundaries: A2A send (delay, drop, truncate), A2A receive (delay, drop), tool calls (delay, not_installed, timeout, malformed_response) and LLM calls (delay, rate_limit, timeout, network_error, malformed_response). A faulted operation keeps its structural position and span type and gains fault.injected, fault.type, fault.spec_id and fault.decision attributes, so baseline and faulty runs stay aligned and comparable side by side. Validation runs the 30-task ProgramDev benchmark five times per condition against a minimal Planner-to-Coder demo and against ChatDev, reporting amplification: extra end-to-end runtime divided by the injected delay. On the demo a 1,000 ms delay at the planning LLM call amplifies 1.053x (median 1.036) and the same delay at the Planner-to-Coder handoff amplifies 1.295x (median 1.390). On ChatDev the same two single injections amplify 48.1x (median 13.9) and 59.2x (median 6.6).",
+          "why": "This branch holds that a transcript is not observability and that the trace has to be structured and correlate intent with action. llmmas-otel is the instrumentation half of that made reusable: a stable attribute vocabulary applied at the boundaries that actually decide outcomes (phase, agent step, handoff, tool call, model call), added to a system you already run rather than to a new framework. The fault-injection overlay is what makes the trace pay for itself, because the same boundary is both what you watch and where you perturb, and a baseline and a faulted run then differ by one recorded attribute instead of by an unknown amount of stochastic drift. The ChatDev amplification figures are the reason to instrument the handoff and not just the model call: a single one-second delay at an inter-agent message boundary cost roughly a minute end to end, which is not something a local latency budget would predict."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260825174D",
+      "title": "Model-Based Agentic Software Engineering",
+      "firstAuthor": "Davis, James C.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25174",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825174D",
+      "branches": [
+        "human",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "MAGE names two problems that coding-agent velocity creates and neither retrieval nor bigger prompts solves: a representation problem (consequential properties such as a system boundary have to be reconstructed from code, tests, config and history every time anyone asks) and an authority problem (a stated obligation has no force unless something enforces it). Its answer is the governed engineering environment, composed of Modeling (externalize the smallest purposeful representation that answers a given engineering question) and Alignment (give settled obligations proportionate authority through constraints, sensors, validators and gates). The position on human judgment is explicit: a rule remains guidance unless a constraint, validator, gate or accountable admission decision gives it operational consequence, and an obligation becomes authoritative only when its meaning is settled enough and there is adequate evidence to evaluate compliance. The longitudinal case, DocAble, is a 20-week build with 6 to 8 agents working in parallel at roughly 200 commits a day and 1,000 a week, past what one engineer could review directly, ending at about 540,000 lines of production code and 1.6 million lines of supporting environment. The response was to move judgment into durable structure: support apparatus grew from 0.85x production source after the prototype to about 3x in mature snapshots (peak 3.68x during hardening), project-specific lint files went from 0 to 747 and gate scripts from 0 to 102, and 208 commits paired a fix with a lint intended to catch its recurrence. Across a nine-stage modeling sequence unmodeled implementation elements fell from 56% to 7.89%, and derived checks caught six instances of a previously identified model-code drift class with no observed recurrence across 56 later feature implementations. Six first-party industrial accounts (Cloudflare, Spotify, Shopify, Docker, Siemens, Zenseact) show the same shape recurring, most directly Docker's separation of producing from reviewing agents with the human keeping the merge decision.",
+          "why": "The rule in this branch is to keep humans on the reasoning chain and to design escalation routes that consume decisions rather than emit alerts. MAGE answers the question that follows once per-change review stops scaling: the human moves from reading every diff to owning admission, deciding which obligations are settled enough to be enforced mechanically and which decisions still require judgment. Governance conversion is the escalation route that consumes a decision, since a failure becomes a lint, gate or model that later work inherits, and the 208 fix-plus-lint commits are what that looks like in a repository. The paper is also honest about the failure mode of its own prescription: more artifacts do not mean a better environment, engineering capital depreciates, and the test is whether the structure makes the right properties answerable at a cost worth paying."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "The acceptance side of MAGE is a claim about what evidence has to exist before autonomous work can be admitted. Alignment is decomposed into constraints (bound what an agent may do), sensors (observe), validators (evaluate) and gates (decide admission), and the semantic gap is defined as the distance between where an obligation arises and where the environment has enough meaning, evidence and authority to determine whether it is satisfied. On a brownfield surface the paper is specific about sequencing: reconcile the model with the realized system before giving it enforcement power, using Audit then Drain then Promote to measure the gap, drive remaining violations down, and only then authorize the obligation. It also argues against a common measurement shortcut. A study that compares projects by tool adoption (their example is a Cursor adoption analysis) records access to a general-purpose capability, not the environment through which it was used, so projects in the same adopted condition may have received materially different interventions. The authors bound their own evidence correspondingly: a longitudinal case plus six first-party industrial accounts support recurrence, variation and analytic generalization within stated scope conditions, and explicitly not population estimates or causal claims about effectiveness. Several of the compared accounts establish no model correspondence, no longitudinal adaptation and no outcome measures, and practitioner feedback that shaped the theory is recorded as informing development rather than validating it. Four directional propositions are offered as falsifiable tests, each with the condition under which it should fail.",
+          "why": "Evaluation as risk reduction, not proof, is this branch's stance, and MAGE contributes the acceptance half: an evaluation only counts when the property it checks is represented, the evidence is sufficient, and something has the authority to refuse the change. Two things transfer directly. Audit-Drain-Promote is a usable pattern for turning an aspiration into an enforced gate without breaking an existing repository on day one. And the adoption-indicator critique applies to how agent deployments get measured in general, since comparing teams that have a tool against teams that do not measures access rather than practice, which is the same error as comparing agent frameworks without holding the harness and evaluation surface fixed. The paper's self-scoping is worth copying too: it states what its evidence cannot support before anyone else has to."
+        }
+      ]
     }
   ],
   "sections": [
