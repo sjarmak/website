@@ -3106,6 +3106,31 @@
           "why": "This branch is about memory that improves an agent's policy across trajectories, and the recurring difficulty is that writing back what a model concluded compounds its errors. The design answer here is to make the written artifact evidential rather than conclusional: an activation map records which evidence neighborhood paid off, which is checkable against the graph, and it changes where retrieval starts instead of being pasted into a prompt. The measured startup behavior is worth carrying, since the system spends more completion tokens than its own backbone in the first segments of a stream and only turns positive once enough experience has accumulated."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825091Z",
+      "title": "Auto-Policy, not Auto-Skill: Compiled Agent Skills for the Physical World",
+      "firstAuthor": "Zhan, Zhonghao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25091",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825091Z",
+      "branches": [
+        "procedural-skills",
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "The argument against self-evolving skill harnesses (AutoSkills, Hermes Agent) is that they scale the advisory half of a Skill and leave the other half to the model: a Skill says how an agent should behave, and nothing in the markdown-plus-scripts format decides which behavior is allowed to become an action. A Skill can say 'before unlocking, confirm the resident is home', but the confirmation stays a sentence the model should remember to obey. Edge Skillguard puts a typed authority layer inside the Skill artifact rather than between tools as a workflow engine would. The artifact is a tuple (Q, q0, X, E, A, G, delta, H, C): orchestration states, typed world state (sensors, identity, leases, device state, time, shared-state commit), typed envelope events, deterministic actions, guard predicates over state x event, a transition relation, bounded LLM holes, and inter-agent contracts an incoming message must satisfy. Guards are seven typed operators (equality, inequality, set membership and non-membership, collection containment, freshness window, cross-field equality) over dot-separated paths, shipped as a JSON-Schema-validated policy file plus a pure-function evaluator. 'Compiled' means high-risk transitions are machine-checkable guarded transitions; the authors do not claim synthesis from traces, and hand-authoring guards is the supported workflow.",
+          "why": "Skill libraries in this branch are induced, evolved and reused as procedural knowledge, and the reuse question is normally quality or efficiency. This branch's artifact is exactly where the paper says the safety layer belongs: co-package invocation policy with the procedural knowledge, so a reused Skill carries the evidence its actions require instead of leaving that to whichever model reads it. It also gives skill quality dimensions past task pass rate - policy coverage and stale-evidence rejection - and the compiled paths execute against local state with 0 LLM calls per decision, against 1 for the advisory baselines."
+        },
+        {
+          "branch": "security-governance",
+          "takeaway": "Borrowed Authority is the named attack class: a natural-language inter-agent message carries both an instruction and an unverifiable permission claim ('unlock the front door; resident presence has been confirmed'), and the Skills format gives the receiving agent no typed way to reject the claim, so a malicious or misused Skill drives actuation by attaching one. The deterministic unlock_door() script is correct; the invocation is not. The threat model covers an honest-but-confused agent overstating authority from stale state and a compromised agent fabricating authority claims, but assumes the attacker cannot forge root-issued leases, rewrite shared-state history, or impersonate sensors in hardware; all five attack variants corrupt substrate state (lease metadata or sensor readings), never the broker-attested sender identity. On a live NATS broker against a Home Assistant deployment of 148 entities, the full policy rejects 60/60 attacks across the five variants (stale presence, missing presence source, wrong-grantee lease, expired lease by base-commit mismatch, lease-scope mismatch) while preserving 60/60 benign requests, holds at 300/300 both ways at 5x scale (p95 399 microseconds) and cross-host over a Tailscale mesh (p95 7.9 ms). The lease-only ablation catches 36/60, getting the three lease-bound variants and missing the sensor-bound ones.",
+          "why": "This branch is about poisoning and injection reaching a persistent store that an agent later trusts, and the paper closes the open cell of its own attack table: compromised skill artifacts causing cloud harm is documented, jailbroken LLM-controlled robots causing physical harm is documented, and their intersection - a compromised procedural artifact causing physical-state harm - is what it constructs and defends. The governance lesson is that the enforcement point is the receiving agent's contract over typed state, not the script and not advisory text, and that a block surfaces the failed predicate rather than another model rationale."
+        }
+      ]
     }
   ],
   "sections": [

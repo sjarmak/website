@@ -2883,6 +2883,25 @@
           "why": "Evaluation as risk reduction, not proof, is this branch's stance, and MAGE contributes the acceptance half: an evaluation only counts when the property it checks is represented, the evidence is sufficient, and something has the authority to refuse the change. Two things transfer directly. Audit-Drain-Promote is a usable pattern for turning an aspiration into an enforced gate without breaking an existing repository on day one. And the adoption-indicator critique applies to how agent deployments get measured in general, since comparing teams that have a tool against teams that do not measures access rather than practice, which is the same error as comparing agent frameworks without holding the harness and evaluation surface fixed. The paper's self-scoping is worth copying too: it states what its evidence cannot support before anyone else has to."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825091Z",
+      "title": "Auto-Policy, not Auto-Skill: Compiled Agent Skills for the Physical World",
+      "firstAuthor": "Zhan, Zhonghao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25091",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825091Z",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "The paper makes inter-agent messages themselves the untrusted surface. A peer's natural-language subtask can carry an unverifiable permission claim, and with no receiver-side guard the NL manager-to-peer condition wrongfully actuates on 60/60 Borrowed Authority requests, identical to the plain Skill baseline where the model is the only filter. Edge Skillguard requires the receiving policy to satisfy typed contracts before a transition: the lease issuer must be the root agent, its grantee must equal the broker-attested envelope sender_id, its scope must contain the requested action, its base_commit must match the current commit, the presence source must be in {phone, cam, button}, and the presence observation must be under 30 seconds old, with deny conditions for vacation and lockdown modes. That drops wrongful actuation to 0/60 across five variants without blocking any of 60 benign requests, at 3.2 microseconds median in-process, 273 microseconds over a local broker, and 5.7 ms cross-host over Tailscale. The layer depends on five substrate preconditions it does not itself provide: schema-validated typed envelopes with closed-enum message types and an A2A v1.0 task-state lifecycle, broker-attested sender_id taken from the connection token rather than the payload, durable per-agent FIFO inboxes, an audit-mirror outbox giving every cross-agent action two independently attested write points, and boundary rejection of malformed envelopes with no silent translation of legacy fields.",
+          "why": "This branch holds that topology is an attack surface and that injection propagates across agents. Here the propagation vector is authority itself rather than content, and the fix is placed at the orchestration boundary inside the artifact rather than in a workflow engine between tools. The lease-only ablation is the useful negative result for anyone building this: identity and scope checks alone catch 36/60 and let both sensor-evidence variants through, so freshness and source predicates over world state are load-bearing, not decoration."
+        }
+      ]
     }
   ],
   "sections": [

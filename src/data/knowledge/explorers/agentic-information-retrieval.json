@@ -563,6 +563,25 @@
           "why": "This branch tracks retrieval becoming an action the model chooses rather than fixed preprocessing. Clarify-Then-Search moves that decision one step earlier, to what the agent asks the user before it searches, and scores it by downstream execution instead of question fluency. It also separates a plausible question from a useful one: models ask region-only questions on 14.3-49.8% of turns and those come back unknown 75.0-86.9% of the time, spending clarification budget without changing the rewritten query."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260825198C",
+      "title": "Tunable Tool-Call Rates in LLM Agents via Representation Steering",
+      "firstAuthor": "Chen, Yuqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.25198",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260825198C",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Whether an instruction-tuned model calls a tool at all is carried by one linear direction in the residual stream, extracted without training. Propensity is read as the log-probability of the shared tool-call special token at the first generated position, one forward pass per query; queries are ranked by that score and the direction is the difference of residual-stream means between the top and bottom quantiles, taken in a three-tool harness (search, calculator, Python) so the split reflects calling anything rather than one tool. Adding alpha*v at a mid-late decoder layer (L22 on Qwen3-4B) moves the call rate monotonically from near 0 to 0.79-1.0 across all three single-tool environments, with calls staying well-formed until alpha=+3. On PopQA with live search, the sweep traces a cost/accuracy Pareto frontier: 0.29 accuracy at zero searches rises to 0.56 at about 1.1 searches per question, and 0.58 when combined with a search-heavy prompt. Across five models spanning dense, MoE and multimodal, baseline call rates span 0.07 to 0.83, alpha=-2 drives every one to 0.00, and each frontier rises from 0.18-0.34 to 0.44-0.52 at 0.75-1.2 searches. A direction extracted from three tools suppresses six held-out tools (translation, weather, unit conversion, e-mail, SQL, stock price) more strongly than each tool's own direction for five of the six, and steering changes whether a call happens while task-appropriate routing is preserved (at alpha=+2, PopQA to search 100%, GSM8K to calculator 99%, code to Python 90%).",
+          "why": "This branch treats retrieval as an action the model chooses, and the usual levers on that choice are fine-tuning, retrieval-supervision, or prompt rewriting. This makes when-to-retrieve a continuous inference-time dial with no training and no prompt change, and shows the dial is knowledge-selective: with positive steering the induced search calls concentrate on the low-popularity PopQA entities the model cannot answer from parametric memory rather than on the popular head. It also separates whether-to-call from which-tool, which are usually measured together, and gives the decision a location in the network - control is inert below L7, strongest and monotone at L21-24, and large but non-monotone above the band, consistent with the decision being computed at mid-late depth."
+        }
+      ]
     }
   ],
   "sections": [
