@@ -357,8 +357,9 @@ const digest = defineCollection({
     // the date spread of their hand-picked items)
     cadence: z.enum(["daily", "weekly", "monthly"]),
     // track: "specialized" follows the site's core topics (agentic coding, evals,
-    // memory, retrieval); "general" is a field-wide roundup selected by social
-    // signal and utility across the whole intel corpus
+    // multi-agent orchestration, agent reliability, semantic governance, retrieval);
+    // "general" is a field-wide roundup selected by social signal and utility
+    // across the whole intel corpus
     track: z.enum(["specialized", "general"]).default("specialized"),
     // origin: produced by the cron agent, or hand-curated in code-intelligence-digest
     origin: z.enum(["auto", "manual"]).default("auto"),

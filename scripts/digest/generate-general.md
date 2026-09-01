@@ -74,6 +74,9 @@ reference (summary, title, body, transcript) to the window you actually pulled f
      concentrated.
    - Scan the sweep for convergence: the same story appearing under many sources is your
      social-signal ranking. Note each distinct story and how many independent sources hit it.
+   - The same paper can appear as two separate items — once from `ADS Research` and once from
+     the matching arXiv category feed — under different item ids. Treat these as ONE candidate
+     (dedupe by title/arXiv id) rather than two weaker, independently-scored entries.
 
 3. **Targeted follow-ups.** For the 2-3 biggest stories, run `search_items` on the story's
    own nouns (the model name, the tool, the benchmark) to collect its full coverage, and

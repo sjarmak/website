@@ -6,8 +6,61 @@ freshest high-signal items in the `code-intel-copilot` MCP, then publish it. Thi
 **specialized** track: it goes deep on the site's core topics; a separate general-track
 issue covers the broader field, so stay on-charter here.
 
-Topics this site cares about (rank these higher): **agentic coding, evals, multi-agent
-orchestration, agent memory systems, information retrieval**. Off-topic items get dropped.
+Topics this site cares about, in rank order. Everything else gets dropped:
+
+1. **agentic coding**
+2. **evals**
+3. **multi-agent orchestration**
+4. **agent reliability** — durable execution, Temporal and similar workflow engines,
+   retries/state/observability for production agents, enterprise agent deployment
+5. **semantic governance & agentic analytics** — how agents map human/business intent onto
+   enterprise data and execute against governed definitions (charter below)
+6. **information retrieval**
+
+### Charter detail: semantic governance & agentic analytics
+
+Research on how agents reliably map human/business intent onto enterprise data and execute
+against governed definitions.
+
+In scope:
+- semantic layers and metrics layers for AI/BI
+- semantic models as agent context or control planes
+- governed business definitions, metrics, dimensions, entities, joins, grain, time semantics
+- text-to-SQL / NL2SQL when the contribution concerns semantic grounding, enterprise-scale
+  schemas, or governed execution
+- schema linking and semantic schema retrieval
+- metric resolution and business-term disambiguation
+- business ontologies, knowledge graphs, and other machine-readable representations of
+  organizational meaning
+- semantic model generation, maintenance, validation, and evolution
+- semantic drift, conflicting definitions, versioning, ownership, promotion of definitions
+- data contracts, lineage, provenance, and definition traceability where they affect agent
+  correctness
+- permissions, row/column policies, and policy-aware semantic execution
+- intermediate representations that separate semantic intent from physical SQL
+- deterministic or constrained compilation from agent intent into queries
+- evaluation of agents over governed semantic layers versus raw schemas
+- interoperability or synchronization of semantic definitions across BI, dbt, warehouses,
+  applications, and agents
+
+Prioritize empirical work measuring: answer or execution accuracy; metric consistency;
+wrong-table / wrong-column / wrong-join rates; schema-linking precision and recall; ambiguity
+handling and clarification behavior; semantic drift or definition disagreement; access-policy
+violations; provenance / explainability of generated answers; model-maintenance burden;
+context size, latency, and cost introduced or eliminated by semantic grounding.
+
+Out of scope: generic BI product news; data catalogs or metadata management with no
+agent/semantic-execution angle; knowledge-graph papers without business-data or
+agent-grounding relevance; text-to-SQL papers concerned only with SQL syntax generation;
+database optimization; enterprise AI governance that concerns organizational policy but not
+operational data semantics; generic RAG unless the retrieval problem is specifically about
+resolving structured enterprise meaning.
+
+Selection heuristic: treat a paper as a direct charter hit when its central question can be
+stated as *"How does an AI system know what the business means, and how do we ensure that
+meaning survives correctly into execution?"* Weight most highly work showing that semantic
+structure changes measurable agent behavior — correctness, consistency, safety,
+explainability, or robustness.
 
 ## Parameters (filled by the runner)
 
@@ -56,11 +109,34 @@ reference (summary, title, body, transcript) to the window you actually pulled f
 
 2. **Gather candidates.** Use the MCP to pull a candidate pool over the window:
    - `search_items` for each core topic term, and `semantic_search_items` for conceptual
-     angles ("how are people thinking about agent memory", etc.).
+     angles ("how are people running agents reliably in production", etc.).
+   - For **semantic governance & agentic analytics**, rotate 2–3 queries per run (not the
+     whole list — the tool budget is ~25 calls) through: "semantic layer for AI agents",
+     "metrics layer agents", "governed analytics agents", "semantic model LLM", "enterprise
+     text-to-SQL semantic layer", "schema linking enterprise databases", "business semantics
+     LLM", "metric grounding LLM", "semantic parsing enterprise analytics", "agent context
+     layer data", "business ontology AI agents", "semantic drift metrics", "governed
+     text-to-SQL", "semantic model generation LLM", "data contracts agents", "knowledge graph
+     enterprise analytics agents". When scanning noisy feeds, treat concept *combinations* as
+     signals even when "semantic layer" never appears: business metrics + agents, schema
+     linking + enterprise databases, governed query generation, semantic intermediate
+     representations, business ontology grounding, metric consistency, controlled analytical
+     execution.
    - `aggregate_items` (group_by source/author) to spot what's over- or under-covered.
    - Pull generously (50–100 candidates); you will cut hard. `search_items` is ranked by
      full-text relevance + recency, NOT by the hybrid quality score — so apply your own
      editorial judgment for quality, don't trust raw order.
+   - **Weight direct hits on the charter topics above everything else.** A paper/monograph
+     whose subject IS one of the listed topics (not a passing mention of it) outranks
+     higher-volume but more tangential items, regardless of source popularity or how deep in
+     a noisy category feed (e.g. `cs.SE updates on arXiv.org` runs 90+ items/window) it sits.
+     When scanning a large category pool, don't stop at the first N that look relevant —
+     scan for the item(s) that most squarely match the charter, even if buried.
+   - The same paper can appear as two separate items — once from `ADS Research` and once from
+     the matching arXiv category feed (e.g. `cs.SE updates on arXiv.org`), under different item
+     ids and sometimes different `published_at` dates. Treat these as ONE candidate (dedupe by
+     title/arXiv id before selecting), and prefer citing the arXiv item's URL/date since it's
+     more current than the ADS mirror's ingest date.
 
 3. **Select.** First read `{{WORK}}/recent-coverage.md` — every URL featured by this
    track's recent issues. Coverage is one-shot: never feature a listed URL again. An
@@ -101,7 +177,7 @@ reference (summary, title, body, transcript) to the window you actually pulled f
        "origin": "auto",
        "date": "{{DATE}}",
        "summary": "<2-3 sentence summary>",
-       "topics": ["evals", "agent-memory", ...],
+       "topics": ["evals", "agent-reliability", "semantic-governance", ...],
        "items": [{ "title": "...", "url": "...", "source": "...", "category": "..." }],
        "highlights": ["...", "..."],
        "bodyFile": "{{WORK}}/body.md"

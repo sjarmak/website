@@ -6,8 +6,11 @@ site (`/digest`). Two producers, one library:
 - **Automated** — a local cron runs `claude-auto -p` (multi-account router) against the `code-intel-copilot` MCP,
   selects items, writes a newsletter + podcast, renders audio, and publishes. Daily
   (~12 min) and weekly (~45 min), each in two tracks:
-  - **specialized** (`daily`, `weekly`) — deep on the site's core topics: agentic coding,
-    evals, multi-agent orchestration, agent memory, retrieval.
+  - **specialized** (`daily`, `weekly`) — deep on the site's core topics, ranked: agentic
+    coding, evals, multi-agent orchestration, agent reliability (durable execution, Temporal
+    and similar workflow engines, enterprise agent deployment), semantic governance &
+    agentic analytics (semantic/metrics layers, governed definitions, schema linking,
+    policy-aware query compilation), retrieval.
   - **general** (`daily-general`, `weekly-general`) — field-wide roundup selected by
     social signal (cross-source convergence) and utility; model launches and tooling
     announcements lead rather than getting filtered as "announcements".
