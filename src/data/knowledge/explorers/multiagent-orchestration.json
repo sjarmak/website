@@ -2422,6 +2422,25 @@
           "why": "The production branch is about the runtime properties that decide whether a demo survives deployment, and observability is the one that has to exist before any of the others can be argued about. This paper is useful here because it does not ask for a framework migration: it names the six boundaries worth instrumenting and the attributes each should carry, then reuses those same boundaries as injection points. The amplification result also changes how a message-heavy topology should be costed. Latency at a coordination edge is not additive in a multi-phase workflow, it multiplies through the downstream interactions, and a system that looks fine under per-call latency budgets can degrade by one to two orders of magnitude from a single slow handoff."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260827969O",
+      "title": "openJiuwen: Beyond Static Harnesses for Long-Horizon Coding Agents",
+      "firstAuthor": "openJiuwen Team",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.27969",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260827969O",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "The harness is treated as the systems layer, and the coordination pattern is a single execution substrate reused at every scale. One nested Inner Loop (bounded ReAct-style model-tool interaction) and Outer Loop (task-level continuation, stopping, and bounded retry, separating infrastructure failure from further agent reasoning) run identically for a standalone agent, a delegated sub-agent, and a programmable Swarm Flow, so adding a topology does not add an execution engine. Cross-cutting capabilities (security, memory, planning, context engineering, semantic feedback, delegation, human interaction) attach as Rails through lifecycle hooks with ordered composition and visibility gating instead of being wired into the loop. Runtime decisions adapt around a fixed model policy: Context Management, Goal Mode, LSP-driven passive diagnostics filtered by per-file and total volume caps, and Self-Reflection persisting extracted trajectory experience into a store retrieved by later tasks. It reports 82.6% on SWE-bench Verified and 87.19% on Terminal-Bench 2.1, 3.4 and 3.39 points over the strongest selected leaderboard entries, with a model-matched Fable 5 run at 84.04%.",
+          "why": "This branch is about the small vocabulary of coordination patterns frameworks keep re-encoding. openJiuwen's claim is precisely that the vocabulary should not be re-encoded per topology: the same two loops plus a hook interface span single-agent, delegated, and multi-agent execution, which is a structural alternative to per-pattern orchestration code. The paper is also disciplined about what the benchmark can support, attributing its category-level strength on file operations and system administration to tool breadth and a unified tool interface as a plausible systems factor rather than a controlled cause."
+        }
+      ]
     }
   ],
   "sections": [

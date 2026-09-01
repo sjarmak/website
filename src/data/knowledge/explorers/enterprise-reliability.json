@@ -2902,6 +2902,31 @@
           "why": "This branch holds that topology is an attack surface and that injection propagates across agents. Here the propagation vector is authority itself rather than content, and the fix is placed at the orchestration boundary inside the artifact rather than in a workflow engine between tools. The lease-only ablation is the useful negative result for anyone building this: identity and scope checks alone catch 36/60 and let both sensor-evidence variants through, so freshness and source predicates over world state are load-bearing, not decoration."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260827886S",
+      "title": "Resource Constraints and Performance in Agentic AI Systems",
+      "firstAuthor": "Salman, Amaz",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.27886",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260827886S",
+      "branches": [
+        "eval",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A paired whole-system comparison of two agent harnesses (OpenClaw and NanoBot, both on gpt-4o-mini, one scored attempt per prompt) where the headline capability difference does not survive its own interval: 31/100 vs 25/100 full completions, risk difference 0.06 with a 95% task-bootstrap interval of [-0.03, 0.15] and exact McNemar p = 0.286. The transition matrix behind those aggregates shows disagreement running both ways: 28 prompts fail for both, 15 OpenClaw failures become NanoBot partial completions and 15 NanoBot failures become OpenClaw partials. The two evidence layers built from the same 23 prompts disagree on outcome for 8 of OpenClaw's and 10 of NanoBot's, and the records do not say whether that came from re-execution, environment change, or rescoring, so the authors refuse to pool them or read either as repeated-run reliability.",
+          "why": "The branch's position is that evaluation has to be grounded in execution against an honest baseline. This paper shows what happens when the link from score to execution is missing: prompt identifiers tie the layers at task level but attempt-level lineage does not exist, and the sign of the effect reverses between layers (+0.055 in the primary benchmark, -0.087 in the detailed subset). Provenance is not documentation hygiene here, it is the difference between a comparison and a coin flip."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Cost is measured per prompt alongside outcome rather than assumed. Median wall time is 34.06 s for OpenClaw against 10.45 s for NanoBot (geometric mean ratio 2.98, interval [1.78, 5.06], directional p = 0.0026); median peak memory is 2926.6 MiB against 136.1 MiB (ratio 19.44, interval [17.61, 21.32], p < 0.001), with OpenClaw higher on all 23 prompts. Resource-bounded completion curves make the trade-off legible: NanoBot reaches all six of its full completions under 60 s and under 192 MiB, while OpenClaw records no partial-or-better result below 1 GiB and needs about 3.3 GiB for its sixth. The authors also puncture their own dominance count: NanoBot weakly dominates on 18 of 23 prompts, but ten of those are joint failures terminated more cheaply, leaving 8 of the 10 prompts with real progress.",
+          "why": "The branch holds that cost facts must be recorded before routing is optimized and that unknown cost is never zero. This is that record for a harness choice rather than a model choice, and it separates two things a single win-rate hides: paying more for the same outcome, and failing more cheaply. The cheaper-joint-failure correction is the methodological point, since a naive cost-dominance metric would have credited the lighter system for giving up sooner."
+        }
+      ]
     }
   ],
   "sections": [
