@@ -40,6 +40,147 @@
       "firstSeen": "2026-09-01",
       "lastAttempt": "2026-09-01",
       "attempts": 1
+    },
+    {
+      "bibcode": "2025arXiv250723465A",
+      "arxiv": "2507.23465",
+      "title": "Almheiri 2025 (access-control leakage in LLM data agents)",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "enforcement"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned has_body false with only the abstract; no introduction, methods, or results available to ground notes on leakage rates or attack robustness."
+    },
+    {
+      "bibcode": "2026arXiv260521027S",
+      "arxiv": "2605.21027",
+      "title": "Singh 2026, Analytic Agent",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "enforcement",
+            "boundary"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned has_body: false, abstract only (Singh 2026, Analytic Agent). No body text to ground notes."
+    },
+    {
+      "bibcode": "2026arXiv260505287A",
+      "arxiv": "2605.05287",
+      "title": "Arceo and Narsing 2026, Securing the Agent",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "enforcement",
+            "boundary"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned has_body: false, abstract only (Arceo and Narsing 2026, Securing the Agent). No body text to ground notes; the isolation model and leakage measurements could not be verified."
+    },
+    {
+      "bibcode": "2025arXiv250923338Z",
+      "arxiv": "2509.23338",
+      "title": "PARROT (Zhou 2025)",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "representation",
+            "grading"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned only the abstract; the search mode reports the paper has no body text in the index (has_body false)."
+    },
+    {
+      "bibcode": "2026arXiv260105579X",
+      "arxiv": "2601.05579",
+      "title": "RISE (Xu 2026)",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "representation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned only the abstract; the search mode reports the paper has no body text in the index (has_body false)."
+    },
+    {
+      "bibcode": "2025arXiv250902473W",
+      "arxiv": "2509.02473",
+      "title": "FDABench (Wang 2025)",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "grading",
+            "representation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: read_paper returned only the abstract (has_body false) and an in-paper search reported no body text, so the composition, agent scores and failure classes of FDABench could not be grounded."
+    },
+    {
+      "bibcode": "2026arXiv260525838K",
+      "arxiv": "2605.25838",
+      "title": "Kanchinadam 2026",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "generalization",
+            "gap"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: not in SciX (read_paper returned Paper not found); intended branches generalization, gap"
+    },
+    {
+      "bibcode": "2026arXiv260402444S",
+      "arxiv": "2604.02444",
+      "title": "Shahbazi 2026",
+      "targets": [
+        {
+          "explorerId": "where-business-meaning-lives",
+          "branches": [
+            "representation"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-01",
+      "lastAttempt": "2026-09-01",
+      "attempts": 1,
+      "note": "2026-09-01: not in SciX (read_paper returned Paper not found); intended branch representation"
     }
   ]
 }
