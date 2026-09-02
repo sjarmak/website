@@ -2927,6 +2927,31 @@
           "why": "The branch holds that cost facts must be recorded before routing is optimized and that unknown cost is never zero. This is that record for a harness choice rather than a model choice, and it separates two things a single win-rate hides: paying more for the same outcome, and failing more cheaply. The cheaper-joint-failure correction is the methodological point, since a naive cost-dominance metric would have credited the lighter system for giving up sooner."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260602875K",
+      "title": "Handoff Debt: The Rediscovery Cost When Coding Agents Take Over Interrupted Tasks",
+      "firstAuthor": "KC, Dipesh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2606.02875",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260602875K",
+      "branches": [
+        "recovery",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "A takeover protocol that freezes an interrupted SWE-bench Verified repository at deterministic handoff points and hands a successor agent one of four views of the predecessor's work: repository state only, the raw event trace, free-form summary notes, or a structured note with fixed fields for changed files, validation evidence, uncertainty, rollback risk and verification. Across 181 handoff points and 724 takeover runs per successor, every context-bearing view beat repository-only on effort: median agent events fell 57-59% under the raw trace and 20-46% under notes, cumulative prompt tokens fell 42-63%. The cost is concentrated where failure evidence exists but is not transferred: at the after-first-post-failure-edit handoff point, repository-only successors needed a median of 122 (Qwen) to 191 (Devstral) agent events, and context there also lifted solved rate by +12.9 to +19.4 percentage points.",
+          "why": "This is the durable-state argument measured rather than asserted. The filesystem is state, and it is not enough: a successor holding only the files has to re-derive why they changed, what was already tested, and what failed. Writing down the continuation contract, not just the artifact, is what makes partial work resumable."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Final resolution alone cannot distinguish costly rediscovery from efficient continuation, and the paper shows the two metrics move differently. Solved-rate gains from predecessor context were modest and model-dependent (+6.1 to +14.9 points for the raw trace; note-based gains not significant at alpha=0.05 for the Qwen and Gemma successors, significant for Devstral), while the effort reductions were consistent across all three successors and held under matched-pair bootstrap intervals that stayed entirely below zero. Among the 110 needs-completion handoff points, repository-only successors resolved 13.6-23.6% of tasks and the best context-bearing view reached 23.6-28.2%.",
+          "why": "It adds a second axis to coding-agent evaluation: not only whether a task is solved, but what it costs another agent to resume. A benchmark that reports resolution alone scores a predecessor that leaves opaque scratch state the same as one that leaves an auditable handoff."
+        }
+      ]
     }
   ],
   "sections": [

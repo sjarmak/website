@@ -20,9 +20,9 @@
         }
       ],
       "firstSeen": "2026-08-20",
-      "lastAttempt": "2026-09-01",
-      "attempts": 13,
-      "note": "2026-08-31: still 'Paper not found' in SciX, no full text. firstSeen 2026-08-20; drop if unindexed after 2026-09-03."
+      "lastAttempt": "2026-09-02",
+      "attempts": 14,
+      "note": "2026-09-02: still Paper not found in SciX. firstSeen 2026-08-20; drop if unindexed after 2026-09-03."
     },
     {
       "bibcode": "2025arXiv251216956C",
@@ -38,8 +38,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: read_paper returned has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250723465A",
@@ -54,9 +55,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned has_body false with only the abstract; no introduction, methods, or results available to ground notes on leakage rates or attack robustness."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260521027S",
@@ -72,9 +73,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned has_body: false, abstract only (Singh 2026, Analytic Agent). No body text to ground notes."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260505287A",
@@ -90,9 +91,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned has_body: false, abstract only (Arceo and Narsing 2026, Securing the Agent). No body text to ground notes; the isolation model and leakage measurements could not be verified."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250923338Z",
@@ -108,9 +109,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned only the abstract; the search mode reports the paper has no body text in the index (has_body false)."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260105579X",
@@ -125,9 +126,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned only the abstract; the search mode reports the paper has no body text in the index (has_body false)."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250902473W",
@@ -143,9 +144,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: read_paper returned only the abstract (has_body false) and an in-paper search reported no body text, so the composition, agent scores and failure classes of FDABench could not be grounded."
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260525838K",
@@ -161,9 +162,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: not in SciX (read_paper returned Paper not found); intended branches generalization, gap"
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still not in SciX (Paper not found)."
     },
     {
       "bibcode": "2026arXiv260402444S",
@@ -178,9 +179,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-01",
-      "attempts": 1,
-      "note": "2026-09-01: not in SciX (read_paper returned Paper not found); intended branch representation"
+      "lastAttempt": "2026-09-02",
+      "attempts": 2,
+      "note": "2026-09-02: still not in SciX (Paper not found)."
     }
   ]
 }
