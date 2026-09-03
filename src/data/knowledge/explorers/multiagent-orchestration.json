@@ -2441,6 +2441,25 @@
           "why": "This branch is about the small vocabulary of coordination patterns frameworks keep re-encoding. openJiuwen's claim is precisely that the vocabulary should not be re-encoded per topology: the same two loops plus a hook interface span single-agent, delegated, and multi-agent execution, which is a structural alternative to per-pattern orchestration code. The paper is also disciplined about what the benchmark can support, attributing its category-level strength on file operations and system administration to tool breadth and a unified tool interface as a plausible systems factor rather than a controlled cause."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260900050S",
+      "title": "Towards Agentic Cloud Engineering: Graph and Loop Engineering with a Zero-Trust Agent Harness",
+      "firstAuthor": "Srinivas Sakhinana, Sagar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.00050",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260900050S",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "A Graph Orchestrator coordinates repository generation, review, execution and deployment, verification and runtime monitoring agents, with every transition gated on machine-checkable repository, deployment and runtime evidence instead of an agent reporting completion. Across 420 verification-perturbation executions per model, all four models blocked 420/420 verification-dependent transitions while the condition was unsatisfied. Replacing the machine-checkable gate with model-determined progression left 416/420 (99.0%) correct, the four invalid transitions concentrated in runtime verification (3/140) and deployment verification (1/140). The evaluation covers 140 natural-language tasks, ten in each of 14 cloud-engineering domains, under six controlled conditions, for 840 executions per model and 3,360 in total on Google Cloud with ADK, A2A and MCP.",
+          "why": "The ablation separates what the orchestration layer contributes from what the model contributes, and the split is uncomfortable in a useful way: model-determined progression is already 99% correct, so the gate buys the last percent, while verified completion and recovery swing about 39 points across the four models. The case for keeping verification in the framework is that it is the part that does not move when the model does."
+        }
+      ]
     }
   ],
   "sections": [

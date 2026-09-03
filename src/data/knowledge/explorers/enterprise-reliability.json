@@ -2952,6 +2952,31 @@
           "why": "It adds a second axis to coding-agent evaluation: not only whether a task is solved, but what it costs another agent to resume. A benchmark that reports resolution alone scores a predecessor that leaves opaque scratch state the same as one that leaves an auditable handoff."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260900050S",
+      "title": "Towards Agentic Cloud Engineering: Graph and Loop Engineering with a Zero-Trust Agent Harness",
+      "firstAuthor": "Srinivas Sakhinana, Sagar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.00050",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260900050S",
+      "branches": [
+        "recovery",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Loop engineering makes recovery a budgeted subsystem rather than an agent retrying at will. A verification failure triggers diagnosis, repair or re-planning, retry and re-verification under fixed limits: at most 20 recovery attempts, 120 minutes wall clock, 10,000,000 cumulative model tokens and 500 tool calls, plus per-task cost, privilege and blast-radius bounds; when a bound is exhausted the run terminates in an auditable failure state, measured at 140/140 for every model. Recovery Success Rate over 420 injected verification failures per model ran from 51.0% (Gemini 2.5 Flash-Lite) to 93.1% (GPT-5.6 Sol), and fell monotonically from repository to deployment to runtime failures in every case (GPT-5.6 Sol: 95.7%, 93.6%, 90.0%; Gemini 2.5 Pro: 82.9%, 77.1%, 69.3%). Disabling the diagnosis and repair path while keeping graph control, harness controls and verification dropped verified task completion from 133/140 (95.0%) to 18/140 (12.9%).",
+          "why": "This is recovery specified as a transaction with declared budgets and a defined terminal state instead of control flow around an exception, and the paper prices both sides of it: 82.1 points of verified completion bought by the loop, and a consistent degradation as the failure moves further from the artifact the agent can directly edit."
+        },
+        {
+          "branch": "security",
+          "takeaway": "The agent harness is a zero-trust boundary enforced per action rather than per session: workload identity, least-privilege authorization, policy-scoped tool access through MCP, tenant isolation, and sandboxed execution split by action type, with VS Code and Chrome sandboxes for repository and browser work and a gVisor-isolated GKE Agent Sandbox for deployment and verification. Under the authorization-policy condition, all four models denied 140/140 unauthorized or out-of-scope capability requests before invocation and permitted 139/140 matched authorized requests. Both figures were identical from Gemini 2.5 Flash-Lite to GPT-5.6 Sol, and held at 100% denial across all 14 domains with a lowest-domain permission rate of 90.0%.",
+          "why": "Identical denial rates across four models of very different capability are the evidence that the boundary lives in the harness control path and not in the model's judgment, which is the property that decides whether an authorization guarantee survives swapping the model underneath it."
+        }
+      ]
     }
   ],
   "sections": [

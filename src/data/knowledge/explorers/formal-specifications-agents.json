@@ -3184,6 +3184,25 @@
           "why": "This branch asks what coding agents are actually graded by and why it is not enough, and the usual answer is that tests are a weak oracle. The sharper claim here is that an output check is not a weaker measurement of the same quantity but one that cannot see the defect at all: in compliance, audit and verification work the procedure is the evidence, so a plausible report produced without retrieving the authoritative records or recalculating the totals is wrong however it scores. It also prices the switch from grading output to grading execution, which is that the harness must emit its own trace or an auditor sees less evidence of work from the arm that did more of it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260900568T",
+      "title": "WiseSpec: Requirements-Driven Agents for Code Generation",
+      "firstAuthor": "Tian, Zhao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.00568",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260900568T",
+      "branches": [
+        "open-questions"
+      ],
+      "notes": [
+        {
+          "branch": "open-questions",
+          "takeaway": "WiseSpec treats the quality of the requirement, not the sophistication of the agent's tooling, as the bottleneck in repository-level code generation, and automates the requirement artifact end to end. Context is gathered by walking program dependencies outward from the task description and organized through a DSL of nine primary requirement attributes and seventeen sub-attributes spanning architectural and implementation detail. Quality is scored by generating code and tests from the requirement and executing them, with acceptance only when all generated tests pass. Deficiencies are typed as Conflict, Omission or Ambiguity, refined under fixed alignment rules, with the highest-scoring candidate kept each iteration and unhelpful feedback retained as counterexamples. On 100 sampled instances each from SWE-bench-Lite, Verified and Pro with DeepSeek-V3.2 and Qwen-Plus, it improved %Resolved by 2 to 29 points and %Applied by 11 to 63 points over Agentless, Trae-agent and Claude Code, with a Wilcoxon signed-rank p below 2.5e-4; on SWE-bench-Pro with Claude-Opus-4.8 it moved 53% to 56%.",
+          "why": "The branch asks whether the specification bottleneck can be automated at all, and this is a measured yes with its boundary stated in the paper's own terms: the artifact is structured natural language explicitly without formal semantics, and the authors reformulate quality assessment as execution-based code evaluation precisely because requirements in that form cannot be scored directly. The margin also shrinks as the underlying model strengthens, from 29 points at the low end to 3 points with Claude-Opus-4.8, which is the shape of a scaffold supplying what the model does not yet supply itself."
+        }
+      ]
     }
   ],
   "sections": [

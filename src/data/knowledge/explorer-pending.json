@@ -20,9 +20,9 @@
         }
       ],
       "firstSeen": "2026-08-20",
-      "lastAttempt": "2026-09-02",
-      "attempts": 14,
-      "note": "2026-09-02: still Paper not found in SciX. firstSeen 2026-08-20; drop if unindexed after 2026-09-03."
+      "lastAttempt": "2026-09-03",
+      "attempts": 15,
+      "note": "2026-09-03: still Paper not found in SciX. firstSeen 2026-08-20 is exactly 14 days out; drop on the next run if still unindexed."
     },
     {
       "bibcode": "2025arXiv251216956C",
@@ -38,9 +38,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: read_paper returned has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250723465A",
@@ -55,9 +55,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260521027S",
@@ -73,9 +73,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260505287A",
@@ -91,9 +91,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250923338Z",
@@ -109,9 +109,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260105579X",
@@ -126,9 +126,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2025arXiv250902473W",
@@ -144,9 +144,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still has_body false, abstract only."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still has_body false, abstract only."
     },
     {
       "bibcode": "2026arXiv260525838K",
@@ -162,9 +162,9 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still not in SciX (Paper not found)."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still not in SciX (Paper not found)."
     },
     {
       "bibcode": "2026arXiv260402444S",
@@ -179,9 +179,92 @@
         }
       ],
       "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-02",
-      "attempts": 2,
-      "note": "2026-09-02: still not in SciX (Paper not found)."
+      "lastAttempt": "2026-09-03",
+      "attempts": 3,
+      "note": "2026-09-03: still not in SciX (Paper not found)."
+    },
+    {
+      "bibcode": "2026arXiv260902095C",
+      "arxiv": "2609.02095",
+      "title": "READY or Not: Reliable Enterprise Agent Deployment",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval",
+            "human"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-03",
+      "lastAttempt": "2026-09-03",
+      "attempts": 1,
+      "note": "2026-09-03: posted to arXiv today, not yet in SciX (Paper not found)."
+    },
+    {
+      "bibcode": "2026arXiv260902246W",
+      "arxiv": "2609.02246",
+      "title": "LLM-as-a-Judge Is Not an Oracle: Why Self-Improving Agents Need Deterministic Guardrails",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "eval"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-03",
+      "lastAttempt": "2026-09-03",
+      "attempts": 1,
+      "note": "2026-09-03: posted to arXiv today, not yet in SciX (Paper not found)."
+    },
+    {
+      "bibcode": "2026arXiv260901873B",
+      "arxiv": "2609.01873",
+      "title": "Epistemic Sybil Resistance: Multiplying AI Agents Without Multiplying Evidence",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "foundations",
+            "frontier"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-03",
+      "lastAttempt": "2026-09-03",
+      "attempts": 1,
+      "note": "2026-09-03: posted to arXiv today, not yet in SciX (Paper not found)."
+    },
+    {
+      "bibcode": "2026arXiv260902371B",
+      "arxiv": "2609.02371",
+      "title": "Diagnosing with Insights: Structured Analysis of Agent Failures via Behavioral Abstractions",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "observability",
+            "reliability"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-03",
+      "lastAttempt": "2026-09-03",
+      "attempts": 1,
+      "note": "2026-09-03: posted to arXiv today, not yet in SciX (Paper not found)."
     }
   ]
 }
