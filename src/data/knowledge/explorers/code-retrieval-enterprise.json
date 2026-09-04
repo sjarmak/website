@@ -1981,6 +1981,31 @@
           "why": "This branch treats lexical, dense and structural methods as an additive ladder and asks where each rung's cost is justified. DeepRepoQA puts a number on one version of that question: with precise structural lookup available and a scored search policy on top, the dense-retrieval rung contributes least. What carries the gain is deciding where to look next and judging what came back, not how the individual lookup is implemented."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901865K",
+      "title": "ExecRetrieval: Measuring the Functional-Correctness Gap in Code-Embedding Retrieval",
+      "firstAuthor": "Kapoor, Aaryan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01865",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901865K",
+      "branches": [
+        "foundations",
+        "techniques"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A direct measurement of the distance between topical similarity and functional correctness. ExecRetrieval plants, for each of 939 Python tasks across ten algorithmic domains, one execution-verified canonical implementation and up to four buggy variants differing from it by a single mechanical edit, all sitting in the same search pool, with a 7 to 10 assert execution oracle deciding correctness; the corpus is 4,694 snippets. The point of planting the counterfactuals is that on CodeSearchNet, CodeXGLUE, CoSQA, CoIR and CodeRAG-Bench a perfect topical retriever and a perfect functional retriever score identically, so the axis was never isolated. With near-clones present the best of 24 systems reaches exec@10 = 1.00 but exec@1 = 0.331, and the canonical scores below at least one of its own four paired distractors in 66.8% of queries on Gemini Embedding 2 and 78.4% on Qwen3-Embedding-8B.",
+          "why": "The branch's claim is that meaning in code lives in structure, and this is the cleanest counterexample to the assumption that embedding proximity carries it. In the worked query, n & (-n) and n | (-n) are one token apart in text and opposite in behavior, and the embedder ranks the broken variant second and the passing implementation fourth."
+        },
+        {
+          "branch": "techniques",
+          "takeaway": "Dense embeddings own intent, and the paper prices where they stop. It evaluates 23 dense embedding configurations plus BM25 under each model's documented best-fair-shot invocation (task types, query and passage prefixes, dtype, normalization, batch size, similarity metric, all sourced from provider documentation), reporting exec@k and execution precision alongside canonical-identity nDCG with paired McNemar tests and query-level bootstrap intervals. Top-k recall is close to solved while rank-1 ordering is not, at 33.1% in the best case, and when rank 1 is wrong it is a paired buggy variant 91.5% to 99.4% of the time across the four leading systems. Deception is spread across all six mechanical mutation types at 44.3% overall within a 39.3% to 48.0% band, least for removing an edge-case check and most for a wrong comparison, so no single bug pattern accounts for it.",
+          "why": "This puts a number on the cascade argument. If the first stage recalls the correct implementation within the top ten but cannot order it against a one-edit mutant, then reranking, execution or test-based verification is not an optional refinement downstream, it is where functional discrimination has to happen. The authors state the scope plainly: every magnitude is conditional on a near-clone being in the pool, not an estimate of how often deployed corpora pose that choice."
+        }
+      ]
     }
   ],
   "sections": [

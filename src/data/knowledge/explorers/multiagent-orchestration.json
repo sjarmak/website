@@ -2460,6 +2460,50 @@
           "why": "The ablation separates what the orchestration layer contributes from what the model contributes, and the split is uncomfortable in a useful way: model-determined progression is already 99% correct, so the gate buys the last percent, while verified completion and recovery swing about 39 points across the four models. The case for keeping verification in the framework is that it is the part that does not move when the model does."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901873B",
+      "title": "Epistemic Sybil Resistance: Multiplying AI Agents Without Multiplying Evidence",
+      "firstAuthor": "Bara, Marc",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01873",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901873B",
+      "branches": [
+        "foundations",
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "The paper separates three quantities that multi-agent work routinely collapses: agent multiplicity, report multiplicity, and evidence-root multiplicity. Classical fusion, forecast combination and social-learning models treat dependence as a property of a fixed external source population; a generative orchestrator instead creates dependence through its own actions, since spawning an agent, branching a retrieval or re-prompting a shared model are things the system does rather than facts about the world. A Gaussian shared-root model shows common ancestry does not imply complete redundancy: repeated extraction from one root adds information but only toward a finite source-level ceiling, and correlated extraction errors, which a shared base model can induce among nominally independent agents, lower that ceiling further.",
+          "why": "It gives the topology question an information-theoretic form. Whether an added agent is collaborative synergy or coordination overhead depends on the evidential ancestry of what it reads, which is a property of the topology the orchestrator built rather than of the agent count."
+        },
+        {
+          "branch": "frontier",
+          "takeaway": "Calibrated consensus with measurements attached. The agent's replicate extraction errors are correlated at an out-of-sample estimate of 0.719, and an aggregator that models correlated extraction restores calibration accordingly. A controlled 2x2 design then separates representation similarity from evidential ancestry and finds that a concrete report-space deduplication mechanism responds to the wrong one: its mean inferred cluster count moves by 1.425 (95% CI [1.363, 1.485]) under a manipulation of representation, but by only 0.040 ([-0.045, 0.120]) under a fourfold change in true ancestry.",
+          "why": "Deduplicating similar-looking reports is the standard production defence against redundant agents. This measures that defence directly and shows it tracks surface form almost exclusively, which means the correction has to be provenance carried through the orchestration rather than similarity computed at the end."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260902371B",
+      "title": "Diagnosing with Insights: Structured Analysis of Agent Failures via Behavioral Abstractions",
+      "firstAuthor": "Bi, Jiayi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902371B",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Failure attribution by LLM judgment alone is weak, and the paper measures it: the best model tested, GPT-5.1, reaches 18.15% accuracy on the failure-attribution datasets, because models struggle to capture multi-step reasoning and action behavior systematically and confuse correlated symptoms with true causes. The neuro-symbolic alternative reports localization accuracies ranging from 25.40% to 77.78% on the Who&When Algorithm-Generated dataset, 22.41% to 34.48% on Who&When Hand-Crafted, and 28.38% to 54.13% on AgentErrata, outperforming the prior art on all three while producing interpretable output, since the explanation is the invariant that was violated.",
+          "why": "Causal attribution is the frontier item, and this is a named system with numbers on both sides of it. The improvement over vanilla LLM-as-judge is large, and the absolute figures on the hand-crafted split are low enough to show the problem is open rather than solved."
+        }
+      ]
     }
   ],
   "sections": [

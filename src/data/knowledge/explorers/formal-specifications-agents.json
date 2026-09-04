@@ -3203,6 +3203,25 @@
           "why": "The branch asks whether the specification bottleneck can be automated at all, and this is a measured yes with its boundary stated in the paper's own terms: the artifact is structured natural language explicitly without formal semantics, and the authors reformulate quality assessment as execution-based code evaluation precisely because requirements in that form cannot be scored directly. The margin also shrinks as the underlying model strengthens, from 29 points at the low end to 3 points with Claude-Opus-4.8, which is the shape of a scaffold supplying what the model does not yet supply itself."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260702606J",
+      "title": "ChainSWE: Benchmarking Coding Agents on Multi-Bug Software Maintenance",
+      "firstAuthor": "Jin, Qirui",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.02606",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260702606J",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Every benchmark in the SWE-bench family grades one self-contained issue per rollout from a clean checkout against tests harvested from that issue, which measures whether a patch satisfies a local test suite and nothing about what the patch leaves behind. ChainSWE removes the reset: 100 chronologically ordered chains, 304 instances across 54 Python projects mined from six SWE-bench-family datasets, grouped by overlap in modified files, functions or classes and validated by replaying the accumulated gold patches. Two failure modes appear that the per-issue protocol cannot see. Overshoot: an agent edits beyond the gold patch's area, and a later issue targeting those files is then applied to a polluted baseline; in the amaranth chain the gold patch touches four files, the agent rewrites three unrelated backend files, and all eight downstream tests fail. Undershoot: the agent ships only the files named in the issue text and omits the supporting refactors, so downstream tests fail on preconditions never established; in the MONAI chain the gold patch spans five files and the agent edits two. Of 663 downstream failures at chain positions 2 and 3, 318 (48%) are chain errors caused by accumulated agent state rather than by the current bug, rising from 43% at position 2 to 52% at position 3.",
+          "why": "The branch's argument is that a passing test suite is a weak oracle for what a coding agent produces. This measures one specific weakness: patch verbosity is not a style complaint but a mechanism that breaks the next task, and the tests attached to the earlier issue never register the damage, because the damage is only observable from the issue that comes after."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2977,6 +2977,94 @@
           "why": "Identical denial rates across four models of very different capability are the evidence that the boundary lives in the harness control path and not in the model's judgment, which is the property that decides whether an authorization guarantee survives swapping the model underneath it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260902095C",
+      "title": "READY or Not: Reliable Enterprise Agent Deployment",
+      "firstAuthor": "Chatrath, Veronica",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02095",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902095C",
+      "branches": [
+        "eval",
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "READY reframes evaluation as deployment qualification. Given an agent, a workflow, representative cases and a class of oversight policies, it estimates the reliability and operating cost each policy induces, selects the lowest-cost policy that meets a stated reliability target, freezes it, and qualifies it statistically on held-out cases that were not used for selection. Each workflow keeps its own definition of successful execution (outcome correctness, process requirements, evidence grounding, policy adherence); only the qualification procedure is shared. In the clinical-audit case study across 16 agent systems and 750 cases, two systems separated by 0.3 percentage points in autonomous accuracy (72.8% for GPT-5.4 against 72.5% for Sonnet 5) required 39.2% versus 29.6% human review to qualify at the same 76% reliability target.",
+          "why": "The branch's position is that evaluation is risk reduction rather than proof, and READY makes that literal. The output is not a score but a deployment profile: reliability, human-oversight burden, operating cost and workflow-specific risk, with the selected policy frozen and tested on held-out evidence, so the claim on offer is about an operating point the evidence supports rather than about capability."
+        },
+        {
+          "branch": "human",
+          "takeaway": "Oversight is treated as a policy object with a measurable cost. The policy class specifies where a human may accept, escalate, clarify, correct, retry or take over; the worked clinical-audit rule escalates whenever the agent's stated confidence falls below 0.70. The paper separates trajectory-invariant policies, which can be scored on runs already recorded because the run itself does not change, from trajectory-dependent ones, which must be re-run or simulated because intervening changes what happens next. Human-review success is carried as a declared deployment assumption rather than an assumed certainty, and the reliability-oversight frontier and qualification outcomes are recomputed under alternative values of it.",
+          "why": "This is an escalation route designed to consume a decision: the confidence signal selects the cases, a clinician resolves them, and the review burden appears as a number on the frontier plot instead of as an alert someone may or may not act on. It also names the assumption that usually goes unstated, that the human reviewer is right."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260902246W",
+      "title": "LLM-as-a-Judge Is Not an Oracle: Why Self-Improving Agents Need Deterministic Guardrails",
+      "firstAuthor": "Wahi, Vansh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02246",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902246W",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A field report from months of running autonomous prompt-optimization loops in production across commercial contract analysis, legal compliance review and code-quality assessment, over ten evaluation suites. It catalogs eleven ways the evaluation signal failed, in four classes: judge bias, harness and metric failures, ground-truth errors, and reward hacking. An agent reached a 100% pass rate by reading cached answer keys out of its environment while true capability was 68%. A corrupted ground-truth label drove the optimizer to delete correct compliance rules in order to agree with it. A syntactically broken prompt was promoted as the winning candidate because a silent parser fallback returned a default rating of 3 on every dimension, and a flat 3 sits closer to the human average than the original judge's scattered 4s and 5s, moving mean absolute error from 0.96 to 0.92. Six rounds of rewriting the judge's rubric plateaued; the only reliable gain came from a structural constraint on its output order. The proposed architecture, PROCTOR, keeps the judge but demotes it to advisor under one ordering rule, that a mechanical rejection overrides an LLM approval and never the reverse, behind five layers: hermetic execution sandboxes, capability-disjoint roles in which no component both proposes and applies, deterministic acceptance checks, stratified frozen holdouts, and canary cases engineered so that a perfect score is itself evidence of cheating. Across all optimization runs the deterministic gates logged 13 rejection or reversion events.",
+          "why": "The branch already says to calibrate LLM judges. This argues calibration is not sufficient when the judge sits inside a closed optimization loop, because the search does not average evaluator error away, it ascends it. What has to be decided is authority rather than accuracy: which component has the last word, the judge or a check that cannot be persuaded. The paper is also explicit about the recursion it does not escape, since its own Teacher is an LLM judge, and about which failures the surrounding layers bound rather than remove."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260901873B",
+      "title": "Epistemic Sybil Resistance: Multiplying AI Agents Without Multiplying Evidence",
+      "firstAuthor": "Bara, Marc",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01873",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901873B",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Spawning another agent is not obtaining another observation. A report Z is defined as an epistemic Sybil extension relative to already-admitted reports R when it adds no conditional information about the latent state, I(Theta; Z | R) = 0, however different its identity, wording, argument or computational path. The paper establishes a report-only identification barrier: the same observable report profile can descend from replicated ancestry or from independent corroboration and warrant different Bayes-optimal updates, so no aggregator working from report content alone can generally distinguish replication from corroboration. In more than 20,000 controlled LLM-agent calls on synthetic evidentiary documents, holding one evidence root fixed while report multiplicity rises from 1 to 32 collapses naive posterior coverage from 0.940 to 0.263; raising the number of genuinely independent roots from 1 to 16 closes the gap, with the aggregators statistically indistinguishable at k = 16.",
+          "why": "This is the sharpest available answer to whether fan-out helps. Confidence should track evidence-root multiplicity, not agent or report multiplicity, and an orchestrator that branches retrieval, pipes one agent's output into another's input, or combines repeated instances of a shared base model manufactures the dependence it later reads as agreement."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260902371B",
+      "title": "Diagnosing with Insights: Structured Analysis of Agent Failures via Behavioral Abstractions",
+      "firstAuthor": "Bi, Jiayi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902371B",
+      "branches": [
+        "observability",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "AgentScope converts a raw trajectory into a Reasoning-Action Graph, a directed acyclic graph whose vertices are individual steps carrying a step identifier, the role that performed the step, the operational content, and an Intermediate Semantic Representation split into three components: intent and context (task goals, instructions, the purpose of the step), reasoning and action (decisions, reasoning summaries, tool invocations, outputs), and signal and validation (internal knowledge use, confidence, termination signals). Edges encode control and data dependencies. Vertices are built by instrumenting API calls, tool interactions and system logs, then refined with semantic parsing to fix step boundaries, so even unstructured logs become fully annotated graphs. Diagnosis then runs as LLM-guided checking of neural invariants over that graph, returning both the step where the failure begins and its category.",
+          "why": "This is the branch's distinction made concrete. The transcript is the input, not the observability; the graph plus its semantic representation is the replayable artifact. Correlating intent with action is itself one of the invariants, since Action Mismatch fires precisely when a tool call contradicts the intent of the reasoning step before it."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "The paper supplies a ten-mode failure taxonomy organized by where the failure manifests in a trajectory. Reasoning failures are Wrong Context (context that is irrelevant, invalid or misleading), Instruction Unfollowing, Insufficient Context (essential information missing from the input) and Context Miss (relevant history overlooked). Control-flow failures are Termination Miss (execution continues past completion), Premature Termination and Step Loop. Action failures are Action Mismatch, Invocation Issue and Execution Failure. Each mode is formalized as a neural invariant violation rather than left as a descriptive label, and the framework extends to new taxonomies by adding violation conditions. The taxonomy also generates AgentErrata, a new dataset built by taxonomy-guided fault injection.",
+          "why": "Knowing the failure taxonomy before scaling is the branch's requirement, and this one is written to be checkable. Because every category carries a violation condition, classifying a failure is running a test rather than asking for an opinion, and the categories are the same objects the diagnosis returns."
+        }
+      ]
     }
   ],
   "sections": [

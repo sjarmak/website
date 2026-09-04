@@ -1726,6 +1726,44 @@
           "why": "This branch is about moving past raw cosine similarity toward retrieval that knows something about the task, and the usual multi-channel answer fuses lexical with semantic. The channel added here differs in kind: it is a record of which part of the evidence graph worked last time, and it is injected upstream of the retriever rather than into the ranking. The motivating measurement generalizes past graph RAG, since an entity-keyed memory cache will miss most reuse in streams where questions overlap in evidence rather than in named entities."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260702606J",
+      "title": "ChainSWE: Benchmarking Coding Agents on Multi-Bug Software Maintenance",
+      "firstAuthor": "Jin, Qirui",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.02606",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260702606J",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Three context-management configurations were run over the same chains on a fixed SWE-EDIT scaffold across seven models. BASELINE retains the full interaction transcript with no compaction of any kind. SUMMARIZE compacts conversation history once the running context passes a fixed threshold. SUB-AGENT delegates file edits to a separate agent to lower token cost over long interactions. Carrying conversation history across bugs helped only one model (GPT-5.5) and only marginally, while summarizing the context and delegating edits to a sub-agent both consistently degraded performance. Per-bug success drops by up to 70% relative to the corresponding single-issue setting, with the sharpest declines at the deepest positions in a chain.",
+          "why": "The branch asks what should occupy the window at each step, and this is a negative result on the two standard answers. Both compaction moves cost accuracy here, and the reason is diagnostic: the state that carries across steps lives in the repository rather than in the transcript, so managing the transcript does not address it. The paper's own conclusion is that progress needs dependency tracking and repository-state management rather than better single-issue resolution."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260901481Y",
+      "title": "Harness-of-Harness: Multi-Day Autonomous Software Development with Continual Improvement",
+      "firstAuthor": "Yan, Haoyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01481",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901481Y",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "HoH runs planning-coding-testing loops on top of an unmodified coding-agent harness and declines a memory module on purpose. To maintain continuity without overwhelming the context window it persists plans, test reports, histories and other artifacts in the file system, exposes them initially through a concise categorized index, and retrieves detailed contents only when relevant; role-specific tools and lightweight Markdown skills are disclosed the same way. Each role must return a structured artifact, and outputs violating the schema trigger a retry, which constrains what enters the next iteration without prescribing how the agent works. A versioned record at both role and iteration level lets a run return to a previously verified state after a major regression and consult evidence from earlier attempts when a similar failure recurs. Across three harness-model pairs (Codex with GPT-5.5 high, OpenCode with DeepSeek-V4-Pro, Pi with MiniMax-M3) on GameCraft-Bench, FrontierSWE and ProgramBench, three iterations give an average relative gain of 52.25%, and on FrontierSWE with Codex and GPT-5.5 ten iterations move 22% to 72.67%. The benchmark runs used the loop alone, without the additional tools, skills or version-control mechanisms, which appear only in the multi-day deployment.",
+          "why": "This is the selective-construction position stated as an architecture rather than a mechanism: the durable store is the file system, the index is the default view, and the window holds only what the current step pulled. It is worth reading against the papers that build a dedicated memory layer, since HoH's claim is that at multi-day horizons an indexed artifact store plus a schema gate on what each role returns is enough to keep a long trajectory coherent."
+        }
+      ]
     }
   ],
   "sections": [
