@@ -2125,6 +2125,50 @@
           "why": "Stated in 2018 with a real industrial schema, before any language model was involved: the schema is organised for applications, not for the question, and the fix proposed is a conceptual vocabulary rather than a better query writer."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901437W",
+      "title": "HarnessDev: Can LLMs Create and Evolve Their Own Agent Harness?",
+      "firstAuthor": "Wu",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2609.01437",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901437W/abstract",
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Wu and colleagues make the harness the evaluated artifact instead of the answer. Six creator models (Opus 4.8, GPT-5.5, Gemini 3.1 Pro, DeepSeek V4 Pro, Qwen 3.7 Max, Seed 2.0 Pro) each build a harness from a common weak seed that parses configuration, exposes passive tools and scores zero on its own, with no loop, planner, context management, state, verifier or stopping rule. The frozen harness is then run on 2,207 held-out instances across SWE-bench Pro, Terminal-Bench 2.1, MLE-bench, EQ-Bench3 and BrowseComp, both with the creator as executor and with Gemini 3.1 Pro as a fixed executor. The motivating number is that GPT-5 solves 35.2 percent of Terminal-Bench 2.1 inside Terminus 2 and 49.6 percent inside Codex CLI with identical weights. Generated harnesses reach 67.8 against a human reference of 86.2 on the unweighted average, close the gap on writing and exceed the reference on MLE-bench, and fall furthest behind on search. Swapping the executor reorders the ranking: an Opus code harness drops from 69.3 to 33.0 on SWE-Pro under Gemini because it hard-codes a 120-step limit tuned to Opus, and an Opus search harness's duplicate-query rate rises from 10.1 to 88.2 percent. Of 108 harness components in the code domain, 18 never trigger in any run, all of them state and memory; 124 of 587 writing features are dead code. In the evolution stage, 64 official revisions produce only two gains that clear the roughly plus or minus 4.75-point repeated-run noise band, feedback and held-out scores move in the same direction 53.1 percent of the time, and 2 of 9 creator-declared final versions are the held-out best.",
+          "why": "This is the harness-as-part-of-the-system claim measured directly rather than inferred from a benchmark footnote. The same model spans a 14-point range depending on the scaffold, a harness can silently be co-adapted to the model that wrote it, and much of the code inside a scaffold never executes. Any text-to-SQL or data-agent result reported without the harness's loop, budgets, stopping rules and executor binding is underdetermined in exactly the way this paper quantifies."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260421413W",
+      "title": "An Alternate Agentic AI Architecture (It's About the Data)",
+      "firstAuthor": "Wenz",
+      "year": 2026,
+      "citationCount": 0,
+      "arxiv": "2604.21413",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260421413W/abstract",
+      "branches": [
+        "representation",
+        "enforcement"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Wenz, Treutwein, Arenja, Demiralp and Stonebraker replace free natural language with AQL, a three-clause notation: FIND columns FROM table WHERE natural-language predicate, plus aggregates, a JOIN between two such blocks, schema-introspection commands and SAVE, OUTPUT and DELETE housekeeping. The user names the tables and attributes; the model's only job is to turn the WHERE predicate into the native call of a source-specific wrapper that presents every source, including email, Wikipedia and video, as a logical relational view. Each command produces a visible intermediate table that can be saved and joined with later commands, and a compiled mode runs a whole AQL sequence as one plan through a relational-style optimizer. The paper argues from the authors' prior enterprise text-to-SQL work that accuracy on real warehouses falls more than 50 percent below Spider and BIRD leaderboard levels because the data is not in the pretraining corpus, warehouse schemas are redundant, institutional jargon is idiosyncratic, and real business queries are more complex than the benchmarks.",
+          "why": "This is the representation move taken to its limit: instead of a semantic layer or a richer intermediate language, the user is asked to supply the relational skeleton and the model fills only the predicate. It bounds what the model can get wrong to a single clause and makes every intermediate result inspectable, at the cost of requiring the user to already know the schema."
+        },
+        {
+          "branch": "enforcement",
+          "takeaway": "On a seven-query benchmark over five sources (Wikipedia, a 97-table anonymized university data warehouse, a research-lab website, Gmail and pretrained model knowledge), where each query needs exactly two sources and the other three are distractors, vanilla GPT-5-mini, Gemini-3-flash and Claude-Sonnet-4.6 and LangChain ReAct agents over the same models score 0 of 7 under both natural-language and AQL-style prompting, while RUBICON answers all seven. The failures are not hallucinated facts but omitted sources, premature termination and uncompleted joins; on the Turing-or-Nobel query the agents retrieve laureates from Wikipedia without restricting to lab faculty, or query the warehouse without checking awards. ReAct input tokens run from about 20,000 (GPT) to over 469,000 (Gemini-AQL) per query and time to first token stretches to minutes, against 4,182 input tokens and exactly two tool calls for RUBICON. AQL-style prompting to the agents improves which sources they call but not how many calls they make. The paper also shows that two valid AQL plans for one question, award-first versus faculty-first, differ in external lookups by a factor of the faculty count, and argues a cost-based optimizer is needed even under perfect coordination.",
+          "why": "The point is that structure enforced by the executor, not advice in the prompt, is what closes the gap between 0 and 7 correct. Giving the agents the same AQL specification as text changed their tool selection but not their completeness, which is the cleanest small-scale demonstration in this map that a constraint has to be mechanical to hold. The benchmark is seven queries built by the authors, so the 100 versus 0 number is a demonstration, not a population estimate."
+        }
+      ]
     }
   ],
   "sections": [
