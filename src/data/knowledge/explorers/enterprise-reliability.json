@@ -3065,6 +3065,50 @@
           "why": "Knowing the failure taxonomy before scaling is the branch's requirement, and this one is written to be checkable. Because every category carries a violation condition, classifying a failure is running a test rather than asking for an opinion, and the categories are the same objects the diagnosis returns."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260902264Y",
+      "title": "Codebook Agent: Amortized Topology Design for LLM Multi-Agent Systems",
+      "firstAuthor": "Yu, Jinxi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02264",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902264Y",
+      "branches": [
+        "topology",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Across seven settings the best fixed topology stays within 1.4 accuracy points of every query-conditioned topology the authors generate, but which fixed graph wins changes with the setting (fully connected on MATH, star on homogeneous HumanEval, chain on MMLU) with gaps up to 4.3 points and a 2.9x token factor. Topologies that survive a reward filter collapse to about six distinct graphs regardless of codebook capacity from 8 to 64. Codebook Agent replaces iterative graph generation with selection from a 16-entry codebook, reranked in one batched MLP pass, and reaches 84.62 average accuracy on six benchmarks against 83.02 for the strongest prior designer while emitting a topology in 2.4 ms.",
+          "why": "Choosing topology deliberately means knowing that the menu is short and the right item depends on the task. The paper also shows the menu cannot be picked a priori: identifying the winner for a new setting required real LLM executions, the same 300-record collection the designer is trained on."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Edge count, the structural cost surrogate used by prior topology designers, correlates with measured token consumption at r of about -0.4, because sparse communication yields longer completions; the sparsest connected topology, chain, is the most token-expensive on every math benchmark. A message-passing scorer over agent-profile nodes is adjacency-invariant when agents share a profile, which is the default in published benchmarks, so it cannot rank candidates at all. Holding the candidate set fixed and swapping only the scorer, the incumbent GNN costs 1711 tokens per query on GSM8K against 1249 for uniform random and 927 for the measured-token MLP, with accuracy within 1.5 points. Setting the cost weight to zero is the costliest configuration with no accuracy gain.",
+          "why": "This is the branch's rule enforced by data: a cost proxy that was never measured pointed optimization in the wrong direction, and the fix was to regress on tokens actually spent. Recording cost facts before optimizing is what turned a scorer that was worse than random into the source of a 22 to 33 percent token saving."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260901870Y",
+      "title": "ArcticSwarm: Deferring Early Consensus in Long-Horizon Multi-Agent Research",
+      "firstAuthor": "Yoon, Soyoung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01870",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901870Y",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Fan-out of independent rollouts does not close the gap: majority voting over N single-agent runs saturates at 63.5 percent at N=40 on BrowseComp-Plus, while ArcticSwarm reaches 82.6 at a token-matched budget. The failure it targets is premature consensus: on GPT-5 runs, questions where the orchestrator never opened an alternative or contrarian task scored 26.8 percent against 91.4 when at least one ran, across every difficulty tier. Ablating gated isolation on the shared board costs 3.8 points; removing the three review gates in turn (commit gate, board audit, self-check) drops accuracy monotonically by 6.3 points, and removing both mechanisms lands at 74.5. Communication-mode swaps holding model, timeout and tools fixed show single-agent and direct-messaging conditions well below the gated board, so structured coordination rather than agent count drives the gain.",
+          "why": "This is the branch's thesis measured: parallelism helped only under a specific coordination design, and the paper names the failure mode (correlated search paths converging on an early candidate) and quantifies each control that prevents it. The zero-alternative bucket is a concrete taxonomy entry for why a research swarm fails."
+        }
+      ]
     }
   ],
   "sections": [

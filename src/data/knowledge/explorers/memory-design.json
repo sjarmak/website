@@ -1764,6 +1764,25 @@
           "why": "This is the selective-construction position stated as an architecture rather than a mechanism: the durable store is the file system, the index is the default view, and the window holds only what the current step pulled. It is worth reading against the papers that build a dedicated memory layer, since HoH's claim is that at multi-day horizons an indexed artifact store plus a schema gate on what each role returns is enough to keep a long trajectory coherent."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901870Y",
+      "title": "ArcticSwarm: Deferring Early Consensus in Long-Horizon Multi-Agent Research",
+      "firstAuthor": "Yoon, Soyoung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01870",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901870Y",
+      "branches": [
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "multiagent",
+          "takeaway": "ArcticSwarm gives a research swarm exactly one shared object, a bulletin board, and controls access to it per task: isolation-mode tasks write findings but cannot read peer posts, collaboration-mode tasks read and write, and the orchestrator sets the mode at task creation rather than on a global schedule. Posts share a fixed schema of candidate, evidence summary, confidence and sources. A dedicated reviewer audits the board and posts CHALLENGE, ALTERNATIVE or VERIFIED verdicts per constraint, which can spawn new search tasks. When a subagent's context fills, a structured summary rewrites its history keeping candidates, evidence, verified constraints, open gaps and tried queries. With read gating, swarm coverage of the corpus grows almost linearly in the number of search paths (804 distinct passages at N=10 versus 618 without isolation and 362 for independent runs), and accuracy on BrowseComp-Plus is 82.6 percent versus 78.8 with free reading.",
+          "why": "Shared memory across agents is usually treated as strictly beneficial; this paper shows that unrestricted reads make agents adopt an early hypothesis as a shared premise, and that the coherence of a swarm comes from gating when memory is read and reviewing what enters it, not from dumping every finding into a common store."
+        }
+      ]
     }
   ],
   "sections": [

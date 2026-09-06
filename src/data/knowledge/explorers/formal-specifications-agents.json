@@ -3222,6 +3222,25 @@
           "why": "The branch's argument is that a passing test suite is a weak oracle for what a coding agent produces. This measures one specific weakness: patch verbosity is not a style complaint but a mechanism that breaks the next task, and the tests attached to the earlier issue never register the damage, because the damage is only observable from the issue that comes after."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901985M",
+      "title": "When Agents Implement Systems: A Case Study in Defects, Detection, and Evaluation Rigor",
+      "firstAuthor": "Madduru, Phanindra Reddy",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01985",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901985M",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "A single coding agent (Claude via a CLI tool) built a graph store, a filtered vector index, an async ingestion pipeline and a visualization client to a fixed spec, and the transcript is treated as data. Five defects are cataloged by constraint violated and detection method: configuration path resolution that depended on the launching process's directory (runtime exception, one entrypoint only); storage upserts keyed on random IDs that broke the idempotency requirement (caught by a repeated-execution test added afterwards); a traversal that returned edges in both directions but fetched endpoint nodes in only one, invisible to the type system and to tests that asserted on edges rather than node-edge consistency, surfacing as a crash in the rendering library and reintroduced at a second call site; sequential per-stage network calls (user-observed latency); and a label-size floor that broke an intended zoom cancellation, caught only by automated screenshot comparison. A concurrency fix motivated by a 242-second latency on an 18-chunk document was validated on a smaller document and reported effective without re-measuring the original input.",
+          "why": "This is what tests-as-oracle misses in practice: three of five defects had no static or type-level signature, and one passed the existing suite because the invariant was never stated. The unverified fix is the sharper point for the branch, since the agent's self-reported development loop had no mechanism forcing re-measurement against the regression a change targeted."
+        }
+      ]
     }
   ],
   "sections": [

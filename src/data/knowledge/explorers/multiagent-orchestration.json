@@ -2504,6 +2504,44 @@
           "why": "Causal attribution is the frontier item, and this is a named system with numbers on both sides of it. The improvement over vanilla LLM-as-judge is large, and the absolute figures on the hand-crafted split are low enough to show the problem is open rather than solved."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260902264Y",
+      "title": "Codebook Agent: Amortized Topology Design for LLM Multi-Agent Systems",
+      "firstAuthor": "Yu, Jinxi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.02264",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260902264Y",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Trained on 300 execution records per benchmark (50 tasks under six fixed topologies: complete, chain, star, three Erdos-Renyi samples), the paper finds that reward-surviving topologies collapse to about six distinct graphs no matter whether the codebook holds 8 or 64 entries, and that the best fixed family stays within 1.4 accuracy points of every generated topology. The choice still matters: fully connected wins on MATH, star on homogeneous HumanEval, chain on MMLU, with gaps up to 4.3 points and a 2.9x token factor. Codebook Agent therefore indexes the short list with a VQ autoencoder, predicts a code from the query embedding, and reranks decoded candidates with an MLP proxy regressed on measured utility and per-task normalized token cost. It scores 84.62 average against 83.02 for GTD, generates a topology in 2.4 ms versus 301 to 396 ms for iterative generators, and cuts tokens 21.9 to 33.2 percent.",
+          "why": "The foundations question is when topology matters and how much of the design space is real. This paper measures both: the useful space is a handful of graphs, the winner changes per task, and per-query selection among them earns its keep only when the cost objective is measured tokens rather than edge count, which correlates with token use at r of about -0.4 because sparse graphs produce longer completions."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260901870Y",
+      "title": "ArcticSwarm: Deferring Early Consensus in Long-Horizon Multi-Agent Research",
+      "firstAuthor": "Yoon, Soyoung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01870",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901870Y",
+      "branches": [
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "memory",
+          "takeaway": "All inter-agent communication passes through one bulletin board, and the orchestrator sets a read-access mode per task at creation: isolation-mode tasks see only the question and their own profile and may write but not read; collaboration-mode tasks read the board too. Every post follows one schema (candidate, evidence summary, confidence, sources) so the orchestrator can extract candidates and track diverging hypotheses. Three review gates guard what crosses into shared state: a self-check before a local finding, a board audit by a dedicated reviewer before a hypothesis is shared, and a commit gate that withholds the report tool until both a builder and a reviewer have posted VERIFIED and at least one alternative-candidate task has run. On BrowseComp-Plus with Qwen 3.5-27B, removing gated isolation drops accuracy from 82.6 to 78.8 percent, and tearing down the three gates lowers it monotonically to 76.3. With isolation, ten search paths cover 804 distinct passages against 362 for ten independent runs.",
+          "why": "This is a governed shared substrate rather than an open one: who may read the team's memory, and when, is a per-task decision, and what enters it is gated by structured review. The ablations show the governance is the mechanism; free reading of the board costs accuracy and halves corpus coverage."
+        }
+      ]
     }
   ],
   "sections": [
