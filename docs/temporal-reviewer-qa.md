@@ -272,12 +272,18 @@ Layered, and `GetVersion` is the smallest layer.
    `TestReplayRejectsPlantedNondeterministicWorkflow` proves the gate actually
    fails when it should, which matters more than the passing test.
 2. `GetVersion` for in-history patches, where one definition must carry old and
-   new command sequences while histories are open. Currently used once, for a
-   formula-version change in `workflow.go`.
-3. Worker Deployments for rollout and routing. At the pinned SDK `v1.46.0`,
-   workers register `DeploymentOptions` / `WorkerDeploymentVersion` and
-   Workflows choose pinned or auto-upgrade behaviour. We do not reconstruct the
-   retired Build-ID compatibility sets.
+   new command sequences while histories are open. Used three times so far:
+   `formula-ref-observability-v1` in the orchestration Workflow,
+   `bead-child-link-v1` in the maintenance Workflow, and
+   `coordinator-outcome-ack-after-delivery-failure` in the outcome Workflow
+   (the patch that accepts an acknowledgement during the post-delivery-failure
+   sleep). Do not say "once"; a panelist reading the source will count three.
+3. Worker Deployments are the plan for rollout and routing at the pinned SDK
+   `v1.46.0`, but the deployed Workers register no deployment version today
+   (`worker.Options{}` is empty in `workers.go`), so captured-history replay
+   plus drain deploys carry all rollout until that lands. We do not
+   reconstruct the retired Build-ID compatibility sets. State it in that
+   order: the plan, then the fact that it is not wired yet.
 4. Drain deploy only when no open history can reach the changed definition.
 
 One local policy worth mentioning because it is the rule people break: a replay
@@ -419,7 +425,16 @@ that has not been done.
 **[verified]**
 
 **Production, continuous:** result delivery and acknowledgement. Running with
-`TEMPORAL_BEADS_MODE=shadow`, `TEMPORAL_OUTCOME_MODE=canary`. First production
+`TEMPORAL_BEADS_MODE=shadow`, `TEMPORAL_OUTCOME_MODE=canary`. Vocabulary trap
+to disarm before a panelist does: the worker recognizes only `shadow` and
+`canary` as env values, so the article's "enabled" rollout state is running
+under the literal mode string `canary` with the rollout epoch set and the
+rollback guard disarmed. If asked, say the env value predates the rollout
+vocabulary and the operative facts are continuous operation and the disarmed
+guard. Operational note (fix before the panel, ideally): the systemd unit file
+on disk says `TEMPORAL_OUTCOME_MODE=shadow`; the live process was started with
+`canary`, so a worker restart would silently revert production result delivery
+to shadow until the unit file is updated. First production
 reconciliation produced exactly two envelopes, both acknowledged on their first
 delivery cycle. A later formula-bookkeeping close was correctly excluded as a
 non-outcome. The all-store health surface stayed at zero silent outcomes and zero
@@ -488,9 +503,12 @@ continues as new after 100 delivery attempts.
 Latency cost: an extra hop from the outbox through the bridge into
 Signal-With-Start on the dispatch path.
 
-The gap: I do not have measured numbers for Worker RSS, history bytes per
-episode, or the delivery latency delta. They are on the measurement plan, and I
-would rather say that than estimate.
+Measured on the live host, 2026-08-02: the self-hosted dev server holds about
+259 MB of resident memory after three and a half days up, the maintenance
+Worker about 54 MB under its `MemoryHigh=1536M` cgroup ceiling, and the SQLite
+state file is 80 MB on disk. Still unmeasured: history bytes per episode and
+the delivery latency delta through the outbox-bridge-signal hop. Both stay on
+the measurement plan, and I would rather say that than estimate.
 
 The judgment I would offer alongside it: the 44-second-every-two-hours
 maintenance job did not justify any of this cost, and we left it as cron plus a
