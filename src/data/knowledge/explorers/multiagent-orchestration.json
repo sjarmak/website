@@ -2542,6 +2542,25 @@
           "why": "This is a governed shared substrate rather than an open one: who may read the team's memory, and when, is a per-task decision, and what enters it is gated by structured review. The ablations show the governance is the mechanism; free reading of the board costs accuracy and halves corpus coverage."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260908371S",
+      "title": "Authority Is Not a String: A Capability-Scoped Harness for Prompt-Injection-Resistant Coding Agents",
+      "firstAuthor": "Stamatios Bouras, Dimitrios",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908371S",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Authorization attaches to the delegation edge rather than to the agent. A fixed four-principal topology of orchestrator, runner, patcher and verifier runs as process-isolated sub-agents, and the Derive rule requires each sub-agent's capability store to be a structurally contained subset of the delegating agent's ceiling, so the runner that reads untrusted output cannot inherit the patcher's write. The implementation is a blocking tool-call hook on Pi 0.78.0 that returns a block decision with a reason, plus process-isolated sub-agents, which makes the monitor a harness feature rather than a framework rewrite. Measured against three baselines over 300 runs with qwen3.5-flash, injected-effect execution falls to 3/75 from 33-47/75 while 68 of 75 repairs still complete. The seven CapScope failures price the topology: two from preflight omitting a needed source write, two from not rerouting an edit to the write-authorized patcher, three from timeouts, with mean latency 316s against 145s for ambient authority and 194s for a task-specific global policy.",
+          "why": "This theme's recurring claim is that bounded autonomy has to be enforced somewhere the model cannot argue with. CapScope gives that a concrete placement, the host, before the tool call, with the ceiling minted from trusted input only and frozen before untrusted content enters context, and it reports the cost honestly: the residual failures come from an over-tight ceiling rather than from an attack, which is the trade a production deployment actually has to price."
+        }
+      ]
     }
   ],
   "sections": [

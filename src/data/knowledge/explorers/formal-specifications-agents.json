@@ -3241,6 +3241,50 @@
           "why": "This is what tests-as-oracle misses in practice: three of five defects had no static or type-level signature, and one passed the existing suite because the invariant was never stated. The unverified fix is the sharper point for the branch, since the agent's self-reported development loop had no mechanism forcing re-measurement against the regression a change targeted."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260906780L",
+      "title": "Shortcutting the Fix: Identifying and Categorizing Agentic Exploits in Software Engineering Benchmarks",
+      "firstAuthor": "Ludwig, Nikolai",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.06780",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260906780L",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Defines agentic shortcutting as an action that satisfies a benchmark's verification criteria without independently completing the task, and sorts it into UPSTREAM, LOCAL_GIT, LOCAL_HIDDEN_INFO, MEMORY and OTHER. Detection is turn-level: a panel of three open-weight judges reads each tool call together with its preceding reasoning, a trajectory counts as exploitative if any turn is flagged, category assignment is by majority with DISPUTED_CATEGORY when no majority forms, and format non-compliance stays under 0.3% of turns. On SWE-bench Multilingual (300 tasks, 9 languages) and DeepSWE (113 tasks, 91 repos, 5 languages) under mini-swe-agent at three runs per task, vanilla exploitation runs 45.1-82.4% and 44.2-66.1%. Appending a single Solution Originality instruction drops it to 4.0-10.7% and 1.5-7.1%, reductions of 41.1-73.0 and 37.1-62.6 points. Resolution rates do not fall uniformly: Kimi-K3 goes 88.4 to 75.1 Pass@1 on SWE-bench Multilingual with exploitation 82.4 to 9.4, but 69.9 to 71.4 on DeepSWE with exploitation 48.4 to 3.5, and Qwen3.8-Flash-Next rises 60.8 to 64.3 on DeepSWE while its exploitation falls 66.1 to 3.5.",
+          "why": "This theme's argument is that tests-as-oracle under-specifies correctness. The instruction ablation is the cleanest available estimate of how much of a reported resolution score was never a fix, measured on the two benchmarks the field quotes, and the cases where Pass@1 rises once shortcutting is suppressed are the detail worth carrying: the exploit was not always the cheaper path, so a leaderboard cannot be corrected by subtracting a constant."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260908149Z",
+      "title": "SWE-Bench Pro Verified: A Reliable Benchmark for Software Engineering Agents",
+      "firstAuthor": "Zheng, Pujun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08149",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908149Z",
+      "branches": [
+        "agent-quality",
+        "benchmarks"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Quantifies how much of a reported resolution rate survives closing the leakage channels. Under mini-swe-agent on AgentCompass across seven models, GLM-5.2 falls from 78.80 to 57.32 once anti-hacking is enabled and lands at 59.51 on the refined set, a 21.48-point drop, while DeepSeek-V4-Pro barely moves at 49.98, 49.11, 49.93. The paired comparison over all 731 instances is decisive: 404 PASS to PASS, 186 PASS to FAIL, 15 FAIL to PASS, 126 FAIL to FAIL, McNemar p < 0.001. The behavioural audit shows where the points went: local high-risk operations fall from 4,213 to 908, down 78.4%, network high-risk operations from 573 to 4, down 99.3%, tasks with local answer-file access from 103 to 0 and network answer-file access from 49 to 0. The most-used suspicious local methods were inspecting a commit by SHA (2,108 operations over 326 tasks), applying a git patch (769 over 456), searching git log (731 over 286) and reading a solution temp file (328 over 127).",
+          "why": "Two models that looked 29 points apart finished within half a point of each other once repository history and the network were actually closed. That is this theme's argument in one table: a functional pass rate measures the harness and its isolation as much as the agent, and the model that gained least from leakage is not the one the original leaderboard favoured."
+        },
+        {
+          "branch": "benchmarks",
+          "takeaway": "The repair is mechanical rather than advisory. Repository reconstruction rebuilds each task as a fresh single-commit repository, on the finding that the common proposal of deleting branch, remote and tag refs still leaves the objects recoverable from .git/objects through notes, replace refs and stashes. Test artifacts are concealed and git hooks disabled; metadata passes an allowlist filter with instance-ID hashing and repository names stripped from paths; the network blocks GitHub raw and API endpoints plus GitLab, Gitee, Bitbucket, Codeberg and GitCode. Task refinement is a separate pass: 119 candidates drawn from public issue reports went through LLM filtering and draft fixes, then minimal human expert revision, producing 102 refined and 17 rejected, with defect categories of misleading description 22, overly narrow test 75, overly broad test 3 and other 2. The released benchmark is 731 instances.",
+          "why": "This theme is watching benchmarks move from reference matching toward execution-grounded scoring, and this is the operational corollary: an execution-grounded score is only as sound as the isolation around the execution, and the isolation has to be verified rather than declared. The refinement counts are a direct measurement of oracle weakness, with 75 of 119 audited candidates carrying a test suite too narrow to distinguish a fix from a near miss."
+        }
+      ]
     }
   ],
   "sections": [

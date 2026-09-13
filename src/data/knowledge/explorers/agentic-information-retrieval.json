@@ -582,6 +582,25 @@
           "why": "This branch treats retrieval as an action the model chooses, and the usual levers on that choice are fine-tuning, retrieval-supervision, or prompt rewriting. This makes when-to-retrieve a continuous inference-time dial with no training and no prompt change, and shows the dial is knowledge-selective: with positive steering the induced search calls concentrate on the low-popularity PopQA entities the model cannot answer from parametric memory rather than on the popular head. It also separates whether-to-call from which-tool, which are usually measured together, and gives the decision a location in the network - control is inert below L7, strongest and monotone at L21-24, and large but non-monotone above the band, consistent with the decision being computed at mid-late depth."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260905110A",
+      "title": "Embedding Surgery: Localized Updates for Adaptive Ranking Correction in Dense Retrieval",
+      "firstAuthor": "Amendola, Maddalena",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.05110",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260905110A",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Document embeddings are computed offline and frozen in the index, so a dense retriever cannot absorb feedback without fine-tuning and re-indexing, which is far too slow for correcting a specific ranking error. Embedding surgery applies minimal localized edits to selected document vectors instead, formulated as a constrained convex quadratic program that enforces the desired ranking constraints while staying close to the original representations; a single pairwise constraint has a closed-form optimal update and batches go to standard solvers. Feedback can come from editorial judgments, from user interactions simulated with counterfactual click models, or from LLM pseudo-labels, with the stated caveat that LLM labels carry systematic weaknesses. Across four dense retrieval models and seven benchmarks including TREC DL 2019-2020, DL-Hard, Robust '04, CAsT 2019 and MS MARCO, editorial feedback lifts nDCG@10 by up to 60.64% relative on DL-Hard, the method holds under noisy feedback, and corrections propagate to semantically related queries. A 56k-query analysis on IVF and HNSW shows the edits stay local, preserve the global geometry of the space, and apply by in-place overwrite with no index reconstruction.",
+          "why": "The static-index assumption is part of the substrate this theme describes, and this paper treats it as the defect rather than the setting. It is also one of the few correction methods whose cost model is compatible with a production approximate-nearest-neighbour index, and it positions explicitly against the two neighbouring families the theme already carries: retriever retraining and re-indexing on one side, query-representation adaptation such as CoRocchio on the other, with the claim that document-side surgery is complementary and more robust to noisy signals."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2169,6 +2169,50 @@
           "why": "The point is that structure enforced by the executor, not advice in the prompt, is what closes the gap between 0 and 7 correct. Giving the agents the same AQL specification as text changed their tool selection but not their completeness, which is the cleanest small-scale demonstration in this map that a constraint has to be mechanical to hold. The benchmark is seven queries built by the authors, so the 100 versus 0 number is a demonstration, not a population estimate."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260904641S",
+      "title": "A Cost-Aware Agentic Architecture for NL-to-SQL over Nested Enterprise Schemas, with a New Benchmark",
+      "firstAuthor": "Sri Varshan Varadharajan, Yoga",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.04641",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260904641S",
+      "branches": [
+        "gap",
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "gap",
+          "takeaway": "The schema is the argument. DevRev's production Snowflake schema carries 30 core entity types expanded to 190 variants, 13,898 fields, 2,036 typed ARRAY[STRUCT] columns and 1,412 nested fields at depth up to 4. Spider 2.0-Snow, the closest public comparison, has 152 databases and 7,860 tables but zero typed ARRAY[STRUCT] columns, zero nested fields, 6,180 opaque VARIANT columns, maximum nesting depth 1, and table-level descriptions on 5% of tables. DevRev's fields instead carry English descriptions that encode operational intent, so the schema doubles as documentation and the retrieval problem becomes finding the right handful of fields among 13,898 rather than the right table among a few dozen. Ablations price what the raw schema does not supply: removing schema expansion costs 8.5 points overall and 11.4 on relationship and network questions, and retrieving on type signatures alone costs 15.0 points overall and 64.4 on the highest SQL-construct-diversity band.",
+          "why": "This theme's claim is that a schema describes storage and a question is not asked in storage terms. Here the gap is measured on a schema where the missing meaning was partly written down, at field level, by the people who ran the system, and the type-signature ablation isolates what is lost when only the structural half is available."
+        },
+        {
+          "branch": "grading",
+          "takeaway": "Semantic Depth Score grades a question on seven dimensions, each 0 to 5 for a 35-point maximum: eligibility, derived metric, population scoping, multi-stage logic, output precision, temporal precision and SQL construct diversity. The point of the construction is to decouple semantic depth from clause counts, which is the proxy most text-to-SQL difficulty labels fall back on. The benchmark itself is 900 execution-verified queries, LLM-generated then execution-verified rather than fully human-curated, which the paper states as a limitation along with its Snowflake-only scope and its dependence on a live execution API. Reported results: 91.7% answer correctness on DevRev-900 against APEX-SQL 27.2, FlexSQL 37.1 and ReFoRCE 29.1, and 91.5% on the SDS >= 11 subset, so the margin does not collapse on the deeper half. Cost is reported in the same table at 161 seconds and 74K tokens per query, $0.57 per correct query against $4.60, $15.35 and $0.93.",
+          "why": "A 54-point margin over the next-best system is the kind of number this theme treats as a claim about the benchmark rather than the method until the difficulty axis is checked. SDS is that check, and it is reported as a separate subset score rather than an aggregate, which is what makes the result legible."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260904298S",
+      "title": "Harbor Adapters and Harbor-Index: Infrastructure and a Curated Meta-Dataset for Large-Scale Agentic Evaluation",
+      "firstAuthor": "Shi, Lin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.04298",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260904298S",
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Harbor fixes one task schema (instruction, environment, tests, solution) and reduces benchmark-times-agent integration from O(mn) to O(m+n), with more than 80 benchmarks ported and 22 agents supported as of May 2026 and a three-stage adapter audit (bot, junior, senior) over more than 10,000 GitHub comments plus multi-trial parity experiments. The measurement that matters here runs 8 models across 2 harnesses each, a shared cross-family Terminus-2 plus each vendor's native harness, over 54 benchmarks, 6,627 tasks and 3 trials: roughly 0.3M trajectories, 226B tokens, more than $300K of compute. A linear mixed model gives between-model variance 0.0485 against residual 0.0161 for an ICC of 0.75, a harness effect spanning 0.087 from 0.045 to -0.042, and a model effect range 5.2 times larger. Better models also use fewer tokens at every difficulty level, and misspecified tasks are common among the unresolved ones.",
+          "why": "The open question in this theme is how much of a reported score belongs to the scaffold rather than the model. This is the largest matched-cell answer available, and it says the harness moves the number while the model moves it about five times more, with orderings staying correlated across benchmarks. The counterweight is in the same paper: evaluation is low-rank, after 12 benchmarks every remaining one correlates at rho >= 0.7 with a selected one and 13 of 54 are saturated above 90%, so scaffold differences are being measured on a narrow capability axis. Harbor-Index answers that with 82 tasks over 29 benchmarks where no model-harness pair clears 30%."
+        }
+      ]
     }
   ],
   "sections": [

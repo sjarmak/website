@@ -3109,6 +3109,107 @@
           "why": "This is the branch's thesis measured: parallelism helped only under a specific coordination design, and the paper names the failure mode (correlated search paths converging on an early candidate) and quantifies each control that prevents it. The zero-alternative bucket is a concrete taxonomy entry for why a research swarm fails."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260904611S",
+      "title": "tau^tau-Bench: An Environment for End-To-End, Realistic Agent Construction",
+      "firstAuthor": "Shi, Quan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.04611",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260904611S",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "The graded task is building the agent, not running one. A developer agent receives a document corpus of handbooks, support transcripts, spreadsheets, images, audio, email threads and screen recordings whose text artifacts alone exceed 5.5M tokens; a simulated client holding facts deliberately removed from the corpus and recoverable only by asking, with the client's knowledge boundary defined as a set of fact identifiers so elicitation is measurable; a client-owned REST API carrying planted defects from a nine-class catalog including schema drift and writes that commit then time out; sometimes an imperfect starting implementation; and a roster of about twenty models with a credit budget on mean per-conversation serving cost, where overage is subtracted from the score. The evaluation suite is withheld, the container is networkless, and there is no reference implementation, so pre-submission feedback comes only from tests the developer writes itself. Across 53 tasks in four domains the best configuration, Claude Opus 5 under Claude Code, passes 23.9% against an expert-authored reference ceiling of 82.2%.",
+          "why": "This is an evaluation design that closes the usual escape hatches at once, and its per-domain split explains where assurance actually breaks: 55.9% on airline, 72.8% retail, 48.2% telecom, 5.9% banking, where the corpus holds 2,969 atomic facts against 85, 119 and 155 elsewhere and a single task can draw on 580. The airline and retail domains were rebranded with every policy value rederived so the database, evidence and evaluation stay consistent, which removes memorization as an explanation. The failure list is the transferable content: shallow keyword queries over records that were never read, near-total absence of client interrogation so requirements one question would have surfaced get shipped around, serving-budget mismanagement in both directions, patching the first architecture that runs, and validating against self-authored tests that encode the developer's own blind spots."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260904630W",
+      "title": "Software Engineering in the Agent Era: From Trustworthy Change to Human-Agent Software Organizations",
+      "firstAuthor": "Wang, Zhongjie",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.04630",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260904630W",
+      "branches": [
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "A theory paper whose useful contribution is an accounting boundary. It separates execution, which agents make elastic, from acceptance of residual risk, which does not scale: a Human-Agent Cell produces candidates, proposals and evidence but holds no acceptance authority, and Responsibility Topology classifies an organization by whether one anchor can finally accept a change or several independently governed anchors must accept jointly. Resources are a vector of token, compute, tool, wall-clock time and human attention, with proposed measures TokenPerAcceptedTC and HumanAttentionPerAcceptedTC and an explicit list of what does not count as evidence: a high commit count is not throughput, many agent trajectories are not many independent verification sources, and a large team is not a multi-anchor topology. Capacity is bounded by the narrowest gate, single-center throughput by decomposability, integration, verification and economics, multi-anchor additionally by local, cross-cell and architecture limits. The failure-mode table names context staleness, unauthorized truth where an unaccepted proposal is treated as authoritative, delegation-responsibility misalignment, cross-cell semantic conflict, false independence where multiple reviewers share one model and its blind spots, verification congestion, invalidation storms and responsibility orphans when an anchor exits.",
+          "why": "The theme's rule is that oversight must consume decisions rather than idle alerts, and this gives that rule an economics: human attention is one of five bounded resources, the verification and acceptance queues become the binding constraint once execution fans out, and false independence is the specific mechanism by which a review panel stops being oversight. The mapping table is the practical part, placing AGENTS.md and CLAUDE.md as authoritative-state snapshots whose authority depends on acceptance and versioning, hooks as delegation guards and stop conditions, CODEOWNERS and approval matrices as one form of technical evidence, and usage and routing budgets as the resource envelope. The paper is explicit that progressive specification and bounded capacity are hypotheses awaiting controlled and longitudinal study rather than results."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260908589W",
+      "title": "The Unreliable Progress Bar: Can LLM Agents Reliably Report Task Progress Throughout Execution?",
+      "firstAuthor": "Wang, Boyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08589",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908589W",
+      "branches": [
+        "observability",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Tests whether an agent's own progress report can be trusted as a signal. In a telecom setting built on an existing tool-use benchmark, every customer-facing reply must end with one of four stage tags, and the gold tag is derived mechanically by replaying the conversation prefix in a fresh environment before the model's tag is read, leaving tasks, tools, policies and the user simulator untouched. Seven of eleven deployments follow the duty on 93.2-100% of checkpoints; four follow it on 0.6-10.1%. Accuracy is stage-shaped: gpt-4.1 and gpt-5.5 report correctly on 90.6-99.4% of pre-action checkpoints and 87.3-88.9% post-completion, but only 5.8-11.5% mid-task. Parsing is a confound the paper isolates rather than hides: gpt-6-astra scores 0.0/0.0/0.0 under strict matching and 99.6/100.0/48.1 once the envelope is stripped, and gpt-5.6-sol 65.3/28.6/40.3 against 95.5/42.3/67.5. The second instrument, StageIF, fixes assistant turns to scripted text across 12 scenarios with 5 checkpoints each and 20 repetitions, 50,400 checkpoint positions, with gold frozen before generation.",
+          "why": "The theme's rule is that transcripts are not observability. This is the measured version: a self-reported state field is a signal whose error rate depends on the stage, on the parser, and on whether a report is emitted at all. In StageIF the dominant failure layers are omission and issuing a tool call where a report was due, not reporting a wrong value, which reaches only 13.6 points at the post-action checkpoint and under 2 elsewhere. Weakness also moves: gemini-3.8-flash, envelope-stripped gpt-6-astra and claude-opus-5 hold 74-100% mid-task but only 48-64% at completion."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "The failure is structured rather than noisy, and it lives in the nonterminal states. Across seven StageIF deployments the terminal-minus-nonterminal adherence gap is significant for six and spans 29.4 to 89.3 points: qwen3.5-35b-a3b runs 21.7/1.2/2.9/97.9 across Wait, Ready, Step and Done for a gap of -89.3, qwen3.5-122b-a10b 83.5/0.0/0.0/66.2 for -38.4, and only gpt-5.5 at 57.7/58.2/34.5/54.4 has a confidence interval covering zero. The most extreme deployment reports correctly at 97.4% terminal against 8.2% intermediate. On deployments whose worst stage is mid-task, 82-90% of well-formed mid-task errors name a pre-action state the run has already left and 10-18% prematurely claim completion; on three collapsing deployments 44-67% of multi-checkpoint trajectories have every mid-task report wrong against 0-4% entirely correct. Interventions do not close it: supplying the true stage or a constant value leaves an upper interval below one sixth of the observed gap, a trailing reminder's largest pooled gain is 9.3 points, and reasoning mode redistributes failures instead of removing them. Withdrawing a needed tool and assigning the unfinished step elsewhere, with task truth unchanged, raises false completion from 6.2% to 64.4% across nine deployments.",
+          "why": "A control loop that gates on the agent's claim of being done inherits a false-completion rate that moves with the environment rather than with the task, which is the failure mode this theme exists to catalogue. The duty comparison is the actionable part: on matched histories the same requirement is met 99.0% of the time when attached to the final reply, 43.7% as a status sentence and 57.4% as a machine-readable report, so the reporting interface changes the measurement before any model property does. Correct withholding fails worst of all, with most deployments re-emitting a report at post-completion checkpoints at a 90-100% false-alarm rate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260908371S",
+      "title": "Authority Is Not a String: A Capability-Scoped Harness for Prompt-Injection-Resistant Coding Agents",
+      "firstAuthor": "Stamatios Bouras, Dimitrios",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908371S",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "The argument is structural: a single task-scoped policy has to grant the union of everything the task needs, so the runner that reads poisoned tool output also holds the patcher's write authority. CapScope moves authorization out of the model's context into a host-side reference monitor. A preflight model call sees only the trusted user request and the project file tree, names and never contents, mints a task-wide authority ceiling that deterministic host code validates and compiles, and the ceiling is frozen before any repository content or tool output is read and kept outside the model's context. A capability pairs an effect with a scope predicate: Read and Write over canonicalized path prefixes with .. and symlinks resolved, Exec over parsed argument-vector prefixes with compound commands split per segment and redirections removed. Three rules govern the store: Mint only from trusted policy, Derive a sub-agent store as a structurally contained subset, Invoke only when a held capability covers the effect. Over 4 conditions by 5 Python repair tasks by 5 injection surfaces by 3 trials, 300 runs, injected effects execute in 47/75 runs under ambient authority, 46/75 under a static denylist, 33/75 under a task-specific global policy and 3/75 under CapScope, with task success at 68/75 against 72/75 for the ambient baseline.",
+          "why": "The diagnostic separates two things security evaluations usually merge. The model still proposes the injected action in 34 of 75 CapScope runs, and 27 of those contain repeated attack-targeting calls, so the model was not hardened, the effects were. The paper is also explicit about what the design does not buy: not confidentiality, since a permitted read plus a permitted write still moves data, and not sandboxing, since allowed commands such as pytest import project code. All three surviving attacks arrived through AGENTS.md, and the cost is latency, a mean of 316s against 145s ambient with five runs hitting the 900s timeout."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260907360K",
+      "title": "Scanning the Harness: An Empirical Study of Supply-Chain Defects in AI Coding-Agent Configurations",
+      "firstAuthor": "Kapner, Benjamin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.07360",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260907360K",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Measures the agent configuration layer as a supply chain. Across 3,171 public GitHub repositories, 2,660 full agent setups and 511 component collections, 31 rules are applied at file, filesystem and pairwise scope; no pairwise or setup-level rule survives validation. Validation is three-stage and fully automated: an independent re-implementation re-derived 8,547 findings across 1,115 re-cloned repositories, 744 disagreeing pairs went to an LLM adjudicator with 586 already in agreement and 640 counted as defects, and a second independent model session re-read all 743 counted pairs, with no human scoring anywhere. Six rules reach the gating tier. Per-setup prevalence: unpinned MCP package 9.8%, a skill that pre-approves shell 3.8%, an arbitrary-execution grant such as Bash(python:*) 3.1%, skill without frontmatter 2.3%, missing agent description 0.8%, missing skill description 0.2%, committed local settings 0.7% as provisional. Aggregates: any security defect 16.0% with a 14.6-17.4 interval, any confirmed defect 16.7% at 15.4-18.2, any confirmed finding 18.4% at 17.0-19.9, against 25.5% from the raw gate output before the audit. Collections are cleaner at 3.7% shipping a shell-pre-approving skill and 6.8% carrying any confirmed finding.",
+          "why": "The framing is the contribution: the harness is a dependency layer with no lockfile, no install-time check and no vocabulary for what a component may do, while a median setup is 6 components and 7,057 tokens and the largest is 500 components and 1,611,649 tokens, with 17.5% of repositories configuring more than one assistant. Two of the measured consequences are platform-version-dependent, since skill frontmatter became optional in Claude Code and bypassPermissions was honoured from project settings only until v2.1.257, so a defect rate here reads one platform version rather than a permanent property. The credential-exfiltration path that motivated the instrument has no confirmed instance in the corpus, which the paper reports rather than buries."
+        }
+      ]
     }
   ],
   "sections": [

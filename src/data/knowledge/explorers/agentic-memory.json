@@ -3131,6 +3131,31 @@
           "why": "This branch is about poisoning and injection reaching a persistent store that an agent later trusts, and the paper closes the open cell of its own attack table: compromised skill artifacts causing cloud harm is documented, jailbroken LLM-controlled robots causing physical harm is documented, and their intersection - a compromised procedural artifact causing physical-state harm - is what it constructs and defends. The governance lesson is that the enforcement point is the receiving agent's contract over typed state, not the script and not advisory text, and that a block surfaces the failed predicate rather than another model rationale."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260908279S",
+      "title": "What Eviction Destroys: A Restore-Counterfactual Audit of Forgetting in Agent Memory",
+      "firstAuthor": "Shen, Chen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08279",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908279S",
+      "branches": [
+        "forgetting",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Separates memory that was destroyed from memory that was merely not retrieved. The restore counterfactual reinstates a question's gold evidence and reruns the frozen reader, giving a restore gain in minus one, zero, one and an irreversible-loss indicator that fires only when the gold evidence is absent from the surviving store, which sorts oracle-answerable policy errors into irreversible, recoverable and residual. On LongMemEval-S with 470 evidence-labeled questions over roughly 102k-token histories at 8k, 30k and 80k budgets, the two-bin irreversible share at 80k under top-k retrieval is 0.71 for FIFO (0.61-0.81), 0.73 random, 0.67 redundancy-aware and 0.60 for LLM-importance, whose interval straddles 0.5; a destructive information-density control that evicts gold about three times as often sits at 1.00, as do all four policies at 8k. Question type splits it: single-session questions are roughly 95% irreversible, while multi-session and temporal questions carry 23-34% residual. A slack audit over 2,276 irreversible cases finds that restoring only surviving gold reclassifies 0.3% and restoring the full retained store recovers 2%, so 98% is genuine destruction, against a placebo restore that flips 8.3% where gold flips 100%.",
+          "why": "This theme has mostly measured eviction by end accuracy, which cannot tell a policy that deleted the answer from a retriever that failed to find it. The restore counterfactual gives that separation a per-question definition, a budget sweep and a bound on how much of the irreversible bin is measurement slack, which is what makes the policy comparison mean anything."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "As much a protocol as a result, and it reports where the protocol runs out. Under matched accuracy with a caliper of 0.05, none of nine baseline policy pairs dissociate on irreversible-loss rate with differences at or below 0.036, and none of six for LLM-importance, while a positive control is significant in all nine at p < 0.001; paired-bootstrap half-widths run 1.2 to 6 points and the authors report this as no dissociation detected at this resolution rather than as equivalence. Read-time regime is treated as a reported variable rather than a constant: the recoverable-share gap between top-k and forced-gold retrieval at 80k is +0.29 for FIFO (0.19-0.39), +0.27 random, +0.33 redundancy-aware and +1.00 for no-evict at adjusted p = .007, with 4 of 12 evicting cells rejecting. Judging is audited in the same way: reader and judge are one small model at temperature 0, an independent larger judge agrees 95.7% with kappa 0.90, judge strictness accounts for under 20% of the residual bin, and a stronger reader halves residual from 59 to 28 on the no-evict 80k forced-gold cell, with the corrected cases being exactly the cross-session aggregation errors.",
+          "why": "Two methodology claims transfer past this paper: budget-accuracy frontiers are not comparable unless the read-time retrieval regime is reported, and a null has to be published with its sensitivity rather than dressed as equivalence. The residual bin also gets an attribution, reader utilization rather than memory state, which is the kind of stage-level failure attribution this theme asks for."
+        }
+      ]
     }
   ],
   "sections": [

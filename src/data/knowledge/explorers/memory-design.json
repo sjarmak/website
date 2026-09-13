@@ -1783,6 +1783,31 @@
           "why": "Shared memory across agents is usually treated as strictly beneficial; this paper shows that unrestricted reads make agents adopt an early hypothesis as a shared premise, and that the coherence of a swarm comes from gating when memory is read and reviewing what enters it, not from dumping every finding into a common store."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260908279S",
+      "title": "What Eviction Destroys: A Restore-Counterfactual Audit of Forgetting in Agent Memory",
+      "firstAuthor": "Shen, Chen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.08279",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260908279S",
+      "branches": [
+        "forgetting",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "forgetting",
+          "takeaway": "Design consequence first: at tight budgets, retention beats retrieval. At 8k the irreversible share is 1.00 for FIFO, random, redundancy-aware and LLM-importance alike, so every restorable policy error at that budget is evidence the policy deleted rather than mislaid. The spread only opens at 80k, from 0.60 to 0.73, where LLM-importance is the single policy whose interval straddles 0.5. FIFO at 80k in counts: 336 questions, 124 policy errors, 55 irreversible, 22 recoverable, 47 residual, an irreversible rate of 0.16. The worked examples show what each bin looks like in practice: a commute fact, 45 minutes each way, evicted outright is irreversible; a subscription count still in the store but unretrieved is recoverable; and a bike-expense question answered $65 against a gold $185 with the evidence present and retrieved is residual.",
+          "why": "The lifecycle question this theme keeps asking is when a memory should be forgotten. The answer here is budget-conditional and measurable: under pressure the eviction policy rather than the ranker sets the ceiling, and a redundancy-aware or importance-scored policy only begins to pay once the budget is loose enough for retrieval to matter at all."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "A benchmark number for a memory system is a joint property of the store and the read-time regime, and this paper measures the size of that coupling. Switching from top-k retrieval to forced gold at an 80k budget moves the recoverable share by +0.29 for FIFO (0.19-0.39), +0.27 for random, +0.33 for redundancy-aware and +1.00 for no-evict at adjusted p = .007, so two systems reporting the same accuracy at the same budget are not comparable unless both state how evidence reached the reader. The reliability work is reported alongside: reader and judge fixed at temperature 0, a separate robustness reader, an independent larger judge agreeing 95.7% at kappa 0.90, judge strictness bounded under 20% of the residual bin, and matched-accuracy nulls published with paired-bootstrap sensitivity of 1.2 to 6 points instead of as equivalence claims.",
+          "why": "This theme asks whether a benchmark tests retrieval quality or answer quality. The restore counterfactual answers that by construction, and the residual bin supplies a third category the usual two-way split misses: evidence present, retrieved, and still misused, which a stronger reader halves from 59 to 28 cases and which maps onto cross-session aggregation rather than storage."
+        }
+      ]
     }
   ],
   "sections": [
