@@ -38,6 +38,33 @@
   kind: repo
   note: Uncle Bob's CRAP metric (Change Risk Anti-Patterns) for Java, complexity weighted by test coverage.
   tags: [metrics, testing, code-quality]
+
+- title: uml-viewer
+  url: https://github.com/unclebob/uml-viewer
+  category: Code quality
+  kind: repo
+  note: >-
+    Uncle Bob's Quil-based live UML class-diagram viewer, driven by an EDN
+    topology + policy file. Overlays cyclomatic complexity, coverage, and
+    mutation-testing metrics, enforces Clean Architecture dependency
+    direction, and lets you preview alternative component groupings without
+    touching source. Worth a look alongside the LikeC4 orient export.
+  tags: [uml, clean-architecture, visualization, clojure]
+  added: 2026-09-18
+
+- title: TypeSafe AI — System One Models (Jev)
+  url: https://typesafe.ai/blog/introducing-system-one-models-and-jev
+  category: AI models
+  kind: article
+  note: >-
+    TypeSafe AI's pitch for a non-chat model class built for automation: Jev
+    outputs type-safe structured values instead of text, claims 40x-200x
+    lower latency than frontier LLMs (70-500ms), free output tokens, and
+    calibrated confidence scores via a "Reinforcement Learning for Calibrated
+    Decisions" training method. Early access; worth watching as a structured-
+    decision alternative to LLM-in-the-loop automation.
+  tags: [structured-output, automation, model-architecture]
+  added: 2026-09-18
   added: 2026-07-24
 
 - title: whatbroke
