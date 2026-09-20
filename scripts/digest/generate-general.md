@@ -24,7 +24,8 @@ non-AI/software content and pure marketing with no information in it.
 ## Parameters (filled by the runner)
 
 - Cadence: **{{CADENCE}}** · Track: **general** · Slug: **{{SLUG}}**
-- Coverage window: **{{WINDOW}}** (items on/after {{SINCE}})
+- Coverage window: **{{WINDOW}}** (items on/after {{SINCE}} and strictly before {{UNTIL}})
+- Hard cap: this issue covers {{DATE}}. Ignore any item published on/after {{UNTIL}}, even if the feed returns it.
 - Podcast transcript target: **~{{WORD_TARGET}} words** (~{{MINUTES}} min at 150 wpm)
 - Items to feature: **{{ITEM_RANGE}}**
 - Issue date: **{{DATE}}**
@@ -68,7 +69,7 @@ reference (summary, title, body, transcript) to the window you actually pulled f
 
 2. **Sweep the window — do NOT search by topic first.** Topic queries are how the
    specialized track misses launches; this track starts from what's actually there:
-   - `search_items` with NO query, `since: "{{SINCE}}"`, `limit: 100` — the raw recency
+   - `search_items` with NO query, `since: "{{SINCE}}"`, `until: "{{UNTIL}}"`, `limit: 100` — the raw recency
      sweep across all categories. This is your primary candidate pool.
    - `aggregate_items` (group_by source) over the same window to see where coverage is
      concentrated.

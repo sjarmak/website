@@ -65,7 +65,8 @@ explainability, or robustness.
 ## Parameters (filled by the runner)
 
 - Cadence: **{{CADENCE}}** · Track: **specialized** · Slug: **{{SLUG}}**
-- Coverage window: **{{WINDOW}}** (items on/after {{SINCE}})
+- Coverage window: **{{WINDOW}}** (items on/after {{SINCE}} and strictly before {{UNTIL}})
+- Hard cap: this issue covers {{DATE}}. Ignore any item published on/after {{UNTIL}}, even if the feed returns it.
 - Podcast transcript target: **~{{WORD_TARGET}} words** (~{{MINUTES}} min at 150 wpm)
 - Items to feature: **{{ITEM_RANGE}}**
 - Issue date: **{{DATE}}**

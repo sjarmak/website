@@ -37,11 +37,16 @@ case "$MODE" in
   *) echo "usage: run.sh <daily|weekly|daily-general|weekly-general|curated <items.json>>" >&2; exit 2 ;;
 esac
 
+# Issue date. DIGEST_DATE backfills a missed run under its real date instead of
+# today's; the item window is then anchored to that date, not to now.
+DATE="${DIGEST_DATE:-$(date +%F)}"
+
 # Window start as an ISO date, for MCP `since` filters in the templates.
 case "$CADENCE" in
-  daily)  SINCE="$(date -d '2 days ago' +%F)" ;;
-  weekly) SINCE="$(date -d '7 days ago' +%F)" ;;
+  daily)  SINCE="$(date -d "$DATE -2 days" +%F)" ;;
+  weekly) SINCE="$(date -d "$DATE -7 days" +%F)" ;;
 esac
+UNTIL="$(date -d "$DATE +1 day" +%F)"
 
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
 WEBSITE_MEDIA_DIR="${WEBSITE_MEDIA_DIR:-$(dirname "$WEBSITE_DIR")/website-media}"
@@ -67,7 +72,6 @@ export DIGEST_CRON=1
 KOKORO_PYTHON="${KOKORO_VENV:-$HOME/.venvs/kokoro-tts}/bin/python"
 [ -x "$KOKORO_PYTHON" ] || { echo "Kokoro venv not found at ${KOKORO_VENV:-$HOME/.venvs/kokoro-tts} — run scripts/digest/setup-kokoro.sh" >&2; exit 2; }
 
-DATE="$(date +%F)"
 WORK="$(mktemp -d)"
 
 # Repeat guard: list every URL featured in this track's recent issues so the
@@ -101,6 +105,7 @@ PROMPT="$(sed \
   -e "s|{{TRACK}}|${TRACK}|g" \
   -e "s|{{SLUG}}|${MODE}-${DATE}|g" \
   -e "s|{{SINCE}}|${SINCE}|g" \
+  -e "s|{{UNTIL}}|${UNTIL}|g" \
   -e "s|{{WINDOW}}|${WINDOW}|g" \
   -e "s|{{WORD_TARGET}}|${WORD_TARGET}|g" \
   -e "s|{{MINUTES}}|${MINUTES}|g" \
