@@ -318,3 +318,32 @@
     industrial-applications angle and a map of open-source PIML tooling.
   tags: [physics-ml, survey, pde, physics-informed]
   added: 2026-08-18
+
+- title: supercov
+  url: https://github.com/supercorp-ai/supercov
+  category: Code quality
+  kind: tool
+  note: >-
+    MIT-licensed CLI (npx supercov) that gives a coding agent targets: it
+    scores per-file code quality via TypeSafe AI's Jev model (yes/no
+    questions per file, arithmetic done locally, about a cent per MB of
+    source), runs your existing test command, and turns uncovered paths into
+    small queries the agent can write tests or refactors against. Covers JS/TS,
+    Rust, Python, Ruby, Go, Java, Kotlin. Compare with crap4java's
+    complexity-times-coverage approach.
+  tags: [coverage, code-quality, coding-agents, testing]
+  added: 2026-09-21
+
+- title: snifftest
+  url: https://github.com/DanRWilloughby/snifftest
+  category: AI writing
+  kind: tool
+  note: >-
+    Prose linter for AI writing tells in Markdown and plain text. Countable
+    rules (long dashes, banned words, uniform sentence length) run locally as
+    regexes; judgment rules (restating closers, stacked hedges) send one
+    paragraph at a time to a small hosted Jev model after an explicit yes.
+    Flags only, never rewrites; ships as CLI, GitHub Action, pre-commit hook
+    and Claude Code plugin. Candidate check for the no-ai-slop pass.
+  tags: [ai-slop, writing, linter, claude-code]
+  added: 2026-09-21
