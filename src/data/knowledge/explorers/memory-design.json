@@ -3,7 +3,7 @@
   "title": "Memory Design Considerations",
   "learningSlug": "memory-design-considerations",
   "homepage": "/library/explorers/memory-design",
-  "paperCount": 51,
+  "paperCount": 85,
   "themeCount": 11,
   "papers": [
     {
@@ -1806,6 +1806,31 @@
           "branch": "evaluation",
           "takeaway": "A benchmark number for a memory system is a joint property of the store and the read-time regime, and this paper measures the size of that coupling. Switching from top-k retrieval to forced gold at an 80k budget moves the recoverable share by +0.29 for FIFO (0.19-0.39), +0.27 for random, +0.33 for redundancy-aware and +1.00 for no-evict at adjusted p = .007, so two systems reporting the same accuracy at the same budget are not comparable unless both state how evidence reached the reader. The reliability work is reported alongside: reader and judge fixed at temperature 0, a separate robustness reader, an independent larger judge agreeing 95.7% at kappa 0.90, judge strictness bounded under 20% of the residual bin, and matched-accuracy nulls published with paired-bootstrap sensitivity of 1.2 to 6 points instead of as equivalence claims.",
           "why": "This theme asks whether a benchmark tests retrieval quality or answer quality. The restore counterfactual answers that by construction, and the residual bin supplies a third category the usual two-way split misses: evidence present, retrieved, and still misused, which a stronger reader halves from 59 to 28 cases and which maps onto cross-session aggregation rather than storage."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260829678F",
+      "title": "Diachronic Hypergraphs for Orchestrated Multi-Agent Multimodal Memory Curation",
+      "firstAuthor": "Feng, Yichao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.29678",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260829678F/abstract",
+      "branches": [
+        "representation",
+        "multiagent"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "MAGE keeps typed hyperedges as first-class storage units instead of decomposing a k-ary collaborative fact into pairwise graph edges, because that decomposition is lossy: it confuses mere co-occurrence with true n-ary co-participation and erases multiplicity.",
+          "why": "A direct, evidence-backed data point for the flat-vector vs. entity-relationship-graph vs. layered-store question this branch tracks, with a specific structural argument against pairwise graph representations for multi-agent memory."
+        },
+        {
+          "branch": "multiagent",
+          "takeaway": "MAGE retrieves role-conditioned memory subgraphs from one shared hypergraph store, rather than forwarding raw histories between agents: planners recover constraints and procedures, retrievers get evidence requirements, executors reuse validated actions, and critics inspect sources and errors.",
+          "why": "Answers this branch's own framing question, how to keep long-running agent swarms coherent without dumping chat logs, with a specific role-aware retrieval mechanism (seeding, bilateral expansion, multi-signal ranking, budget-bounded packing) rather than full-history forwarding."
         }
       ]
     }

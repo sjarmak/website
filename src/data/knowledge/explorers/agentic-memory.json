@@ -3,7 +3,7 @@
   "title": "Agentic Memory Systems",
   "learningSlug": "agentic-memory-systems",
   "homepage": "/library/explorers/agentic-memory",
-  "paperCount": 119,
+  "paperCount": 153,
   "themeCount": 9,
   "papers": [
     {
@@ -3154,6 +3154,25 @@
           "branch": "eval-methodology",
           "takeaway": "As much a protocol as a result, and it reports where the protocol runs out. Under matched accuracy with a caliper of 0.05, none of nine baseline policy pairs dissociate on irreversible-loss rate with differences at or below 0.036, and none of six for LLM-importance, while a positive control is significant in all nine at p < 0.001; paired-bootstrap half-widths run 1.2 to 6 points and the authors report this as no dissociation detected at this resolution rather than as equivalence. Read-time regime is treated as a reported variable rather than a constant: the recoverable-share gap between top-k and forced-gold retrieval at 80k is +0.29 for FIFO (0.19-0.39), +0.27 random, +0.33 redundancy-aware and +1.00 for no-evict at adjusted p = .007, with 4 of 12 evicting cells rejecting. Judging is audited in the same way: reader and judge are one small model at temperature 0, an independent larger judge agrees 95.7% with kappa 0.90, judge strictness accounts for under 20% of the residual bin, and a stronger reader halves residual from 59 to 28 on the no-evict 80k forced-gold cell, with the corrected cases being exactly the cross-session aggregation errors.",
           "why": "Two methodology claims transfer past this paper: budget-accuracy frontiers are not comparable unless the read-time retrieval regime is reported, and a null has to be published with its sensitivity rather than dressed as equivalence. The residual bin also gets an attribution, reader utilization rather than memory state, which is the kind of stage-level failure attribution this theme asks for."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260829678F",
+      "title": "Diachronic Hypergraphs for Orchestrated Multi-Agent Multimodal Memory Curation",
+      "firstAuthor": "Feng, Yichao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.29678",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260829678F/abstract",
+      "branches": [
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "architectures",
+          "takeaway": "MAGE (Multi-Agents Graph Engine) replaces flat vector or pairwise-graph memory with a heterogeneous, bitemporal hypergraph whose hyperedges hold whole multi-way MAS events (agents, tools, documents, decisions, evidence) as single memory units, organized into six layers from storage and indexing through role-aware retrieval.",
+          "why": "A concrete instance of the branch's hypergraph/tiered-architecture bucket: it argues and shows empirically that decomposing a k-ary collaborative event into pairwise edges conflates co-occurrence with true n-ary co-participation, giving a specific structural reason to prefer hypergraphs over plain graph memory for multi-agent systems."
         }
       ]
     }

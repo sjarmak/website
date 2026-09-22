@@ -1,183 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2025arXiv251216956C",
-      "arxiv": "2512.16956",
-      "title": "SpIDER: Spatially Informed Dense Embedding Retrieval for Software Issue Localization",
-      "targets": [
-        {
-          "explorerId": "code-retrieval-enterprise",
-          "branches": [
-            "techniques",
-            "repo-scale"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2025arXiv250723465A",
-      "arxiv": "2507.23465",
-      "title": "Almheiri 2025 (access-control leakage in LLM data agents)",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "enforcement"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2026arXiv260521027S",
-      "arxiv": "2605.21027",
-      "title": "Singh 2026, Analytic Agent",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "enforcement",
-            "boundary"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2026arXiv260505287A",
-      "arxiv": "2605.05287",
-      "title": "Arceo and Narsing 2026, Securing the Agent",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "enforcement",
-            "boundary"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2025arXiv250923338Z",
-      "arxiv": "2509.23338",
-      "title": "PARROT (Zhou 2025)",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "representation",
-            "grading"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2026arXiv260105579X",
-      "arxiv": "2601.05579",
-      "title": "RISE (Xu 2026)",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "representation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2025arXiv250902473W",
-      "arxiv": "2509.02473",
-      "title": "FDABench (Wang 2025)",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "grading",
-            "representation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: papers row present but body IS NULL and no papers_fulltext entry; abstract only."
-    },
-    {
-      "bibcode": "2026arXiv260525838K",
-      "arxiv": "2605.25838",
-      "title": "Kanchinadam 2026",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "generalization",
-            "gap"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
-    },
-    {
-      "bibcode": "2026arXiv260402444S",
-      "arxiv": "2604.02444",
-      "title": "Shahbazi 2026",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "representation"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-01",
-      "lastAttempt": "2026-09-13",
-      "attempts": 9,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
-    },
-    {
-      "bibcode": "2026arXiv260904075S",
-      "arxiv": "2609.04075",
-      "title": "PatchBench: Evaluating AI Agents for Vulnerability Patching",
-      "targets": [
-        {
-          "explorerId": "formal-specifications-agents",
-          "branches": [
-            "agent-quality",
-            "benchmarks"
-          ]
-        }
-      ],
-      "firstSeen": "2026-09-05",
-      "lastAttempt": "2026-09-13",
-      "attempts": 5,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
-    },
-    {
       "bibcode": "2026arXiv260702436M",
       "arxiv": "2607.02436",
       "title": "Reasoning effort, not tool access, buys first-try reliability in agentic code generation: an observational study",
@@ -191,9 +14,9 @@
         }
       ],
       "firstSeen": "2026-09-09",
-      "lastAttempt": "2026-09-13",
-      "attempts": 2,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 3,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911515S",
@@ -209,9 +32,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-13",
-      "attempts": 1,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 2,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911028Z",
@@ -227,9 +50,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-13",
-      "attempts": 1,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 2,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911076H",
@@ -246,9 +69,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-13",
-      "attempts": 1,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 2,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911060S",
@@ -270,9 +93,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-13",
-      "attempts": 1,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 2,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911286G",
@@ -293,9 +116,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-13",
-      "attempts": 1,
-      "note": "2026-09-13: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-22",
+      "attempts": 2,
+      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
     }
   ]
 }
