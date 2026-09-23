@@ -45,6 +45,7 @@ test('each field has sourced papers, progression, a reading path, audio and a tr
     assert.match(html, /Open problems/);
     assert.match(html, /<audio controls/);
     assert.ok(html.includes(data.podcast.audioUrl));
+    assert.match(data.podcast.audioUrl, /\.mp3\?v=[a-f0-9]{7,40}$/, `${slug}: versioned media URL avoids cached pre-deployment 404s`);
     assert.ok(data.podcast.durationMin > 0, `${slug}: measured audio duration`);
     assert.match(html, /Read transcript/);
     const transcript = read(`src/data/scix-ab/transcripts/${slug}.md`);
