@@ -1,0 +1,402 @@
+{
+  "id": "david-schimel",
+  "title": "Observing the carbon-climate system",
+  "blurb": "A progression from terrestrial carbon-cycle foundations through integrated towers, models, and satellite observations to monitoring and attribution.",
+  "homepage": "/scix_ab_explorers/david-schimel",
+  "learningSlug": "david-schimel",
+  "paperCount": 13,
+  "themeCount": 4,
+  "person": {
+    "name": "David S. Schimel",
+    "affiliation": "Jet Propulsion Laboratory, California Institute of Technology",
+    "expertise": "Terrestrial ecology, carbon-cycle science, ecosystem modeling, remote sensing, and Earth-system observation",
+    "interests": [
+      "terrestrial carbon fluxes",
+      "climate-carbon feedbacks",
+      "ecosystem measurements",
+      "satellite spectroscopy",
+      "data assimilation"
+    ],
+    "sources": [
+      {
+        "title": "JPL Science profile",
+        "url": "https://science.jpl.nasa.gov/people/dschimel"
+      },
+      {
+        "title": "Observing the carbon-climate system",
+        "url": "https://arxiv.org/abs/1604.02106"
+      }
+    ]
+  },
+  "papers": [
+    {
+      "bibcode": "1995GCBio...1...77S",
+      "title": "Terrestrial ecosystems and the carbon cycle",
+      "firstAuthor": "Schimel, David S.",
+      "year": 1995,
+      "url": "https://doi.org/10.1111/j.1365-2486.1995.tb00008.x",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "The terrestrial carbon budget combines large opposing exchanges, land-use emissions, and uncertain sinks driven by interacting biological processes.",
+          "why": "Begin with reservoirs, fluxes, and why an apparent missing sink is an inference with uncertainty."
+        }
+      ]
+    },
+    {
+      "bibcode": "2001Natur.414..169S",
+      "title": "Recent patterns and mechanisms of carbon exchange by terrestrial ecosystems",
+      "firstAuthor": "Schimel, D. S.",
+      "year": 2001,
+      "url": "https://doi.org/10.1038/35102500",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Atmospheric and terrestrial evidence constrains regional carbon exchange, but attributing the sink to land use, regrowth, and environmental change remains difficult.",
+          "why": "A historical baseline for how multiple explanations can fit a global budget."
+        }
+      ]
+    },
+    {
+      "bibcode": "1999RSEnv..70..108R",
+      "title": "A Global Terrestrial Monitoring Network Integrating Tower Fluxes, Flask Sampling, Ecosystem Modeling and EOS Satellite Data",
+      "firstAuthor": "Running, S. W.",
+      "year": 1999,
+      "url": "https://doi.org/10.1016/S0034-4257(99)00061-9",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A proposed monitoring network combines flux towers, atmospheric flask samples, ecosystem models, and satellite observations.",
+          "why": "See why no single measurement system can observe the entire carbon cycle."
+        }
+      ]
+    },
+    {
+      "bibcode": "1995RSEnv..51...49S",
+      "title": "Terrestrial biogeochemical cycles: Global estimates with remote sensing",
+      "firstAuthor": "Schimel, David S.",
+      "year": 1995,
+      "url": "https://doi.org/10.1016/0034-4257(94)00064-T",
+      "branches": [
+        "observation"
+      ],
+      "notes": [
+        {
+          "branch": "observation",
+          "takeaway": "Remote sensing strategies must differ for photosynthetic exchange, land-use change, and the mechanisms producing additional ecosystem uptake.",
+          "why": "Schimel connects the quantity of interest to the observation required to estimate it."
+        }
+      ]
+    },
+    {
+      "bibcode": "2015GCBio..21.1762S",
+      "title": "Observing terrestrial ecosystems and the carbon cycle from space",
+      "firstAuthor": "Schimel, David",
+      "year": 2015,
+      "url": "https://doi.org/10.1111/gcb.12822",
+      "branches": [
+        "observation"
+      ],
+      "notes": [
+        {
+          "branch": "observation",
+          "takeaway": "Remote and in situ observations together can reduce spatial sampling gaps in carbon stocks, fluxes, and plant traits, especially in tropical and northern ecosystems.",
+          "why": "Move beyond greenness indices toward ecosystem structure and function."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019RSEnv.23311383X",
+      "title": "Remote sensing of the terrestrial carbon cycle: A review of advances over 50 years",
+      "firstAuthor": "Xiao, Jingfeng",
+      "year": 2019,
+      "url": "https://doi.org/10.1016/j.rse.2019.111383",
+      "branches": [
+        "observation"
+      ],
+      "notes": [
+        {
+          "branch": "observation",
+          "takeaway": "Five decades of work connect optical, thermal, microwave, lidar, fluorescence, and inversion methods to carbon stocks and fluxes.",
+          "why": "Use this review to compare what each observing approach measures and how its estimates are validated."
+        }
+      ]
+    },
+    {
+      "bibcode": "2015PNAS..112..436S",
+      "title": "Effect of increasing CO2 on the terrestrial carbon cycle",
+      "firstAuthor": "Schimel, David",
+      "year": 2015,
+      "url": "https://doi.org/10.1073/pnas.1407302112",
+      "branches": [
+        "assimilation"
+      ],
+      "notes": [
+        {
+          "branch": "assimilation",
+          "takeaway": "An analysis combining tropical and extratropical flux constraints finds a substantial CO2-driven contribution to land uptake, while emphasizing remaining uncertainty.",
+          "why": "Separate evidence for fertilization from assumptions about the persistence of that sink under warming and deforestation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020PlBio..22S...5A",
+      "title": "The influence of rising tropospheric carbon dioxide and ozone on plant productivity",
+      "firstAuthor": "Ainsworth, E. A.",
+      "year": 2020,
+      "url": "https://doi.org/10.1111/plb.12973",
+      "branches": [
+        "assimilation"
+      ],
+      "notes": [
+        {
+          "branch": "assimilation",
+          "takeaway": "Long-term enrichment experiments reveal interacting effects of CO2, ozone, temperature, water, and nutrients on plant productivity.",
+          "why": "Use manipulative experiments to challenge mechanisms inferred from global observations."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016arXiv160402106S",
+      "title": "Observing the carbon-climate system",
+      "firstAuthor": "Schimel, David",
+      "year": 2016,
+      "url": "https://doi.org/10.48550/arXiv.1604.02106",
+      "branches": [
+        "assimilation"
+      ],
+      "notes": [
+        {
+          "branch": "assimilation",
+          "takeaway": "This preprint argues for higher-resolution observations that distinguish heterogeneous carbon sources and sinks and attribute their changes to mechanisms.",
+          "why": "Read it as an observing-system proposal, then compare its ambitions with later budget assessments."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020EcoAp..30E2039B",
+      "title": "Carbon sequestration and biodiversity co-benefits of preserving forests in the western United States",
+      "firstAuthor": "Buotte, Polly C.",
+      "year": 2020,
+      "url": "https://doi.org/10.1002/eap.2039",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Scenario-based ecosystem modeling combines carbon sequestration potential, drought and fire vulnerability, and biodiversity in forest-preservation priorities.",
+          "why": "Connect carbon science to decisions while retaining scenario dependence and multiple ecological criteria."
+        }
+      ]
+    },
+    {
+      "bibcode": "2012ERL.....7a1001K",
+      "title": "New views on changing Arctic vegetation",
+      "firstAuthor": "Kennedy, Robert E.",
+      "year": 2012,
+      "url": "https://doi.org/10.1088/1748-9326/7/1/011001",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "This perspective explains why long, consistent, spatially resolved records are needed to test interpretations of Arctic vegetation change.",
+          "why": "A continuing methodological challenge: distinguish a measured greening trend from its ecological cause."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025ESSD...17..965F",
+      "title": "Global Carbon Budget 2024",
+      "firstAuthor": "Friedlingstein, Pierre",
+      "year": 2025,
+      "url": "https://doi.org/10.5194/essd-17-965-2025",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Global Carbon Budget 2024 combines emissions inventories, observations, models, and inversions while documenting persistent disagreements in regional fluxes.",
+          "why": "The 2025 publication shows how budget closure can coexist with important uncertainty about sources and sinks."
+        }
+      ]
+    },
+    {
+      "title": "The Global Ecosystem Dynamics Investigation: High-resolution laser ranging of the Earth\u2019s forests and topography",
+      "firstAuthor": "Dubayah, Ralph",
+      "year": 2020,
+      "url": "https://doi.org/10.1016/j.srs.2020.100002",
+      "branches": [
+        "observation"
+      ],
+      "notes": [
+        {
+          "branch": "observation",
+          "takeaway": "GEDI uses spaceborne laser ranging to measure forest vertical structure, supporting estimates of biomass and studies of habitat and ecosystem processes.",
+          "why": "Connect the episode\u2019s discussion of three-dimensional vegetation observations to the instrument and its measurement requirements."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Foundations: stocks, fluxes, ecosystems",
+      "summary": "Carbon science begins by distinguishing stocks from fluxes and by explaining how vegetation, soils, climate, and disturbance interact. These mechanisms define what an observing system must measure.",
+      "count": 3,
+      "themes": [
+        "stocks",
+        "fluxes"
+      ],
+      "gaps": [
+        "soil persistence"
+      ],
+      "questions": [
+        "Which processes control sink longevity?"
+      ]
+    },
+    {
+      "key": "observation",
+      "label": "Observation: towers, atmosphere, satellites",
+      "summary": "The field then combines tower fluxes, flask samples, ecosystem models, and satellite observations. Each observes a different projection of the carbon system, so integration is the scientific task.",
+      "count": 4,
+      "themes": [
+        "sensor fusion",
+        "remote sensing"
+      ],
+      "gaps": [
+        "scale mismatch"
+      ],
+      "questions": [
+        "How should observations be compared?"
+      ]
+    },
+    {
+      "key": "assimilation",
+      "label": "Assimilation: from measurements to estimates",
+      "summary": "Inverse and ecosystem models use heterogeneous observations to estimate sources and sinks. Their results remain conditional on transport, priors, calibration, and the structure of the model.",
+      "count": 3,
+      "themes": [
+        "inverse problems",
+        "uncertainty"
+      ],
+      "gaps": [
+        "identifiability"
+      ],
+      "questions": [
+        "Which observations change the estimate?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Frontier: monitoring a changing planet",
+      "summary": "Current work asks whether carbon loss and climate stress can be detected early enough to matter. That requires provenance, uncertainty, and measurements that remain comparable as sensors and pipelines change.",
+      "count": 3,
+      "themes": [
+        "early warning",
+        "attribution"
+      ],
+      "gaps": [
+        "regional verification"
+      ],
+      "questions": [
+        "How fast can anomalies be attributed?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "1995GCBio...1...77S",
+      "Terrestrial ecosystems and the carbon cycle",
+      "foundations"
+    ],
+    [
+      "2001Natur.414..169S",
+      "Recent patterns and mechanisms of carbon exchange by terrestrial ecosystems",
+      "foundations"
+    ],
+    [
+      "1999RSEnv..70..108R",
+      "A Global Terrestrial Monitoring Network Integrating Tower Fluxes, Flask Sampling, Ecosystem Modeling and EOS Satellite Data",
+      "foundations"
+    ],
+    [
+      "1995RSEnv..51...49S",
+      "Terrestrial biogeochemical cycles: Global estimates with remote sensing",
+      "observation"
+    ],
+    [
+      "2015GCBio..21.1762S",
+      "Observing terrestrial ecosystems and the carbon cycle from space",
+      "observation"
+    ],
+    [
+      "2019RSEnv.23311383X",
+      "Remote sensing of the terrestrial carbon cycle: A review of advances over 50 years",
+      "observation"
+    ],
+    [
+      "2015PNAS..112..436S",
+      "Effect of increasing CO2 on the terrestrial carbon cycle",
+      "assimilation"
+    ],
+    [
+      "2020PlBio..22S...5A",
+      "The influence of rising tropospheric carbon dioxide and ozone on plant productivity",
+      "assimilation"
+    ],
+    [
+      "2016arXiv160402106S",
+      "Observing the carbon-climate system",
+      "assimilation"
+    ],
+    [
+      "2020EcoAp..30E2039B",
+      "Carbon sequestration and biodiversity co-benefits of preserving forests in the western United States",
+      "frontier"
+    ],
+    [
+      "2012ERL.....7a1001K",
+      "New views on changing Arctic vegetation",
+      "frontier"
+    ],
+    [
+      "2025ESSD...17..965F",
+      "Global Carbon Budget 2024",
+      "frontier"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Carbon monitoring with explicit provenance",
+      "Tie every flux estimate to sensor, model, and uncertainty lineage."
+    ],
+    [
+      "Ecosystem early-warning benchmarks",
+      "Test whether combined biomass, fluorescence, and flux data detect drought stress before losses appear."
+    ]
+  ],
+  "practices": [
+    "Separate measured quantities from inferred fluxes.",
+    "Report uncertainty and versioned data provenance."
+  ],
+  "podcast": {
+    "title": "David Schimel and the carbon-climate observatory",
+    "description": "A narrated progression from ecosystem carbon theory to satellites and global carbon budgets.",
+    "audioUrl": "/media/podcasts/scix-ab-david-schimel.mp3",
+    "durationMin": 9.95,
+    "transcript": "david-schimel"
+  }
+}

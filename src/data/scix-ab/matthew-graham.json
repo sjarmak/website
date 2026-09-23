@@ -1,0 +1,408 @@
+{
+  "id": "matthew-graham",
+  "title": "Real-Time Time-Domain Astronomy",
+  "blurb": "How wide-field surveys turn a changing sky into an alert stream, a searchable archive, and a decision system.",
+  "homepage": "/scix_ab_explorers/matthew-graham",
+  "learningSlug": "matthew-graham",
+  "person": {
+    "name": "Matthew J. Graham",
+    "affiliation": "California Institute of Technology",
+    "expertise": "Time-domain astronomy, astroinformatics, machine learning, and distributed scientific data systems",
+    "interests": [
+      "Zwicky Transient Facility",
+      "variable and transient objects",
+      "quasar variability",
+      "real-time inference",
+      "multi-messenger follow-up"
+    ],
+    "sources": [
+      {
+        "title": "Caltech faculty profile",
+        "url": "https://www.pma.caltech.edu/people/matthew-graham"
+      },
+      {
+        "title": "Personal research page",
+        "url": "https://sites.astro.caltech.edu/~mjg"
+      },
+      {
+        "title": "ZTF publications",
+        "url": "https://ztf.ipac.caltech.edu/page/publications"
+      }
+    ]
+  },
+  "paperCount": 12,
+  "themeCount": 4,
+  "papers": [
+    {
+      "title": "Machine Learning for the Zwicky Transient Facility",
+      "firstAuthor": "Mahabal, Ashish",
+      "year": 2019,
+      "bibcode": "2019PASP..131c8002M",
+      "citationCount": 122,
+      "url": "https://doi.org/10.1088/1538-3873/aaf3fa",
+      "branches": [
+        "inference"
+      ],
+      "notes": [
+        {
+          "branch": "inference",
+          "takeaway": "A survey producing hundreds of thousands of alerts nightly requires staged filtering, classification, active learning, and links to other data sets.",
+          "why": "It makes the central computational problem explicit and connects it to ZTF's scientific breadth."
+        }
+      ]
+    },
+    {
+      "bibcode": "2015Natur.518...74G",
+      "title": "A possible close supermassive black-hole binary in a quasar with optical periodicity",
+      "firstAuthor": "Graham, Matthew J.",
+      "year": 2015,
+      "url": "https://doi.org/10.1038/nature14143",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A periodic optical signal in PG 1302\u2212102 motivates a possible close supermassive black-hole binary interpretation.",
+          "why": "Graham\u2019s quasar work illustrates how time-series patterns generate physical hypotheses without uniquely proving them."
+        }
+      ]
+    },
+    {
+      "title": "FINK, a new generation of broker for the LSST community",
+      "firstAuthor": "M\u00f6ller, Anais",
+      "year": 2021,
+      "bibcode": "2021MNRAS.501.3272M",
+      "citationCount": 45,
+      "url": "https://doi.org/10.1093/mnras/staa3602",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A broker organizes heterogeneous alerts, enriches them, and exposes classifications to users and downstream services.",
+          "why": "Broker architecture is the bridge between survey throughput and community science."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019PASP..131a8002B",
+      "title": "The Zwicky Transient Facility: System Overview, Performance, and First Results",
+      "firstAuthor": "Bellm, Eric C.",
+      "year": 2019,
+      "url": "https://doi.org/10.1088/1538-3873/aaecbe",
+      "branches": [
+        "survey"
+      ],
+      "notes": [
+        {
+          "branch": "survey",
+          "takeaway": "The ZTF instrument and data system combine a wide-field camera with rapid reduction and a public alert stream.",
+          "why": "Connect observing hardware to the latency and selection effects inherited by downstream classifiers."
+        }
+      ]
+    },
+    {
+      "title": "Real-bogus classification for the Zwicky Transient Facility using deep learning",
+      "firstAuthor": "Duev, Dmitry A.",
+      "year": 2019,
+      "bibcode": "2019MNRAS.489.3582D",
+      "citationCount": 35,
+      "url": "https://doi.org/10.1093/mnras/stz2357",
+      "branches": [
+        "inference"
+      ],
+      "notes": [
+        {
+          "branch": "inference",
+          "takeaway": "Deep models can reject image artifacts at the front of a high-volume pipeline.",
+          "why": "Scientific reliability depends on separating sky changes from instrumental defects."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019PASP..131g8001G",
+      "title": "The Zwicky Transient Facility: Science Objectives",
+      "firstAuthor": "Graham, Matthew J.",
+      "year": 2019,
+      "url": "https://doi.org/10.1088/1538-3873/ab006c",
+      "branches": [
+        "survey"
+      ],
+      "notes": [
+        {
+          "branch": "survey",
+          "takeaway": "Graham and colleagues connect survey cadence, depth, and real-time alerts to scientific questions spanning explosive transients, variable stars, and active galaxies.",
+          "why": "Start from the science requirements that shape an alert survey."
+        }
+      ]
+    },
+    {
+      "title": "The Tiny Time-series Transformer: Low-latency High-throughput Classification of Astronomical Transients using Deep Model Compression",
+      "firstAuthor": "Allam, Tarek, Jr.",
+      "year": 2023,
+      "bibcode": "2023arXiv230308951A",
+      "citationCount": 8,
+      "url": "https://doi.org/10.48550/arXiv.2303.08951",
+      "branches": [
+        "inference"
+      ],
+      "notes": [
+        {
+          "branch": "inference",
+          "takeaway": "Model compression and deployment choices reduce a time-series transformer\u2019s size and inference latency while preserving classification performance in the reported tests.",
+          "why": "Compare scientific accuracy with the throughput needed for a live alert broker."
+        }
+      ]
+    },
+    {
+      "title": "Bayesian multi-band fitting of alerts for kilonovae detection",
+      "firstAuthor": "Biswas, Biswajit",
+      "year": 2023,
+      "bibcode": "2023arXiv231104845B",
+      "citationCount": 4,
+      "url": "https://doi.org/10.48550/arXiv.2311.04845",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Probabilistic multi-band inference can rank rapidly evolving candidates while propagating uncertainty.",
+          "why": "This is the decision support needed for scarce follow-up time."
+        }
+      ]
+    },
+    {
+      "title": "REDBACK: a Bayesian inference software package for electromagnetic transients",
+      "firstAuthor": "Sarin, Nikhil",
+      "year": 2024,
+      "bibcode": "2024MNRAS.531.1203S",
+      "citationCount": 10,
+      "url": "https://doi.org/10.1093/mnras/stae1238",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "A flexible Bayesian framework connects transient light curves to physical models and observing decisions.",
+          "why": "It extends alert classification toward interpretable parameter inference."
+        }
+      ]
+    },
+    {
+      "title": "A classifier-based approach to multiclass anomaly detection for astronomical transients",
+      "firstAuthor": "Gupta, Rithwik",
+      "year": 2025,
+      "bibcode": "2025RASTI...4...54G",
+      "citationCount": 1,
+      "url": "https://doi.org/10.1093/rasti/rzae054",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Classifier-based anomaly detection can surface unusual behavior without a fixed taxonomy.",
+          "why": "Rare and novel events are why a broker must remain open to surprises."
+        }
+      ]
+    },
+    {
+      "title": "The automation of optical transient discovery and classification in Rubin-era time-domain astronomy",
+      "firstAuthor": "Rehemtulla, Nabeel",
+      "year": 2025,
+      "bibcode": "2025NatAs...9.1764R",
+      "citationCount": 0,
+      "url": "https://doi.org/10.1038/s41550-025-02720-6",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "End-to-end automation is moving from candidate generation toward discovery and classification at survey scale.",
+          "why": "It frames the emerging problem as a system of models, data, and human oversight."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020PhRvL.124y1102G",
+      "title": "Candidate Electromagnetic Counterpart to the Binary Black Hole Merger Gravitational-Wave Event S190521g*",
+      "firstAuthor": "Graham, M. J.",
+      "year": 2020,
+      "url": "https://doi.org/10.1103/PhysRevLett.124.251102",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "A ZTF flare is proposed as a plausible electromagnetic counterpart to a binary black-hole merger under an active-galaxy disk scenario.",
+          "why": "Read the association as a candidate and examine the competing explanations and follow-up predictions."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "From exposures to alerts",
+      "summary": "Time-domain astronomy begins with repeated imaging, calibrated products, and brokers that make a changing sky queryable. Throughput and provenance are scientific requirements: every classifier depends on knowing how a candidate entered the stream and what context accompanied it.",
+      "count": 2,
+      "themes": [
+        "image processing",
+        "brokers",
+        "data provenance"
+      ],
+      "gaps": [
+        "cross-survey calibration",
+        "latency versus completeness"
+      ],
+      "questions": [
+        "Which metadata are essential when alerts move between brokers?"
+      ]
+    },
+    {
+      "key": "survey",
+      "label": "A public, multi-purpose survey",
+      "summary": "ZTF made rapid optical discovery a shared service and demonstrated that one alert infrastructure can serve stellar transients, explosive events, and moving Solar System objects. The progression is from a camera and cadence to a public system whose value grows through reuse and cross-domain context.",
+      "count": 2,
+      "themes": [
+        "public alerts",
+        "cadence",
+        "small bodies"
+      ],
+      "gaps": [
+        "selection effects",
+        "follow-up access"
+      ],
+      "questions": [
+        "How should alert products expose survey selection without overwhelming users?"
+      ]
+    },
+    {
+      "key": "inference",
+      "label": "Learning at alert speed",
+      "summary": "Real-bogus filtering and learned time-series representations reduce the distance between detection and interpretation. The field is moving toward models that learn from scarce labels, but calibration, drift, and false negatives remain central concerns.",
+      "count": 3,
+      "themes": [
+        "deep learning",
+        "rare classes",
+        "artifact rejection"
+      ],
+      "gaps": [
+        "calibration",
+        "domain shift",
+        "human review"
+      ],
+      "questions": [
+        "What evidence should a model expose before an astronomer commits follow-up time?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Inference and discovery in the loop",
+      "summary": "Bayesian transient models and anomaly detectors push beyond fixed labels toward physical inference and novelty detection. Systems must rank what to observe next while retaining uncertainty, provenance, and room for events that do not fit the training set.",
+      "count": 5,
+      "themes": [
+        "Bayesian inference",
+        "anomaly detection",
+        "automation"
+      ],
+      "gaps": [
+        "utility-aware scheduling",
+        "novelty evaluation"
+      ],
+      "questions": [
+        "Can automated follow-up remain scientifically plural rather than optimizing one event class?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "2015Natur.518...74G",
+      "A possible close supermassive black-hole binary in a quasar with optical periodicity",
+      "foundations"
+    ],
+    [
+      "2021MNRAS.501.3272M",
+      "FINK, a new generation of broker for the LSST community",
+      "foundations"
+    ],
+    [
+      "2019PASP..131a8002B",
+      "The Zwicky Transient Facility: System Overview, Performance, and First Results",
+      "survey"
+    ],
+    [
+      "2019PASP..131g8001G",
+      "The Zwicky Transient Facility: Science Objectives",
+      "survey"
+    ],
+    [
+      "2019PASP..131c8002M",
+      "Machine Learning for the Zwicky Transient Facility",
+      "inference"
+    ],
+    [
+      "2019MNRAS.489.3582D",
+      "Real-bogus classification for the Zwicky Transient Facility using deep learning",
+      "inference"
+    ],
+    [
+      "2023arXiv230308951A",
+      "The Tiny Time-series Transformer: Low-latency High-throughput Classification of Astronomical Transients using Deep Model Compression",
+      "inference"
+    ],
+    [
+      "2020PhRvL.124y1102G",
+      "Candidate Electromagnetic Counterpart to the Binary Black Hole Merger Gravitational-Wave Event S190521g*",
+      "frontier"
+    ],
+    [
+      "2023arXiv231104845B",
+      "Bayesian multi-band fitting of alerts for kilonovae detection",
+      "frontier"
+    ],
+    [
+      "2024MNRAS.531.1203S",
+      "REDBACK: a Bayesian inference software package for electromagnetic transients",
+      "frontier"
+    ],
+    [
+      "2025RASTI...4...54G",
+      "A classifier-based approach to multiclass anomaly detection for astronomical transients",
+      "frontier"
+    ],
+    [
+      "2025NatAs...9.1764R",
+      "The automation of optical transient discovery and classification in Rubin-era time-domain astronomy",
+      "frontier"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Calibrated alert triage",
+      "Compare rare-event classifiers with explicit selection and uncertainty audits."
+    ],
+    [
+      "Learning follow-up policies",
+      "Test transparent observing utilities against learned schedules."
+    ],
+    [
+      "Cross-survey identity",
+      "Preserve provenance while linking optical, gravitational-wave, infrared, and Solar System alerts."
+    ]
+  ],
+  "practices": [],
+  "podcast": {
+    "title": "When the Sky Starts Streaming: Matthew Graham and ZTF",
+    "description": "A path from image processing and public alerts to machine-guided transient inference.",
+    "audioUrl": "/media/podcasts/scix-ab-matthew-graham.mp3",
+    "durationMin": 9.77,
+    "transcript": "matthew-graham"
+  }
+}

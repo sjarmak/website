@@ -1,0 +1,394 @@
+{
+  "id": "louis-moresi",
+  "title": "Computational geodynamics and the evolving Earth",
+  "blurb": "A progression from mantle convection and plate tectonics to open, self-describing computational geoscience.",
+  "homepage": "/scix_ab_explorers/louis-moresi",
+  "learningSlug": "louis-moresi",
+  "paperCount": 12,
+  "themeCount": 4,
+  "person": {
+    "name": "Louis Moresi",
+    "affiliation": "Australian National University, Research School of Earth Sciences",
+    "expertise": "Geodynamics, mantle convection, computational mechanics, scientific software, and reproducible geoscience",
+    "interests": [
+      "thermal-mechanical evolution of Earth",
+      "mantle convection and plate tectonics",
+      "large-deformation materials",
+      "finite-element and particle-in-cell methods",
+      "open scientific software"
+    ],
+    "sources": [
+      {
+        "title": "ANU research profile",
+        "url": "https://researchportalplus.anu.edu.au/en/persons/louis-moresi/"
+      },
+      {
+        "title": "Underworld geodynamics",
+        "url": "https://underworldcode.org/"
+      },
+      {
+        "title": "Underworld project and technical notes",
+        "url": "https://www.underworldcode.org/"
+      },
+      {
+        "title": "ANU research profile and software lineage",
+        "url": "https://earthsciences.anu.edu.au/people/professor-louis-moresi"
+      }
+    ]
+  },
+  "papers": [
+    {
+      "bibcode": "1990Natur.344..209O",
+      "title": "The large-scale structure of convection in the earth's mantle",
+      "firstAuthor": "Olson, Peter",
+      "year": 1990,
+      "url": "https://doi.org/10.1038/344209a0",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Seismic tomography connects mantle-scale circulation with surface plate motions, while exchange across the upper\u2013lower mantle boundary remains contested.",
+          "why": "Start with the observations a convection model must explain."
+        }
+      ]
+    },
+    {
+      "bibcode": "1992AnRFM..24..359S",
+      "title": "Numerical models of mantle convection",
+      "firstAuthor": "Schubert, G.",
+      "year": 1992,
+      "url": "https://doi.org/10.1146/annurev.fl.24.010192.002043",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Three-dimensional models expose how geometry, viscosity, heating, and boundary assumptions change the predicted circulation.",
+          "why": "Establish what numerical experiments add to scaling arguments."
+        }
+      ]
+    },
+    {
+      "bibcode": "1998GeoJI.133..669M",
+      "title": "Mantle convection with a brittle lithosphere: thoughts on the global tectonic styles of the Earth and Venus",
+      "firstAuthor": "Moresi, Louis",
+      "year": 1998,
+      "url": "https://doi.org/10.1046/j.1365-246X.1998.00521.x",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Changing lithospheric yield strength produces stagnant, mobile, or episodically overturning lids in temperature-dependent convection models.",
+          "why": "Moresi and Solomatov connect failure mechanics to contrasting planetary tectonic styles."
+        }
+      ]
+    },
+    {
+      "bibcode": "2002PApGe.159.2335M",
+      "title": "Mantle Convection Modeling with Viscoelastic/Brittle Lithosphere: Numerical Methodology and Plate Tectonic Modeling",
+      "firstAuthor": "Moresi, L.",
+      "year": 2002,
+      "url": "https://doi.org/10.1007/s00024-002-8738-3",
+      "branches": [
+        "rheology"
+      ],
+      "notes": [
+        {
+          "branch": "rheology",
+          "takeaway": "A particle-in-cell finite-element formulation couples large-deformation viscoelasticity with strain-dependent yielding and checks accuracy against analytic benchmarks.",
+          "why": "Follow the transition from a viscous mantle to a lithosphere with elastic memory and brittle failure."
+        }
+      ]
+    },
+    {
+      "bibcode": "2003JCoPh.184..476M",
+      "title": "A Lagrangian integration point finite element method for large deformation modeling of viscoelastic geomaterials",
+      "firstAuthor": "Moresi, L.",
+      "year": 2003,
+      "url": "https://doi.org/10.1016/S0021-9991(02)00031-1",
+      "branches": [
+        "rheology"
+      ],
+      "notes": [
+        {
+          "branch": "rheology",
+          "takeaway": "An Eulerian mesh solves field variables while moving integration particles retain material history through large deformation.",
+          "why": "This explains the numerical machinery behind evolving, history-dependent geomaterials."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016PEPI..252...77S",
+      "title": "Simulating faults and plate boundaries with a transversely isotropic plasticity model",
+      "firstAuthor": "Sharples, W.",
+      "year": 2016,
+      "url": "https://doi.org/10.1016/j.pepi.2015.11.007",
+      "branches": [
+        "rheology"
+      ],
+      "notes": [
+        {
+          "branch": "rheology",
+          "takeaway": "Transversely isotropic plasticity represents the directional weakness of unresolved fault surfaces and promotes asymmetric subduction in the modeled cases.",
+          "why": "Ask how small-scale fault physics can enter a mantle-scale calculation without resolving every shear band."
+        }
+      ]
+    },
+    {
+      "bibcode": "2007PEPI..163...69M",
+      "title": "Computational approaches to studying non-linear dynamics of the crust and mantle",
+      "firstAuthor": "Moresi, L.",
+      "year": 2007,
+      "url": "https://doi.org/10.1016/j.pepi.2007.06.009",
+      "branches": [
+        "software"
+      ],
+      "notes": [
+        {
+          "branch": "software",
+          "takeaway": "The formulation, solution strategy, and parallel implementation are developed together for nonlinear viscoelastic-plastic crust and mantle dynamics.",
+          "why": "Connect mathematical assumptions to the architecture of a working research solver."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020JOSS....5.1797M",
+      "title": "Underworld2: Python Geodynamics Modelling for Desktop, HPC and Cloud",
+      "firstAuthor": "Mansour, John",
+      "year": 2020,
+      "url": "https://doi.org/10.21105/joss.01797",
+      "branches": [
+        "software"
+      ],
+      "notes": [
+        {
+          "branch": "software",
+          "takeaway": "Underworld2 packages geodynamics modeling in a Python-facing environment spanning desktop, high-performance, and cloud computing.",
+          "why": "Use the reviewed software paper as the entry point to the implementation and its archived release."
+        }
+      ]
+    },
+    {
+      "bibcode": "2025JOSS...10.7831M",
+      "title": "Underworld3: Mathematically Self-Describing Modelling in Python for Desktop, HPC and Cloud",
+      "firstAuthor": "Moresi, Louis",
+      "year": 2025,
+      "url": "https://doi.org/10.21105/joss.07831",
+      "branches": [
+        "software"
+      ],
+      "notes": [
+        {
+          "branch": "software",
+          "takeaway": "Underworld3 expresses model mathematics symbolically and generates the machinery used to discretize and solve it.",
+          "why": "Follow the software lineage from numerical implementation to models whose mathematical structure can be inspected at runtime."
+        }
+      ]
+    },
+    {
+      "bibcode": "2014Natur.508..245M",
+      "title": "Dynamics of continental accretion",
+      "firstAuthor": "Moresi, L.",
+      "year": 2014,
+      "url": "https://doi.org/10.1038/nature13033",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Three-dimensional models trace how buoyant crustal accretion disrupts subduction, drives lateral trench rollback, and reorganizes the convergent margin.",
+          "why": "Moresi and colleagues connect dynamic experiments to geological evidence from eastern Australia."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023ESRv..23604277S",
+      "title": "Subduction invasion polarity switch from the Pacific to the Atlantic Ocean: A new geodynamic model of subduction initiation based on the Scotia Sea region",
+      "firstAuthor": "Schellart, W. P.",
+      "year": 2023,
+      "url": "https://doi.org/10.1016/j.earscirev.2022.104277",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Reconstructions and numerical experiments test a proposed polarity-switch mechanism for new subduction in the Scotia region.",
+          "why": "Treat subduction initiation as a competing-mechanisms problem, not a settled inference from one reconstruction."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024ESRv..25304755S",
+      "title": "Subduction dynamics and overriding plate deformation",
+      "firstAuthor": "Schellart, W. P.",
+      "year": 2024,
+      "url": "https://doi.org/10.1016/j.earscirev.2024.104755",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Subduction-zone width and maturity alter slab motion, mantle return flow, and whether the overriding plate extends or shortens.",
+          "why": "A recent synthesis links model behavior to comparisons across active subduction zones."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Foundations: mantle convection",
+      "summary": "Geodynamics begins with mantle flow, heat transport, and the large-scale structure of convection. These models establish the physical processes that later work connects to plate motions and geological history.",
+      "count": 3,
+      "themes": [
+        "convection",
+        "heat transport"
+      ],
+      "gaps": [
+        "initial conditions"
+      ],
+      "questions": [
+        "Which observables constrain deep flow?"
+      ]
+    },
+    {
+      "key": "rheology",
+      "label": "Rheology: plates and materials",
+      "summary": "The field adds heterogeneous and anisotropic materials, melting, and plasticity to explain how deformation localizes. Constitutive choices determine whether a model produces Earth-like plate boundaries.",
+      "count": 3,
+      "themes": [
+        "plasticity",
+        "heterogeneity"
+      ],
+      "gaps": [
+        "multiphysics coupling"
+      ],
+      "questions": [
+        "Which material complexity is resolvable?"
+      ]
+    },
+    {
+      "key": "software",
+      "label": "Software: scalable computational experiments",
+      "summary": "Numerical methods and open codes make planetary-scale experiments possible and expose the numerical assumptions behind them. Benchmarks and reproducible examples are part of the evidence.",
+      "count": 3,
+      "themes": [
+        "HPC",
+        "open software"
+      ],
+      "gaps": [
+        "verification at scale"
+      ],
+      "questions": [
+        "How should geodynamic codes expose error?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Frontier: tectonics across planets",
+      "summary": "Current work connects computation to subduction, overriding-plate deformation, and planetary evolution. The frontier is comparing mechanisms across scales while preserving reproducibility.",
+      "count": 3,
+      "themes": [
+        "subduction",
+        "planetary evolution"
+      ],
+      "gaps": [
+        "cross-scale validation"
+      ],
+      "questions": [
+        "What observations discriminate competing models?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "1990Natur.344..209O",
+      "The large-scale structure of convection in the earth's mantle",
+      "foundations"
+    ],
+    [
+      "1992AnRFM..24..359S",
+      "Numerical models of mantle convection",
+      "foundations"
+    ],
+    [
+      "1998GeoJI.133..669M",
+      "Mantle convection with a brittle lithosphere: thoughts on the global tectonic styles of the Earth and Venus",
+      "foundations"
+    ],
+    [
+      "2002PApGe.159.2335M",
+      "Mantle Convection Modeling with Viscoelastic/Brittle Lithosphere: Numerical Methodology and Plate Tectonic Modeling",
+      "rheology"
+    ],
+    [
+      "2003JCoPh.184..476M",
+      "A Lagrangian integration point finite element method for large deformation modeling of viscoelastic geomaterials",
+      "rheology"
+    ],
+    [
+      "2016PEPI..252...77S",
+      "Simulating faults and plate boundaries with a transversely isotropic plasticity model",
+      "rheology"
+    ],
+    [
+      "2007PEPI..163...69M",
+      "Computational approaches to studying non-linear dynamics of the crust and mantle",
+      "software"
+    ],
+    [
+      "2020JOSS....5.1797M",
+      "Underworld2: Python Geodynamics Modelling for Desktop, HPC and Cloud",
+      "software"
+    ],
+    [
+      "2025JOSS...10.7831M",
+      "Underworld3: Mathematically Self-Describing Modelling in Python for Desktop, HPC and Cloud",
+      "software"
+    ],
+    [
+      "2014Natur.508..245M",
+      "Dynamics of continental accretion",
+      "frontier"
+    ],
+    [
+      "2023ESRv..23604277S",
+      "Subduction invasion polarity switch from the Pacific to the Atlantic Ocean: A new geodynamic model of subduction initiation based on the Scotia Sea region",
+      "frontier"
+    ],
+    [
+      "2024ESRv..25304755S",
+      "Subduction dynamics and overriding plate deformation",
+      "frontier"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Executable geodynamics benchmarks",
+      "Pair every published mechanism with a rerunnable model, test, and expected invariant."
+    ],
+    [
+      "AI code review for scientific solvers",
+      "Use machine assistance to check equations and provenance while keeping human-readable model intent."
+    ]
+  ],
+  "practices": [
+    "Publish source, parameters, meshes, and benchmark outputs.",
+    "Treat numerical verification as part of the scientific argument."
+  ],
+  "podcast": {
+    "title": "Louis Moresi and the executable Earth",
+    "description": "From mantle convection to software that explains its own mathematics.",
+    "audioUrl": "/media/podcasts/scix-ab-louis-moresi.mp3",
+    "durationMin": 10.21,
+    "transcript": "louis-moresi"
+  }
+}

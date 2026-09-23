@@ -1,0 +1,347 @@
+{
+  "id": "ilya-zaslavsky",
+  "title": "Spatial information and reproducible water science",
+  "blurb": "A route through Ilya Zaslavsky\u2019s interests in spatial integration and scientific infrastructure, using hydrologic information systems as the worked example.",
+  "homepage": "/scix_ab_explorers/ilya-zaslavsky",
+  "learningSlug": "ilya-zaslavsky",
+  "paperCount": 12,
+  "themeCount": 4,
+  "person": {
+    "name": "Ilya Zaslavsky",
+    "affiliation": "San Diego Supercomputer Center, UC San Diego",
+    "expertise": "Spatial information systems, spatiotemporal integration, and distributed scientific data infrastructure",
+    "interests": [
+      "geographic information systems",
+      "hydrologic information systems",
+      "cross-domain data integration",
+      "spatial analysis"
+    ],
+    "sources": [
+      {
+        "title": "SDSC research profile",
+        "url": "https://www.sdsc.edu/research/experts/zaslavsky_ilya.html"
+      },
+      {
+        "title": "SDSC spatial data science profile and teaching",
+        "url": "https://www.sdsc.edu/news/2026/PR20260804-spatial-analysis.html"
+      }
+    ]
+  },
+  "papers": [
+    {
+      "bibcode": "2008WRR....44.5406H",
+      "title": "A relational model for environmental and water resources data",
+      "firstAuthor": "Horsburgh, Jeffery S.",
+      "year": 2008,
+      "url": "https://doi.org/10.1029/2007WR006392",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Store each observation with its location, variable, units, method, and provenance in a relational model.",
+          "why": "A shared schema makes cross-investigator comparisons possible without discarding measurement context."
+        }
+      ]
+    },
+    {
+      "bibcode": "2012EnvMS..37..146A",
+      "title": "HydroDesktop: Web services-based software for hydrologic data discovery, download, visualization, and analysis",
+      "firstAuthor": "Ames, Daniel P.",
+      "year": 2012,
+      "url": "https://doi.org/10.1016/j.envsoft.2012.03.013",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "HydroDesktop combines discovery, download, visualization, and analysis across CUAHSI web services.",
+          "why": "A common client makes a distributed network usable to researchers."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016EnvMS..79...55H",
+      "title": "Observations Data Model 2: A community information model for spatially discrete Earth observations",
+      "firstAuthor": "Horsburgh, Jeffery S.",
+      "year": 2016,
+      "url": "https://doi.org/10.1016/j.envsoft.2016.01.010",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "ODM2 extends observation modeling to accommodate both sensors and specimens across scientific domains.",
+          "why": "Interoperability requires agreement about what observations mean, as well as how they are encoded."
+        }
+      ]
+    },
+    {
+      "bibcode": "2016JAWRA..52..873H",
+      "title": "HydroShare: Sharing Diverse Environmental Data Types and Models as Social Objects with Application to the Hydrology Domain",
+      "firstAuthor": "Horsburgh, Jeffery S.",
+      "year": 2016,
+      "url": "https://doi.org/10.1111/1752-1688.12363",
+      "branches": [
+        "sharing"
+      ],
+      "notes": [
+        {
+          "branch": "sharing",
+          "takeaway": "HydroShare treats datasets and models as objects people can annotate, publish, and collaborate around.",
+          "why": "Scientific sharing includes unfinished work and conversation alongside formal publication."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019EnvMS.111...24X",
+      "title": "Map based discovery of hydrologic data in the HydroShare collaboration environment",
+      "firstAuthor": "Xue, Zhaokun",
+      "year": 2019,
+      "url": "https://doi.org/10.1016/j.envsoft.2018.09.014",
+      "branches": [
+        "sharing"
+      ],
+      "notes": [
+        {
+          "branch": "sharing",
+          "takeaway": "Map-based discovery must balance spatial use cases, browser performance, and resources without geographic meaning.",
+          "why": "A bounding box is only one part of a scientific discovery interface."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020EnvMS.12904706G",
+      "title": "Collaborative sharing of multidimensional space-time data in a next generation hydrologic information system",
+      "firstAuthor": "Gan, Tian",
+      "year": 2020,
+      "url": "https://doi.org/10.1016/j.envsoft.2020.104706",
+      "branches": [
+        "sharing"
+      ],
+      "notes": [
+        {
+          "branch": "sharing",
+          "takeaway": "NetCDF-based resources combine multidimensional space-time data with harvested metadata and access services.",
+          "why": "Gridded environmental data need structures beyond point time series."
+        }
+      ]
+    },
+    {
+      "bibcode": "2020EnvMS.12504623G",
+      "title": "HydroDS: Data services in support of physically based, distributed hydrological models",
+      "firstAuthor": "Gichamo, Tseganeh Z.",
+      "year": 2020,
+      "url": "https://doi.org/10.1016/j.envsoft.2020.104623",
+      "branches": [
+        "workflows"
+      ],
+      "notes": [
+        {
+          "branch": "workflows",
+          "takeaway": "HydroDS exposes terrain, climate, soil, and canopy preparation through Python-accessible web services.",
+          "why": "Reproducibility begins in input preparation, before the simulation runs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021EnvMS.13504888C",
+      "title": "Toward open and reproducible environmental modeling by integrating online data repositories, computational environments, and model Application Programming Interfaces",
+      "firstAuthor": "Choi, Young-Don",
+      "year": 2021,
+      "url": "https://doi.org/10.1016/j.envsoft.2020.104888",
+      "branches": [
+        "workflows"
+      ],
+      "notes": [
+        {
+          "branch": "workflows",
+          "takeaway": "Connects a data repository, notebook compute environments, and a model API in a reproducible hydrologic workflow.",
+          "why": "An executable study needs coordinated storage, computation, and model control."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022WRR....5831753K",
+      "title": "Community Workflows to Advance Reproducibility in Hydrologic Modeling: Separating Model-Agnostic and Model-Specific Configuration Steps in Applications of Large-Domain Hydrologic Models",
+      "firstAuthor": "Knoben, W. J. M.",
+      "year": 2022,
+      "url": "https://doi.org/10.1029/2021WR031753",
+      "branches": [
+        "workflows"
+      ],
+      "notes": [
+        {
+          "branch": "workflows",
+          "takeaway": "Separates common preprocessing from model-specific configuration in reproducible SUMMA and mizuRoute workflows.",
+          "why": "Shared preparation steps can become reusable community infrastructure."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023EnvMS.16405689M",
+      "title": "Building cyberinfrastructure for the reuse and reproducibility of complex hydrologic modeling studies",
+      "firstAuthor": "Maghami, Iman",
+      "year": 2023,
+      "url": "https://doi.org/10.1016/j.envsoft.2023.105689",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Combines HydroShare, notebooks, containers, large-data transfer, and HPC for continental modeling.",
+          "why": "The same provenance problem persists as experiments outgrow a laptop."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024EnvMS.17205895M",
+      "title": "An extensible schema for capturing environmental model metadata: Implementation in the HydroShare online data repository",
+      "firstAuthor": "Maghami, Iman",
+      "year": 2024,
+      "url": "https://doi.org/10.1016/j.envsoft.2023.105895",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Introduces an extensible schema describing particular model applications while retaining a standard core.",
+          "why": "Comparing model instances requires both common fields and model-specific detail."
+        }
+      ]
+    },
+    {
+      "bibcode": "2024EnvMS.17205902T",
+      "title": "HydroShare retrospective: Science and technology advances of a comprehensive data and model publication environment for the water science domain",
+      "firstAuthor": "Tarboton, David G.",
+      "year": 2024,
+      "url": "https://doi.org/10.1016/j.envsoft.2023.105902",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Reviews a decade of HydroShare architecture, operation, usage, and research contributions.",
+          "why": "Long-term operation provides a test of infrastructure beyond an initial demonstration."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Foundations: describing an observation",
+      "summary": "A value becomes usable evidence when its time, place, units, method, and history travel with it. Relational observation models and service clients made these descriptions consistent across independent data providers.",
+      "count": 3,
+      "questions": [
+        "Which context must remain attached to every measurement?"
+      ]
+    },
+    {
+      "key": "sharing",
+      "label": "Progression: from files to shared research objects",
+      "summary": "Repositories widened from point observations to models and multidimensional data. Collaborative annotation and spatial discovery brought scientists' workflows into the design of environmental information systems.",
+      "count": 3,
+      "questions": [
+        "How should a map represent data collected at different scales?"
+      ]
+    },
+    {
+      "key": "workflows",
+      "label": "Progression: making an analysis repeatable",
+      "summary": "Access services, data preparation, notebooks, and model APIs join the repository to the experiment. The challenge moves from finding a dataset to recording how it became the input to a particular simulation.",
+      "count": 3,
+      "questions": [
+        "What must be preserved to rerun a study without its original author?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Frontier: reproducibility across systems and scales",
+      "summary": "Large models require coordinated computing, transfer, and metadata systems. Extensible descriptions and long-running repository experience expose the maintenance needed to keep research reusable.",
+      "count": 3,
+      "questions": [
+        "How can reuse preserve both computation and scientific intent?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "2008WRR....44.5406H",
+      "A relational model for environmental and water resources data",
+      "foundations"
+    ],
+    [
+      "2012EnvMS..37..146A",
+      "HydroDesktop: Web services-based software for hydrologic data discovery, download, visualization, and analysis",
+      "foundations"
+    ],
+    [
+      "2016EnvMS..79...55H",
+      "Observations Data Model 2: A community information model for spatially discrete Earth observations",
+      "foundations"
+    ],
+    [
+      "2016JAWRA..52..873H",
+      "HydroShare: Sharing Diverse Environmental Data Types and Models as Social Objects with Application to the Hydrology Domain",
+      "sharing"
+    ],
+    [
+      "2020EnvMS.12904706G",
+      "Collaborative sharing of multidimensional space-time data in a next generation hydrologic information system",
+      "sharing"
+    ],
+    [
+      "2020EnvMS.12504623G",
+      "HydroDS: Data services in support of physically based, distributed hydrological models",
+      "workflows"
+    ],
+    [
+      "2021EnvMS.13504888C",
+      "Toward open and reproducible environmental modeling by integrating online data repositories, computational environments, and model Application Programming Interfaces",
+      "workflows"
+    ],
+    [
+      "2022WRR....5831753K",
+      "Community Workflows to Advance Reproducibility in Hydrologic Modeling: Separating Model-Agnostic and Model-Specific Configuration Steps in Applications of Large-Domain Hydrologic Models",
+      "workflows"
+    ],
+    [
+      "2024EnvMS.17205895M",
+      "An extensible schema for capturing environmental model metadata: Implementation in the HydroShare online data repository",
+      "frontier"
+    ],
+    [
+      "2024EnvMS.17205902T",
+      "HydroShare retrospective: Science and technology advances of a comprehensive data and model publication environment for the water science domain",
+      "frontier"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Measure successful reuse",
+      "Test whether a researcher can find, interpret, and rerun an unfamiliar hydrologic study, recording failures at each step."
+    ],
+    [
+      "Preserve spatial assumptions",
+      "Attach coordinate systems, aggregation choices, interpolation methods, and spatial support to derived model inputs."
+    ]
+  ],
+  "practices": [
+    "Preserve units, methods, spatial support, and provenance alongside values.",
+    "Version input data, preprocessing, model configuration, and compute environment together."
+  ],
+  "podcast": {
+    "title": "The observation behind the map",
+    "description": "From a single water measurement to distributed, executable environmental science.",
+    "audioUrl": "/media/podcasts/scix-ab-ilya-zaslavsky.mp3",
+    "durationMin": 10.85,
+    "transcript": "ilya-zaslavsky"
+  }
+}

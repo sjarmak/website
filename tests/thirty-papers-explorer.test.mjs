@@ -20,10 +20,9 @@ const BUILD_SOURCE = path.join(REPO_ROOT, "src", "lib", "knowledge", "build.ts")
 const PAGE_SOURCE = path.join(
   REPO_ROOT,
   "src",
-  "pages",
-  "library",
-  "explorers",
-  "[id].astro",
+  "components",
+  "knowledge",
+  "ThematicExplorer.astro",
 );
 const DIST_PAGE = path.join(
   REPO_ROOT,

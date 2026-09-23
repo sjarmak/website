@@ -1,0 +1,347 @@
+{
+  "id": "brad-aagaard",
+  "title": "Computational earthquake hazards",
+  "blurb": "A progression from rupture physics and fault geometry to finite-element deformation, wave simulation, and probabilistic hazard.",
+  "homepage": "/scix_ab_explorers/brad-aagaard",
+  "learningSlug": "brad-aagaard",
+  "paperCount": 12,
+  "themeCount": 4,
+  "person": {
+    "name": "Brad T. Aagaard",
+    "affiliation": "U.S. Geological Survey, Earthquake Hazards Program",
+    "expertise": "Earthquake source physics, ground-motion modeling, crustal characterization, and computational seismic hazard",
+    "interests": [
+      "earthquake rupture and fault interaction",
+      "3-D crustal and seismic velocity structure",
+      "strong ground motion",
+      "probabilistic earthquake hazard",
+      "open computational geophysics"
+    ],
+    "sources": [
+      {
+        "title": "USGS staff profile",
+        "url": "https://www.usgs.gov/staff-profiles/brad-aagaard"
+      }
+    ]
+  },
+  "papers": [
+    {
+      "bibcode": "2004EOSTr..85..321H",
+      "title": "Seismology: Earthquake Rupture Dynamics: Comparing the Numerical Simulation Methods",
+      "firstAuthor": "Harris, Ruth A.",
+      "year": 2004,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Compares numerical approaches for dynamic rupture simulation.",
+          "why": "Establishes the methodological landscape."
+        }
+      ],
+      "url": "https://doi.org/10.1029/2004EO340003"
+    },
+    {
+      "bibcode": "2011CMAME.200.2859C",
+      "title": "A Nitsche-extended finite element method for earthquake rupture on complex fault systems",
+      "firstAuthor": "Coon, E. T.",
+      "year": 2011,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Extended finite elements represent discontinuities on complex fault systems.",
+          "why": "Fault geometry is a numerical problem as well as a geological one."
+        }
+      ],
+      "url": "https://doi.org/10.1016/j.cma.2011.05.005"
+    },
+    {
+      "bibcode": "2012JSG....38...77B",
+      "title": "Observed source parameters for dynamic rupture with non-uniform initial stress and relatively high fracture energy",
+      "firstAuthor": "Beeler, Nick",
+      "year": 2012,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Relates stress drop, fracture energy, and rupture observations.",
+          "why": "Source parameters control the resulting wavefield."
+        }
+      ],
+      "url": "https://doi.org/10.1016/j.jsg.2011.11.013"
+    },
+    {
+      "bibcode": "2014JGRB..119.7010T",
+      "title": "Inversion for the physical parameters that control the source dynamics of the 2004 Parkfield earthquake",
+      "firstAuthor": "Twardzik, C.",
+      "year": 2014,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Uses dynamic inversion to estimate rupture geometry, stress, and friction.",
+          "why": "Turns observed motion into physical source constraints."
+        }
+      ],
+      "url": "https://doi.org/10.1002/2014JB011238"
+    },
+    {
+      "bibcode": "2015JGRB..120.1053K",
+      "title": "Variability of seismic source spectra, estimated stress drop, and radiated energy, derived from cohesive-zone models of symmetrical and asymmetrical circular and elliptical ruptures",
+      "firstAuthor": "Kaneko, Y.",
+      "year": 2015,
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Tests how rupture geometry and cohesive-zone assumptions affect spectra and radiated energy.",
+          "why": "Makes source uncertainty explicit."
+        }
+      ],
+      "url": "https://doi.org/10.1002/2014JB011642"
+    },
+    {
+      "bibcode": "2016JCoPh.305..185D",
+      "title": "Dynamic earthquake rupture simulations on nonplanar faults embedded in 3D geometrically complex, heterogeneous elastic solids",
+      "firstAuthor": "Duru, Kenneth",
+      "year": 2016,
+      "branches": [
+        "simulation"
+      ],
+      "notes": [
+        {
+          "branch": "simulation",
+          "takeaway": "Simulates rupture on nonplanar faults in heterogeneous 3-D solids.",
+          "why": "Approaches the structural complexity hazard models need."
+        }
+      ],
+      "url": "https://doi.org/10.1016/j.jcp.2015.10.021"
+    },
+    {
+      "bibcode": "2013JGRB..118.3059A",
+      "title": "A domain decomposition approach to implementing fault slip in finite-element models of quasi-static and dynamic crustal deformation",
+      "firstAuthor": "Aagaard, B. T.",
+      "year": 2013,
+      "branches": [
+        "simulation"
+      ],
+      "notes": [
+        {
+          "branch": "simulation",
+          "takeaway": "Uses domain decomposition and Lagrange multipliers to implement fault slip in PyLith.",
+          "why": "Aagaard contribution to reusable crustal modeling."
+        }
+      ],
+      "url": "https://doi.org/10.1002/jgrb.50217"
+    },
+    {
+      "bibcode": "2011PApGe.168..367G",
+      "title": "CyberShake: A Physics-Based Seismic Hazard Model for Southern California",
+      "firstAuthor": "Graves, Robert",
+      "year": 2011,
+      "branches": [
+        "hazard"
+      ],
+      "notes": [
+        {
+          "branch": "hazard",
+          "takeaway": "Builds probabilistic hazard from simulated ruptures and 3-D wave propagation.",
+          "why": "Canonical bridge from simulation to hazard curves."
+        }
+      ],
+      "url": "https://doi.org/10.1007/s00024-010-0161-6"
+    },
+    {
+      "bibcode": "2020EarSp..36..673L",
+      "title": "Hybrid broadband ground motion simulation validation of small magnitude earthquakes in Canterbury, New Zealand",
+      "firstAuthor": "Lee, Robin L.",
+      "year": 2020,
+      "branches": [
+        "hazard"
+      ],
+      "notes": [
+        {
+          "branch": "hazard",
+          "takeaway": "Tests hybrid broadband simulations against observed motions.",
+          "why": "Validation turns plausible simulation into evidence."
+        }
+      ],
+      "url": "https://doi.org/10.1177/8755293019891718"
+    },
+    {
+      "bibcode": "2024EarSp..40..346R",
+      "title": "Findings from a decade of ground motion simulation validation research and a path forward",
+      "firstAuthor": "Rezaeian, Sanaz",
+      "year": 2024,
+      "branches": [
+        "hazard"
+      ],
+      "notes": [
+        {
+          "branch": "hazard",
+          "takeaway": "Synthesizes lessons from a decade of simulation-validation studies.",
+          "why": "Identifies evaluation gaps for operational use."
+        }
+      ],
+      "url": "https://doi.org/10.1177/87552930231212475"
+    },
+    {
+      "bibcode": "2022GSAB..135.2179R",
+      "title": "Validation of earthquake ground-motion models in southern California, USA, using precariously balanced rocks",
+      "firstAuthor": "Rood, Anna H.",
+      "year": 2022,
+      "branches": [
+        "hazard"
+      ],
+      "notes": [
+        {
+          "branch": "hazard",
+          "takeaway": "Uses precariously balanced rocks as evidence of past shaking beyond the instrumental record.",
+          "why": "Independent geological constraints test hazard tails."
+        }
+      ],
+      "url": "https://doi.org/10.1130/B36484.1"
+    },
+    {
+      "bibcode": "2022BuSSA.112.2070H",
+      "title": "Evaluation and Updates for the USGS San Francisco Bay Region 3D Seismic Velocity Model in the East and North Bay Portions",
+      "firstAuthor": "Hirakawa, Evan",
+      "year": 2022,
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Updates a regional 3-D velocity model used for ground-motion work.",
+          "why": "Regional structure meets USGS practice."
+        }
+      ],
+      "url": "https://doi.org/10.1785/0120210256"
+    }
+  ],
+  "sections": [
+    {
+      "key": "foundations",
+      "label": "Foundations: rupture and fault geometry",
+      "summary": "The field begins by representing discontinuities, stress, friction, and geometry well enough for rupture to propagate. Numerical comparisons establish which approximations can move into larger simulations.",
+      "count": 5,
+      "themes": [
+        "fault geometry",
+        "rupture methods"
+      ],
+      "gaps": [
+        "unseen source complexity"
+      ],
+      "questions": [
+        "Which source parameters are identifiable?"
+      ]
+    },
+    {
+      "key": "simulation",
+      "label": "Simulation: source to wavefield",
+      "summary": "Dynamic rupture models move from idealized faults to nonplanar interfaces in heterogeneous solids. Finite-element infrastructure makes deformation experiments reusable across regional problems.",
+      "count": 2,
+      "themes": [
+        "3-D heterogeneity",
+        "finite elements"
+      ],
+      "gaps": [
+        "multiscale coupling"
+      ],
+      "questions": [
+        "How should source and wave solvers exchange uncertainty?"
+      ]
+    },
+    {
+      "key": "hazard",
+      "label": "Hazard: ensembles and validation",
+      "summary": "Physics-based systems run rupture and wave scenarios, then compare outputs with recordings and geological constraints. The goal is calibrated decision support, not visual realism alone.",
+      "count": 4,
+      "themes": [
+        "probabilistic hazard",
+        "ground-motion validation"
+      ],
+      "gaps": [
+        "rare-event calibration"
+      ],
+      "questions": [
+        "Which metrics predict usefulness?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Frontier: regional, open hazard models",
+      "summary": "Updated velocity models and shared validation connect computational geophysics to operational hazard assessment. The next step is provenance from fault assumptions through site-specific outputs.",
+      "count": 1,
+      "themes": [
+        "regional structure",
+        "reproducibility"
+      ],
+      "gaps": [
+        "common reporting standards"
+      ],
+      "questions": [
+        "What inputs must every result publish?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "2004EOSTr..85..321H",
+      "Rupture methods",
+      "foundations"
+    ],
+    [
+      "2016JCoPh.305..185D",
+      "3-D rupture",
+      "simulation"
+    ],
+    [
+      "2011PApGe.168..367G",
+      "CyberShake",
+      "hazard"
+    ],
+    [
+      "2024EarSp..40..346R",
+      "Validation path",
+      "hazard"
+    ],
+    [
+      "2022BuSSA.112.2070H",
+      "Regional velocity model",
+      "frontier"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Transparent rupture-to-risk benchmarks",
+      "Pair source, velocity-model, and site uncertainties in shared regional test cases."
+    ],
+    [
+      "Validation under missing observations",
+      "Design metrics honest where large earthquakes have no recordings."
+    ]
+  ],
+  "practices": [
+    "Compare simulations to waveforms, intensity measures, and geological constraints.",
+    "Publish meshes, parameters, and workflows."
+  ],
+  "podcast": {
+    "title": "The computational earthquake",
+    "description": "From fault mechanics through 3-D ground-motion simulation to useful hazard forecasts.",
+    "audioUrl": "/media/podcasts/scix-ab-brad-aagaard.mp3",
+    "durationMin": 9.56,
+    "transcript": "brad-aagaard"
+  }
+}

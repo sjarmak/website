@@ -1,0 +1,367 @@
+{
+  "id": "alex-young",
+  "title": "Solar Physics and Space Weather",
+  "blurb": "Solar image analysis, magnetic activity, and forecasting methods for understanding the Sun's eruptions and their effects.",
+  "homepage": "/scix_ab_explorers/alex-young",
+  "learningSlug": "alex-young",
+  "person": {
+    "name": "C. Alex Young",
+    "affiliation": "NASA Goddard Space Flight Center",
+    "expertise": "Solar physics, signal and image processing, and space-weather communication",
+    "interests": [
+      "solar flares and coronal mass ejections",
+      "solar image processing",
+      "statistical methods",
+      "solar-cycle variability",
+      "space weather"
+    ],
+    "sources": [
+      {
+        "title": "NASA Goddard biography and publications",
+        "url": "https://visual.gsfc.nasa.gov/heliophysics/spaceweather/bio/c.alex.young.1"
+      },
+      {
+        "title": "NASA solar physics profile",
+        "url": "https://umbra.nascom.nasa.gov/people/alex.html"
+      }
+    ]
+  },
+  "paperCount": 12,
+  "themeCount": 4,
+  "papers": [
+    {
+      "bibcode": "2019ApJS..243...36L",
+      "title": "A Comparison of Flare Forecasting Methods. II. Benchmarks, Metrics, and Performance Results for Operational Solar Flare Forecasting Systems",
+      "firstAuthor": "Leka, K. D.",
+      "year": 2019,
+      "citationCount": 101,
+      "url": "https://doi.org/10.3847/1538-4365/ab2e12",
+      "branches": [
+        "forecasting"
+      ],
+      "notes": [
+        {
+          "branch": "forecasting",
+          "takeaway": "Operational flare forecasts need shared benchmarks and metrics before systems can be compared.",
+          "why": "This paper makes evaluation part of the forecasting problem."
+        }
+      ]
+    },
+    {
+      "bibcode": "2018ApJ...856....7H",
+      "title": "Deep Learning Based Solar Flare Forecasting Model. I. Results for Line-of-sight Magnetograms",
+      "firstAuthor": "Huang, Xin",
+      "year": 2018,
+      "citationCount": 174,
+      "url": "https://doi.org/10.3847/1538-4357/aaae00",
+      "branches": [
+        "forecasting"
+      ],
+      "notes": [
+        {
+          "branch": "forecasting",
+          "takeaway": "Deep models can learn flare precursors from line-of-sight magnetograms.",
+          "why": "It is a major bridge from magnetic images to prediction."
+        }
+      ]
+    },
+    {
+      "bibcode": "2021ApJ...922..232D",
+      "title": "Fine-grained Solar Flare Forecasting Based on the Hybrid Convolutional Neural Networks",
+      "firstAuthor": "Deng, Zheng",
+      "year": 2021,
+      "citationCount": 19,
+      "url": "https://doi.org/10.3847/1538-4357/ac2b2b",
+      "branches": [
+        "forecasting"
+      ],
+      "notes": [
+        {
+          "branch": "forecasting",
+          "takeaway": "Hybrid convolutional models target finer flare classes than a simple event/no-event label.",
+          "why": "Severity and lead-time detail matter operationally."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022ApJ...941...20L",
+      "title": "Deep Learning Based Solar Flare Forecasting Model. II. Influence of Image Resolution",
+      "firstAuthor": "Liu, Sixuan",
+      "year": 2022,
+      "citationCount": 9,
+      "url": "https://doi.org/10.3847/1538-4357/ac99dc",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Image resolution changes what a deep flare forecast can learn.",
+          "why": "It exposes a measurement choice often hidden behind model scores."
+        }
+      ]
+    },
+    {
+      "bibcode": "2023ApJS..266....8S",
+      "title": "Deep Learning-based Solar Flare Forecasting Model. III. Extracting Precursors from EUV Images",
+      "firstAuthor": "Sun, Dezhi",
+      "year": 2023,
+      "citationCount": 8,
+      "url": "https://doi.org/10.3847/1538-4365/acc248",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "EUV images can carry precursor information complementary to magnetograms.",
+          "why": "Multi-wavelength imaging is central to Young's image-processing interests."
+        }
+      ]
+    },
+    {
+      "bibcode": "2012ApJ...752..145B",
+      "title": "Automatic Detection and Tracking of Coronal Mass Ejections. II. Multiscale Filtering of Coronagraph Images",
+      "firstAuthor": "Byrne, Jason P.",
+      "year": 2012,
+      "citationCount": 69,
+      "url": "https://doi.org/10.1088/0004-637X/752/2/145",
+      "branches": [
+        "imaging"
+      ],
+      "notes": [
+        {
+          "branch": "imaging",
+          "takeaway": "Multiscale filtering helps detect and track diffuse CMEs in coronagraph images.",
+          "why": "It is a direct example of signal processing for space weather."
+        }
+      ]
+    },
+    {
+      "bibcode": "2015JSWSC...5A..19B",
+      "title": "Investigating the kinematics of coronal mass ejections with the automated CORIMP catalog",
+      "firstAuthor": "Byrne, Jason P.",
+      "year": 2015,
+      "citationCount": 15,
+      "url": "https://doi.org/10.1051/swsc/2015020",
+      "branches": [
+        "imaging"
+      ],
+      "notes": [
+        {
+          "branch": "imaging",
+          "takeaway": "Automated catalogs turn CME tracks into kinematic measurements.",
+          "why": "Catalogs support statistics beyond individual case studies."
+        }
+      ]
+    },
+    {
+      "bibcode": "2017ApJ...836..134H",
+      "title": "Comparing Automatic CME Detections in Multiple LASCO and SECCHI Catalogs",
+      "firstAuthor": "Hess, Phillip",
+      "year": 2017,
+      "citationCount": 33,
+      "url": "https://doi.org/10.3847/1538-4357/aa5b85",
+      "branches": [
+        "imaging"
+      ],
+      "notes": [
+        {
+          "branch": "imaging",
+          "takeaway": "Different automated catalogs do not necessarily identify the same CME population.",
+          "why": "Cross-catalog comparison is essential for trustworthy automation."
+        }
+      ]
+    },
+    {
+      "bibcode": "2019ApJS..244....9W",
+      "title": "A New Automatic Tool for CME Detection and Tracking with Machine-learning Techniques",
+      "firstAuthor": "Wang, Pengyu",
+      "year": 2019,
+      "citationCount": 23,
+      "url": "https://doi.org/10.3847/1538-4365/ab340c",
+      "branches": [
+        "imaging"
+      ],
+      "notes": [
+        {
+          "branch": "imaging",
+          "takeaway": "Machine learning can automate CME detection and tracking in accumulated coronagraph data.",
+          "why": "It extends classical image processing toward scalable archives."
+        }
+      ]
+    },
+    {
+      "bibcode": "2022LRSP...19....1P",
+      "title": "Magnetic reconnection: MHD theory and modelling",
+      "firstAuthor": "Pontin, David I.",
+      "year": 2022,
+      "citationCount": 90,
+      "url": "https://doi.org/10.1007/s41116-022-00032-9",
+      "branches": [
+        "physics"
+      ],
+      "notes": [
+        {
+          "branch": "physics",
+          "takeaway": "MHD reconnection theory explains how magnetic topology changes and energy is released.",
+          "why": "It supplies the physical foundation behind flare signatures."
+        }
+      ]
+    },
+    {
+      "bibcode": "2011AdSpR..47.1508P",
+      "title": "Three-dimensional magnetic reconnection regimes: A review",
+      "firstAuthor": "Pontin, D. I.",
+      "year": 2011,
+      "citationCount": 141,
+      "url": "https://doi.org/10.1016/j.asr.2010.12.022",
+      "branches": [
+        "physics"
+      ],
+      "notes": [
+        {
+          "branch": "physics",
+          "takeaway": "Three-dimensional reconnection has multiple regimes rather than one simple geometry.",
+          "why": "It prevents image-based inference from collapsing complex topology into a cartoon."
+        }
+      ]
+    },
+    {
+      "bibcode": "2011PhPl...18k1205M",
+      "title": "Observational studies of reconnection in the solar corona",
+      "firstAuthor": "McKenzie, David E.",
+      "year": 2011,
+      "citationCount": 11,
+      "url": "https://doi.org/10.1063/1.3628554",
+      "branches": [
+        "physics"
+      ],
+      "notes": [
+        {
+          "branch": "physics",
+          "takeaway": "Remote observations can test reconnection through coordinated morphology and dynamics.",
+          "why": "It connects theory to the observables Young works with."
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "key": "physics",
+      "label": "Magnetic energy and reconnection",
+      "summary": "Solar flares begin with magnetic energy stored in active regions. Reconnection theory and coronal observations explain how topology changes and energy reaches the plasma.",
+      "count": 3,
+      "themes": [
+        "magnetic topology",
+        "energy release",
+        "coronal observations"
+      ],
+      "gaps": [
+        "triggering",
+        "three-dimensional measurements"
+      ],
+      "questions": [
+        "Which observables distinguish competing reconnection regimes?"
+      ]
+    },
+    {
+      "key": "imaging",
+      "label": "From images to CME tracks",
+      "summary": "Solar images contain structure across scales and wavelengths. Filtering, catalogs, and machine learning turn those patterns into event and kinematic measurements.",
+      "count": 4,
+      "themes": [
+        "multiscale processing",
+        "CME catalogs",
+        "cross-instrument comparison"
+      ],
+      "gaps": [
+        "catalog disagreement",
+        "projection effects"
+      ],
+      "questions": [
+        "How can automated detections preserve uncertainty and physical context?"
+      ]
+    },
+    {
+      "key": "forecasting",
+      "label": "Forecasting flares",
+      "summary": "Magnetograms and EUV images support forecasts, while benchmark design determines whether reported skill transfers to operations. Resolution, class imbalance, and lead time remain coupled choices.",
+      "count": 3,
+      "themes": [
+        "magnetograms",
+        "EUV precursors",
+        "operational metrics"
+      ],
+      "gaps": [
+        "rare events",
+        "calibration"
+      ],
+      "questions": [
+        "What should a forecast communicate to an operator besides a probability?"
+      ]
+    },
+    {
+      "key": "frontier",
+      "label": "Space weather decisions",
+      "summary": "The next step joins physical models, image pipelines, and alerts. A useful forecast must state its evidence, uncertainty, and likely consequence for Earth or spacecraft.",
+      "count": 2,
+      "themes": [
+        "alerts",
+        "model transfer",
+        "mission operations"
+      ],
+      "gaps": [
+        "impact prediction",
+        "lead time"
+      ],
+      "questions": [
+        "How should uncertainty move from an image to an action?"
+      ]
+    }
+  ],
+  "reading": [
+    [
+      "2022LRSP...19....1P",
+      "Reconnection physics",
+      "physics"
+    ],
+    [
+      "2012ApJ...752..145B",
+      "CME image processing",
+      "imaging"
+    ],
+    [
+      "2019ApJS..243...36L",
+      "Forecast benchmarks",
+      "forecasting"
+    ],
+    [
+      "2023ApJS..266....8S",
+      "EUV precursors",
+      "forecasting"
+    ]
+  ],
+  "opportunities": [
+    [
+      "Cross-instrument CME benchmarks",
+      "Compare detectors across LASCO, SECCHI, and newer imagers with shared event identities and uncertainty."
+    ],
+    [
+      "Physics-informed flare forecasting",
+      "Combine magnetic topology, EUV structure, and calibrated learning rather than treating images as opaque pixels."
+    ],
+    [
+      "Operator-centered alerts",
+      "Evaluate forecasts by lead time, false-alarm cost, and the decision they support."
+    ]
+  ],
+  "practices": [],
+  "podcast": {
+    "title": "Reading the active Sun",
+    "description": "From magnetic reconnection and solar images to CME catalogs and calibrated flare forecasts.",
+    "audioUrl": "/media/podcasts/scix-ab-alex-young.mp3",
+    "durationMin": 10.23,
+    "transcript": "alex-young"
+  }
+}

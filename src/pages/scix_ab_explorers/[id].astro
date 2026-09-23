@@ -1,0 +1,53 @@
+---
+import ThematicExplorer from "@/components/knowledge/ThematicExplorer.astro";
+import { getScixExplorers, getScixTranscript } from "@/lib/knowledge/scix-ab";
+export function getStaticPaths() {
+  return getScixExplorers().map(explorer => ({ params: { id: explorer.id }, props: { explorer } }));
+}
+const { explorer } = Astro.props;
+const transcript = getScixTranscript(explorer);
+---
+<ThematicExplorer explorer={explorer} noindex backUrl="/scix_ab_explorers"
+  backLabel="SciX advisory board explorers" podcasts={[]}>
+  <aside slot="profile" class="profile">
+    <h2>{explorer.person.name}</h2>
+    <p class="muted">{explorer.person.affiliation}</p>
+    <p class="measure">{explorer.person.expertise}</p>
+    <p class="measure">{explorer.person.interests.join(" · ")}</p>
+    <details>
+      <summary>Research profile sources</summary>
+      <ul>{explorer.person.sources.map(source => <li><a href={source.url} rel="noopener noreferrer">{source.title}</a></li>)}</ul>
+    </details>
+  </aside>
+  <section slot="podcast" id="podcast" class="episode">
+    <h2>Companion podcast</h2>
+    <p class="muted">An independently prepared guide to the field.</p>
+    <h3>{explorer.podcast.title}</h3>
+    <p class="measure">{explorer.podcast.description}</p>
+    <p class="muted">{Math.round(explorer.podcast.durationMin)} minutes · AI-narrated field guide</p>
+    <audio controls preload="none" aria-label={explorer.podcast.title}>
+      <source src={explorer.podcast.audioUrl} type="audio/mpeg" />
+    </audio>
+    <details class="transcript">
+      <summary>Read transcript</summary>
+      <div class="stack stack-s measure">
+        {transcript.map(paragraph => paragraph.startsWith("#")
+          ? <h4>{paragraph.replace(/^#+\s*/, "")}</h4>
+          : <p>{paragraph}</p>)}
+      </div>
+    </details>
+  </section>
+</ThematicExplorer>
+<style>
+  .profile { padding: var(--space-m); border-inline-start: 2px solid var(--color-accent); background: var(--color-bg-subtle); }
+  .profile h2 { font-size: var(--step-1); }
+  .profile p { margin-block: var(--space-xs); }
+  summary { cursor: pointer; padding-block: var(--space-xs); min-height: 2.75rem; }
+  .profile ul { padding-inline-start: var(--space-m); }
+  .episode { border-top: var(--border-hairline); padding-block-start: var(--space-l); scroll-margin-top: var(--space-xl); }
+  .episode h2 { font-size: var(--step-2); }
+  .episode h3 { font-size: var(--step-1); }
+  audio { width: 100%; margin-block: var(--space-s); }
+  .transcript { padding-block: var(--space-s); }
+  .transcript p { white-space: pre-line; }
+</style>
