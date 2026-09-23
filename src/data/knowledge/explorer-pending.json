@@ -14,9 +14,9 @@
         }
       ],
       "firstSeen": "2026-09-09",
-      "lastAttempt": "2026-09-22",
-      "attempts": 3,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 4,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911515S",
@@ -32,9 +32,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-22",
-      "attempts": 2,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 3,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911028Z",
@@ -50,9 +50,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-22",
-      "attempts": 2,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 3,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911076H",
@@ -69,9 +69,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-22",
-      "attempts": 2,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 3,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911060S",
@@ -93,9 +93,9 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-22",
-      "attempts": 2,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 3,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
     },
     {
       "bibcode": "2026arXiv260911286G",
@@ -116,9 +116,79 @@
         }
       ],
       "firstSeen": "2026-09-13",
-      "lastAttempt": "2026-09-22",
-      "attempts": 2,
-      "note": "2026-09-22: not in the SciX mirror yet (no papers row); abstract-only classification retained."
+      "lastAttempt": "2026-09-23",
+      "attempts": 3,
+      "note": "2026-09-23: still absent from the SciX mirror (read_paper: paper not found); abstract-only classification retained."
+    },
+    {
+      "bibcode": "2026arXiv260925563B",
+      "arxiv": "2609.25563",
+      "title": "AkasicMEM: Governed Enterprise Memory for Agents",
+      "targets": [
+        {
+          "explorerId": "agentic-memory",
+          "branches": [
+            "security-governance"
+          ]
+        },
+        {
+          "explorerId": "memory-design",
+          "branches": [
+            "interop"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-23",
+      "lastAttempt": "2026-09-23",
+      "attempts": 1,
+      "note": "2026-09-23: SciX has the abstract row only (has_body=false); waiting on full text."
+    },
+    {
+      "bibcode": "2026arXiv260925396X",
+      "arxiv": "2609.25396",
+      "title": "Passes Alone, Fails Together: Benchmarking Semantic Coordination in Parallel LLM-Agent Development",
+      "targets": [
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "reliability"
+          ]
+        },
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "frontier"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-23",
+      "lastAttempt": "2026-09-23",
+      "attempts": 1,
+      "note": "2026-09-23: not in the SciX mirror yet (paper not found)."
+    },
+    {
+      "bibcode": "2026arXiv260926781Z",
+      "arxiv": "2609.26781",
+      "title": "Agensh: Scaling Organizational Intelligence to 1,024 Agents",
+      "targets": [
+        {
+          "explorerId": "multiagent-orchestration",
+          "branches": [
+            "foundations",
+            "memory"
+          ]
+        },
+        {
+          "explorerId": "enterprise-reliability",
+          "branches": [
+            "topology"
+          ]
+        }
+      ],
+      "firstSeen": "2026-09-23",
+      "lastAttempt": "2026-09-23",
+      "attempts": 1,
+      "note": "2026-09-23: not in the SciX mirror yet (paper not found)."
     }
   ]
 }

@@ -3210,6 +3210,25 @@
           "why": "The framing is the contribution: the harness is a dependency layer with no lockfile, no install-time check and no vocabulary for what a component may do, while a median setup is 6 components and 7,057 tokens and the largest is 500 components and 1,611,649 tokens, with 17.5% of repositories configuring more than one assistant. Two of the measured consequences are platform-version-dependent, since skill frontmatter became optional in Claude Code and bypassPermissions was honoured from project settings only until v2.1.257, so a defect rate here reads one platform version rather than a permanent property. The credential-exfiltration path that motivated the instrument has no confirmed instance in the corpus, which the paper reports rather than buries."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260924928A",
+      "title": "Trajectory-Aware Benchmark Subset Selection for Cost-Efficient Software Engineering Agent Regression Testing",
+      "firstAuthor": "Ayyad, Mahmoud",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.24928",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260924928A",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Evaluating an agent update on a subset of a benchmark is only trustworthy if the subset tracks the full resolve rate. Across 31,779 trajectories from 58 runs on SWE-Rebench and SWE-Bench Verified, grouping instances by historical pass count and then picking the ones closest to each group's centroid in a sanitized trajectory-embedding space cut mean estimation error by up to 11.4% and worst-case error by 38 to 46% against the 95th-percentile draw of the strongest stratified-random baseline at 5% and 10% subset sizes. A 10% subset kept median error under 5% and cut tokens from 3.44B to 345M.",
+          "why": "Regression-testing an agent on the full benchmark costs hundreds of millions of tokens per run, so teams already sample, and a fixed-seed random draw was off by 57 points on one run. Both parts of the method are needed: dropping outcome grouping raises error 30 to 37%, and a deterministic pick by outcome stability alone, without embeddings, is no better than random. The advantage fades at 20 to 30% subsets and in the cross-framework scenario."
+        }
+      ]
     }
   ],
   "sections": [

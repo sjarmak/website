@@ -2213,6 +2213,68 @@
           "why": "The open question in this theme is how much of a reported score belongs to the scaffold rather than the model. This is the largest matched-cell answer available, and it says the harness moves the number while the model moves it about five times more, with orderings staying correlated across benchmarks. The counterweight is in the same paper: evaluation is low-rank, after 12 benchmarks every remaining one correlates at rho >= 0.7 with a selected one and 13 of 54 are saturated above 90%, so scaffold differences are being measured on a narrow capability axis. Harbor-Index answers that with 82 tasks over 29 benchmarks where no model-harness pair clears 30%."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260922259Y",
+      "title": "Which Part of the Context Layer Does the Work? Separating Semantic Content from Retrieval Scaffolding in Text-to-SQL Agents",
+      "firstAuthor": "Ye, Qing",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.22259",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260922259Y",
+      "branches": [
+        "context",
+        "enforcement",
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "A four-arm ablation on DABStep across GLM, DeepSeek, Claude Sonnet 5 and GPT-5.6 separates a context layer into semantic content, retrieval scaffolding and pre-computed views. Restoring the prose to a hollowed data contract, with names, types, tools, allow-list and rules held byte-for-byte, raises hard-task accuracy 26 to 36 points on every model. The empty scaffolding alone is worth 0 to 5 points on the two flash models and 14 to 15 on the two frontier models, so the content step exceeds the scaffolding step by 1.8x to 6.6x.",
+          "why": "This is the cleanest decomposition so far of what documentation buys: the prose does most of the work, and the same prose pasted into a 24,000-character system prompt loses to one-lookup delivery. On Sonnet 5 the prompt arm was indistinguishable from a bare schema on hard tasks while the contract arm sat 45 points above both, and the contract arm's SQL expressed all six fee clauses on 55% and 98% of tasks on the frontier models against 4% for the prompt arm holding the same rule."
+        },
+        {
+          "branch": "enforcement",
+          "takeaway": "The contract declares forbidden operations and a table allow-list, rendered into the system prompt and checked by a sqlglot static validator before any statement reaches the database. Across 6,416 transcripts, ungoverned arms submitted 166 mutating statements over 26 tasks and corrupted the warehouse twice; governed arms submitted none, so the validator never had to fire. Both corruptions were competent agents routing around a per-call connection boundary with CREATE TEMP and then persistent tables, not injections.",
+          "why": "Declared rules stopped the attempts upstream of enforcement, but the data cannot say whether a non-compliant model would have been caught, because none tried. The paper also shows the agent fetching the NULL-wildcard rule and then misapplying it on set-membership tasks, and a five-line DuckDB macro encoding that rule answers the lost tasks exactly, which argues for making semantics executable rather than adding more prose."
+        },
+        {
+          "branch": "harness",
+          "takeaway": "The contract arm does the least work on every model: fewest turns per task, a half to a third of the reasoning tokens, never exhausting its output budget, and cheapest per correct answer on three of four models. On GPT-5.6 it bills $21.32 against the prompt arm's $14.42 because tool-delivered knowledge is charged as fresh input on every turn while a static system prompt is billed at the cached rate. A near-replicate of the GLM run differing only by a validator fix flipped 94 of 401 task verdicts at temperature 0 on a pinned endpoint.",
+          "why": "Where the semantics sit inside the harness, and how the provider prices cached against fresh tokens, changes both the accuracy and the bill; the authors state that the work claim generalizes across models and the price claim does not. The 23% verdict flip rate between near-identical runs means no named-task result on this benchmark should be read as reproducible."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260922222N",
+      "title": "Can Coding Agents Reproduce Official Statistics? Metadata, Retry Budget and the Limits of Execution Feedback in a Controlled Eurostat Benchmark",
+      "firstAuthor": "Necula, Sabina-Cristiana",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.22222",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260922222N",
+      "branches": [
+        "context",
+        "grading",
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "On 30 Eurostat tasks run in three replicates with Claude Sonnet 5, a frozen dataset metadata card carrying dimension codes and unit meanings but no gold values raised exact correctness from 27.8% to 51.1% and cut wrong-filter outcomes from 39 to 4 of 90 task-runs.",
+          "why": "The metadata card is documentation in its narrowest form, a codebook for one dataset, and on its own it removed most of the estimand-selection errors. Once filters were fixed, wrong shape and wrong unit became the residual semantic errors, which documentation about codes does not address."
+        },
+        {
+          "branch": "grading",
+          "takeaway": "The benchmark was first run under an output contract that never told the model the ranking key or whether units should be codes or labels, while the evaluator required both. That contract understated the repair condition by 23.4 points (53.3% against 76.7%) and flipped its comparison with the metadata-only condition from non-significant (p=0.2153) to significant (p=0.0013). Rescoring the original run with a permissive ranking-key rule recovers 74.4%, within two points of the rerun.",
+          "why": "A serialization detail nobody communicated to the model manufactured twenty points of apparent agent error and reversed a reported conclusion. The remedy proposed is to publish the full output contract shown to the model beside the scoring code, frozen source responses and scoring-sensitivity switches, so false rejection can be audited alongside false acceptance."
+        },
+        {
+          "branch": "harness",
+          "takeaway": "Two conditions shared the same metadata and a three-attempt budget. One received sanitized static, runtime and schema diagnostics after a failure; the other had the original request resent with no sign anything had gone wrong. Both scored 69 of 90 exact, with 12 discordant pairs in each direction. Diagnostics lifted execution success from 96.7% to 100% and nothing else. Even in the best condition one executable answer in five was silently wrong.",
+          "why": "The repair loop's benefit was the retry budget, not the feedback, and comparing repair against a single attempt, as the self-repair literature does, cannot see this because it bundles the two. Static-checker rejections, 15 outcomes in the metadata-only condition and every one for importing sys, are harness properties that would otherwise be counted as model failures."
+        }
+      ]
     }
   ],
   "sections": [
