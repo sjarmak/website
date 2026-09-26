@@ -347,3 +347,100 @@
     and Claude Code plugin. Candidate check for the no-ai-slop pass.
   tags: [ai-slop, writing, linter, claude-code]
   added: 2026-09-21
+
+- title: The AI Coding Dictionary
+  url: https://www.aicodingdictionary.com/
+  category: Agentic coding
+  kind: other
+  note: >-
+    Glossary of agentic-coding terminology (sourced from aihero.dev), grouped
+    into seven areas: core model concepts, session/context management, agent
+    tools and environments, failure modes, multi-session workflows, memory
+    and steering (AGENTS.md, progressive disclosure), and practical work
+    patterns (AFK sessions, human-in-the-loop). Plain-language definitions
+    aimed at developers, not a general AI glossary.
+  tags: [glossary, agentic-coding, terminology]
+  added: 2026-09-24
+
+- title: "AI Agents Push Humans Out of the Loop"
+  url: https://arxiv.org/html/2608.23642v3
+  category: Agentic coding
+  kind: paper
+  note: >-
+    Position paper arguing that agent oversight is self-undermining: the
+    cognitive load of monitoring autonomous agents exceeds what interfaces
+    support, extended reliance on agents degrades the critical-thinking
+    skills oversight requires, and approval fatigue pushes reviewers toward
+    superficial rubber-stamping that then gets fed back into training as a
+    weaker judgment signal. Proposes developer-level design affordances
+    (strategic friction, decision design, behavioral monitoring) plus
+    organizational protocols as fixes, treating human cognitive limits as a
+    first-class design constraint rather than an afterthought.
+  tags: [agents, human-oversight, hci, safety]
+  added: 2026-09-26
+
+- title: "Hegel: How It Works"
+  url: https://hegel.dev/explanation/how-hegel-works
+  category: Code quality
+  kind: article
+  note: >-
+    Explains Hegel's property-based testing architecture: a Rust core
+    (libhegel) handles generation, shrinking failing cases to a minimal
+    reproducer, and an example database, while thin per-language bindings
+    (Rust, Go, C++, TypeScript, Java, OCaml) request typed generated values
+    from it during test runs. Now the house rule's designated property-testing
+    tool for parsers, codecs, round-trips, and other pure-logic invariants
+    outside Python (which stays on Hypothesis).
+  tags: [testing, property-based-testing, code-quality]
+  added: 2026-09-26
+
+- title: second-brain-os
+  url: https://github.com/undefined-ui/second-brain-os
+  category: Knowledge management
+  kind: repo
+  note: >-
+    Obsidian vault scaffold run by a Claude Code agent as a self-maintaining
+    personal knowledge base: an ingestion pipeline turns saved articles, PDFs,
+    and transcripts into linked wiki pages, split into a knowledge layer
+    (what you know) and a projects layer (what you're doing), retrieved via
+    structured wikilinks rather than vector similarity. Ships as 72 slash
+    commands and 18 agent skills over MCP, plus Python tooling for link
+    checking, stats, and graph export. Relevant to compare against the
+    Obsidian vault setup and this site's own knowledge hub / graph pipeline.
+  tags: [obsidian, pkm, claude-code, agents, knowledge-graph]
+  added: 2026-09-24
+
+- title: How We Made Claude.ai Faster
+  url: https://claude.dev/blog/how-we-made-claude-ai-faster/
+  category: Agentic coding
+  kind: article
+  note: >-
+    Anthropic's account of speeding up claude.ai web and desktop: deterministic
+    benchmarks (Valgrind instruction counts, React commit tracking, DOM
+    mutation counts) targeting the four user journeys covering 95% of
+    activity, fixes like a static HTML composer mounted during React init,
+    precompiled V8 code caching, and eliminating redundant cache clones and
+    megamorphic lookups. Notable for the process as much as the numbers: Claude
+    ran with standing instructions to find bottlenecks, build benchmarks, and
+    ship PRs autonomously across 150+ concurrent threads, with humans steering
+    ambition and direction. Reports 3.1x average improvement across 13
+    metrics, including a 19x faster message-send at p75.
+  tags: [performance, agentic-coding, claude, web-perf]
+  added: 2026-09-24
+
+- title: openclaw test-audit skill
+  url: https://github.com/openclaw/openclaw/tree/main/.agents/skills/test-audit
+  category: Code quality
+  kind: other
+  note: >-
+    Agent skill (SKILL.md) for gating and auditing test value, not just
+    coverage. An authoring gate requires four answers before a new test
+    lands (behavior protected, credible regression, why existing coverage
+    misses it, whether it forces a test-only production seam), plus a
+    catalogued "junk pattern" list (assertion-free probes, source greps,
+    mocks that implement the behavior they assert, self-fulfilling
+    fixtures) shared by both new-test review and sweep-style audits of
+    low-value or implementation-coupled tests. Complements crap4java and
+    supercov's coverage-quantity lens with a test-quality-per-test lens.
+  tags: [testing, code-quality, agent-skills, test-review]
+  added: 2026-09-24
