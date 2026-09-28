@@ -25,12 +25,12 @@ export const readingPaths: ReadingPath[] = [
     title: "Agents, Evals & Production Scale",
     audience: "If you're evaluating me for agent or eval work",
     blurb:
-      "A tour from the philosophy behind the Agent Advocate role through the benchmark I built, the ideas shaping how I think about evaluation, a live webinar on composing agents into workflows, and the open-source orchestration framework I help maintain.",
+      "A tour from why production agent infrastructure matters, through the benchmark I built and the ideas shaping how I think about evaluation, to a live webinar on composing agents into workflows and the open-source orchestration framework I help maintain.",
     stops: [
       {
         collection: "writing",
         slug: "why-agent-advocate-exists",
-        why: "Start here to understand why I think production agent infrastructure matters more than prompt engineering — and what the Agent Advocate role is actually about.",
+        why: "Start here for why I think production agent infrastructure matters more than prompt engineering, written during my time as an Agent Advocate at Sourcegraph.",
       },
       {
         collection: "projects",

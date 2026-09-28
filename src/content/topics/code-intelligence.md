@@ -1,6 +1,6 @@
 ---
 title: Code intelligence
-summary: "Understanding codebases at scale: search, navigation, and agents that reason over source. The domain of my work at Sourcegraph."
+summary: "Understanding codebases at scale: search, navigation, and agents that reason over source."
 related: [agents, retrieval]
 weight: 2
 ---

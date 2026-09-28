@@ -6,9 +6,9 @@ export const site = {
   domain: "sjarmak.ai",
   url: "https://sjarmak.ai",
   email: "steph.jarmak@gmail.com",
-  tagline: "Information scientist, AI agent advocate, and illustrator.",
+  tagline: "AI Engineer and Researcher",
   description:
-    "Stephanie Jarmak — information scientist and applied research scientist, AI agent advocate at Sourcegraph, NASA SciX research affiliate. Knowledge graphs, retrieval, and agents.",
+    "Stephanie Jarmak is an AI engineer and researcher working on reliable AI systems: evaluating agents, retrieval and context for models, and agentic software engineering. AI Engineer at Omni and research affiliate with NASA SciX.",
   locale: "en",
 } as const;
 
@@ -42,6 +42,6 @@ export const socials: readonly SocialLink[] = [
 
 // Affiliations surfaced in JSON-LD and the footer.
 export const affiliations = [
-  { name: "Sourcegraph", role: "AI agent advocate / applied research scientist" },
-  { name: "NASA Science Explorer (SciX)", role: "Research affiliate" },
+  { name: "Omni", role: "AI Engineer", since: "September 2026 – Present", relation: "worksFor" },
+  { name: "NASA Science Explorer (SciX)", role: "Research Affiliate", relation: "affiliation" },
 ] as const;

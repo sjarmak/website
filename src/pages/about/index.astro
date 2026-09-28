@@ -8,8 +8,14 @@ const personLd = {
   name: site.name,
   url: site.url,
   email: `mailto:${site.email}`,
-  jobTitle: "Applied Research Scientist & AI Agent Advocate",
-  worksFor: affiliations.map((a) => ({ "@type": "Organization", name: a.name })),
+  jobTitle: "AI Engineer",
+  description: site.description,
+  worksFor: affiliations
+    .filter((a) => a.relation === "worksFor")
+    .map((a) => ({ "@type": "Organization", name: a.name })),
+  affiliation: affiliations
+    .filter((a) => a.relation === "affiliation")
+    .map((a) => ({ "@type": "Organization", name: a.name })),
   sameAs: socials.filter((s) => s.label !== "Email").map((s) => s.href),
 };
 ---
@@ -17,14 +23,17 @@ const personLd = {
 <PageLayout
   title="About"
   kicker="Hello"
-  intro="Information scientist, AI agent advocate, illustrator, and mom."
+  intro="AI engineer and researcher, illustrator, and mom."
   description="About Stephanie Jarmak."
 >
   <div class="prose">
     <p>
-      I'm an applied research scientist focused on how people and machines find knowledge.
-      At <strong>Sourcegraph</strong>, I work on AI agents and code intelligence, and I
-      advocate for the ways agents are reshaping engineering. As a research affiliate with
+      I'm an AI engineer and researcher focused on how people and machines find knowledge. I
+      work on reliable AI systems: how models use context, tools, and structured knowledge, and
+      how to tell whether the result actually works. I'm an AI Engineer at <strong>Omni</strong>.
+      Before that, at <strong>Sourcegraph</strong>, I did applied research on coding agents and
+      code intelligence, including benchmarks for how agents perform in large, multi-repo
+      codebases. As a research affiliate with
       <strong>NASA's Science Explorer (SciX)</strong>, I continue work on AI-powered scientific
       search: natural language processing, entity extraction, embeddings, and knowledge graphs.
     </p>

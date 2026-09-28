@@ -72,7 +72,7 @@
       "id": "reliable-agents",
       "question": "What makes multi-agent systems reliable enough to change real production code?",
       "status": "exploring",
-      "take": "Most agent demos work once. Production is the opposite problem: the same task run a thousand times, with no one watching the single run that quietly corrupts a repository. The work at Sourcegraph lives underneath that, in orchestration, verification, and blast-radius control rather than in cleverer prompts. Below is what I'm building toward reliability, sitting next to the empirical work on where agents actually break.",
+      "take": "Most agent demos work once. Production is the opposite problem: the same task run a thousand times, with no one watching the single run that quietly corrupts a repository. My work lives underneath that, in orchestration, verification, and blast-radius control rather than in cleverer prompts. Below is what I'm building toward reliability, sitting next to the empirical work on where agents actually break.",
       "concepts": [
         "agents",
         "code-intelligence",

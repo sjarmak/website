@@ -1,12 +1,10 @@
 ---
 title: Sourcegraph GTM Assistant
-status: active
+status: archived
 domain: ai-agents
 summary: A stateless MCP server on Cloud Run that gives any authenticated Sourcegraph employee, through claude.ai, one tool surface over curated per-account research (GCS corpus) and live internal data (Salesforce, Looker, PostHog, HubSpot via cost-safeguarded databot), spanning account discovery, intelligence, lead scoring, and voice-checked outreach drafting.
 role: Creator
 tech: [Python, Agents, Slack, LLM]
-featured: true
-featuredOrder: 7
 order: 22
 topics: [agents]
 tags: [bot, automation]
