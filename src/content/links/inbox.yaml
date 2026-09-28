@@ -362,6 +362,22 @@
   tags: [glossary, agentic-coding, terminology]
   added: 2026-09-24
 
+- title: jevgrep
+  url: https://github.com/dzhng/jevgrep
+  category: Agentic coding
+  kind: tool
+  note: >-
+    CLI that answers "how does X work" over a codebase instead of grepping
+    for a literal string: walks the filesystem respecting ignore files, uses
+    Vercel's Jev model to judge file and declaration relevance from content
+    previews, and returns matching excerpts with line references. Parses
+    Python and TypeScript/JavaScript declarations natively, falls back
+    elsewhere. Reports matching baseline task success (8/10) on a ten-task
+    SWE-bench comparison at roughly 30% lower coding-agent cost ($5.44 vs
+    $7.62).
+  tags: [agents, code-search, semantic-search, cli]
+  added: 2026-09-27
+
 - title: "AI Agents Push Humans Out of the Loop"
   url: https://arxiv.org/html/2608.23642v3
   category: Agentic coding
