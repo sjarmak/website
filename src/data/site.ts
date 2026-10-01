@@ -18,7 +18,6 @@ export const nav: readonly NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Library", href: "/library" },
   { label: "Radar", href: "/radar" },
-  { label: "Models", href: "/models" },
   { label: "Digest", href: "/digest" },
   { label: "Writing", href: "/writing" },
   { label: "Talks", href: "/talks" },

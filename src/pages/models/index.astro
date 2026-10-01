@@ -99,7 +99,7 @@ const observationCount = scored.length;
 
 <PageLayout
   title="Model selection"
-  kicker="Research artifact"
+  kicker="Omni Evaluations · research artifact"
   intro="Which publicly available models are worth testing on our own analytics-agent workload. Public benchmarks screen; internal evaluation decides."
   description="A maintained screening tracker of public LLM benchmark evidence across data analysis, instruction following, SQL, reasoning, long context and cost, with explicit weights, eligibility gates, provenance and a capability-versus-cost Pareto view."
 >
@@ -116,6 +116,10 @@ const observationCount = scored.length;
         that loop leans on, each mapped to one or two public benchmarks, normalized onto a common scale and combined
         with weights that are stated in full below. Nothing is collapsed into a generic intelligence number, and a
         missing result stays missing rather than counting as zero.
+      </p>
+      <p class="muted">
+        This tracker is the public-screening layer of the <a href="/projects/omni-evaluations">Omni Evaluations</a>
+        project.
       </p>
       <p class="muted">
         {rows.length} models · {observationCount} benchmark observations · {eligibleCount} currently pass every gate
