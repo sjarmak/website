@@ -58,3 +58,5 @@ function wireAll() {
 
 wireAll();
 document.addEventListener("astro:after-swap", wireAll);
+
+export {};

@@ -7,7 +7,7 @@ interface Props {
 
 const { rows } = Astro.props;
 
-const placed = rows.filter((r) => r.composite.value !== null && r.blendedPrice !== null);
+const placed = rows.filter((r) => r.eligibility === "pass" && r.composite.value !== null && r.blendedPrice !== null);
 
 const width = 760;
 const height = 420;
@@ -45,7 +45,7 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
 
 {
   placed.length === 0 ? (
-    <p class="muted">No model has both a composite and a price yet, so there is nothing to plot.</p>
+    <p class="muted">No gate-passing model has both a composite and a price yet, so there is nothing to plot.</p>
   ) : (
     <figure class="pareto">
       <svg
@@ -56,9 +56,10 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
       >
         <title id="pareto-title">Public composite versus blended list price</title>
         <desc id="pareto-desc">
-          Scatter of each model's public composite score against its blended price per million tokens on a log
-          axis. Filled points lie on the Pareto frontier and are labelled; ringed points are within tolerance of it.
-          Hover any point for its name.
+          Scatter of each gate-passing model's public composite score against its blended price per million tokens
+          on a log axis. Filled points lie on the Pareto frontier and are labelled; ringed points are within
+          tolerance of it.
+          Hover or focus any point for its name and values; click or press Enter to pin its label.
         </desc>
         {yTicks.map((t) => (
           <g>
@@ -96,16 +97,24 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
               : r.pareto === "near"
                 ? "pareto__dot pareto__dot--near"
                 : "pareto__dot";
+          const detail = `composite ${Math.round((r.composite.value as number) * 100)} · ${fmtPrice(r.blendedPrice as number)}/M blended`;
           return (
-            <g class="pareto__mark">
+            <g
+              class="pareto__mark"
+              tabindex="0"
+              role="button"
+              aria-label={`${r.model.name}: ${detail}. Activate to pin the label.`}
+              data-name={r.model.name}
+              data-detail={detail}
+              data-x={cx.toFixed(1)}
+              data-y={cy.toFixed(1)}
+            >
               <circle cx={cx} cy={cy} r="12" class="pareto__hit" />
               <circle cx={cx} cy={cy} r="5" class={cls} />
-              <title>
-                {`${r.model.name}: composite ${Math.round((r.composite.value as number) * 100)}, ${fmtPrice(r.blendedPrice as number)}/M blended`}
-              </title>
             </g>
           );
         })}
+        <g class="pareto__pins" />
         {labelled.map(({ row: r, above }) => {
           const cx = x(r.blendedPrice as number);
           const cy = y(r.composite.value as number);
@@ -123,10 +132,15 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
           );
         })}
       </svg>
+      <div class="pareto__tip" role="status" aria-live="polite" hidden>
+        <strong></strong>
+        <span></span>
+      </div>
       <figcaption class="pareto__legend muted">
         <span><i class="pareto__key pareto__key--frontier" aria-hidden="true"></i> on the frontier</span>
-        <span><i class="pareto__key pareto__key--near" aria-hidden="true"></i> within tolerance of the frontier (hover for the name)</span>
+        <span><i class="pareto__key pareto__key--near" aria-hidden="true"></i> within tolerance of the frontier</span>
         <span><i class="pareto__key" aria-hidden="true"></i> dominated on both axes</span>
+        <span>hover any point for its name; click to pin the label</span>
       </figcaption>
     </figure>
   )
@@ -135,6 +149,42 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
 <style>
   .pareto {
     margin: 0;
+    position: relative;
+  }
+  .pareto__tip {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    padding: var(--space-2xs) var(--space-xs);
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+    font-size: var(--step--1);
+    white-space: nowrap;
+  }
+  .pareto__tip strong {
+    display: block;
+    font-weight: 600;
+  }
+  .pareto__tip span {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--color-text-secondary);
+  }
+  .pareto__mark {
+    cursor: pointer;
+    outline: none;
+  }
+  .pareto__mark:focus-visible .pareto__dot {
+    stroke: var(--color-accent);
+    stroke-width: 3;
+  }
+  .pareto__mark--pinned .pareto__dot {
+    stroke-width: 3;
+  }
+  .pareto__label--pinned {
+    fill: var(--color-accent);
   }
   .pareto__svg {
     width: 100%;
@@ -213,3 +263,7 @@ const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
     background: var(--color-accent);
   }
 </style>
+
+<script>
+  import "@/scripts/pareto-tooltip";
+</script>

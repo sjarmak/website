@@ -6,7 +6,16 @@ import { blendedPricePerM, normalizeScore } from "../src/lib/models/normalize.ts
 import { capabilityScores, composite, scoreObservations } from "../src/lib/models/score.ts";
 import { nearFrontier, paretoFrontier } from "../src/lib/models/pareto.ts";
 import { eligibility, verdictFromFlag, verdictFromThreshold } from "../src/lib/models/gates.ts";
-import type { BenchmarkRecord, CapabilityDefinition, CapabilityId, Observation } from "../src/data/models/types.ts";
+import { buildTracker } from "../src/lib/models/build.ts";
+import type { Gate } from "../src/lib/models/gates.ts";
+import type {
+  BenchmarkRecord,
+  CapabilityDefinition,
+  CapabilityId,
+  ModelRecord,
+  Observation,
+  PricingRecord,
+} from "../src/data/models/types.ts";
 
 const bench = (id: string, capability: BenchmarkRecord["capability"], weight = 1): BenchmarkRecord => ({
   id,
@@ -111,6 +120,48 @@ test("pareto frontier keeps only undominated points", () => {
   assert.deepEqual([...near], ["dominated"]);
 });
 
+test("frontier and near-frontier are computed over gate-passing models only", () => {
+  const model = (id: string, toolCalling: boolean | undefined): ModelRecord => ({
+    id,
+    name: id,
+    vendor: "OpenAI",
+    openWeights: false,
+    apiAvailable: true,
+    toolCalling,
+  });
+  const pricing = (id: string, perM: number): PricingRecord => ({
+    model: id,
+    inputPerM: perM,
+    outputPerM: perM,
+    sourceUrl: "https://example.test",
+    retrieved: "2026-10-01",
+  });
+  const toolGate: Gate = {
+    id: "tools",
+    label: "Tool calling",
+    description: "",
+    evaluate: (ctx) => verdictFromFlag(ctx.model.toolCalling),
+  };
+  const tracker = buildTracker({
+    models: [model("cheap-strong-fails", false), model("pricey-passes", true), model("unknown-gate", undefined)],
+    benchmarks: [bench("da", "data-analysis")],
+    observations: [obs("cheap-strong-fails", "da", 95), obs("pricey-passes", "da", 80), obs("unknown-gate", "da", 99)],
+    pricing: [pricing("cheap-strong-fails", 0.2), pricing("pricey-passes", 5), pricing("unknown-gate", 0.1)],
+    latency: [],
+    config: {
+      capabilities: [caps[0]],
+      minimumCoverage: 0,
+      cost: { inputShare: 3, outputShare: 1, normalization: { kind: "log-inverse", best: 0.1, worst: 50 } },
+    },
+    gates: [toolGate],
+    nearFrontierTolerance: 0.05,
+  });
+  const status = Object.fromEntries(tracker.rows.map((r) => [r.model.id, r.pareto]));
+  assert.equal(status["pricey-passes"], "frontier");
+  assert.equal(status["cheap-strong-fails"], "ineligible");
+  assert.equal(status["unknown-gate"], "ineligible");
+});
+
 test("gate verdicts: unknown data never counts as pass or fail", () => {
   assert.equal(verdictFromFlag(undefined), "unknown");
   assert.equal(verdictFromFlag(true), "pass");
@@ -158,7 +209,9 @@ test("property: composite lies within the range of its inputs and coverage is in
       id,
       label: id,
       shortLabel: id,
-      weight: tc.draw(gs.floats({ minValue: 0, maxValue: 1, allowNan: false, allowInfinity: false })),
+      weight: tc.draw(gs.booleans())
+        ? 0
+        : tc.draw(gs.floats({ minValue: 0.001, maxValue: 1, allowNan: false, allowInfinity: false })),
       description: "",
     }));
     const values = new Map<CapabilityId, number>();

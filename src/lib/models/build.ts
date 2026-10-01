@@ -33,7 +33,7 @@ export interface TrackerInput {
   nearFrontierTolerance: number;
 }
 
-export type ParetoStatus = "frontier" | "near" | "dominated" | "unplaced";
+export type ParetoStatus = "frontier" | "near" | "dominated" | "ineligible" | "unplaced";
 
 export interface TrackerRow {
   model: ModelRecord;
@@ -105,12 +105,14 @@ export function buildTracker(input: TrackerInput): Tracker {
     };
   });
 
-  const points = partial
-    .filter((r) => r.composite.value !== null && r.blendedPrice !== null)
+  const priced = partial.filter((r) => r.composite.value !== null && r.blendedPrice !== null);
+  const points = priced
+    .filter((r) => r.eligibility === "pass")
     .map((r) => ({ id: r.model.id, cost: r.blendedPrice as number, value: r.composite.value as number }));
   const frontier = paretoFrontier(points);
   const near = nearFrontier(points, frontier, input.nearFrontierTolerance);
   const placed = new Set(points.map((p) => p.id));
+  const excluded = new Set(priced.filter((r) => r.eligibility !== "pass").map((r) => r.model.id));
 
   const rows: TrackerRow[] = partial.map((r) => ({
     ...r,
@@ -120,7 +122,9 @@ export function buildTracker(input: TrackerInput): Tracker {
         ? "near"
         : placed.has(r.model.id)
           ? "dominated"
-          : "unplaced",
+          : excluded.has(r.model.id)
+            ? "ineligible"
+            : "unplaced",
   }));
 
   rows.sort((a, b) => {

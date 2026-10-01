@@ -40,8 +40,10 @@ export const gates: Gate[] = [
   {
     id: "privacy",
     label: "No-training / ZDR option",
-    description: "A contractual option for zero data retention or at least a no-training commitment on API traffic.",
-    evaluate: ({ model }) => verdictFromFlag(model.zeroDataRetention),
+    description:
+      "A contractual option for zero data retention or at least a no-training commitment on API traffic, from the vendor or from a third-party host that serves the same model (Bedrock, Vertex, Fireworks, Vercel AI Gateway and similar).",
+    evaluate: ({ model }) =>
+      model.privacyVia && model.privacyVia.length > 0 ? "pass" : verdictFromFlag(model.zeroDataRetention),
   },
   {
     id: "instruction-floor",

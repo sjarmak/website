@@ -34,6 +34,7 @@ export interface ModelRecord {
   toolCalling?: boolean;
   structuredOutput?: boolean;
   zeroDataRetention?: boolean;
+  privacyVia?: string[];
   notes?: string;
   docsUrl?: string;
 }

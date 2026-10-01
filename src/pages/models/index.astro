@@ -35,7 +35,7 @@ const normalizationLabel = (b: (typeof benchmarks)[number]) =>
     : `log-inverse, ${b.normalization.best} → 1, ${b.normalization.worst} → 0`;
 
 const verdictGlyph = { pass: "✓", fail: "✗", unknown: "?" } as const;
-const paretoLabel = { frontier: "frontier", near: "near", dominated: "", unplaced: "" } as const;
+const paretoLabel = { frontier: "frontier", near: "near", dominated: "", ineligible: "", unplaced: "" } as const;
 
 const leaderboardView = (r: (typeof rows)[number]) => {
   const failingGates = r.gates.filter((g) => g.verdict === "fail").map((g) => g.gate.label);
@@ -94,6 +94,7 @@ const leaderboardView = (r: (typeof rows)[number]) => {
 };
 
 const eligibleCount = rows.filter((r) => r.eligibility === "pass").length;
+const ineligiblePricedCount = rows.filter((r) => r.pareto === "ineligible").length;
 const observationCount = scored.length;
 ---
 
@@ -205,7 +206,12 @@ const observationCount = scored.length;
         The frontier is the set of models no other model beats on both composite and price. Points within
         {Math.round(nearFrontierTolerance * 100)} composite points of the frontier at their price are ringed:
         those are the candidates that trade a little capability for a large cost reduction, which is what this
-        page exists to surface. Models without a composite or a list price are not plotted.
+        page exists to surface. Only models that pass every gate are plotted and compete for the frontier: a
+        model that fails a gate could not be adopted whatever its score.{" "}
+        {ineligiblePricedCount > 0
+          ? `${ineligiblePricedCount} priced ${ineligiblePricedCount === 1 ? "model is" : "models are"} left off for that reason.`
+          : ""}{" "}
+        Models without a composite or a list price are not plotted either.
       </p>
       <ParetoChart rows={rows} />
     </section>
@@ -239,11 +245,18 @@ const observationCount = scored.length;
                     {r.model.maxOutputTokens ? ` · ${tokens(r.model.maxOutputTokens)} out` : ""}
                   </span>
                 </th>
-                {r.gates.map((g) => (
-                  <td class:list={["num", "gate", `gate--${g.verdict}`]} title={`${g.gate.label}: ${g.verdict}`}>
-                    {verdictGlyph[g.verdict]}
-                  </td>
-                ))}
+                {r.gates.map((g) => {
+                  const via = g.gate.id === "privacy" && r.model.privacyVia?.length ? r.model.privacyVia.join(", ") : "";
+                  return (
+                    <td
+                      class:list={["num", "gate", `gate--${g.verdict}`]}
+                      title={via ? `${g.gate.label}: ${g.verdict} via ${via}` : `${g.gate.label}: ${g.verdict}`}
+                    >
+                      {verdictGlyph[g.verdict]}
+                      {via && <span class="gate__via muted">via host</span>}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
@@ -674,6 +687,11 @@ const observationCount = scored.length;
   }
   .gate--unknown {
     color: var(--color-text-muted);
+  }
+  .gate__via {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--step--2);
   }
   .gate__why {
     display: block;
