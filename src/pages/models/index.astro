@@ -1,0 +1,723 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import ParetoChart from "@/components/models/ParetoChart.astro";
+import { tracker, trackerInput } from "@/data/models";
+import { fullDate } from "@/lib/dates";
+import type { CapabilityId } from "@/data/models/types";
+
+const { rows, scored, lastUpdated } = tracker;
+const { benchmarks, config, gates, nearFrontierTolerance } = trackerInput;
+
+const weightedCapabilities = config.capabilities.filter((c) => c.weight > 0);
+const trackedOnly = config.capabilities.filter((c) => c.weight === 0);
+const columnCapabilities = config.capabilities.filter((c) => c.id !== "cost");
+
+const pct = (v: number | null | undefined) => (v === null || v === undefined ? "—" : String(Math.round(v * 100)));
+const sortAttr = (v: number | null | undefined) => (v === null || v === undefined ? "" : String(v));
+const price = (p: number) => (p >= 1 ? `$${p.toFixed(2)}` : `$${p.toFixed(3)}`);
+const tokens = (n: number) => (n >= 1_000_000 ? `${parseFloat((n / 1_000_000).toFixed(2))}M` : `${Math.round(n / 1000)}k`);
+const hostOf = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
+
+const benchmarksByCapability = new Map<CapabilityId, typeof benchmarks>();
+for (const b of benchmarks) {
+  benchmarksByCapability.set(b.capability, [...(benchmarksByCapability.get(b.capability) ?? []), b]);
+}
+
+const normalizationLabel = (b: (typeof benchmarks)[number]) =>
+  b.normalization.kind === "linear"
+    ? `linear ${b.normalization.min}–${b.normalization.max} → 0–1`
+    : `log-inverse, ${b.normalization.best} → 1, ${b.normalization.worst} → 0`;
+
+const verdictGlyph = { pass: "✓", fail: "✗", unknown: "?" } as const;
+const paretoLabel = { frontier: "frontier", near: "near", dominated: "", unplaced: "" } as const;
+
+const leaderboardView = (r: (typeof rows)[number]) => {
+  const failingGates = r.gates.filter((g) => g.verdict === "fail").map((g) => g.gate.label);
+  const unknownGates = r.gates.filter((g) => g.verdict === "unknown").map((g) => g.gate.label);
+  const dataAttrs: Record<string, string> = {
+    "data-model": r.model.id,
+    "data-name": r.model.name,
+    "data-price": sortAttr(r.blendedPrice),
+    "data-composite": sortAttr(r.composite.value),
+    "data-eligibility": r.eligibility === "pass" ? "2" : r.eligibility === "unknown" ? "1" : "0",
+    "data-updated": r.lastUpdated ?? "",
+  };
+  for (const c of columnCapabilities) dataAttrs[`data-${c.id}`] = sortAttr(r.values.get(c.id));
+  const vendorLine = [
+    r.model.vendor,
+    r.model.openWeights ? "open weights" : "",
+    paretoLabel[r.pareto],
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const capabilityCells = columnCapabilities.map((c) => {
+    const cap = r.capabilities.get(c.id);
+    const tip = cap
+      ? cap.observations.map((o) => `${o.benchmarkName} (${o.version}): ${o.score} → ${pct(o.normalized)}`).join("\n")
+      : "no public measurement on a mapped benchmark";
+    return { tip, text: pct(cap?.value), unavailable: !cap, tracked: c.weight === 0 };
+  });
+  const priceTip = r.pricing
+    ? [
+        `${price(r.pricing.inputPerM)}/M in`,
+        `${price(r.pricing.outputPerM)}/M out`,
+        hostOf(r.pricing.sourceUrl),
+        `cost score ${pct(r.values.get("cost"))}`,
+      ].join(" · ")
+    : "no list price recorded";
+  const coveragePct = Math.round(r.composite.coverage * 100);
+  const gateTip = failingGates.length
+    ? `fails: ${failingGates.join(", ")}`
+    : unknownGates.length
+      ? `unknown: ${unknownGates.join(", ")}`
+      : "passes every gate";
+  return {
+    dataAttrs,
+    vendorLine,
+    capabilityCells,
+    priceTip,
+    priceText: r.blendedPrice === null ? "—" : price(r.blendedPrice),
+    coverageTip: `coverage ${coveragePct}% of weighted capabilities`,
+    coverageText: `${coveragePct}%`,
+    compositeText: r.composite.value === null ? "—" : pct(r.composite.value),
+    gateTip,
+    gateGlyph: verdictGlyph[r.eligibility],
+    gateWhy: failingGates.length ? failingGates.join(", ") : unknownGates.join(", "),
+    gateWhyMuted: failingGates.length === 0,
+  };
+};
+
+const eligibleCount = rows.filter((r) => r.eligibility === "pass").length;
+const observationCount = scored.length;
+---
+
+<PageLayout
+  title="Model selection"
+  kicker="Research artifact"
+  intro="Which publicly available models are worth testing on our own analytics-agent workload. Public benchmarks screen; internal evaluation decides."
+  description="A maintained screening tracker of public LLM benchmark evidence across data analysis, instruction following, SQL, reasoning, long context and cost, with explicit weights, eligibility gates, provenance and a capability-versus-cost Pareto view."
+>
+  <div class="stack stack-l">
+    <section class="prose" id="method">
+      <p>
+        Public benchmarks are used as a screening layer for model selection, not as a substitute for
+        application-specific evaluation. Models that perform well across capabilities relevant to analytics are
+        shortlisted for deeper evaluation on representative domain tasks.
+      </p>
+      <p>
+        The workload is an analytics agent: it searches a semantic model, writes SQL, validates its own answer,
+        and builds charts and dashboards through a multi-step tool loop. So the capabilities tracked here are the ones
+        that loop leans on, each mapped to one or two public benchmarks, normalized onto a common scale and combined
+        with weights that are stated in full below. Nothing is collapsed into a generic intelligence number, and a
+        missing result stays missing rather than counting as zero.
+      </p>
+      <p class="muted">
+        {rows.length} models · {observationCount} benchmark observations · {eligibleCount} currently pass every gate
+        {lastUpdated && ` · last retrieval ${fullDate(new Date(lastUpdated))}`}
+      </p>
+      <nav class="section-nav" aria-label="On this page">
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#pareto">Capability vs cost</a>
+        <a href="#gates">Gates</a>
+        <a href="#mapping">Benchmarks</a>
+        <a href="#composite">Composite formula</a>
+        <a href="#provenance">Provenance</a>
+        <a href="#calibration">Calibration</a>
+      </nav>
+    </section>
+
+    <section id="leaderboard">
+      <h2 class="sub">Leaderboard</h2>
+      <p class="muted measure note">
+        Cells are normalized capability scores on 0–100. Hover a cell for the underlying benchmark results, or
+        expand the model under Provenance. “—” means no public measurement on a mapped benchmark. Click a column
+        header to sort; empty cells always sort last.
+      </p>
+      <div class="table-wrap table-wrap--wide">
+        <table class="tracker" data-sortable>
+          <thead>
+            <tr>
+              <th scope="col"><button type="button" data-sort-key="name" data-sort-default="asc">Model</button></th>
+              {columnCapabilities.map((c) => (
+                <th scope="col" class="num" title={c.description}>
+                  <button type="button" data-sort-key={c.id}>{c.shortLabel}</button>
+                </th>
+              ))}
+              <th scope="col" class="num" title="Blended list price per million tokens, 3:1 input:output">
+                <button type="button" data-sort-key="price" data-sort-default="asc">$/M</button>
+              </th>
+              <th scope="col" class="num" title="Weighted composite over covered capabilities; coverage in brackets">
+                <button type="button" data-sort-key="composite">Composite</button>
+              </th>
+              <th scope="col" title="All gates pass, or which one fails">
+                <button type="button" data-sort-key="eligibility">Gates</button>
+              </th>
+              <th scope="col"><button type="button" data-sort-key="updated">Updated</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const v = leaderboardView(r);
+              return (
+                <tr {...v.dataAttrs}>
+                  <th scope="row" class="model-cell">
+                    <a href={`#prov-${r.model.id}`}>{r.model.name}</a>
+                    <span class="muted model-cell__vendor">{v.vendorLine}</span>
+                  </th>
+                  {v.capabilityCells.map((c) => (
+                    <td class:list={["num", { unavailable: c.unavailable, tracked: c.tracked }]} title={c.tip}>
+                      {c.text}
+                    </td>
+                  ))}
+                  <td class:list={["num", { unavailable: r.blendedPrice === null }]} title={v.priceTip}>
+                    {v.priceText}
+                  </td>
+                  <td class:list={["num", "composite", { unavailable: r.composite.value === null }]} title={v.coverageTip}>
+                    {v.compositeText}
+                    <span class="muted coverage">{v.coverageText}</span>
+                  </td>
+                  <td class:list={["gate", `gate--${r.eligibility}`]} title={v.gateTip}>
+                    {v.gateGlyph}
+                    {v.gateWhy && <span class:list={["gate__why", { muted: v.gateWhyMuted }]}>{v.gateWhy}</span>}
+                  </td>
+                  <td class="mono muted">{r.lastUpdated ?? "—"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="pareto">
+      <h2 class="sub">Capability versus cost</h2>
+      <p class="muted measure note">
+        The frontier is the set of models no other model beats on both composite and price. Points within
+        {Math.round(nearFrontierTolerance * 100)} composite points of the frontier at their price are ringed:
+        those are the candidates that trade a little capability for a large cost reduction, which is what this
+        page exists to surface. Models without a composite or a list price are not plotted.
+      </p>
+      <ParetoChart rows={rows} />
+    </section>
+
+    <section id="gates">
+      <h2 class="sub">Eligibility gates</h2>
+      <p class="muted measure note">
+        Gates are evaluated independently of the composite. A model can score well and still be unusable in the
+        harness. Unknown means the record has no value yet, not a failure. Thresholds live in
+        <code>src/data/models/gates.ts</code>.
+      </p>
+      <div class="table-wrap table-wrap--wide">
+        <table class="tracker tracker--gates">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              {gates.map((g) => (
+                <th scope="col" class="num" title={g.description}>
+                  {g.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <th scope="row" class="model-cell">
+                  {r.model.name}
+                  <span class="muted model-cell__vendor">
+                    {r.model.contextWindow ? `${tokens(r.model.contextWindow)} ctx` : "ctx ?"}
+                    {r.model.maxOutputTokens ? ` · ${tokens(r.model.maxOutputTokens)} out` : ""}
+                  </span>
+                </th>
+                {r.gates.map((g) => (
+                  <td class:list={["num", "gate", `gate--${g.verdict}`]} title={`${g.gate.label}: ${g.verdict}`}>
+                    {verdictGlyph[g.verdict]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul class="gate-list">
+        {gates.map((g) => (
+          <li>
+            <strong>{g.label}.</strong> <span class="secondary">{g.description}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="mapping">
+      <h2 class="sub">Capabilities and the benchmarks behind them</h2>
+      <p class="muted measure note">
+        Each capability maps to the public benchmarks below. Version is pinned per benchmark; an observation whose
+        version differs from the definition fails the build rather than mixing releases. Weights within a capability
+        combine its benchmarks; weights across capabilities build the composite.
+      </p>
+      <div class="table-wrap">
+        <table class="tracker tracker--mapping">
+          <thead>
+            <tr>
+              <th scope="col">Capability</th>
+              <th scope="col" class="num">Weight</th>
+              <th scope="col">Benchmark</th>
+              <th scope="col">Version</th>
+              <th scope="col">Scale → normalization</th>
+              <th scope="col">Why this one</th>
+            </tr>
+          </thead>
+          <tbody>
+            {config.capabilities.map((c) => {
+              const list = benchmarksByCapability.get(c.id) ?? [];
+              if (c.id === "cost") {
+                return (
+                  <tr>
+                    <th scope="row">{c.label}</th>
+                    <td class="num mono">{Math.round(c.weight * 100)}%</td>
+                    <td>Provider list price</td>
+                    <td class="mono">current</td>
+                    <td>
+                      blended $/M = ({config.cost.inputShare}·input + {config.cost.outputShare}·output) /{" "}
+                      {config.cost.inputShare + config.cost.outputShare}; log-inverse, ${config.cost.normalization.best} → 1, $
+                      {config.cost.normalization.worst} → 0
+                    </td>
+                    <td class="secondary">{c.description}</td>
+                  </tr>
+                );
+              }
+              if (list.length === 0) {
+                return (
+                  <tr>
+                    <th scope="row">{c.label}</th>
+                    <td class="num mono">{Math.round(c.weight * 100)}%</td>
+                    <td colspan="4" class="muted">
+                      no benchmark mapped yet
+                    </td>
+                  </tr>
+                );
+              }
+              return list.map((b, i) => (
+                <tr>
+                  {i === 0 && (
+                    <th scope="row" rowspan={list.length}>
+                      {c.label}
+                      {c.weight === 0 && <span class="muted model-cell__vendor">tracked, unweighted</span>}
+                    </th>
+                  )}
+                  {i === 0 && (
+                    <td class="num mono" rowspan={list.length}>
+                      {Math.round(c.weight * 100)}%
+                    </td>
+                  )}
+                  <td>
+                    <a href={b.url} rel="noopener" target="_blank">
+                      {b.name}
+                    </a>
+                    {list.length > 1 && (
+                      <span class="muted"> · {Math.round((b.weightWithinCapability / list.reduce((s, x) => s + x.weightWithinCapability, 0)) * 100)}%</span>
+                    )}
+                  </td>
+                  <td class="mono">{b.version}</td>
+                  <td>
+                    {b.scale}; {normalizationLabel(b)}
+                  </td>
+                  <td class="secondary">
+                    {b.rationale}
+                    {b.contaminationResistant ? "" : " Static test set: treat as contaminable."}
+                    {b.dataExport && <span class="muted"> Export: {b.dataExport}.</span>}
+                  </td>
+                </tr>
+              ));
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="composite" class="prose">
+      <h2 class="sub">How the composite is computed</h2>
+      <ol>
+        <li>
+          <strong>Normalize.</strong> Each observation is mapped onto 0–1 by its benchmark's rule. Pass-rate and
+          accuracy benchmarks use the declared scale linearly (a 0–100 score divided by 100), clamped. Price uses a
+          log-inverse rule so that a 10× cheaper model gains the same credit whether it moves from $20 to $2 or from $2
+          to $0.20.
+        </li>
+        <li>
+          <strong>Capability score.</strong> Within a capability, normalized observations are averaged with the
+          within-capability weights in the mapping table. A benchmark with no observation for the model is dropped from
+          that average, not scored as zero.
+        </li>
+        <li>
+          <strong>Composite.</strong> Σ(weight × capability score) over the capabilities that have a score, divided by the
+          sum of those weights. The table shows that covered share next to each composite. If less than{" "}
+          {Math.round(config.minimumCoverage * 100)}% of the weight is covered the composite is withheld. Two composites
+          are only comparable when they cover the same capabilities. LiveSQLBench has no rows yet for models released
+          after mid-2026, so the few models that carry an SQL score are pulled down by it relative to the rest. That
+          gap is the first thing internal evaluation has to fill.
+        </li>
+        <li>
+          <strong>Weights.</strong>{" "}
+          {weightedCapabilities.map((c) => `${c.label} ${Math.round(c.weight * 100)}%`).join(", ")}.
+          {trackedOnly.length > 0 &&
+            ` ${trackedOnly.map((c) => c.label).join(", ")} ${trackedOnly.length === 1 ? "is" : "are"} tracked but carries no weight.`}
+          {" "}These are screening weights for an analytics workload, not claims about general model quality. They
+          live in <code>src/data/models/capabilities.ts</code>.
+        </li>
+      </ol>
+      <p>
+        Everything on this page is generated from records under <code>src/data/models/</code>: model records,
+        benchmark definitions with version and normalization rule, raw observations with source URL and retrieval date,
+        list prices, capability weights and gate thresholds. Scores can be refreshed by rewriting the observation and
+        pricing files from a benchmark's export without touching the page.
+      </p>
+    </section>
+
+    <section id="provenance">
+      <h2 class="sub">Provenance</h2>
+      <p class="muted measure note">
+        Every number above, with its source. Raw score, benchmark version, normalized value, and the date it was
+        read from the source.
+      </p>
+      <div class="stack stack-s">
+        {rows.map((r) => (
+          <details class="prov" id={`prov-${r.model.id}`}>
+            <summary>
+              <span class="prov__name">{r.model.name}</span>
+              <span class="muted">
+                {r.model.vendor}
+                {r.model.apiId && ` · ${r.model.apiId}`}
+                {r.model.released && ` · released ${r.model.released}`}
+              </span>
+            </summary>
+            {r.model.notes && <p class="secondary prov__note">{r.model.notes}</p>}
+            <div class="table-wrap">
+              <table class="tracker tracker--prov">
+                <thead>
+                  <tr>
+                    <th scope="col">Benchmark</th>
+                    <th scope="col">Version</th>
+                    <th scope="col" class="num">Raw</th>
+                    <th scope="col" class="num">Normalized</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">Retrieved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scored
+                    .filter((o) => o.model === r.model.id)
+                    .map((o) => (
+                      <tr>
+                        <td>{o.benchmarkName}</td>
+                        <td class="mono">{o.version}</td>
+                        <td class="num mono">{o.score}</td>
+                        <td class="num mono">{pct(o.normalized)}</td>
+                        <td>
+                          <a href={o.sourceUrl} rel="noopener" target="_blank">
+                            {hostOf(o.sourceUrl)}
+                          </a>
+                          {o.note && <span class="muted"> · {o.note}</span>}
+                        </td>
+                        <td class="mono muted">{o.retrieved}</td>
+                      </tr>
+                    ))}
+                  {r.pricing && (
+                    <tr>
+                      <td>List price</td>
+                      <td class="mono">current</td>
+                      <td class="num mono">
+                        ${r.pricing.inputPerM} / ${r.pricing.outputPerM}
+                      </td>
+                      <td class="num mono">{pct(r.values.get("cost"))}</td>
+                      <td>
+                        <a href={r.pricing.sourceUrl} rel="noopener" target="_blank">
+                          {hostOf(r.pricing.sourceUrl)}
+                        </a>
+                        {r.pricing.note && <span class="muted"> · {r.pricing.note}</span>}
+                      </td>
+                      <td class="mono muted">{r.pricing.retrieved}</td>
+                    </tr>
+                  )}
+                  {r.latency && (
+                    <tr>
+                      <td>Latency</td>
+                      <td class="mono">current</td>
+                      <td class="num mono">
+                        {r.latency.ttftSeconds !== undefined && `${r.latency.ttftSeconds}s TTFT`}
+                        {r.latency.outputTokensPerSecond !== undefined && ` · ${r.latency.outputTokensPerSecond} tok/s`}
+                      </td>
+                      <td class="num mono muted">unweighted</td>
+                      <td>
+                        <a href={r.latency.sourceUrl} rel="noopener" target="_blank">
+                          {hostOf(r.latency.sourceUrl)}
+                        </a>
+                      </td>
+                      <td class="mono muted">{r.latency.retrieved}</td>
+                    </tr>
+                  )}
+                  {scored.filter((o) => o.model === r.model.id).length === 0 && !r.pricing && (
+                    <tr>
+                      <td colspan="6" class="muted">
+                        No observations recorded yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section id="calibration" class="prose">
+      <h2 class="sub">Public evidence versus internal evaluation</h2>
+      <p>
+        Two kinds of evidence are kept apart. <strong>Public benchmark evidence</strong> is everything on this page:
+        reproducible, comparable across models, and only loosely related to any one production workload.{" "}
+        <strong>Application-specific evaluation</strong> is the internal suite run on representative analytics tasks
+        against the real semantic model and tool surface. The public composite says which models are worth the cost
+        of that run. It does not predict production quality, and a high composite is not a recommendation.
+      </p>
+      <p>
+        Once enough shortlisted models have been through the internal suite, the pairing of public scores and internal
+        outcomes becomes data of its own. The plan is to measure which public benchmarks correlate with
+        internal performance on this workload and to move the capability weights toward the ones that do, or drop a
+        benchmark that does not. The intended loop:
+      </p>
+      <p class="mono loop">
+        public benchmarks → candidate shortlist → internal evaluation → observed correlation → improved screening model
+      </p>
+      <p>
+        Until that correlation exists, the weights above are priors chosen from what the harness does most, not fitted
+        values.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    import "@/scripts/model-table-sort";
+  </script>
+</PageLayout>
+
+<style>
+  .sub {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-s);
+  }
+  .note {
+    margin-block-end: var(--space-m);
+  }
+  .section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+  .section-nav a {
+    display: inline-block;
+    padding: 0.25em 0.8em;
+    border: var(--border-hairline);
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+  .section-nav a:hover {
+    color: var(--color-accent);
+    border-color: color-mix(in oklch, var(--color-accent) 45%, var(--color-border));
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+  }
+  .table-wrap--wide {
+    width: min(100vw - 2 * clamp(var(--space-s), 3vw, var(--space-l)), 88rem);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .tracker {
+    width: 100%;
+    min-width: 60rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+  .tracker--prov {
+    min-width: 0;
+  }
+  .tracker th {
+    text-align: left;
+    padding: var(--space-xs) var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-bottom: var(--border-hairline);
+    background: var(--color-bg-subtle);
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  .tracker thead th {
+    font-size: var(--step--2);
+  }
+  .tracker thead th button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .tracker thead th button::after {
+    content: "↕";
+    opacity: 0.35;
+    margin-inline-start: 0.35em;
+  }
+  .tracker thead th[aria-sort="ascending"] button::after {
+    content: "↑";
+    opacity: 1;
+    color: var(--color-accent);
+  }
+  .tracker thead th[aria-sort="descending"] button::after {
+    content: "↓";
+    opacity: 1;
+    color: var(--color-accent);
+  }
+  .tracker thead th.num,
+  .tracker td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    width: 1%;
+    white-space: nowrap;
+  }
+  .tracker td.mono {
+    width: 1%;
+    white-space: nowrap;
+  }
+  .tracker td {
+    padding: var(--space-xs) var(--space-2xs);
+    vertical-align: top;
+    border-bottom: var(--border-hairline);
+  }
+  .tracker tbody th {
+    background: none;
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: normal;
+    min-width: 11rem;
+  }
+  .model-cell a {
+    white-space: nowrap;
+  }
+  .tracker tbody tr:last-child td,
+  .tracker tbody tr:last-child th {
+    border-bottom: none;
+  }
+  .tracker tbody tr:hover td {
+    background: color-mix(in oklch, var(--color-surface) 60%, transparent);
+  }
+  .model-cell a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .model-cell a:hover {
+    color: var(--color-accent);
+  }
+  .model-cell__vendor {
+    display: block;
+    font-size: var(--step--2);
+    font-family: var(--font-mono);
+  }
+  .mono {
+    font-family: var(--font-mono);
+  }
+  .unavailable {
+    color: var(--color-text-muted);
+  }
+  .tracked {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+  .composite {
+    font-weight: 600;
+  }
+  .coverage {
+    display: block;
+    font-size: var(--step--2);
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+  .gate {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .gate--pass {
+    color: var(--sage-500);
+  }
+  .gate--fail {
+    color: var(--color-accent);
+  }
+  .gate--unknown {
+    color: var(--color-text-muted);
+  }
+  .gate__why {
+    display: block;
+    font-size: var(--step--2);
+    white-space: normal;
+    min-width: 11rem;
+  }
+  .gate-list {
+    margin-block-start: var(--space-m);
+    padding-inline-start: 1.2em;
+    font-size: var(--step--1);
+  }
+  .gate-list li + li {
+    margin-block-start: var(--space-2xs);
+  }
+  .tracker--mapping td,
+  .tracker--mapping tbody th {
+    vertical-align: top;
+  }
+  .prov {
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    padding: var(--space-xs) var(--space-s);
+  }
+  .prov summary {
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    align-items: baseline;
+    font-size: var(--step-0);
+  }
+  .prov__name {
+    font-weight: 500;
+  }
+  .prov__note {
+    font-size: var(--step--1);
+    margin-block: var(--space-xs);
+  }
+  .prov .table-wrap {
+    margin-block-start: var(--space-xs);
+  }
+  .loop {
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+  }
+</style>

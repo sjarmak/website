@@ -1,0 +1,215 @@
+---
+import type { TrackerRow } from "@/lib/models/build";
+
+interface Props {
+  rows: TrackerRow[];
+}
+
+const { rows } = Astro.props;
+
+const placed = rows.filter((r) => r.composite.value !== null && r.blendedPrice !== null);
+
+const width = 760;
+const height = 420;
+const pad = { top: 20, right: 28, bottom: 52, left: 52 };
+const plotW = width - pad.left - pad.right;
+const plotH = height - pad.top - pad.bottom;
+
+const costs = placed.map((r) => r.blendedPrice as number);
+const minCost = costs.length ? Math.min(...costs) : 0.1;
+const maxCost = costs.length ? Math.max(...costs) : 100;
+const logMin = Math.floor(Math.log10(minCost));
+const logMax = Math.ceil(Math.log10(maxCost));
+const x = (cost: number) => pad.left + ((Math.log10(cost) - logMin) / (logMax - logMin)) * plotW;
+
+const values = placed.map((r) => r.composite.value as number);
+const yMin = values.length ? Math.max(0, Math.floor((Math.min(...values) - 0.05) * 10) / 10) : 0;
+const yMax = values.length ? Math.min(1, Math.ceil((Math.max(...values) + 0.05) * 10) / 10) : 1;
+const y = (value: number) => pad.top + ((yMax - value) / (yMax - yMin)) * plotH;
+
+const xTicks = Array.from({ length: logMax - logMin + 1 }, (_, i) => 10 ** (logMin + i));
+const yTicks = Array.from({ length: Math.round((yMax - yMin) * 10) + 1 }, (_, i) => yMin + i / 10);
+
+const frontier = placed
+  .filter((r) => r.pareto === "frontier")
+  .sort((a, b) => (a.blendedPrice as number) - (b.blendedPrice as number));
+const frontierPath = frontier
+  .map((r, i) => `${i === 0 ? "M" : "L"}${x(r.blendedPrice as number).toFixed(1)},${y(r.composite.value as number).toFixed(1)}`)
+  .join(" ");
+
+const labelled = frontier.map((r, i) => ({ row: r, above: i % 2 === 0 }));
+
+const fmtPrice = (p: number) => (p >= 1 ? `$${p.toFixed(2)}` : `$${p.toFixed(3)}`);
+const fmtTick = (p: number) => (p >= 1 ? `$${p}` : `$${p}`);
+---
+
+{
+  placed.length === 0 ? (
+    <p class="muted">No model has both a composite and a price yet, so there is nothing to plot.</p>
+  ) : (
+    <figure class="pareto">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-labelledby="pareto-title pareto-desc"
+        class="pareto__svg"
+      >
+        <title id="pareto-title">Public composite versus blended list price</title>
+        <desc id="pareto-desc">
+          Scatter of each model's public composite score against its blended price per million tokens on a log
+          axis. Filled points lie on the Pareto frontier and are labelled; ringed points are within tolerance of it.
+          Hover any point for its name.
+        </desc>
+        {yTicks.map((t) => (
+          <g>
+            <line x1={pad.left} x2={width - pad.right} y1={y(t)} y2={y(t)} class="pareto__grid" />
+            <text x={pad.left - 8} y={y(t)} dy="0.32em" text-anchor="end" class="pareto__tick">
+              {Math.round(t * 100)}
+            </text>
+          </g>
+        ))}
+        {xTicks.map((t) => (
+          <g>
+            <line x1={x(t)} x2={x(t)} y1={pad.top} y2={height - pad.bottom} class="pareto__grid" />
+            <text x={x(t)} y={height - pad.bottom + 18} text-anchor="middle" class="pareto__tick">
+              {fmtTick(t)}
+            </text>
+          </g>
+        ))}
+        <text x={pad.left + plotW / 2} y={height - 10} text-anchor="middle" class="pareto__axis">
+          blended list price, $ per million tokens (log scale, 3:1 input:output)
+        </text>
+        <text
+          transform={`translate(14 ${pad.top + plotH / 2}) rotate(-90)`}
+          text-anchor="middle"
+          class="pareto__axis"
+        >
+          public composite (axis clipped to the observed range)
+        </text>
+        {frontier.length > 1 && <path d={frontierPath} class="pareto__frontier" />}
+        {placed.map((r) => {
+          const cx = x(r.blendedPrice as number);
+          const cy = y(r.composite.value as number);
+          const cls =
+            r.pareto === "frontier"
+              ? "pareto__dot pareto__dot--frontier"
+              : r.pareto === "near"
+                ? "pareto__dot pareto__dot--near"
+                : "pareto__dot";
+          return (
+            <g class="pareto__mark">
+              <circle cx={cx} cy={cy} r="12" class="pareto__hit" />
+              <circle cx={cx} cy={cy} r="5" class={cls} />
+              <title>
+                {`${r.model.name}: composite ${Math.round((r.composite.value as number) * 100)}, ${fmtPrice(r.blendedPrice as number)}/M blended`}
+              </title>
+            </g>
+          );
+        })}
+        {labelled.map(({ row: r, above }) => {
+          const cx = x(r.blendedPrice as number);
+          const cy = y(r.composite.value as number);
+          const flip = cx > width - pad.right - 140;
+          return (
+            <text
+              x={flip ? cx - 9 : cx + 9}
+              y={above ? cy - 9 : cy + 9}
+              dy={above ? "0" : "0.72em"}
+              text-anchor={flip ? "end" : "start"}
+              class="pareto__label"
+            >
+              {r.model.name}
+            </text>
+          );
+        })}
+      </svg>
+      <figcaption class="pareto__legend muted">
+        <span><i class="pareto__key pareto__key--frontier" aria-hidden="true"></i> on the frontier</span>
+        <span><i class="pareto__key pareto__key--near" aria-hidden="true"></i> within tolerance of the frontier (hover for the name)</span>
+        <span><i class="pareto__key" aria-hidden="true"></i> dominated on both axes</span>
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .pareto {
+    margin: 0;
+  }
+  .pareto__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    font-family: var(--font-body);
+  }
+  .pareto__grid {
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+  .pareto__tick {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    fill: var(--color-text-muted);
+  }
+  .pareto__axis {
+    font-size: 12px;
+    fill: var(--color-text-secondary);
+  }
+  .pareto__frontier {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+  .pareto__hit {
+    fill: transparent;
+  }
+  .pareto__dot {
+    fill: var(--color-bg);
+    stroke: var(--color-text-muted);
+    stroke-width: 2;
+  }
+  .pareto__dot--near {
+    stroke: var(--color-accent);
+  }
+  .pareto__dot--frontier {
+    fill: var(--color-accent);
+    stroke: var(--color-bg);
+  }
+  .pareto__mark:hover .pareto__dot {
+    stroke-width: 3;
+  }
+  .pareto__label {
+    font-size: 11px;
+    fill: var(--color-text);
+    paint-order: stroke;
+    stroke: var(--color-bg);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+  .pareto__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    margin-block-start: var(--space-xs);
+    font-size: var(--step--1);
+  }
+  .pareto__key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--color-text-muted);
+    vertical-align: -1px;
+    margin-inline-end: 0.3em;
+  }
+  .pareto__key--near {
+    border-color: var(--color-accent);
+  }
+  .pareto__key--frontier {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+  }
+</style>
