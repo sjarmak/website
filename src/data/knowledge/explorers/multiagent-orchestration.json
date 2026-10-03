@@ -2561,6 +2561,69 @@
           "why": "This theme's recurring claim is that bounded autonomy has to be enforced somewhere the model cannot argue with. CapScope gives that a concrete placement, the host, before the tool call, with the ceiling minted from trusted input only and frozen before untrusted content enters context, and it reports the cost honestly: the residual failures come from an over-tight ceiling rather than from an attack, which is the trade a production deployment actually has to price."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260925396X",
+      "title": "Passes Alone, Fails Together: Benchmarking Semantic Coordination in Parallel LLM-Agent Development",
+      "firstAuthor": "Xia, Haocheng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.25396",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260925396X",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "The STALE benchmark tests semantic coordination across three tiers: synthetic tasks, pairs of merged pull requests mined from Django, SymPy, xarray and seaborn, and constructed tasks on real Django helpers. In the mined tier, 685 Django pull requests give 417 valid pairs, and of 834 runs only one shows interference. In the constructed tier interference is near total without a message and mostly recovered with one.",
+          "why": "Reviewed pull-request history is a poor source of unresolved parallel conflicts, because review has already removed them. That leaves constructed tasks as the measurable case, and their rates do not estimate how often the problem occurs in practice. The tests cover pairs of agents, Django, and a message delivered before work starts; messages exchanged during ongoing work are untested."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260926781Z",
+      "title": "Agensh: Scaling Organizational Intelligence to 1,024 Agents",
+      "firstAuthor": "Zhan, Zhihao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.26781",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260926781Z",
+      "branches": [
+        "foundations",
+        "memory"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Agensh runs many coding agents with no central orchestrator. Every worker gets the same prompt apart from its ID and repeats a five-step loop: gather context, claim a sub-task, act, verify, merge. On the five hardest ProgramBench tasks with a six-hour budget, mean final test-pass rate rises from 19.31 percent with one agent to 20.68 with 8, 26.52 with 32 and 28.78 with 128. On pandoc it reaches 55.06 percent at 1,024 agents, against 33.89 with one.",
+          "why": "Roles and review structure were not assigned and appeared anyway. At 8 agents the workers agree interfaces and resolve overlapping claims; at 32 they run multi-worker review and integration; at 128 they specialize, choose reviewers by prior experience and standardize integration protocols. More agents also reach a given quality sooner: on pandoc 128 agents pass 30 percent at 30 minutes and a single agent does not within two hours. The portions read do not report cost."
+        },
+        {
+          "branch": "memory",
+          "takeaway": "Coordination rests on three shared pieces of infrastructure: a git workspace, a chat interface with channel announcements and direct messages, and a shared context of append-only typed entries (OBSERVED, FACT, FAIL, CLAIM, PATCH_SUMMARY) with a search tool. Announcements are delivered at the start of each loop and direct messages after each infrastructure tool call.",
+          "why": "The shared context is the group's memory, and its entry types are what let identical workers divide labor: a CLAIM prevents duplicate work and a FAIL keeps others from repeating a dead end. Because the layer sits above a single-agent harness through adapters, the coordination design is independent of the agent underneath."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000905R",
+      "title": "Understanding Issues, Causes and Solutions in Open-Source LLM-based Multi-Agent Systems",
+      "firstAuthor": "Rehman, Asad Ur",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00905",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000905R",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Across 21 open-source multi-agent frameworks, practitioners most often report orchestration and execution issues (22.0 percent of 944 closed issues), a category with ten types that include coordination and handoff failures, control flow errors, infinite execution loops, termination failures and premature termination. Memory and state management follows at 14.7 percent. Communication between agents accounts for 2.6 percent and role issues for 3.8 percent.",
+          "why": "The taxonomy gives framework builders a ranked list drawn from what users filed and maintainers closed. Workflow, tool integration and memory problems are the most frequent causes. The reports quoted are concrete: a sequential agent that does not run sub-agents after the first, parallel tasks that repeat while the aggregator never runs, and a chain that stops at the first agent. The coding was done by one author and reviewed by others, with 29 conflicts in issue categories resolved by discussion."
+        }
+      ]
     }
   ],
   "sections": [

@@ -3175,6 +3175,69 @@
           "why": "A concrete instance of the branch's hypergraph/tiered-architecture bucket: it argues and shows empirically that decomposing a k-ary collaborative event into pairwise edges conflates co-occurrence with true n-ary co-participation, giving a specific structural reason to prefer hypergraphs over plain graph memory for multi-agent systems."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260911060S",
+      "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+      "firstAuthor": "Suresh, Susheel",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11060",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911060S",
+      "branches": [
+        "reflection-experience",
+        "architectures"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "A memory curator that sees only completed trajectories can memorize an answer to one instance, inherit an inefficient path, assert a scope it never tested, and keep entries that have gone stale. This paper gives the curator read-only tools on the environment so it can check a claim, test its scope and re-run a procedure before writing. On a 40-question benchmark with a schema migration after question 20, pass rate goes from 39 percent with no memory to 70 percent with trajectory-only memory and 73 percent with probing.",
+          "why": "Reflection over a trajectory records what happened once; probing records what holds. The qualitative comparison shows the difference: the trajectory-only entry is a warning anchored to one answer, and the probed entry is an executable procedure. Queries per question fall from 8.8 with no memory to 4.7, and task-agent cost from $3.38 to $1.68, the lowest of the four systems."
+        },
+        {
+          "branch": "architectures",
+          "takeaway": "The design splits memory authority. An asynchronous curator is the only agent that can create, update or delete memory, and it follows a propose, probe, commit sequence with least-privilege read-only world tools. The task agent gets a read-only memory tool. Records carry category, confidence, scope, provenance, utility and usage, and no model is retrained.",
+          "why": "Separating the writer from the reader keeps probing cost off the task path and limits what can corrupt memory. On 90 adapted consulting tasks across six document worlds, all 18 memory-versus-baseline reward comparisons are positive, tool calls fall from 30.0 to 71.6 down to 13.9 to 28.4, and probing gives the best reward gain per dollar in 5 of 6 worlds. Curation cost is tracked separately and is not included in the task-agent cost figures."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260911286G",
+      "title": "Generating a Consistent Enterprise: Synthesis and Reference-Free Evaluation of Multi-System Business Data",
+      "firstAuthor": "Gruenbaum, Benjamin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11286",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911286G",
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "A five-value specification (industry, size, business model, application portfolio and seed) produces one entity graph for a fictional company, projected into 66 product simulators such as Salesforce, Zendesk, Slack, Jira and Stripe over vendor REST and MCP interfaces. Each simulator rebuilds the graph from the seed, so the same customer, employee and deal agree across systems by construction. A 20,000-employee company comes to about 250,000 records, generated in about nine minutes.",
+          "why": "Agents that hold memory across enterprise systems need test data in which those systems agree with each other, and real data of that kind is not shareable. Consistency here comes from determinism and not from reconciliation after the fact. The generator also plants flaws in 3 percent of records and follows working-hour patterns, with 78 percent of events in business hours, so the data is not uniformly clean."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260925563B",
+      "title": "AkasicMEM: Governed Enterprise Memory for Agents",
+      "firstAuthor": "Bae, Jeongmin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.25563",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260925563B",
+      "branches": [
+        "security-governance"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "The paper defines governed enterprise memory as three requirements: integration of sources into memory, governance of memory, and authorization continuity, meaning a restriction on a source stays in force through every memory derived from it. The leak it targets is a memory that remains retrievable by scope after access to its source is withdrawn. Effective authorization for a memory is the intersection of its own permissions with those of every ancestor in a transitive lineage graph, re-evaluated at retrieval.",
+          "why": "Agent memory copies and summarizes source documents, and the copies usually lose the access rules of the originals. Computing authorization over lineage closes that gap in both directions, narrowing and widening. A deleted or deregistered source authorizes no one, declassification is the one recorded exception, and each decision leaves a record for audit. The portions of the paper read for this note specify the mechanism and do not report an empirical evaluation."
+        }
+      ]
     }
   ],
   "sections": [

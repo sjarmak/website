@@ -3229,6 +3229,126 @@
           "why": "Regression-testing an agent on the full benchmark costs hundreds of millions of tokens per run, so teams already sample, and a fixed-seed random draw was off by 57 points on one run. Both parts of the method are needed: dropping outcome grouping raises error 30 to 37%, and a deterministic pick by outcome stability alone, without embeddings, is no better than random. The advantage fades at 20 to 30% subsets and in the cross-framework scenario."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260702436M",
+      "title": "Reasoning effort, not tool access, buys first-try reliability in agentic code generation: an observational study",
+      "firstAuthor": "Mehta, Achint",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2607.02436",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260702436M",
+      "branches": [
+        "reliability",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Ninety independent agent runs build the same real-time retrospective board from one specification, scored on a 14-criterion rubric worth 42 points. Raising reasoning effort from High to xHigh on Opus 4.7 lifts first-try perfect runs from 5 of 18 to 16 of 18, a 61-point difference with a 95% interval of 29 to 78, and cuts corrective prompts from 0.89 to 0.17 per run. Giving the agent a Playwright browser-testing tool does not change the score. Docker deployment fails on the first try in 40 of 90 runs, and two environment criteria account for 55 of the 100 first-try criterion failures.",
+          "why": "First-try reliability and final score are different measurements. Every frontier configuration ends near 41 of 42, so the final score hides the variable an operator pays for, which is how many correction rounds a run needs. The failures also sit where the specification is silent: a native module that does not compile on Alpine and an Express 5 wildcard route, not the application logic."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Capability tier sets the score: the three frontier model families average about 41 of 42 at $1 to $8 per run, while two local Qwen models score 37 and 24. Within Opus 4.7, xHigh effort costs 9 to 29 percent more than High. The testing tool raises median cost by 42 percent at High and 68 percent at xHigh with no score gain, because cache-read tokens grow from 2.3M to 5.3M and 7.0M while output tokens stay flat.",
+          "why": "The study prices three levers against each other on one task. Effort buys reliability for a small premium, the testing tool buys nothing measurable for a large one, and the extra cost of the tool is context re-reading, which the author calls a tool use tax. The cells hold six or seven runs, conditions were chosen and not randomized, and the task and vendor are mostly single, so only differences of about two points are resolvable."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260925396X",
+      "title": "Passes Alone, Fails Together: Benchmarking Semantic Coordination in Parallel LLM-Agent Development",
+      "firstAuthor": "Xia, Haocheng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.25396",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260925396X",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Two agents working in parallel can each produce a patch that passes its tests and merges cleanly, and the combination still fails. The paper measures this as tests that pass with each patch alone and fail merged, with the same test set in every condition. On 36 constructed tasks over 12 real Django helpers, GPT-5.5 working blind shows this interference in 105 of 108 runs. A short message describing the other agent's change recovers 89 of 108.",
+          "why": "Per-agent test results do not certify the merged result, and a clean textual merge does not either. The fix is cheap when the information exists: in the synthetic tier an oracle message of about 130 tokens cut mean interference from 2.50 to 0.04. Grading matters as well. The first procedure let agents' test edits count and produced false interference, which disappeared once the same tests were used in every condition."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260926781Z",
+      "title": "Agensh: Scaling Organizational Intelligence to 1,024 Agents",
+      "firstAuthor": "Zhan, Zhihao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.26781",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260926781Z",
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "The topology is flat. No orchestrator assigns work; identical workers claim sub-tasks through a shared typed context, exchange messages over chat and merge through git. Scaling this from 1 to 128 agents adds 9.47 points of mean test-pass rate on five ProgramBench tasks, about 49 percent relative, and the gain from 1 to 8 agents is small (19.31 to 20.68).",
+          "why": "This is evidence that a decentralized topology can keep improving at agent counts where a central planner would be the bottleneck. The returns are uneven, with most of the gain arriving between 8 and 128 agents, and the result covers five tasks with one model under a fixed time budget. Cost is not reported in the portions read, so the price of each added point is unknown."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261001833V",
+      "title": "Continuous Process-Level Evaluation for Evolving Enterprise AI Agent Skills",
+      "firstAuthor": "Vo, Ngoc Phuoc An",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.01833",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261001833V",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Two enterprise agent skills that apportion revenue and compute productivity across applications are run 240 times: two skills, two specification variants, two harnesses (Claude Code and Codex) and three models, ten trials each. The evaluator checks tool selection, arguments, ordering and database integrity against an oracle computed by calling the same real APIs. Of 175 trials that pass every final numerical check, 162 (92.6 percent) have at least one other deviation, so final-value checks alone would miss deviations in 67.5 percent of all trials.",
+          "why": "A correct final number does not show that the agent followed the process. The deviations behind correct answers include data or numerical inconsistency (106 trials), a missing phase or required tool (66), tools outside the allowlist (55) and redundant calls (43). Dependency attribution reduces a mean of 6.34 failed checks per run to 2.65 roots. The same specification written two ways shifts the score by up to 12.9 points, and which model is sensitive changes with the harness. A flagged trajectory is a violation of an authored invariant and not a confirmed operational defect."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261001618W",
+      "title": "Agents Are Systems, Not Models: Rethinking Agentic Evaluation",
+      "firstAuthor": "Wiedmann, Luis",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.01618",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261001618W",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "An agent is a model plus a harness, and this benchmark varies the harness. On four scientific tasks where a coding agent must find and operate a specialist model, the authors cross five axes (information given, reasoning style, verification, budget and backbone model) into 432 configurations, each run five times. Among genuine attempts about 54 percent of score variance is run-to-run noise. Information has the largest effect on every task, ahead of the backbone model and the budget.",
+          "why": "A score attached to a model name leaves out the configuration that produced it, and here the configuration matters more than the model. The axes also interact: more budget raises completion and lowers score for small and medium models, and raises both for the large one. Prompting an agent to verify barely changes what it does, while a dedicated verification tool does. With five runs per cell the confidence interval on a cell mean is still wide, so completion rates and variance belong beside the score."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000905R",
+      "title": "Understanding Issues, Causes and Solutions in Open-Source LLM-based Multi-Agent Systems",
+      "firstAuthor": "Rehman, Asad Ur",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00905",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000905R",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "The study reads 944 closed GitHub issues, filtered from 22,848 across 21 open-source multi-agent projects, and codes each for the issue, its cause and its solution. Orchestration and execution problems are the largest category at 22.0 percent, followed by memory and state management at 14.7 percent. Tool issues are 9.2 percent, and model issues only 1.6 percent.",
+          "why": "This is a field record of where multi-agent systems break in use, and it points at the plumbing. Failed handoffs, wrong execution order, infinite loops, runs that stop early and runs that do not stop account for more reported problems than the models do. One CrewAI example shows the kind of defect: a manager agent passes a dictionary where the delegation schema expects a string. The most common fixes are optimizing the workflow and adjusting configuration."
+        }
+      ]
     }
   ],
   "sections": [

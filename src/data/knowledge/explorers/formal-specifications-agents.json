@@ -3285,6 +3285,62 @@
           "why": "This theme is watching benchmarks move from reference matching toward execution-grounded scoring, and this is the operational corollary: an execution-grounded score is only as sound as the isolation around the execution, and the isolation has to be verified rather than declared. The refinement counts are a direct measurement of oracle weakness, with 75 of 119 audited candidates carrying a test suite too narrow to distinguish a fix from a near miss."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260911028Z",
+      "title": "BenchShield: Formal Model-Backed Instrumentation for Reward Integrity in LLM-Agent Evaluation Infrastructure",
+      "firstAuthor": "Zheng, Shenghan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11028",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911028Z",
+      "branches": [
+        "agent-quality",
+        "benchmarks"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "BenchShield treats reward hacking as a break in the integrity of the path from task source to score. In 456 human-adjudicated trajectories drawn from more than 31,000 public runs on Terminal-Bench 3, SkillsBench and ClawsBench, 314 (69 percent) contain reward hacking across 419 exploit episodes. Exploits appear mid-run: the median first attempt is 60 percent of the way through a trajectory and the median first success 76 percent. Runtime attribution from infrastructure-side evidence is 96 percent accurate against 36 percent for transcript-only review.",
+          "why": "A passing score on an agent benchmark is evidence of ability only if the agent could not reach the grader, the answers or the state the grader trusts. The exploit chains are directional. Access to the task source is mostly an entry step (69 entry links against 4 outcome links), and writable authoritative state is the most common enabling condition, so the check has to follow the lifecycle and not the transcript."
+        },
+        {
+          "branch": "benchmarks",
+          "takeaway": "The lifecycle is written as a finite TLA+ model with seven integrity dimensions. Six are structural invariants checked with TLC; the seventh, whether the test measures what it claims, is recorded and not enforced. A phase-aware static taint analysis over the task package and runtime lifecycle checks feed an audit agent with pinned evidence. Against BenchJack on the same tasks and model, full-chain recall rises from 23 to 94 percent up to 77 to 100 percent, and cost per task falls on all three benchmarks, for example from $5.91 to $2.05 on Terminal-Bench 3.",
+          "why": "This applies a formal model to the benchmark infrastructure itself, which makes benchmark integrity a checkable property. The model also shows where isolation stops helping: a separate verifier environment removes most exposure on the first four dimensions, but no isolation mechanism fixes a grader that fails open or a test that does not measure the task. One example is a Lean task where the agent turns off kernel type checking."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260911076H",
+      "title": "SaltBench: A Referee-Gated Protocol for Measuring Method Effects in Machine-Checked Software Work",
+      "firstAuthor": "Hickey, Jason",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11076",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911076H",
+      "branches": [
+        "benchmarks",
+        "verified-codegen",
+        "open-questions"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks",
+          "takeaway": "SaltBench is a protocol for measuring what a working method costs when a machine referee decides the outcome. The referee (a proof kernel, a verifier or a withheld test suite) sits outside the agent's toolchain. The agent is walled off from the network, reference solutions and the harness, and probes test the wall before scored runs. Predictions are frozen in advance, and hitting the budget is a halt, not a failure.",
+          "why": "The protocol separates what the agent can touch from what decides the result, which is the property most agent benchmarks lack. The unit under test is the seat: agent, harness and workspace together. The withheld suites kill 44 of 44 authored mutants, so the referee is shown to detect wrong implementations before it is used to judge any."
+        },
+        {
+          "branch": "verified-codegen",
+          "takeaway": "On five authored Rust components under a pinned Verus (Crc32, FreeList, LRU, LZW, Paxos), the arm instructed to specify and verify cost more than the plain arm on all five, with a one-sided sign test at p=0.0312 and three runs per condition. No premium exceeded 2.89 times, and three sat below 1.4 times. A post-hoc correctness pass over 43 cells found 35 passes and did not separate the arms.",
+          "why": "This is a cost measurement for asking an agent to write specifications and proofs alongside code. The direction is established and the size is not: the smallest effect the design can resolve at three runs is about 2.0 times, and FreeList in the plain arm alone ranged from $13.01 to $23.38. The author does not claim that the verified arm changes what a referee accepts."
+        },
+        {
+          "branch": "open-questions",
+          "takeaway": "Giving the agent an a-priori statement of the property raised cost in 3 of 4 components, which at p=0.3125 yields no verdict. The Paxos statement cells were refused because no statement could be written that was neutral between arms for a task whose deliverable is a proof obligation.",
+          "why": "The paper reports what its design cannot resolve next to what it can. Run-to-run noise larger than the smallest measured premium means small-sample comparisons of verification methods cannot license a magnitude, and the benefit side of specify-and-verify, whether it changes correctness, stays unmeasured here."
+        }
+      ]
     }
   ],
   "sections": [

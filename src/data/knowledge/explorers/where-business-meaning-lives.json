@@ -2275,6 +2275,25 @@
           "why": "The repair loop's benefit was the retry budget, not the feedback, and comparing repair against a single attempt, as the self-repair literature does, cannot see this because it bundles the two. Static-checker rejections, 15 outcomes in the metadata-only condition and every one for importing sys, are harness properties that would otherwise be counted as model failures."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260911286G",
+      "title": "Generating a Consistent Enterprise: Synthesis and Reference-Free Evaluation of Multi-System Business Data",
+      "firstAuthor": "Gruenbaum, Benjamin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11286",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911286G",
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "With no real dataset to compare against, realism is scored by a five-axis scorecard of 28 checks, an adversarial detector that looks for marks of synthetic data, and soundness checks that include a classifier two-sample test against a column-shuffled copy. Across 23 companies, mean realism rose from 60.3 to 99.1 and the share the detector flagged fell from 55.2 percent to zero. A second generator takes business questions, forces qualifying rows for each answerable one, adds near misses and computes exact labels from the finished tables.",
+          "why": "Grading an agent on business questions needs ground truth that is exact and data that does not give the answer away. Labels computed from the generated tables are exact, near misses penalize loose filters, and unanswerable questions are flagged with the table or column that is missing. The reference targets record their own provenance: 7 are sourced, 3 are shape-only and 3 are estimates. The language model appears only in schema design, so the accepted data model is stored to keep runs repeatable."
+        }
+      ]
     }
   ],
   "sections": [

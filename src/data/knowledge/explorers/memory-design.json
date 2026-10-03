@@ -1833,6 +1833,88 @@
           "why": "Answers this branch's own framing question, how to keep long-running agent swarms coherent without dumping chat logs, with a specific role-aware retrieval mechanism (seeding, bilateral expansion, multi-signal ranking, budget-bounded packing) rather than full-history forwarding."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260911515S",
+      "title": "ChurnBench: A Drift-Aware Benchmark Demonstrating That Refresh Scheduling, Not Cache Age, Governs Staleness in Agentic AI",
+      "firstAuthor": "Singh, Vivek Kumar",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11515",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911515S",
+      "branches": [
+        "temporal",
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "temporal",
+          "takeaway": "ChurnBench measures what happens when an agent answers from cached enterprise data that has since changed. With tiered refresh on, where assignments and user status refresh daily, prices weekly and contract terms monthly, the system makes 7 freshness errors at a 1-day cache and 4 at a 28-day cache over 180 tasks. With tiering off, the same cache ages give 7 and 45. Under tiering, 14 of 15 freshness errors come from prices, the 7-day tier.",
+          "why": "Staleness exposure is the width of an entity's refresh tier multiplied by how often that entity changes, not the age of the cache. Untiered at 28 days, the errors land on user status (15), assignments (10) and prices (20), and none on contract terms, which changed 27 times in 56,370 events. The practical instruction is to sweep the refresh configuration, since sweeping cache age with tiering on shows almost nothing."
+        },
+        {
+          "branch": "evaluation",
+          "takeaway": "The benchmark generates a four-source data fabric (a PostgreSQL warehouse, a MongoDB store, a rate-limited mock SaaS API and documents) as a timeline with an append-only ground-truth ledger. Gold answers are computed from the ledger with no model in grading. An answer that is wrong at evaluation time but correct as of the agent's effective retrieval time counts as a freshness error; wrong at both counts as a reasoning error.",
+          "why": "Separating freshness errors from reasoning errors requires per-entity refresh timestamps from the trace. The count of lapsed time-to-live entries reads zero in both the tiered and untiered configurations for opposite reasons, so that counter cannot stand in for staleness. The paper measures one system and does not claim an architecture comparison, and its 14-day run used a different reasoning setting from the other two."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260911060S",
+      "title": "Grounding Agent Memory: Environment-Probing Curation for Enterprise Agents",
+      "firstAuthor": "Suresh, Susheel",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.11060",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260911060S",
+      "branches": [
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "consolidation",
+          "takeaway": "Consolidation here is a verified write. After a task, an asynchronous curator proposes a memory, probes the live environment with read-only tools to check the claim, test its scope and re-enact the procedure, and only then commits it. Stale entries are refreshed the same way. Against trajectory-only curation on a drift schedule, pass rate rises from 70 to 73 percent and input tokens fall from 2.13M to 1.69M.",
+          "why": "Most consolidation schemes distill from what the agent already did, so errors and narrow scope in the trajectory pass into memory. Probing checks the entry against the world before it is stored. In the no-drift setting the gain holds across models, with mean reward 0.748 against 0.673 on Sonnet 4.6 and 0.721 against 0.696 on Opus 4.7."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260925563B",
+      "title": "AkasicMEM: Governed Enterprise Memory for Agents",
+      "firstAuthor": "Bae, Jeongmin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.25563",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260925563B",
+      "branches": [
+        "interop"
+      ],
+      "notes": [
+        {
+          "branch": "interop",
+          "takeaway": "AkasicMEM connects memory to the enterprise systems it is derived from. Each memory keeps lineage to its sources and to other memories, policies are composed when a memory is formed, and a policy change at a source travels as a flag that is resolved the next time the memory is validated. Erasing a memory keeps its identity in the lineage graph. The system is built on AkasicDB, a unified vector, graph and relational store with one query planner.",
+          "why": "A memory layer that sits beside enterprise sources has to stay consistent with their permissions as well as their content. Carrying lineage and policy in the same store as the vectors lets one query check similarity, graph ancestry and authorization together. The lifecycle names Select, Store, Retrieve, Validate, Revise, Invalidate and Erase, and the paper details Store, Retrieve and Validate."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261002163Z",
+      "title": "AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents",
+      "firstAuthor": "Zhang, Xuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.02163",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261002163Z",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "AutoCompact trains a coding agent to decide for itself when to replace its history with a summary of working state. A judge corrects the agent's compaction decisions during data collection (when to compact, what to keep and how to continue), giving 1,052 trajectories for supervised training, followed by reinforcement learning on task success alone. No judge runs at inference. Pass rate on SWE-bench Verified rises from 30.4 to 39.6 percent, and on SWE-PolyBench Verified from 19.5 to 24.5.",
+          "why": "Compaction helps before the window is full. In the 256K setting no trajectory overflows, and the trained agent still beats the full-history baseline at every budget from $0.10 to $4.00 per task, which means keeping everything is not the best policy even when it fits. Compacting on a fixed length threshold scores below the baseline (28.8 against 30.4). The same checkpoint with its compaction calls ignored passes fewer tasks, so the gain comes from the compaction and not from the training alone."
+        }
+      ]
     }
   ],
   "sections": [
