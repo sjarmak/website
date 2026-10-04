@@ -3349,6 +3349,113 @@
           "why": "This is a field record of where multi-agent systems break in use, and it points at the plumbing. Failed handoffs, wrong execution order, infinite loops, runs that stop early and runs that do not stop account for more reported problems than the models do. One CrewAI example shows the kind of defect: a manager agent passes a dictionary where the delegation schema expects a string. The most common fixes are optimizing the workflow and adjusting configuration."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261000648F",
+      "title": "Incident-Arena: Getting agents to the last nine of reliability",
+      "firstAuthor": "Fu, Andre",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00648",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000648F",
+      "branches": [
+        "eval",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Incident-Arena is 20 human-authored incident tasks run on live Kubernetes across three applications: a Slack-like system built for the benchmark (47 pods, 45 services, 13 of the tasks) and pinned deployments of Saleor and FrappeERP. Faults are injected at the configuration, runtime and image layers while load keeps flowing. The verifier uses no LLM. An outcome gate checks goodput, latency and error rate under fresh traffic during a 180-second soak after the agent declares the incident closed, against bounds calibrated once on the healthy system. A safety gate restarts the affected service or re-fires the trigger to confirm the repair holds, and checks that the agent stayed in scope and left protected data and guardrails intact. A trial passes only if both gates pass.",
+          "why": "The grade is taken on the running system after the agent stops, which static checks cannot do. The two gates block shortcut repairs such as flushing a queue, granting broad permissions or turning traffic off. Each task is validated with an oracle run and a no-op run, and adversarial agents were set to reward-hack the graders; an earlier iteration of one task let an agent reach remote code execution on the grader pod. Across 3,000 trials of 10 model and harness configurations, the best configuration passes 64.3 percent. The authors list three trials per condition, a Slack-heavy task mix and a custom harness fork as limits."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "The paper sorts 1,948 failed trials into exclusive causes. The repair did not last in 26.5 percent, the agent declared while the service was still out of bounds in 23.9 percent, it changed something off the permitted list in 21.9 percent, it never declared in 16.3 percent, and it left the planted cause or damage in place in 8.7 percent. Of 2,967 episodes with an action record, 55 percent issued the full reference fix and only 59 percent of those passed. Among the 672 that had the full fix and still failed, 340 declared before the service recovered and 329 failed a safety check by undoing their own fix.",
+          "why": "Most failures happen after the fault is found. The first correct action arrives at a median of 3.3 minutes into a 60-minute window. On multi-fault tasks, 595 episodes issued only part of the fix, 549 of them declared the incident complete, and 2.5 percent passed. Agents that declared within two minutes of their last correct action out-passed those that waited five minutes or more on 11 of 12 tasks, by 20 points on average. Raising reasoning effort from low to max moves the pass rate from 39.2 to 43.8 percent, with an interval that includes zero, while mean episode cost multiplies by 2.3."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260420779B",
+      "title": "SWE-chat: Coding Agent Interactions From Real Users in the Wild",
+      "firstAuthor": "Baumann, Joachim",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2604.20779",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260420779B",
+      "branches": [
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "In about 6,000 logged sessions, Claude Code asks a clarifying question in 1.1 to 2.6 percent of turns. Users interrupt in 3.3 to 6.0 percent of turns and push back after 39 percent. The share of sessions where the agent writes more than 99 percent of committed code doubled from 20 percent to over 40 percent in three months. Those sessions introduce 0.76 vulnerabilities per 1,000 lines, against 0.14 for collaborative sessions and 0.08 for human-only ones.",
+          "why": "The authors' summary is that autonomy is outpacing oversight. The oversight that exists is started by the human as correction after the fact; the agent seldom asks. The collaborative mode, where human and agent both write code, is the cheapest per 100 committed lines at $0.05 against $0.13 for vibe coding and $0.07 for human-only work, and takes 4.8 minutes against 12.6 for vibe coding. The expert-nitpicker persona dominates, at 47 percent even in vibe-coding sessions. On cost and on security, collaboration comes out ahead of full delegation in this data."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000349Z",
+      "title": "Fault-Tolerant Budget Conservation in Distributed Multi-Agent Delegation",
+      "firstAuthor": "Zhu, Genliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00349",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000349Z",
+      "branches": [
+        "recovery",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "A budget that is safe at allocation can still be overspent at execution. With a root grant of two effects, worker A reserves one and dispatches, the reply is lost, the controller times out and refunds, worker B spends the refund, and A's effect completes late. That makes three effects on a two-effect authorization. The fix is to hold budget as exclusive escrow credits. Before dispatch a branch writes a durable reservation bound to lineage, epoch, normalized effect, maximum charge, receiver and idempotency key, and the gateway verifies a signed dispatch permit before first acceptance. An uncertain effect stays charged until an authenticated settlement, a fenced no-effect proof or permanent forfeiture.",
+          "why": "This is the retry-around-side-effects problem stated for spend. A timeout tells the controller nothing about whether the effect happened, and the paper's rule is that elapsed time alone cannot make the right spendable again. The crash experiments support the mechanism within a declared scope: 10 of 10 safe two-process SQLite cases ran without a violation under an independent checker across 9 injected SIGKILL process deaths, and the checker detected the timeout-refund mutant. The guarantees are conditional on a cooperating, idempotent, fenced and queryable gateway with complete mediation. Liveness, Byzantine tolerance and refinement for arbitrary runtime adapters are not established."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Budgets are modelled as quantized resource vectors, and the ledger must always balance: available, in-transit, reserved, quarantined, committed and forfeited credit sum to what was issued. Every observed effect has to be covered by exactly one operation, and exposure cannot exceed the budget. A maximum reservation is sound only if the gateway can prevent an actual charge above it. Where a provider reveals usage only afterwards and may exceed the reservation, the paper says no local algorithm can prove a hard bound on the real charge, and the choices are to refuse the hard-bound profile, reserve a conservative worst case or state a softer monitoring claim.",
+          "why": "A timeout refund assumes that an unconfirmed call cost nothing. This paper treats the unknown case as charged, which is what a budget needs if it is to act as an authorization boundary. It also marks what conservation does not cover. A compromised worker can still waste its own escrow, so deployments need rate limits, per-child reservation caps, bounded delegation depth and human escalation for large or long-lived quarantines. Provider self-reported usage cannot validate actual invoice bounds, and the measured latencies (per-case medians of 9.7 to 12.0 ms) are mechanism health checks, not throughput claims."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000972Z",
+      "title": "VeriHarness: Scaling Agentic Verification for Long-Horizon Tasks",
+      "firstAuthor": "Zhang, Caiqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00972",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000972Z",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "On pools of ten rollouts of Claude Opus 4.8 on APEX-Agents, 34 percent of the 917 claims the rollouts agree on are wrong. Of 775 disputed claims, 74 percent contain a correct candidate, but the most frequent answer is correct in only 47 percent. Across five benchmarks, majority voting over ten rollouts moves the average score from 47.2 to 47.5 with Gemini 3.5 Flash and from 49.6 to 50.4 with Opus. VeriHarness, which checks competing and shared claims against files, data and constraints in the workspace, reaches 51.6 and 53.7 by selection and 53.4 and 56.1 with evidence-backed revision.",
+          "why": "Sampling more rollouts helps only when something checks them against evidence. Agreement is a weak signal. A third of consensus claims are wrong, and where rollouts disagree the most frequent answer is right less than half the time. An agentic verifier with the same environment access but no protocol or skills recovers about half the gain (49.4 and 51.6), so the structure of the check matters as well as the access. The selection oracle sits at 62.7 and 63.1, above what the verifier reaches. The verifier is the generator's own model, with no reference answers or rubrics at test time."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000371Z",
+      "title": "Deny Without Disabling: Authorization-Paired Evaluation and Control for Multi-Agent Systems",
+      "firstAuthor": "Zhang, Yunbei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000371Z",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Fragments that each pass a local check can combine into a prohibited use. With artifacts, policy and proposal held fixed, per-artifact review permits 413 of 480 denied commits (86.0 percent) and reviewing the union permits none, with 459 of 480 authorized objects supplied in both arms. The paper counts a control as successful only when it blocks the prohibited use and completes the paired authorized one. Class-only review withholds most denied values but achieves zero joint successes. Binding review to resolved objects, with deterministic enforcement at a commit gate, reaches 96.5 to 99.7 percent selective correctness with no verbatim release across 2,304 trials.",
+          "why": "A control that blocks everything sensitive looks safe and fails the task, and the paired metric exposes that. The experiments also separate detection from enforcement. Under a reference-position attack a reviewing model can detect the violation and still disclose it, and deterministic deletion removes the leak. Preserving lineage is not enough either. Explicit provenance contracts restore lineage in 99.3 to 100 percent of graphs, yet permission attribution is wrong in 676 of 840. Recording lineage at runtime and handing permission to an isolated specialist brings denied commits to 0 of 480 across four specialist models."
+        }
+      ]
     }
   ],
   "sections": [

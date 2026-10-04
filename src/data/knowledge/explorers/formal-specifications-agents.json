@@ -3341,6 +3341,44 @@
           "why": "The paper reports what its design cannot resolve next to what it can. Run-to-run noise larger than the smallest measured premium means small-sample comparisons of verification methods cannot license a magnitude, and the benefit side of specify-and-verify, whether it changes correctness, stays unmeasured here."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261000425V",
+      "title": "Code That Works, Environments That Don't: Measuring Environment Reproducibility in AI-Generated Software",
+      "firstAuthor": "Vangala, Bhanu Prakash",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00425",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000425V",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "The paper separates three dependency layers for a generated project: what the agent declares in its manifest, what gets installed, and what the program loads at runtime, traced with ptrace and Sciunit as ground truth. Across 50 tasks, four languages and three agents (Claude Code, Codex and Gemini Code Assist), initial-manifest F1 against the runtime trace is 0.765 in Python, 0.708 in Java and 0.219 in JavaScript. In JavaScript about 49 percent of declared packages are never loaded and about 62 percent of loaded packages are never declared. For identical tasks, the agents choose fully disjoint dependency sets in 53.3 percent of cases on average, and three independent runs of Claude Code never agree unanimously in any language.",
+          "why": "A benchmark that scores final success would rate all three agents near perfect, because after up to ten repair cycles fed the runtime error almost every project runs. The differences are in the first attempt and in the cost of repair. First-attempt success for Claude Code ranges from 96 percent in JavaScript to 18 percent in Java, and repair cost differs by up to five times in cycles. The manifest feeds SBOMs, vulnerability scans and license audits, so a manifest that lists unused packages and omits loaded ones passes its errors on to each of them. One generation's dependency set does not predict the next, so a review of one run does not transfer. The authors call for precision, recall and F1 on dependency declarations as evaluation criteria next to functional tests, and treat their rates as lower bounds because the prompt asked for a pinned manifest."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv260420779B",
+      "title": "SWE-chat: Coding Agent Interactions From Real Users in the Wild",
+      "firstAuthor": "Baumann, Joachim",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2604.20779",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260420779B",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "SWE-chat collects real coding-agent sessions from developers who opted into checkpoint logging with the Entire.io CLI, which links each session transcript to commits with line-level attribution of human and agent authorship. The version available in full text has about 6,000 sessions, more than 63,000 prompts and more than 355,000 tool calls from over 200 public repositories, about 85 percent of them Claude Code. Only 44.3 percent of agent-produced code survives into commits. Semgrep scans of pre- and post-commit snapshots find 0.76 new vulnerabilities per 1,000 lines in vibe-coded commits, against 0.08 for human-only and 0.14 for collaborative commits.",
+          "why": "These are quality measures that curated benchmarks do not report: whether the code was kept, what it cost and what it broke. Vibe coding, where the agent writes more than 99 percent of committed code, is 40.8 percent of sessions and uses a median 204K tokens per 100 committed lines, about three times the collaborative mode. LLM judges rate 90 percent of sessions at 50 or more on success, while more than half of the agent's code does not reach a commit. The population is opt-in early adopters, which the authors list as a limit."
+        }
+      ]
     }
   ],
   "sections": [

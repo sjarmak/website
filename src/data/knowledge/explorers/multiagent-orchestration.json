@@ -2624,6 +2624,63 @@
           "why": "The taxonomy gives framework builders a ranked list drawn from what users filed and maintainers closed. Workflow, tool integration and memory problems are the most frequent causes. The reports quoted are concrete: a sequential agent that does not run sub-agents after the first, parallel tasks that repeat while the aggregator never runs, and a chain that stops at the first agent. The coding was done by one author and reviewed by others, with 29 conflicts in issue categories resolved by discussion."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261000349Z",
+      "title": "Fault-Tolerant Budget Conservation in Distributed Multi-Agent Delegation",
+      "firstAuthor": "Zhu, Genliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00349",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000349Z",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "The paper formalizes budget conservation for delegation across concurrent, failure-prone workers. Budget moves through the delegation DAG as exclusive escrow credits; delegation atomically moves a subvector into a fresh child generation, and a partitioned branch spends only from its own escrow. Under stated mediation, durability, authentication and gateway assumptions it proves ownership partition, ledger and effect conservation, descendant non-amplification, at-most-once settlement, late-completion safety and partition confinement. An indistinguishability argument shows that a shared unallocated unit cannot stay spendable in every partition, so local availability under partition requires exclusive preallocation.",
+          "why": "It gives a cost bound that holds under lost replies, duplicates, partitions and joins that alias one credit lineage, the cases where parent-child allocation constraints stop. The evidence is bounded and falsifiable. The settlement TLA+ model explored 54,477 generated and 16,592 distinct states with no invariant violation, all 18 safe named schedules passed, and both predeclared weakened mechanisms (timeout refund and historical-certificate validation) produced short counterexamples. The authors note that the TLA+ and JavaScript encodings are not independent specifications, that DAG join is not exercised in the SQLite prototype, and that a bounded check does not establish correctness outside its constants or assumptions."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000972Z",
+      "title": "VeriHarness: Scaling Agentic Verification for Long-Horizon Tasks",
+      "firstAuthor": "Zhang, Caiqi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00972",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000972Z",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "VeriHarness splits verification into roles that run in separate contexts. A disagreement resolver tests competing claims against source files, data and constraints. A consensus challenger recomputes values, checks labels against metadata and looks for omitted requirements. A fresh-context adjudicator then picks a base rollout, a revision plan and a list of unresolved claims, and a verification record links each claim to its check, evidence and verdict. With Opus 4.8 the resolver alone scores 54.3, the challenger alone 52.6 and both together 56.1.",
+          "why": "The paper measures the distance between consensus and correctness and builds the check around it. The selection gain grows with pool disagreement, from about 0.6 points on consensus pools to about 9.4 on high-entropy pools on APEX-Agents. Aggregating rollouts without evidence checks stays below the evidence-backed result. Verification skills can be evolved from failure feedback: a library evolved from empty beats the empty library by 11.0 points on APEX-Agents and 5.7 on SpreadsheetBench 2, and beats the human-authored one. The harness keeps most of its gain when run inside Gemini CLI, Claude Code and Codex."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261000371Z",
+      "title": "Deny Without Disabling: Authorization-Paired Evaluation and Control for Multi-Agent Systems",
+      "firstAuthor": "Zhang, Yunbei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00371",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000371Z",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "FlowReview connects three steps: resolve which objects a proposal contains, rank the permissions that apply, and enforce deterministically at a commit gate. The tests cover five homogeneous and two heterogeneous teams built from Sonnet 4.5, Haiku 4.5, Qwen3-32B, Gemma3-27B and Llama-3.3-70B, with an attacker who controls untrusted artifacts but not the trusted policy, schema or gate. A runtime assembler supplies authorized objects at a rate of 1.000 where a model composer manages 0.350. On an AgentDojo-derived relay with Sonnet pairs, target commits fall from 21 of 24 to 0 of 24 while utility rises from 9 of 24 to 21 of 24.",
+          "why": "The governance problem in a multi-agent system sits in the composed flow, and topology changes it. Splitting contributors maximally leaves 19 of 168 graphs unresolved even though every field is present, and inserting a relay lowers both unsafe proposals and authorized supply. The paper's requirement is that object identity and permission stay connected to execution through components whose outputs can be verified. In these experiments that means assembly and enforcement done by the runtime, not by a model. With model-generated artifacts, authorized supply (15 of 60) and task completion (27 of 60) stay low."
+        }
+      ]
     }
   ],
   "sections": [
