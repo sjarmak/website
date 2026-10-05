@@ -3456,6 +3456,44 @@
           "why": "A control that blocks everything sensitive looks safe and fails the task, and the paired metric exposes that. The experiments also separate detection from enforcement. Under a reference-position attack a reviewing model can detect the violation and still disclose it, and deterministic deletion removes the leak. Preserving lineage is not enough either. Explicit provenance contracts restore lineage in 99.3 to 100 percent of graphs, yet permission attribution is wrong in 676 of 840. Recording lineage at runtime and handing permission to an isolated specialist brings denied commits to 0 of 480 across four specialist models."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261001769F",
+      "title": "CONTRA: Discovering and Qualifying Behavior-Changing Questions for Selective Clarification in LLM Code Generation",
+      "firstAuthor": "Fang, Zheng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.01769",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261001769F",
+      "branches": [
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "CONTRA decides which clarification questions a coding agent should put to the developer. It generates candidate questions broadly, drops those unrelated to required behavior or already answered by the requirement, then writes three programs under each of two plausible answers and runs all six on at least seven shared inputs. A question survives only if the two groups give different stable outputs. On ClarifyCodeBench (419 underspecified and 80 fully specified tasks, five-question budget) it has the highest F1 with all four agents, a macro-average of 41.20 percent against 27.32 for the best baseline. On Qwen3.8-27B its recall is 20.73 percent against 6.26 for Claude Code and 8.42 for OpenHands, with a 5.00 percent false-positive rate on fully specified tasks, equal to Claude Code and below OpenHands at 32.50.",
+          "why": "An escalation earns a developer's attention only when the answer changes what gets built, and this paper turns that into an executable test. The baselines show the two ways to get it wrong. Letting the model decide whether to ask gives 59.32 percent precision and 15.12 percent recall with GPT-5.5, so most key questions go unasked. Asking on any disagreement among sampled programs gives 37.37 percent recall and 13.58 percent precision with GPT-5-mini. Using the interaction history to pick the next question or stop matters most: removing it costs 8.67 F1 points. In a 40-task repository study of the Claude Code plugin, independent review found 116 of 262 reported decisions absent from the agent's own report. Downstream pass@1 gains are small, 1.22 and 0.61 points, and the effect on developer effort over longer sessions is left to future work."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261001348A",
+      "title": "Verify Claims, Not Scores: Evidence-Based Verification of Modular Agents",
+      "firstAuthor": "Atiah Alzahrani, Ali",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.01348",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261001348A",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "The paper replaces the aggregate score with a ledger of claims, each recorded with its evidence, one of four verdicts (supported, unsupported, unresolved, not evaluated) and the boundary within which it holds. It applies the audit to ARC-Agent, a five-step portfolio-allocation agent built for the study, in a synthetic market that records the hidden regime. Perfect regime information is worth +0.07 ± 0.08 Sharpe when the oracle may only switch between two portfolios and +0.28 ± 0.08 when it may hold regime-specific weights, so the low figure came from the evaluation. The scenario generator keeps 29 percent of the true bull-crisis mean gap while its local checks pass, and a repair that raises retention from 47 to 186 percent changes Sharpe by +0.075 ± 0.174. Bypassing the runtime gate leaves feasibility audits, provenance records and outcomes looking normal.",
+          "why": "A flat score after a component change fits a useless component, a component masked downstream, and an evaluation that cannot express the gain. The audit separates these by intervention and reads the results asymmetrically: a replacement that recovers value locates a bottleneck, and one that recovers nothing is recorded as unresolved whenever a downstream component could hide it. The verifier is a target too. The gate's score compares one realised loss with a scenario CVaR, which does not identify CVaR, so the claim that the gate certifies decision quality is unsupported. Under the gate bypass, maximum drawdown is 9.9 percent, the lowest in the attack table, and no reported outcome metric flags it. The limits are stated: one synthetic environment, one architecture, and an agent with no language model, model judge or prompt-injection attack."
+        }
+      ]
     }
   ],
   "sections": [
