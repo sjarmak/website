@@ -3238,6 +3238,69 @@
           "why": "Agent memory copies and summarizes source documents, and the copies usually lose the access rules of the originals. Computing authorization over lineage closes that gap in both directions, narrowing and widening. A deleted or deregistered source authorizes no one, declassification is the one recorded exception, and each decision leaves a record for audit. The portions of the paper read for this note specify the mechanism and do not report an empirical evaluation."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261007309W",
+      "title": "The Right Memory in the Wrong Context: Verifying Retrieval Admissibility in Long-Term Agent Memory",
+      "firstAuthor": "Wang, Zi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.07309",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261007309W",
+      "branches": [
+        "security-governance",
+        "eval-methodology"
+      ],
+      "notes": [
+        {
+          "branch": "security-governance",
+          "takeaway": "A retrieved memory can be relevant and still ineligible: it belongs to another principal, violates an active policy, was explicitly forgotten, or is in a lifecycle state the query cannot use. The paper scores each memory-query pair on scope, policy and lifecycle, each as established positive, established negative or unresolved, and combines them with a strong Kleene conjunction, so one established violation excludes the record and missing governance evidence is never imputed. Restricting candidates to a trusted provenance namespace raises top-20 anchor recall from 0.432 to 0.533 on frozen rankings from RHELM and MemOps, 3,767 queries, and removes 98.3 percent of exact similarity evaluations. Text-only verifiers do not deliver the same control. Under a 1 percent limit on denying required evidence, GPT-5.6 Sol meets the limit only by retaining every candidate and detecting no violations, and Gemini 3.6 Flash has no tested operating point under it.",
+          "why": "Governance here is a decision about the memory-query context, not a label on the record. A superseded value is inadmissible for a question about what is true now and required for a question about how it changed. The results favor enforcing eligibility from authenticated metadata before prompt assembly, since a model reading the text over-denies required evidence. The paper also follows one memory ID from storage through retrieval, prompt exposure and answer disclosure, which gives an audit trail of what crossed the prompt boundary. In 16 controlled exposure scenarios, one of four readers shows a disclosure increase whose 95 percent interval excludes zero (+0.156, [0.031, 0.312])."
+        },
+        {
+          "branch": "eval-methodology",
+          "takeaway": "Recall and final-answer accuracy do not show whether retrieved evidence was allowed to be used. A route can look safe because it missed required evidence, and a correct answer can follow exposure to an inadmissible record. The framework compares routes at matched required-evidence recall, reports bounds for unresolved labels instead of imputing them, and scores prompt exposure and answer-level disclosure as separate stages on separate, non-pooled populations.",
+          "why": "The paper keeps candidate support, the eligibility decision and reader behavior identifiable instead of collapsing them into answer accuracy, and it is explicit about which comparisons are causal. Namespace routing is associated with judged-accuracy gains of 0.053 to 0.068 across three readers on 1,523 paired cases, and the authors call that comparison observational because recall changes at the same time. Matching recall is what stops a filter from scoring as safer by returning less useful context."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261011647Y",
+      "title": "One Skill Too Many: How Co-Installed Skills Conflict in Coding Agents",
+      "firstAuthor": "Yan, Chaoliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11647",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011647Y",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Reconstructing the skills Claude Code would load in 20,947 public repositories, the authors estimate that nearly one in four installed skills is already co-installed with a skill that does the same job, about 10,100 after near-duplicates are counted once. In the 489 projects that copy a whole collection the share is 37 percent of judged skills, against 19 percent elsewhere. Most conflict-prone pairs involve normative skills, followed by capability skills. Which skill runs is decided by where it is installed; listing order barely matters. The conflict is settled at the first read of a skill file, almost always before the agent changes any file, and a pre-tool hook at that read restores fidelity on exclusive core functions to the level of runs that open the installed skill first.",
+          "why": "A skill library is selected from by name and a few hundred characters of description, so growing it adds near-duplicates the model cannot tell apart and the user is not told about: the final reply names the skill used in 0.9 percent of substituted runs. Skills that do the same job still differ in content. In the experimental pairs the similar skill does not ask for 73 percent of the installed skill's applicable core functions. The estimates are conservative, since public repositories rarely show the personal skills and plugins developers add. The fix the paper tests is at the platform: guard the first read and show which skill ran."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261011559D",
+      "title": "SWE-Journey: Towards More Realistic Evaluation of Coding Assistants through Long-Horizon, Multi-Turn Interaction",
+      "firstAuthor": "Deng, Hexuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11559",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011559D",
+      "branches": [
+        "synthetic-data"
+      ],
+      "notes": [
+        {
+          "branch": "synthetic-data",
+          "takeaway": "SWE-Journey generates both halves of its evaluation. Tasks come from a weak-to-strong synthesis pipeline that decomposes a long-horizon task into subtasks, synthesizes each subtask's components separately and accumulates a reusable module-level skills library, at $56.64 per task. Users come from four personas mined from real interaction data, Non-coder, Product Manager, New Developer and Software Architect, which condition a GLM-5.2 simulator that discloses requirements gradually and differs by persona in expertise, detail preference, control style, goal stability and verification style. The same assistants pass over 75 percent of tests for requested functionality with the Software Architect persona and fewer than 25 percent with the Non-coder.",
+          "why": "A fixed specification handed over in one turn removes the variable that turned out to matter most: a gap of more than 50 points in pass rate comes from who the simulated user is. The construction choices address two problems with synthetic evaluation data. Generating follow-up requirements beyond the public seed reduces direct solution leakage, where mining GitHub history lets a model with a bash tool find the newer repository version online. Decomposition lets a synthesis model produce tasks harder than it could write in one attempt. The authors estimate manual labelling of a short SWE-bench-style instance at about $100."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1915,6 +1915,25 @@
           "why": "Compaction helps before the window is full. In the 256K setting no trajectory overflows, and the trained agent still beats the full-history baseline at every budget from $0.10 to $4.00 per task, which means keeping everything is not the best policy even when it fits. Compacting on a fixed length threshold scores below the baseline (28.8 against 30.4). The same checkpoint with its compaction calls ignored passes fewer tasks, so the gain comes from the compaction and not from the training alone."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261007309W",
+      "title": "The Right Memory in the Wrong Context: Verifying Retrieval Admissibility in Long-Term Agent Memory",
+      "firstAuthor": "Wang, Zi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.07309",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261007309W",
+      "branches": [
+        "evaluation"
+      ],
+      "notes": [
+        {
+          "branch": "evaluation",
+          "takeaway": "The paper adds a question to memory evaluation that retrieval-correctness and answer-correctness both miss: was the retrieved record eligible for this principal, purpose, intent and time. It audits each retrieved record at matched required-evidence recall, tracks the memory ID through prompt exposure, and scores target-level disclosure in the answer. On frozen rankings from RHELM and MemOps (3,767 queries), trusted-namespace filtering raises top-20 anchor recall from 0.432 to 0.533 and the share of queries where 80 percent recall is feasible from 0.237 to 0.311, with 98.3 percent fewer exact similarity evaluations.",
+          "why": "A scope filter built from authenticated provenance improves evidence reachability and cuts search work in the same step, so the governance control is not paid for in recall here. The eligibility decision is harder. In the frozen 72-case development diagnostic a reference built from released metadata preserves required evidence, while neither text-only verifier detects violations within the 1 percent false-denial limit. A design that relies on a model reading memory text to decide eligibility should expect to lose required evidence."
+        }
+      ]
     }
   ],
   "sections": [

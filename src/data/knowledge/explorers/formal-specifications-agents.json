@@ -3379,6 +3379,25 @@
           "why": "These are quality measures that curated benchmarks do not report: whether the code was kept, what it cost and what it broke. Vibe coding, where the agent writes more than 99 percent of committed code, is 40.8 percent of sessions and uses a median 204K tokens per 100 committed lines, about three times the collaborative mode. LLM judges rate 90 percent of sessions at 50 or more on success, while more than half of the agent's code does not reach a commit. The population is opt-in early adopters, which the authors list as a limit."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261011647Y",
+      "title": "One Skill Too Many: How Co-Installed Skills Conflict in Coding Agents",
+      "firstAuthor": "Yan, Chaoliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11647",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011647Y",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "When two skills that do the same job are installed together, the agent can run the wrong one and the task still passes. The paper measures the loss with fidelity: for each skill it derives core functions from the skill's text, requirements a competent model would not meet without the skill, quoted from the text and checkable in the output, and fixes the first three that apply to a task before any run. Across 312 pairs and three models, the similar skill takes one in five runs from the installed skill without lowering task completion. Runs that open the similar skill first lose more than a third of the exclusive core functions, the ones only the installed skill asks for. Within the same pair and model, opening the similar skill first lowers fidelity on exclusive core functions by 9.4 points (95% CI [-15.0, -4.0], Holm-adjusted p = 0.004).",
+          "why": "Task pass rate cannot see this failure, because two skills compete exactly when either can finish the task. The authors note that most skill benchmarks score whether the task passes or whether the right skill was retrieved, and cite SWE-Skills-Bench's finding that 39 of 49 skills produce no pass-rate improvement, so losing such a skill cannot lower the pass rate either. In one run a similar skill led the agent to commit work the installed skill forbids, and the task completed. The paper's recommendation is that benchmarks score exclusive core functions next to task completion."
+        }
+      ]
     }
   ],
   "sections": [

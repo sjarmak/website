@@ -3494,6 +3494,119 @@
           "why": "A flat score after a component change fits a useless component, a component masked downstream, and an evaluation that cannot express the gain. The audit separates these by intervention and reads the results asymmetrically: a replacement that recovers value locates a bottleneck, and one that recovers nothing is recorded as unresolved whenever a downstream component could hide it. The verifier is a target too. The gate's score compares one realised loss with a scenario CVaR, which does not identify CVaR, so the claim that the gate certifies decision quality is unsupported. Under the gate bypass, maximum drawdown is 9.9 percent, the lowest in the attack table, and no reported outcome metric flags it. The limits are stated: one synthetic environment, one architecture, and an agent with no language model, model judge or prompt-injection attack."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261007639Z",
+      "title": "HarnessSecurity-Bench: Do Security Mechanisms Really Protect Coding Agent Harnesses?",
+      "firstAuthor": "Zhu, Zhengyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.07639",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261007639Z",
+      "branches": [
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "The study assesses 40 coding agent harnesses, 27 open-source and 13 closed-source, against a taxonomy of ten security mechanisms. Of the 400 harness-mechanism cells, 205 are confirmed implemented, 83 are confirmed absent and 112 stay unresolved. About half of the confirmed implementations are opt-in, and the evidence gaps sit mostly in closed-source products. HarnessSecurity-Bench then runs 23 coding tasks across five attack surfaces on Claude Code, Codex CLI, Gemini CLI, gptme, Qwen Code and GitHub Copilot with GLM-5.2 held fixed, 2,500 trials and 81,155 tool calls. Enabling auto-approve raises attack success from 29.2 to 95.6 percent. Network isolation cuts it from 57.1 to 0.8 percent and costs 24.5 points of task utility. Read-only mode cuts it from 8.3 to 0.8 percent and costs 34.0 points. Command allowlisting reduces attack effects at a small utility loss, and command denylisting reduces them with a utility gain.",
+          "why": "This branch treats tool and repository content as untrusted, and the paper measures what a harness's own controls do when that content is hostile. Each native mechanism is compared enabled and disabled in the same Docker environment, with separate deterministic oracles for task utility and attack effect, so the price of a control is read next to its protection. Two task-level results limit how far a setting can be trusted. Restricting a shared capability blocks legitimate and malicious operations together. A command restriction left an interpreter-based execution path to the protected operation open, so the authors ask harness providers to test alternative execution paths and to make security settings verifiable."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261007261M",
+      "title": "Verifying Coordination in Parallel Coding Agents: NP-Bench and a Scheduling Planner",
+      "firstAuthor": "Muku, Sumanyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.07261",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261007261M",
+      "branches": [
+        "topology",
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "The paper treats coordination among parallel coding agents as scheduling. Before any agent starts, a static deterministic planner takes each work item's declared scope, partitions the work so concurrent agents hold disjoint scopes, and orders merges along the producer-to-consumer dependency graph so a contract change lands before its consumers. In the deterministic simulation the planner lifts clean integration from 1 of 9 scenarios to 9 of 9 and merge conflicts from 13 to 0. Reactive conflict detection tracks the no-coordination arm exactly, because under concurrency its warning arrives after the conflicting edit, and the planner's advantage grows with the number of agents.",
+          "why": "The choice between watching for conflicts and allocating work up front is a topology decision, and this is a three-arm measurement of it. The benefit did not shrink on stronger models across the two capability tiers and two vendors tested, which the author attributes to its source: how work is allocated, not how well a model reasons. The limit is stated. Scopes are declared by each work item, the schedule is only as good as those declarations, and inferring scopes automatically is left open."
+        },
+        {
+          "branch": "reliability",
+          "takeaway": "Each agent passes its own checks on its own branch while the merged tree is broken. NP-Bench reads the outcome off a real git merge and test run (does the merged tree build, does it pass, did the consumer adapt to the new contract) across three arms: no coordination, reactive detection and proactive planning. With live agents on a breaking contract change, the clean-integration rate is 0 under no coordination and 0 under reactive detection on every seed. The planner raises it to 1.0 on a frontier model and 0.6 on a small one, and none of 5 agents strayed from its assigned scope. A separate cross-session memory test drops the repeated-mistake rate from 1.00 to 0.00 on both a strong and a weak model.",
+          "why": "The failure this measures is invisible to single-agent evaluation, so a fan-out that looks healthy agent by agent can still ship a broken integration. The benchmark makes whether coordination helped a measurement taken from the merge instead of an agent's report. It also records what did not help: a vague reactive warning was worth about as much as no coordination to a live agent, and routing facts to agents did not rescue retrieval accuracy over long contexts at scales that fit the window. The author presents NP-Bench as a focused study of when coordination helps, not a comprehensive benchmark."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261010126L",
+      "title": "Know the Shape, Find the Fault: Topology-Conditioned Diagnosis of Multi-Agent LLM Failures",
+      "firstAuthor": "Liu, Xinwen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.10126",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261010126L",
+      "branches": [
+        "reliability",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Failure type depends on communication topology. On the 851 MAST-clean traces, a contingency table of four topologies against the fourteen MAST failure modes rejects independence with chi-squared 409.9 and p of 1.2e-70. Giving a small judge the ground-truth topology and the failure patterns typical of it raises gpt-mini's Macro-F1 on failure classification from 0.173 to 0.350. The paper's worked example is a shared-message-pool run: a reviewer asks for interrupted-transfer handling in a file-transfer tool, the tester adds tests for an unrelated square function, and the next review accepts them.",
+          "why": "A failure taxonomy is more useful when it says which failures to expect from a given structure. Similar symptoms in a trace can come from different problems in how information is passed, used or verified, and the topology tells the diagnoser which dependency to check. In the example every message is locally plausible, and the fault only shows against the shared pool, where the reviewer's request was visible to the tester and went unverified."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "Execution logs from AutoGen, MetaGPT, ChatDev, LangGraph, CrewAI and Magentic differ in format and often do not record topology. The Trace Structural Extractor recovers a relation graph and a topology label from a trace in four stages, compaction, relation extraction, validation with repair and structural labelling, and grounds each relation in message evidence. It labels 211 of 256 ChatDev traces correctly, 82.4 percent, and 31 of 40 traces, 77.5 percent, when framework identity is withheld. With the predicted topology, the full gpt-mini pipeline reaches Macro-F1 0.346 against 0.372 for gpt-5.4 reading the trace alone.",
+          "why": "A transcript without structure leaves the diagnoser to infer who was supposed to hear what. Topology changes far more slowly than failure labels: a deployed pipeline keeps the same shape across thousands of runs, so the structure can be extracted once and reused. For 1,000 traces under a fixed orchestration structure the projected pipeline cost, including the one extraction, is about 6 percent of repeated gpt-5.4 diagnosis."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261010961X",
+      "title": "Cross-Provider Review as a Runtime Contract for Coding Agents: A Controlled Pilot and Fault-Injection Study",
+      "firstAuthor": "Xu, Bowen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.10961",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261010961X",
+      "branches": [
+        "reliability",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "A second agent from another provider reviewing a finished turn is only a review if the runtime can show it received the complete input, produced a usable critique and ran in a separate resource pool. The paper states that as a six-property contract and finds three ways its own implementation counted a failed review as complete. A reviewer given truncated input returned a plausible clean verdict at four truncation levels, from 1 percent delivered to one character missing. Cancellation during process reaping was counted as a completed review. A reviewer that exited nonzero with a well-formed verdict was counted as complete, found only after preregistered collection had begun. In the 20-turn pilot, eight turns had a material reviewer finding (95% exact interval 19.1 to 63.9 percent).",
+          "why": "Every one of these failures reads as a turn with no material finding, which is the outcome that makes review look unnecessary and a skip policy look safe. The authors' rule is that a zero exit status does not establish a review and a well-formed verdict does not redeem a failed process: both are necessary and neither is sufficient. The claims are bounded. The pilot is agent-authored, read-only, on one codebase, labelled once per item by a Claude-family judge, and the outcome is a reviewer finding, not an observed improvement in software quality."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "Durable per-attempt evidence is one of the contract's six properties, and the study shows the cost of a gap in it. When the third defect was found, exit status had not been recorded per attempt, so the authors could not determine which of the 25 formal observations in the shadow study were affected. Those 25 and two pending records were kept as an audit cohort, the measurement-valid cohort restarted at zero, and no gate result is reported. In real CLI probes the recorded trace was what made the capability check possible: Codex's JSONL trace shows file-change and shell-write attempts in five of five read-only trials, each ending in a failed tool event, and no disposable repository changed.",
+          "why": "Checking a condition at run time without recording it leaves nothing to audit when the check turns out to be wrong. The runtime records a semantic outcome next to the process outcome for this reason, and turns missing or truncated reviews into explicit exclusions instead of silent observations. The trace has limits too: the Codex event stream gave no permission-denial reason, so it does not establish which lower-level mechanism rejected the writes."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261011050L",
+      "title": "AgentHorizon: Evaluating Agentic Judges for Long-Horizon Computer-Use Tasks",
+      "firstAuthor": "Lù, Xing Han",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11050",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011050L",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "AgentHorizon grades the judges. It holds 1,373 instruction-trajectory pairs, 523 positive and 850 negative, drawn from 166 hours of human-recorded computer-use trajectories on three operating systems. Annotators record trajectories for two closely related instructions, and swapping the instructions yields a negative: a coherent, completed trajectory for a request that was not the one asked. Eleven judges are tested two ways, by passing the full trajectory of up to 300 screenshots and actions directly, and by running the judge as a coding agent in one of five harnesses so it can inspect evidence with tools. The best agentic judge, GPT-5.5, reaches 80.9 percent balanced accuracy on the frontier split.",
+          "why": "A judge that is wrong about one in five long trajectories is the instrument many agent evaluations and training loops rest on, and its errors are not symmetric: judges differ sharply in how readily they accept a valid trajectory and reject a failed one. Tools are not a uniform fix. GPT-5.5 does better through the Codex CLI than with the full context, while Qwen 3.6 27B does better with direct prompting than through OpenCode. The paper's example shows the failure in a frontier judge. Claude Opus 4.7 returned success with high confidence on a 195-step trajectory that published changelog content the instruction never asked for, because the visible evidence was internally consistent."
+        }
+      ]
     }
   ],
   "sections": [
