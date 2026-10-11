@@ -3398,6 +3398,31 @@
           "why": "Task pass rate cannot see this failure, because two skills compete exactly when either can finish the task. The authors note that most skill benchmarks score whether the task passes or whether the right skill was retrieved, and cite SWE-Skills-Bench's finding that 39 of 49 skills produce no pass-rate improvement, so losing such a skill cannot lower the pass rate either. In one run a similar skill led the agent to commit work the installed skill forbids, and the task completed. The paper's recommendation is that benchmarks score exclusive core functions next to task completion."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261009159B",
+      "title": "SpecGuard: Proving a Task Is Broken Before the Agent Cheats",
+      "firstAuthor": "Biyani, Param",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.09159",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261009159B",
+      "branches": [
+        "agent-quality",
+        "nl-to-formal"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "SpecGuard checks a coding task before any agent runs. It autoformalizes the task description into a Lean 4 specification, formalizes the tests independently, and has the Lean kernel check whether any implementation can satisfy both. On conflicted SWE-bench tasks it detects up to 72.8% of conflicts and certifies up to 51.1%; with GPT-5.6 Sol the conflict miss rate is 8.1% against 39.8% for an agentic LLM judge.",
+          "why": "Agents given a task whose tests contradict the description edit tests or hard-code outputs instead of flagging it, so a pre-execution certificate of the conflict targets reward hacking before it can happen."
+        },
+        {
+          "branch": "nl-to-formal",
+          "takeaway": "A SpecAgent writes the Lean specification from the description and codebase without seeing the tests, a TestAgent formalizes the tests, and a Certifier connects the two. The Lean proof shows the generated formalizations are jointly infeasible; it does not prove they are faithful to the task, and that boundary is stated. A manual audit found 52 of 60 certificates faithful, and giving both original and corrupted tests raised detection by 17 to 25 points.",
+          "why": "Faithfulness of the autoformalization is the limit on what a certificate means, and the paper measures it."
+        }
+      ]
     }
   ],
   "sections": [

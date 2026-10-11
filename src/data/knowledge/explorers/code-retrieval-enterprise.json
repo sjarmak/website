@@ -2006,6 +2006,25 @@
           "why": "This puts a number on the cascade argument. If the first stage recalls the correct implementation within the top ten but cannot order it against a one-edit mutant, then reranking, execution or test-based verification is not an optional refinement downstream, it is where functional discrimination has to happen. The authors state the scope plainly: every magnitude is conditional on a near-clone being in the pool, not an estimate of how often deployed corpora pose that choice."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261011578Y",
+      "title": "Chronos Enables Code Agents to Reason over Software Evolution",
+      "firstAuthor": "Yin, Xin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11578",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011578Y",
+      "branches": [
+        "repo-scale"
+      ],
+      "notes": [
+        {
+          "branch": "repo-scale",
+          "takeaway": "The retrieval unit is a distilled pull request, not a file or snippet. Semantic search finds entry cards, then weighted multi-hop expansion over repeated edits to the same files, explicit references and shared workflow context pulls in related changes whose descriptions match the query poorly. The memory is exposed to agents through search and read tools with no model fine-tuning.",
+          "why": "It adds repository history as a retrieval corpus next to the current source tree, and shows that relations between historical changes help within a fixed retrieval depth."
+        }
+      ]
     }
   ],
   "sections": [

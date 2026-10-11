@@ -3607,6 +3607,31 @@
           "why": "A judge that is wrong about one in five long trajectories is the instrument many agent evaluations and training loops rest on, and its errors are not symmetric: judges differ sharply in how readily they accept a valid trajectory and reject a failed one. Tools are not a uniform fix. GPT-5.5 does better through the Codex CLI than with the full context, while Qwen 3.6 27B does better with direct prompting than through OpenCode. The paper's example shows the failure in a frontier judge. Claude Opus 4.7 returned success with high confidence on a 195-step trajectory that published changelog content the instruction never asked for, because the visible evidence was internally consistent."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261008900L",
+      "title": "Humanize: Judgement Engineering for Agentic Coding",
+      "firstAuthor": "Liu, Sihao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.08900",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261008900L",
+      "branches": [
+        "human",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "A human approves a plan contract that fixes the goal, acceptance criteria, scope and tasks before any code is written, and an advisory quiz asks two questions about the plan's mechanism to expose plans accepted without being understood. Deterministic hooks, not a model, route work between builder and reviewer.",
+          "why": "It puts the human decision at the plan boundary, where it is cheap to judge, instead of at a long transcript or diff at the end."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "The builder agent cannot declare completion. A reviewer from another vendor does, behind 72 mechanical gates. Modeling the loop as a Markov chain, a defect survives with probability b times mR, so alternating two models with different blind spots accepts fewer defective states. In 118 public postmortems, independent review catches unsupported builder claims, but two thirds of rounds in phase-separated reports came after implementation was accepted. The authors state the evidence is observational, not a controlled comparison.",
+          "why": "It is a concrete case of separating the agent that writes from the agent that judges, with the open weakness named: knowing when to stop."
+        }
+      ]
     }
   ],
   "sections": [

@@ -3301,6 +3301,25 @@
           "why": "A fixed specification handed over in one turn removes the variable that turned out to matter most: a gap of more than 50 points in pass rate comes from who the simulated user is. The construction choices address two problems with synthetic evaluation data. Generating follow-up requirements beyond the public seed reduces direct solution leakage, where mining GitHub history lets a model with a bash tool find the newer repository version online. Decomposition lets a synthesis model produce tasks harder than it could write in one attempt. The authors estimate manual labelling of a short SWE-bench-style instance at about $100."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261011578Y",
+      "title": "Chronos Enables Code Agents to Reason over Software Evolution",
+      "firstAuthor": "Yin, Xin",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.11578",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261011578Y",
+      "branches": [
+        "reflection-experience"
+      ],
+      "notes": [
+        {
+          "branch": "reflection-experience",
+          "takeaway": "Chronos distills each merged pull request into a four-field experience card (Summary, Signals, Motivation, Solution) and links the cards in a typed graph with eleven relation types across code, developer intent and organizational context. Graph expansion from semantic entry cards raises the mean number of useful cards among ten retrieved from 1.24 to 2.87 in a 100-task human evaluation, and lifts SWE-Agent on SWE-Bench Verified from a 69.2% to 72.9% mean across six backbones.",
+          "why": "Experience memory here is built from repository history rather than the agent's own trajectories, and the relations between experiences carry retrieval signal that query similarity alone misses."
+        }
+      ]
     }
   ],
   "sections": [
