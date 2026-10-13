@@ -1,0 +1,438 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import {
+  talk,
+  path,
+  slug,
+  downloads,
+  speakerResources,
+  qrImage,
+  chartTypeLabel,
+  sectionLabel,
+  notesParagraphs,
+  chartTable,
+  longDate,
+} from "@/lib/talks/liesDamnedLiesAndEvals";
+
+const entry = await getEntry("talks", slug);
+if (!entry) throw new Error(`Missing talks collection entry: ${slug}`);
+const photo = entry.data.photo;
+const photoAlt = entry.data.photoAlt ?? `${talk.title}, ${talk.event}`;
+const eventDate = longDate(talk.event_date);
+const spokenSlides = talk.slides.filter((s) => s.speaker_note_word_count > 0).length;
+---
+
+<PageLayout
+  title={talk.title}
+  kicker={`Talk · ${talk.event} · ${eventDate}`}
+  intro={talk.description}
+  description={`${talk.title}. ${talk.speaker}, ${talk.event}, ${eventDate}. All ${talk.slide_count} slides, chart data, prepared speaker notes, sources and downloads.`}
+>
+  <div class="talk-page stack stack-l">
+    <section class="talk-meta" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="visually-hidden">About this talk</h2>
+      <dl class="talk-meta__grid">
+        <div>
+          <dt>Speaker</dt>
+          <dd>{talk.speaker}, {talk.speaker_role}</dd>
+        </div>
+        <div>
+          <dt>Event</dt>
+          <dd>{talk.event}, {eventDate}</dd>
+        </div>
+        <div>
+          <dt>Format</dt>
+          <dd>{talk.slide_count} slides · {talk.rehearsal_target_minutes}-minute rehearsal target</dd>
+        </div>
+        <div>
+          <dt>Notes</dt>
+          <dd>
+            {talk.notes_label}: {talk.prepared_script_words.toLocaleString("en-US")} words across {spokenSlides} spoken
+            slides. A prepared script, not a transcript of the delivered talk.
+          </dd>
+        </div>
+      </dl>
+      <p class="cluster talk-meta__quick" style="--cluster-gap: var(--space-m)">
+        <a href="#downloads">Downloads</a>
+        <a href="#resources">Procedures and references</a>
+        <a href={`${path}llms.txt`}>llms.txt</a>
+        <a href={`${path}content.json`}>content.json</a>
+      </p>
+    </section>
+
+    {
+      photo && (
+        <figure class="talk-photo">
+          <Image src={photo} alt={photoAlt} widths={[640, 960, 1400]} sizes="(max-width: 50rem) 100vw, 50rem" loading="eager" />
+          <figcaption class="secondary">{photoAlt}</figcaption>
+        </figure>
+      )
+    }
+
+    <nav class="toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">Slides</h2>
+      <ol class="toc__list">
+        {
+          talk.slides.map((s) => (
+            <li>
+              <a href={`#${s.anchor}`}>{s.title}</a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <p class="secondary measure">
+      Each section below carries the full text of one slide as shown at the end of its build, the chart or diagram it
+      carries with the underlying numbers where there are any, the prepared speaker notes, the scope and caveats that
+      bound each claim, and the sources cited on that slide.
+    </p>
+
+    {
+      talk.slides.map((s) => {
+        const table = chartTable(s);
+        const notes = notesParagraphs(s);
+        return (
+          <section class="slide" id={s.anchor} aria-labelledby={`${s.anchor}-title`}>
+            <p class="kicker slide__kicker">
+              Slide {s.number} of {talk.slide_count} · {sectionLabel(s)} · {s.timing}
+            </p>
+            <h2 id={`${s.anchor}-title`} class="slide__title">
+              {s.title}
+            </h2>
+
+            <h3>Slide text</h3>
+            <div class="slide__text">{s.body_text}</div>
+            {s.visible_footer_citations.length > 0 && (
+              <p class="slide__footer muted">
+                Cited on the slide:{" "}
+                {s.visible_footer_citations.map((c, i) => (
+                  <>
+                    {i > 0 && " · "}
+                    <a href={c.url} rel="noopener">
+                      {c.label}
+                    </a>
+                  </>
+                ))}
+              </p>
+            )}
+
+            <h3>Chart or diagram</h3>
+            <p class="slide__chart-type">
+              <span class="tag">{chartTypeLabel(s.chart.type)}</span>
+            </p>
+            {s.chart.alt_text.map((alt) => (
+              <p class="measure">{alt}</p>
+            ))}
+            {table && (
+              <table class="slide__table">
+                <caption>{table.caption}</caption>
+                <thead>
+                  <tr>
+                    {table.head.map((h) => (
+                      <th scope="col">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {table.rows.map((row) => (
+                    <tr>
+                      {row.map((cell, i) => (i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {s.number === 14 && (
+              <figure class="slide__qr">
+                <img src={qrImage} alt={`QR code linking to ${talk.current_qr_target}`} width="164" height="164" loading="lazy" />
+                <figcaption>
+                  Scans to <a href={talk.current_qr_target} rel="noopener">{talk.current_qr_target.replace("https://", "")}</a>
+                </figcaption>
+              </figure>
+            )}
+            <p class="secondary measure slide__brief">
+              <span class="slide__label">Figure brief.</span> {s.chart.description}
+            </p>
+
+            <h3>{talk.notes_label}</h3>
+            {notes.length > 0 ? (
+              <div class="slide__notes measure">
+                {notes.map((p) => (
+                  <p>{p}</p>
+                ))}
+              </div>
+            ) : (
+              <p class="secondary measure">No separate spoken section. {s.delivery_cue}</p>
+            )}
+
+            <h3>Scope and caveats</h3>
+            <p class="secondary measure slide__scope">{s.scope_and_reference_notes}</p>
+
+            {s.sources.length > 0 && (
+              <>
+                <h3>Sources</h3>
+                <ul class="slide__sources">
+                  {s.sources.map((src) => (
+                    <li>
+                      <a href={src.url} rel="noopener">
+                        {src.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
+        );
+      })
+    }
+
+    <section id="resources" class="resources" aria-labelledby="resources-heading">
+      <h2 id="resources-heading">Procedures and references</h2>
+      <p class="secondary measure">
+        The public procedures the talk points at, and the monograph the evidence comes from. They are planning aids and
+        practical procedures with documented prerequisites. Using them does not by itself establish reliability.
+      </p>
+      <ul class="resources__list">
+        {
+          talk.resources.map((r) => (
+            <li>
+              <a href={r.url} rel="noopener">
+                {r.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id="downloads" class="downloads" aria-labelledby="downloads-heading">
+      <h2 id="downloads-heading">Downloads</h2>
+      <ul class="downloads__list">
+        {
+          downloads.map((d) => (
+            <li>
+              <a href={d.href} type={d.type} download={d.href.endsWith(".json") ? undefined : ""}>
+                {d.label}
+              </a>
+              <span class="secondary"> {d.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="secondary measure">
+        The PDF and PPTX are the paired static edition of the deck. They carry the same talk, numbers, source footers and
+        speaker notes as the animated presentation, but are not a frame-for-frame export of it.
+      </p>
+      <h3>Speaker resources</h3>
+      <ul class="downloads__list">
+        {
+          speakerResources.map((d) => (
+            <li>
+              <a href={d.href} type={d.type} download="">
+                {d.label}
+              </a>
+              <span class="secondary"> {d.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <h3>For agents and scripts</h3>
+      <ul class="downloads__list">
+        <li>
+          <a href={`${path}llms.txt`}>llms.txt</a>
+          <span class="secondary"> Plain-text version of this page: outline, every slide, chart data, notes, sources.</span>
+        </li>
+        <li>
+          <a href={`${path}content.json`}>content.json</a>
+          <span class="secondary"> The same content as structured JSON with stable slide anchors.</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  .talk-page {
+    padding-block-end: var(--space-3xl);
+  }
+  .talk-meta {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .talk-meta__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-m) var(--space-l);
+    margin: 0;
+  }
+  .talk-meta__grid dt {
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .talk-meta__grid dd {
+    margin: var(--space-3xs) 0 0;
+  }
+  .talk-photo {
+    margin: 0;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .talk-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-l);
+    border: var(--border-hairline);
+    display: block;
+  }
+  .talk-photo figcaption {
+    font-size: var(--step--1);
+  }
+  .toc h2 {
+    font-size: var(--step-1);
+    margin-block-end: var(--space-s);
+  }
+  .toc__list {
+    columns: 2;
+    column-gap: var(--space-l);
+    padding-inline-start: 1.5em;
+    margin: 0;
+  }
+  .toc__list li {
+    break-inside: avoid;
+    padding-block: var(--space-3xs);
+  }
+  @media (max-width: 40rem) {
+    .toc__list {
+      columns: 1;
+    }
+  }
+  .slide {
+    padding-block-start: var(--space-xl);
+    border-top: var(--border-hairline);
+    display: grid;
+    gap: var(--space-s);
+    scroll-margin-top: var(--space-l);
+  }
+  .slide__kicker {
+    margin: 0;
+  }
+  .slide__title {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-xs);
+  }
+  .slide h3 {
+    font-size: var(--step-0);
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+  }
+  .slide__text {
+    white-space: pre-line;
+    padding: var(--space-m);
+    border: var(--border-hairline);
+    border-radius: var(--radius-l);
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    line-height: var(--leading-snug);
+    max-width: 48rem;
+  }
+  .slide__footer {
+    font-size: var(--step--1);
+  }
+  .slide__chart-type {
+    margin: 0;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.1em 0.6em;
+    border-radius: 999px;
+    background: var(--color-tag-bg);
+    font-size: var(--step--1);
+    color: var(--color-text-secondary);
+  }
+  .slide__table {
+    border-collapse: collapse;
+    max-width: 40rem;
+    width: 100%;
+    font-size: var(--step--1);
+  }
+  .slide__table caption {
+    text-align: left;
+    caption-side: bottom;
+    padding-block-start: var(--space-2xs);
+    color: var(--color-text-muted);
+  }
+  .slide__table th,
+  .slide__table td {
+    text-align: left;
+    padding: var(--space-2xs) var(--space-xs);
+    border-bottom: var(--border-hairline);
+    vertical-align: top;
+  }
+  .slide__table thead th {
+    border-bottom: 2px solid var(--color-border);
+  }
+  .slide__table td:last-child,
+  .slide__table th:last-child:not([scope="row"]) {
+    text-align: right;
+  }
+  .slide__qr {
+    margin: 0;
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: start;
+  }
+  .slide__qr img {
+    width: 164px;
+    height: 164px;
+    border: var(--border-hairline);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .slide__brief,
+  .slide__scope {
+    font-size: var(--step--1);
+  }
+  .slide__label {
+    color: var(--color-text-muted);
+  }
+  .slide__notes > p + p {
+    margin-block-start: var(--space-s);
+  }
+  .slide__sources,
+  .resources__list,
+  .downloads__list {
+    padding-inline-start: 1.25em;
+    margin: 0;
+  }
+  .slide__sources li,
+  .resources__list li,
+  .downloads__list li {
+    padding-block: var(--space-3xs);
+  }
+  .resources,
+  .downloads {
+    padding-block-start: var(--space-xl);
+    border-top: var(--border-hairline);
+    display: grid;
+    gap: var(--space-s);
+  }
+  .downloads h3 {
+    font-size: var(--step-0);
+    margin-block-start: var(--space-m);
+    color: var(--color-text-secondary);
+  }
+  @media print {
+    .slide {
+      break-inside: avoid;
+    }
+    .talk-meta__quick {
+      display: none;
+    }
+  }
+</style>

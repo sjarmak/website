@@ -1,0 +1,786 @@
+{
+  "schema_version": "1.0",
+  "prepared_on": "2026-10-12",
+  "updated_on": "2026-10-13",
+  "title": "Lies, Damned Lies, and Evals: How to trust your agents when the stakes are high",
+  "speaker": "Stephanie Jarmak",
+  "speaker_role": "AI Engineer at Omni",
+  "event": "AIE NYC",
+  "event_date": "2026-10-13",
+  "publication_state": "Prepared handoff; no talk webpage published by this package",
+  "proposed_route": "/talks/lies-damned-lies-and-evals",
+  "route_status": "Proposal only; inspect existing repository conventions and seek publication approval",
+  "notes_label": "Prepared speaker notes",
+  "notes_are_delivered_transcript": false,
+  "slide_count": 14,
+  "prepared_script_words": 2091,
+  "rehearsal_target_minutes": 17,
+  "hard_cutoff_minutes": 18,
+  "description": "A talk about comparing agent systems, tracing the causes of changes, and checking whether an evaluation measures what an operating decision needs.",
+  "content_authority": "Current supplied stage HTML determines visible wording; the unchanged canonical script determines prepared speaker notes. Do not use older slide_copy or native-deck labels to overwrite the stage wording.",
+  "resources": [
+    {
+      "label": "Coding Agent Workflows",
+      "url": "https://github.com/sjarmak/coding-agent-workflows"
+    },
+    {
+      "label": "Evaluation design · agent-eval-design",
+      "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-eval-design/SKILL.md"
+    },
+    {
+      "label": "Harness traceability · agent-harness-traceability",
+      "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-harness-traceability/SKILL.md"
+    },
+    {
+      "label": "Reliability procedures · reliability-pass",
+      "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/reliability-pass/SKILL.md"
+    },
+    {
+      "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · online book",
+      "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents"
+    },
+    {
+      "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · arXiv:2608.13867",
+      "url": "https://arxiv.org/abs/2608.13867"
+    }
+  ],
+  "current_qr_target": "https://github.com/sjarmak/coding-agent-workflows",
+  "slides": [
+    {
+      "number": 1,
+      "anchor": "slide-1",
+      "title": "Lies, Damned Lies, and Evals",
+      "kind": "bookend",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "AIE NYC · OCTOBER 13, 2026 AIE NYC\nLies, Damned Lies, and Evals\nHow to trust your agents when the stakes are high\nStephanie Jarmak AI Engineer at Omni\nAIE NYC · OCTOBER 13, 2026 01 / 14",
+      "body_text": "Lies, Damned Lies, and Evals\nHow to trust your agents when the stakes are high\nStephanie Jarmak AI Engineer at Omni",
+      "stage_content_html": "<div class=\"title-rule\"></div><h1>Lies, Damned Lies, and Evals</h1><p class=\"talk-subtitle\">How to trust your agents when the stakes are high</p><div class=\"speaker-credit\"><strong>Stephanie Jarmak</strong><span>AI Engineer at Omni</span></div>",
+      "chart": {
+        "type": "title",
+        "description": "Uncluttered cream/orange opening. Large official talk title and subtitle; speaker, role and event/date below. No new diagram or substantive claim.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "",
+      "speaker_note_word_count": 0,
+      "timing": "Before 0:00 · title hold",
+      "delivery_cue": "Hold the title during the introduction. At 0:00, start the clock and ask the opening choice question from the first paragraph of slide 2’s script while the title remains visible. Pause briefly, then advance to slide 2 at “That’s from my own work.” This uses the existing script; add no separate spoken preface.",
+      "scope_and_reference_notes": "Official title and speaker/event metadata supplied for this talk. Hold the title for the opening choice question from slide 2’s script, then advance at “That’s from my own work.” No separate spoken introduction is added.",
+      "sources": [],
+      "visible_footer_citations": [],
+      "resource_links": []
+    },
+    {
+      "number": 2,
+      "anchor": "slide-2",
+      "title": "Lower cost. The retrieval failure remained.",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "01 / THE COMPARISON AIE NYC\nLower cost. The retrieval failure remained.\nI changed the opening instructions to address a search failure\n−28%\nObserved cost\nOn the affected task family\n+0.0048\nPrimary evaluation score Δ · t = 0.27\n+3.9%\nElapsed time\nSearch missed\nrelevant evidence → Agent trusted\nthe empty result\nDoes quality meet the bar?\nWhat change would repair the failure?\nThe retrieval failure remained. Little evidence of score improvement does not establish equivalent quality.\nJarmak · Engineering Reliable Coding Agents, ch. 18 02 / 14",
+      "body_text": "I changed the opening instructions to address a search failure\n−28%\nObserved cost\nOn the affected task family\n+0.0048\nPrimary evaluation score Δ · t = 0.27\n+3.9%\nElapsed time\nSearch missed\nrelevant evidence → Agent trusted\nthe empty result\nDoes quality meet the bar?\nWhat change would repair the failure?\nThe retrieval failure remained. Little evidence of score improvement does not establish equivalent quality.",
+      "stage_content_html": "<p class=\"subline\">I changed the opening instructions to address a search failure</p><div class=\"outcomes opener-outcomes\"><div><strong>−28<span>%</span></strong><p>Observed cost</p><small>On the affected task family</small></div><div><strong class=\"smaller\">+0.0048</strong><p>Primary evaluation score Δ · t = 0.27</p></div><div><strong>+3.9<span>%</span></strong><p>Elapsed time</p></div></div><div class=\"handoff opener-handoff\"><span>Search missed<br>relevant evidence</span><b>→</b><span class=\"fault\">Agent trusted<br>the empty result</span></div><p class=\"takeaway\">Does quality meet the bar?<br><span>What change would repair the failure?</span></p><p class=\"micro\">The retrieval failure remained. Little evidence of score improvement does not establish equivalent quality.</p>",
+      "chart": {
+        "type": "mixed",
+        "description": "Lead with the author’s actual preamble experiment. One dominant observed cost reduction (−28%), with primary reward Δ +0.0048, t = 0.27 and elapsed time +3.9% kept as separate outcomes. An editable schematic highlights that a false-negative retrieval result was still accepted as authoritative. Label reported author experiment; the schematic reconstructs the mechanism rather than a literal trace. Do not plot incomparable units on one axis or imply unchanged quality. Keep the affected-task-family scope visible near the −28% result.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Suppose you’re choosing between the current agent and a version that costs twenty-eight percent less. Would you switch? What else would you need to know?\n\nThat’s from my own work. I changed a coding agent’s opening instructions to fix a search failure. Cost fell on the affected task family. But the primary evaluation score showed no clear improvement, and it took about four percent longer. The search still missed relevant evidence; the agent trusted the empty result.\n\nMy two questions: Is the lower cost worth keeping, if quality meets the requirement? And how would we find out what actually fixes the failure?",
+      "speaker_note_word_count": 102,
+      "timing": "0:00–1:00",
+      "delivery_cue": "Speak this page’s first paragraph while title slide 1 remains visible. Pause for the audience’s provisional choice, then advance here at “That’s from my own work.” Reveal the unresolved quality, latency and search evidence. Keep the cost reduction scoped to the affected task family; acceptable quality has not been established.",
+      "scope_and_reference_notes": "Author-reported preamble intervention intended to address a known retrieval failure. On the affected task family, observed cost reduction 28%; primary reward difference +0.0048, t = 0.27; elapsed-time change +3.9%. The predicted wall-time reduction was 40%, but that prediction is not narrated. The result provides little evidence of a primary-reward improvement; it does not establish equivalent quality or noninferiority. The agent continued to accept a false-negative retrieval result as authoritative. No repository, task identity, sample size, baseline reward or confidence interval is invented. The cost-saving and failure-repair questions are a proposed interpretation of these observations, not a claim that the change was deployed or its quality cleared a release bar.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 18",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/agent-topology-dynamic-task-allocation"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, ch. 18",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/agent-topology-dynamic-task-allocation"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 3,
+      "anchor": "slide-3",
+      "title": "The ranking changes with the harness",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [
+        {
+          "until_step": 1,
+          "text": "Same tasks\ndifferent harness"
+        },
+        {
+          "until_step": 2,
+          "text": "Does the ranking carry across harnesses?"
+        }
+      ],
+      "visible_slide_text": "01 / THE COMPARISON AIE NYC\nThe ranking changes with the harness\n63 Terminal-Bench 4 tasks that don’t require a GPU · one scored run per task / configuration\n0%\n25%\n50%\n75%\n100%\nTASKS SOLVED\nOpenHands\nPI\n19/63 · 30.2%\n38/63 · 60.3%\n36/63 · 57.1%\n31/63 · 49.2%\nClaude Opus 5 GPT-6 Astra\nThe observed ranking reverses. Compare the configuration you will actually run.\nResults depend on the pairing; this does not establish a universal ranking or statistical significance.\nLi et al. · Finding the Right Fit Hardy et al. · Agent Evaluation Reliability 03 / 14",
+      "body_text": "63 Terminal-Bench 4 tasks that don’t require a GPU · one scored run per task / configuration\n0%\n25%\n50%\n75%\n100%\nTASKS SOLVED\nOpenHands\nPI\n19/63 · 30.2%\n38/63 · 60.3%\n36/63 · 57.1%\n31/63 · 49.2%\nClaude Opus 5 GPT-6 Astra\nThe observed ranking reverses. Compare the configuration you will actually run.\nResults depend on the pairing; this does not establish a universal ranking or statistical significance.",
+      "stage_content_html": "<p class=\"subline\">63 Terminal-Bench 4 tasks that don’t require a GPU · one scored run per task / configuration</p><div class=\"chart-shell\"><svg class=\"harness-chart\" viewBox=\"0 0 1000 430\" role=\"img\" aria-label=\"Solved tasks on common zero to 100 percent scale. OpenHands: Claude Opus 5 36 of 63, GPT-6 Astra 31 of 63. PI: Claude Opus 5 19 of 63, GPT-6 Astra 38 of 63.\"><g class=\"grid-lines\"><line x1=\"165\" y1=\"350\" x2=\"850\" y2=\"350\"></line><text x=\"130\" y=\"357\" text-anchor=\"end\">0%</text><line x1=\"165\" y1=\"275\" x2=\"850\" y2=\"275\"></line><text x=\"130\" y=\"282\" text-anchor=\"end\">25%</text><line x1=\"165\" y1=\"200\" x2=\"850\" y2=\"200\"></line><text x=\"130\" y=\"207\" text-anchor=\"end\">50%</text><line x1=\"165\" y1=\"125\" x2=\"850\" y2=\"125\"></line><text x=\"130\" y=\"132\" text-anchor=\"end\">75%</text><line x1=\"165\" y1=\"50\" x2=\"850\" y2=\"50\"></line><text x=\"130\" y=\"57\" text-anchor=\"end\">100%</text></g><text class=\"axis-title\" x=\"40\" y=\"26\">TASKS SOLVED</text><text class=\"harness-title\" x=\"250\" y=\"406\" text-anchor=\"middle\">OpenHands</text><text class=\"harness-title\" x=\"740\" y=\"406\" text-anchor=\"middle\">PI</text><rect class=\"pending-lane\" x=\"630\" y=\"50\" width=\"220\" height=\"300\" rx=\"0\"></rect><g class=\"reveal-item\" data-reveal=\"1\"><path class=\"opus-line\" d=\"M250,178.571 L740,259.524\"></path><path class=\"astra-line\" d=\"M250,202.381 L740,169.048\"></path><circle class=\"opus-dot\" cx=\"740\" cy=\"259.524\" r=\"9\"></circle><rect class=\"astra-dot\" x=\"732\" y=\"161.048\" width=\"16\" height=\"16\"></rect><text class=\"opus-text\" x=\"770\" y=\"280\">19/63 · 30.2%</text><text class=\"astra-text\" x=\"770\" y=\"153\">38/63 · 60.3%</text></g><circle class=\"opus-dot\" cx=\"250\" cy=\"178.571\" r=\"9\"></circle><rect class=\"astra-dot\" x=\"242\" y=\"194.381\" width=\"16\" height=\"16\"></rect><text class=\"opus-text\" x=\"270\" y=\"154\">36/63 · 57.1%</text><text class=\"astra-text\" x=\"270\" y=\"235\">31/63 · 49.2%</text></svg><div class=\"chart-legend\"><span><i class=\"circle\"></i>Claude Opus 5</span><span><i class=\"square\"></i>GPT-6 Astra</span></div></div><div class=\"build-caption\"><p class=\"takeaway reveal-item\" data-reveal=\"2\">The observed ranking reverses.<span> Compare the configuration you will actually run.</span></p></div><p class=\"micro\">Results depend on the pairing; this does not establish a universal ranking or statistical significance.</p>",
+      "chart": {
+        "type": "empirical",
+        "description": "Native editable grouped bars or clean 2×2 interaction chart. Display solved counts out of 63 and percentages. Preserve common zero–100% scale. OpenHands: Opus5 57.142857%, GPT6Astra49.206349%; PI: Opus530.158730%, GPT6Astra60.317460%. Highlight crossed ordering with orange, not statistical significance.",
+        "alt_text": [
+          "Solved tasks on common zero to 100 percent scale. OpenHands: Claude Opus 5 36 of 63, GPT-6 Astra 31 of 63. PI: Claude Opus 5 19 of 63, GPT-6 Astra 38 of 63."
+        ],
+        "data": {
+          "tasks": 63,
+          "OpenHands": {
+            "Claude Opus 5": 36,
+            "GPT-6 Astra": 31
+          },
+          "PI": {
+            "Claude Opus 5": 19,
+            "GPT-6 Astra": 38
+          }
+        }
+      },
+      "prepared_speaker_notes": "Say you’re choosing a model. Here are two models on the same sixty-three terminal tasks, using two agent harnesses: OpenHands and PI. A harness is the software around the model that manages context, tools, recovery and budget.\n\nWith OpenHands, Claude Opus 5 solved thirty-six and GPT-6 Astra solved thirty-one. With PI, Claude solved nineteen and GPT solved thirty-eight. That’s one scored run per task for each configuration.\n\nThe ranking flipped. The observed gap between models differed by thirty-eight percentage points across harnesses.\n\nFor a deployment decision, the pairing matters. For a claim about which model is generally better, it adds uncertainty.\n\nSo test the combinations you might actually deploy. These results describe the tested configurations. They don’t give us a ranking that carries over to every harness.",
+      "speaker_note_word_count": 127,
+      "timing": "1:00–2:05",
+      "delivery_cue": "Give each harness result room to land. Describe the observed reversal without implying a universal ranking or a randomized estimate. One scored run per task is a real limit.",
+      "scope_and_reference_notes": "Finding the Right Fit evaluated 66 configurations overall. These four Terminal-Bench 4 cells share a 63-task non-H100 subset and task IDs. One last scored run per task after infrastructure retries, not repeated trials estimating stability. Model gap: OpenHands 36/63−31/63 = +7.9365 pp; PI 19/63−38/63 = −30.1587 pp; difference in observed gaps = 38.0952 pp. This is an interaction in observed outcomes, not a randomized component ablation or established universal ranking. The mechanism discussion identifies what harnesses control; trace evidence alone does not establish which mechanism caused the crossover. Agent Evaluation Reliability uses Bayesian latent-logit variance decomposition; fixed-system versus scaffold-averaged-model estimands assign interaction variance differently. Its numerical reliability ranges refer to nine HAL benchmarks, not all 22 combined benchmarks; no range is narrated here. Reliable ranking is distinct from construct validity and absolute deployment-threshold reliability.",
+      "sources": [
+        {
+          "label": "Finding the Right Fit, §§3–4",
+          "url": "https://arxiv.org/html/2610.00917"
+        },
+        {
+          "label": "Agent Evaluation Reliability, §§4–5",
+          "url": "https://arxiv.org/html/2610.00651"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Li et al. · Finding the Right Fit",
+          "url": "https://arxiv.org/html/2610.00917"
+        },
+        {
+          "label": "Hardy et al. · Agent Evaluation Reliability",
+          "url": "https://arxiv.org/html/2610.00651"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 4,
+      "anchor": "slide-4",
+      "title": "Public benchmarks and internal evaluation",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [
+        {
+          "until_step": 1,
+          "text": "↶ A repeated comparison"
+        },
+        {
+          "until_step": 2,
+          "text": "Which decisions can each comparison support?"
+        }
+      ],
+      "visible_slide_text": "01 / THE COMPARISON AIE NYC\nPublic benchmarks and internal evaluation\nBenchmark A standardized reference for comparison\nPublic results\nMap the landscape → Shortlist systems\nInternal evaluation\nCompare with the baseline 01\n→\nDiagnose failures 02\n→\nChange the system 03\n→\nRetest 04\nRetest & show value against the baseline · Quality · reliability · human repair · total cost ↶\nInternal benchmarks exist.\nPublic benchmarks can be used internally.\nPublic and internal describe visibility, not exclusive purposes. The decision determines what evidence we need.\nJarmak · Engineering Reliable Coding Agents, chs. 2–3 04 / 14",
+      "body_text": "Benchmark A standardized reference for comparison\nPublic results\nMap the landscape → Shortlist systems\nInternal evaluation\nCompare with the baseline 01\n→\nDiagnose failures 02\n→\nChange the system 03\n→\nRetest 04\nRetest & show value against the baseline · Quality · reliability · human repair · total cost ↶\nInternal benchmarks exist.\nPublic benchmarks can be used internally.\nPublic and internal describe visibility, not exclusive purposes. The decision determines what evidence we need.",
+      "stage_content_html": "<p class=\"definition\"><span>Benchmark</span> A standardized reference for comparison</p><div class=\"benchmark-bridge\"><div class=\"public-path\"><p class=\"eyebrow\">Public results</p><div class=\"big-flow\"><span>Map the landscape</span><b>→</b><span>Shortlist systems</span></div></div><div class=\"internal-path\"><p class=\"eyebrow\">Internal evaluation</p><div class=\"eval-loop\"><div class=\"loop-node\"><strong>Compare</strong><span class=\"reveal-item\" data-reveal=\"1\">with the baseline</span><span class=\"node-guide\">01</span></div><b aria-hidden=\"true\">→</b><div class=\"loop-node\"><strong>Diagnose</strong><span class=\"reveal-item\" data-reveal=\"1\">failures</span><span class=\"node-guide\">02</span></div><b aria-hidden=\"true\">→</b><div class=\"loop-node\"><strong>Change</strong><span class=\"reveal-item\" data-reveal=\"1\">the system</span><span class=\"node-guide\">03</span></div><b aria-hidden=\"true\">→</b><div class=\"loop-node\"><strong>Retest</strong><span class=\"node-guide\">04</span></div></div><div class=\"loop-feedback\"><div class=\"loop-return reveal-item\" data-reveal=\"1\">Retest &amp; show value against the baseline &nbsp; · &nbsp; Quality · reliability · human repair · total cost &nbsp; ↶</div></div></div></div><div class=\"build-caption\"><p class=\"takeaway reveal-item\" data-reveal=\"2\">Internal benchmarks exist.<br><span>Public benchmarks can be used internally.</span></p></div><p class=\"micro\">Public and internal describe visibility, not exclusive purposes. The decision determines what evidence we need.</p>",
+      "chart": {
+        "type": "conceptual",
+        "description": "A concise conceptual bridge, not an empirical comparison. Top definition places benchmarks within evaluation. Show common uses of public results (landscape, shortlist) and internal evaluation (improvement, baseline-relative value). Explicitly connect internal benchmarks and public benchmarks used internally so public/internal is not presented as an exclusive taxonomy. Keep labels sparse; no invented metrics or data.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "A benchmark gives us a standardized reference for comparison. Evaluation is the broader work of gathering evidence for a decision.\n\nPublic benchmarks help us understand the landscape and make a shortlist. Keep the tested tasks and protocol in mind when you read the result.\n\nInternally, we’re asking: does this change improve our product or process? Compare it with what we run today, on representative work. Look at output quality, consistency across runs, and total cost. Track the time people spend checking, clarifying, intervening and fixing output, too. Show that separately so we can judge the workload. Use the failures to make a change, then test it against the baseline again.\n\nExplain the value: what got better, by how much, for whom, at what cost, and how sure are we?\n\nThese categories overlap. You can have an internal benchmark, or use a public benchmark in an internal evaluation. The public result gives us a reason to try something. Internal evidence tells us whether it helps here.",
+      "speaker_note_word_count": 165,
+      "timing": "2:05–3:20",
+      "delivery_cue": "Keep this practical: shortlist, test on your work, explain the value. Name checking, clarification, intervention and repair as people’s work, and report their time separately from total cost. Public and internal are not exclusive categories.",
+      "scope_and_reference_notes": "Conceptual definitions and proposed enterprise framing, not an empirical taxonomy. A benchmark is a standardized comparison reference with a defined workload, protocol and scoring procedure; evaluation is the broader activity of collecting evidence for an improvement or decision. Public/private describes visibility and access, not mutually exclusive purposes: organizations can maintain internal benchmarks, and public benchmarks can be included in internal evaluations. Public results support landscape and shortlist decisions within their evaluated protocol and workload. Internal representative evaluation can support product/process improvement and communicate baseline-relative value, provided its observation, sampling and uncertainty are appropriate. Total cost includes human review/repair and failed attempts, not only successful model calls. Repeated adaptation to an internal benchmark can also overfit; the fresh-confirmation control on the next slide still applies. Human effort includes checking outputs, clarifying requirements, intervening during execution and repairing results. Report its time or workload separately to show capacity demands, even when monetized labor is also included in total cost; avoid double-counting that labor.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 3",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/contamination-oracle-workload-validity"
+        },
+        {
+          "label": "Rethinking Coding Agent Benchmarks",
+          "url": "https://medium.com/@steph.jarmak/rethinking-coding-agent-benchmarks-5cde3c696e4a"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, chs. 2–3",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 5,
+      "anchor": "slide-5",
+      "title": "Design the experiment around the decision",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "01 / THE COMPARISON AIE NYC\nDesign the experiment around the decision\n01\nMore tasks\nWorkload coverage\n02\nMore repeats\n↻ ↻ ↻\nVariation between runs\n03\nMore configurations\nA×1A×2B×1B×2\nHow results depend on the pairing\nMatched starting state · Fresh confirmation cases · Account for related tasks\nReport quality, reliability, people’s time\nand total cost together.\nRepeated runs are not independent tasks. A better relative score does not establish that either system is reliable enough.\nJarmak · Engineering Reliable Coding Agents, chs. 1–2 Hardy et al. · Agent Evaluation Reliability 05 / 14",
+      "body_text": "01\nMore tasks\nWorkload coverage\n02\nMore repeats\n↻ ↻ ↻\nVariation between runs\n03\nMore configurations\nA×1A×2B×1B×2\nHow results depend on the pairing\nMatched starting state · Fresh confirmation cases · Account for related tasks\nReport quality, reliability, people’s time\nand total cost together.\nRepeated runs are not independent tasks. A better relative score does not establish that either system is reliable enough.",
+      "stage_content_html": "<div class=\"experiment-axes\"><div><span class=\"axis-num\">01</span><h3>More tasks</h3><div class=\"family-tiles\"><i></i><i></i><i></i><i></i><i></i><i></i></div><p>Workload coverage</p></div><div><span class=\"axis-num\">02</span><h3>More repeats</h3><div class=\"repeat-symbol\">↻ ↻ ↻</div><p>Variation between runs</p></div><div><span class=\"axis-num\">03</span><h3>More configurations</h3><div class=\"cross-grid\"><i>A×1</i><i>A×2</i><i>B×1</i><i>B×2</i></div><p>How results depend on the pairing</p></div></div><div class=\"protocol-line\">Matched starting state <b>·</b> Fresh confirmation cases <b>·</b> Account for related tasks</div><p class=\"takeaway\">Report quality, reliability, people’s time<br>and total cost together.</p><p class=\"micro\">Repeated runs are not independent tasks. A better relative score does not establish that either system is reliable enough.</p>",
+      "chart": {
+        "type": "schematic",
+        "description": "Three deliberately different experimental axes: task families, repeated runs, crossed configurations. Small bottom line showing total operating cost divided by independently accepted outcomes. No invented empirical frontier or ROC. If a frontier is sketched, label conceptual and omit numerical points.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "First, which uncertainty are we trying to reduce?\n\nMore tasks cover more work. Repeating a task shows how much execution varies. More model and harness combinations test whether the pairing changes the result.\n\nGive both configurations the same task and runnable starting state. Keep the repository snapshot, tools, budgets and evaluator version fixed.\n\nBefore seeing results, decide what benefit would justify switching, after running costs, people’s work and migration. Express it as a measurable requirement. Otherwise, it’s easy to lower the bar to fit the result.\n\nKeep task families visible: an average can hide a regression. Tasks sharing a repository can share build tools and conventions, so one change might help many for the same reason. Group related tasks when estimating uncertainty rather than treating every win as independent evidence.\n\nReport the difference with a confidence interval, accounting for those groups and repeated runs. If the range still allows outcomes that would change your decision, the question is unresolved. For a cheaper system, check whether it rules out an unacceptable quality loss. A narrow interval can still describe the wrong workload or a biased test.\n\nKeep cases you haven’t used during development for confirmation. Tuning on the same cases can improve those scores without improving new work. Rephrase a question without changing what a correct answer requires, and see whether performance changes. That doesn’t replace unused cases.\n\nCount failed attempts, retries, latency and people’s time. Cost per accepted result is useful only if you’ve validated what counts as accepted.\n\nEven a stable ranking doesn’t tell us whether either system is reliable enough.",
+      "speaker_note_word_count": 262,
+      "timing": "3:20–5:20",
+      "delivery_cue": "Use tasks, repeats and configurations as three different sources of uncertainty. Explain the predeclared decision requirement, then the confidence interval and its limits. Keep shared task groups, unused confirmation cases and acceptable-quality evidence distinct. This slide has a two-minute rehearsal budget.",
+      "scope_and_reference_notes": "Methodological synthesis, not a measured experiment or a universally sufficient protocol. Repeats must not be treated as independent task draws. Paired task labels are insufficient if one arm starts from transformed code. Cluster-aware uncertainty is needed when tasks share repositories/families; report the estimand and resampling unit. Threshold reliability can differ from relative-rank reliability. Author benchmark gates separate infrastructure-invalid measurements from capability evaluation; maintain a parallel operational denominator including user-experienced failures rather than deleting outages from reliability. Cost frontier should use comparable price/cache settings and include failures, retry policy, adjudication, queue latency and human effort where measurable. Primary paper cost/task values are intentionally not repurposed as production cost per accepted outcome. A non-significant quality difference does not establish equivalence or noninferiority. Adaptive benchmark selection is supported by the book’s exposure/iteration-holdout discussion and by REUSE. REUSE formalizes within-round selection, repeated tests and adaptive dependence. Its guarantee assumes an initially independent i.i.d. evaluation set and only promotion-decision feedback to the proposer; it does not cover arbitrary access to per-item traces or score feedback. Fresh confirmation and meaning-preserving challenge variants are proposed evaluation controls, not a claim that REUSE validates every deployment protocol. Diogo Almeida’s essay is critical commentary on public-score selection, not an experiment; its empirical allegations are not repeated here. For the confidence interval, prespecify the estimand, confidence level, interval method and practically relevant quality margin. Preserve baseline/candidate pairing and account for repeats and related task or repository groups using appropriate independent sampling units or a justified model. For a cost-saving choice, compare the appropriate quality-difference bound with the acceptable-loss margin; a nonsignificant difference is insufficient. An interval crossing the decision boundary leaves the specified evidential question unresolved. Interval precision does not remove workload mismatch, adaptive-selection bias, evaluator error or model misspecification.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 1",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/variance-power-paired-comparisons"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        },
+        {
+          "label": "Agent Evaluation Reliability",
+          "url": "https://arxiv.org/html/2610.00651"
+        },
+        {
+          "label": "Benchmark engineering diary",
+          "url": "https://medium.com/@steph.jarmak/i-couldnt-find-a-good-enough-benchmark-for-large-scale-software-development-so-i-built-one-d2cc5946e963"
+        },
+        {
+          "label": "Diogo Almeida, Lies, Damned Lies, and Benchmarks (11 September 2026)",
+          "url": "https://www.completeskeptic.com/p/lies-damned-lies-and-benchmarks"
+        },
+        {
+          "label": "Sun et al., Which Self-Improvements Should We Trust? Reliable Self-Improvement When Agents Reuse Their Benchmarks, §2.1 (arXiv:2609.33180v2)",
+          "url": "https://arxiv.org/html/2609.33180v2"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, chs. 1–2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/variance-power-paired-comparisons"
+        },
+        {
+          "label": "Hardy et al. · Agent Evaluation Reliability",
+          "url": "https://arxiv.org/html/2610.00651"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 6,
+      "anchor": "slide-6",
+      "title": "Trace where evidence becomes a conclusion",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "02 / LOCATING THE CAUSE AIE NYC\nTrace where evidence becomes a conclusion\nThe next tests I would run on the opening retrieval failure\nAvailable → Called → Returned\nEmpty response\n→ Interpreted\nConclusion: nothing relevant exists\nRecord where and how you searched, plus gaps and incomplete results.\nHold the evidence fixed → Change how its status reaches the component using it\nHold the component using the evidence fixed → Change the evidence it receives\nTest search limits and evidence separately.\nCheck task outcomes.\nA trace tells us where to investigate. These proposed tests have not yet demonstrated a repair.\nJarmak · Engineering Reliable Coding Agents, chs. 2 & 18 06 / 14",
+      "body_text": "The next tests I would run on the opening retrieval failure\nAvailable → Called → Returned\nEmpty response\n→ Interpreted\nConclusion: nothing relevant exists\nRecord where and how you searched, plus gaps and incomplete results.\nHold the evidence fixed → Change how its status reaches the component using it\nHold the component using the evidence fixed → Change the evidence it receives\nTest search limits and evidence separately.\nCheck task outcomes.\nA trace tells us where to investigate. These proposed tests have not yet demonstrated a repair.",
+      "stage_content_html": "<p class=\"subline\">The next tests I would run on the opening retrieval failure</p><div class=\"diagnostic-path\"><span>Available</span><b>→</b><span>Called</span><b>→</b><span class=\"boundary\">Returned<small>Empty response</small></span><b>→</b><span class=\"boundary\">Interpreted<small>Conclusion: nothing relevant exists</small></span></div><div class=\"status-fields\"><span>Record where and how you searched,</span> <span>plus gaps</span> <span>and incomplete results.</span></div><div class=\"diagnostic-tests\"><div><span>Hold the evidence fixed</span><b>→</b><strong>Change how its status reaches the component using it</strong></div><div><span>Hold the component using the evidence fixed</span><b>→</b><strong>Change the evidence it receives</strong></div></div><p class=\"takeaway\">Test search limits and evidence separately.<br><span>Check task outcomes.</span></p><p class=\"micro\">A trace tells us where to investigate. These proposed tests have not yet demonstrated a repair.</p>",
+      "chart": {
+        "type": "diagnostic_schematic",
+        "description": "Replace the repeated three-number preamble result with an editable four-stage evidence path: available → invoked → returned → interpreted. Highlight the returned-to-interpreted boundary where an empty result can become an authoritative absence claim. Show search scope, execution status and remaining uncertainty as distinct fields. Two small controlled-intervention lanes vary status presentation or evidence while holding the other part fixed. Label proposed diagnostic tests, not executed experiments.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Let’s go back to the search failure. The search came back empty, and the agent treated that as proof that nothing relevant existed.\n\nI’d ask four questions: Could the agent search? Did it? What came back? What did it conclude?\n\nI’d also record where and how we searched, what we didn’t or couldn’t check, and whether the search stopped early or returned partial results. Even a completed search can miss evidence phrased differently.\n\nThen I’d try two separate tests. First, give the agent the same empty result, but make the search limits explicit. Does it still conclude nothing is there? Second, keep the agent and its settings the same, but supply a known relevant result. Can it use that evidence to complete the task?\n\nThose comparisons would help us tell a search problem from a problem using the result. They’re experiments I’d run. We still need the complete task outcomes to know whether a change helped.",
+      "speaker_note_word_count": 156,
+      "timing": "5:20–6:40",
+      "delivery_cue": "Return to the opening failure. Make the two tests concrete: the same empty result with explicit search limits, then a known relevant result with the agent and settings unchanged. Both are proposed experiments; check complete task outcomes.",
+      "scope_and_reference_notes": "This slide develops the mechanism from the opening preamble experiment without repeating its numerical outcomes. The observed fact is that a false-negative retrieval result continued to be treated as authoritative. Tool availability, invocation, returned evidence and subsequent use are separate observation points. Search-scope/status fields and controlled changes to the consumer’s status information or retrieved evidence are proposed diagnostic interventions, not reported completed repairs. A trace can motivate an intervention; it does not by itself establish which change will causally improve outcomes. “Adequate coverage” must be defined relative to the task and available sources, rather than claimed as an unrestricted guarantee that no relevant evidence exists.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 18",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/agent-topology-dynamic-task-allocation"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, chs. 2 & 18",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/agent-topology-dynamic-task-allocation"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 7,
+      "anchor": "slide-7",
+      "title": "Better evidence can still go unused",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "02 / LOCATING THE CAUSE AIE NYC\nBetter evidence can still go unused\nControlled simulation. Test the evidence and the agent’s use of it separately.\nAvailability → Tool call → Evidence → Interpretation → Outcome\n01\nChange the information\nInject better evidence\n02\nChange the component using the evidence\nTest the downstream path\nSupporting observation: 41 turns · 0 calls to the tool under test\nKeep non-use in the\ndeployed-system comparison.\nSimulation result; production effects remain untested. Tool use alone does not identify the tool’s causal effect.\nAlzahrani · Verify Claims, Not Scores Jarmak · Engineering Reliable Coding Agents, ch. 2 07 / 14",
+      "body_text": "Controlled simulation. Test the evidence and the agent’s use of it separately.\nAvailability → Tool call → Evidence → Interpretation → Outcome\n01\nChange the information\nInject better evidence\n02\nChange the component using the evidence\nTest the downstream path\nSupporting observation: 41 turns · 0 calls to the tool under test\nKeep non-use in the\ndeployed-system comparison.\nSimulation result; production effects remain untested. Tool use alone does not identify the tool’s causal effect.",
+      "stage_content_html": "<p class=\"subline\">Controlled simulation. Test the evidence and the agent’s use of it separately.</p><div class=\"pipeline\"><span>Availability</span><b>→</b><span>Tool call</span><b>→</b><span class=\"signal\">Evidence</span><b>→</b><span class=\"consumer\">Interpretation</span><b>→</b><span>Outcome</span></div><div class=\"substitutions\"><div><b>01</b><h3>Change the information</h3><p>Inject better evidence</p></div><div><b>02</b><h3>Change the component using the evidence</h3><p>Test the downstream path</p></div></div><p class=\"nonuse-example\">Supporting observation: 41 turns · 0 calls to the tool under test</p><p class=\"takeaway\">Keep non-use in the<br>deployed-system comparison.</p><p class=\"micro\">Simulation result; production effects remain untested. Tool use alone does not identify the tool’s causal effect.</p>",
+      "chart": {
+        "type": "schematic",
+        "description": "Simple pipeline with two separately highlighted controlled substitutions: evidence injection before consumer and consumer/generator bypass. Small companion lane showing randomized availability and observed non-use retained. Label methodological schematic; simulation evidence does not validate production-finance performance.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Now suppose we hand the agent the information it needs, and its answer still doesn’t improve. That doesn’t tell us the information was useless. The agent may not know how to use it.\n\nA controlled simulation showed this. Giving the system the true market conditions produced no clear gain. Bypassing its scenario generator, which turns those conditions into possible market outcomes, exposed value the earlier change hadn’t revealed. That finding is specific to this simulation.\n\nSo I’d test the evidence and the agent’s use of it separately.\n\nThere’s a related trap. In another evaluation, one candidate task ran for forty-one turns without calling the tool being tested. Keep that non-use in the deployment result.\n\nBut don’t compare only runs that chose to use the tool with runs that didn’t. Those runs may differ for other reasons. To test whether the information helps, use matched runs of the same task. Keep the setup fixed, and control which information the agent receives. Then compare the complete task outcomes.",
+      "speaker_note_word_count": 166,
+      "timing": "6:40–8:00",
+      "delivery_cue": "Start with useful information the agent may fail to use. Keep the simulation result bounded to its tested system. Explain why self-selected tool use is an unfair causal comparison; control what information matched runs receive instead.",
+      "scope_and_reference_notes": "Verify Claims is a simulated financial setting, explicitly not evidence about financial-market performance. Pipeline includes regime detector, generator, gate and allocator. True-regime replacement gives +0.041 ±0.153 Sharpe over 16 paired seeds; no clear gain. Full generator bypass recovers value. Do not narrate simulated returns as real business efficacy. Six-seed interaction estimate includes zero; trusted-path compromise not tested. The diagram is a methodological synthesis. A perfect-information substitution is diagnostic, not a deployable method. Availability estimand versus efficacy mechanism: conditioning on invocation is post-treatment selection, even if usage criteria were predeclared. A null result constrains the tested path, not the isolated usefulness of an upstream component under all consumers. The brief 41-turn supporting example comes from chapter 2: a candidate enterprise-benchmark task passed static checks and ran without invoking the evaluated tool. Its identity, final task score and reason for non-use are not disclosed. Non-use belongs in the tool-availability deployment comparison; selecting only tool-using runs does not establish a causal effect of the information.",
+      "sources": [
+        {
+          "label": "Verify Claims, Not Scores, §§3–6",
+          "url": "https://arxiv.org/html/2610.01348v1"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Alzahrani · Verify Claims, Not Scores",
+          "url": "https://arxiv.org/html/2610.01348v1"
+        },
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, ch. 2",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/baselines-ablations-cost-accuracy"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 8,
+      "anchor": "slide-8",
+      "title": "Audit the scoring rule and the answer key",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [
+        {
+          "until_step": 1,
+          "text": "?"
+        },
+        {
+          "until_step": 1,
+          "text": "?"
+        },
+        {
+          "until_step": 1,
+          "text": "?"
+        },
+        {
+          "until_step": 1,
+          "text": "Returned files and the reference set"
+        },
+        {
+          "until_step": 2,
+          "text": "?"
+        },
+        {
+          "until_step": 2,
+          "text": "?"
+        },
+        {
+          "until_step": 2,
+          "text": "?"
+        },
+        {
+          "until_step": 3,
+          "text": "Known outputs → expected scores"
+        }
+      ],
+      "visible_slide_text": "03 / TESTING THE INSTRUMENT AIE NYC\nAudit the scoring rule and the answer key\nOne CodeProbe trial · one declared reference set\n295 files returned 6 reference files · all 6 found\nSix reference files · One square = one returned file; placement is schematic.\nRecall\n1.0\nPrecision\n0.020339\nAbout 2%\nScore under the declared rule\n0.025295\nF-beta · beta = 0.5\nProposed evaluator challenges\nKnown-good Empty Return-everything Valid alternatives missing from the key\nChallenge the scoring rule and the reference set.\nOne output, measured against one reference set. The score was precision-sensitive; intent and prevalence are not established.\nJarmak · CodeProbe trial e5d7a4e7 / commit 2495927 08 / 14",
+      "body_text": "One CodeProbe trial · one declared reference set\n295 files returned 6 reference files · all 6 found\nSix reference files · One square = one returned file; placement is schematic.\nRecall\n1.0\nPrecision\n0.020339\nAbout 2%\nScore under the declared rule\n0.025295\nF-beta · beta = 0.5\nProposed evaluator challenges\nKnown-good Empty Return-everything Valid alternatives missing from the key\nChallenge the scoring rule and the reference set.\nOne output, measured against one reference set. The score was precision-sensitive; intent and prevalence are not established.",
+      "stage_content_html": "<p class=\"subline\">One CodeProbe trial · one declared reference set</p><div class=\"codeprobe-set\"><div class=\"set-headline\"><span><span class=\"value-slot\"><strong class=\"reveal-item\" data-reveal=\"1\">295</strong></span> files returned</span><span><span class=\"value-slot\"><strong class=\"reveal-item\" data-reveal=\"1\">6</strong></span> reference files · <span class=\"value-slot\"><strong class=\"reveal-item\" data-reveal=\"1\">all 6</strong></span> found</span></div><div class=\"file-grid\" role=\"img\" aria-label=\"295 returned files, including all six files in the declared reference set. Each square represents one returned file; arrangement is schematic.\"><i class=\"reference-file\"></i><i class=\"reference-file\"></i><i class=\"reference-file\"></i><i class=\"reference-file\"></i><i class=\"reference-file\"></i><i class=\"reference-file\"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class=\"set-caption-slot\"><p class=\"set-caption reveal-item\" data-reveal=\"1\"><i></i> Six reference files &nbsp; · &nbsp; One square = one returned file; placement is schematic.</p></div></div><div class=\"codeprobe-metrics\"><div><span>Recall</span><div class=\"metric-value-slot\"><strong class=\"reveal-item\" data-reveal=\"2\">1.0</strong></div></div><div><span>Precision</span><div class=\"metric-value-slot\"><strong class=\"reveal-item\" data-reveal=\"2\">0.020339</strong></div><small class=\"reveal-item\" data-reveal=\"2\">About 2%</small></div><div class=\"declared-reward\"><span>Score under the declared rule</span><div class=\"metric-value-slot\"><strong class=\"reveal-item\" data-reveal=\"2\">0.025295</strong></div><small class=\"reveal-item\" data-reveal=\"2\">F-beta · beta = 0.5</small></div></div><div class=\"metric-challenges\"><p class=\"eyebrow\">Proposed evaluator challenges</p><div class=\"challenge-slot\"><div class=\"challenge-cases reveal-item\" data-reveal=\"3\"><span>Known-good</span><span>Empty</span><span>Return-everything</span><span>Valid alternatives missing from the key</span></div></div></div><p class=\"takeaway\">Challenge the scoring rule and the reference set.</p><p class=\"micro\">One output, measured against one reference set. The score was precision-sensitive; intent and prevalence are not established.</p>",
+      "chart": {
+        "type": "empirical_three_step_build",
+        "description": "Preserve three sequential reveal groups. Group 1: one returned set of 295 files, with the 6 reference files highlighted inside it; label reference set rather than universal ground truth. Group 2: the same output produces recall 1.0 and precision 0.020339; separately show actual declared F-beta(beta=0.5) reward 0.025295. Never label the actual reward perfect. Group 3: proposed evaluator challenges (known-good, empty, return-everything, valid alternatives missing from key), leading to an auditable result record. Use native editable groups and source-bound quantitative labels. The set geometry is schematic; the counts/metrics are from one recorded trial. No inferred prevalence or intentional gaming.",
+        "alt_text": [
+          "295 returned files, including all six files in the declared reference set. Each square represents one returned file; arrangement is schematic."
+        ],
+        "data": {
+          "task_id": "e5d7a4e7",
+          "returned_files": 295,
+          "expected_files": 6,
+          "matched_expected_files": 6,
+          "recall": 1,
+          "precision": 0.020339,
+          "f1": 0.039867,
+          "declared_reward_family": "F-beta",
+          "beta": 0.5,
+          "actual_reward": 0.025295
+        }
+      },
+      "prepared_speaker_notes": "In one of my CodeProbe trials, the agent returned two hundred and ninety-five files. The expected set had six. It found all six.\n\nThat’s full recall. But only about two percent of the returned files were in the reference set: that’s precision. The actual score, which was sensitive to precision, was about zero point zero two five.\n\nSame output, same reference set. A different headline score gives a very different impression.\n\nThat’s why I want the scoring rule in the result record. Before relying on an evaluator, give it a known-good answer, an empty answer, and an answer that returns everything. Can it tell useful selection from exhaustive coverage?\n\nThen check the answer key. If it leaves out a valid alternative, the precision penalty may count good work as wrong.\n\nWe need to test both the scoring rule and the reference set before using the score to choose a system or let it do more.",
+      "speaker_note_word_count": 155,
+      "timing": "8:00–9:15",
+      "delivery_cue": "Reveal the returned-file count, then the expected set, then the measurements. Pause at the different impression of the same run. Preserve the actual reward and the answer-key caveat; no gaming-intent claim.",
+      "scope_and_reference_notes": "Firsthand recorded CodeProbe trial, task e5d7a4e7 in investigation codeprobe-x7p3, at commit 2495927394414509f707601f1b3f22b29b158f62. Baseline output returned 295 files and matched all 6 expected files: recall 1.0, precision 0.020339, F1 0.039867. The declared scoring family was F-beta with beta 0.5; actual reward was 0.025295. The actual run was not awarded recall as its reward. This is one observed over-returning trial, not evidence of intentional gaming, a prevalence estimate, or a comparative causal tool effect. The investigation contains five tasks, two configurations and one repeat; no cross-run ranking claim is used. All set-based interpretations are relative to the task’s declared reference key; key completeness and acceptable alternatives still require validation. The counterexample suite and result-record recommendation are methodological synthesis. The current scoring-model document describes task-declared families; the immutable per-trial record establishes the reward used for this observation. The book’s separate recall-only design loophole and later overlap-F1 default are not conflated with this F-beta-scored trial. UTBoost remains supporting evidence rather than the main stage case: its Seaborn missing-data example, test-log parser defects and bounded audit results illustrate oracle incompleteness. No UTBoost statistic is spoken in this revision.",
+      "sources": [
+        {
+          "label": "CodeProbe per-trial record, task e5d7a4e7, immutable commit 2495927",
+          "url": "https://github.com/sjarmak/codeprobe/blob/2495927394414509f707601f1b3f22b29b158f62/docs/investigations/codeprobe-x7p3/per_trial.json"
+        },
+        {
+          "label": "CodeProbe task-declared scoring model",
+          "url": "https://github.com/sjarmak/codeprobe/blob/main/docs/scoring_model.md"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 6",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/proxy-gaming-layered-signals"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · CodeProbe trial e5d7a4e7 / commit 2495927",
+          "url": "https://github.com/sjarmak/codeprobe/blob/2495927394414509f707601f1b3f22b29b158f62/docs/investigations/codeprobe-x7p3/per_trial.json"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 9,
+      "anchor": "slide-9",
+      "title": "Test whether the gate changes execution",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "03 / TESTING THE INSTRUMENT AIE NYC\nTest whether the gate changes execution\nMy approval-queue audit found paths that allowed execution when required components were missing\nRequest → Approval / check\nRequired components\n→ Execution → Observed effect\nInspect independently\nProposed isolated probes\nReject Cancel Remove a required component Change the approved proposal\nRecognizing a problem and preventing an action\nare different outcomes. Measure both.\nAuthorized completion Safe stop People’s repair work\nMeasure safe completion, safe stopping and people’s repair work separately.\nDeliberately break a control next. Also measure false blocks on legitimate work; this audit did not establish unauthorized production writes.\nJarmak · Engineering Reliable Coding Agents, chs. 4 & 17 09 / 14",
+      "body_text": "My approval-queue audit found paths that allowed execution when required components were missing\nRequest → Approval / check\nRequired components\n→ Execution → Observed effect\nInspect independently\nProposed isolated probes\nReject Cancel Remove a required component Change the approved proposal\nRecognizing a problem and preventing an action\nare different outcomes. Measure both.\nAuthorized completion Safe stop People’s repair work\nMeasure safe completion, safe stopping and people’s repair work separately.\nDeliberately break a control next. Also measure false blocks on legitimate work; this audit did not establish unauthorized production writes.",
+      "stage_content_html": "<p class=\"subline\">My approval-queue audit found paths that allowed execution when required components were missing</p><div class=\"gate-path\"><span>Request</span><b>→</b><span class=\"gate-boundary\">Approval / check<small>Required components</small></span><b>→</b><span>Execution</span><b>→</b><span>Observed effect<small>Inspect independently</small></span></div><div class=\"gate-probes\"><p class=\"eyebrow\">Proposed isolated probes</p><div><span>Reject</span><span>Cancel</span><span>Remove a required component</span><span>Change the approved proposal</span></div></div><p class=\"gate-principle\">Recognizing a problem and preventing an action<br>are different outcomes. Measure both.</p><div class=\"gate-outcomes\"><span>Authorized completion</span><span>Safe stop</span><span>People’s repair work</span></div><p class=\"takeaway\">Measure safe completion, safe stopping and people’s repair work separately.</p><p class=\"micro\">Deliberately break a control next. Also measure false blocks on legitimate work; this audit did not establish unauthorized production writes.</p>",
+      "chart": {
+        "type": "reported_audit_plus_proposed_tests",
+        "description": "Replace the SWE-CC percentage comparison with one editable decision path: request → approval/check → execution → independently observed effect. Mark the dependency-required control boundary. Use small proposed fault-injection callouts for rejected/cancelled request, missing component, and proposal changed after approval. End in three clearly distinct observed outcomes: authorized completion, safe stop, human repair. The firsthand evidence is an audit that found fail-open paths; the displayed fault-injection protocol is proposed, not a reported population experiment. Keep action correctness and permitted behavior visually distinct. No claim of observed unauthorized production writes.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Eval platforms can help decide whether to release a system. In this example, I’m checking what the running agent can actually execute after a request is rejected or changed.\n\nWhen I audited my approval queue, I found paths that allowed execution when required components were missing, and commands built without the intended checks. A separate check required reproducing a bug before changing code. When a required program was missing, it stopped enforcing that rule.\n\nTest in isolation: reject a request, cancel it, remove a required component, change the proposal after approval. Use the agent’s ordinary identity and check what actually executes. Then follow the fallback. Does it finish the authorized task, stop safely, or leave someone with repair work?\n\nA gate is a check that permits or blocks execution. Record whether the evaluator recognized the problem and whether the gate prevented the action. We need both. Include legitimate work too, so we see false blocks.\n\nKeep the exact tested version and evidence that the checks ran. If you change the evaluator, rerun the stored baseline and candidate under that same version on matched cases. Otherwise, you may be calling a change in the evaluator an improvement in the agent.",
+      "speaker_note_word_count": 199,
+      "timing": "9:15–10:55",
+      "delivery_cue": "Separate the audit findings from the tests you would run. Follow the action all the way to execution and fallback. Include legitimate work and false blocks.",
+      "scope_and_reference_notes": "The approval-queue findings and separate reproduction-before-mutation hook are firsthand author audit/reproduction examples in chapter 17. They establish fail-open paths with missing required components and unvalidated command construction; they do not establish a production unauthorized-write incident, a frequency or a quantified reduction from later fixes. The isolated rejection/cancellation/missing-dependency/changed-proposal tests are proposed methods, not reported completed experiments. Observe actual destination effects under the ordinary agent identity, including possible alternate execution paths. Record authorized completion, safe stop, unresolved failure and human repair separately, and test valid work to detect false blocks. Code QA remains part of end-to-end evaluation rather than a competing category. Rerunning a stored baseline and current candidate with the same evaluator on matched executable states is a comparison control from chapter 4, not a demonstrated efficacy percentage. SWE-CC moves to supporting notes: its 150-check audit reported 94% rater agreement versus 87.2% weighted checker acceptance (95% CI 82.1–92.3), different quantities; 50.3% of violations among functionally resolved runs occurred in trajectories. These remain corroboration for process QA and evaluator validity, not firsthand author findings. Repository policy compliance is not legal compliance.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 17: gate audits and failure experiments",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/autonomy-provenance-gates-accountability"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 4: repeated trials as release tests",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/execution-correction-gates-release-tests"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, companion",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/companion"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, chs. 4 & 17",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/autonomy-provenance-gates-accountability"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 10,
+      "anchor": "slide-10",
+      "title": "Choose what runs automatically, then measure it",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "03 / TESTING THE INSTRUMENT AIE NYC\nChoose what runs automatically, then measure it\n01\nMissed consequential\ndefects\n02\nFalse alarms\nand review load\n03\nShare handled\nautomatically\n1%\nfalse alarms\n× 1,000,000\nlegitimate actions\n= 10,000\nreviews\nRetrieve existing rules. Clarify unresolved requirements.\nEncode where possible; escalate uncertain authority.\nWorked example, not measured traffic. Samples enriched for suspected errors do not estimate production error rates.\nLiu et al. · Auditing and Repairing LLM-as-Judge Failures Sehanobish et al. · From Benchmarks to Production (FLINT) 10 / 14",
+      "body_text": "01\nMissed consequential\ndefects\n02\nFalse alarms\nand review load\n03\nShare handled\nautomatically\n1%\nfalse alarms\n× 1,000,000\nlegitimate actions\n= 10,000\nreviews\nRetrieve existing rules. Clarify unresolved requirements.\nEncode where possible; escalate uncertain authority.\nWorked example, not measured traffic. Samples enriched for suspected errors do not estimate production error rates.",
+      "stage_content_html": "<div class=\"operating-axes\"><div><b>01</b><h3>Missed consequential<br>defects</h3></div><div><b>02</b><h3>False alarms<br>and review load</h3></div><div><b>03</b><h3>Share handled<br>automatically</h3></div></div><div class=\"review-arithmetic\"><span>1% <small>false alarms</small></span><b>×</b><span>1,000,000 <small>legitimate actions</small></span><b>=</b><span class=\"answer\">10,000 <small>reviews</small></span></div><p class=\"takeaway\">Retrieve existing rules. Clarify unresolved requirements.<br><span>Encode where possible; escalate uncertain authority.</span></p><p class=\"micro\">Worked example, not measured traffic. Samples enriched for suspected errors do not estimate production error rates.</p>",
+      "chart": {
+        "type": "schematic",
+        "description": "Three operational quantities linked to threshold: defect misses, benign false alarms, automatic coverage. Include worked arithmetic 1% × 1,000,000 benign actions = 10,000 reviews, labeled illustration. Optional small audit annotation κ0.04 enriched n234 versus κ0.42 random n200; do not draw fake ROC or compare as a longitudinal improvement.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "A model judge can agree with human reviewers on a sample and still miss important errors.\n\nTo test what it misses, include consequential defects. A random sample from mostly successful work might contain almost none. But the error rate in a sample chosen for difficult cases won’t be the production error rate.\n\nIn a production text-to-SQL audit, agreement with human labels was much lower on cases drawn mainly from the judge’s flagged outputs than on a random sample. The sample changed the measurement.\n\nThe researchers also tried three model judges. When the models disagreed with each other, the case went to a person. Agreement with human labels was higher on the cases handled automatically. But fewer cases were automated, and people had more review work.\n\nFor example, at one million legitimate actions, a one-percent false-alarm rate creates ten thousand reviews.\n\nSQL can also run successfully while using the wrong metric, fiscal period or currency convention. Did the agent miss an existing rule, or is the requirement unresolved? Retrieve the rule or clarify it with its owner. If authority is uncertain, escalate. Encode resolved requirements in fixed checks where possible.\n\nWhich costly errors does the evaluator catch? Which good work does it block? Can we sustain the review load?",
+      "speaker_note_word_count": 208,
+      "timing": "10:55–12:35",
+      "delivery_cue": "Distinguish human labels used for the audit from disagreement among model judges used to send cases to people. Higher agreement applies to the smaller automatic subset. Pause after the illustrative ten thousand reviews. Keep missing rules, unresolved requirements and missing authority distinct.",
+      "scope_and_reference_notes": "Judge audit: enriched n 234, κ=.04 [−.02,.09]; uniform n 200, κ=.42 [.24,.58]. Enriched set 192 faithful/42 unfaithful, 148 false flags among faithful (77.1%), not population-wide false-positive rate. Grade hallucination from result previews: removing preview recovered 93/98 mechanism-labeled cases but shifted to underflagging, so repairing one failure mode did not calibrate whole judge. Three-strong-judge unanimity κ=.788 at 89.7% automatic coverage; full-coverage majority κ=.731. Selective coverage, not free judge improvement. Proposed protocol: separate threshold-tuning and heldout validation, define defect as positive, measure class-specific TPR/FPR with uncertainty, report coverage and weighted production estimates. The million-action arithmetic is a worked illustration, not measured traffic. FLINT triangulates domain validity: all compared methods ≥ 99% SQL execution but no academic baseline >50% semantic accuracy on 359 production-derived questions (221 financials, 138 transactions); opaque IDs and conventions can yield executable wrong answers. FLINT judge validation only 50 sampled decisions/47 human agreements, not a statistical guarantee. Do not conflate its judge with the separate judge-audit paper. The semantic/authority paragraph is operational synthesis, not an experimental claim that every business requirement can be captured in a deterministic rule. Missing domain meaning and missing authorization are distinct; both can require additional context or an accountable human decision before execution. Clarified requirements should be encoded and tested where feasible. A successful execution check alone need not test those semantics, although a properly specified deterministic check can. A missing requirement in the agent’s view is not automatically genuine business ambiguity. First distinguish retrieval failure for an existing rule from a requirement that its accountable owner has not yet resolved. Permission uncertainty is a separate escalation condition. Human reference labels evaluate the policy in the audit; they are not required to choose whether a live case goes to review. The routing trigger is disagreement among the three model judges. As an operational recommendation, independently audit a sample of the cases they all accept because shared mistakes can survive unanimity. This recommendation is not a measured result of this audit.",
+      "sources": [
+        {
+          "label": "Production text-to-SQL judge audit, §§4–6",
+          "url": "https://arxiv.org/html/2609.30290"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 5",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/calibrating-model-graders-agreement-correctness"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 16",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/verification-interfaces-risk-based-escalation"
+        },
+        {
+          "label": "FLINT, §4 and Appendices C/D",
+          "url": "https://arxiv.org/html/2610.03524v1"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Liu et al. · Auditing and Repairing LLM-as-Judge Failures",
+          "url": "https://arxiv.org/html/2609.30290"
+        },
+        {
+          "label": "Sehanobish et al. · From Benchmarks to Production (FLINT)",
+          "url": "https://arxiv.org/html/2610.03524v1"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 11,
+      "anchor": "slide-11",
+      "title": "Some evidence needs another observer",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "03 / TESTING THE INSTRUMENT AIE NYC\nSome evidence needs another observer\nSelf-written record\n→\nWhat the harness says happened\nIndependent record\n→\nWhat reached the model\nResulting state\n→\nWhat changed in the destination\nHearsay · 28 controlled aider interventions\nOwn record passed the hash check 28/28\nIndependent record comparison detected 28/28\nProposed observer tests\nMissed detections · False alarms · What the observer cannot see\nSecurity claims need tested detection coverage\nand false-alarm rates.\n28 deliberately introduced changes. Detection beyond this scope is untested; model traffic does not prove execution or destination state.\nDai et al. · Hearsay 11 / 14",
+      "body_text": "Self-written record\n→\nWhat the harness says happened\nIndependent record\n→\nWhat reached the model\nResulting state\n→\nWhat changed in the destination\nHearsay · 28 controlled aider interventions\nOwn record passed the hash check 28/28\nIndependent record comparison detected 28/28\nProposed observer tests\nMissed detections · False alarms · What the observer cannot see\nSecurity claims need tested detection coverage\nand false-alarm rates.\n28 deliberately introduced changes. Detection beyond this scope is untested; model traffic does not prove execution or destination state.",
+      "stage_content_html": "<div class=\"observer-routes\"><div><h3>Self-written record</h3><span class=\"route-arrow\" aria-hidden=\"true\">→</span><p>What the harness says happened</p></div><div><h3>Independent record</h3><span class=\"route-arrow\" aria-hidden=\"true\">→</span><p>What reached the model</p></div><div><h3>Resulting state</h3><span class=\"route-arrow\" aria-hidden=\"true\">→</span><p>What changed in the destination</p></div></div><div class=\"observer-result\"><p class=\"observer-scope\">Hearsay · 28 controlled aider interventions</p><div class=\"observer-stat-grid\"><div><span>Own record passed the hash check</span><strong>28/28</strong></div><div><span>Independent record comparison detected</span><strong>28/28</strong></div></div></div><div class=\"observer-tests\"><span>Proposed observer tests</span><p>Missed detections <b>·</b> False alarms <b>·</b> What the observer cannot see</p></div><p class=\"takeaway\">Security claims need tested detection coverage<br>and false-alarm rates.</p><p class=\"micro\">28 deliberately introduced changes. Detection beyond this scope is untested; model traffic does not prove execution or destination state.</p>",
+      "chart": {
+        "type": "schematic_with_bounded_empirical_result",
+        "description": "Editable three-lane evidence diagram: harness record, independent model-boundary observer, destination/tool-state receipt. Small bounded inset: 28 controlled aider interventions, own chain28/28 verified, independent reconciliation28/28 detected. Clearly no production-detection guarantee. Distinct arrows show observation coverage and blind spots. The final observer-test cue now names missed detections, false alarms and sensor blind spots for a specific security control. Do not depict an authenticated log as proof of execution or a quality score as a security guarantee.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "An evaluator can only judge what it can observe.\n\nIn a narrow, controlled Hearsay experiment, researchers inserted omissions and fabrications while a harness wrote its record. A hash chain checked whether entries changed afterward. It still passed all twenty-eight intervention runs. Comparing an independent record of model traffic with the harness record detected all twenty-eight.\n\nThe hash chain couldn’t tell us what the writer left out.\n\nCatching every fault we inserted tells us about those faults under those conditions. We still need to check how well they represent failures we’ll encounter in use. Seeing model traffic doesn’t prove a tool executed correctly or a database changed as intended.\n\nKeep evidence of what reached the model, what tools did, and what state exists at the destination. Tie it to the exact run and artifact.\n\nFor a security claim, I’d inject failures such as an omitted action, missing permission check or interrupted operation. Measure missed detections and false alarms.\n\nIf we can’t observe whether the control worked, mark the result unverified. Decide what evidence would resolve it and whether work can safely continue during that check. For consequential actions, missing evidence may mean stopping or limiting the agent.",
+      "speaker_note_word_count": 196,
+      "timing": "12:35–14:05",
+      "delivery_cue": "Give the two twenty-eight-run results clearly. Then distinguish what each observer can establish. The proposed injected failures extend the method, not the Hearsay findings. End with the next evidence check and a risk-based decision about continuing, limiting or stopping.",
+      "scope_and_reference_notes": "Hearsay main grid 5 harnesses × 14 tasks × 2 runs=140, one Sonnet 5 backing model. Decisive separate intervention only 28 aider runs: 14 omitted model replies, 14 fabricated test-run claims contemporaneously. Own hash chain verified 28/28; independent model-boundary log plus forward/reverse reconciliation reported 28/28. Not universal detection or a production-ready anomaly detector. Other edited-copy detector had severe false positives without clean twins (52/95 clean copies flagged); model-boundary witness does not establish physical tool execution, state truth, or resistance to operator compromise/bypass. Engineering synthesis requires distinct execution/state receipts. Author software-factory article describes completed fix 3 commits ahead of main, illustrating outcome/publication gap; no incident rate claimed. HarnessTester observed nested-list redaction bypass in saved history and upstream recursive-redaction fix; traces are also a software/security surface, not automatically safe evidence storage. Pinterest quality reporting represents validation gaps explicitly and gives definitions ownership/versioning/freshness/recertification; adoption or governance is not controlled proof of agent accuracy. Keep sensitive trace fields minimized and access-controlled. The final paragraph proposes controlled fault injection to measure an observer’s failure-detection ability and false alarms. It is not a claim that the Hearsay witness detects unavailable permission checks or interrupted operations, nor that any single receipt proves all execution or authorization properties. “Trust” is confined to a specific control, claim, test scope and observation boundary. Unknown or missing observations remain explicit; they do not count as passes. Recovery behavior and escalation/fallback suitability need separate outcome observations.",
+      "sources": [
+        {
+          "label": "Hearsay, §§4,6 and Table 2",
+          "url": "https://arxiv.org/html/2609.32495"
+        },
+        {
+          "label": "Software factories are distributed systems",
+          "url": "https://www.sjarmak.ai/writing/software-factories-are-distributed-systems/"
+        },
+        {
+          "label": "HarnessTester, §8.2",
+          "url": "https://arxiv.org/html/2610.04921v1"
+        },
+        {
+          "label": "Pinterest Metrics Board",
+          "url": "https://medium.com/pinterest-engineering/metrics-board-building-an-agent-ready-metrics-layer-2c8fefe68756"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 17",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/autonomy-provenance-gates-accountability"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Dai et al. · Hearsay",
+          "url": "https://arxiv.org/html/2609.32495"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 12,
+      "anchor": "slide-12",
+      "title": "A retrieval upgrade: the experiment I would run",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "04 / THE NEXT CHANGE AIE NYC\nA retrieval upgrade: the experiment I would run\nCompare fairly. Challenge independently. Monitor after deployment.\nMatched comparison\nTarget work · same starting states\n→ Independent challenge\nPlausible defects · valid alternatives\n→ Run alongside current work.\nTest state changes in isolation.\nBring an independent challenger\nCan an independent challenger\nfind the decisive evidence?\nCan they catch deliberately introduced\ndefects in time?\nAfter deployment\n01 Completion, repair, latency, cost\n02 Audit accepted work and failures\n03 Check traces against real outcomes\n04 Watch workload and version changes\n05 Owner, intervention, regression tests\nKeep checking whether the score predicts\nthe outcome people receive.\nSet restriction or rollback triggers before deployment. The monitoring loop and independent-review tests are proposed.\nJarmak, chs. 16–17 Google SRE: monitoring and alerting 12 / 14",
+      "body_text": "Compare fairly. Challenge independently. Monitor after deployment.\nMatched comparison\nTarget work · same starting states\n→ Independent challenge\nPlausible defects · valid alternatives\n→ Run alongside current work.\nTest state changes in isolation.\nBring an independent challenger\nCan an independent challenger\nfind the decisive evidence?\nCan they catch deliberately introduced\ndefects in time?\nAfter deployment\n01 Completion, repair, latency, cost\n02 Audit accepted work and failures\n03 Check traces against real outcomes\n04 Watch workload and version changes\n05 Owner, intervention, regression tests\nKeep checking whether the score predicts\nthe outcome people receive.\nSet restriction or rollback triggers before deployment. The monitoring loop and independent-review tests are proposed.",
+      "stage_content_html": "<p class=\"subline\">Compare fairly. Challenge independently. Monitor after deployment.</p><div class=\"review-workflow\"><span>Matched comparison<br><small>Target work · same starting states</small></span><b>→</b><span>Independent challenge<br><small>Plausible defects · valid alternatives</small></span><b>→</b><span>Run alongside current work.<br><small>Test state changes in isolation.</small></span></div><div class=\"review-record\"><div class=\"review-questions\"><p class=\"eyebrow\">Bring an independent challenger</p><h3>Can an independent challenger<br>find the decisive evidence?</h3><h3>Can they catch deliberately introduced<br>defects in time?</h3></div><div class=\"decision-record\"><p class=\"eyebrow\">After deployment</p><ol><li><b>01</b><span>Completion, repair, latency, cost</span></li><li><b>02</b><span>Audit accepted work and failures</span></li><li><b>03</b><span>Check traces against real outcomes</span></li><li><b>04</b><span>Watch workload and version changes</span></li><li><b>05</b><span>Owner, intervention, regression tests</span></li></ol></div></div><p class=\"takeaway\">Keep checking whether the score predicts<br>the outcome people receive.</p><p class=\"micro\">Set restriction or rollback triggers before deployment. The monitoring loop and independent-review tests are proposed.</p>",
+      "chart": {
+        "type": "proposed_protocol",
+        "description": "Retain the existing matched-comparison, evaluator/reviewer and run-alongside workflow geometry. Replace the five-field handoff inset with five production-monitoring rows: completion/repair/latency/cost; accepted-work and failure audits; traces versus real outcomes; workload and version changes; a named intervention owner and regression tests. Keep the independent-review questions, defining the challenger as someone who did not build the change. Preserve the score-to-real-outcome takeaway. The monitoring loop and reviewer test are proposed guidance, not reported deployment evidence.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Should we deploy a retrieval upgrade? Here’s the experiment I’d run.\n\nUse representative work, including missing, stale and contradictory evidence. Set the quality requirement, worthwhile improvement and budget. Compare current and proposed systems from matched starting states.\n\nThen repeat both configurations on a representative subset. Use that variation to choose how many tasks and repeats the larger comparison needs. Keep non-use and failed attempts in the result.\n\nTrace the path: was the source available, retrieved, sufficient, and used? Try the two tests from earlier: clarify the search limits, then separately supply evidence we know is relevant.\n\nChallenge the evaluator with plausible defects and valid alternatives. Can someone who didn’t build this find the decisive evidence and catch deliberately introduced defects in the time they have?\n\nFirst, run alongside current work without taking live actions. Check answers independently and test state changes in isolation. After deployment, track completion and repair rates, latency and cost by task type and system version. Audit a random sample of accepted work as well as investigating failures. Compare traces with what actually changed and what customers received. Watch for changes in the workload. Decide in advance what should trigger intervention and who can restrict or roll back the system. Turn confirmed failures into regression tests, and keep checking whether the evaluator’s scores predict real outcomes.",
+      "speaker_note_word_count": 219,
+      "timing": "14:05–15:50",
+      "delivery_cue": "Use the same time budget: the monitoring loop replaces the decision-record aside. Ask for a challenger who did not build the change. Separate parallel answer checks from isolated state-change tests, then move through production outcomes, accepted-work audits, workload changes, named intervention and regression tests. The loop is proposed guidance, not a measured deployment result.",
+      "scope_and_reference_notes": "Proposed method synthesized from sources; no claim the full protocol has been deployed, randomized or validated. Workload family/repository dependence requires appropriate uncertainty and sampling. Predeclare practically relevant effects and, for cost-saving deployment at maintained quality, a justified noninferiority/quality margin and sufficient evidence; a nonsignificant difference is not equality. Preserve separate valid-capability denominator and all-attempt operational denominator. Independent evidence is bounded by sensor coverage and source quality; it does not guarantee ground truth. Sourcegraph observed reward heterogeneity by repository size (−.080 below 400 kLOC, +.259 at 400 k–2 M); not a universal size threshold. Pinterest supports named ownership, validation coverage and recertification as a constructive operating model. Authority-boundary fault injection tests rejection/cancellation/timeout/missing dependencies and changed artifacts; passing injected tests estimates boundary behavior, not real incident frequency. Human review is a measured finite resource, not an automatic guarantee. The five-field decision record is described as implemented in the author’s fleet. Its attention-saving benefit is explicitly unmeasured; no comparative productivity claim is made. Testing whether a reviewer can locate decisive evidence and catch seeded defects, alongside time and repair effort, is a proposed evaluation of the verification interface. External cognitive-forcing evidence is not narrated as firsthand or universally effective. The decision record clarifies the consequential human question; it does not make missing evidence or authorization disappear. Pilot repeats should cover a representative subset under each compared configuration, rather than only failed cases. Observed pilot variation informs the allocation of tasks and repeats, but a small, stable pilot cannot establish that rare failures are absent. Predeclare the quality requirement, worthwhile effect and budget before the pilot comparison. Use pilot variation to plan task and repeat allocation, not to redefine a successful result after seeing scores. Parallel runs without live actions can check answers against observable sources, but cannot establish proposed destination-state effects. Test those effects in an isolated environment, or in a separately authorized and bounded live evaluation. Current-system destination evidence alone does not prove how the proposed system would change production state.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, chapters 1–6 and closing",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/closing"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 17",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/autonomy-provenance-gates-accountability"
+        },
+        {
+          "label": "Pinterest Metrics Board",
+          "url": "https://medium.com/pinterest-engineering/metrics-board-building-an-agent-ready-metrics-layer-2c8fefe68756"
+        },
+        {
+          "label": "Why coding agents fail in large codebases",
+          "url": "https://sourcegraph.com/blog/why-coding-agents-fail-large-codebases"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 16: decision records and review effectiveness",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/verification-interfaces-risk-based-escalation"
+        },
+        {
+          "label": "Google SRE: Monitoring Distributed Systems (monitoring principles)",
+          "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+        },
+        {
+          "label": "Google SRE Workbook: Alerting on SLOs (alerting principles)",
+          "url": "https://sre.google/workbook/alerting-on-slos/"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak, chs. 16–17",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/verification-interfaces-risk-based-escalation"
+        },
+        {
+          "label": "monitoring",
+          "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+        },
+        {
+          "label": "alerting",
+          "url": "https://sre.google/workbook/alerting-on-slos/"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 13,
+      "anchor": "slide-13",
+      "title": "Make the next autonomy decision explicit",
+      "kind": "body",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "04 / THE NEXT CHANGE AIE NYC\nMake the next autonomy decision explicit\nThe autonomy decision I would ask a team to make\nAdditional action + operating scope\nWhich human check would change?\nEvidence bar + evaluator + execution controls\nRepresentative repeats · tolerable failures · total cost and repair burden\n01\nExpand within\nthe tested boundary\n02\nRetain\nreview\n03\nStop\nand escalate\nHuman decision owner Acceptable risk, conflicting values and unresolved judgment\nAn action-specific standard to test. Procedures support the work; they do not establish reliability or supply missing evidence.\nJarmak · Engineering Reliable Coding Agents, closing 13 / 14",
+      "body_text": "The autonomy decision I would ask a team to make\nAdditional action + operating scope\nWhich human check would change?\nEvidence bar + evaluator + execution controls\nRepresentative repeats · tolerable failures · total cost and repair burden\n01\nExpand within\nthe tested boundary\n02\nRetain\nreview\n03\nStop\nand escalate\nHuman decision owner Acceptable risk, conflicting values and unresolved judgment\nAn action-specific standard to test. Procedures support the work; they do not establish reliability or supply missing evidence.",
+      "stage_content_html": "<p class=\"subline\">The autonomy decision I would ask a team to make</p><div class=\"autonomy-scope\"><p>Additional action <b>+</b> operating scope</p><span>Which human check would change?</span></div><div class=\"autonomy-evidence\"><span>Evidence bar + evaluator + execution controls</span><p>Representative repeats · tolerable failures · total cost and repair burden</p></div><div class=\"autonomy-options\"><div><b>01</b><h3>Expand within<br>the tested boundary</h3></div><div><b>02</b><h3>Retain<br>review</h3></div><div><b>03</b><h3>Stop<br>and escalate</h3></div></div><p class=\"human-owner\">Human decision owner <span>Acceptable risk, conflicting values and unresolved judgment</span></p><p class=\"micro\">An action-specific standard to test. Procedures support the work; they do not establish reliability or supply missing evidence.</p>",
+      "chart": {
+        "type": "proposed_action_decision_record",
+        "description": "A compact proposed decision record: additional action and operating scope; which human check changes; evidence bar, evaluator and execution controls; three dispositions (expand within the tested boundary, retain review, stop and escalate); a human decision owner for risk and unresolved judgment. The current slide has no repository call to action. Practical procedures are on slide 14. This is a proposed standard, not a reported autonomy rollout.",
+        "alt_text": [],
+        "data": null
+      },
+      "prepared_speaker_notes": "Would you switch now? What evidence are you still missing?\n\nI’d keep the cheaper change if it meets our quality and latency requirements, and review and repair don’t erase the savings. This comparison hasn’t established that.\n\nFor the search failure, I’d test whether making the search limits explicit changes the agent’s conclusion, then check complete task outcomes. That’s a proposed test.\n\nMore authority needs repeated success on representative work, tolerable failures and acceptable total cost. Name the additional action, scope and human check you’d remove. Test the evaluator and execution controls.\n\nIf required evidence is missing, a gate fails or scope changes, stop and return the decision to its human owner, with options, evidence and uncertainty. That person owns acceptable risk and business priorities.\n\nI’ve linked the evaluation-design, traceability and reliability procedures for your next rollout.",
+      "speaker_note_word_count": 136,
+      "timing": "15:50–17:00",
+      "delivery_cue": "Return to the audience’s original choice and pause briefly after the two questions. Give the conditional cost answer and proposed search test; acceptable quality is still unestablished. Then make the additional-action decision and human owner concrete. Advance to resources after the final sentence without added speech.",
+      "scope_and_reference_notes": "Closing is the speaker's proposed synthesis. Do not say quality is unchanged merely because a quality test was nonsignificant. Cost-saving deployment requires evidence against a stated quality requirement/noninferiority margin. Apparent task gain also requires workload, observation and operational validation, so monitoring stays attached to the same accepted-outcome definition. The book companion distinguishes supported findings from thin-support leads; it contains 206 records (56 developed, 150 compact), 42 compact thin-support leads, not 206 validated practices. Safe task completion, unsafe completion, blocked failure and recovery remain distinct in any expanded rollout. Do not present ongoing monitoring as a guarantee. The closing returns to the preamble case, distinguishing observed lower cost from unestablished acceptable quality and persisting failure. It does not assert that the cost change was a validated efficiency improvement or that the proposed handoff repair was implemented. Closing is a proposed action-class-specific autonomy standard. It requires the team to name the additional action and operating scope, specify which human check changes, predeclare its evidential and economic bar, validate both judgment and execution controls, preserve stop/escalation conditions, and retain an accountable human owner for risk and conflicting values. No single score, numerical universal threshold or claimed production authority expansion is introduced. The linked user-owned coding-agent-workflows repository is already public. The agent-eval-design skill is a planning/design aid, not an evaluation runner; agent-harness-traceability specifies attempt identity, pairing and missing-versus-zero evidence; reliability-pass has prerequisites/dependencies including those skills and failure-mode-capture. These procedures do not prove reliability or promise immediate plug-and-play integration.",
+      "sources": [
+        {
+          "label": "Engineering Reliable Coding Agents, closing",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/closing"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, companion",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/companion"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 18",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/agent-topology-dynamic-task-allocation"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 17",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/autonomy-provenance-gates-accountability"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents, chapter 16",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/verification-interfaces-risk-based-escalation"
+        },
+        {
+          "label": "Public coding-agent-workflows repository: evaluation, traceability and reliability procedures",
+          "url": "https://github.com/sjarmak/coding-agent-workflows"
+        }
+      ],
+      "visible_footer_citations": [
+        {
+          "label": "Jarmak · Engineering Reliable Coding Agents, closing",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents/closing"
+        }
+      ],
+      "resource_links": []
+    },
+    {
+      "number": 14,
+      "anchor": "slide-14",
+      "title": "Evaluation procedures and references",
+      "kind": "bookend",
+      "presentation_only_pre_reveal_prompts": [],
+      "visible_slide_text": "PROCEDURES & REFERENCES AIE NYC\nEvaluation procedures and references\ngithub.com/sjarmak/coding-agent-workflows ↗\nScan for the public procedures\nEvaluation design ↗\nDesign the comparison and its decision criteria.\nHarness traceability ↗\nRetain attempt identity, evidence and comparison provenance.\nReliability procedures ↗\nExercise authority boundaries, recovery and review.\nEngineering Reliable Coding Agents\nEvaluating and Operating the System Around the Model\nsjarmak.ai/books/engineering-reliable-coding-agents arxiv.org/abs/2608.13867 ↗\nPlanning aids and practical procedures. Implement their documented prerequisites; using them does not establish reliability.\nSTEPHANIE JARMAK · SJARMAK.AI 14 / 14",
+      "body_text": "github.com/sjarmak/coding-agent-workflows ↗\nScan for the public procedures\nEvaluation design ↗\nDesign the comparison and its decision criteria.\nHarness traceability ↗\nRetain attempt identity, evidence and comparison provenance.\nReliability procedures ↗\nExercise authority boundaries, recovery and review.\nEngineering Reliable Coding Agents\nEvaluating and Operating the System Around the Model\nsjarmak.ai/books/engineering-reliable-coding-agents arxiv.org/abs/2608.13867 ↗\nPlanning aids and practical procedures. Implement their documented prerequisites; using them does not establish reliability.",
+      "stage_content_html": "<p class=\"resources-url\"><a href=\"https://github.com/sjarmak/coding-agent-workflows\" target=\"_blank\" rel=\"noopener noreferrer\">github.com/sjarmak/coding-agent-workflows <span>↗</span></a></p><div class=\"resources-grid\"><div class=\"resource-qr\"><a href=\"https://github.com/sjarmak/coding-agent-workflows\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Open Coding Agent Workflows\"><img src=\"assets/coding-agent-workflows-qr.png\" width=\"328\" height=\"328\" alt=\"QR code linking to github.com/sjarmak/coding-agent-workflows\"></a><p>Scan for the public procedures</p></div><div class=\"resource-links\"><div class=\"skill-links\"><div><a href=\"https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-eval-design/SKILL.md\" target=\"_blank\" rel=\"noopener noreferrer\">Evaluation design <span>↗</span></a><p>Design the comparison and its decision criteria.</p></div><div><a href=\"https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-harness-traceability/SKILL.md\" target=\"_blank\" rel=\"noopener noreferrer\">Harness traceability <span>↗</span></a><p>Retain attempt identity, evidence and comparison provenance.</p></div><div><a href=\"https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/reliability-pass/SKILL.md\" target=\"_blank\" rel=\"noopener noreferrer\">Reliability procedures <span>↗</span></a><p>Exercise authority boundaries, recovery and review.</p></div></div><div class=\"book-links\"><a class=\"book-title\" href=\"https://www.sjarmak.ai/books/engineering-reliable-coding-agents\" target=\"_blank\" rel=\"noopener noreferrer\">Engineering Reliable Coding Agents</a><p>Evaluating and Operating the System Around the Model</p><div><a href=\"https://www.sjarmak.ai/books/engineering-reliable-coding-agents\" target=\"_blank\" rel=\"noopener noreferrer\">sjarmak.ai/books/engineering-reliable-coding-agents</a><a href=\"https://arxiv.org/abs/2608.13867\" target=\"_blank\" rel=\"noopener noreferrer\">arxiv.org/abs/2608.13867 ↗</a></div></div></div></div><p class=\"micro\">Planning aids and practical procedures. Implement their documented prerequisites; using them does not establish reliability.</p>",
+      "chart": {
+        "type": "resource_endcard",
+        "description": "One prominent QR code to the verified public coding-agent-workflows repository, with readable repository URL. Use a compact three-link procedure list and a distinct book/reference block with full title, online edition link and direct arXiv link. Make every link clickable. Keep generous whitespace; do not render long skill-file paths. Builder must decode the QR from the final rendered slide and confirm its exact target. Hold after the final sentence; no additional spoken section.",
+        "alt_text": [
+          "QR code linking to github.com/sjarmak/coding-agent-workflows"
+        ],
+        "data": null
+      },
+      "prepared_speaker_notes": "",
+      "speaker_note_word_count": 0,
+      "timing": "17:00 · resources hold",
+      "delivery_cue": "After the exact final sentence on slide 13, advance here and hold the links/QR on screen. No additional spoken explanation; finish within the same 17-minute target.",
+      "scope_and_reference_notes": "Resources bookend. The public repository contains the three linked evaluation-design, harness-traceability and reliability procedures. The arXiv record identifies the monograph as Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model, by Stephanie Jarmak, submitted 14 August 2026. The online book is also linked. The evaluation-design skill supports planning rather than running an evaluation. Traceability and reliability procedures require target-environment implementation and their documented dependencies; they do not establish reliability by themselves. The arXiv link is to the monograph; individual empirical results retain their specific sources in the preceding notes. The QR code opens the public coding-agent-workflows repository; its readable URL is provided alongside it.",
+      "sources": [
+        {
+          "label": "Coding Agent Workflows",
+          "url": "https://github.com/sjarmak/coding-agent-workflows"
+        },
+        {
+          "label": "Evaluation design · agent-eval-design",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-eval-design/SKILL.md"
+        },
+        {
+          "label": "Harness traceability · agent-harness-traceability",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-harness-traceability/SKILL.md"
+        },
+        {
+          "label": "Reliability procedures · reliability-pass",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/reliability-pass/SKILL.md"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · online book",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · arXiv:2608.13867",
+          "url": "https://arxiv.org/abs/2608.13867"
+        }
+      ],
+      "visible_footer_citations": [],
+      "resource_links": [
+        {
+          "label": "Coding Agent Workflows",
+          "url": "https://github.com/sjarmak/coding-agent-workflows"
+        },
+        {
+          "label": "Evaluation design · agent-eval-design",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-eval-design/SKILL.md"
+        },
+        {
+          "label": "Harness traceability · agent-harness-traceability",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/agent-harness-traceability/SKILL.md"
+        },
+        {
+          "label": "Reliability procedures · reliability-pass",
+          "url": "https://github.com/sjarmak/coding-agent-workflows/blob/main/source/skills/reliability-pass/SKILL.md"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · online book",
+          "url": "https://www.sjarmak.ai/books/engineering-reliable-coding-agents"
+        },
+        {
+          "label": "Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model · arXiv:2608.13867",
+          "url": "https://arxiv.org/abs/2608.13867"
+        }
+      ]
+    }
+  ]
+}
