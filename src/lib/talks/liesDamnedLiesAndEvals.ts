@@ -75,13 +75,13 @@ export const downloads: Download[] = [
     label: "Editable slides — static edition (PPTX)",
     href: `${path}downloads/AIE_2026_Slides_Static_Edition.pptx`,
     type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    note: "14 slides with the prepared speaker notes in the notes pane.",
+    note: "14 slides with the notes for each slide in the notes pane.",
   },
   {
     label: "Talk content as Markdown",
     href: `${path}downloads/${slug}.md`,
     type: "text/markdown",
-    note: "Every slide's text, chart notes, prepared speaker notes, scope notes and sources in one readable file.",
+    note: "Every slide's text, chart notes, notes, scope notes and sources in one readable file.",
   },
   {
     label: "Talk content as JSON",
@@ -97,18 +97,98 @@ export const downloads: Download[] = [
   },
 ];
 
-export const speakerResources: Download[] = [
+export type RepoGroup = {
+  heading: string;
+  repos: { name: string; url: string; note: string }[];
+};
+
+const gh = (name: string) => `https://github.com/sjarmak/${name}`;
+
+export const repositories: RepoGroup[] = [
   {
-    label: "Concise speaker cues (PDF)",
-    href: `${path}speaker-resources/AIE_NYC_Concise_Speaker_Cues.pdf`,
-    type: "application/pdf",
-    note: "Per-slide cue sheet used to rehearse the talk.",
+    heading: "Evaluation harnesses and benchmarks",
+    repos: [
+      {
+        name: "codeprobe",
+        url: gh("codeprobe"),
+        note: "Turns a repository's merged pull requests into coding-agent evaluations, then measures the whole agent setup (model, tools, retrieval, cost, harness) against them. Python CLI, on PyPI. The slide 8 trial comes from it.",
+      },
+      {
+        name: "agent-oriented-architecture",
+        url: gh("agent-oriented-architecture"),
+        note: "Measures how well a repository works for AI coding agents by running agents on tasks drawn from the repo's own history and scoring how quickly they find, and how cleanly they change, the right code.",
+      },
+      {
+        name: "CodeScaleBench-Public",
+        url: gh("CodeScaleBench-Public"),
+        note: "275 tasks across 20 suites measuring how coding agents use context retrieval tools in enterprise-scale codebases, with auditable result snapshots.",
+      },
+      {
+        name: "terminal-bench-science",
+        url: gh("terminal-bench-science"),
+        note: "Terminal-Bench Science: evaluating agents on complex real-world scientific workflows in the terminal.",
+      },
+      {
+        name: "migration-evals",
+        url: gh("migration-evals"),
+        note: "Grades agent-produced batch-change diffs through tiered oracles (diff validity, compile, tests, AST, LLM judge, invariants), anchored to merged-PR survival.",
+      },
+      {
+        name: "mg-ax",
+        url: gh("mg-ax"),
+        note: "Evaluation framework for the agentic experience of MCP tools: static lint rules over tool manifests plus a cassette-backed trace pipeline that replays recorded agent sessions into schema-validated claims about tool behavior.",
+      },
+      {
+        name: "omni-benchmark",
+        url: gh("omni-benchmark"),
+        note: "Omni on LiveSQLBench Large-v1: a frozen, preregistered held-out evaluation (89 questions, four conditions, three repetitions, 1,068 immutable attempts, two preregistered scorers) with a separate mechanism analysis on development data.",
+      },
+    ],
   },
   {
-    label: "Concise speaker cues (DOCX)",
-    href: `${path}speaker-resources/AIE_NYC_Concise_Speaker_Cues.docx`,
-    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    note: "Editable version of the same cue sheet.",
+    heading: "Diagnosis and reliability",
+    repos: [
+      {
+        name: "agent-diagnostics",
+        url: gh("agent-diagnostics"),
+        note: "Behavioral taxonomy and annotation framework for coding-agent failures: 40 failure categories across 11 dimensions labeled over 11,995 trials from 4 models on 61 benchmarks, with a queryable dataset backend and a pip-installable labeling tool.",
+      },
+      {
+        name: "agent-durability-lab",
+        url: gh("agent-durability-lab"),
+        note: "An evidence lab for agent durability. Every claim has an unsafe control that fails, an exact fault barrier, and preserved raw runs.",
+      },
+      {
+        name: "software-factory-reliability",
+        url: gh("software-factory-reliability"),
+        note: "Executable reliability patterns and fault drills for AI software factories. Companion to \"Software Factories Are Distributed Systems.\"",
+      },
+      {
+        name: "agent-routing",
+        url: gh("agent-routing"),
+        note: "Does an agent need its most capable model for every step? Four routing arms, one designed to lose, measured at cost per successful task.",
+      },
+      {
+        name: "mem",
+        url: gh("mem"),
+        note: "Agentic memory built from multi-agent orchestration traces (6,691 work items, 874 session transcripts) and benchmarked on the same record: does retained memory improve agent success rate, iterations, and cost?",
+      },
+    ],
+  },
+  {
+    heading: "Procedures and the monograph",
+    repos: [
+      {
+        name: "coding-agent-workflows",
+        url: gh("coding-agent-workflows"),
+        note: "Neutral source of coding standards, agent roles, skills, and workflows, rendered to native config for Claude Code, Codex, and Amp. Home of the evaluation-design, harness-traceability and reliability-pass procedures the talk cites.",
+      },
+      {
+        name: "engineering-reliable-coding-agents",
+        url: gh("engineering-reliable-coding-agents"),
+        note: "The monograph the evidence comes from, with runnable reliability and evaluation protocols, a machine-readable evidence and practice catalog, and reusable agent skills derived from selected practices.",
+      },
+    ],
   },
 ];
 

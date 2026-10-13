@@ -4,7 +4,7 @@ import {
   talk,
   canonicalUrl,
   downloads,
-  speakerResources,
+  repositories,
   chartTypeLabel,
   sectionLabel,
   chartTable,
@@ -15,22 +15,36 @@ function absolute(href: string): string {
 }
 
 function build() {
-  const { slides, ...header } = talk;
+  const {
+    slides,
+    notes_label: _notesLabel,
+    prepared_script_words: _words,
+    rehearsal_target_minutes: _rehearsal,
+    hard_cutoff_minutes: _cutoff,
+    ...header
+  } = talk;
   return {
     ...header,
     canonical_url: canonicalUrl,
     llms_txt_url: `${canonicalUrl}llms.txt`,
     downloads: downloads.map((d) => ({ label: d.label, url: absolute(d.href), media_type: d.type, note: d.note })),
-    speaker_resources: speakerResources.map((d) => ({
-      label: d.label,
-      url: absolute(d.href),
-      media_type: d.type,
-      note: d.note,
+    repositories: repositories.map((g) => ({
+      heading: g.heading,
+      repos: g.repos.map((r) => ({ name: `sjarmak/${r.name}`, url: r.url, note: r.note })),
     })),
     slides: slides.map((slide) => {
-      const { stage_content_html: _html, ...rest } = slide;
+      const {
+        stage_content_html: _html,
+        presentation_only_pre_reveal_prompts: _prompts,
+        timing: _timing,
+        delivery_cue: _cue,
+        speaker_note_word_count: _count,
+        prepared_speaker_notes,
+        ...rest
+      } = slide;
       return {
         ...rest,
+        notes: prepared_speaker_notes,
         url: `${canonicalUrl}#${slide.anchor}`,
         section_label: sectionLabel(slide),
         chart: { ...slide.chart, type_label: chartTypeLabel(slide.chart.type), table: chartTable(slide) },
