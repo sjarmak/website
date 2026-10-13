@@ -2294,6 +2294,62 @@
           "why": "Grading an agent on business questions needs ground truth that is exact and data that does not give the answer away. Labels computed from the generated tables are exact, near misses penalize loose filters, and unanswerable questions are flagged with the table or column that is missing. The reference targets record their own provenance: 7 are sourced, 3 are shape-only and 3 are estimates. The language model appears only in schema design, so the accepted data model is stored to keep runs repeatable."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013573Z",
+      "title": "MatQuery: Execution-Grounded Natural-Language Querying over Heterogeneous Materials Databases",
+      "firstAuthor": "Zhang, Chen Jason",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13573",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013573Z",
+      "branches": [
+        "representation",
+        "enforcement",
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "Frozen, self-verifying snapshots of six materials databases, a field catalog, and a canonical database-independent query representation with per-database adapters; identity must be judged by structure rather than composition, since one SiO2 cluster held band gaps of 0.000, 5.469, 5.516 and 4.606 eV across three different space groups.",
+          "why": "Shows the meaning problem is naming, coverage and unit heterogeneity across sources (a missing field is not a zero, and method strings mean different things per database), and that a representation which hides those caveats returns one unqualified wrong number."
+        },
+        {
+          "branch": "enforcement",
+          "takeaway": "An eight-step 'model proposes, program checks' pipeline: the model routes and writes the query, the program compiles it, executes on pinned snapshots, bounds revision to two rounds of execution feedback, and keeps an auditable record; the benchmark generator verifies every question by execution and a back-translation check.",
+          "why": "Puts deterministic checks in code and judgment in the model, and the authors frame the compiler, bounded revision and execution feedback as the base of a local runtime where checks compensate for a weaker model."
+        },
+        {
+          "branch": "grading",
+          "takeaway": "Strict execution accuracy on 800 development questions rose from 56.5% to 82.4% with three demonstrations, but the authors state that result-set equality proves query correctness, not scientific comparability; the probe-then-ask arm failed its pre-specified gate (11 of 50 valid answers), and no independent expert has reviewed the questions.",
+          "why": "A grader that measures what it can and names what it cannot: the full pipeline is still in smoke testing, so the preliminary numbers are explicitly not its performance."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013361W",
+      "title": "AgentSWE: Can Coding Agents Build the Agent You Actually Want?",
+      "firstAuthor": "Wang, Jiahao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13361",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013361W",
+      "branches": [
+        "grading",
+        "generalization"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "The grade is held-out cases with requirement-derived rubrics and hard zero gates on a frozen delivery, never the builder's own development score; in the 1,500-second rebuild the last development score exceeded the held-out result on every task, 70.3 against 31.5 on average.",
+          "why": "The distance between the visible score and the held-out score is the meaning gap this explorer tracks: the requirement lived in the cases the builder never saw."
+        },
+        {
+          "branch": "generalization",
+          "takeaway": "Going from zero to two development cases raised held-out results by about 30 points on two Creation tasks, but two more cases added nothing on PDF translation and lowered PPTX generation from 33.5 to 15.2; repeated builds of one harness-model pairing scored 32.8, 33.3 and 90.5 on the same task.",
+          "why": "Visible examples help up to a point and then invite overfitting, and build-to-build variance is large enough that single runs mislead."
+        }
+      ]
     }
   ],
   "sections": [

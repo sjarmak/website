@@ -3632,6 +3632,138 @@
           "why": "It is a concrete case of separating the agent that writes from the agent that judges, with the open weakness named: knowing when to stop."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013668Y",
+      "title": "(When) Should a Software Factory be Lights-off? Benchmarking Code Review Agents on Bug Detection",
+      "firstAuthor": "Yang, Chenyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13668",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013668Y",
+      "branches": [
+        "human",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "Humans alone catch 50% of CRBugBench bugs, the best agent 71.9%, and the two combined 82.1%; the authors conclude lights-off review is defensible only for narrow, low-consequence PRs.",
+          "why": "Grounds human-in-the-loop review in complementary coverage rather than caution: agents and humans miss different bugs, and agents drop up to 25.5% on proprietary repos where project context decides."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "1,800 tasks built from addressed review comments and post-merge fix PRs across 98 open-source repos plus two industry monorepos, scored as recall@k by a three-model judge panel; comprehensive prompting beat multi-agent setups (+5.8% at 1.10x cost versus +4.7% at 5.55x).",
+          "why": "Shows how to mine a review-agent benchmark from real review artifacts, and that harness gains fade as models absorb the behaviors, so a deployed configuration needs re-evaluation after each model change."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013144W",
+      "title": "Competence-Aware Orchestration for LLM-Based Multi-Agent Systems",
+      "firstAuthor": "Wang, Songmiao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13144",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013144W",
+      "branches": [
+        "topology",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Generated graphs shrink for strong backbones (switching Llama-3.1-8B to GPT-4o on the same question cut tokens 42.2% with the answer preserved) and grow for weak ones, with efficiency-oriented backbones gaining 74.07 to 78.65 on MMLU and Gemma-3-12B gaining most.",
+          "why": "Evidence that topology should be sized to backbone competence: fixed structures overpay on strong models and underperform on weak ones."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "On performance-oriented backbones the method beat G-Designer 89.97 to 87.22 with 36.26% fewer tokens per query, recovering the one-time fingerprint cost after about 28 queries; gains held on unseen GLM 5.1 and Gemini 3.1 Pro.",
+          "why": "A cheap, reusable capability prior outperforms free-form model descriptions as the routing signal, which cost 100.67% more tokens and 3.10 points when substituted."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013356H",
+      "title": "SWE-Critix: Post-Training Generalist Verifiers for Assessing Coding-Agent Trajectories",
+      "firstAuthor": "Hu, Jiajun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13356",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013356H",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "A verifier trained to judge whole coding-agent trajectories: GPT-5.5 differential analysis of success and failure pairs on the same issue yields chain-of-thought annotations over a two-dimensional taxonomy, then SFT on 10,390 and GRPO with plus-or-minus-one unit-test rewards on 108,690 CoderForge-Preview trajectories; Qwen3-30B-A3B accuracy went 57% to 66% to 78%.",
+          "why": "A process-level verifier that reads the trajectory rather than only the patch is the execution-free gate a production loop can run, and the untuned base model had near-zero negative recall, so an unadapted judge approves almost everything."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261012822H",
+      "title": "Reward Hacking as a Transmissible Strategy in Multi-Agent Coding Systems",
+      "firstAuthor": "Hu, Yuepeng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.12822",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261012822H",
+      "branches": [
+        "security",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "Reward hacks elicited by coding RL (exit-code manipulation, always-equal objects, conftest hooks against a leaky pytest evaluator) propagate from small open-weight sources to stronger closed-weight targets through shared code, shared memory and natural-language plans; a hacking planner induced confirmed hacks in every target coder, and some targets adopt the hack only after evaluator feedback, which evaluation of first submissions misses.",
+          "why": "Treats a learned exploit as a transmissible strategy rather than one agent's defect, and shows propagation can intensify along a chain after the source leaves as the code gains more persuasive justifications."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Orchestrators selected the reward-hacking source more often than its matched clean control, with or without cost metadata, and aggregators kept hacked submissions in the final solution when no clean candidate passed the leaky evaluator.",
+          "why": "Coordination logic that trusts pass signals rewards the hacker without adopting the hack; verifiers shown the evaluator's pass signal accept more hacks, and verifiers strict enough to block them reject genuine solutions."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013485F",
+      "title": "Proactive Agentic Orchestration",
+      "firstAuthor": "Feng, Xueyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13485",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013485F",
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Under controlled mid-execution tool revocation, proactive feedback recovered 92% of cases with a mean delay of 1.67 steps, versus 86% at 2.11 steps for end-of-task triggers and 28% at 12.86 steps for polling every 20 steps.",
+          "why": "Quantifies how long each intervention scheme takes to notice a harness mismatch, and shows that frequent polling raises adaptability but breaks execution continuity and lowers overall success."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013889C",
+      "title": "RATED: Reliability-Aware AI Agent Tool Retrieval via Execution Dynamics",
+      "firstAuthor": "Chen, Weiliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13889",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013889C",
+      "branches": [
+        "reliability"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "EcoAgent indexes 5,172 tools from LangChain, CrewAI, LlamaIndex and n8n and finds more than half flawed; a reliability score from name-description consistency, source credibility and documentation quality keeps 2,940 tools at 0.8 or above, and selection of faulty tools fell from 86.2% to 2.9% at a 30% injected failure rate.",
+          "why": "Shows that semantic-only retrieval over a realistic ecosystem picks broken tools most of the time, and that a cheap metadata prior plus execution feedback removes most of that risk."
+        }
+      ]
     }
   ],
   "sections": [

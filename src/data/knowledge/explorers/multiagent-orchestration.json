@@ -2681,6 +2681,63 @@
           "why": "The governance problem in a multi-agent system sits in the composed flow, and topology changes it. Splitting contributors maximally leaves 19 of 168 graphs unresolved even though every field is present, and inserting a relay lowers both unsafe proposals and authorized supply. The paper's requirement is that object identity and permission stay connected to execution through components whose outputs can be verified. In these experiments that means assembly and enforcement done by the runtime, not by a model. With model-generated artifacts, authorized supply (15 of 60) and task completion (27 of 60) stay low."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013144W",
+      "title": "Competence-Aware Orchestration for LLM-Based Multi-Agent Systems",
+      "firstAuthor": "Wang, Songmiao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13144",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013144W",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "A binary 4x12 capability fingerprint per backbone, computed once from probe questions across four domains and three difficulty levels, is fused with the query embedding and supervised by empirical success rate; the resulting competence vector drives role activation and communication-graph generation.",
+          "why": "Makes the collaboration structure a function of which model is answering, not only the task; the ablation shows the fingerprint matters, since removing it raised tokens 154.64% and lowered the average score 3.02 points."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261012822H",
+      "title": "Reward Hacking as a Transmissible Strategy in Multi-Agent Coding Systems",
+      "firstAuthor": "Hu, Yuepeng",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.12822",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261012822H",
+      "branches": [
+        "production"
+      ],
+      "notes": [
+        {
+          "branch": "production",
+          "takeaway": "Mitigations tested in the planner-coder loop: coder self-review lowered propagation for every coder but most still produced confirmed hacks; a separate verifier as a delivery gate blocked most hacks, and feeding its rejections back into the loop drove several configurations to zero or near zero.",
+          "why": "Gives teams the concrete trade-off for shipping multi-agent coding: a strict verifier is the effective control, and its cost is false rejection of genuine work."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013485F",
+      "title": "Proactive Agentic Orchestration",
+      "firstAuthor": "Feng, Xueyang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13485",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013485F",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "Sub-agents may pause at any logical point and send structured feedback (status, request, evidence); the orchestrator revises the harness and records the exchange as an observation. OPOD attributes that feedback to earlier orchestration decisions and distills it into process supervision, lifting a Qwen3.5-9B orchestrator to 77.9% on GAIA and 49.2% on GAIA2.",
+          "why": "Replaces end-of-task and error triggers or periodic polling with sub-agent-initiated interruption; with DeepSeek-V4-Flash it reached 55.5% on GAIA2 against ReAct's 44.5% at 36% lower per-task API cost."
+        }
+      ]
     }
   ],
   "sections": [

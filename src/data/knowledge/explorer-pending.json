@@ -1,39 +1,6 @@
 {
   "pending": [
     {
-      "bibcode": "2026arXiv261013668Y",
-      "arxiv": "2610.13668",
-      "title": "(When) Should a Software Factory be Lights-off? Benchmarking Code Review Agents on Bug Detection",
-      "targets": [
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "human",
-            "eval"
-          ]
-        }
-      ],
-      "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
-    },
-    {
-      "bibcode": "2026arXiv261012569M",
-      "arxiv": "2610.12569",
-      "title": "SWE-Duel: Towards a Self-Scaling Arena for Coding Agents",
-      "targets": [
-        {
-          "explorerId": "formal-specifications-agents",
-          "branches": [
-            "agent-quality"
-          ]
-        }
-      ],
-      "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
-    },
-    {
       "bibcode": "2026arXiv260605670F",
       "arxiv": "2606.05670",
       "title": "Do More Agents Help? Evaluating Accuracy and Cost in LLM Multi-Agent Workflows",
@@ -53,71 +20,8 @@
         }
       ],
       "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
-    },
-    {
-      "bibcode": "2026arXiv261013144W",
-      "arxiv": "2610.13144",
-      "title": "Competence-Aware Orchestration for LLM-Based Multi-Agent Systems",
-      "targets": [
-        {
-          "explorerId": "multiagent-orchestration",
-          "branches": [
-            "foundations"
-          ]
-        },
-        {
-          "explorerId": "enterprise-reliability",
-          "branches": [
-            "topology",
-            "routing"
-          ]
-        }
-      ],
-      "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
-    },
-    {
-      "bibcode": "2026arXiv261013075H",
-      "arxiv": "2610.13075",
-      "title": "LongHarness: Advancing Agentic Reasoning over 100M-Token Corpora via Stateful Evidence Management",
-      "targets": [
-        {
-          "explorerId": "agentic-information-retrieval",
-          "branches": [
-            "agentic-loops"
-          ]
-        },
-        {
-          "explorerId": "memory-design",
-          "branches": [
-            "context"
-          ]
-        }
-      ],
-      "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
-    },
-    {
-      "bibcode": "2026arXiv261013573Z",
-      "arxiv": "2610.13573",
-      "title": "MatQuery: Execution-Grounded Natural-Language Querying over Heterogeneous Materials Databases",
-      "targets": [
-        {
-          "explorerId": "where-business-meaning-lives",
-          "branches": [
-            "representation",
-            "enforcement",
-            "grading"
-          ]
-        }
-      ],
-      "firstSeen": "2026-10-12",
-      "lastAttempt": "2026-10-12",
-      "attempts": 1
+      "lastAttempt": "2026-10-13",
+      "attempts": 2
     }
   ]
 }

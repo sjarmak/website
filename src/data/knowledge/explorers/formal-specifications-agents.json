@@ -3423,6 +3423,94 @@
           "why": "Faithfulness of the autoformalization is the limit on what a certificate means, and the paper measures it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261012569M",
+      "title": "SWE-Duel: Towards a Self-Scaling Arena for Coding Agents",
+      "firstAuthor": "Minn, Wei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.12569",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261012569M",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Agents write tasks for each other: Red implements a feature with tests, plants a bug with sealed bug tests, and a fresh session of the same agent must repair it blind before the task is admitted; Blue wins if feature, existing and bug suites all pass.",
+          "why": "A self-scaling arena where task difficulty rises with author ability (the newest GLM version's tasks beat a fixed solver 42.9% of the time versus 4.0% for older versions) answers benchmark saturation without human task writing, and admission checks keep tasks solvable (91.7% repeated self-repair, 6.0% unsound bug tests)."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013361W",
+      "title": "AgentSWE: Can Coding Agents Build the Agent You Actually Want?",
+      "firstAuthor": "Wang, Jiahao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13361",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013361W",
+      "branches": [
+        "benchmarks",
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks",
+          "takeaway": "25 commissions (10 Creation, 10 Editing on pinned OpenHands- and Aider-style codebases, 5 Optimization) in which a builder sees a few development cases and is graded on held-out cases with requirement-derived rubrics and hard zero gates; the best of five models in the Codex harness averaged 19.1 on Creation and 31.6 on Editing.",
+          "why": "Measures whether a coding agent can deliver an agent that meets a requirement rather than one that passes the visible cases, and ships AgentSWE-Lite, eight tasks, as a cheaper entry point."
+        },
+        {
+          "branch": "agent-quality",
+          "takeaway": "Three recurring failures: fitting the visible cases (a development score of 90 or more yielded a held-out average of 9.9), hollow runtimes that read as complete but do not work, and completion claims contradicted by the builder's own effect logs in 13 of 33 delivered Editing runs.",
+          "why": "Documents misreporting as a measurable property of delegation; more development cases, a prescribed design, a self-test instruction and 2.5 times the case budget each left the failure modes in place."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013065E",
+      "title": "TestSuiteBench: Coding Agents Struggle to Generate Strong Test Suites from Specifications",
+      "firstAuthor": "Egashira, Kazuki",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13065",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013065E",
+      "branches": [
+        "benchmarks",
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "benchmarks",
+          "takeaway": "165 Rust, Go and C++ command-line applications from ProgramBench, each with a refined natural-language specification and about 74 requirement-targeted mutants that exactly one reference test kills, scored by test validity rate and mutation score.",
+          "why": "Isolates specification-to-test-suite generation from implementation: the agent sees only the specification, which is the setting greenfield verification needs."
+        },
+        {
+          "branch": "agent-quality",
+          "takeaway": "The best agent killed 55% of mutants and four of six fell below 40%, while 88% of generated tests were valid and the same agents' implementations passed up to 93% of reference tests; giving the agent the reference executable moved mutation score only from 37.7% to 38.1%.",
+          "why": "Pins the bottleneck on test design rather than specification ambiguity: suites are too small and skip input combinations, so agents build software they cannot verify."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013356H",
+      "title": "SWE-Critix: Post-Training Generalist Verifiers for Assessing Coding-Agent Trajectories",
+      "firstAuthor": "Hu, Jiajun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13356",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013356H",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Failed trajectories remain the hard class: negative recall reached only 64% overall after RL and R2E-Gym lagged the other subsets, and all training trajectories came from one harness (OpenHands) with one policy model (Qwen3-Coder-480B).",
+          "why": "Marks where trajectory verification still breaks, diverse and subtle failure patterns, and the single-source data limit the authors plan to address with mixed harnesses and class ratios."
+        }
+      ]
     }
   ],
   "sections": [

@@ -601,6 +601,44 @@
           "why": "The static-index assumption is part of the substrate this theme describes, and this paper treats it as the defect rather than the setting. It is also one of the few correction methods whose cost model is compatible with a production approximate-nearest-neighbour index, and it positions explicitly against the two neighbouring families the theme already carries: retriever retraining and re-indexing on one side, query-representation adaptation such as CoRocchio on the other, with the claim that document-side surgery is complementary and more robust to noisy signals."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013075H",
+      "title": "LongHarness: Advancing Agentic Reasoning over 100M-Token Corpora via Stateful Evidence Management",
+      "firstAuthor": "Huang, Songtao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13075",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013075H",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "The loop keeps three explicit states, source-linked evidence in an EvidenceBank, evidence-linked conclusions with unresolved gaps, and history; gaps direct the next retrieval and new evidence revises conclusions, with a controller validating actions, source references and budget.",
+          "why": "Names the two failure modes of plain ReAct over 100M-token corpora, unbounded exploration and evidence-state drift, and shows the fix: GLM-5.3-Flash rose from 15.8 to 60.2 exact match on OfficeQA Pro V1, and median turns grew only 22 to 30 from V1 to V2 against 21 to 116 for Claude Code."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261013889C",
+      "title": "RATED: Reliability-Aware AI Agent Tool Retrieval via Execution Dynamics",
+      "firstAuthor": "Chen, Weiliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13889",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013889C",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Tool retrieval as a two-stage loop: a DRAGON dual-encoder fine-tuned with InfoNCE and then frozen ranks candidates, and a LinUCB bandit re-ranks the top-K from a metadata-derived reliability prior updated by execution feedback; mean reciprocal rank rose 52.2% relative to ToolLLM's retriever with 0.172 ms added latency.",
+          "why": "Retrieval that learns from what happened after the call, not only from the query, is the agentic-loop pattern applied to tool selection."
+        }
+      ]
     }
   ],
   "sections": [

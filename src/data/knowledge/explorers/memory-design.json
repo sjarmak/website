@@ -1934,6 +1934,25 @@
           "why": "A scope filter built from authenticated provenance improves evidence reachability and cuts search work in the same step, so the governance control is not paid for in recall here. The eligibility decision is harder. In the frozen 72-case development diagnostic a reference built from released metadata preserves required evidence, while neither text-only verifier detects violations within the 1 percent false-denial limit. A design that relies on a model reading memory text to decide eligibility should expect to lose required evidence."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013075H",
+      "title": "LongHarness: Advancing Agentic Reasoning over 100M-Token Corpora via Stateful Evidence Management",
+      "firstAuthor": "Huang, Songtao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13075",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013075H",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "Evidence has a lifecycle (admission, revision, retraction, supersession) rather than append-only accumulation; restricting the bank to append-only cost 3.8 and 10.0 points on V1 and V2, and replacing structured conclusions with free-text working notes cost 6.8 and 7.8.",
+          "why": "A concrete case that working context should be a managed ledger with retirement, not a growing scratchpad; in the Treasury example Codex found a correction and then dropped it, while LongHarness retired the old value and returned the reference answer."
+        }
+      ]
     }
   ],
   "sections": [
