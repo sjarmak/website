@@ -639,6 +639,25 @@
           "why": "Retrieval that learns from what happened after the call, not only from the query, is the agentic-loop pattern applied to tool selection."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260935774C",
+      "title": "Post-Generation Verification Dominates Retrieval Optimization: A 2^4 Factorial Ablation of RAG Pipeline Features",
+      "firstAuthor": "Chong, Ng S. T.",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.35774",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260935774C",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "In a 2^4 factorial ablation of a 14-stage hybrid RAG pipeline (16 configurations x 24 queries x 2 cloud models, 760 scored responses over five public regulatory documents of 78 to 492 pages), the completeness check was the strongest feature (d = +0.48, p < 0.001). It is a post-generation loop: decompose the question into facets, mark each covered, missing or partial against the generated answer, then re-retrieve and regenerate for the gaps. Enabled alone it scored 4.31/5, above every configuration without it, including the three-feature section-expansion + agentic-search + ToC stack (4.11). Agentic search, an LLM decomposition of the query into up to four sub-queries before retrieval, was small and unstable (d = +0.14): it lifted cross-section queries by +0.63 but cut its own target queries by -0.22.",
+          "why": "The retrieval action that paid off was the one taken after reading the generated answer, not the one taken before retrieval. Pre-retrieval decomposition can fragment retrieval instead of improving it, and the verification loop buys its gain with latency: configurations containing the check averaged 210 s against 92 s without it."
+        }
+      ]
     }
   ],
   "sections": [
