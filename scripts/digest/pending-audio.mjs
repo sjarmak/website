@@ -18,7 +18,7 @@ const recordSchema = z
     backend: z.enum(["git", "r2"]),
     reason: z.string().min(1),
     check: z.string().optional(),
-    failedAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
   })
   .strict();
 

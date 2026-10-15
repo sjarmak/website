@@ -141,15 +141,16 @@ reference (summary, title, body, transcript) to the window you actually pulled f
    ```
    It prints `{"file": "...", "audioUrl": "...", "durationSec": N}`. Add `audioFile` (the printed
    `file`, `{{AUDIO_DIR}}/{{SLUG}}.mp3`) and `durationSec` to `{{WORK}}/spec.json`. Do not add
-   `audioUrl`: publishing sets it only after the audio verifies at its public URL.
+   `audioUrl`: the runner adds it once the audio verifies at its public URL.
 
 9. **Publish.** From {{WEBSITE_DIR}}, run:
    ```
    node scripts/digest/publish-digest.mjs --spec {{WORK}}/spec.json
    ```
-   Its JSON output includes `audio.status`. `pending` is expected when the audio is not live
-   yet: the issue publishes without a player and the runner attaches the audio on a later
-   run. Do not retry, re-render, or add audio fields yourself.
+   Its JSON output always reports `audio.status` as `pending` (check `queued`): publishing
+   never uploads or verifies audio. After you finish, the runner uploads or pushes the audio,
+   verifies its public URL, and attaches the player. Do not retry, re-render, or add audio
+   fields yourself.
    This writes the digest entry and stages it. Do NOT commit or push — the runner does that.
 
 ## Rules

@@ -9,13 +9,19 @@ import { attachEntryAudio, readEntryAudio, stripEntryAudio } from "./entry-audio
 import { localMediaPath } from "./media-location.mjs";
 import { dropCommand, dropPending, listPending, removePending, retryCommand, writePending } from "./pending-audio.mjs";
 import { mediaBackend, publicBase, r2ConfigFromEnv, verifyTimeoutMs } from "../media/config.mjs";
-import { isSiteMediaUrl, keyFromSiteUrl, publicUrlForKey } from "../media/keys.mjs";
+import { isSiteMediaUrl, keyFromSiteUrl, publicUrlForKey, siteUrlForKey } from "../media/keys.mjs";
 import { readLocalObject } from "../media/local-object.mjs";
 import { createR2Store, putImmutable } from "../media/store.mjs";
 import { verifyPublicMedia } from "../media/verify.mjs";
 
 const CONTENT_DIR = "src/content/digest";
-const USAGE = "usage: audio-gate.mjs <drain [--slug <slug>]|verify-staged|settle|status|drop --slug <slug>>";
+const VERIFIED = "verified";
+const USAGE =
+  "usage: audio-gate.mjs <drain [--slug <slug>] [--wait-sec <seconds>]|verify-staged|settle|status|drop --slug <slug>>";
+const OPTIONS = {
+  drain: { slug: { type: "string" }, "wait-sec": { type: "string" } },
+  drop: { slug: { type: "string" } },
+};
 
 const log = (line) => console.error(`[audio] ${line}`);
 const entryPath = (slug) => path.join(CONTENT_DIR, `${slug}.md`);
@@ -48,15 +54,23 @@ async function readIfPresent(file) {
   }
 }
 
-function makeContext(env) {
+function makeContext(env, waitMs = verifyTimeoutMs(env)) {
   const backend = mediaBackend(env);
   return {
     env,
     backend,
     base: publicBase(env),
-    deadline: Date.now() + verifyTimeoutMs(env),
+    deadline: Date.now() + waitMs,
     store: backend === "r2" ? createR2Store(r2ConfigFromEnv(env)) : null,
   };
+}
+
+function waitMsFrom(raw, env) {
+  if (raw === undefined) return verifyTimeoutMs(env);
+  if (!/^[1-9][0-9]*$/.test(raw)) {
+    throw new Error(`--wait-sec must be a positive whole number of seconds, got ${JSON.stringify(raw)}`);
+  }
+  return Number(raw) * 1000;
 }
 
 async function makeLive(ctx, { key, file, sha256 }) {
@@ -89,35 +103,61 @@ async function stage(file, content) {
   git(["add", "--", file]);
 }
 
+function recordProblem(ctx, record) {
+  let expected;
+  try {
+    expected = localMediaPath(record.key, ctx.env);
+  } catch (err) {
+    return err.message;
+  }
+  if (path.resolve(record.file) !== expected) {
+    return `${record.file} is not where the ${ctx.backend} backend keeps ${record.key} (${expected})`;
+  }
+  if (record.audioUrl !== siteUrlForKey(record.key)) {
+    return `audioUrl ${record.audioUrl} is not the site URL of ${record.key}`;
+  }
+  return null;
+}
+
+async function checkRecord(ctx, record, file, md) {
+  const problem = recordProblem(ctx, record);
+  if (problem) return { ok: false, check: "record", reason: problem };
+  if (md === null) return { ok: false, check: "entry", reason: `${file} does not exist; publish the issue text first` };
+  return makeLive(ctx, record);
+}
+
 async function drainOne(ctx, record) {
   const file = entryPath(record.slug);
   const md = await readIfPresent(file);
-  const outcome = md === null
-    ? { ok: false, check: "entry", reason: `${file} does not exist; publish the issue text first` }
-    : await makeLive(ctx, record);
+  if (record.check === VERIFIED && md !== null && readEntryAudio(md).audioUrl === record.audioUrl) {
+    log(`${record.slug}: audio already verified and attached to ${file}`);
+    return true;
+  }
+  const outcome = await checkRecord(ctx, record, file, md);
+  const updatedAt = new Date().toISOString();
   if (!outcome.ok) {
-    await writePending({ ...record, reason: outcome.reason, check: outcome.check, failedAt: new Date().toISOString() });
+    await writePending({ ...record, reason: outcome.reason, check: outcome.check, updatedAt });
     log(`${record.slug}: still pending (${outcome.check}: ${outcome.reason})`);
     return false;
   }
-  const attached = attachEntryAudio(md, { audioUrl: record.audioUrl, durationSec: record.durationSec });
-  await stage(file, attached);
+  await stage(file, attachEntryAudio(md, { audioUrl: record.audioUrl, durationSec: record.durationSec }));
+  const reason = `verified at its public URL and attached to ${file}; cleared once that is committed`;
+  await writePending({ ...record, reason, check: VERIFIED, updatedAt });
   log(`${record.slug}: audio verified at its public URL and attached to ${file}`);
   return true;
 }
 
-async function drain(env, { slug }) {
+async function drain(env, { slug, "wait-sec": waitSec }) {
+  const ctx = makeContext(env, waitMsFrom(waitSec, env));
   const records = (await readPendingRecords()).filter((record) => !slug || record.slug === slug);
   if (records.length === 0) {
     log("no pending audio to attach");
     return 0;
   }
-  const ctx = makeContext(env);
-  let stillPending = 0;
-  for (const record of records) {
-    if (!(await drainOne(ctx, record))) stillPending += 1;
-  }
-  return stillPending === 0 ? 0 : 1;
+  const results = await Promise.allSettled(records.map((record) => drainOne(ctx, record)));
+  const crashed = results.find((result) => result.status === "rejected");
+  if (crashed) throw crashed.reason;
+  return results.every((result) => result.value) ? 0 : 1;
 }
 
 function stagedEntries() {
@@ -149,7 +189,7 @@ async function verifyEntry(ctx, { slug, audioUrl, durationSec }) {
     backend: ctx.backend,
     reason: outcome.reason,
     check: outcome.check,
-    failedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
   return { ...outcome, record };
 }
@@ -180,6 +220,7 @@ async function verifyStaged(env) {
 
 async function settle() {
   for (const record of await readPendingRecords()) {
+    if (record.check !== VERIFIED) continue;
     const committed = committedEntry(entryPath(record.slug));
     if (committed !== null && readEntryAudio(committed).audioUrl === record.audioUrl) {
       await removePending(record.slug);
@@ -196,6 +237,9 @@ function remedy(record, env) {
       `  fix:    publish the issue text, then run ${retry}`,
       `          or stop waiting for this audio with ${dropCommand(record.slug)}`,
     ];
+  }
+  if (record.check === "record") {
+    return [`  fix:    ${dropCommand(record.slug)}`, "          or re-publish the issue, which rewrites this record"];
   }
   return [`  retry:  ${retry}`];
 }
@@ -242,7 +286,7 @@ async function drop({ slug }) {
 }
 
 function parseOptions(command, rest) {
-  const options = command === "drain" || command === "drop" ? { slug: { type: "string" } } : {};
+  const options = OPTIONS[command] ?? {};
   let values;
   try {
     ({ values } = parseArgs({ args: rest, options, strict: true }));

@@ -5,11 +5,19 @@ import os from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
-const record = (event) => {
+const record = (event, details = {}) => {
   if (process.env.STUB_LOG) {
-    appendFileSync(process.env.STUB_LOG, `${JSON.stringify({ event, pid: process.pid, at: Date.now() })}\n`);
+    appendFileSync(process.env.STUB_LOG, `${JSON.stringify({ event, pid: process.pid, at: Date.now(), ...details })}\n`);
   }
 };
+
+function startDetails() {
+  const staged = spawnSync("git", ["diff", "--cached", "--name-only"], { encoding: "utf8" });
+  return {
+    r2Env: Object.keys(process.env).filter((name) => name.startsWith("R2_")).sort(),
+    staged: staged.stdout.split("\n").filter(Boolean),
+  };
+}
 
 function run(script, args) {
   const result = spawnSync(process.execPath, [script, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] });
@@ -45,7 +53,7 @@ function publishIssue(slug) {
   }
 }
 
-record("start");
+record("start", startDetails());
 await delay(Number(process.env.STUB_SLEEP_MS ?? 0));
 if (process.env.STUB_SLUG) publishIssue(process.env.STUB_SLUG);
 record("end");

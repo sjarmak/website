@@ -20,13 +20,12 @@ import { z } from "zod";
 import YAML from "yaml";
 import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
 import { evaluateConceptGate, isCronMode, runPostPublishSideEffects } from "./concept-gate.mjs";
+import { readEntryAudio } from "./entry-audio.mjs";
 import { mediaFilesRoot } from "./media-location.mjs";
-import { removePending, retryCommand, writePending } from "./pending-audio.mjs";
-import { mediaBackend, publicBase, r2ConfigFromEnv, verifyTimeoutMs } from "../media/config.mjs";
-import { digestKey, publicUrlForKey, siteUrlForKey } from "../media/keys.mjs";
+import { retryCommand, writePending } from "./pending-audio.mjs";
+import { mediaBackend } from "../media/config.mjs";
+import { digestKey, siteUrlForKey } from "../media/keys.mjs";
 import { installLocalObject, readLocalObject } from "../media/local-object.mjs";
-import { createR2Store, putImmutable } from "../media/store.mjs";
-import { verifyPublicMedia } from "../media/verify.mjs";
 
 const CONTENT_DIR = "src/content/digest";
 
@@ -114,9 +113,11 @@ async function publish(spec) {
   const gate = evaluateConceptGate(spec.topics, { cron });
 
   await assertNoRepeatedItems(spec);
+  const body = spec.body ?? (await readFile(spec.bodyFile, "utf8"));
 
-  const audio = await resolveAudio(spec, slug);
-  const showDuration = spec.durationSec && (audio.audioUrl || spec.embedUrl);
+  const mdPath = path.join(CONTENT_DIR, `${slug}.md`);
+  const audio = await resolveAudio(spec, slug, mdPath);
+  const durationSec = audio.audioUrl ? audio.durationSec : spec.embedUrl ? spec.durationSec : undefined;
 
   // 2. assemble frontmatter — only include keys that are set
   const fm = {
@@ -130,16 +131,14 @@ async function publish(spec) {
     ...(gate.unresolvedFacets.length > 0 ? { unresolvedFacets: gate.unresolvedFacets } : {}),
     ...(audio.audioUrl ? { audioUrl: audio.audioUrl } : {}),
     ...(spec.embedUrl ? { embedUrl: spec.embedUrl } : {}),
-    ...(showDuration ? { durationSec: spec.durationSec } : {}),
+    ...(durationSec ? { durationSec } : {}),
     items: spec.items,
     highlights: spec.highlights,
   };
 
   // 3. write the collection entry
-  const body = spec.body ?? (await readFile(spec.bodyFile, "utf8"));
   const md = `---\n${YAML.stringify(fm).trimEnd()}\n---\n\n${body.trim()}\n`;
   await mkdir(CONTENT_DIR, { recursive: true });
-  const mdPath = path.join(CONTENT_DIR, `${slug}.md`);
   await writeFile(mdPath, md, "utf8");
   written.push(mdPath);
 
@@ -163,58 +162,52 @@ async function publish(spec) {
   return { slug, mdPath, audioUrl: audio.audioUrl, audio: audio.report, written };
 }
 
-async function resolveAudio(spec, slug) {
+const QUEUED_REASON = {
+  git: "queued: run.sh commits and pushes the media branch, waits for its deploy, verifies the public URL, then attaches the player",
+  r2: "queued: run.sh uploads it to R2, verifies its public URL, then attaches the player",
+};
+
+function committedAudio(mdPath, audioUrl) {
+  const shown = spawnSync("git", ["show", `HEAD:${mdPath}`], { encoding: "utf8" });
+  if (shown.status !== 0) return {};
+  const committed = readEntryAudio(shown.stdout);
+  return committed.audioUrl === audioUrl ? committed : {};
+}
+
+async function resolveAudio(spec, slug, mdPath) {
   if (!spec.audioFile) {
     if (!spec.audioUrl) return { report: { status: "none" } };
     console.error(
       `[publish-digest] audioUrl ${spec.audioUrl} was given without audioFile, so it is published unverified; ` +
         "run.sh verify-staged strips it if it does not serve",
     );
-    return { audioUrl: spec.audioUrl, report: { status: "unverified" } };
+    return { audioUrl: spec.audioUrl, durationSec: spec.durationSec, report: { status: "unverified" } };
   }
   const backend = mediaBackend();
-  const r2 = backend === "r2" ? r2ConfigFromEnv() : null;
   const key = digestKey(slug);
+  const audioUrl = siteUrlForKey(key);
   const file = await installLocalObject(spec.audioFile, mediaFilesRoot(), key);
   const local = await readLocalObject(file);
-  const audioUrl = siteUrlForKey(key);
-
-  const defer = async (reason, check) => {
-    await writePending({
-      slug,
-      key,
-      audioUrl,
-      ...(spec.durationSec ? { durationSec: spec.durationSec } : {}),
-      file,
-      sha256: local.sha256,
-      bytes: local.bytes,
-      backend,
-      reason,
-      check,
-      failedAt: new Date().toISOString(),
-    });
-    console.error(`[publish-digest] audio for ${slug} is pending (${reason}); publishing the text without a player`);
-    return { report: { status: "pending", reason, check, retry: retryCommand(backend) } };
-  };
-
-  if (backend === "git") return defer("awaiting media push and deploy", "deploy");
-  try {
-    await putImmutable(createR2Store(r2), { key, file });
-  } catch (err) {
-    return defer(`upload to R2 failed: ${err.message}`, "upload");
-  }
-  try {
-    await verifyPublicMedia({
-      url: publicUrlForKey(publicBase(), key),
-      file,
-      deadline: Date.now() + verifyTimeoutMs(),
-      log: (line) => console.error(line),
-    });
-  } catch (err) {
-    return defer(err.message, err.check ?? "verify");
-  }
-  await removePending(slug);
-  return { audioUrl, report: { status: "verified" } };
+  const reason = QUEUED_REASON[backend];
+  await writePending({
+    slug,
+    key,
+    audioUrl,
+    ...(spec.durationSec ? { durationSec: spec.durationSec } : {}),
+    file,
+    sha256: local.sha256,
+    bytes: local.bytes,
+    backend,
+    reason,
+    check: "queued",
+    updatedAt: new Date().toISOString(),
+  });
+  const kept = committedAudio(mdPath, audioUrl);
+  console.error(
+    `[publish-digest] audio for ${slug} is pending until run.sh verifies it at its public URL; ` +
+      (kept.audioUrl ? "the committed player stays until then" : "publishing the text without a player"),
+  );
+  return { ...kept, report: { status: "pending", reason, check: "queued", retry: retryCommand(backend) } };
 }
 
 async function main() {

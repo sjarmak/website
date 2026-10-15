@@ -54,6 +54,14 @@ case "$CADENCE" in
 esac
 UNTIL="$(date -d "$DATE +1 day" +%F)"
 
+MEDIA_START_DRAIN_SEC="${MEDIA_START_DRAIN_SEC:-60}"
+MEDIA_DEPLOY_WAIT_SEC="${MEDIA_DEPLOY_WAIT_SEC:-1200}"
+MEDIA_VERIFY_TIMEOUT_SEC="${MEDIA_VERIFY_TIMEOUT_SEC:-300}"
+for NAME in MEDIA_START_DRAIN_SEC MEDIA_DEPLOY_WAIT_SEC MEDIA_VERIFY_TIMEOUT_SEC; do
+  [[ "${!NAME}" =~ ^[1-9][0-9]*$ ]] || { echo "$NAME must be a positive whole number of seconds, found: ${!NAME}" >&2; exit 2; }
+done
+export MEDIA_VERIFY_TIMEOUT_SEC
+
 WEBSITE_DIR="${WEBSITE_DIR:-/home/ds/projects/website}"
 LOG_DIR="$WEBSITE_DIR/.digest-runs"
 mkdir -p "$LOG_DIR"
@@ -89,14 +97,6 @@ else
     echo "MEDIA_BACKEND=r2 needs R2 credentials in $R2_ENV_FILE (see scripts/digest/README.md)" >&2
     exit 2
   }
-  set -a
-  . "$R2_ENV_FILE"
-  set +a
-  MISSING=""
-  for NAME in R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
-    [ -n "${!NAME:-}" ] || MISSING="$MISSING $NAME"
-  done
-  [ -z "$MISSING" ] || { echo "$R2_ENV_FILE does not set:$MISSING" >&2; exit 2; }
   export DIGEST_SPOOL="${DIGEST_SPOOL:-$HOME/.local/share/sjarmak-media/spool}"
   AUDIO_DIR="$DIGEST_SPOOL/digests"
 fi
@@ -161,14 +161,27 @@ CLAUDE_FLAGS="${CLAUDE_FLAGS:---permission-mode acceptEdits --allowedTools Bash,
 
 CLAUDE_BIN="${CLAUDE_BIN:-claude-auto}"
 
+WITHOUT_R2=(env -u R2_ACCOUNT_ID -u R2_ACCESS_KEY_ID -u R2_SECRET_ACCESS_KEY -u R2_BUCKET)
+
 audio_gate() {
-  node scripts/digest/audio-gate.mjs "$@" 2>&1 | tee -a "$LOG"
+  if [ "$MEDIA_BACKEND" = "r2" ]; then
+    "${WITHOUT_R2[@]}" node --env-file="$R2_ENV_FILE" scripts/digest/audio-gate.mjs "$@" 2>&1 | tee -a "$LOG"
+  else
+    node scripts/digest/audio-gate.mjs "$@" 2>&1 | tee -a "$LOG"
+  fi
 }
 
-drain_pending() {
-  local status=0
-  audio_gate drain || status=$?
-  [ "$status" = "0" ] || echo "[digest] pending-audio drain exited ${status}; any issue whose audio did not verify stays text-only" | tee -a "$LOG"
+drain_phase() {
+  local label="$1" wait_sec="$2" status=0
+  audio_gate drain --wait-sec "$wait_sec" || status=$?
+  case "$status" in
+    0) ;;
+    1) echo "[digest] ${label} drain: audio that did not verify within ${wait_sec}s stays pending and its issue stays text-only" | tee -a "$LOG" ;;
+    *)
+      echo "[digest] ${label} drain failed (exit ${status}), so nothing was committed; staged changes are left in place for inspection" | tee -a "$LOG"
+      exit "$status"
+      ;;
+  esac
 }
 
 if [ "$MODE" = "attach-pending" ]; then
@@ -179,13 +192,15 @@ else
   echo "[digest] ${MODE} ${DATE} — generating (work=${WORK}, via ${CLAUDE_BIN}, backend ${MEDIA_BACKEND})" | tee "$LOG"
 fi
 
-if [ "$MEDIA_BACKEND" = "r2" ]; then
-  drain_pending
+if [ "$MEDIA_BACKEND" = "git" ]; then
+  drain_phase start "$MEDIA_START_DRAIN_SEC"
+else
+  drain_phase start "$MEDIA_VERIFY_TIMEOUT_SEC"
 fi
 
 if [ "$MODE" != "attach-pending" ]; then
   # shellcheck disable=SC2086
-  "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
+  "${WITHOUT_R2[@]}" "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 fi
 
 git add src/content/digest 2>/dev/null || true
@@ -199,11 +214,13 @@ if [ "$MEDIA_BACKEND" = "git" ]; then
   if [ "${DIGEST_PUSH:-0}" = "1" ]; then
     git -C "$WEBSITE_MEDIA_DIR" pull --rebase --autostash
     git -C "$WEBSITE_MEDIA_DIR" push origin media
-    echo "[digest] pushed the media branch; waiting for its audio to go live" | tee -a "$LOG"
-    drain_pending
+    echo "[digest] pushed the media branch; waiting up to ${MEDIA_DEPLOY_WAIT_SEC}s for its audio to go live" | tee -a "$LOG"
+    drain_phase deploy "$MEDIA_DEPLOY_WAIT_SEC"
   else
     echo "[digest] DIGEST_PUSH!=1, media branch not pushed, so new audio stays pending" | tee -a "$LOG"
   fi
+elif [ "$MODE" != "attach-pending" ]; then
+  drain_phase upload "$MEDIA_VERIFY_TIMEOUT_SEC"
 fi
 
 GATE_STATUS=0
