@@ -3320,6 +3320,25 @@
           "why": "Experience memory here is built from repository history rather than the agent's own trajectories, and the relations between experiences carry retrieval signal that query similarity alone misses."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261014216G",
+      "title": "Cortex: Measurement-Gated Evolution and Pruning of Coding-Agent Skills and Rules",
+      "firstAuthor": "Giampieri, Samuele",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.14216",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261014216G",
+      "branches": [
+        "procedural-skills"
+      ],
+      "notes": [
+        {
+          "branch": "procedural-skills",
+          "takeaway": "Cortex grows and prunes a coding agent's skills and rules by measurement. A candidate is kept only if it was in the agent's context on the tasks scored, won net runs against the live harness in a confirm sweep, caused no task to drop past a threshold, never broke a task that always passed, and actually fired; a live item is deleted only when the same test, pointed the other way, shows removal costs nothing and the item had fired. Across four runs with Claude Haiku 4.5 on a synthetic repository with four house rules, the evolved harness raised held-out pass rate from 21.5 to 76.5 percent (+55.0 points, 95 percent CI +34.1 to +74.1) while adding no always-on text. Path-gated rules loaded on almost every matching task; always-on skills were listed 198 times and opened zero.",
+          "why": "Procedural memory for coding agents is usually accumulated by a model's own judgment. This paper makes keep and delete decisions mechanical and exposure-aware, and reports where that fails: harm was not detected because screens run on failing tasks, narrowed file-list scopes never fired on unseen work, and a real open-source project with a low correction rate yielded nothing to learn."
+        }
+      ]
     }
   ],
   "sections": [

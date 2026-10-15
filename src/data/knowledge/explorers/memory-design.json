@@ -1953,6 +1953,25 @@
           "why": "A concrete case that working context should be a managed ledger with retirement, not a growing scratchpad; in the Treasury example Codex found a correction and then dropped it, while LongHarness retired the old value and returned the reference answer."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261018410S",
+      "title": "Graph-free Retrieval with Graph-Modified Embeddings",
+      "firstAuthor": "Santi, Federica",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.18410",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261018410S",
+      "branches": [
+        "retrieval"
+      ],
+      "notes": [
+        {
+          "branch": "retrieval",
+          "takeaway": "Five offline transformations fold a knowledge graph's neighbourhood into node embeddings (one-hop and two-hop blends, a retrofitting pull, random-walk endpoint blends, Louvain cluster blends) so a plain vector index can answer relational questions without walking the graph at query time. Replacing the original embeddings outright hurt, but using the modified embeddings in a second query stage helped: a chained requery over random-walk embeddings lifted recall on the hard relational and collection questions from 51.0 to 60.8 percent at a 40-node budget, and matched plain retrieval's 40-node recall with 24 nodes.",
+          "why": "This is a concrete recipe for getting part of graph retrieval's relational benefit from a memory store that only holds dense vectors. Controls that requeried with the original embeddings show that slightly more than half of the gain comes from graph conditioning rather than from requerying alone."
+        }
+      ]
     }
   ],
   "sections": [

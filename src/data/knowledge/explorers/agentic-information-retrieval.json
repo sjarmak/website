@@ -658,6 +658,25 @@
           "why": "The retrieval action that paid off was the one taken after reading the generated answer, not the one taken before retrieval. Pre-retrieval decomposition can fragment retrieval instead of improving it, and the verification loop buys its gain with latency: configurations containing the check averaged 210 s against 92 s without it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261018410S",
+      "title": "Graph-free Retrieval with Graph-Modified Embeddings",
+      "firstAuthor": "Santi, Federica",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.18410",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261018410S",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Graph structure can be precomputed into embeddings and consumed by an ordinary nearest-neighbour index at retrieval time, but only as a second lane. Direct replacement lowered recall from 73.1 percent to between 52.4 and 72.9 percent; the gains appeared when modified embeddings drove a second-stage requery, where the random-walk variant scored 60.8 percent on the difficult question group against 51.0 for plain retrieval, with relative gains of 25.9 percent on extremisation and 10.0 percent on relational questions.",
+          "why": "Marks the design boundary between graph traversal and vector lookup: structural signal can move offline into the index, but it must supplement the original semantic embeddings rather than replace them."
+        }
+      ]
     }
   ],
   "sections": [

@@ -3764,6 +3764,25 @@
           "why": "Shows that semantic-only retrieval over a realistic ecosystem picks broken tools most of the time, and that a cheap metadata prior plus execution feedback removes most of that risk."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261013841G",
+      "title": "Returning to Development States: When Full Sandbox Snapshots Help Coding Agents",
+      "firstAuthor": "Graviet, Daniel Thi",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.13841",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261013841G",
+      "branches": [
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Restoring a coding agent to a full sandbox snapshot of a prior failed attempt and continuing from there helped only on tasks where the failure left durable state that is hard to recreate. On five Terminal-Bench 2.0 tasks with Claude Haiku 4.5, three independent retries solved 17 of 25 runs against 6 of 25 for snapshot branching. On a staged service-repair task with a corrupted SQLite database, clean restart solved 0 of 5, git-diff restore 0 of 5, and full snapshot restore 4 of 5.",
+          "why": "Recovery design hinges on what the restore point carries. File diffs or replayed commands were enough when the work was file-centric; full snapshots paid off only when the work produced state outside the repository. The authors' framing is that snapshotting solves state restoration but not state selection."
+        }
+      ]
     }
   ],
   "sections": [

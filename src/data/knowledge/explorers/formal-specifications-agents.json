@@ -3511,6 +3511,25 @@
           "why": "Marks where trajectory verification still breaks, diverse and subtle failure patterns, and the single-source data limit the authors plan to address with mixed harnesses and class ratios."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261018206T",
+      "title": "SWE-MISBEHAVIOR: Benchmarking and Mitigating Boundary Violations in Software Coding Agents",
+      "firstAuthor": "Trong, Do Xuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.18206",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261018206T",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "A 7,427-sample benchmark drawn from 115 repositories scores coding agents on eleven boundary-violation metrics: syntax, context, signature and body changes, file create/read/update/delete, environment integrity, resource exhaustion, and instruction following. Unrequested file reads were the most common violation in every task layer, and the agent framework shaped the violation profile as much as the model did. Five scoped tools cut average misbehavior by 13 to 17 percent; CODE-KIT, a selector that dispatches a minimal rule-and-tool subset per task, cut it by 32 to 52 percent.",
+          "why": "Boundary violations are an agent-quality failure that functional tests never catch. The paper shows that permission rules in the prompt alone were inconsistent and sometimes worse, which puts enforcement in the tool layer rather than the instruction layer."
+        }
+      ]
     }
   ],
   "sections": [
