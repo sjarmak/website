@@ -9,14 +9,10 @@
 // Usage:
 //   node scripts/digest/publish-digest.mjs --spec issue.json [--commit]
 //
-// The spec is JSON. `body` is the newsletter markdown (inline string), or pass
-// `bodyFile` to read it from a file. `audioFile` (a rendered MP3 path) is copied
-// into the configured media worktree; alternatively pass a ready `audioUrl`.
-//
 // Writes src/content/digest/<slug>.md and git-adds it. With --commit it also
 // commits locally. It never pushes — that stays an explicit, separate step.
 
-import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
@@ -24,7 +20,13 @@ import { z } from "zod";
 import YAML from "yaml";
 import { collectRecentCoverage, normalizeUrl } from "./recent-coverage.mjs";
 import { evaluateConceptGate, isCronMode, runPostPublishSideEffects } from "./concept-gate.mjs";
-import { digestAudioPath } from "./media-location.mjs";
+import { mediaFilesRoot } from "./media-location.mjs";
+import { removePending, retryCommand, writePending } from "./pending-audio.mjs";
+import { mediaBackend, publicBase, r2ConfigFromEnv, verifyTimeoutMs } from "../media/config.mjs";
+import { digestKey, publicUrlForKey, siteUrlForKey } from "../media/keys.mjs";
+import { installLocalObject, readLocalObject } from "../media/local-object.mjs";
+import { createR2Store, putImmutable } from "../media/store.mjs";
+import { verifyPublicMedia } from "../media/verify.mjs";
 
 const CONTENT_DIR = "src/content/digest";
 
@@ -113,16 +115,8 @@ async function publish(spec) {
 
   await assertNoRepeatedItems(spec);
 
-  // 1. resolve audio (copy a rendered file in, or use a provided URL)
-  let audioUrl = spec.audioUrl;
-  if (spec.audioFile) {
-    const dest = digestAudioPath(slug);
-    await mkdir(path.dirname(dest), { recursive: true });
-    if (path.resolve(spec.audioFile) !== path.resolve(dest)) {
-      await copyFile(spec.audioFile, dest);
-    }
-    audioUrl = `/media/digests/${slug}.mp3`;
-  }
+  const audio = await resolveAudio(spec, slug);
+  const showDuration = spec.durationSec && (audio.audioUrl || spec.embedUrl);
 
   // 2. assemble frontmatter — only include keys that are set
   const fm = {
@@ -134,9 +128,9 @@ async function publish(spec) {
     summary: spec.summary,
     topics: spec.topics,
     ...(gate.unresolvedFacets.length > 0 ? { unresolvedFacets: gate.unresolvedFacets } : {}),
-    ...(audioUrl ? { audioUrl } : {}),
+    ...(audio.audioUrl ? { audioUrl: audio.audioUrl } : {}),
     ...(spec.embedUrl ? { embedUrl: spec.embedUrl } : {}),
-    ...(spec.durationSec ? { durationSec: spec.durationSec } : {}),
+    ...(showDuration ? { durationSec: spec.durationSec } : {}),
     items: spec.items,
     highlights: spec.highlights,
   };
@@ -166,7 +160,61 @@ async function publish(spec) {
 
   // 4. stage (always) and commit (opt-in). Never push.
   git("add", ...written);
-  return { slug, mdPath, audioUrl, written };
+  return { slug, mdPath, audioUrl: audio.audioUrl, audio: audio.report, written };
+}
+
+async function resolveAudio(spec, slug) {
+  if (!spec.audioFile) {
+    if (!spec.audioUrl) return { report: { status: "none" } };
+    console.error(
+      `[publish-digest] audioUrl ${spec.audioUrl} was given without audioFile, so it is published unverified; ` +
+        "run.sh verify-staged strips it if it does not serve",
+    );
+    return { audioUrl: spec.audioUrl, report: { status: "unverified" } };
+  }
+  const backend = mediaBackend();
+  const r2 = backend === "r2" ? r2ConfigFromEnv() : null;
+  const key = digestKey(slug);
+  const file = await installLocalObject(spec.audioFile, mediaFilesRoot(), key);
+  const local = await readLocalObject(file);
+  const audioUrl = siteUrlForKey(key);
+
+  const defer = async (reason, check) => {
+    await writePending({
+      slug,
+      key,
+      audioUrl,
+      ...(spec.durationSec ? { durationSec: spec.durationSec } : {}),
+      file,
+      sha256: local.sha256,
+      bytes: local.bytes,
+      backend,
+      reason,
+      check,
+      failedAt: new Date().toISOString(),
+    });
+    console.error(`[publish-digest] audio for ${slug} is pending (${reason}); publishing the text without a player`);
+    return { report: { status: "pending", reason, check, retry: retryCommand(backend) } };
+  };
+
+  if (backend === "git") return defer("awaiting media push and deploy", "deploy");
+  try {
+    await putImmutable(createR2Store(r2), { key, file });
+  } catch (err) {
+    return defer(`upload to R2 failed: ${err.message}`, "upload");
+  }
+  try {
+    await verifyPublicMedia({
+      url: publicUrlForKey(publicBase(), key),
+      file,
+      deadline: Date.now() + verifyTimeoutMs(),
+      log: (line) => console.error(line),
+    });
+  } catch (err) {
+    return defer(err.message, err.check ?? "verify");
+  }
+  await removePending(slug);
+  return { audioUrl, report: { status: "verified" } };
 }
 
 async function main() {
@@ -182,7 +230,9 @@ async function main() {
   if (args.commit) {
     git("commit", "-m", `content(digest): publish ${result.slug}`);
   }
-  process.stdout.write(`${JSON.stringify({ slug: result.slug, path: result.mdPath, audioUrl: result.audioUrl, committed: args.commit })}\n`);
+  process.stdout.write(
+    `${JSON.stringify({ slug: result.slug, path: result.mdPath, audioUrl: result.audioUrl, audio: result.audio, committed: args.commit })}\n`,
+  );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

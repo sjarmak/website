@@ -5,20 +5,19 @@
 //   node scripts/digest/tts-render.mjs --in transcript.txt --out daily-2026-06-10 \
 //     [--voice af_heart] [--speed 0.85]
 //
-// Prints a JSON line to stdout: { "audioUrl": "/media/digests/<out>.mp3", "durationSec": <n> }
-// so the publish step / generation agent can consume it directly.
-//
 // Requires the Kokoro venv (scripts/digest/setup-kokoro.sh; override location with
 // $KOKORO_VENV) and ffmpeg for WAV→MP3 concat+encode. No API key, no network —
 // the model runs locally (first-ever render downloads weights into the HF cache).
 
-import { readFile, writeFile, mkdir, rm, stat } from "node:fs/promises";
+import { readFile, writeFile, mkdtemp, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import os from "node:os";
 import path from "node:path";
-import { requireMediaRoot } from "./media-location.mjs";
+import { mediaFilesRoot } from "./media-location.mjs";
+import { digestKey, siteUrlForKey } from "../media/keys.mjs";
+import { installLocalObject } from "../media/local-object.mjs";
 
 const MAX_CHARS = 4000; // per-chunk cap keeps Kokoro inputs and memory bounded
 const RENDERER = path.join(path.dirname(new URL(import.meta.url).pathname), "kokoro-render.py");
@@ -166,28 +165,26 @@ async function main() {
   const speed = Number.parseFloat(args.speed ?? "0.85");
   if (!Number.isFinite(speed) || speed <= 0) throw new Error(`invalid --speed: ${args.speed}`);
   const base = path.basename(args.out, ".mp3");
-  const outDir = path.join(requireMediaRoot(), "digests");
+  const key = digestKey(base);
+  const root = mediaFilesRoot();
 
   const raw = await readFile(args.in, "utf8");
   const speech = stripForSpeech(raw);
   const chunks = chunkText(speech);
   if (chunks.length === 0) throw new Error("transcript produced no speakable text");
 
-  await mkdir(outDir, { recursive: true });
-  const tmpDir = path.join(outDir, `.tmp-${base}`);
-  await mkdir(tmpDir, { recursive: true });
-
-  const partFiles = await renderChunks({ chunks, tmpDir, voice, speed });
-
-  const outFile = path.join(outDir, `${base}.mp3`);
-  await concatChunks(partFiles, outFile, path.join(tmpDir, "concat.txt"));
-  await rm(tmpDir, { recursive: true, force: true });
-
-  const wordCount = speech.split(/\s+/).filter(Boolean).length;
-  const durationSec = ffprobeDuration(outFile) ?? Math.round((wordCount / WORDS_PER_MIN) * 60);
-  await stat(outFile); // assert it exists
-
-  process.stdout.write(`${JSON.stringify({ audioUrl: `/media/digests/${base}.mp3`, durationSec })}\n`);
+  const tmpDir = await mkdtemp(path.join(os.tmpdir(), `tts-${base}-`));
+  try {
+    const partFiles = await renderChunks({ chunks, tmpDir, voice, speed });
+    const encoded = path.join(tmpDir, `${base}.mp3`);
+    await concatChunks(partFiles, encoded, path.join(tmpDir, "concat.txt"));
+    const wordCount = speech.split(/\s+/).filter(Boolean).length;
+    const durationSec = ffprobeDuration(encoded) ?? Math.round((wordCount / WORDS_PER_MIN) * 60);
+    const file = await installLocalObject(encoded, root, key);
+    process.stdout.write(`${JSON.stringify({ file, audioUrl: siteUrlForKey(key), durationSec })}\n`);
+  } finally {
+    await rm(tmpDir, { recursive: true, force: true });
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

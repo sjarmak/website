@@ -1,5 +1,8 @@
 import path from "node:path";
 
+import { mediaBackend, spoolRoot } from "../media/config.mjs";
+import { assertMediaKey } from "../media/keys.mjs";
+
 export function requireMediaRoot(environment = process.env) {
   const configured = environment.WEBSITE_MEDIA_ROOT;
   if (!configured) {
@@ -13,6 +16,10 @@ export function requireMediaRoot(environment = process.env) {
   return path.resolve(configured);
 }
 
-export function digestAudioPath(slug, environment = process.env) {
-  return path.join(requireMediaRoot(environment), "digests", `${slug}.mp3`);
+export function mediaFilesRoot(environment = process.env) {
+  return mediaBackend(environment) === "r2" ? spoolRoot(environment) : requireMediaRoot(environment);
+}
+
+export function localMediaPath(key, environment = process.env) {
+  return path.join(mediaFilesRoot(environment), assertMediaKey(key));
 }
