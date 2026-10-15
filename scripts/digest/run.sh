@@ -246,7 +246,7 @@ fi
 
 audio_gate settle
 if ! audio_gate status; then
-  echo "[digest] finished with audio still pending; those issues are published without a player" | tee -a "$LOG"
+  echo "[digest] finished with audio still pending; each PENDING report above says what its issue shows now and how to clear it" | tee -a "$LOG"
   exit 1
 fi
 [ "$GATE_STATUS" = "0" ] || exit 1

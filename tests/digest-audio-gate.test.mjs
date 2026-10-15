@@ -239,6 +239,31 @@ test("drain refuses a record that points outside the media root or at another UR
   }
 });
 
+test("re-published audio that R2 already holds different bytes for is reported as a conflict, never retried", async (t) => {
+  const ctx = await setup(t);
+  assert.equal((await ctx.publish()).status, 0);
+  assert.equal((await ctx.gate("drain")).status, 0);
+  git(ctx.sandbox.repo, "commit", "-q", "-m", "first");
+  assert.equal((await ctx.gate("settle")).status, 0);
+  assert.equal((await ctx.publish({ bytes: randomBytes(2048), durationSec: 99 })).status, 0);
+
+  const drained = await ctx.gate("drain");
+  assert.equal(drained.status, 1);
+  assert.equal((await ctx.pending()).check, "conflict");
+  assert.equal(ctx.fake.stats.puts, 1);
+  assert.deepEqual(ctx.fake.objects.get(KEY).body, ctx.audio);
+  assert.deepEqual(readEntryAudio(await ctx.entry()), { audioUrl: `/media/${KEY}`, durationSec: 61 });
+
+  const status = await ctx.gate("status");
+  assert.equal(status.status, 1);
+  assert.match(status.stderr, new RegExp(`^\\[audio\\] PENDING ${SLUG}: R2 already holds different audio under ${KEY}`, "m"));
+  assert.match(status.stderr, /^ {2}reason: R2 object .* already exists with different content/m);
+  assert.match(status.stderr, new RegExp(`published audio is unchanged: ${ctx.fake.publicBase}/${KEY} still serves the earlier upload`));
+  assert.match(status.stderr, /^ {2}fix: +give the issue a new slug and publish it again$/m);
+  assert.match(status.stderr, new RegExp(`or keep the published audio with ${DROP.source} ${SLUG}$`, "m"));
+  assert.doesNotMatch(status.stderr, /retry:/);
+});
+
 test("re-publishing an issue keeps its committed player, and settle keeps the new audio queued", async (t) => {
   const ctx = await setup(t);
   assert.equal((await ctx.publish()).status, 0);

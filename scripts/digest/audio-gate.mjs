@@ -11,7 +11,7 @@ import { dropCommand, dropPending, listPending, removePending, retryCommand, wri
 import { mediaBackend, publicBase, r2ConfigFromEnv, verifyTimeoutMs } from "../media/config.mjs";
 import { isSiteMediaUrl, keyFromSiteUrl, publicUrlForKey, siteUrlForKey } from "../media/keys.mjs";
 import { readLocalObject } from "../media/local-object.mjs";
-import { createR2Store, putImmutable } from "../media/store.mjs";
+import { ConflictError, createR2Store, putImmutable } from "../media/store.mjs";
 import { verifyPublicMedia } from "../media/verify.mjs";
 
 const CONTENT_DIR = "src/content/digest";
@@ -87,6 +87,7 @@ async function makeLive(ctx, { key, file, sha256 }) {
     try {
       await putImmutable(ctx.store, { key, file });
     } catch (err) {
+      if (err instanceof ConflictError) return { ok: false, local, check: "conflict", reason: err.message };
       return { ok: false, local, check: "upload", reason: `upload to R2 failed: ${err.message}` };
     }
   }
@@ -230,8 +231,15 @@ async function settle() {
   return 0;
 }
 
-function remedy(record, env) {
+function remedy(record, env, url) {
   const retry = retryCommand(mediaBackend(env), env);
+  if (record.check === "conflict") {
+    return [
+      `  published audio is unchanged: ${url} still serves the earlier upload`,
+      "  fix:    give the issue a new slug and publish it again",
+      `          or keep the published audio with ${dropCommand(record.slug)}`,
+    ];
+  }
   if (record.check === "entry") {
     return [
       `  fix:    publish the issue text, then run ${retry}`,
@@ -244,14 +252,22 @@ function remedy(record, env) {
   return [`  retry:  ${retry}`];
 }
 
+function headline(record) {
+  if (record.check === "conflict") {
+    return `R2 already holds different audio under ${record.key}, so this audio cannot be published there`;
+  }
+  return "the issue is published without a player until its audio verifies";
+}
+
 export function describePending(record, env = process.env) {
+  const url = publicUrlForKey(publicBase(env), record.key);
   return [
-    `[audio] PENDING ${record.slug}: the issue is published without a player until its audio verifies`,
-    `  url:    ${publicUrlForKey(publicBase(env), record.key)}`,
+    `[audio] PENDING ${record.slug}: ${headline(record)}`,
+    `  url:    ${url}`,
     `  check:  ${record.check ?? "unknown"}`,
     `  reason: ${record.reason}`,
     `  file:   ${record.file}`,
-    ...remedy(record, env),
+    ...remedy(record, env, url),
   ].join("\n");
 }
 
