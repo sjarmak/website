@@ -3,7 +3,8 @@ import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
-const MEDIA_PREFIX = "public/media/";
+const MEDIA_DIR = "public/media";
+const MEDIA_PREFIX = `${MEDIA_DIR}/`;
 const EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 const USAGE = "usage: media-guard.mjs --base <sha|empty> --head <sha>";
 
@@ -18,7 +19,7 @@ export function parseNameStatus(output) {
 
 export function forbiddenMediaPaths(entries) {
   return entries
-    .filter(({ path }) => path.startsWith(MEDIA_PREFIX))
+    .filter(({ path }) => path === MEDIA_DIR || path.startsWith(MEDIA_PREFIX))
     .map(({ path }) => path)
     .sort();
 }
@@ -51,12 +52,12 @@ function guard({ base, head }) {
   const diff = git(["diff", "--name-status", "--no-renames", "-z", "--diff-filter=AMT", from, head, "--"]);
   const forbidden = forbiddenMediaPaths(parseNameStatus(diff.stdout));
   if (forbidden.length === 0) {
-    console.log(`[media-guard] no files added or changed under ${MEDIA_PREFIX} between ${from} and ${head}`);
+    console.log(`[media-guard] nothing added or changed at or under ${MEDIA_DIR} between ${from} and ${head}`);
     return 0;
   }
   console.error(
     [
-      `[media-guard] these changes commit files under ${MEDIA_PREFIX} (${from}..${head}):`,
+      `[media-guard] these changes commit paths at or under ${MEDIA_DIR} (${from}..${head}):`,
       ...forbidden.map((file) => `  ${file}`),
       "Media does not belong in the site build. Digest audio ships through scripts/digest/run.sh",
       "(media branch or R2, per MEDIA_BACKEND); upload other media with scripts/media/backfill.mjs",

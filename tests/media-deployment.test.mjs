@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -44,11 +44,14 @@ test("the media guard flags added or rewritten files under public/media and noth
     "T", "public/media/video/talk.mp4",
     "A", "src/content/digest/daily-2026-10-16.md",
     "A", "public/mediakit/logo.png",
+    "A", "public/media",
+    "A", "public/media.bak",
     "",
   ].join("\0");
   const entries = parseNameStatus(listing);
-  assert.equal(entries.length, 5);
+  assert.equal(entries.length, 7);
   assert.deepEqual(forbiddenMediaPaths(entries), [
+    "public/media",
     "public/media/digests/daily-2026-10-15.mp3",
     "public/media/digests/daily-2026-10-16.mp3",
     "public/media/video/talk.mp4",
@@ -96,6 +99,18 @@ test("the media guard fails a push that commits new media and passes content-onl
   assert.equal((await repo.guard(content, removal)).status, 0);
   assert.equal((await repo.guard(ZERO_SHA, content)).status, 0);
   assert.equal((await repo.guard("", media)).status, 1);
+});
+
+test("the media guard fails a push that puts a symlink at public/media itself", async (t) => {
+  const repo = await guardRepo(t);
+  const base = await repo.commit({ "public/robots.txt": "", "archive/a.mp3": "ID3" }, "baseline");
+  await symlink("../archive", path.join(repo.root, "public", "media"));
+  git(repo.root, "add", "-A");
+  git(repo.root, "commit", "-q", "-m", "link the archive into the build");
+  const linked = git(repo.root, "rev-parse", "HEAD");
+  const result = await repo.guard(base, linked);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /^ {2}public\/media$/m);
 });
 
 test("the media guard checks a first push against the empty tree", async (t) => {
