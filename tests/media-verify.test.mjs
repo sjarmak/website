@@ -95,6 +95,22 @@ test("a URL that 404s while the CDN catches up passes once it starts serving", a
   assert.equal(result.attempts, 4);
 });
 
+test("a full GET whose connection resets mid-body is retried and then verifies", async (t) => {
+  const { fake, run } = await setup(t);
+  fake.faults.public.set(KEY, { resetFullBodyTimes: 1 });
+  const result = await run({ deadline: Date.now() + 5_000 });
+  assert.equal(result.attempts, 2);
+  assert.equal(fake.faults.public.get(KEY).resetFullBodyTimes, 0);
+});
+
+test("a range body that stalls past the request timeout is retried and then verifies", async (t) => {
+  const { fake, run } = await setup(t);
+  fake.faults.public.set(KEY, { stallRangeBodyTimes: 1 });
+  const result = await run({ deadline: Date.now() + 5_000, requestTimeoutMs: 300 });
+  assert.equal(result.attempts, 2);
+  assert.equal(fake.faults.public.get(KEY).stallRangeBodyTimes, 0);
+});
+
 test("an expired deadline still makes exactly one attempt", async (t) => {
   const { fake, run } = await setup(t);
   fake.faults.public.set(KEY, { status: 404 });

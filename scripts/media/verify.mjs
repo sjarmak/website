@@ -42,9 +42,17 @@ async function request(fetchImpl, url, { method = "GET", range, timeoutMs }) {
   }
 }
 
+async function readBody(res, check, what) {
+  try {
+    return Buffer.from(await res.arrayBuffer());
+  } catch (err) {
+    throw new CheckFailure(check, `${what} body read failed: ${err.message}`);
+  }
+}
+
 async function checkRange(fetchImpl, url, local, { start, end, check, timeoutMs }) {
   const res = await request(fetchImpl, url, { range: `bytes=${start}-${end}`, timeoutMs });
-  const body = Buffer.from(await res.arrayBuffer());
+  const body = await readBody(res, check, `GET bytes=${start}-${end}`);
   expect(res.status === 206, check, `expected 206 for bytes=${start}-${end}, got ${res.status}`);
   const expected = `bytes ${start}-${end}/${local.bytes}`;
   const contentRange = res.headers.get("content-range");
@@ -69,7 +77,7 @@ async function runChecks(fetchImpl, url, local, contentType, timeoutMs) {
   });
 
   const full = await request(fetchImpl, url, { timeoutMs });
-  const body = Buffer.from(await full.arrayBuffer());
+  const body = await readBody(full, "full-get", "GET");
   expect(full.status === 200, "full-get", `GET returned ${full.status}`);
   expect(mediaType(full) === contentType, "full-get", `GET Content-Type "${mediaType(full)}"`);
   const sha256 = createHash("sha256").update(body).digest("hex");

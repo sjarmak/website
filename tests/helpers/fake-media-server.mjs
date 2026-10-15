@@ -116,10 +116,20 @@ async function handlePublic(state, req, res, key) {
       "content-length": String(slice.length),
       "content-range": `bytes ${range.start}-${range.end}/${body.length}`,
     });
+    if (req.method !== "HEAD" && takeOnce(fault, "stallRangeBodyTimes")) return res.write(slice.subarray(0, slice.length >> 1));
     return res.end(req.method === "HEAD" ? undefined : slice);
   }
   res.writeHead(200, { ...base, "content-length": String(body.length) });
+  if (req.method !== "HEAD" && takeOnce(fault, "resetFullBodyTimes")) {
+    return res.write(body.subarray(0, body.length >> 1), () => res.socket.destroy());
+  }
   return res.end(req.method === "HEAD" ? undefined : body);
+}
+
+function takeOnce(fault, name) {
+  if (!(fault[name] > 0)) return false;
+  fault[name] -= 1;
+  return true;
 }
 
 export async function startFakeMediaServer({ bucket = "test-bucket" } = {}) {
