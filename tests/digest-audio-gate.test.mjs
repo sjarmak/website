@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
@@ -222,4 +222,82 @@ test("verify-staged leaves entries alone when their audioUrl is already committe
   const result = await ctx.gate("verify-staged");
   assert.equal(result.status, 0, result.stderr);
   assert.equal(ctx.fake.stats.publicRequests.length, before);
+});
+
+const pendingFile = (ctx, name) => path.join(ctx.sandbox.repo, ".digest-runs", "pending-audio", name);
+const DROP = /cd \S+ && flock \.digest-runs\/run\.lock node scripts\/digest\/audio-gate\.mjs drop --slug/;
+
+test("a malformed pending record is skipped by drain and settle, and status names it until it is dropped", async (t) => {
+  const ctx = await setup(t, { extraEnv: { MEDIA_VERIFY_TIMEOUT_SEC: "1" } });
+  ctx.fake.faults.public.set(KEY, { status: 404 });
+  assert.equal((await ctx.publish().done).status, 0);
+  git(ctx.sandbox.repo, "commit", "-q", "-m", "text only");
+  const broken = pendingFile(ctx, "weekly-2026-10-16.json");
+  const misnamed = pendingFile(ctx, "Not A Slug.json");
+  await writeFile(broken, "{not json");
+  await writeFile(misnamed, "{}");
+  ctx.fake.faults.public.delete(KEY);
+
+  const drained = await ctx.gate("drain");
+  assert.equal(drained.status, 0, drained.stderr);
+  assert.ok(drained.stderr.includes(`skipping ${broken}: not valid JSON`), drained.stderr);
+  assert.ok(drained.stderr.includes(`skipping ${misnamed}: the file name is not a digest slug`), drained.stderr);
+  assert.equal(readEntryAudio(await ctx.entry()).audioUrl, `/media/${KEY}`);
+  git(ctx.sandbox.repo, "commit", "-q", "-m", "attach");
+
+  const settled = await ctx.gate("settle");
+  assert.equal(settled.status, 0, settled.stderr);
+  assert.ok(settled.stderr.includes(`skipping ${broken}`), settled.stderr);
+  assert.equal(await ctx.hasPending(), false);
+
+  const status = await ctx.gate("status");
+  assert.equal(status.status, 1);
+  assert.ok(status.stderr.includes(`UNREADABLE ${broken}`), status.stderr);
+  assert.match(status.stderr, new RegExp(`fix: +${DROP.source} weekly-2026-10-16$`, "m"));
+  assert.ok(status.stderr.includes(`fix:    rm -- ${misnamed}`), status.stderr);
+
+  const dropped = await ctx.gate("drop", "--slug", "weekly-2026-10-16");
+  assert.equal(dropped.status, 0, dropped.stderr);
+  assert.match(dropped.stdout, /\{not json/);
+  await rm(misnamed);
+  assert.equal((await ctx.gate("status")).status, 0);
+});
+
+test("drop removes one pending record, prints it, and leaves the audio alone", async (t) => {
+  const ctx = await setup(t, { extraEnv: { MEDIA_VERIFY_TIMEOUT_SEC: "1" } });
+  ctx.fake.faults.public.set(KEY, { status: 404 });
+  assert.equal((await ctx.publish().done).status, 0);
+  const objectsBefore = [...ctx.fake.objects.keys()];
+
+  const dropped = await ctx.gate("drop", "--slug", SLUG);
+  assert.equal(dropped.status, 0, dropped.stderr);
+  assert.ok(dropped.stdout.includes(`dropped ${pendingFile(ctx, `${SLUG}.json`)}`), dropped.stdout);
+  assert.match(dropped.stdout, new RegExp(`"slug": "${SLUG}"`));
+  assert.match(dropped.stdout, /audio file and any uploaded copy are untouched/);
+  assert.equal(await ctx.hasPending(), false);
+  assert.equal(await exists(path.join(ctx.sandbox.spool, KEY)), true);
+  assert.deepEqual([...ctx.fake.objects.keys()], objectsBefore);
+  assert.equal((await ctx.gate("status")).status, 0);
+
+  const again = await ctx.gate("drop", "--slug", SLUG);
+  assert.equal(again.status, 1);
+  assert.match(again.stderr, new RegExp(`no pending audio record for ${SLUG}`));
+  assert.equal((await ctx.gate("drop", "--slug", "../escape")).status, 2);
+  assert.equal((await ctx.gate("drop")).status, 2);
+});
+
+test("status tells how to clear audio whose issue text was never published", async (t) => {
+  const ctx = await setup(t, { extraEnv: { MEDIA_VERIFY_TIMEOUT_SEC: "1" } });
+  ctx.fake.faults.public.set(KEY, { status: 404 });
+  assert.equal((await ctx.publish().done).status, 0);
+  git(ctx.sandbox.repo, "rm", "-q", "-f", "--", ENTRY_REL);
+
+  const drained = await ctx.gate("drain");
+  assert.equal(drained.status, 1);
+  assert.match(drained.stderr, /still pending \(entry:/);
+  const status = await ctx.gate("status");
+  assert.equal(status.status, 1);
+  assert.match(status.stderr, /fix: +publish the issue text, then run MEDIA_BACKEND=r2 DIGEST_PUSH=1 \S+ attach-pending/);
+  assert.match(status.stderr, new RegExp(`or stop waiting for this audio with ${DROP.source} ${SLUG}$`, "m"));
+  assert.doesNotMatch(status.stderr, /retry:/);
 });

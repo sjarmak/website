@@ -3,10 +3,11 @@ import { spawnSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { parseArgs } from "node:util";
 
 import { attachEntryAudio, readEntryAudio, stripEntryAudio } from "./entry-audio.mjs";
 import { localMediaPath } from "./media-location.mjs";
-import { listPending, removePending, retryCommand, writePending } from "./pending-audio.mjs";
+import { dropCommand, dropPending, listPending, removePending, retryCommand, writePending } from "./pending-audio.mjs";
 import { mediaBackend, publicBase, r2ConfigFromEnv, verifyTimeoutMs } from "../media/config.mjs";
 import { isSiteMediaUrl, keyFromSiteUrl, publicUrlForKey } from "../media/keys.mjs";
 import { readLocalObject } from "../media/local-object.mjs";
@@ -14,10 +15,16 @@ import { createR2Store, putImmutable } from "../media/store.mjs";
 import { verifyPublicMedia } from "../media/verify.mjs";
 
 const CONTENT_DIR = "src/content/digest";
-const USAGE = "usage: audio-gate.mjs <drain [--slug <slug>]|verify-staged|settle|status>";
+const USAGE = "usage: audio-gate.mjs <drain [--slug <slug>]|verify-staged|settle|status|drop --slug <slug>>";
 
 const log = (line) => console.error(`[audio] ${line}`);
 const entryPath = (slug) => path.join(CONTENT_DIR, `${slug}.md`);
+
+async function readPendingRecords() {
+  const { records, invalid } = await listPending();
+  for (const { file, reason } of invalid) log(`skipping ${file}: ${reason}`);
+  return records;
+}
 
 function git(args, { allowFailure = false } = {}) {
   const result = spawnSync("git", args, { encoding: "utf8" });
@@ -100,7 +107,7 @@ async function drainOne(ctx, record) {
 }
 
 async function drain(env, { slug }) {
-  const records = (await listPending()).filter((record) => !slug || record.slug === slug);
+  const records = (await readPendingRecords()).filter((record) => !slug || record.slug === slug);
   if (records.length === 0) {
     log("no pending audio to attach");
     return 0;
@@ -172,7 +179,7 @@ async function verifyStaged(env) {
 }
 
 async function settle() {
-  for (const record of await listPending()) {
+  for (const record of await readPendingRecords()) {
     const committed = committedEntry(entryPath(record.slug));
     if (committed !== null && readEntryAudio(committed).audioUrl === record.audioUrl) {
       await removePending(record.slug);
@@ -182,6 +189,17 @@ async function settle() {
   return 0;
 }
 
+function remedy(record, env) {
+  const retry = retryCommand(mediaBackend(env), env);
+  if (record.check === "entry") {
+    return [
+      `  fix:    publish the issue text, then run ${retry}`,
+      `          or stop waiting for this audio with ${dropCommand(record.slug)}`,
+    ];
+  }
+  return [`  retry:  ${retry}`];
+}
+
 export function describePending(record, env = process.env) {
   return [
     `[audio] PENDING ${record.slug}: the issue is published without a player until its audio verifies`,
@@ -189,37 +207,66 @@ export function describePending(record, env = process.env) {
     `  check:  ${record.check ?? "unknown"}`,
     `  reason: ${record.reason}`,
     `  file:   ${record.file}`,
-    `  retry:  ${retryCommand(mediaBackend(env), env)}`,
+    ...remedy(record, env),
+  ].join("\n");
+}
+
+function describeInvalid({ file, reason, slug }) {
+  return [
+    `[audio] UNREADABLE ${file}: every run skips this pending-audio record until it is repaired or removed`,
+    `  reason: ${reason}`,
+    `  fix:    ${slug ? dropCommand(slug) : `rm -- ${file}`}`,
   ].join("\n");
 }
 
 async function status(env) {
-  const records = await listPending();
-  if (records.length === 0) {
+  const { records, invalid } = await listPending();
+  if (records.length === 0 && invalid.length === 0) {
     log("no pending audio");
     return 0;
   }
   for (const record of records) console.error(describePending(record, env));
+  for (const bad of invalid) console.error(describeInvalid(bad));
   return 1;
 }
 
-function parseSlug(rest) {
-  if (rest.length === 0) return undefined;
-  if (rest.length === 2 && rest[0] === "--slug") return rest[1];
-  throw new Error(USAGE);
+async function drop({ slug }) {
+  const { file, raw } = await dropPending(slug);
+  if (raw === null) {
+    log(`no pending audio record for ${slug} at ${file}`);
+    return 1;
+  }
+  console.log(`[audio] dropped ${file}; it held:\n${raw.trimEnd()}`);
+  console.log("[audio] the audio file and any uploaded copy are untouched; the issue stays published without a player");
+  return 0;
+}
+
+function parseOptions(command, rest) {
+  const options = command === "drain" || command === "drop" ? { slug: { type: "string" } } : {};
+  let values;
+  try {
+    ({ values } = parseArgs({ args: rest, options, strict: true }));
+  } catch {
+    throw new Error(USAGE);
+  }
+  if (command === "drop" && !values.slug) throw new Error(USAGE);
+  return values;
 }
 
 async function main(argv, env) {
   const [command, ...rest] = argv;
+  const options = parseOptions(command, rest);
   switch (command) {
     case "drain":
-      return drain(env, { slug: parseSlug(rest) });
+      return drain(env, options);
     case "verify-staged":
       return verifyStaged(env);
     case "settle":
       return settle();
     case "status":
       return status(env);
+    case "drop":
+      return drop(options);
     default:
       throw new Error(USAGE);
   }
