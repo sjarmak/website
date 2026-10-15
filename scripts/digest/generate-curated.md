@@ -120,13 +120,17 @@ Do:
    ```
    node scripts/digest/tts-render.mjs --in {{WORK}}/transcript.txt --out <slug>
    ```
-   It prints `{"audioUrl": "...", "durationSec": N}`. Add `audioFile`
-   (`{{WEBSITE_MEDIA_DIR}}/public/media/digests/<slug>.mp3`) and `durationSec` to `{{WORK}}/spec.json`.
+   It prints `{"file": "...", "audioUrl": "...", "durationSec": N}`. Add `audioFile` (the printed
+   `file`, `{{AUDIO_DIR}}/<slug>.mp3`) and `durationSec` to `{{WORK}}/spec.json`. Do not add
+   `audioUrl`: publishing sets it only after the audio verifies at its public URL.
 
 9. **Publish.** From {{WEBSITE_DIR}}, run:
    ```
    node scripts/digest/publish-digest.mjs --spec {{WORK}}/spec.json
    ```
+   Its JSON output includes `audio.status`. `pending` is expected when the audio is not live
+   yet: the issue publishes without a player and the runner attaches the audio on a later
+   run. Do not retry, re-render, or add audio fields yourself.
    This writes the digest entry and stages it. Do NOT commit or push — the runner does the
    commit, and the user pushes after reviewing.
 
