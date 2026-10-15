@@ -75,6 +75,14 @@ test("run.sh rejects an unknown media backend before doing any work", async (t) 
   assert.match(result.stderr, /MEDIA_BACKEND must be git or r2, found: s3/);
 });
 
+test("run.sh defaults the git media worktree to ~/website-worktrees/media", async (t) => {
+  const ctx = await setup(t, { backend: "git" });
+  const result = await ctx.run(["daily"], { HOME: ctx.sandbox.root }).done;
+  assert.equal(result.status, 2);
+  const expected = path.join(ctx.sandbox.root, "website-worktrees", "media");
+  assert.ok(result.stderr.includes(`Media worktree not found at ${expected}`), result.stderr);
+});
+
 test("run.sh in r2 mode fails fast when the credentials file is missing a variable", async (t) => {
   const ctx = await setup(t);
   await writeFile(ctx.env.R2_ENV_FILE, `R2_ACCOUNT_ID=${TEST_ACCOUNT_ID}\nR2_BUCKET=test-bucket\n`);

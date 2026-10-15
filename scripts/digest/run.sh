@@ -17,7 +17,6 @@
 #   CLAUDE_FLAGS    (optional — override the claude -p permission flags; see README)
 #   CLAUDE_BIN      (optional — claude binary/router; default claude-auto)
 #   WEBSITE_DIR     (optional — defaults to this repo)
-#   WEBSITE_MEDIA_DIR (optional — media-branch worktree beside this repo)
 set -euo pipefail
 
 MODE="${1:-}"
@@ -72,7 +71,7 @@ if [ "${DIGEST_RUN_LOCK:-}" != "$LOCK_FILE" ]; then
 fi
 
 if [ "$MEDIA_BACKEND" = "git" ]; then
-  WEBSITE_MEDIA_DIR="${WEBSITE_MEDIA_DIR:-$(dirname "$WEBSITE_DIR")/website-media}"
+  WEBSITE_MEDIA_DIR="${WEBSITE_MEDIA_DIR:-$HOME/website-worktrees/media}"
   [ -d "$WEBSITE_MEDIA_DIR" ] || {
     echo "Media worktree not found at $WEBSITE_MEDIA_DIR — create it from the media branch" >&2
     exit 2

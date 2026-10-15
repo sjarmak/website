@@ -166,9 +166,8 @@ changes files under `public/media/` on `main`.
   ```
 
   `run.sh` exports its `public/media` directory as `WEBSITE_MEDIA_ROOT`, commits
-  audio on `media`, then commits page content on `main`. Its default location is
-  `../website-media` beside the repo, so the cron sets `WEBSITE_MEDIA_DIR` to the
-  real worktree.
+  audio on `media`, then commits page content on `main`. It looks for the worktree at
+  `~/website-worktrees/media` unless `WEBSITE_MEDIA_DIR` names another one.
 - **R2 credentials** (`r2` backend only): `~/.config/sjarmak-media/r2.env`, see
   [Backends](#backends-media_backend).
 
