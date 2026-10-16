@@ -3530,6 +3530,25 @@
           "why": "Boundary violations are an agent-quality failure that functional tests never catch. The paper shows that permission rules in the prompt alone were inconsistent and sometimes worse, which puts enforcement in the tool layer rather than the instruction layer."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261015797J",
+      "title": "Passing Tests, Missing Semantics: Evidence of Interpretive Lock-In in Plan-Based DataFrame Code Generation",
+      "firstAuthor": "Liu, Jingjing",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.15797",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261015797J",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "On 30 PySpark DataFrame tasks derived from TPC-DS, Claude Code with claude-sonnet-4-6 wrote a plan, a solution and its own pytest suite. Test passing rose from 22/30 in one pass to 29/30 with test-guided revision and 30/30 with an obligation-audit revision loop, yet 0/30 outputs matched the stored reference in any condition. On the 28 tasks whose references SQL re-execution reproduced, all 77 passing suites were false passes. Among violated requirements in passing runs, about half had no test at all; the rest had tests that passed anyway, through candidate-defined schemas, fixtures too small to tell alternatives apart, or assertions that repeated the code's own wrong logic.",
+          "why": "Self-generated tests check agreement with the model's own reading of the task, so plan, code and tests can share one mistake and revision leaves it in place. The authors call this interpretive lock-in. Their proposed remedy is to derive acceptance assertions from the task contract before looking at any candidate, hold them fixed through revision, and build fixtures that discriminate between plausible alternatives: unmatched join keys, unequal price fields, multiple groups."
+        }
+      ]
     }
   ],
   "sections": [

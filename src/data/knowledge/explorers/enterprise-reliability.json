@@ -3783,6 +3783,31 @@
           "why": "Recovery design hinges on what the restore point carries. File diffs or replayed commands were enough when the work was file-centric; full snapshots paid off only when the work produced state outside the repository. The authors' framing is that snapshotting solves state restoration but not state selection."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261006914W",
+      "title": "Text2Dashboard: A Governed Agent Architecture for Natural-Language Dashboard Generation over Enterprise DataBrain",
+      "firstAuthor": "Wu, Yiou",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.06914",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261006914W",
+      "branches": [
+        "recovery",
+        "human"
+      ],
+      "notes": [
+        {
+          "branch": "recovery",
+          "takeaway": "Text2Dashboard persists two states with different lifetimes. Agent state (request, phase, trace, approvals, errors) is written to a temporary file and atomically replaced; dashboard state (panel order and lifecycle) lives outside the agent, so a later run, the Codex plugin or a reviewer can continue without replaying the conversation. Real SQL execution is never retried automatically because an uncertain outcome should not be duplicated, while metadata calls retry only timeouts and HTTP 502/503/504, up to three attempts. Approval, checkpointing, state loading, circuit breaking and loop control fail closed; audit fails open. All ten injected fault scenarios produced their specified outcome with no unapproved external side effect.",
+          "why": "Retry policy here is set per tool by whether the side effect can be safely repeated: bounded retries for read-only metadata, none for a query whose result is uncertain. The one end-to-end failure was a parameter task that rebuilt its panel after each successful preflight and hit the 30-step limit, which the authors take as a reason to make completion and termination explicit runtime properties rather than model judgement."
+        },
+        {
+          "branch": "human",
+          "takeaway": "Approval is bound to a SHA-256 fingerprint of the tool name and canonical arguments, with confirmation-like fields excluded, and is consumed after one call whether it succeeds or fails. Changing the SQL, a date range or the report requires a new approval, and a preflight receipt is bound to the hash of the exact HTML report, so regenerating the report invalidates it. In the fault experiment, SQL, preflight and preview each paused for approval, and changed arguments required a new one (3 of 3).",
+          "why": "A confirmation message in the chat is weaker than an approval tied to the exact pending action. Binding the grant to its arguments keeps the human decision attached to what actually runs, and a pause is stored as a resumable question in persisted state rather than an alert someone has to notice."
+        }
+      ]
     }
   ],
   "sections": [
