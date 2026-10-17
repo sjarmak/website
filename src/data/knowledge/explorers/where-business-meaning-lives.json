@@ -2350,6 +2350,25 @@
           "why": "Visible examples help up to a point and then invite overfitting, and build-to-build variance is large enough that single runs mislead."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261022350Y",
+      "title": "FDE-Gym: The Last Mile of AI Delivery",
+      "firstAuthor": "Yang, Dongxu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22350",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022350Y",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "FDE-Gym varies how much business context the agent receives. At L0 it is given the rules and constraints; at L1 they are withheld and must be discovered by questioning more than 130 scripted stakeholders. For the three leading models on the 20 original tasks, scores range from 0.73 to 0.82 at L0 and from 0.39 to 0.62 at L1, a drop of 0.28 (CI 0.17 to 0.39), while moving on to the sponsor's original, possibly misdirected request (L3) costs only another 0.04. Without the rules, the leading models ask 11.3 to 13.0 questions per task instead of 3.9 to 7.0. Even with every rule supplied, no model exceeds 0.82.",
+          "why": "Withholding the constraints accounts for most of the loss, and questioning recovers only part of it. In the 73 cases where an agent obtained every key fact, uplift averaged 0.66 and only 37% reached 0.8, so knowing the business rules is not the same as applying them to the data. The authors' starting hypothesis, that problem definition would be the bottleneck, did not hold for leading models."
+        }
+      ]
     }
   ],
   "sections": [

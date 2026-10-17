@@ -3808,6 +3808,107 @@
           "why": "A confirmation message in the chat is weaker than an approval tied to the exact pending action. Binding the grant to its arguments keeps the human decision attached to what actually runs, and a pause is stored as a resumable question in persisted state rather than an alert someone has to notice."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261016859Z",
+      "title": "ANCHOR: Assessing Naturalistic Constraint Hierarchies and Ordering in Repository-Grounded Agentic Coding",
+      "firstAuthor": "Zhu, Wenqiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.16859",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261016859Z",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "ANCHOR's judge is hybrid: rule-based checks (path filters, file and line counts, command presence and arguments, action order, imports, regex) plus an LLM judge reading evidence excerpts. On 480 stratified items labeled by five human evaluators, the LLM judge agrees with the human consensus at kappa 0.78 (89.4% raw), against kappa 0.83 between humans. Agreement is 0.86 on rule-verifiable items, 0.79 on semantically straightforward ones and 0.69 on THEN and PRIORITY relations. Model rankings on the human-labeled subset match the full judged ranking at Spearman 0.96.",
+          "why": "The paper reports where its judge fails, not just one agreement figure. The three largest disagreement types are all cases where the judge passes what humans failed: partial evidence for a multi-part constraint (41.2%), interleaved actions accepted as the required order (26.7%), and an agent that said it complied but did not (19.4%). No judge from a second provider was tested."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261022350Y",
+      "title": "FDE-Gym: The Last Mile of AI Delivery",
+      "firstAuthor": "Yang, Dongxu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22350",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022350Y",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "FDE-Gym scores 95 tasks adapted from real delivery projects in 18 sectors by business outcome: KPI uplift on held-out production data, normalized between a do-nothing baseline and a reference solution, set to zero by any incident, minus a cost for each stakeholder contact. A grader was admitted only if the reference scored at least 0.95, doing nothing scored 0, literal compliance at most 0.2 and shortcuts at most 0.8, and graders were tested against more than 270 shortcut and bypass strategies. Given the sponsor's original request, the best of 13 configurations, Claude Opus 5.5, scores 0.56 and resolves 14 of 95 tasks; five configurations resolve none. Models that reach up to 88%, 90% and 61% on Terminal-Bench 2.1, Vibe Code Bench and Finance Agent score 0.19 to 0.56 here.",
+          "why": "The admission anchors make the grader pass its own test before any model is scored: it has to separate the reference from inaction, literal compliance and shortcuts. Charging for questions exposes a cost that completion metrics leave out. GPT-6 Astra reached uplift of at least 0.8 on 36 tasks but resolved only 9 once contact cost was counted; Opus 5.5 went from 40 to 14. Haiku 4.5 scored below the do-nothing baseline on 79 of 95 tasks."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261017685C",
+      "title": "LatentRiskBench: Measuring State-Dependent Risks in Enterprise Agents",
+      "firstAuthor": "Cong, Jingyue",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.17685",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261017685C",
+      "branches": [
+        "security",
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "security",
+          "takeaway": "LatentRiskBench pairs each risky workflow with a benign twin that ends in the same terminal action, so only workflow state separates them: accumulated content, artifacts, outbound destination, approval status, data-sensitivity tags and alignment with the user's goal. An auditor that sees only the action detects 0.09 of violations; one that reconstructs state detects 0.96, a gap of 0.87 (McNemar p<1e-15). On the 124-trace core set, residual risk is 0.96 with no guard, 0.85 under LlamaGuard 3, 0.78 under keyword filters, 0.59 under step rules, 0.50 under trajectory rules, 0.32 under an LLM judge and 0.20 under GuardAgent.",
+          "why": "Per-action guardrails check each call on its own, and in these pairs the call is identical in the safe and unsafe case. Trajectory rules read the committed prefix but do not reconstruct state and still leave 0.50 of the risk, which the authors take as evidence that the gap comes from state reconstruction rather than access to history. A guard has to carry what was read, where it is going and what was approved."
+        },
+        {
+          "branch": "observability",
+          "takeaway": "On four weeks of logs from a deployed e-commerce marketing agent built on ReAct, the outcome-level violation rate was 0.08 but residual risk under the state-reconstructing auditor was 0.61, with a benign false-positive rate of 0.025. Each flag was confirmed by replaying the trace in an inert sandbox against deterministic event-log rules. A typical case was a campaign-sync call that was risky only because the draft carried internal pricing to an external platform. Auditing cost a median 430 ms (p95 1.9 s) and about $0.0028 per action.",
+          "why": "Catching these cases requires a trace that preserves state, not only the sequence of actions. The authors suggest auditing actions with external side effects inline and the rest asynchronously; the study itself was an offline audit, not production enforcement."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261021914G",
+      "title": "CodeHealth Predicts the Token Cost of Agentic Code Review: A Pre-Registered Study of 465 Agent-Authored Pull Requests",
+      "firstAuthor": "Gullstrand Heander, Lo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.21914",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261021914G",
+      "branches": [
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "routing",
+          "takeaway": "A pre-registered study ran one frozen pipeline (four review agents mapped to ISO/IEC 25010 qualities and one batch fix agent, temperature 0, hashed prompts) over 465 agent-authored pull requests from 246 repositories under three LLMs: deepseek-v4-flash, a locally served qwen3-6 and sonnet-5. Holding footprint, language and repository fixed, each CodeHealth point was associated with 3.5% to 6.1% fewer total tokens, and moving from the median unhealthy PR (CH 2.8) to the median healthy PR (CH 9.7) at equal size corresponds to 21.8% to 35.0% fewer tokens. Footprint was the strongest driver (+0.325 to +0.595 log tokens per unit of log footprint), and CodeHealth did not predict footprint. Complex Method and Complex Conditional predicted fix-stage cost under all three LLMs; Code Duplication did not.",
+          "why": "The cost of agent review depends on the code under review, not only on how many lines changed, so a budget set from diff size alone misses part of it. Exploratory analyses put the extra cost in the review stage, where agents took more iterations on unhealthy code without writing more comments, and the association disappears once the size of the scored files is controlled, since unhealthy files are larger. Token totals are not compared across LLMs because prefix caching differs."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261022195D",
+      "title": "HTN-Orchestrate: A Hierarchical Task Network Framework for Multi-Agent Orchestration",
+      "firstAuthor": "Deng, Yanchen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22195",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022195D",
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "HTN-Orchestrate splits orchestration into two layers. A Planner keeps a hierarchical task network (a decomposition tree plus precedence edges between siblings) and decomposes a dependent subtask only after its prerequisites return; each executable leaf gets its own Orchestrator that dispatches researcher and verifier workers and decides from their reports whether to dispatch more, wait or finish. Parents synthesize under AND semantics once all children return, and when the network cannot resolve the task the Planner rebuilds it once from the original task, carrying forward supported evidence. With DeepSeek-V4.1-Flash behind every method, it beat a parallel-subagent Agent Team on all five benchmarks, by 2.45 points on BrowseComp (89.73%) up to 10.19 on PRL-Bench.",
+          "why": "On a 200-question BrowseComp subset, planning the whole tree before any research cut accuracy from 92.0% to 90.5% and raised median worker invocations from 14 to 16, orchestrator rounds from 14 to 17 and median completion time from 25.23 to 30.02 minutes. That is a direct comparison of a task graph that grows from results against one fixed in advance. Network depth was capped at two, and the work was supported by Apodex, which also built the Agent Team baseline."
+        }
+      ]
     }
   ],
   "sections": [

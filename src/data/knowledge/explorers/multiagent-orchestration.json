@@ -2738,6 +2738,44 @@
           "why": "Replaces end-of-task and error triggers or periodic polling with sub-agent-initiated interruption; with DeepSeek-V4-Flash it reached 55.5% on GAIA2 against ReAct's 44.5% at 36% lower per-task API cost."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261022195D",
+      "title": "HTN-Orchestrate: A Hierarchical Task Network Framework for Multi-Agent Orchestration",
+      "firstAuthor": "Deng, Yanchen",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22195",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022195D",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "HTN-Orchestrate sits between structured workflows (MetaGPT, AFlow), which fix decomposition before execution, and runtime delegation (Magentic-One, Kimi K2.5, Apodex agent teams), which puts decomposition, dispatch and synthesis in one orchestrator without modeling dependencies. Its Planner checks each proposed decomposition for coverage of the parent and acyclicity of the new edges, dispatches ready leaves in parallel waves, and synthesizes a parent only after all children return. Each leaf's Orchestrator runs up to three concurrent workers over at most twelve rounds.",
+          "why": "Replacing each leaf's Orchestrator with a single ReAct researcher dropped BrowseComp-subset accuracy from 92.0% to 89.5%, raised executed leaves from 4.67 to 6.15 per question and nearly doubled the rebuild rate (17.5% to 32.0%): weak local execution pushes work back up to the planner, so the two layers are not independent choices. Average worker concurrency was 2.47 against 1.70 for Agent Team, and on the 165 questions both solved HTN-Orchestrate finished first on 67.9%."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261021113M",
+      "title": "SSR: Structural Signal Retriever for Scalable Agent Discovery in LLM-Orchestrated Multi-Agent Systems",
+      "firstAuthor": "Maldonado Cárdenas, Giancarlo",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.21113",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261021113M",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "SSR is a retrieval layer in front of an LLM orchestrator that selects agents from a registry of A2A Agent Cards. It extracts at most 64 unigram and bigram signals from capability fields (name, description, skills, tags, examples, tool descriptions), scores cards by IDF-weighted signal overlap, and uses an inverted index so only cards sharing a signal are scored; at most K cards reach the LLM. On a synthetic registry of 1,000 cards, sending at most 10 cut mean input tokens from 63,645 to 767 (98.8%) and latency by 70.9% against sending the full catalog. At 5,000 document-derived cards the full-catalog prompt was estimated at 447,761 tokens and none of 200 calls succeeded, while pre-selection with K=20 reached 0.885 end-to-end accuracy.",
+          "why": "A2A and MCP define how capabilities are described, not how a large registry is ranked, and this paper treats ranking as a separate pre-orchestration step with its own budget. A BM25 pre-selector under the same budget did as well (0.895 at 5,000 cards, no significant paired difference) and retrieved better on MS MARCO (R@10 0.389 against 0.338), so the gain comes from bounding the candidate context, not from SSR's scoring. Registries are synthetic or adapted from MS MARCO passages, not production Agent Cards."
+        }
+      ]
     }
   ],
   "sections": [

@@ -3549,6 +3549,25 @@
           "why": "Self-generated tests check agreement with the model's own reading of the task, so plan, code and tests can share one mistake and revision leaves it in place. The authors call this interpretive lock-in. Their proposed remedy is to derive acceptance assertions from the task contract before looking at any candidate, hold them fixed through revision, and build fixtures that discriminate between plausible alternatives: unmatched join keys, unequal price fields, multiple groups."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261016859Z",
+      "title": "ANCHOR: Assessing Naturalistic Constraint Hierarchies and Ordering in Repository-Grounded Agentic Coding",
+      "firstAuthor": "Zhu, Wenqiang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.16859",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261016859Z",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "ANCHOR attaches a checklist of developer constraints to 358 SWE-Compass tasks from 23 repositories in 8 language groups: on average 7.9 atomic constraints and 1.7 typed relations (AND, THEN, PRIORITY) per task, drawn from a taxonomy of 2,836 atomic constraints mined from real task instructions, inline review comments and post-hoc feedback. Across 19 agent configurations, 81% of tasks fail at least one checklist item and at least 24.6% are completed without passing the full checklist. The best configuration, Claude Opus 4.8 under Cline, satisfies 70.1% of atomic constraints but every item on only 19.0% of tasks. Adding the constraints barely moves completion (mean signed change +0.7 points, range -4.1 to +4.5).",
+          "why": "A coding agent can finish the task while breaking the scope, workflow, testing or reporting rules the developer stated, and a completion score does not register it. ANCHOR grades those rules separately. Ordering is the hardest part: THEN relations reach 46.7% compliance against 58.1% for AND, and reporting (41.0) and workflow (50.1) constraints are followed far less than dependency (72.4) or security (68.7) ones."
+        }
+      ]
     }
   ],
   "sections": [
