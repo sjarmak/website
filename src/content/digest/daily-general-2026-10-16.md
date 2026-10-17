@@ -28,6 +28,8 @@ unresolvedFacets:
   - code-security
   - agent-payments
   - prompt-caching
+audioUrl: /media/digests/daily-general-2026-10-16.mp3
+durationSec: 826
 items:
   - title: Anthropic tells investors quarterly revenue up nearly 50% to $16.8bn
       ahead of IPO
