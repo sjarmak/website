@@ -1972,6 +1972,50 @@
           "why": "This is a concrete recipe for getting part of graph retrieval's relational benefit from a memory store that only holds dense vectors. Controls that requeried with the original embeddings show that slightly more than half of the gain comes from graph conditioning rather than from requerying alone."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261020116W",
+      "title": "Maximising Transparency in Context Compaction Improves Retention of Facts and Commitments for Lightweight Coding Agents",
+      "firstAuthor": "Woolford, Felix",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.20116",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261020116W",
+      "branches": [
+        "context",
+        "consolidation"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "transparent-compact replaces compacted history with a checkpoint that keeps every user message and all assistant prose word for word, reduces each tool call to a one-line signature, lists files read and modified as not in context, and removes tool outputs and model reasoning. The header declares what was removed and states that retained prose is a record of what was said, not verification of its claims. Removed material stays recoverable through a single context_lookup tool answered by a subagent that searches the append-only session file. On 18 synthetic sessions compacted three times at about 95k tokens, it recalled 97.8% of planted facts on Qwen3.8-27B against 75.3% for Pi's model-written summary, 95.1% against 55.0% on GPT-6 Luna and 93.3% against 51.5% on Gemma4 31B. Compaction took 0.43 s against 167.8 s for the local model's summary.",
+          "why": "What the model sees after compaction is a design choice, and this paper argues for making the loss visible instead of hiding it in a paraphrase. The cost is context size: probe turns processed 2.7 times as many uncached prompt tokens as pi-vcc on Qwen. The verbatim guarantee also has a horizon: the conversation section is capped at 25% of the window, roughly ten compactions, after which truncation begins."
+        },
+        {
+          "branch": "consolidation",
+          "takeaway": "Both lossy methods select, and the paper locates where each one fails. Extraction (pi-vcc) cut the qualifying clauses that carry a rule; rewriting (Pi's model summary) kept rules but narrowed or reframed them, and every such error was confident. On 27 commitment probes from real sessions, transparent-compact beat pi-vcc on every model, by 21 points on Qwen, 19 on Luna, 7 on Gemma and 11 on Sol. With pi-vcc, 41 to 56% of lightweight-model replies broke the commitment with no sign of doubt, against 15 to 37% with transparent-compact. Pi's summary failed most sessions at the fifth or sixth compaction, when the growing summary hit its generation cap. The frontier model GPT-6.1 Sol was the one place Pi's summary led on commitments (74.1% against 69.1%), and even there transparent-compact recalled 99.3% of planted facts against 75.6%.",
+          "why": "Letting a model rewrite its own memory produces errors that look like answers. The paper's confident-blunder measure separates a stale value asserted without a flag from a recognized gap, and shows summary-based consolidation produces the former. How much a lossy method loses also depends on the reader: the same pi-vcc context gave 98% recall on Qwen and 46% on Luna."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261022273S",
+      "title": "Librarian Agents: Training LLMs to Curate Long-Context Workspaces that Anticipate Future Queries",
+      "firstAuthor": "Singh, Anikait",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22273",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022273S",
+      "branches": [
+        "representation"
+      ],
+      "notes": [
+        {
+          "branch": "representation",
+          "takeaway": "The memory is a hierarchical filesystem of synthetic files and reference links over the raw corpus, chosen because LLM agents already navigate filesystems well but are rarely trained to build them. The paper sets three desiderata: coverage with efficient navigation (artifacts reachable through shallow, legibly named paths), faithful fallback (raw documents are never deleted and every synthetic file links its sources) and amortized reuse. Training changed what gets built: on BRIGHT the trained builder produced on average 53.4 active synthetic files in 45.4 clusters with 8.0 merged artifacts, against 4.8 files, 4.2 clusters and 0.6 merges for the base model. The answering agent read 26.9 files and 9,346 tokens per query over the trained workspace against 2.72 files and 1,238 tokens over the base one, with accuracy 0.64 against 0.24.",
+          "why": "Knowledge graphs commit to a fixed abstraction such as named entities, and flat vector stores commit to none; a learned filesystem is a representation whose structure is itself optimized for downstream answers. The trade is more reading per query in exchange for a richer, navigable layer with a verified path back to source."
+        }
+      ]
     }
   ],
   "sections": [

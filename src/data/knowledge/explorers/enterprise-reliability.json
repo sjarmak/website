@@ -3909,6 +3909,81 @@
           "why": "On a 200-question BrowseComp subset, planning the whole tree before any research cut accuracy from 92.0% to 90.5% and raised median worker invocations from 14 to 16, orchestrator rounds from 14 to 17 and median completion time from 25.23 to 30.02 minutes. That is a direct comparison of a task graph that grows from results against one fixed in advance. Network depth was capped at two, and the work was supported by Apodex, which also built the Agent Team baseline."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261021098X",
+      "title": "ToolBottleneckBench: Measuring Tool-Agent Performance under Controlled Pressures and Fixed Harness Budgets",
+      "firstAuthor": "Xu, Zichuan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.21098",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261021098X",
+      "branches": [
+        "eval",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "ToolBottleneckBench fixes a task family (request, decision facts, answer, evidence rule and operational tools) and varies one pressure at a time: the registered catalog (32 to 2,048 tools), the visible menu (8 to 128 schemas), the certified workflow length, or the encoding of returned records. An exact grader checks nine obligations in order and records the first unmet one together with the harness limit that ended the episode. Across 21 configurations and 20,408 exactly graded episodes, 91.5% of the 3,725 failures ended at a harness limit (completion cap, episode budget, call limit or infeasibility stop) and only 5.5% were wrong conclusions. Growing the menu from 8 to 128 schemas cut verified task success by 12.3 points, but that penalty tracked truncation at the 1,024-token completion cap (Pearson r = -0.95), and raising the cap sixteenfold shrank the pooled penalty in the six truncation-heavy configurations from -43.7 to -2.7 points.",
+          "why": "A success score and a first-failed-step label cannot separate the model from the harness that runs it. All 849 failures labeled 'selection' came from episodes that made no call, 838 of them cut off at the completion cap, so the label reflected check order rather than a wrong choice among tools. A decoder trained to recover the assigned pressure from the failure record reached 48.9% balanced accuracy, below binned call counts alone at 54.8%. The authors' recommendation is to report pressure effects together with the budgets under which they were measured."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Each repair and every configuration switch (a different served model under the same harness) is re-executed on the same stressed cells and compared on success, tokens, wall time and cost. Three repairs activated, and all three change which tools reach the model or who issues the calls: a connector-first router that raised required-tool availability at 2,048 tools from 19.4% to 77.8%; a routed menu with a 4.9-point stress gain; and a deterministic public-handoff controller that issues the calls itself, raising success in the structural holdout by 96.6 points while cutting mean tokens per episode from 130,468 to 21,159 and over-budget episodes from 389 to 3 of 408. The two prompt repairs (a workflow prompt and an interface guide) did not activate. Only the router and the controller beat every configuration switch on success; the routed menu was success-superior for 0 of 21 incumbents.",
+          "why": "Switching models is the repair practitioners reach for first, and the paper makes it the control every other repair must beat. The repairs that won did so by taking retrieval or execution away from the model, not by improving its behavior, and cost is part of the test: the controller was cost-superior for only 4 of 17 incumbents even as it won on success for all 17."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261020673K",
+      "title": "HPCAgent-Bench: A Framework for Sound Benchmarking of Code-Optimizing Agents, Harnesses, and Skills",
+      "firstAuthor": "Koray Budanaz, Yakup",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.20673",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261020673K",
+      "branches": [
+        "eval",
+        "routing"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "HPCAgent-Bench specifies each of 689 kernels once in NumPy, derives C and Fortran references, and grades submissions through an external judge that times them on fuzzed inputs drawn from two secret seeds, one for the agent's score tool and another for the final grade. A speedup counts only when a one-sided Mann-Whitney test confirms it. Twenty repeated runs of one kernel at default temperature spanned 0.51x to 100x for Qwen3.8-27B, so one run is a single sample and the main experiments use 40 or 35 kernels. Intervention efficacy compares paired before and after runs with the same kernels, model and judge: across 40 matched setups, only two interventions changed speedup significantly.",
+          "why": "The paper's motivation is prior measurement failure: a re-evaluation of four benchmarks found only 6.11% of implementations labeled performant were faster when re-timed over 30 runs, and replayed patches lose their speedup on other machines. Here 93 to 99% of answers without device-specific code stayed correct on a second machine and per-kernel speedups kept a rank correlation of at least 0.84. That is what an execution-grounded judge and a stated baseline buy, and the run-to-run noise figure says how many samples a claim needs."
+        },
+        {
+          "branch": "routing",
+          "takeaway": "Token cost is a weighted sum of input, cached-input and output tokens under three stated weightings: billed (1, 0.1, 1), effective (1, 0, 1) and total (1, 1, 1). Interventions changed cost far more than speed. OpenHands cut Qwen3.8-27B's billed tokens 2.1x and mini-SWE-agent cut OSS-120B's 3.0x, while no harness changed speedup on the 20-kernel harness set. The weighting alone changed a cost effect up to threefold: OpenHands saved Qwen3.8-27B nothing by effective cost but 3.2x by total cost, because extra turns resend cached context that only some weightings charge. The CPF rewrite halved Qwen3.8-27B's billed tokens at unchanged speedup; the AutoKernel add-on tripled OSS-120B's score calls and raised cost 1.3x with speedup within noise.",
+          "why": "Whether a saving is significant depends on how cached tokens are priced, so a cost claim without its weights cannot be compared across papers. The authors release every token component and decline to report dollars, since list prices differ across providers and change over time while token counts do not."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261021243N",
+      "title": "A Responsibility-Centered Coordination Mechanism for Decentralized Multi-Agent Systems",
+      "firstAuthor": "Nguyen, Thi-Nhung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.21243",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261021243N",
+      "branches": [
+        "topology",
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "No workflow is prescribed. In RCM trajectories on Claw-Eval, coordination structures emerged as linear support chains (35.2%), hybrid networks (27.5%), specialist hubs (24.2%), delegation stars (9.9%) and hierarchical cascades (3.3%). Delegation needs were discovered during execution in 44.0% of cases, before it in 39.6% and both in 16.5%. Agents recruited complementary capabilities 75.8% of the time and overlapping ones 34.1% for verification, coverage or load sharing. Scaling the team from 1 to 16 agents with a fixed tool set divided more finely, RCM kept the strongest task performance, and its latency grew more slowly than baselines whose latency rose sharply as agents were added. Assigning the initial task to all agents beat assigning it to the most relevant agent or a random one.",
+          "why": "The task graph here grows from execution rather than from a designer's chart, and the counts give a rare empirical distribution of what shapes a team forms when roles are not fixed in code. The scaling result is the practical argument: one mechanism adapted to every team size without a separate workflow per configuration."
+        },
+        {
+          "branch": "recovery",
+          "takeaway": "Failure recovery is the delegator's job and is measured. An environmental failure is an explicit unsuccessful response from a tool or the environment; four metrics follow it: Communicate (fraction of failures reported), Monitor (fraction followed by a relevant change in action), Intervene (fraction of those changes that resolve or bypass the failure) and Fulfillment. With GPT-5.4 on Claw-Eval, RCM reached 100.0% Communicate, 99.0% Monitor, 67.0% Intervene and 65.4% Fulfillment, a Responsibility score of 82.8%, 10.2 points above the best baseline. GPTSwarm detected failures about as well (95.2% Communicate, 95.0% Monitor) but converted few into fixes (32.5% Intervene, 37.8% Fulfillment). When a downstream commitment becomes VIOLATED the delegator closes it and may open a replacement with another delegatee while unaffected work continues, and dependent commitments are released under their agreed terms. Applied as a monitor, the same mechanism reached F1 34.96 on Who&When failure attribution, 9.83 above o3, and 73.82 on ATBench-C harmful-trajectory detection.",
+          "why": "Detecting a failure and recovering from it are different capabilities, and the Intervene column is where baselines collapse. Commitments carry explicit state, verified transitions and an owner, so recovery is a guarded update to a record rather than something a conversation has to remember. Across methods the Responsibility score correlated positively with task score."
+        }
+      ]
     }
   ],
   "sections": [

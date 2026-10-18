@@ -677,6 +677,25 @@
           "why": "Marks the design boundary between graph traversal and vector lookup: structural signal can move offline into the index, but it must supplement the original semantic embeddings rather than replace them."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261022273S",
+      "title": "Librarian Agents: Training LLMs to Curate Long-Context Workspaces that Anticipate Future Queries",
+      "firstAuthor": "Singh, Anikait",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22273",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022273S",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Librarian Agents moves part of the retrieve-reason loop ahead of the query. A builder agent edits a filesystem workspace with four actions (CreateFile with reference links to its sources, MergeFiles into higher-level artifacts, Delete for synthetic files only, Stop), and a frozen answering agent then navigates it with list and read actions. The builder is a GRPO-trained policy whose reward is the change in answerability of hidden training queries probed every eight turns plus terminal correctness. On 50 held-out BrowseComp-Plus tasks it reached 0.75 accuracy with a Qwen3.5-4B answerer against 0.42 for embedding retrieval, 0.44 with a reranker, 0.36 for GraphRAG and 0.04 for autocompaction; an untrained builder reached 0.28. Trained only on BrowseComp-Plus, it transferred zero-shot to BRIGHT with 52.0% pass@1 against 17 to 21% for BM25, dense, hybrid and agentic retrieval.",
+          "why": "Agentic search treats retrieval as an action taken at query time; this paper applies the same agency before any query arrives, with the builder learning what structure future searchers will need. Construction cost 178,926 tokens per document set and amortizes: at ten questions per corpus the trained builder used 33.8% fewer tokens per expected correct answer than the base builder, and the answerer still falls back to raw documents through provenance links when the synthetic layer omits a detail."
+        }
+      ]
     }
   ],
   "sections": [

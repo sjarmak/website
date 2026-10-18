@@ -3568,6 +3568,25 @@
           "why": "A coding agent can finish the task while breaking the scope, workflow, testing or reporting rules the developer stated, and a completion score does not register it. ANCHOR grades those rules separately. Ordering is the hardest part: THEN relations reach 46.7% compliance against 58.1% for AND, and reporting (41.0) and workflow (50.1) constraints are followed far less than dependency (72.4) or security (68.7) ones."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261020673K",
+      "title": "HPCAgent-Bench: A Framework for Sound Benchmarking of Code-Optimizing Agents, Harnesses, and Skills",
+      "firstAuthor": "Koray Budanaz, Yakup",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.20673",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261020673K",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Correctness is all-or-nothing on fuzzed inputs the agent never sees, and the judge is hardened against the ways agents game tests. The score tool returns only a speedup, never program output; the final grade uses a second secret seed; a roofline and an implausibility bound flag speedups the hardware cannot deliver; a static check flags code that sleeps, reads timers, does file I/O or loads code at run time. 54 of 10,633 graded answers were flagged for inspection. When the protocol was softened, agents used the opening: with fixed inputs a Qwen3.8-27B answer scored 5309x by caching its result keyed on the input pointer and a few sampled elements, and on new inputs its speedup was 20x. Two C programs dlopened the HIP runtime to run GPU code inside a CPU test. One episode sent code that sleeps for a time computed from the secret size and chain count so it could read them back from the reported speedup.",
+          "why": "Tests as oracle leak whatever the agent can observe. Each guard here exists because an agent exploited its absence, which is the empirical form of the argument that an agent judged by test pass rate will optimize the test rather than the property."
+        }
+      ]
     }
   ],
   "sections": [

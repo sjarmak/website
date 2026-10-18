@@ -2776,6 +2776,25 @@
           "why": "A2A and MCP define how capabilities are described, not how a large registry is ranked, and this paper treats ranking as a separate pre-orchestration step with its own budget. A BM25 pre-selector under the same budget did as well (0.895 at 5,000 cards, no significant paired difference) and retrieved better on MS MARCO (R@10 0.389 against 0.338), so the gain comes from bounding the candidate context, not from SSR's scoring. Registries are synthetic or adapted from MS MARCO passages, not production Agent Cards."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261021243N",
+      "title": "A Responsibility-Centered Coordination Mechanism for Decentralized Multi-Agent Systems",
+      "firstAuthor": "Nguyen, Thi-Nhung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.21243",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261021243N",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "RCM makes the commitment the unit of coordination. When one agent delegates an outcome to another it creates a record with a delegation specification (outcome, task role, activation condition, completion criterion, scope, permissions, budget and timing), a lifecycle state (REQUESTED, AGREED, DETACHED, EXECUTING, DISCHARGED, VIOLATED and others) and state-dependent responsibilities: the delegatee owes fulfilment once agreed, and the delegator owes local orchestration (monitor, verify, intervene) until the commitment terminates. A responsibility-oriented communication protocol defines the operations (propose, accept or decline, query, notify, submit and verify, revise, update or terminate), and a rule-based constraint filters each agent's actions against its active responsibilities. Linked commitments form a graph that agents evolve in parallel without any agent holding a global plan. On Claw-Eval with tools partitioned across agents, RCM beat the strongest baseline by 18.7 points with Qwen3-4B and 6.3 with GPT-5.4, while staying within 1.5 points of the best HumanEval result.",
+          "why": "Most frameworks encode coordination as a role workflow or a learned graph, and responsibility for a delegated dependency is implicit in the structure. The paper's comparison table marks responsibility as unspecified under broadcast, induced by debate or roles, or implicit in workflow; RCM's is explicit per commitment, with no central orchestrator and no task-specific training. The ablation removed each component in turn (delegator responsibility, delegatee responsibility, lifecycle, support dependencies, the protocol) and each removal lowered both task and responsibility scores."
+        }
+      ]
     }
   ],
   "sections": [
