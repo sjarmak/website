@@ -3984,6 +3984,50 @@
           "why": "Detecting a failure and recovering from it are different capabilities, and the Intervene column is where baselines collapse. Commitments carry explicit state, verified transitions and an owner, so recovery is a guarded update to a record rather than something a conversation has to remember. Across methods the Responsibility score correlated positively with task score."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260938761H",
+      "title": "Where Do Multi-Agent Systems Fail? Evidence-Grounded Diagnosis of Collective Mechanisms",
+      "firstAuthor": "Han, Zhengye",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.38761",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260938761H",
+      "branches": [
+        "observability",
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "The records an observer holds decide what can be diagnosed. On 288 deliberately broken mechanisms run through AutoGen, LangGraph, CAMEL and MetaGPT adapters, a zero-shot LLM diagnoser recovered the broken mechanism in 76 cases (26.4%) from public outputs and 182 (63.2%) from native execution records such as each agent's actual input, admission decisions, shared-state versions and action receipts, a paired gain of 0.368 [0.271, 0.472]. Public outputs sufficed almost only for action failures, whose rejection is visible; native records made routing fully recoverable but left admission and state maintenance mostly unrecovered. Each diagnostic contract names the authoritative record for its mechanism (the admission log, the receiver's complete input, shared state before and after the update, the action receipt), and a missing record is never read as evidence that an event did not happen. None of 156 released TraceElephant multi-agent traces exposed the records any of the four contracts require, and 147 stayed unresolved.",
+          "why": "This is the transcript-versus-trace argument with a measured gap. A public transcript is equally consistent with a working and a broken admission step, so the record that settles the question has to be written by the operation itself and bound to it. Trace collections assembled for failure attribution mostly do not carry those records, which caps what any diagnoser run over them can claim."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Outcome grading misses violations and an uncalibrated LLM judge overclaims. Breaking the admission rule left the answer correct in 43 of 72 controlled cases (59.7%), and 28 supported violations in a separate allocation task still produced the exact optimal assignment. Given exactly the records the contract uses, a generic diagnoser prompt recovered all 192 supported violations, but after decisive records were deleted it still asserted a resolved verdict on 576 of 768 packages whose evidence forced none, and reversed 138 of 1,152 resolved verdicts. Prompts that stated the contracts made no reversals and resolved far fewer unknown cases (53 of 533 and 8 of 435), but returned valid output for only 78.1% and 67.1% of packages, so the preregistered verdict was inconclusive. On an independently developed Co-STORM workflow the same frozen prompt kept its verdict under irrelevant-record deletion in 13 of 28 pairs, against 287 of 287 on the benchmark.",
+          "why": "A pass rate certifies the answer, not the coordination rules that produced it, so a system graded on outcomes can carry a broken mechanism until a different input exposes it. The judge result is the calibration point: diagnostic behavior that looked solved on its own benchmark degraded on the first independently built workflow, so a judge has to be re-validated on each system rather than carried over."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261023284J",
+      "title": "Annotrace: A Workbench for Step-Level Annotation of Agent Traces",
+      "firstAuthor": "Josephraj Arokiaraj, Arun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.23284",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261023284J",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Annotrace makes the execution step the unit of labelling. Six adapters (OpenTelemetry GenAI, LangSmith, Langfuse, chat messages, Who&When and a coordinator format) convert a run into an ordered, nested list of steps with an actor, a kind and a depth, and where a format buries the agent loop in one text field the adapter recovers Thinking-Action-Response cycles. The annotator writes the codebook as a list of questions; a model proposes a starting schema from ten sampled runs and answers each trace first from the same question object the human sees, and every answer records whether a person or the model produced it. The motivating run answered a HotpotQA question correctly, so a trace-level label calls it a success, while its steps record eight wasted search cycles and a verification the worker's own reasoning contradicts. On a 40-run multi-agent corpus the coordinator adapter reproduced all 235 unit keys of an earlier manual effort, and two models labelling six runs agreed on 91% of 22 answers at κ = 0.82.",
+          "why": "Observability platforms store traces without structured labelling, and text-annotation tools have no notion of a step, a delegation or a tool call, so each failure study has built throwaway tooling. A step-level unit that reads standard trace formats is what turns recorded telemetry into labelled failure data, and the successful run in the example is exactly the case a run-level outcome hides. The agreement evidence is small: six runs and 22 answers."
+        }
+      ]
     }
   ],
   "sections": [

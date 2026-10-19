@@ -2369,6 +2369,25 @@
           "why": "Withholding the constraints accounts for most of the loss, and questioning recovers only part of it. In the 73 cases where an agent obtained every key fact, uplift averaged 0.66 and only 37% reached 0.8, so knowing the business rules is not the same as applying them to the data. The authors' starting hypothesis, that problem definition would be the bottleneck, did not hold for leading models."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261020344G",
+      "title": "Doc2Harness: Benchmarking LLMs on Long-Horizon Harness Engineering of Coding Agents",
+      "firstAuthor": "Ge, Yuyao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.20344",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261020344G",
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Ge and colleagues grade a model on building a harness rather than on running inside one. A build model working in a fixed OpenCode builder receives a development document consolidated from the user documentation of twelve frontier harnesses and a roughly seventy-line contract skeleton stripped from mini-swe-agent, and writes a harness of about 30 files and 16,000 lines, 99.6% of it its own. The frozen harness is then driven by a scripted mock model through 328 test cases that read four channels: requests sent to the model, files on disk, exit code and command output. Across nineteen models with three builds each, GPT-6 Astra passed 53.05% and Hy3 27.44%. Opus 5 led on ordinary scenarios (80.68 against 72.46) but fell to 37.02 on boundary scenarios where GPT-6 Astra scored 48.97, and a model's rank moved by up to sixteen places across categories. At equal code size, harnesses split into more modules scored lower (partial correlation −0.423). The paper's related work cites Claw-SWE-Bench, where harness choice shifted scores by 27.4 points against 29.4 for model choice.",
+          "why": "This theme argues that a result belongs to a model inside a scaffold. Doc2Harness tests the scaffold itself against a written specification, clause by clause with a scripted model, so harness behavior is measured apart from the executor that downstream-task scoring mixes in. Its point that output-only scoring cannot see a run that returned a correct answer after reaching unauthorized resources is the same gap a semantic layer evaluated only on answer accuracy leaves open."
+        }
+      ]
     }
   ],
   "sections": [

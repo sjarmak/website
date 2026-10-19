@@ -2795,6 +2795,25 @@
           "why": "Most frameworks encode coordination as a role workflow or a learned graph, and responsibility for a delegated dependency is implicit in the structure. The paper's comparison table marks responsibility as unspecified under broadcast, induced by debate or roles, or implicit in workflow; RCM's is explicit per commitment, with no central orchestrator and no task-specific training. The ablation removed each component in turn (delegator responsibility, delegatee responsibility, lifecycle, support dependencies, the protocol) and each removal lowered both task and responsibility scores."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260938761H",
+      "title": "Where Do Multi-Agent Systems Fail? Evidence-Grounded Diagnosis of Collective Mechanisms",
+      "firstAuthor": "Han, Zhengye",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.38761",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260938761H",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Han replaces failure labels with diagnostic contracts for four collective mechanisms: access/routing, admission/dependence, state maintenance and representation/action. A contract pairs a violation predicate defined on the mechanism rather than the task outcome with an evidence specification naming the authoritative records, and returns supported, ruled out or unknown; deleting records can turn a verdict into unknown but never into its opposite. Ground truth comes from replaying each run from a frozen prefix three ways: unchanged, with one mechanism broken, and with it restored. The unchanged contracts bound to four native mechanisms in MetaGPT, the Agents SDK and Co-STORM, supporting every perturbed branch and no clean or restored control. Candidate bindings for Agents SDK handoff and session persistence, an approval gate, and a workflow with no separable admission guard were rejected because the native code did not implement the contract's rule.",
+          "why": "Attribution methods answer which agent failed and when, starting from a failed run. This answers which record licenses the claim that a coordination rule broke, including in runs that succeeded, and turns portability across frameworks into something tested per binding. It also marks the open edge: every binding needed a manual source audit, one mechanism was broken at a time, and repairs were supplied rather than discovered."
+        }
+      ]
     }
   ],
   "sections": [

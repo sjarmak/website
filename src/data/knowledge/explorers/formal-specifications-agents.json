@@ -3587,6 +3587,25 @@
           "why": "Tests as oracle leak whatever the agent can observe. Each guard here exists because an agent exploited its absence, which is the empirical form of the argument that an agent judged by test pass rate will optimize the test rather than the property."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261020344G",
+      "title": "Doc2Harness: Benchmarking LLMs on Long-Horizon Harness Engineering of Coding Agents",
+      "firstAuthor": "Ge, Yuyao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.20344",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261020344G",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Interface-bound unit tests do not transfer to harnesses, the paper argues, because one feature can be built many ways and a harness completes no task on its own; Doc2Harness instead drives the frozen harness with a scripted mock model and asserts on observable channels. Its defense against vacuous passes is the positive control, a sibling case that shares the scenario and fixture, changes only the input or access route, and asserts an outcome that must occur if the observation precondition holds. For path escape, the test asserts that a symlinked file outside the workspace never reaches the model's requests; channel, same-form and reverse controls confirm that the read tool puts file content into requests at all, that bash can read the same symlink, and that an in-workspace symlink still reads. A failed control marks every case it gates as FAIL. 130 of the 328 cases are gated by at least one control, 56 cases were failed by all 57 scored harnesses and 16 passed by all, and the suite's KR-20 is 0.913.",
+          "why": "This is a concrete repair for the weak-oracle problem this theme tracks: an assertion can hold because the feature works or because the feature never ran, and the test alone cannot tell which. Positive controls make that precondition explicit and checkable. The source analysis adds a structural signal pass rates usually hide: at equal size, more fragmented harnesses scored lower."
+        }
+      ]
     }
   ],
   "sections": [
