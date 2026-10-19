@@ -24,6 +24,8 @@ topics:
 unresolvedFacets:
   - code-security
   - local-inference
+audioUrl: /media/digests/daily-general-2026-10-18.mp3
+durationSec: 749
 items:
   - title: DeepSeek-v4.1-Flash-1017
     url: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
