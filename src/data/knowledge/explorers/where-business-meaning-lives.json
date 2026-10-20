@@ -2388,6 +2388,25 @@
           "why": "This theme argues that a result belongs to a model inside a scaffold. Doc2Harness tests the scaffold itself against a written specification, clause by clause with a scripted model, so harness behavior is measured apart from the executor that downstream-task scoring mixes in. Its point that output-only scoring cannot see a run that returned a correct answer after reaching unauthorized resources is the same gap a semantic layer evaluated only on answer accuracy leaves open."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261022791W",
+      "title": "Self-Evolving Coding Agents via Harness-Policy Optimization",
+      "firstAuthor": "Wei, Zhepei",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.22791",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261022791W",
+      "branches": [
+        "harness"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Wei and colleagues alternate harness search and reinforcement learning on one coding agent, with the policy reading its own failed trajectories and proposing the harness revisions. On Qwen3.5-35B-A3B with mini-SWE-agent as the seed harness, SWE-Bench Verified rose from 61.0% to 69.5%, against 67.5 for RL alone and 65.2 for harness search alone, and the three-benchmark average went from 57.8 to 64.8. Cross-evaluation separates the two parts: the evolved harness on the base policy scored 64.5, the trained policy on the seed harness 64.4, and the pair 69.5, an 8.5-point gain larger than the 6.9-point sum of the individual gains. On out-of-distribution SWE-Bench Multilingual, harness search alone moved the score 0.1 points and the joint method 5.5. The evolved harness kept the same model-query and command loop and added runtime controls: a warning as the step or time budget runs out, a one-time empty-patch guard, a hold on the first submission to check API names against the repository, and a git-diff fallback when the submitted patch fails to apply.",
+          "why": "This theme holds that a result belongs to a model inside a scaffold. Self-HPO measures that dependence in both directions on one model: the harness and the weights each carry part of the gain, the joint gain exceeds their sum, and so neither can be credited alone. Its evolved harness changed execution and termination logic rather than prompts, which is the sense in which this map treats a semantic layer as a harness: it decides what happens to the model's output, not only what the model sees."
+        }
+      ]
     }
   ],
   "sections": [
