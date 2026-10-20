@@ -45,6 +45,9 @@ services:
         value: public, max-age=604800
     routes:
       - type: rewrite
+        source: /media-canary/*
+        destination: https://media.sjarmak.ai/*
+      - type: rewrite
         source: /media/*
         destination: https://sjarmak-ai-media.onrender.com/*
     # Single-page-style fallback is NOT needed; Astro emits real 404.html.
