@@ -24,6 +24,8 @@ topics:
 unresolvedFacets:
   - interpretability
   - policy
+audioUrl: /media/digests/weekly-general-2026-10-19.mp3
+durationSec: 2776
 items:
   - title: Meta ships Muse Wonder and Wonder Full
     url: https://www.latent.space/p/ainews-meta-muse-wonder-and-wonder
