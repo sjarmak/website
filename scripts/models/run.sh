@@ -61,6 +61,65 @@ fetch_catalog() {
   done
 }
 
+http_get() {
+  local out="$1" url="$2" code
+  shift 2
+  if ! code="$(curl -sS -L --max-time "$FEED_TIMEOUT_SEC" -o "$out" -w '%{http_code}' "$@" "$url")"; then
+    say "feed $url could not be fetched"
+    rm -f "$out"
+    return 1
+  fi
+  if [[ ! "$code" =~ ^2[0-9][0-9]$ ]] || [ ! -s "$out" ]; then
+    say "feed $url answered HTTP $code with $(wc -c <"$out" 2>/dev/null || echo 0) bytes"
+    rm -f "$out"
+    return 1
+  fi
+}
+
+fetch_livebench() {
+  local dir="$1/livebench" script release file
+  mkdir -p "$dir"
+  http_get "$dir/index.html" "$LIVEBENCH_URL/" || return 1
+  script="$(grep -oE 'static/js/main\.[0-9a-f]+\.js' "$dir/index.html" | head -n 1)"
+  [ -n "$script" ] || { say "livebench front page names no main script"; return 1; }
+  http_get "$dir/main.js" "$LIVEBENCH_URL/$script" || return 1
+  release="$(grep -oE '"20[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"' "$dir/main.js" | tr -d '"' | sort -u | tail -n 1)"
+  [ -n "$release" ] || { say "livebench script names no release"; return 1; }
+  for file in table.csv categories.json cost.csv notes.json; do
+    http_get "$dir/$file" "$LIVEBENCH_URL/data/$release/$file" || return 1
+  done
+  rm -f "$dir/index.html" "$dir/main.js"
+  printf '%s\n' "$release" >"$dir/release"
+  say "livebench release $release"
+}
+
+fetch_terminal_bench() {
+  local out="$1/terminal-bench.json"
+  http_get "$out" "$TBENCH_URL" -X POST -H 'Content-Type: application/json' \
+    --data '{"package":"terminal-bench/terminal-bench","name":"4-0-0"}' || return 1
+  node -e 'const b=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!b.leaderboard||!Array.isArray(b.rows))process.exit(1)' "$out" || {
+    say "terminal-bench feed is not a leaderboard"
+    rm -f "$out"
+    return 1
+  }
+}
+
+fetch_feeds() {
+  local dir="$1"
+  mkdir -p "$dir"
+  if fetch_livebench "$dir"; then
+    FEED_SOURCES+=(--source livebench-feed=ok)
+  else
+    rm -rf "${dir:?}/livebench"
+    FEED_SOURCES+=(--source livebench-feed=failed)
+  fi
+  if fetch_terminal_bench "$dir"; then
+    FEED_SOURCES+=(--source terminal-bench-feed=ok)
+  else
+    FEED_SOURCES+=(--source terminal-bench-feed=failed)
+  fi
+}
+
 fill_prompt() {
   sed -e "s|{{RUN_DATE}}|$RUN_DATE|g" -e "s|{{CATALOG_COMMIT}}|${CATALOG_COMMIT:-}|g" -e "s|{{OUTPUT}}|$2|g" "$1"
 }
@@ -133,6 +192,7 @@ record_status() {
   [ ! -s "$WORK/summary.json" ] || args+=(--summary "$WORK/summary.json")
   [ "$stage" != catalog ] || args+=(--source "omni-catalog=failed")
   [ -z "${CATALOG_COMMIT:-}" ] || [ "$stage" = catalog ] || args+=(--source "omni-catalog=ok")
+  args+=("${FEED_SOURCES[@]}" --feeds "$WORK/research/feeds")
   node scripts/models/apply.ts "${args[@]}"
 }
 
@@ -180,6 +240,10 @@ main() {
   RUN_DATE="${MODELS_RUN_DATE:-$(date -u +%F)}"
   [[ "$RUN_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || die "$EXIT_USAGE" "MODELS_RUN_DATE must be YYYY-MM-DD"
   CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+  FEED_TIMEOUT_SEC="${MODELS_FEED_TIMEOUT_SEC:-60}"
+  [[ "$FEED_TIMEOUT_SEC" =~ ^[1-9][0-9]*$ ]] || die "$EXIT_USAGE" "MODELS_FEED_TIMEOUT_SEC must be a positive whole number"
+  LIVEBENCH_URL="${MODELS_LIVEBENCH_URL:-https://livebench.ai}"
+  TBENCH_URL="${MODELS_TBENCH_URL:-https://ofhuhcpkvzjlejydnvyd.supabase.co/functions/v1/leaderboard-read}"
   GATES_CMD="${MODELS_GATES_CMD:-npm run check && npm run build && node --test tests/models-refresh.test.ts}"
   load_catalog_config
 
@@ -199,6 +263,7 @@ main() {
   WORK="$(mktemp -d)"
   trap 'rm -rf "$WORK"' EXIT
   CATALOG_COMMIT=""
+  FEED_SOURCES=()
   say "refresh for $RUN_DATE started $STARTED_AT from $BASE_REF (log $LOG)"
 
   sync_tree || fail "$EXIT_SOURCE" sync
@@ -206,13 +271,14 @@ main() {
 
   mkdir -p "$WORK/research" "$WORK/eligibility"
   node scripts/models/apply.ts reference --out "$WORK/research" || fail "$EXIT_INVALID" reference
+  fetch_feeds "$WORK/research/feeds"
   run_agent research "$WORK/research" "$(fill_prompt scripts/models/refresh.md research.json)" \
     "Read,Write,Glob,Grep,WebFetch,WebSearch" research.json || fail "$EXIT_AGENT" research
 
   fetch_catalog "$WORK/eligibility/catalog" || fail "$EXIT_SOURCE" catalog
   say "catalog commit $CATALOG_COMMIT"
   node scripts/models/apply.ts models --research "$WORK/research/research.json" --run-date "$RUN_DATE" \
-    --log "$LOG" --out "$WORK/eligibility/models.json" || fail "$EXIT_INVALID" research-proposals
+    --log "$LOG" --out "$WORK/eligibility/models.json" --feeds "$WORK/research/feeds" || fail "$EXIT_INVALID" research-proposals
   cp "$WORK/research/gates.json" "$WORK/eligibility/gates.json"
   run_agent eligibility "$WORK/eligibility" "$(fill_prompt scripts/models/eligibility.md eligibility.json)" \
     "Read,Write,Glob,Grep" eligibility.json || fail "$EXIT_AGENT" eligibility
@@ -220,7 +286,7 @@ main() {
   node scripts/models/apply.ts apply --research "$WORK/research/research.json" \
     --eligibility "$WORK/eligibility/eligibility.json" --catalog-dir "$WORK/eligibility/catalog" \
     --catalog-commit "$CATALOG_COMMIT" --run-date "$RUN_DATE" --log "$LOG" --summary "$WORK/summary.json" \
-    || fail "$EXIT_INVALID" apply
+    --feeds "$WORK/research/feeds" || fail "$EXIT_INVALID" apply
 
   local changed
   changed="$(node -e 'process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).changed))' "$WORK/summary.json")"

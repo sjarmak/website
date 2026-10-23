@@ -11,6 +11,7 @@ import type { ModelRecord, Observation, OmniEligibility, PricingRecord, RefreshS
 import { buildTracker } from "../src/lib/models/build.ts";
 import { selectCandidates } from "../src/lib/models/candidates.ts";
 import { DATA_FILES, loadData, loadStatus, nextStatus, serialize } from "../scripts/models/refresh-io.ts";
+import { feedNotices, NO_FEEDS } from "../scripts/models/feeds.ts";
 import { ProposalError, proposedModels, refresh, type DataSet, type RunContext } from "../scripts/models/refresh-lib.ts";
 
 const RUN = "2026-10-23";
@@ -28,6 +29,7 @@ const ctx = (over: Partial<RunContext> = {}): RunContext => ({
   config: compositeConfig,
   gates,
   maxReplacementShare: 1,
+  feeds: { livebenchRelease: "20260625", terminalBench: null },
   ...over,
 });
 
@@ -209,6 +211,108 @@ test("a score for a different benchmark version is rejected", () => {
   assert.match(out.rejected[0].reason, /differs from the pinned/);
 });
 
+test("a LiveBench row from a release other than the pinned one is rejected, even when it restates the pinned version", () => {
+  const v2 = { model: "acme-three-1", benchmark: BENCH.id, score: 50, version: BENCH.version, ...proof };
+  const fromFile = refresh(
+    baseData(),
+    research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/data/20261014/table.csv" }] }),
+    eligibilityFile([]),
+    ctx(),
+  );
+  assert.match(fromFile.rejected[0].reason, /LiveBench release 2026-10-14 differs from the pinned "2026-06-25 question set"/);
+  const fromSite = refresh(baseData(), research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/" }] }), eligibilityFile([]), ctx({ feeds: { livebenchRelease: "20261014", terminalBench: null } }));
+  assert.match(fromSite.rejected[0].reason, /LiveBench release 2026-10-14 differs/);
+  const unknown = refresh(baseData(), research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/" }] }), eligibilityFile([]), ctx({ feeds: NO_FEEDS }));
+  assert.match(unknown.rejected[0].reason, /release behind this score is unknown/);
+  assert.equal(fromFile.data.observations.length + fromSite.data.observations.length + unknown.data.observations.length, 6);
+});
+
+const TBENCH = benchmarks.find((b) => b.harness) as (typeof benchmarks)[number];
+const boardRow = (over: Partial<{ agent: string; model: string; effort: string; accuracy: number; displayed: boolean }> = {}) => ({
+  agent: "Claude Code",
+  model: "One 1",
+  effort: "max",
+  accuracy: 57.88,
+  displayed: true,
+  ...over,
+});
+const board = (rows: ReturnType<typeof boardRow>[], leaderboard = TBENCH.harness as string) => ({ livebenchRelease: "20260625", terminalBench: { leaderboard, rows } });
+const tbClaim = (over: Record<string, unknown> = {}) => ({
+  model: "acme-three-1",
+  benchmark: TBENCH.id,
+  score: 57.9,
+  version: TBENCH.version,
+  agent: "Claude Code",
+  effort: "max",
+  ...proof,
+  sourceUrl: TBENCH.url,
+  ...over,
+});
+const tbData = () => {
+  const data = baseData();
+  data.models = data.models.map((m) => (m.id === "acme-three-1" ? { ...m, name: "Acme One 1" } : m));
+  return data;
+};
+
+test("a Terminal-Bench row is accepted only from a displayed row on the recorded harness, keeping agent and effort", () => {
+  const ok = refresh(tbData(), research({ observations: [tbClaim()] }), eligibilityFile([]), ctx({ feeds: board([boardRow()]) }));
+  assert.equal(ok.rejected.length, 0, JSON.stringify(ok.rejected));
+  const row = ok.data.observations.find((o) => o.model === "acme-three-1" && o.benchmark === TBENCH.id);
+  assert.equal(row?.note, `agent Claude Code, effort max, leaderboard ${TBENCH.harness}`);
+  const cases: [Parameters<typeof ctx>[0], Record<string, unknown>, RegExp][] = [
+    [{ feeds: board([boardRow()], "someone/else 4-0-0") }, {}, /is not the harness/],
+    [{ feeds: board([boardRow({ agent: "Terminus 2" })]) }, {}, /no .* row for Acme One 1 with agent Claude Code/],
+    [{ feeds: board([boardRow({ effort: "low" })]) }, {}, /no .* row/],
+    [{ feeds: board([boardRow({ model: "One 1.5" })]) }, {}, /no .* row/],
+    [{ feeds: board([boardRow({ accuracy: 50.3 })]) }, {}, /no .* row/],
+    [{ feeds: board([boardRow({ displayed: false })]) }, {}, /not displayed/],
+    [{ feeds: board([boardRow()]) }, { agent: undefined }, /needs the leaderboard's agent and effort/],
+    [{ feeds: { livebenchRelease: "20260625", terminalBench: null } }, {}, /was not fetched this run/],
+  ];
+  for (const [over, claim, reason] of cases) {
+    const out = refresh(tbData(), research({ observations: [tbClaim(claim)] }), eligibilityFile([]), ctx(over));
+    assert.match(out.rejected[0]?.reason ?? "", reason);
+    assert.equal(out.data.observations.length, 2);
+  }
+});
+
+test("a page reported unresolved blocks items citing it without blocking the rest of its host", () => {
+  const out = refresh(
+    baseData(),
+    research({
+      sources: [
+        { url: "https://acme.example/pricing", status: "unresolved" },
+        { url: "https://acme.example/models", status: "ok" },
+      ],
+      pricing: [
+        { model: "acme-two-1", inputPerM: 2, outputPerM: 8, provider: "Acme API", scope: "standard", ...proof, sourceUrl: "https://acme.example/pricing" },
+        { model: "acme-three-1", inputPerM: 2, outputPerM: 8, provider: "Acme API", scope: "standard", ...proof, sourceUrl: "https://acme.example/models" },
+      ],
+    }),
+    eligibilityFile([]),
+    ctx(),
+  );
+  assert.deepEqual(out.data.pricing.map((p) => p.model), ["acme-one-1", "acme-three-1"]);
+  assert.match(out.rejected[0].reason, /acme\.example\/pricing was reported as failed or unresolved/);
+  assert.deepEqual(out.sources, [
+    { source: "acme.example/pricing", status: "unresolved" },
+    { source: "acme.example", status: "ok" },
+  ]);
+});
+
+test("a benchmark board's run cost is never taken as a list price", () => {
+  const cost = { model: "acme-two-1", inputPerM: 2, outputPerM: 8, provider: "LiveBench", scope: "run", ...proof, sourceUrl: "https://livebench.ai/data/20261014/cost.csv" };
+  const out = refresh(baseData(), research({ pricing: [cost] }), eligibilityFile([]), ctx());
+  assert.match(out.rejected[0].reason, /benchmark board/);
+  assert.equal(out.data.pricing.length, 1);
+});
+
+test("a newer LiveBench release is a status notice, and the pinned release is not", () => {
+  assert.match(feedNotices(benchmarks, { livebenchRelease: "20261014", terminalBench: null })[0], /release 2026-10-14, which the composite does not use/);
+  assert.deepEqual(feedNotices(benchmarks, { livebenchRelease: "20260625", terminalBench: null }), []);
+  assert.deepEqual(feedNotices(benchmarks, NO_FEEDS), []);
+});
+
 test("supersession must stay in one vendor, never point at itself, and never form a cycle", () => {
   const data = baseData();
   data.models.push(model("other-one-1", { vendor: "OpenAI" }));
@@ -297,7 +401,7 @@ test("updateModels changes only whitelisted fields", () => {
   assert.match(out.rejected[0].reason, /cannot be changed/);
 });
 
-const failedRun = { at: "2026-10-24T09:00:00Z", outcome: "failed" as const, failedStage: "gates", exitCode: 6, catalogCommit: null, accepted: 0, rejected: 0 };
+const failedRun = { at: "2026-10-24T09:00:00Z", outcome: "failed" as const, failedStage: "gates", exitCode: 6, catalogCommit: null, accepted: 0, rejected: 0, notices: [] };
 
 test("nextStatus keeps the last success on a failed run and dates each source separately", () => {
   const neverRun: RefreshStatus = {
@@ -310,6 +414,7 @@ test("nextStatus keeps the last success on a failed run and dates each source se
     accepted: 0,
     rejected: 0,
     sources: [],
+    notices: [],
   };
   const first = nextStatus(neverRun, {
     at: "2026-10-23T09:00:00Z",
@@ -323,11 +428,13 @@ test("nextStatus keeps the last success on a failed run and dates each source se
       { source: "a.example", status: "ok" },
       { source: "b.example", status: "failed" },
     ],
+    notices: ["n"],
   });
   const second = nextStatus(first, { ...failedRun, sources: [{ source: "b.example", status: "ok" }] });
   assert.equal(second.lastSuccess, "2026-10-23T09:00:00Z");
   assert.equal(second.lastAttempt, "2026-10-24T09:00:00Z");
   assert.equal(second.catalogCommit, COMMIT);
+  assert.deepEqual([first.notices, second.notices], [["n"], []]);
   assert.deepEqual(second.sources, [
     { source: "a.example", status: "ok", checked: "2026-10-23T09:00:00Z", lastOk: "2026-10-23T09:00:00Z" },
     { source: "b.example", status: "ok", checked: "2026-10-24T09:00:00Z", lastOk: "2026-10-24T09:00:00Z" },

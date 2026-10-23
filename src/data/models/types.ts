@@ -72,7 +72,7 @@ export interface OmniEligibility {
   retrieved: string;
 }
 
-export type SourceStatus = "ok" | "failed";
+export type SourceStatus = "ok" | "failed" | "unresolved";
 
 export interface RefreshSource {
   source: string;
@@ -93,6 +93,7 @@ export interface RefreshStatus {
   accepted: number;
   rejected: number;
   sources: RefreshSource[];
+  notices: string[];
 }
 
 export type HistoryTable = "models" | "observations" | "pricing" | "omni";
@@ -131,6 +132,7 @@ export interface BenchmarkRecord {
   normalization: Normalization;
   contaminationResistant: boolean;
   dataExport?: string;
+  harness?: string;
   rationale: string;
 }
 

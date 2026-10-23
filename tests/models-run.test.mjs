@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { createServer } from "node:http";
 import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -62,6 +63,9 @@ function runJob(sandbox, env = {}) {
       MODELS_CATALOG_REPO: sandbox.catalog,
       MODELS_CATALOG_FILES: "lib/models.ts",
       MODELS_GATES_CMD: "true",
+      MODELS_LIVEBENCH_URL: "http://127.0.0.1:9",
+      MODELS_TBENCH_URL: "http://127.0.0.1:9/leaderboard-read",
+      MODELS_FEED_TIMEOUT_SEC: "5",
       CLAUDE_BIN: STUB,
       ...env,
     },
@@ -161,4 +165,91 @@ test("the job refuses the primary checkout, a push from another base, and a held
   assert.equal(busy.status, 75);
   holder.child.kill();
   await holder.done;
+});
+
+const TBENCH_BODY = { package: "terminal-bench/terminal-bench", name: "4-0-0" };
+const boardRow = (agent, model, effort, accuracy) => ({
+  metadata: { agent_display: { label: agent }, model_display: { label: model }, reasoning_effort: effort, date: "2026-10-20" },
+  metrics: { accuracy },
+  status: "display",
+});
+
+async function serveFeeds(t) {
+  const posted = [];
+  const server = createServer((req, res) => {
+    const send = (code, body, type = "text/plain") => {
+      res.writeHead(code, { "content-type": type });
+      res.end(body);
+    };
+    if (req.method === "POST" && req.url === "/leaderboard-read") {
+      let body = "";
+      req.on("data", (chunk) => (body += chunk));
+      req.on("end", () => {
+        posted.push(JSON.parse(body));
+        send(200, JSON.stringify({ leaderboard: { ...TBENCH_BODY, title: "Terminal-Bench 4.0" }, rows: [boardRow("Claude Code", "Claude Opus 5", "xhigh", 55)] }), "application/json");
+      });
+      return;
+    }
+    if (req.url === "/") return send(200, '<script src="/static/js/main.0a1b2c.js"></script>', "text/html");
+    if (req.url === "/static/js/main.0a1b2c.js") return send(200, 'const v1=["2026-06-25","2026-04-02"],_e=["20261014"];');
+    const data = /^\/data\/20261014\/(table\.csv|categories\.json|cost\.csv|notes\.json)$/.exec(req.url ?? "");
+    if (data) return send(200, data[1].endsWith(".csv") ? "model,score\nx,1\n" : "{}");
+    send(404, "missing");
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  return { posted, env: { MODELS_LIVEBENCH_URL: base, MODELS_TBENCH_URL: `${base}/leaderboard-read` } };
+}
+
+const observation = (extra) => ({ version: "4.0, tbench.ai official harness", sourceUrl: "https://www.tbench.ai/leaderboard", retrieved: RUN_DATE, evidence: "leaderboard row", ...extra });
+const feedSources = (s) => s.sources.filter((x) => x.source.endsWith("-feed")).map((x) => [x.source, x.status]);
+
+test("the job saves both feeds for the agents, then checks Terminal-Bench rows and LiveBench releases against them", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t);
+  const research = {
+    observations: [
+      observation({ model: "claude-opus-5", benchmark: "terminal-bench-4", score: 55, agent: "Claude Code", effort: "xhigh" }),
+      observation({ model: "claude-opus-5.5", benchmark: "terminal-bench-4", score: 61.2, agent: "Terminus 2", effort: "high" }),
+      {
+        model: "claude-opus-5.5",
+        benchmark: "livebench-data-analysis",
+        score: 70.1,
+        version: "2026-06-25 question set",
+        sourceUrl: "https://livebench.ai/data/20261014/table.csv",
+        retrieved: RUN_DATE,
+        evidence: "table row",
+      },
+    ],
+  };
+  const run = await runJob(sandbox, { ...feeds.env, STUB_RESEARCH: JSON.stringify(research), STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.deepEqual(feeds.posted, [TBENCH_BODY]);
+  assert.match(run.stdout, /research feeds 20261014 terminal-bench\/terminal-bench 4-0-0/);
+  const recorded = await status(sandbox);
+  assert.deepEqual(feedSources(recorded), [["livebench-feed", "ok"], ["terminal-bench-feed", "ok"]]);
+  assert.deepEqual([recorded.accepted, recorded.rejected], [2, 2]);
+  assert.match(recorded.notices.join(" "), /LiveBench published release 2026-10-14, which the composite does not use/);
+  const observations = JSON.parse(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"));
+  const accepted = observations.find((o) => o.model === "claude-opus-5" && o.benchmark === "terminal-bench-4");
+  assert.deepEqual([accepted.score, accepted.note], [55, "agent Claude Code, effort xhigh, leaderboard terminal-bench/terminal-bench 4-0-0"]);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.match(log, /REJECT observation claude-opus-5\.5 \| no terminal-bench\/terminal-bench 4-0-0 row for Claude Opus 5\.5 with agent Terminus 2/);
+  assert.match(log, /REJECT observation claude-opus-5\.5 \| LiveBench release 2026-10-14 differs from the pinned "2026-06-25 question set"/);
+});
+
+test("unreachable feeds are recorded as failed sources, change no rows, and leave the run successful", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const research = { observations: [observation({ model: "claude-opus-5", benchmark: "terminal-bench-4", score: 55, agent: "Claude Code", effort: "xhigh" })] };
+  const before = await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8");
+  const run = await runJob(sandbox, { STUB_RESEARCH: JSON.stringify(research), STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.match(run.stdout, /research feeds none none/);
+  const recorded = await status(sandbox);
+  assert.deepEqual(feedSources(recorded), [["livebench-feed", "failed"], ["terminal-bench-feed", "failed"]]);
+  assert.deepEqual(recorded.notices, []);
+  assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.match(log, /REJECT observation claude-opus-5 \| the terminal-bench\/terminal-bench 4-0-0 leaderboard was not fetched this run/);
 });

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
 const phase = prompt.includes("daily research step") ? "research" : "eligibility";
@@ -14,6 +14,9 @@ if (process.env.STUB_FAIL_PHASE === phase) {
 }
 const runDate = prompt.match(/Today is (\d{4}-\d{2}-\d{2})/)?.[1];
 if (phase === "research") {
+  const release = existsSync("feeds/livebench/release") ? readFileSync("feeds/livebench/release", "utf8").trim() : "none";
+  const board = existsSync("feeds/terminal-bench.json") ? JSON.parse(readFileSync("feeds/terminal-bench.json", "utf8")).leaderboard : null;
+  console.log(`[stub-models-agent] research feeds ${release} ${board ? `${board.package} ${board.name}` : "none"}`);
   const extra = JSON.parse(process.env.STUB_RESEARCH ?? "{}");
   writeFileSync("research.json", JSON.stringify({ runDate, sources: [], ...extra }));
 } else {

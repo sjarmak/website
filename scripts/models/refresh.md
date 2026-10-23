@@ -9,6 +9,11 @@ Your working directory holds the current public data, read-only for you:
 - `gates.json`: the hard requirements a model must meet to be ranked.
 - `vendors.json`: the vendor names the page accepts.
 
+The job also saved two public leaderboards under `feeds/` before you started. A feed that could not be fetched is simply absent; never substitute another copy of it.
+
+- `feeds/livebench/`: the latest LiveBench release, named in `release` (YYYYMMDD), with `table.csv`, `categories.json`, `cost.csv` and `notes.json` served from `https://livebench.ai/data/<release>/`. The LiveBench benchmarks in `benchmarks.json` are pinned to one release. When this release is a different one, its rows are a different benchmark: do not propose them, and never map its categories onto the pinned ones by name. `cost.csv` is what the benchmark run cost, not a provider's price; never use it for pricing.
+- `feeds/terminal-bench.json`: the official Terminal-Bench 4.0 leaderboard (`leaderboard` and `rows`). Use only rows whose `status` is `"display"`. For each tracked model, propose the row with the highest `metrics.accuracy`, which is how the recorded rows were chosen, and add the fields `agent` (`metadata.agent_display.label`) and `effort` (`metadata.reasoning_effort`) exactly as the row has them, `score` as the accuracy rounded to one decimal, and `sourceUrl` set to the benchmark's `url`. A program checks each one against the saved rows.
+
 Your only output is the file `{{OUTPUT}}`. Do not edit any other file. A program validates every item you propose and rejects anything that breaks a rule below, so propose only what a source page states.
 
 ## What to check
@@ -26,7 +31,7 @@ Your only output is the file `{{OUTPUT}}`. Do not edit any other file. A program
 - Pricing rows name the provider (for example "Anthropic API") and the scope the price covers (for example "standard tier, under 200k input").
 - When something is unknown or unclear, leave it out. Never estimate, interpolate or carry a value across versions.
 - Every item carries `sourceUrl` (the exact https page), `retrieved` set to `{{RUN_DATE}}`, and `evidence`: a short quote or description of what the page shows, at most 1000 characters.
-- Record every page you fetched in `sources`, with `status` `"ok"` when it loaded and was readable and `"failed"` when it did not.
+- Record every page you fetched in `sources`, with `status` `"ok"` when it loaded and was readable, `"failed"` when it did not, and `"unresolved"` when it loaded but does not state the value you came for (for example a pricing page whose table for a model is empty). Never infer a value an unresolved page leaves out. Moonshot's pricing page at https://platform.moonshot.ai/docs/pricing/chat.md has shown empty Kimi K3 and K2 tables; report it `"unresolved"` while that is still so.
 
 ## Output shape
 

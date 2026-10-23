@@ -92,6 +92,7 @@ export const benchmarks: BenchmarkRecord[] = [
     weightWithinCapability: 1,
     url: "https://www.tbench.ai/leaderboard",
     version: "4.0, tbench.ai official harness",
+    harness: "terminal-bench/terminal-bench 4-0-0",
     scale: "0–100 (task pass rate)",
     normalization: percent,
     contaminationResistant: false,

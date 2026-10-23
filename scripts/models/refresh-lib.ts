@@ -33,6 +33,7 @@ import {
   textList,
   type Raw,
 } from "./proposal-shape.ts";
+import { checkFeedRow, hostOf, type Feeds } from "./feeds.ts";
 
 export { ItemError, ProposalError };
 
@@ -52,6 +53,7 @@ export interface RunContext {
   config: CompositeConfig;
   gates: Gate[];
   maxReplacementShare: number;
+  feeds: Feeds;
 }
 
 export interface Decision {
@@ -178,13 +180,12 @@ class Batch {
   }
 }
 
-const hostOf = (url: string): string => new URL(url).hostname.replace(/^www\./, "");
+const pageOf = (url: string): string => `${hostOf(url)}${new URL(url).pathname}`;
 
 function sourced(batch: Batch, o: Raw): ReturnType<typeof dated> {
   const proof = dated(o, batch.ctx.runDate);
-  if (batch.failedSources.has(hostOf(proof.sourceUrl))) {
-    throw new ItemError(`source ${hostOf(proof.sourceUrl)} was reported as failed in this run`);
-  }
+  const blocked = [hostOf(proof.sourceUrl), pageOf(proof.sourceUrl)].find((key) => batch.failedSources.has(key));
+  if (blocked) throw new ItemError(`source ${blocked} was reported as failed or unresolved in this run`);
   return proof;
 }
 
@@ -282,7 +283,7 @@ function relabelSource(batch: Batch, model: string, benchmark: string, score: nu
 }
 
 function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
-  onlyKeys(o, ["model", "benchmark", "score", "version", "note", ...DATED_KEYS]);
+  onlyKeys(o, ["model", "benchmark", "score", "version", "note", "agent", "effort", ...DATED_KEYS]);
   const proof = sourced(batch, o);
   const model = batch.model(text(o, "model", 64));
   const benchmarkId = text(o, "benchmark", 64);
@@ -293,6 +294,8 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
   const score = finite(o, "score");
   const [min, max] = scoreRange(benchmark);
   if (score < min || score > max) throw new ItemError(`score ${score} is outside ${min}..${max}`);
+  const claim = { agent: optionalText(o, "agent", 80), effort: optionalText(o, "effort", 20), score };
+  const boardNote = checkFeedRow(benchmark, model, proof.sourceUrl, claim, batch.ctx.feeds);
   const key = `${model.id}/${benchmark.id}`;
   if (seen.has(key)) throw new ItemError(`${key} appears twice in this batch`);
   seen.add(key);
@@ -307,7 +310,7 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
     version,
     sourceUrl: proof.sourceUrl,
     retrieved: proof.retrieved,
-    note: optionalText(o, "note", 200),
+    note: boardNote ?? optionalText(o, "note", 200),
   });
   if (index >= 0) {
     const previous = batch.observations[index];
@@ -324,6 +327,9 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
 function addPricing(batch: Batch, o: Raw, seen: Set<string>): void {
   onlyKeys(o, ["model", "inputPerM", "outputPerM", "provider", "scope", "note", ...DATED_KEYS]);
   const proof = sourced(batch, o);
+  if (batch.ctx.benchmarks.some((b) => hostOf(b.url) === hostOf(proof.sourceUrl))) {
+    throw new ItemError(`${hostOf(proof.sourceUrl)} is a benchmark board; its run costs are not provider list prices`);
+  }
   const model = batch.model(text(o, "model", 64));
   if (seen.has(model.id)) throw new ItemError(`pricing for ${model.id} appears twice in this batch`);
   seen.add(model.id);
@@ -374,17 +380,20 @@ function dropUnbenchmarked(batch: Batch, tracked: Set<string>): void {
 }
 
 function sourceReports(batch: Batch, root: Raw): SourceReport[] {
-  const byHost = new Map<string, SourceStatus>();
+  const bySource = new Map<string, SourceStatus>();
   for (const raw of list(root, "sources")) {
     batch.attempt("source report", () => {
       if (!isObject(raw)) throw new ItemError("source report must be an object");
-      const host = hostOf(httpsUrl(raw, "url"));
       const status = text(raw, "status", 10);
-      if (status !== "ok" && status !== "failed") throw new ItemError(`source status must be ok or failed, found ${status}`);
-      byHost.set(host, byHost.get(host) === "ok" ? "ok" : status);
+      if (status !== "ok" && status !== "failed" && status !== "unresolved") {
+        throw new ItemError(`source status must be ok, failed or unresolved, found ${status}`);
+      }
+      const url = httpsUrl(raw, "url");
+      const key = status === "unresolved" ? pageOf(url) : hostOf(url);
+      bySource.set(key, bySource.get(key) === "ok" ? "ok" : status);
     });
   }
-  return [...byHost].map(([source, status]) => ({ source, status }));
+  return [...bySource].map(([source, status]) => ({ source, status }));
 }
 
 function each(batch: Batch, root: Raw, key: string, label: string, step: (o: Raw) => void): void {
@@ -400,7 +409,7 @@ function each(batch: Batch, root: Raw, key: string, label: string, step: (o: Raw
 function applyResearch(batch: Batch, research: unknown): SourceReport[] {
   const root = header(research, batch.ctx.runDate);
   const sources = sourceReports(batch, root);
-  batch.failedSources = new Set(sources.filter((s) => s.status === "failed").map((s) => s.source));
+  batch.failedSources = new Set(sources.filter((s) => s.status !== "ok").map((s) => s.source));
   const observed = new Set<string>();
   const priced = new Set<string>();
   const tracked = new Set(batch.models.map((m) => m.id));

@@ -85,6 +85,7 @@ export interface RunRecord {
   accepted: number;
   rejected: number;
   sources: SourceReport[];
+  notices: string[];
 }
 
 export function nextStatus(previous: RefreshStatus, run: RunRecord): RefreshStatus {
@@ -108,5 +109,6 @@ export function nextStatus(previous: RefreshStatus, run: RunRecord): RefreshStat
     accepted: run.accepted,
     rejected: run.rejected,
     sources: [...carried, ...fresh].sort((a, b) => a.source.localeCompare(b.source)),
+    notices: run.notices,
   };
 }

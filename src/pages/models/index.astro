@@ -34,6 +34,7 @@ const retiredWhy = (r: (typeof retired)[number]) =>
       ? `Not eligible: ${basisText[r.eligibility.basis](r.eligibility)}`
       : `Eligibility unresolved (${basisText[r.eligibility.basis](r.eligibility)}); no verified benchmark yet`;
 const failingSources = refreshStatus.sources.filter((s) => s.status === "failed");
+const unresolvedSources = refreshStatus.sources.filter((s) => s.status === "unresolved");
 const refreshLine = refreshStatus.lastSuccess
   ? `Daily refresh last succeeded ${fullDate(new Date(refreshStatus.lastSuccess))}${
       refreshStatus.outcome === "failed" && refreshStatus.lastAttempt
@@ -172,6 +173,9 @@ const observationCount = scored.length;
           ` Sources that failed on the latest attempt: ${failingSources
             .map((s) => `${s.source} (last good ${s.lastOk ? fullDate(new Date(s.lastOk)) : "never"})`)
             .join(", ")}.`}
+        {unresolvedSources.length > 0 &&
+          ` Sources that loaded without the values sought, so nothing was inferred from them: ${unresolvedSources.map((s) => s.source).join(", ")}.`}
+        {refreshStatus.notices.map((n) => ` ${n}`).join("")}
       </p>
       <nav class="section-nav" aria-label="On this page">
         <a href="#leaderboard">Leaderboard</a>

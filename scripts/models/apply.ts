@@ -6,6 +6,7 @@ import { benchmarks } from "../../src/data/models/benchmarks.ts";
 import { compositeConfig } from "../../src/data/models/capabilities.ts";
 import { gates } from "../../src/data/models/gates.ts";
 import { VENDORS, type RefreshOutcome } from "../../src/data/models/types.ts";
+import { feedNotices, readFeeds } from "./feeds.ts";
 import { DATA_FILES, loadData, loadStatus, nextStatus, serialize, writeData, writeStatus } from "./refresh-io.ts";
 import { ProposalError, proposedModels, refresh, type RunContext, type SourceReport } from "./refresh-lib.ts";
 
@@ -32,7 +33,7 @@ function catalogText(dir: string): string {
   return files.map((f) => readFileSync(path.join(dir, f), "utf8")).join("\n");
 }
 
-function context(runDate: string, catalogCommit: string, catalogDir: string | null): RunContext {
+function context(runDate: string, catalogCommit: string, catalogDir: string | null, feedsDir: string | undefined): RunContext {
   const share = Number(process.env.MODELS_MAX_REPLACEMENT_SHARE ?? "0.25");
   if (!Number.isFinite(share) || share <= 0 || share > 1) throw new Error("MODELS_MAX_REPLACEMENT_SHARE must be in (0, 1]");
   return {
@@ -43,6 +44,7 @@ function context(runDate: string, catalogCommit: string, catalogDir: string | nu
     config: compositeConfig,
     gates,
     maxReplacementShare: share,
+    feeds: readFeeds(feedsDir),
   };
 }
 
@@ -75,11 +77,12 @@ function models(argv: string[]): number {
       "run-date": { type: "string" },
       log: { type: "string" },
       out: { type: "string" },
+      feeds: { type: "string" },
     },
   });
   const log = required(values, "log");
   try {
-    const ctx = context(required(values, "run-date"), "", null);
+    const ctx = context(required(values, "run-date"), "", null, values.feeds);
     const proposed = proposedModels(loadData(DATA_DIR), readProposal(required(values, "research")), ctx);
     writeFileSync(required(values, "out"), `${JSON.stringify(proposed, null, 2)}\n`);
     return 0;
@@ -99,11 +102,12 @@ function apply(argv: string[]): number {
       "run-date": { type: "string" },
       log: { type: "string" },
       summary: { type: "string" },
+      feeds: { type: "string" },
     },
   });
   const log = required(values, "log");
   const runDate = required(values, "run-date");
-  const ctx = context(runDate, required(values, "catalog-commit"), required(values, "catalog-dir"));
+  const ctx = context(runDate, required(values, "catalog-commit"), required(values, "catalog-dir"), values.feeds);
   try {
     const result = refresh(
       loadData(DATA_DIR),
@@ -157,6 +161,7 @@ function status(argv: string[]): number {
       "catalog-commit": { type: "string" },
       summary: { type: "string" },
       source: { type: "string", multiple: true },
+      feeds: { type: "string" },
     },
   });
   const outcome = required(values, "outcome") as Exclude<RefreshOutcome, "never-run">;
@@ -171,6 +176,7 @@ function status(argv: string[]): number {
     accepted: summary?.accepted ?? 0,
     rejected: summary?.rejected ?? 0,
     sources: sourcesFrom(values.source ?? [], values.summary),
+    notices: feedNotices(benchmarks, readFeeds(values.feeds)),
   });
   writeStatus(DATA_DIR, next);
   return 0;
