@@ -7,6 +7,13 @@ import { fileURLToPath } from "node:url";
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const TEST_ACCOUNT_ID = "0123456789abcdef0123456789abcdef";
 const HEARTBEAT_REL = path.join("src", "data", "knowledge", "concept-sync-status.json");
+export const CONCEPT_ASSIGNMENTS_REL = "src/data/knowledge/concept-assignments.json";
+export const EXPLORERS_REL = "src/data/knowledge/explorers.json";
+
+export async function writeConceptAssignmentInputs(repo) {
+  await writeFile(path.join(repo, EXPLORERS_REL), `${JSON.stringify({ explorers: [] })}\n`, "utf8");
+  await writeFile(path.join(repo, CONCEPT_ASSIGNMENTS_REL), "{}\n", "utf8");
+}
 
 export function git(cwd, ...args) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
@@ -33,6 +40,7 @@ export async function makeDigestSandbox(t, { prefix = "digest-sandbox-", withScr
     recursive: true,
   });
   await cp(path.join(REPO_ROOT, HEARTBEAT_REL), path.join(repo, HEARTBEAT_REL));
+  await writeConceptAssignmentInputs(repo);
   await writeFile(
     path.join(repo, ".gitignore"),
     ".digest-runs/\n/public/media/\n/scripts\n/node_modules\n/src/lib\n",

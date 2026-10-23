@@ -204,6 +204,11 @@ if [ "$MODE" != "attach-pending" ]; then
 fi
 
 git add src/content/digest 2>/dev/null || true
+if ! node scripts/knowledge/seed_concept_assignments.mjs 2>&1 | tee -a "$LOG"; then
+  echo "[digest] reseeding concept assignments failed, so nothing was committed; staged changes are left in place for inspection" | tee -a "$LOG"
+  exit 1
+fi
+git add src/data/knowledge/concept-assignments.json
 
 if [ "$MEDIA_BACKEND" = "git" ]; then
   git -C "$WEBSITE_MEDIA_DIR" add public/media/digests 2>/dev/null || true

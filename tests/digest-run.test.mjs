@@ -6,7 +6,16 @@ import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
 
 import { readEntryAudio } from "../scripts/digest/entry-audio.mjs";
-import { git, makeDigestSandbox, REPO_ROOT, runProcess, sandboxEnv, TEST_ACCOUNT_ID } from "./helpers/digest-sandbox.mjs";
+import {
+  CONCEPT_ASSIGNMENTS_REL,
+  EXPLORERS_REL,
+  git,
+  makeDigestSandbox,
+  REPO_ROOT,
+  runProcess,
+  sandboxEnv,
+  TEST_ACCOUNT_ID,
+} from "./helpers/digest-sandbox.mjs";
 import { HAS_FFMPEG, fakeKokoroVenv } from "./helpers/fake-kokoro.mjs";
 import { startFakeMediaServer } from "./helpers/fake-media-server.mjs";
 
@@ -143,6 +152,31 @@ test("r2: a run uploads, verifies, and commits the issue with its player", needs
   assert.equal(ctx.fake.stats.puts, 1);
   assert.deepEqual(ctx.fake.objects.get(KEY).body, await readFile(path.join(ctx.sandbox.spool, KEY)));
   assert.equal(await exists(path.join(ctx.sandbox.repo, PENDING_REL)), false);
+});
+
+test("r2: a run commits the reseeded concept assignments with the issue", needsFfmpeg, async (t) => {
+  const ctx = await setup(t, { extraEnv: { STUB_SLUG: SLUG } });
+  const result = await ctx.run(["daily"]).done;
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const committed = git(ctx.sandbox.repo, "show", "--name-only", "--format=", "HEAD").split("\n");
+  assert.ok(committed.includes(CONCEPT_ASSIGNMENTS_REL), committed.join("\n"));
+  assert.deepEqual(JSON.parse(git(ctx.sandbox.repo, "show", `HEAD:${CONCEPT_ASSIGNMENTS_REL}`)), {
+    [`digest:${SLUG}`]: { concept: "evaluation" },
+  });
+  assert.equal(git(ctx.sandbox.repo, "status", "--porcelain", "--", CONCEPT_ASSIGNMENTS_REL), "");
+});
+
+test("a run whose concept reseed fails commits nothing and says why", async (t) => {
+  const ctx = await setup(t);
+  await writeFile(
+    path.join(ctx.sandbox.repo, ENTRY_REL),
+    `---\ntitle: Written without publish\ncadence: daily\ndate: ${DATE}\nsummary: s\ntopics: [evals]\n---\n\nBody.\n`,
+  );
+  await writeFile(path.join(ctx.sandbox.repo, EXPLORERS_REL), "not json\n");
+  const result = await ctx.run(["daily"]).done;
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout, /reseeding concept assignments failed, so nothing was committed/);
+  assert.equal(git(ctx.sandbox.repo, "log", "-1", "--format=%s"), "sandbox baseline");
 });
 
 test("r2: the credentials file wins over the caller's R2 variables, and the agent sees none of them", needsFfmpeg, async (t) => {

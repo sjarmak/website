@@ -16,6 +16,7 @@ import os from "node:os";
 import path from "node:path";
 import YAML from "yaml";
 import { evaluateConceptGate, measureFacetResolution } from "../scripts/digest/concept-gate.mjs";
+import { writeConceptAssignmentInputs } from "./helpers/digest-sandbox.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLISH_SCRIPT = path.join(REPO_ROOT, "scripts", "digest", "publish-digest.mjs");
@@ -53,6 +54,7 @@ async function makeTempRepo(t) {
   });
   await cp(path.join(REPO_ROOT, HEARTBEAT_REL), path.join(repo, HEARTBEAT_REL));
   await writeFile(path.join(repo, "src", "content", "digest", "daily-2026-07-02.md"), FIXTURE_ENTRY, "utf8");
+  await writeConceptAssignmentInputs(repo);
 
   const git = spawnSync("git", ["init", "-q"], { cwd: repo, encoding: "utf8" });
   assert.equal(git.status, 0, `git init failed: ${git.stderr}`);

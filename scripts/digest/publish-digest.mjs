@@ -14,7 +14,7 @@
 
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 import { z } from "zod";
 import YAML from "yaml";
@@ -26,8 +26,10 @@ import { retryCommand, writePending } from "./pending-audio.mjs";
 import { mediaBackend } from "../media/config.mjs";
 import { digestKey, siteUrlForKey } from "../media/keys.mjs";
 import { installLocalObject, readLocalObject } from "../media/local-object.mjs";
+import { CONCEPT_ASSIGNMENTS_PATH } from "../../src/lib/knowledge/conceptAssignments.ts";
 
 const CONTENT_DIR = "src/content/digest";
+const SEEDER = fileURLToPath(new URL("../knowledge/seed_concept_assignments.mjs", import.meta.url));
 
 // Mirrors the `digest` collection schema in src/content.config.ts. Kept minimal
 // here because the Astro schema can't be imported outside the Astro runtime.
@@ -73,6 +75,14 @@ function git(...cmd) {
   const r = spawnSync("git", cmd, { encoding: "utf8" });
   if (r.status !== 0) throw new Error(`git ${cmd.join(" ")} failed: ${r.stderr?.trim()}`);
   return r.stdout?.trim();
+}
+
+function reseedConceptAssignments() {
+  const r = spawnSync(process.execPath, [SEEDER, CONCEPT_ASSIGNMENTS_PATH], { encoding: "utf8" });
+  if (r.status !== 0) {
+    throw new Error(`reseeding concept assignments failed (exit ${r.status ?? r.signal}): ${r.stderr?.trim()}`);
+  }
+  return CONCEPT_ASSIGNMENTS_PATH;
 }
 
 // Repeat guard: with DIGEST_REPEAT_GUARD_DAYS set (the auto-run path), refuse
@@ -156,6 +166,7 @@ async function publish(spec) {
       contentDir: CONTENT_DIR,
     }))
   );
+  written.push(reseedConceptAssignments());
 
   // 4. stage (always) and commit (opt-in). Never push.
   git("add", ...written);
