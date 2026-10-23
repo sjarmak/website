@@ -175,8 +175,9 @@ test("a run whose concept reseed fails commits nothing and says why", async (t) 
   await writeFile(path.join(ctx.sandbox.repo, EXPLORERS_REL), "not json\n");
   const result = await ctx.run(["daily"]).done;
   assert.equal(result.status, 1, result.stdout + result.stderr);
-  assert.match(result.stdout, /reseeding concept assignments failed, so nothing was committed/);
+  assert.match(result.stdout, /reseeding concept assignments failed, so nothing was staged or committed/);
   assert.equal(git(ctx.sandbox.repo, "log", "-1", "--format=%s"), "sandbox baseline");
+  assert.equal(git(ctx.sandbox.repo, "diff", "--cached", "--name-only"), "");
 });
 
 test("r2: the credentials file wins over the caller's R2 variables, and the agent sees none of them", needsFfmpeg, async (t) => {

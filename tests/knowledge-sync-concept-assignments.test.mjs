@@ -15,6 +15,7 @@ import {
 
 const SYNC_SCRIPT = path.join(REPO_ROOT, "scripts", "knowledge", "sync-knowledge.sh");
 const DATE = "2026-07-04";
+const HEARTBEAT_REL = "src/data/knowledge/concept-sync-status.json";
 const BIBCODE = "2026arXiv260700001T";
 const SYNCED_EXPLORERS = {
   explorers: [
@@ -33,7 +34,7 @@ async function stub(dir, name, script) {
   return file;
 }
 
-async function syncSandbox(t, explorersAfterSync) {
+async function syncSandbox(t, explorersAfterSync, { repoHeartbeat = false } = {}) {
   const sandbox = await makeDigestSandbox(t, { prefix: "knowledge-sync-assignments-", withScripts: true });
   const knowledge = path.join(sandbox.repo, "src", "data", "knowledge");
   await mkdir(path.join(knowledge, "explorers"), { recursive: true });
@@ -57,6 +58,7 @@ async function syncSandbox(t, explorersAfterSync) {
     CONCEPTS_HEARTBEAT_PATH: path.join(sandbox.root, "heartbeat.json"),
     KNOWLEDGE_SYNC_PUSH: "0",
   });
+  if (repoHeartbeat) delete env.CONCEPTS_HEARTBEAT_PATH;
   const head = git(sandbox.repo, "rev-parse", "HEAD");
   const run = () => runProcess("bash", [SYNC_SCRIPT, "--date", DATE], { cwd: sandbox.repo, env }).done;
   return { sandbox, head, run };
@@ -77,13 +79,17 @@ test("an explorer sync commits the reseeded concept assignments with the explore
   assert.equal(git(sandbox.repo, "status", "--porcelain", "--", CONCEPT_ASSIGNMENTS_REL), "");
 });
 
-test("a seeder failure fails the sync loudly and commits nothing", async (t) => {
-  const { sandbox, head, run } = await syncSandbox(t, "not json\n");
+test("a seeder failure fails the sync loudly and commits no explorer or assignment change", async (t) => {
+  const { sandbox, head, run } = await syncSandbox(t, "not json\n", { repoHeartbeat: true });
   const result = await run();
   assert.equal(result.status, 1, result.stdout + result.stderr);
 
-  assert.match(result.stdout, /\[knowledge-sync\] reseeding concept assignments failed, so nothing was committed/);
-  assert.equal(git(sandbox.repo, "rev-parse", "HEAD"), head);
+  assert.match(
+    result.stdout,
+    /\[knowledge-sync\] reseeding concept assignments failed, so explorer and concept-assignment changes were not committed/,
+  );
+  const changed = git(sandbox.repo, "diff", "--name-only", head, "HEAD").split("\n").filter(Boolean);
+  assert.deepEqual(changed.filter((file) => file !== HEARTBEAT_REL), [], changed.join("\n"));
   assert.equal(git(sandbox.repo, "diff", "--cached", "--name-only"), "");
   assert.equal(await readFile(path.join(sandbox.repo, CONCEPT_ASSIGNMENTS_REL), "utf8"), "{}\n");
 });

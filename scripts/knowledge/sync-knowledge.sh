@@ -118,7 +118,7 @@ echo "[knowledge-sync] ${MODE} ${DATE} — classifying (via ${CLAUDE_BIN})" | te
 "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
 if ! node scripts/knowledge/seed_concept_assignments.mjs 2>&1 | tee -a "$LOG"; then
-  echo "[knowledge-sync] reseeding concept assignments failed, so nothing was committed (see $LOG)" | tee -a "$LOG"
+  echo "[knowledge-sync] reseeding concept assignments failed, so explorer and concept-assignment changes were not committed (see $LOG)" | tee -a "$LOG"
   exit 1
 fi
 

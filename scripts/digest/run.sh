@@ -203,11 +203,11 @@ if [ "$MODE" != "attach-pending" ]; then
   "${WITHOUT_R2[@]}" "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 fi
 
-git add src/content/digest 2>/dev/null || true
 if ! node scripts/knowledge/seed_concept_assignments.mjs 2>&1 | tee -a "$LOG"; then
-  echo "[digest] reseeding concept assignments failed, so nothing was committed; staged changes are left in place for inspection" | tee -a "$LOG"
+  echo "[digest] reseeding concept assignments failed, so nothing was staged or committed" | tee -a "$LOG"
   exit 1
 fi
+git add src/content/digest 2>/dev/null || true
 git add src/data/knowledge/concept-assignments.json
 
 if [ "$MEDIA_BACKEND" = "git" ]; then
