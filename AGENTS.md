@@ -68,6 +68,7 @@ Standing rule for anyone editing `src/data/models` (Stephanie, 2026-10-23):
 - Provenance is dated. Scores and prices match the exact model, version, provider and scope. Unknowns stay unknown, and scores never carry between versions.
 - Rows are never deleted; a replaced value goes to `history.json`, and a failed source changes nothing.
 - The scoring method does not change without her say. No paid data, no new credentials, no expanded access.
+- LiveBench scores stay on the pinned question set. A score is taken only from that set's own table (`livebench.ai/v1/table_<date>.csv` with its `categories_<date>.json`), recomputed with the existing rule (category = mean of its subtests), from the exact row key with effort variants kept as separate rows. A newer LiveBench release is reported, never mapped onto the pinned categories by name; moving to it is her call. `cost.csv` is benchmark-run cost, never pricing (Stephanie via Pip, 2026-10-23).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
