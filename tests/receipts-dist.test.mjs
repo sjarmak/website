@@ -1,14 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { receiptDomId } from "../src/lib/receipts/domId.ts";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RECEIPTS_PAGE = path.join(REPO_ROOT, "dist", "prototypes", "receipts", "index.html");
 const RECEIPT = {
@@ -42,9 +39,7 @@ test("receipt component does not create per-render random ids", async () => {
 });
 
 test("rendered receipt tooltip ids are unique on the receipts page", async () => {
-  if (!existsSync(RECEIPTS_PAGE)) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
+  requireDist();
 
   const html = await readFile(RECEIPTS_PAGE, "utf8");
   const ids = Array.from(html.matchAll(/id="(receipt-[a-f0-9]{8}-pop)"/g), (match) => match[1]);

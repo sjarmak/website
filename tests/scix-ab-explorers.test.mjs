@@ -1,11 +1,15 @@
-import { test } from 'node:test';
+import { before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
+
+import { requireDist } from './helpers/require-dist.mjs';
 
 const expected = ['sunny-narayanan', 'brad-aagaard', 'alex-young', 'david-schimel', 'sarah-stamps', 'ilya-zaslavsky', 'louis-moresi', 'matt-mayernik', 'matthew-graham', 'stephanie-jarmak', 'graziella-caprarelli'];
 const root = new URL('../', import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), 'utf8');
 const page = (slug = '') => read(`dist/scix_ab_explorers/${slug ? `${slug}/` : ''}index.html`);
+
+before(() => requireDist());
 
 test('the hub contains exactly the selected attendees and is unindexed', () => {
   const html = page();

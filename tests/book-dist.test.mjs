@@ -3,18 +3,16 @@
 
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import {
   BOOK,
   CHAPTERS,
 } from "../scripts/content/import-agent-reliability-book.mjs";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
 
@@ -28,18 +26,7 @@ function linkedCss(html) {
     .join("\n");
 }
 
-before(async () => {
-  // Build only when the artifact is missing: three dist suites once each ran
-  // an unconditional build, and node --test's parallel file execution let the
-  // concurrent Astro builds delete each other's in-flight dist modules. The
-  // ordered CI pipeline builds before testing, so dist normally exists.
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], {
-      cwd: REPO_ROOT,
-      maxBuffer: 64 * 1024 * 1024,
-    });
-  }
-});
+before(() => requireDist());
 
 test("writing index links to the book exactly once", () => {
   const html = page("writing");

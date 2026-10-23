@@ -1,12 +1,10 @@
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA_PATH = path.join(
   REPO_ROOT,
@@ -81,14 +79,7 @@ test("the explorer page exposes source provenance and accessible search controls
   assert.match(source, /data-empty-state/);
 });
 
-before(async () => {
-  if (!existsSync(DIST_PAGE)) {
-    await execFileP("npm", ["run", "build"], {
-      cwd: REPO_ROOT,
-      maxBuffer: 64 * 1024 * 1024,
-    });
-  }
-});
+before(() => requireDist());
 
 test("the built explorer renders all readings and links back to 30papers.com", () => {
   const html = readFileSync(DIST_PAGE, "utf8");

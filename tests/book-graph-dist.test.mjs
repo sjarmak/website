@@ -1,12 +1,10 @@
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
 const SLUG = "engineering-reliable-coding-agents";
@@ -15,13 +13,7 @@ function page(...segments) {
   return readFileSync(path.join(DIST, ...segments, "index.html"), "utf8");
 }
 
-before(async () => {
-  // Build only when the artifact is missing; an unconditional build here raced
-  // the other dist suites' builds under node --test's parallel execution.
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
-});
+before(() => requireDist());
 
 test("the canonical explorer ships the complete graph and accessible controls", () => {
   const html = page("books", SLUG, "explore");

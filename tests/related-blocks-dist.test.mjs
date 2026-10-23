@@ -7,10 +7,8 @@
 
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import {
   conceptLabel,
@@ -19,8 +17,8 @@ import {
   loadTalkDocs,
   relatedItems,
 } from "../src/lib/knowledge/relatedContent.ts";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
 
@@ -37,11 +35,7 @@ function count(html, needle) {
   return html.split(needle).length - 1;
 }
 
-before(async () => {
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
-});
+before(() => requireDist());
 
 test("projects: related block renders exactly when concept edges derive", () => {
   const projects = loadProjectDocs();

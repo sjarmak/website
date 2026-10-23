@@ -18,13 +18,11 @@
 
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
 const LEARNING = path.join(REPO_ROOT, "src", "content", "learning");
@@ -63,11 +61,7 @@ function page(...parts) {
   return readFileSync(path.join(DIST, ...parts, "index.html"), "utf8");
 }
 
-before(async () => {
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
-});
+before(() => requireDist());
 
 test("every companion episode names an explorer that exists", () => {
   const ids = explorerIds();

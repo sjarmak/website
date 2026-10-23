@@ -5,14 +5,12 @@
 
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
 const PAGE = path.join(DIST, "concepts", "index.html");
@@ -23,9 +21,7 @@ let html;
 let payload;
 
 before(async () => {
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
+  requireDist();
   html = readFileSync(PAGE, "utf8");
   const match = html.match(GRAPH_DATA_RE);
   assert.ok(match, "concepts page embeds a data-graph-data payload");

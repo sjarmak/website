@@ -6,11 +6,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { existsSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { checkLinks, routeToDistCandidates } from "../scripts/checks/concepts-link-integrity.mjs";
+import { requireDist } from "./helpers/require-dist.mjs";
 
 const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -62,9 +62,7 @@ test("script fails (exit 1) on the fixture page with a dead link", async () => {
 });
 
 test("script passes over the real built site", async () => {
-  if (!existsSync(path.join(REPO_ROOT, "dist", "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
+  requireDist();
   const result = await runCheck([]);
   assert.equal(result.code, 0, `link check failed:\n${result.stderr}`);
   assert.match(result.stdout, /\[links\] OK/);

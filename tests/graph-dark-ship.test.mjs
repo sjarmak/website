@@ -7,13 +7,11 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { requireDist } from "./helpers/require-dist.mjs";
 
-const execFileP = promisify(execFile);
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(REPO_ROOT, "dist");
 
@@ -29,10 +27,8 @@ function htmlFiles(dir) {
 
 const GRAPH_DATA_RE = /<script type="application\/json" data-graph-data[^>]*>([\s\S]*?)<\/script>/g;
 
-test("production build contains zero vaultNote nodes", async () => {
-  if (!existsSync(path.join(DIST, "index.html"))) {
-    await execFileP("npm", ["run", "build"], { cwd: REPO_ROOT, maxBuffer: 64 * 1024 * 1024 });
-  }
+test("production build contains zero vaultNote nodes", () => {
+  requireDist();
 
   let graphsFound = 0;
   const offenders = [];

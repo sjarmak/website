@@ -4,6 +4,8 @@ import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { requireDist } from "./helpers/require-dist.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = path.join(
   ROOT,
@@ -947,16 +949,11 @@ test("no internal identifiers reach the reader-facing surface", () => {
         .filter((e) => e.isFile() && e.name.endsWith(".go"))
         .map((e) => path.join(e.parentPath ?? e.path, e.name))
     : [];
-  // The built pages are the authoritative surface; checked only when a build
-  // exists so this still runs standalone, and it always runs in CI where build
-  // precedes test. Every page in the route family is scanned: the article and
-  // the code browser.
+  requireDist();
   const builtRouteDir = path.join(ROOT, "dist/temporal-agent-orchestration");
-  const builtPages = existsSync(builtRouteDir)
-    ? readdirSync(builtRouteDir, { recursive: true, withFileTypes: true })
-        .filter((e) => e.isFile() && e.name.endsWith(".html"))
-        .map((e) => path.join(e.parentPath ?? e.path, e.name))
-    : [];
+  const builtPages = readdirSync(builtRouteDir, { recursive: true, withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith(".html"))
+    .map((e) => path.join(e.parentPath ?? e.path, e.name));
 
   // The published run evidence is a reader-facing surface like any page:
   // downloadable text and JSON, scanned in full.
