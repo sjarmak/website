@@ -248,6 +248,21 @@ sync_tree() {
   fi
 }
 
+remove_work() {
+  chmod -R u+w "$WORK" 2>/dev/null
+  rm -rf "$WORK"
+}
+
+reload_if_changed() {
+  local self="$1" before="$2"
+  shift 2
+  [ -z "${MODELS_RUN_RELOADED:-}" ] || return 0
+  [ "$(sha256sum "$self" | cut -d' ' -f1)" != "$before" ] || return 0
+  say "the sync changed $self; re-running the updated script"
+  remove_work
+  MODELS_RUN_DATE="$RUN_DATE" MODELS_RUN_RELOADED="$LOG" exec bash "$self" "$@"
+}
+
 main() {
   WEBSITE="${MODELS_WEBSITE_DIR:-}"
   [ -n "$WEBSITE" ] || die "$EXIT_USAGE" "MODELS_WEBSITE_DIR is required: the dedicated worktree the job may reset"
@@ -268,12 +283,12 @@ main() {
   [[ "$FEED_TIMEOUT_SEC" =~ ^[1-9][0-9]*$ ]] || die "$EXIT_USAGE" "MODELS_FEED_TIMEOUT_SEC must be a positive whole number"
   LIVEBENCH_URL="${MODELS_LIVEBENCH_URL:-https://livebench.ai}"
   TBENCH_URL="${MODELS_TBENCH_URL:-https://ofhuhcpkvzjlejydnvyd.supabase.co/functions/v1/leaderboard-read}"
-  GATES_CMD="${MODELS_GATES_CMD:-npm run check && npm run build && node --test tests/models-refresh.test.ts}"
+  GATES_CMD="${MODELS_GATES_CMD:-npm run check && npm run build && npm test}"
   load_catalog_config
 
   LOG_DIR="$WEBSITE/.models-runs"
   mkdir -p "$LOG_DIR"
-  local lock="$LOG_DIR/run.lock" status=0
+  local lock="$LOG_DIR/run.lock" status=0 self before
   if [ "${MODELS_RUN_LOCK:-}" != "$lock" ]; then
     MODELS_RUN_LOCK="$lock" flock -o -E "$EXIT_BUSY" -w "$LOCK_WAIT_SEC" "$lock" bash "$(readlink -f "$0")" "$@" || status=$?
     [ "$status" != "$EXIT_BUSY" ] || say "another refresh still holds $lock after ${LOCK_WAIT_SEC}s" >&2
@@ -282,15 +297,18 @@ main() {
 
   cd "$WEBSITE"
   LOG="$LOG_DIR/$RUN_DATE.log"
-  exec > >(tee -a "$LOG") 2>&1
+  [ "${MODELS_RUN_RELOADED:-}" = "$LOG" ] || exec > >(tee -a "$LOG") 2>&1
   STARTED_AT="$(date -u +%FT%TZ)"
   WORK="$(mktemp -d)"
-  trap 'chmod -R u+w "$WORK" 2>/dev/null; rm -rf "$WORK"' EXIT
+  trap remove_work EXIT
   CATALOG_COMMIT=""
   FEED_SOURCES=()
   say "refresh for $RUN_DATE started $STARTED_AT from $BASE_REF (log $LOG)"
 
+  self="$(readlink -f "$0")"
+  before="$(sha256sum "$self" | cut -d' ' -f1)"
   sync_tree || fail "$EXIT_SOURCE" sync
+  reload_if_changed "$self" "$before" "$@"
   [ -s "$STATUS_FILE" ] || die "$EXIT_USAGE" "$BASE_REF has no $STATUS_FILE"
 
   mkdir -p "$WORK/research" "$WORK/eligibility" "$WORK/evidence"

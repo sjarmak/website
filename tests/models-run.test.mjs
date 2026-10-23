@@ -155,6 +155,52 @@ test("the account picker routes both agents to its account's config, and a refus
   assert.equal((await status(sandbox)).failedStage, "research");
 });
 
+test("the default gate runs check, build and the whole npm test suite, in that order", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t);
+  const bin = path.join(sandbox.root, "bin");
+  const calls = path.join(sandbox.root, "npm-calls");
+  await mkdir(bin);
+  await writeFile(path.join(bin, "npm"), `#!/usr/bin/env bash\nprintf '%s\\n' "$*" >>"${calls}"\n`, { mode: 0o755 });
+  const run = await runJob(sandbox, { ...feeds.env, PATH: `${bin}:${process.env.PATH}`, MODELS_GATES_CMD: undefined, STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.match(run.stdout, /running the gates: npm run check && npm run build && npm test\n/);
+  assert.deepEqual((await readFile(calls, "utf8")).split("\n").filter(Boolean), ["run check", "run build", "test"]);
+});
+
+test("a run behind a commit that changes run.sh executes the updated script in the same run and log, and re-executes only once", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t);
+  const script = "scripts/models/run.sh";
+  const sync = '  sync_tree || fail "$EXIT_SOURCE" sync\n';
+  const original = await readFile(path.join(sandbox.primary, script), "utf8");
+  assert.ok(original.includes(sync));
+  await writeFile(path.join(sandbox.primary, script), original.replace(sync, `  say "updated script running"\n  bash "$STUB_ADVANCE"\n${sync}`));
+  git(sandbox.primary, "commit", "-qam", "update run.sh");
+  git(sandbox.primary, "push", "-q", "origin", "HEAD:main");
+  const advance = path.join(sandbox.root, "advance.sh");
+  await writeFile(
+    advance,
+    [
+      "#!/usr/bin/env bash",
+      "set -euo pipefail",
+      `cd ${JSON.stringify(sandbox.primary)}`,
+      `sed -i 's/updated script running/second update running/' ${script}`,
+      'git diff --quiet || { git commit -qam "second update"; git push -q origin HEAD:main; }',
+      "",
+    ].join("\n"),
+    { mode: 0o755 },
+  );
+  const run = await runJob(sandbox, { ...feeds.env, STUB_ADVANCE: advance, STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.equal(run.stdout.match(/updated script running/g)?.length, 1, run.stdout);
+  assert.equal(run.stdout.match(/re-running the updated script/g)?.length, 1, run.stdout);
+  assert.doesNotMatch(run.stdout, /second update running/);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.equal(log.match(/updated script running/g)?.length, 1, log);
+  assert.equal(log.match(/refresh for .* started/g)?.length, 2, log);
+});
+
 test("the job refuses the primary checkout, a push from another base, and a held lock", async (t) => {
   const sandbox = await makeSandbox(t);
   const primary = await runJob(sandbox, { MODELS_WEBSITE_DIR: sandbox.primary });
