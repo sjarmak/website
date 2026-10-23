@@ -132,6 +132,21 @@ test("meets-constraints is re-gated: a failing gate makes it ineligible, an unkn
   );
 });
 
+test("an unresolved model that fails a gate is ineligible on that gate, and one with only unknown gates stays unresolved", () => {
+  const data = baseData();
+  data.models = [model("acme-one-1", { structuredOutput: false }), model("acme-two-1", { contextWindow: undefined })];
+  data.observations = data.models.map((m) => obs(m.id, 80, OTHER_BENCH));
+  const unsure = (m: string) => ({ model: m, verdict: "unresolved", reason: "catalog is silent" });
+  const out = refresh(data, research(), eligibilityFile([unsure("acme-one-1"), unsure("acme-two-1")]), ctx());
+  assert.deepEqual(
+    [verdictOf(out.data, "acme-one-1"), verdictOf(out.data, "acme-two-1")].map((e) => [e?.verdict, e?.basis, e?.gates]),
+    [
+      ["ineligible", "failed-gate", ["structured"]],
+      ["unresolved", "evidence-inconclusive", undefined],
+    ],
+  );
+});
+
 test("an ineligible failed-gate claim on a model that passes every gate is downgraded", () => {
   const claim = { model: "acme-one-1", verdict: "ineligible", basis: "failed-gate", citations: [], reason: "x" };
   const out = refresh(baseData(), research(), eligibilityFile([claim]), ctx());

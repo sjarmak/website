@@ -512,11 +512,11 @@ function applyEligibility(batch: Batch, proposals: unknown): void {
   for (const m of batch.models) {
     if (!batch.assessed.has(m.id)) setVerdict(batch, m.id, "unresolved", "not-assessed");
   }
-  for (const e of batch.eligibility.filter((x) => x.verdict === "meets-constraints")) {
+  for (const e of batch.eligibility.filter((x) => x.verdict === "meets-constraints" || x.verdict === "unresolved")) {
     const g = gates.get(e.model);
     if (!g) continue;
     if (g.failing.length > 0) setVerdict(batch, e.model, "ineligible", "failed-gate", g.failing);
-    else if (g.unknown.length > 0) setVerdict(batch, e.model, "unresolved", "gates-unknown", g.unknown);
+    else if (g.unknown.length > 0 && e.verdict === "meets-constraints") setVerdict(batch, e.model, "unresolved", "gates-unknown", g.unknown);
   }
   for (const previous of batch.startingEligibility) {
     const now = batch.eligibility.find((e) => e.model === previous.model);
