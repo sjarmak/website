@@ -1266,5 +1266,67 @@
     "version": "τ³-bench Banking domain",
     "sourceUrl": "https://taubench.com/leaderboard/",
     "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-opus-5.5",
+    "benchmark": "terminal-bench-4",
+    "score": 64.8,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Claude Code, effort max, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "claude-sonnet-5.5",
+    "benchmark": "terminal-bench-4",
+    "score": 61.8,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Claude Code, effort max, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "gpt-6-sol",
+    "benchmark": "terminal-bench-4",
+    "score": 49.4,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Codex, effort max, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "glm-5.3-flash",
+    "benchmark": "terminal-bench-4",
+    "score": 35.8,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Claude Code, effort none, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "gpt-6-luna",
+    "benchmark": "terminal-bench-4",
+    "score": 16.4,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Codex, effort max, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "muse-spark-1.3",
+    "benchmark": "terminal-bench-4",
+    "score": 14.5,
+    "version": "4.0, tbench.ai official harness",
+    "sourceUrl": "https://www.tbench.ai/leaderboard",
+    "retrieved": "2026-10-23",
+    "note": "agent Muse Code, effort xhigh, leaderboard terminal-bench/terminal-bench 4-0-0"
+  },
+  {
+    "model": "gpt-5.2",
+    "benchmark": "tau3-banking",
+    "score": 32.2,
+    "version": "τ³-bench Banking domain",
+    "sourceUrl": "https://taubench.com/leaderboard/",
+    "retrieved": "2026-10-23"
   }
 ]

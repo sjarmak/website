@@ -828,5 +828,34 @@
       "retrieved": "2026-10-23"
     },
     "replacedOn": "2026-10-23"
+  },
+  {
+    "table": "models",
+    "model": "qwen3.8-max",
+    "key": "notes",
+    "previous": "Weights published under a custom licence; no-training commitment but call data is stored.",
+    "replacedOn": "2026-10-23",
+    "sourceUrl": "https://www.alibabacloud.com/en/notice/model_studio_update_notice_for_qwen38max_models_863"
+  },
+  {
+    "table": "models",
+    "model": "deepseek-v4.1-flash-1017",
+    "key": "notes",
+    "previous": "JSON mode only, no schema enforcement. Weights published on Hugging Face; licence not stated in the release note.",
+    "replacedOn": "2026-10-23",
+    "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+  },
+  {
+    "table": "omni",
+    "model": "gemini-3.7-flash",
+    "key": "verdict",
+    "previous": {
+      "model": "gemini-3.7-flash",
+      "verdict": "unresolved",
+      "basis": "evidence-inconclusive",
+      "catalogCommit": "ba1efadd69315f51310175ec2f779e298996f859",
+      "retrieved": "2026-10-23"
+    },
+    "replacedOn": "2026-10-23"
   }
 ]

@@ -1,12 +1,12 @@
 {
-  "lastAttempt": "2026-10-23T13:32:58Z",
-  "lastSuccess": "2026-10-23T13:32:58Z",
+  "lastAttempt": "2026-10-23T13:56:38Z",
+  "lastSuccess": "2026-10-23T13:56:38Z",
   "outcome": "published",
   "failedStage": null,
   "exitCode": 0,
-  "catalogCommit": "ba1efadd69315f51310175ec2f779e298996f859",
-  "accepted": 120,
-  "rejected": 26,
+  "catalogCommit": "534e1e3f271ccf4a900f04a35667336f6a39219d",
+  "accepted": 47,
+  "rejected": 3,
   "sources": [
     {
       "source": "ai.developer.meta.com",
@@ -23,8 +23,8 @@
     {
       "source": "ai.google.dev",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "ai.meta.com/tools/muse/",
@@ -35,14 +35,14 @@
     {
       "source": "alibabacloud.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "api-docs.deepseek.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "api-docs.deepseek.com/news",
@@ -57,28 +57,34 @@
       "lastOk": null
     },
     {
+      "source": "api-docs.deepseek.com/updates",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": null
+    },
+    {
       "source": "artificialanalysis.ai/evaluations/aa-lcr",
       "status": "failed",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "artificialanalysis.ai/evaluations/long-context-reasoning",
       "status": "failed",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "benchleader.com/benchmarks/aa_lcr",
       "status": "unresolved",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "dev.meta.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "dev.meta.ai/docs/pricing.md",
@@ -89,104 +95,110 @@
     {
       "source": "developers.openai.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "docs.mistral.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "docs.x.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "docs.z.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "labs.scale.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "livebench-feed",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
+    },
+    {
+      "source": "livebench.ai/",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": null
     },
     {
       "source": "livesqlbench.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "omni-catalog",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "platform.claude.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "platform.kimi.ai",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "platform.kimi.ai/docs/pricing/chat",
       "status": "unresolved",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "platform.kimi.ai/docs/pricing/chat.md",
       "status": "unresolved",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "platform.minimax.io",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "platform.moonshot.ai/docs/pricing/chat.md",
       "status": "unresolved",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "taubench.com",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     },
     {
       "source": "tbench.ai/leaderboard",
       "status": "unresolved",
-      "checked": "2026-10-23T13:32:58Z",
+      "checked": "2026-10-23T13:56:38Z",
       "lastOk": null
     },
     {
       "source": "terminal-bench-feed",
       "status": "ok",
-      "checked": "2026-10-23T13:32:58Z",
-      "lastOk": "2026-10-23T13:32:58Z"
+      "checked": "2026-10-23T13:56:38Z",
+      "lastOk": "2026-10-23T13:56:38Z"
     }
   ],
   "notices": [

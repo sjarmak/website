@@ -575,7 +575,7 @@
     "structuredOutput": true,
     "zeroDataRetention": true,
     "docsUrl": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max",
-    "notes": "Weights published under a custom licence; no-training commitment but call data is stored."
+    "notes": "Weights published under a custom licence; no-training commitment but call data is stored. Since 2026-09-05 the qwen3.8-max endpoint serves the qwen3.8-max-0902 snapshot (alias qwen3.8-max-2026-09-02)."
   },
   {
     "id": "minimax-m3",
@@ -666,6 +666,6 @@
     "structuredOutput": false,
     "zeroDataRetention": false,
     "docsUrl": "https://api-docs.deepseek.com/quick_start/pricing",
-    "notes": "JSON mode only, no schema enforcement. Weights published on Hugging Face; licence not stated in the release note."
+    "notes": "JSON mode only, no schema enforcement. Weights published on Hugging Face and ModelScope; licence not stated in the release note. The deepseek-flash endpoint serves this release; legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted and routed to it at the Flash price."
   }
 ]
