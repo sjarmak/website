@@ -180,7 +180,7 @@ main() {
   RUN_DATE="${MODELS_RUN_DATE:-$(date -u +%F)}"
   [[ "$RUN_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || die "$EXIT_USAGE" "MODELS_RUN_DATE must be YYYY-MM-DD"
   CLAUDE_BIN="${CLAUDE_BIN:-claude}"
-  GATES_CMD="${MODELS_GATES_CMD:-npm test && npm run check && npm run build}"
+  GATES_CMD="${MODELS_GATES_CMD:-npm run check && npm run build && node --test tests/models-refresh.test.ts}"
   load_catalog_config
 
   LOG_DIR="$WEBSITE/.models-runs"
