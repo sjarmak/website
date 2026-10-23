@@ -460,3 +460,38 @@
     supercov's coverage-quantity lens with a test-quality-per-test lens.
   tags: [testing, code-quality, agent-skills, test-review]
   added: 2026-09-24
+
+- title: LLMs are making formal software verification feasible at a much larger scale
+  url: https://www.anthropic.com/research/formal-verification
+  category: Code security
+  kind: article
+  note: >-
+    Anthropic Frontier Red Team with Theorem (2026-10-22). Claude turned
+    OSS-Fuzz entry points into specifications and wrote Rocq proofs that 239
+    entry points across 123 open-source libraries never crash from
+    memory-safety errors or failed assertions on inputs up to 64 MB, about
+    180 million lines of proof checked at the RISC-V assembly level, finding
+    hundreds of bugs on the way. The proofs assume single-threaded static
+    musl binaries, a Linux model and the trusted semantics, so they are
+    bounded claims, not "bug-free". Worth reading for the fuzz-test to
+    specification move and the cost: proofs can take hundreds of millions
+    of tokens.
+  tags: [formal-verification, memory-safety, fuzzing, claude, rocq]
+  added: 2026-10-23
+
+- title: "The Pulse: Anthropic builds its own source control system"
+  url: https://blog.pragmaticengineer.com/the-pulse-anthropic-builds-its-own-source-control-system/
+  category: Agentic coding
+  kind: article
+  note: >-
+    The Pragmatic Engineer on Scion, Anthropic's in-house replacement for git
+    on its monorepo, and Antique, its code review platform. The driver is
+    agent-scale load: merges went from about 2,500 a day in May to over
+    30,000 a day by September, with about 25 million checkouts a day, mostly
+    from CI, against a 25GB working copy. Server nodes hold the whole repo,
+    changesets live in Spanner and blobs in Cloud Storage, and a team of
+    seven runs it. Also covers the Mononoke attribution dispute and
+    git-compatible alternatives. Read for which bottleneck breaks first when
+    agents multiply merges.
+  tags: [source-control, git, ci, monorepo, agentic-coding]
+  added: 2026-10-23
