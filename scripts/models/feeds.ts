@@ -12,7 +12,6 @@ export interface BoardRow {
 }
 
 export interface QuestionSet {
-  categories: ReadonlyMap<string, readonly string[]>;
   rows: ReadonlyMap<string, ReadonlyMap<string, number | null>>;
 }
 
@@ -70,7 +69,7 @@ function parseTable(csv: string): { subtests: string[]; rows: QuestionSet["rows"
   return rows.size > 0 ? { subtests, rows } : null;
 }
 
-function parseCategories(json: string, subtests: string[]): QuestionSet["categories"] | null {
+function parseCategories(json: string, subtests: string[]): ReadonlyMap<string, readonly string[]> | null {
   let raw: unknown;
   try {
     raw = JSON.parse(json);
@@ -89,30 +88,38 @@ function parseCategories(json: string, subtests: string[]): QuestionSet["categor
   return valid && entries.length > 0 ? new Map(entries as [string, string[]][]) : null;
 }
 
-function readQuestionSet(dir: string): QuestionSet | null {
+function matchesPins(pins: readonly BenchmarkRecord[], categories: ReadonlyMap<string, readonly string[]>): boolean {
+  return pins.every((b) => {
+    const pinned = b.livebenchSubtests ?? [];
+    const listed = b.livebenchCategory === undefined ? undefined : categories.get(b.livebenchCategory);
+    return pinned.length > 0 && listed?.length === pinned.length && pinned.every((s) => listed.includes(s));
+  });
+}
+
+function readQuestionSet(dir: string, pins: readonly BenchmarkRecord[]): QuestionSet | null {
   const tableFile = path.join(dir, "table.csv");
   const categoriesFile = path.join(dir, "categories.json");
-  if (!existsSync(tableFile) || !existsSync(categoriesFile)) return null;
+  if (pins.length === 0 || !existsSync(tableFile) || !existsSync(categoriesFile)) return null;
   const table = parseTable(readFileSync(tableFile, "utf8"));
   if (!table) return null;
   const categories = parseCategories(readFileSync(categoriesFile, "utf8"), table.subtests);
-  return categories ? { categories, rows: table.rows } : null;
+  return categories && matchesPins(pins, categories) ? { rows: table.rows } : null;
 }
 
-function readQuestionSets(dir: string): Feeds["livebenchQuestionSets"] {
+function readQuestionSets(dir: string, benchmarks: readonly BenchmarkRecord[]): Feeds["livebenchQuestionSets"] {
   const root = path.join(dir, "livebench", "v1");
   if (!existsSync(root)) return new Map();
   return new Map(
     readdirSync(root)
       .filter((name) => SET_DIR.test(name))
       .flatMap((name) => {
-        const set = readQuestionSet(path.join(root, name));
+        const set = readQuestionSet(path.join(root, name), benchmarks.filter((b) => questionSet(b) === name));
         return set ? [[name, set] as const] : [];
       }),
   );
 }
 
-export function readFeeds(dir: string | undefined): Feeds {
+export function readFeeds(dir: string | undefined, benchmarks: readonly BenchmarkRecord[]): Feeds {
   if (!dir) return NO_FEEDS;
   const releaseFile = path.join(dir, "livebench", "release");
   const release = existsSync(releaseFile) ? readFileSync(releaseFile, "utf8").trim() : "";
@@ -125,7 +132,7 @@ export function readFeeds(dir: string | undefined): Feeds {
       terminalBench = { leaderboard: `${board.leaderboard.package} ${board.leaderboard.name}`, rows };
     }
   }
-  return { livebenchRelease: RELEASE.test(release) ? release : null, livebenchQuestionSets: readQuestionSets(dir), terminalBench };
+  return { livebenchRelease: RELEASE.test(release) ? release : null, livebenchQuestionSets: readQuestionSets(dir, benchmarks), terminalBench };
 }
 
 export interface BoardClaim {
@@ -139,6 +146,7 @@ export interface BoardClaim {
 export interface Recorded {
   models: readonly ModelRecord[];
   note: string | undefined;
+  score: number | undefined;
 }
 
 const normalized = (s: string): string => s.toLowerCase().replaceAll(".", "-");
@@ -153,7 +161,10 @@ function reach(rowKey: string, model: ModelRecord): number {
 function checkLivebench(benchmark: BenchmarkRecord, model: ModelRecord, claim: BoardClaim, feeds: Feeds, recorded: Recorded): string {
   const set = questionSet(benchmark);
   const category = benchmark.livebenchCategory;
-  if (!set || !category) throw new ItemError(`${benchmark.id} names no LiveBench question set and category, so its scores cannot be checked`);
+  const subtests = benchmark.livebenchSubtests ?? [];
+  if (!set || !category || subtests.length === 0) {
+    throw new ItemError(`${benchmark.id} names no LiveBench question set, category and subtests, so its scores cannot be checked`);
+  }
   const table = feeds.livebenchQuestionSets.get(set);
   if (!table) throw new ItemError(`the LiveBench ${benchmark.version} table was not fetched this run, so the score cannot be checked`);
   const tableUrl = questionSetTableUrl(benchmark, set);
@@ -162,20 +173,21 @@ function checkLivebench(benchmark: BenchmarkRecord, model: ModelRecord, claim: B
   if (!key) throw new ItemError(`a ${benchmark.id} score needs sourceRow, the exact row key in ${tableUrl}`);
   const row = table.rows.get(key);
   if (!row) throw new ItemError(`the LiveBench ${benchmark.version} table has no row ${key}`);
-  const own = reach(key, model);
+  const before = recorded.models.find((m) => m.id === model.id);
+  if (!before) throw new ItemError(`${model.id} is added in this run; its LiveBench rows are matched from the next run, once its record exists`);
+  const own = reach(key, before);
   if (own === 0) throw new ItemError(`LiveBench row ${key} does not name ${model.id}`);
   const closer = recorded.models.find((m) => m.id !== model.id && reach(key, m) >= own);
   if (closer) throw new ItemError(`LiveBench row ${key} names ${closer.id} at least as closely as ${model.id}`);
-  const subtests = table.categories.get(category);
-  if (!subtests) throw new ItemError(`the LiveBench ${benchmark.version} categories list no ${category}`);
   const values = subtests.map((s) => row.get(s));
   const missing = subtests.filter((_, i) => typeof values[i] !== "number");
   if (missing.length > 0) throw new ItemError(`LiveBench row ${key} has no ${missing.join(", ")} score, so its ${category} score cannot be computed`);
   const mean = Math.round(((values as number[]).reduce((a, b) => a + b, 0) / values.length) * 10) / 10;
-  if (Math.abs(mean - claim.score) > PRINTED_PRECISION) {
-    throw new ItemError(`LiveBench row ${key} averages ${mean} on ${category}, not ${claim.score}`);
-  }
+  if (mean !== claim.score) throw new ItemError(`LiveBench row ${key} averages ${mean} on ${category}, not ${claim.score}`);
   const earlier = NOTED_ROW.exec(recorded.note ?? "")?.[1];
+  if (earlier === undefined && recorded.score !== undefined && recorded.score !== mean) {
+    throw new ItemError(`${model.id} on ${benchmark.id} is recorded as ${recorded.score} from an unnamed LiveBench row; its configuration is unknown, so row ${key} cannot change it`);
+  }
   if (earlier && earlier !== key) {
     throw new ItemError(`${model.id} on ${benchmark.id} is recorded from LiveBench row ${earlier}; row ${key} is another configuration`);
   }

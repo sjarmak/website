@@ -134,6 +134,7 @@ export interface BenchmarkRecord {
   dataExport?: string;
   harness?: string;
   livebenchCategory?: string;
+  livebenchSubtests?: readonly string[];
   rationale: string;
 }
 

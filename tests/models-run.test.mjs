@@ -180,7 +180,7 @@ const boardRow = (agent, model, effort, accuracy) => ({
 
 const QUESTION_SET_TABLE = [
   "model,theory_of_mind,zebra_puzzle,spatial,logic_with_navigation,consecutive_events,tablejoin,tablereformat,paraphrase,simplify,story_generation,summarize",
-  "grok-4.7-xhigh,84.0,86.0,96.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "gemini-4-argon-xhigh,84.0,86.0,96.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
 ].join("\n");
 const QUESTION_SET_CATEGORIES = JSON.stringify({
   Reasoning: ["theory_of_mind", "zebra_puzzle", "spatial", "logic_with_navigation"],
@@ -188,7 +188,7 @@ const QUESTION_SET_CATEGORIES = JSON.stringify({
   IF: ["paraphrase", "simplify", "story_generation", "summarize"],
 });
 
-async function serveFeeds(t, { questionSet = true } = {}) {
+async function serveFeeds(t, { questionSet = true, table = `${QUESTION_SET_TABLE}\n`, categories = QUESTION_SET_CATEGORIES } = {}) {
   const posted = [];
   const server = createServer((req, res) => {
     const send = (code, body, type = "text/plain") => {
@@ -206,8 +206,8 @@ async function serveFeeds(t, { questionSet = true } = {}) {
     }
     if (req.url === "/") return send(200, '<script src="/static/js/main.0a1b2c.js"></script>', "text/html");
     if (req.url === "/static/js/main.0a1b2c.js") return send(200, 'const v1=["2026-06-25","2026-04-02"],_e=["20261014"];');
-    if (questionSet && req.url === "/v1/table_2026_06_25.csv") return send(200, `${QUESTION_SET_TABLE}\n`);
-    if (questionSet && req.url === "/v1/categories_2026_06_25.json") return send(200, QUESTION_SET_CATEGORIES, "application/json");
+    if (questionSet && req.url === "/v1/table_2026_06_25.csv") return send(200, table);
+    if (questionSet && req.url === "/v1/categories_2026_06_25.json") return send(200, categories, "application/json");
     const data = /^\/data\/20261014\/(table\.csv|categories\.json|cost\.csv|notes\.json)$/.exec(req.url ?? "");
     if (data) return send(200, data[1].endsWith(".csv") ? "model,score\nx,1\n" : "{}");
     send(404, "missing");
@@ -285,10 +285,10 @@ test("a research agent that rewrites its copy of a feed cannot vouch for its own
 });
 
 const livebenchClaim = (extra) => ({
-  model: "grok-4.7",
+  model: "gemini-4-argon",
   benchmark: "livebench-reasoning",
   version: "2026-06-25 question set",
-  sourceRow: "grok-4.7-xhigh",
+  sourceRow: "gemini-4-argon-xhigh",
   sourceUrl: "https://livebench.ai/v1/table_2026_06_25.csv",
   retrieved: RUN_DATE,
   evidence: "question set table row",
@@ -305,10 +305,10 @@ test("the job saves the pinned LiveBench question set and accepts a score only a
   assert.match(run.stdout, /research question sets 2026_06_25/);
   assert.deepEqual(feedSources(await status(sandbox)), [["livebench-feed", "ok"], ["terminal-bench-feed", "ok"]]);
   const observations = JSON.parse(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"));
-  const reasoning = observations.find((o) => o.model === "grok-4.7" && o.benchmark === "livebench-reasoning");
-  assert.deepEqual([reasoning.score, reasoning.note], [83, "LiveBench row grok-4.7-xhigh, 2026-06-25 question set"]);
+  const reasoning = observations.find((o) => o.model === "gemini-4-argon" && o.benchmark === "livebench-reasoning");
+  assert.deepEqual([reasoning.score, reasoning.note], [83, "LiveBench row gemini-4-argon-xhigh, 2026-06-25 question set"]);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
-  assert.match(log, /REJECT observation grok-4\.7 \| LiveBench row grok-4\.7-xhigh averages 76\.9 on Data Analysis, not 77\.2/);
+  assert.match(log, /REJECT observation gemini-4-argon \| LiveBench row gemini-4-argon-xhigh averages 76\.9 on Data Analysis, not 77\.2/);
 });
 
 test("a pinned LiveBench question set that cannot be fetched fails the LiveBench feed and changes no LiveBench row", async (t) => {
@@ -323,5 +323,23 @@ test("a pinned LiveBench question set that cannot be fetched fails the LiveBench
   assert.deepEqual(feedSources(await status(sandbox)), [["livebench-feed", "failed"], ["terminal-bench-feed", "ok"]]);
   assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
-  assert.match(log, /REJECT observation grok-4\.7 \| the LiveBench 2026-06-25 question set table was not fetched this run/);
+  assert.match(log, /REJECT observation gemini-4-argon \| the LiveBench 2026-06-25 question set table was not fetched this run/);
+});
+
+test("a pinned LiveBench question set that answers 200 but does not parse as the pinned set fails the LiveBench feed and exits 8", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const before = await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8");
+  const broken = [
+    { table: "<!doctype html><html><body>LiveBench</body></html>\n" },
+    { table: "model,theory_of_mind\ngemini-4-argon-xhigh,84.0\n", categories: JSON.stringify({ Reasoning: ["theory_of_mind"] }) },
+  ];
+  for (const served of broken) {
+    const feeds = await serveFeeds(t, served);
+    const run = await runJob(sandbox, { ...feeds.env, STUB_RESEARCH: JSON.stringify({ observations: [livebenchClaim({ score: 84 })] }), STUB_VERDICTS: verdicts });
+    assert.equal(run.status, 8, run.stdout + run.stderr);
+    assert.match(run.stdout, /livebench question set 2026_06_25 does not parse as the pinned subtests/);
+    assert.match(run.stdout, /research question sets none/);
+    assert.deepEqual(feedSources(await status(sandbox)), [["livebench-feed", "failed"], ["terminal-bench-feed", "ok"]]);
+    assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
+  }
 });

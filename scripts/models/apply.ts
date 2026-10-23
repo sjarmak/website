@@ -44,7 +44,7 @@ function context(runDate: string, catalogCommit: string, catalogDir: string | nu
     config: compositeConfig,
     gates,
     maxReplacementShare: share,
-    feeds: readFeeds(feedsDir),
+    feeds: readFeeds(feedsDir, benchmarks),
   };
 }
 
@@ -67,6 +67,7 @@ function reference(argv: string[]): number {
     url: b.url,
     version: b.version,
     livebenchCategory: b.livebenchCategory,
+    livebenchSubtests: b.livebenchSubtests,
     scale: b.scale,
     normalization: b.normalization,
   }));
@@ -77,10 +78,19 @@ function reference(argv: string[]): number {
   return 0;
 }
 
+const pinnedSets = (): string[] => [...new Set(benchmarks.map(questionSet).filter((s): s is string => s !== null))];
+
 function questionSets(): number {
-  const sets = new Set(benchmarks.map(questionSet).filter((s): s is string => s !== null));
-  process.stdout.write([...sets].map((s) => `${s}\n`).join(""));
+  process.stdout.write(pinnedSets().map((s) => `${s}\n`).join(""));
   return 0;
+}
+
+function checkQuestionSets(argv: string[]): number {
+  const { values } = parseArgs({ args: argv, options: { feeds: { type: "string" } } });
+  const parsed = readFeeds(required(values, "feeds"), benchmarks).livebenchQuestionSets;
+  const broken = pinnedSets().filter((s) => !parsed.has(s));
+  for (const s of broken) console.log(`[models] livebench question set ${s} does not parse as the pinned subtests`);
+  return broken.length === 0 ? 0 : 1;
 }
 
 function models(argv: string[]): number {
@@ -190,17 +200,17 @@ function status(argv: string[]): number {
     accepted: summary?.accepted ?? 0,
     rejected: summary?.rejected ?? 0,
     sources: sourcesFrom(values.source ?? [], values.summary),
-    notices: feedNotices(benchmarks, readFeeds(values.feeds)),
+    notices: feedNotices(benchmarks, readFeeds(values.feeds, benchmarks)),
   });
   writeStatus(DATA_DIR, next);
   return 0;
 }
 
 const [command, ...rest] = process.argv.slice(2);
-const commands: Record<string, (argv: string[]) => number> = { reference, "question-sets": questionSets, models, apply, status };
+const commands: Record<string, (argv: string[]) => number> = { reference, "question-sets": questionSets, "check-question-sets": checkQuestionSets, models, apply, status };
 const run = command ? commands[command] : undefined;
 if (!run) {
-  console.error(`usage: apply.ts <reference|question-sets|models|apply|status> [options]; data files: ${Object.values(DATA_FILES).join(", ")}`);
+  console.error(`usage: apply.ts <reference|question-sets|check-question-sets|models|apply|status> [options]; data files: ${Object.values(DATA_FILES).join(", ")}`);
   process.exit(2);
 }
 process.exitCode = run(rest);

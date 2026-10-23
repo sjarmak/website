@@ -140,6 +140,7 @@ class Batch {
   rejected: Decision[] = [];
   replaced = 0;
   readonly baselineRows: number;
+  readonly recordedModels: readonly ModelRecord[];
   readonly ctx: RunContext;
   readonly startingEligibility: OmniEligibility[];
   readonly assessed = new Set<string>();
@@ -148,6 +149,7 @@ class Batch {
   constructor(data: DataSet, ctx: RunContext) {
     this.ctx = ctx;
     this.models = data.models.map((m) => ({ ...m }));
+    this.recordedModels = data.models.map((m) => ({ ...m }));
     this.observations = data.observations.map((o) => ({ ...o }));
     this.pricing = data.pricing.map((p) => ({ ...p }));
     this.eligibility = data.eligibility.map((e) => ({ ...e }));
@@ -311,7 +313,8 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
     score,
   };
   const index = batch.observations.findIndex((r) => r.model === model.id && r.benchmark === benchmark.id);
-  const boardNote = checkFeedRow(benchmark, model, claim, batch.ctx.feeds, { models: batch.models, note: batch.observations[index]?.note });
+  const recorded = { models: batch.recordedModels, note: batch.observations[index]?.note, score: batch.observations[index]?.score };
+  const boardNote = checkFeedRow(benchmark, model, claim, batch.ctx.feeds, recorded);
   const key = `${model.id}/${benchmark.id}`;
   if (seen.has(key)) throw new ItemError(`${key} appears twice in this batch`);
   seen.add(key);

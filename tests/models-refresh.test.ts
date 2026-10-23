@@ -236,7 +236,7 @@ function livebenchFeeds(files: Record<string, string> = { "table.csv": `${LB_TAB
     const dir = path.join(root, "livebench", "v1", "2026_06_25");
     mkdirSync(dir, { recursive: true });
     for (const [name, content] of Object.entries(files)) writeFileSync(path.join(dir, name), content);
-    return readFeeds(root);
+    return readFeeds(root, benchmarks);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -280,6 +280,8 @@ test("a LiveBench score is accepted when it is the pinned question set's own cat
 test("a LiveBench score is rejected unless the pinned table, row, model, category and score all agree", () => {
   const cases: [Record<string, unknown>, Feeds | undefined, RegExp][] = [
     [{ score: 82.8 }, undefined, /row grok-4\.7-xhigh averages 82\.7 on Reasoning, not 82\.8/],
+    [{ score: 82.74 }, undefined, /row grok-4\.7-xhigh averages 82\.7 on Reasoning, not 82\.74/],
+    [{ score: 82.66 }, undefined, /row grok-4\.7-xhigh averages 82\.7 on Reasoning, not 82\.66/],
     [{ sourceRow: undefined }, undefined, /needs sourceRow/],
     [{ sourceRow: "grok-4.8-xhigh" }, undefined, /has no row grok-4\.8-xhigh/],
     [{ model: "grok-4.6" }, undefined, /row grok-4\.7-xhigh does not name grok-4\.6/],
@@ -305,6 +307,47 @@ test("a LiveBench score never switches a model to another configuration's row", 
   const out = lbRefresh(lbClaim(), livebenchFeeds(), grokData([recorded]));
   assert.match(out.rejected[0]?.reason ?? "", /recorded from LiveBench row grok-4\.7-low; row grok-4\.7-xhigh is another configuration/);
   assert.equal(out.data.observations.find((o) => o.model === "grok-4.7")?.score, 80);
+});
+
+test("a LiveBench score never changes a stored score whose note records no row, and an equal claim changes nothing", () => {
+  const legacy = (score: number, note?: string): Observation => ({ ...obs("grok-4.7", score, LB_REASONING), ...(note ? { note } : {}) });
+  for (const stored of [legacy(80, "Thinking configuration"), legacy(80)]) {
+    const out = lbRefresh(lbClaim(), livebenchFeeds(), grokData([stored]));
+    assert.match(out.rejected[0]?.reason ?? "", /grok-4\.7 on livebench-reasoning is recorded as 80 from an unnamed LiveBench row/);
+    assert.deepEqual(out.data.observations.find((o) => o.model === "grok-4.7"), stored);
+  }
+  const same = legacy(82.7, "Thinking configuration");
+  const out = lbRefresh(lbClaim(), livebenchFeeds(), grokData([same]));
+  assert.deepEqual([out.rejected, out.accepted], [[], []]);
+  assert.deepEqual(out.data.observations.find((o) => o.model === "grok-4.7"), same);
+});
+
+test("a LiveBench row is matched only against models recorded before this run, never against ids or API ids proposed in it", () => {
+  const add = { id: "grok-4.8", name: "Grok 4.8", vendor: "xAI", apiId: "grok-4.7-codex", openWeights: false, apiAvailable: true, ...proof };
+  const out = refresh(
+    grokData(),
+    research({ addModels: [add], observations: [lbClaim({ model: "grok-4.8", sourceRow: "grok-4.7-codex-xhigh" })] }),
+    eligibilityFile([]),
+    ctx({ feeds: livebenchFeeds() }),
+  );
+  assert.match(out.rejected.find((r) => r.item === "observation grok-4.8")?.reason ?? "", /grok-4\.8 is added in this run/);
+  assert.ok(!out.data.observations.some((o) => o.model === "grok-4.8"));
+  const shadow = { ...add, id: "grok-4.7-xhigh", apiId: undefined };
+  const kept = refresh(grokData(), research({ addModels: [shadow], observations: [lbClaim()] }), eligibilityFile([]), ctx({ feeds: livebenchFeeds() }));
+  assert.equal(kept.data.observations.find((o) => o.model === "grok-4.7" && o.benchmark === LB_REASONING.id)?.score, 82.7);
+});
+
+test("a question set whose categories or header differ from the pinned subtests is absent", () => {
+  const categories = JSON.parse(LB_CATEGORIES) as Record<string, string[]>;
+  const variants: Record<string, string>[] = [
+    { "table.csv": "model,theory_of_mind\ngrok-4.7-xhigh,84.615\n", "categories.json": JSON.stringify({ Reasoning: ["theory_of_mind"] }) },
+    { "table.csv": LB_TABLE, "categories.json": JSON.stringify({ ...categories, Reasoning: ["theory_of_mind", "zebra_puzzle", "spatial"] }) },
+    { "table.csv": LB_TABLE, "categories.json": JSON.stringify({ ...categories, Reasoning: [...categories.Reasoning, "tablejoin"] }) },
+    { "table.csv": LB_TABLE, "categories.json": JSON.stringify({ Reasoning: categories.Reasoning, IF: categories.IF }) },
+  ];
+  for (const files of variants) {
+    assert.equal(livebenchFeeds(files).livebenchQuestionSets.size, 0, JSON.stringify(files).slice(0, 160));
+  }
 });
 
 test("a malformed or incomplete pinned LiveBench file leaves that question set absent", () => {

@@ -87,6 +87,7 @@ fetch_livebench() {
     http_get "$dir/v1/$pinned/table.csv" "$LIVEBENCH_URL/v1/table_$pinned.csv" || return 1
     http_get "$dir/v1/$pinned/categories.json" "$LIVEBENCH_URL/v1/categories_$pinned.json" || return 1
   done
+  node scripts/models/apply.ts check-question-sets --feeds "$1" || return 1
   http_get "$dir/index.html" "$LIVEBENCH_URL/" || return 1
   script="$(grep -oE 'static/js/main\.[0-9a-f]+\.js' "$dir/index.html" | head -n 1)"
   [ -n "$script" ] || { say "livebench front page names no main script"; return 1; }
