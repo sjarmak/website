@@ -65,12 +65,24 @@ fill_prompt() {
   sed -e "s|{{RUN_DATE}}|$RUN_DATE|g" -e "s|{{CATALOG_COMMIT}}|${CATALOG_COMMIT:-}|g" -e "s|{{OUTPUT}}|$2|g" "$1"
 }
 
+pick_account() {
+  local picked config
+  [ -n "${MODELS_ACCOUNT_PICKER:-}" ] || return 0
+  picked="$("$MODELS_ACCOUNT_PICKER")" || { say "account picker refused the launch"; return 1; }
+  [[ "$picked" =~ ^[1-9]$ ]] || { say "account picker returned an invalid account"; return 1; }
+  config="${MODELS_ACCOUNT_HOMES:-$HOME/.claude-homes}/account$picked/.claude"
+  [ -f "$config/.credentials.json" ] || { say "account$picked has no credentials file"; return 1; }
+  export CLAUDE_CONFIG_DIR="$config"
+  say "agent runs on account$picked"
+}
+
 run_agent() {
   local label="$1" dir="$2" prompt="$3" tools="$4" output="$5" status=0 before
   before="$(git status --porcelain)"
   say "$label agent starting in $dir"
   (
     cd "$dir"
+    pick_account || exit 1
     timeout --kill-after=60 "$AGENT_TIMEOUT_SEC" "$CLAUDE_BIN" -p "$prompt" \
       --restricted --strict-mcp-config --no-session-persistence \
       --tools "$tools" --allowedTools "$tools" --permission-mode acceptEdits
@@ -167,7 +179,7 @@ main() {
   [[ "$LOCK_WAIT_SEC" =~ ^[0-9]+$ ]] || die "$EXIT_USAGE" "MODELS_LOCK_WAIT_SEC must be whole seconds"
   RUN_DATE="${MODELS_RUN_DATE:-$(date -u +%F)}"
   [[ "$RUN_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || die "$EXIT_USAGE" "MODELS_RUN_DATE must be YYYY-MM-DD"
-  CLAUDE_BIN="${CLAUDE_BIN:-claude-auto}"
+  CLAUDE_BIN="${CLAUDE_BIN:-claude}"
   GATES_CMD="${MODELS_GATES_CMD:-npm test && npm run check && npm run build}"
   load_catalog_config
 

@@ -3,6 +3,11 @@ import { writeFileSync } from "node:fs";
 
 const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
 const phase = prompt.includes("daily research step") ? "research" : "eligibility";
+if (!process.argv.includes("--restricted") || process.argv.includes("--dangerously-skip-permissions")) {
+  console.error("[stub-models-agent] Error: bypassPermissions not supported in restricted mode");
+  process.exit(1);
+}
+console.log(`[stub-models-agent] ${phase} config ${process.env.CLAUDE_CONFIG_DIR ?? "ambient"}`);
 if (process.env.STUB_FAIL_PHASE === phase) {
   console.error(`[stub-models-agent] failing the ${phase} phase on request`);
   process.exit(1);

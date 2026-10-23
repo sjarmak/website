@@ -52,7 +52,7 @@ async function makeSandbox(t) {
 
 function runJob(sandbox, env = {}) {
   const base = { ...process.env };
-  for (const name of Object.keys(base)) if (name.startsWith("MODELS_")) delete base[name];
+  for (const name of Object.keys(base)) if (name.startsWith("MODELS_") || name === "CLAUDE_CONFIG_DIR") delete base[name];
   return runProcess("bash", [path.join(sandbox.job, "scripts", "models", "run.sh")], {
     cwd: sandbox.root,
     env: {
@@ -127,6 +127,24 @@ test("a malformed research proposal exits 5", async (t) => {
   const run = await runJob(sandbox, { STUB_RESEARCH: JSON.stringify({ runDate: "1999-01-01" }) });
   assert.equal(run.status, 5, run.stdout + run.stderr);
   assert.equal((await status(sandbox)).failedStage, "research-proposals");
+});
+
+test("the account picker routes both agents to its account's config, and a refusal fails the research stage", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const homes = path.join(sandbox.root, "homes");
+  await mkdir(path.join(homes, "account2", ".claude"), { recursive: true });
+  await writeFile(path.join(homes, "account2", ".claude", ".credentials.json"), "{}\n");
+  const picker = path.join(sandbox.root, "picker.sh");
+  await writeFile(picker, "#!/usr/bin/env bash\n[ -z \"$PICKER_REFUSE\" ] || exit 75\necho 2\n", { mode: 0o755 });
+  const routed = await runJob(sandbox, { MODELS_ACCOUNT_PICKER: picker, MODELS_ACCOUNT_HOMES: homes, STUB_VERDICTS: verdicts });
+  assert.equal(routed.status, 0, routed.stdout + routed.stderr);
+  const config = path.join(homes, "account2", ".claude");
+  assert.match(routed.stdout, new RegExp(`research config ${config}`));
+  assert.match(routed.stdout, new RegExp(`eligibility config ${config}`));
+  const refused = await runJob(sandbox, { MODELS_ACCOUNT_PICKER: picker, MODELS_ACCOUNT_HOMES: homes, PICKER_REFUSE: "1" });
+  assert.equal(refused.status, 4, refused.stdout + refused.stderr);
+  assert.match(refused.stdout, /account picker refused the launch/);
+  assert.equal((await status(sandbox)).failedStage, "research");
 });
 
 test("the job refuses the primary checkout, a push from another base, and a held lock", async (t) => {
