@@ -292,7 +292,7 @@ function relabelSource(batch: Batch, model: string, benchmark: string, score: nu
 }
 
 function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
-  onlyKeys(o, ["model", "benchmark", "score", "version", "note", "agent", "effort", ...DATED_KEYS]);
+  onlyKeys(o, ["model", "benchmark", "score", "version", "note", "agent", "effort", "sourceRow", ...DATED_KEYS]);
   const model = batch.model(text(o, "model", 64));
   const benchmarkId = text(o, "benchmark", 64);
   const benchmark = batch.ctx.benchmarks.find((b) => b.id === benchmarkId);
@@ -303,12 +303,18 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
   const score = finite(o, "score");
   const [min, max] = scoreRange(benchmark);
   if (score < min || score > max) throw new ItemError(`score ${score} is outside ${min}..${max}`);
-  const claim = { agent: optionalText(o, "agent", 80), effort: optionalText(o, "effort", 20), score };
-  const boardNote = checkFeedRow(benchmark, model, claim, batch.ctx.feeds);
+  const claim = {
+    agent: optionalText(o, "agent", 80),
+    effort: optionalText(o, "effort", 20),
+    sourceRow: optionalText(o, "sourceRow", 120),
+    sourceUrl: proof.sourceUrl,
+    score,
+  };
+  const index = batch.observations.findIndex((r) => r.model === model.id && r.benchmark === benchmark.id);
+  const boardNote = checkFeedRow(benchmark, model, claim, batch.ctx.feeds, { models: batch.models, note: batch.observations[index]?.note });
   const key = `${model.id}/${benchmark.id}`;
   if (seen.has(key)) throw new ItemError(`${key} appears twice in this batch`);
   seen.add(key);
-  const index = batch.observations.findIndex((r) => r.model === model.id && r.benchmark === benchmark.id);
   if (index >= 0 && batch.observations[index].score === score) return;
   const clash = relabelSource(batch, model.id, benchmark.id, score);
   if (clash) throw new ItemError(`score ${score} equals the ${clash} row on ${benchmark.id}; possible relabel`);

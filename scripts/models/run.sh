@@ -78,8 +78,15 @@ http_get() {
 }
 
 fetch_livebench() {
-  local dir="$1/livebench" script release file
+  local dir="$1/livebench" script release file sets pinned
   mkdir -p "$dir"
+  sets="$(node scripts/models/apply.ts question-sets)" || { say "could not read the pinned livebench question sets"; return 1; }
+  for pinned in $sets; do
+    [[ "$pinned" =~ ^[0-9]{4}_[0-9]{2}_[0-9]{2}$ ]] || { say "livebench question set $pinned is not YYYY_MM_DD"; return 1; }
+    mkdir -p "$dir/v1/$pinned"
+    http_get "$dir/v1/$pinned/table.csv" "$LIVEBENCH_URL/v1/table_$pinned.csv" || return 1
+    http_get "$dir/v1/$pinned/categories.json" "$LIVEBENCH_URL/v1/categories_$pinned.json" || return 1
+  done
   http_get "$dir/index.html" "$LIVEBENCH_URL/" || return 1
   script="$(grep -oE 'static/js/main\.[0-9a-f]+\.js' "$dir/index.html" | head -n 1)"
   [ -n "$script" ] || { say "livebench front page names no main script"; return 1; }

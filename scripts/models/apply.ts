@@ -6,7 +6,7 @@ import { benchmarks } from "../../src/data/models/benchmarks.ts";
 import { compositeConfig } from "../../src/data/models/capabilities.ts";
 import { gates } from "../../src/data/models/gates.ts";
 import { VENDORS, type RefreshOutcome } from "../../src/data/models/types.ts";
-import { feedNotices, readFeeds } from "./feeds.ts";
+import { feedNotices, questionSet, readFeeds } from "./feeds.ts";
 import { DATA_FILES, loadData, loadStatus, nextStatus, serialize, writeData, writeStatus } from "./refresh-io.ts";
 import { ProposalError, proposedModels, refresh, type RunContext, type SourceReport } from "./refresh-lib.ts";
 
@@ -61,11 +61,25 @@ function reference(argv: string[]): number {
   for (const file of [DATA_FILES.models, DATA_FILES.observations, DATA_FILES.pricing]) {
     copyFileSync(path.join(DATA_DIR, file), path.join(out, file));
   }
-  const pinned = benchmarks.map((b) => ({ id: b.id, name: b.name, url: b.url, version: b.version, scale: b.scale, normalization: b.normalization }));
+  const pinned = benchmarks.map((b) => ({
+    id: b.id,
+    name: b.name,
+    url: b.url,
+    version: b.version,
+    livebenchCategory: b.livebenchCategory,
+    scale: b.scale,
+    normalization: b.normalization,
+  }));
   writeFileSync(path.join(out, "benchmarks.json"), `${JSON.stringify(pinned, null, 2)}\n`);
   const gateList = gates.map((g) => ({ id: g.id, label: g.label, description: g.description }));
   writeFileSync(path.join(out, "gates.json"), `${JSON.stringify(gateList, null, 2)}\n`);
   writeFileSync(path.join(out, "vendors.json"), `${JSON.stringify(VENDORS, null, 2)}\n`);
+  return 0;
+}
+
+function questionSets(): number {
+  const sets = new Set(benchmarks.map(questionSet).filter((s): s is string => s !== null));
+  process.stdout.write([...sets].map((s) => `${s}\n`).join(""));
   return 0;
 }
 
@@ -183,10 +197,10 @@ function status(argv: string[]): number {
 }
 
 const [command, ...rest] = process.argv.slice(2);
-const commands: Record<string, (argv: string[]) => number> = { reference, models, apply, status };
+const commands: Record<string, (argv: string[]) => number> = { reference, "question-sets": questionSets, models, apply, status };
 const run = command ? commands[command] : undefined;
 if (!run) {
-  console.error(`usage: apply.ts <reference|models|apply|status> [options]; data files: ${Object.values(DATA_FILES).join(", ")}`);
+  console.error(`usage: apply.ts <reference|question-sets|models|apply|status> [options]; data files: ${Object.values(DATA_FILES).join(", ")}`);
   process.exit(2);
 }
 process.exitCode = run(rest);

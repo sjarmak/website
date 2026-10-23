@@ -133,6 +133,7 @@ export interface BenchmarkRecord {
   contaminationResistant: boolean;
   dataExport?: string;
   harness?: string;
+  livebenchCategory?: string;
   rationale: string;
 }
 

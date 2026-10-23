@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
 const phase = prompt.includes("daily research step") ? "research" : "eligibility";
@@ -17,7 +17,10 @@ if (phase === "research") {
   const release = existsSync("feeds/livebench/release") ? readFileSync("feeds/livebench/release", "utf8").trim() : "none";
   const board = existsSync("feeds/terminal-bench.json") ? JSON.parse(readFileSync("feeds/terminal-bench.json", "utf8")).leaderboard : null;
   console.log(`[stub-models-agent] research feeds ${release} ${board ? `${board.package} ${board.name}` : "none"}`);
+  const sets = existsSync("feeds/livebench/v1") ? readdirSync("feeds/livebench/v1").join(" ") : "none";
+  console.log(`[stub-models-agent] research question sets ${sets}`);
   if (process.env.STUB_FORGE_BOARD) writeFileSync("feeds/terminal-bench.json", process.env.STUB_FORGE_BOARD);
+  if (process.env.STUB_FORGE_QUESTION_SET) writeFileSync("feeds/livebench/v1/2026_06_25/table.csv", process.env.STUB_FORGE_QUESTION_SET);
   const extra = JSON.parse(process.env.STUB_RESEARCH ?? "{}");
   writeFileSync("research.json", JSON.stringify({ runDate, sources: [], ...extra }));
 } else {

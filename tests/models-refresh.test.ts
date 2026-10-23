@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import * as hegel from "@hegeldev/hegel";
@@ -11,14 +12,13 @@ import type { ModelRecord, Observation, OmniEligibility, PricingRecord, RefreshS
 import { buildTracker } from "../src/lib/models/build.ts";
 import { selectCandidates } from "../src/lib/models/candidates.ts";
 import { DATA_FILES, loadData, loadStatus, nextStatus, serialize } from "../scripts/models/refresh-io.ts";
-import { feedNotices, NO_FEEDS } from "../scripts/models/feeds.ts";
+import { feedNotices, NO_FEEDS, readFeeds, type Feeds } from "../scripts/models/feeds.ts";
 import { ProposalError, proposedModels, refresh, type DataSet, type RunContext } from "../scripts/models/refresh-lib.ts";
 
 const RUN = "2026-10-23";
 const COMMIT = "a".repeat(40);
 const CATALOG = "const ids = ['acme-one-1', 'acme-two-1'];\nfamilies: acme-*\n";
 const BENCH = benchmarks.find((b) => b.id === "livesqlbench-base") as (typeof benchmarks)[number];
-const LIVEBENCH = benchmarks[0];
 const OTHER_BENCH = benchmarks[1];
 const DATA_DIR = path.resolve(import.meta.dirname, "..", "src", "data", "models");
 
@@ -30,7 +30,7 @@ const ctx = (over: Partial<RunContext> = {}): RunContext => ({
   config: compositeConfig,
   gates,
   maxReplacementShare: 1,
-  feeds: { livebenchRelease: "20260625", terminalBench: null },
+  feeds: { ...NO_FEEDS, livebenchRelease: "20260625" },
   ...over,
 });
 
@@ -212,12 +212,105 @@ test("a score for a different benchmark version is rejected", () => {
   assert.match(out.rejected[0].reason, /differs from the pinned/);
 });
 
-test("a LiveBench row is rejected whatever release its URL names, so a pinned score never moves", () => {
-  const row = { model: "acme-three-1", benchmark: LIVEBENCH.id, score: 50, version: LIVEBENCH.version, ...proof };
-  for (const sourceUrl of ["https://livebench.ai/data/20261014/table.csv", "https://livebench.ai/data/20260625/v2/table.csv", "https://livebench.ai/"]) {
-    const out = refresh(baseData(), research({ observations: [{ ...row, sourceUrl }] }), eligibilityFile([]), ctx());
-    assert.equal(out.data.observations.length, 2, sourceUrl);
-    assert.match(out.rejected[0].reason, /pinned to the "2026-06-25 question set", and this job cannot yet check a LiveBench score/);
+const LB_REASONING = benchmarks.find((b) => b.id === "livebench-reasoning") as (typeof benchmarks)[number];
+const LB_TABLE_URL = "https://livebench.ai/v1/table_2026_06_25.csv";
+const LB_TABLE = [
+  "model,theory_of_mind,zebra_puzzle,spatial,logic_with_navigation,consecutive_events,tablejoin,tablereformat,paraphrase,simplify,story_generation,summarize",
+  "grok-4.6,86.538,95.5,98.0,82.0,78.148,43.423,100.0,71.783,69.333,78.267,68.083",
+  "grok-4.7-xhigh,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "grok-4.7-low,84.615,,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+].join("\n");
+const LB_CATEGORIES = JSON.stringify({
+  Reasoning: ["theory_of_mind", "zebra_puzzle", "spatial", "logic_with_navigation"],
+  "Data Analysis": ["consecutive_events", "tablejoin", "tablereformat"],
+  IF: ["paraphrase", "simplify", "story_generation", "summarize"],
+});
+
+function livebenchFeeds(files: Record<string, string> = { "table.csv": `${LB_TABLE}\n`, "categories.json": LB_CATEGORIES }): Feeds {
+  const root = mkdtempSync(path.join(os.tmpdir(), "models-feeds-"));
+  try {
+    const dir = path.join(root, "livebench", "v1", "2026_06_25");
+    mkdirSync(dir, { recursive: true });
+    for (const [name, content] of Object.entries(files)) writeFileSync(path.join(dir, name), content);
+    return readFeeds(root);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+const grokData = (observations: Observation[] = []): DataSet => ({
+  ...baseData(),
+  models: [...baseData().models, model("grok-4", { vendor: "xAI" }), model("grok-4.6", { vendor: "xAI" }), model("grok-4.7", { vendor: "xAI" })],
+  observations: [...baseData().observations, ...observations],
+});
+const lbClaim = (over: Record<string, unknown> = {}) => ({
+  model: "grok-4.7",
+  benchmark: LB_REASONING.id,
+  score: 82.7,
+  version: LB_REASONING.version,
+  sourceRow: "grok-4.7-xhigh",
+  ...proof,
+  sourceUrl: LB_TABLE_URL,
+  ...over,
+});
+const lbRefresh = (claim: Record<string, unknown>, feeds = livebenchFeeds(), data = grokData()) =>
+  refresh(data, research({ observations: [claim] }), eligibilityFile([]), ctx({ feeds }));
+
+test("a LiveBench score is accepted when it is the pinned question set's own category mean for the named row", () => {
+  for (const [m, row, benchmark, score] of [
+    ["grok-4.7", "grok-4.7-xhigh", "livebench-reasoning", 82.7],
+    ["grok-4.7", "grok-4.7-xhigh", "livebench-data-analysis", 76.9],
+    ["grok-4.6", "grok-4.6", "livebench-instruction-following", 71.9],
+  ] as const) {
+    const out = lbRefresh(lbClaim({ model: m, sourceRow: row, benchmark, score }));
+    assert.equal(out.rejected.length, 0, JSON.stringify(out.rejected));
+    const recorded = out.data.observations.find((o) => o.model === m && o.benchmark === benchmark);
+    assert.deepEqual(
+      [recorded?.score, recorded?.sourceUrl, recorded?.note],
+      [score, LB_TABLE_URL, `LiveBench row ${row}, 2026-06-25 question set`],
+    );
+  }
+});
+
+test("a LiveBench score is rejected unless the pinned table, row, model, category and score all agree", () => {
+  const cases: [Record<string, unknown>, Feeds | undefined, RegExp][] = [
+    [{ score: 82.8 }, undefined, /row grok-4\.7-xhigh averages 82\.7 on Reasoning, not 82\.8/],
+    [{ sourceRow: undefined }, undefined, /needs sourceRow/],
+    [{ sourceRow: "grok-4.8-xhigh" }, undefined, /has no row grok-4\.8-xhigh/],
+    [{ model: "grok-4.6" }, undefined, /row grok-4\.7-xhigh does not name grok-4\.6/],
+    [{ model: "grok-4" }, undefined, /row grok-4\.7-xhigh names grok-4\.7 at least as closely as grok-4/],
+    [{ sourceRow: "grok-4.7-low" }, undefined, /row grok-4\.7-low has no zebra_puzzle score/],
+    [{}, { ...NO_FEEDS, livebenchRelease: "20261014" }, /2026-06-25 question set table was not fetched this run/],
+    [{ sourceUrl: "https://livebench.ai/data/20261014/table.csv" }, undefined, /must cite the 2026-06-25 question set table https:\/\/livebench\.ai\/v1\/table_2026_06_25\.csv/],
+    [{ sourceUrl: "https://livebench.ai/data/20260625/v2/table.csv" }, undefined, /must cite the 2026-06-25 question set table/],
+    [{ sourceUrl: "https://livebench.ai/" }, undefined, /must cite the 2026-06-25 question set table/],
+  ];
+  for (const [over, feeds, reason] of cases) {
+    const out = lbRefresh(lbClaim(over), feeds ?? livebenchFeeds());
+    assert.match(out.rejected[0]?.reason ?? "", reason, JSON.stringify(over));
+    assert.equal(out.data.observations.length, 2);
+  }
+});
+
+test("a LiveBench score never switches a model to another configuration's row", () => {
+  const recorded = { ...obs("grok-4.7", 80, LB_REASONING), note: "LiveBench row grok-4.7-low, 2026-06-25 question set" };
+  const out = lbRefresh(lbClaim(), livebenchFeeds(), grokData([recorded]));
+  assert.match(out.rejected[0]?.reason ?? "", /recorded from LiveBench row grok-4\.7-low; row grok-4\.7-xhigh is another configuration/);
+  assert.equal(out.data.observations.find((o) => o.model === "grok-4.7")?.score, 80);
+});
+
+test("a malformed or incomplete pinned LiveBench file leaves that question set absent", () => {
+  assert.equal(livebenchFeeds().livebenchQuestionSets.get("2026_06_25")?.rows.size, 3);
+  const malformed: Record<string, string>[] = [
+    { "table.csv": LB_TABLE },
+    { "table.csv": LB_TABLE.replace("86.538", "86.5x"), "categories.json": LB_CATEGORIES },
+    { "table.csv": LB_TABLE.replace("grok-4.6,", "grok-4.6,1,"), "categories.json": LB_CATEGORIES },
+    { "table.csv": LB_TABLE.replace(/^model,/, "name,"), "categories.json": LB_CATEGORIES },
+    { "table.csv": LB_TABLE, "categories.json": "{\"Reasoning\": [\"coding\"]}" },
+    { "table.csv": LB_TABLE, "categories.json": "not json" },
+  ];
+  for (const files of malformed) {
+    assert.equal(livebenchFeeds(files).livebenchQuestionSets.size, 0, JSON.stringify(files).slice(0, 120));
   }
 });
 
@@ -264,7 +357,7 @@ const boardRow = (over: Partial<{ agent: string; model: string; effort: string; 
   displayed: true,
   ...over,
 });
-const board = (rows: ReturnType<typeof boardRow>[], leaderboard = TBENCH.harness as string) => ({ livebenchRelease: "20260625", terminalBench: { leaderboard, rows } });
+const board = (rows: ReturnType<typeof boardRow>[], leaderboard = TBENCH.harness as string) => ({ ...NO_FEEDS, livebenchRelease: "20260625", terminalBench: { leaderboard, rows } });
 const tbClaim = (over: Record<string, unknown> = {}) => ({
   model: "acme-three-1",
   benchmark: TBENCH.id,
@@ -295,7 +388,7 @@ test("a Terminal-Bench row is accepted only from a displayed row on the recorded
     [{ feeds: board([boardRow({ accuracy: 50.3 })]) }, {}, /no .* row/],
     [{ feeds: board([boardRow({ displayed: false })]) }, {}, /not displayed/],
     [{ feeds: board([boardRow()]) }, { agent: undefined }, /needs the leaderboard's agent and effort/],
-    [{ feeds: { livebenchRelease: "20260625", terminalBench: null } }, {}, /was not fetched this run/],
+    [{ feeds: { ...NO_FEEDS, livebenchRelease: "20260625" } }, {}, /was not fetched this run/],
     [{ feeds: board([boardRow()]) }, { sourceUrl: "https://bench.example/board" }, /must cite https:\/\/www\.tbench\.ai\/leaderboard/],
   ];
   for (const [over, claim, reason] of cases) {
@@ -348,8 +441,8 @@ test("a benchmark board's run cost is never taken as a list price", () => {
 });
 
 test("a newer LiveBench release is a status notice, and the pinned release is not", () => {
-  assert.match(feedNotices(benchmarks, { livebenchRelease: "20261014", terminalBench: null })[0], /release 2026-10-14, which the composite does not use/);
-  assert.deepEqual(feedNotices(benchmarks, { livebenchRelease: "20260625", terminalBench: null }), []);
+  assert.match(feedNotices(benchmarks, { ...NO_FEEDS, livebenchRelease: "20261014" })[0], /release 2026-10-14, which the composite does not use/);
+  assert.deepEqual(feedNotices(benchmarks, { ...NO_FEEDS, livebenchRelease: "20260625" }), []);
   assert.deepEqual(feedNotices(benchmarks, NO_FEEDS), []);
 });
 

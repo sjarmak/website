@@ -178,7 +178,17 @@ const boardRow = (agent, model, effort, accuracy) => ({
   status: "display",
 });
 
-async function serveFeeds(t) {
+const QUESTION_SET_TABLE = [
+  "model,theory_of_mind,zebra_puzzle,spatial,logic_with_navigation,consecutive_events,tablejoin,tablereformat,paraphrase,simplify,story_generation,summarize",
+  "grok-4.7-xhigh,84.0,86.0,96.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+].join("\n");
+const QUESTION_SET_CATEGORIES = JSON.stringify({
+  Reasoning: ["theory_of_mind", "zebra_puzzle", "spatial", "logic_with_navigation"],
+  "Data Analysis": ["consecutive_events", "tablejoin", "tablereformat"],
+  IF: ["paraphrase", "simplify", "story_generation", "summarize"],
+});
+
+async function serveFeeds(t, { questionSet = true } = {}) {
   const posted = [];
   const server = createServer((req, res) => {
     const send = (code, body, type = "text/plain") => {
@@ -196,6 +206,8 @@ async function serveFeeds(t) {
     }
     if (req.url === "/") return send(200, '<script src="/static/js/main.0a1b2c.js"></script>', "text/html");
     if (req.url === "/static/js/main.0a1b2c.js") return send(200, 'const v1=["2026-06-25","2026-04-02"],_e=["20261014"];');
+    if (questionSet && req.url === "/v1/table_2026_06_25.csv") return send(200, `${QUESTION_SET_TABLE}\n`);
+    if (questionSet && req.url === "/v1/categories_2026_06_25.json") return send(200, QUESTION_SET_CATEGORIES, "application/json");
     const data = /^\/data\/20261014\/(table\.csv|categories\.json|cost\.csv|notes\.json)$/.exec(req.url ?? "");
     if (data) return send(200, data[1].endsWith(".csv") ? "model,score\nx,1\n" : "{}");
     send(404, "missing");
@@ -240,7 +252,7 @@ test("the job saves both feeds for the agents, then checks Terminal-Bench rows a
   assert.deepEqual([accepted.score, accepted.note], [55, "agent Claude Code, effort xhigh, leaderboard terminal-bench/terminal-bench 4-0-0"]);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
   assert.match(log, /REJECT observation claude-opus-5\.5 \| no terminal-bench\/terminal-bench 4-0-0 row for Claude Opus 5\.5 with agent Terminus 2/);
-  assert.match(log, /REJECT observation claude-opus-5\.5 \| livebench-data-analysis is pinned to the "2026-06-25 question set", and this job cannot yet check a LiveBench score/);
+  assert.match(log, /REJECT observation claude-opus-5\.5 \| a livebench-data-analysis score must cite the 2026-06-25 question set table https:\/\/livebench\.ai\/v1\/table_2026_06_25\.csv/);
 });
 
 test("unreachable feeds are recorded as failed sources, change no rows, and exit 8 after publishing what validated", async (t) => {
@@ -270,4 +282,46 @@ test("a research agent that rewrites its copy of a feed cannot vouch for its own
   assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
   assert.match(log, /REJECT observation claude-opus-5\.5 \| no terminal-bench\/terminal-bench 4-0-0 row for Claude Opus 5\.5 with agent Forge/);
+});
+
+const livebenchClaim = (extra) => ({
+  model: "grok-4.7",
+  benchmark: "livebench-reasoning",
+  version: "2026-06-25 question set",
+  sourceRow: "grok-4.7-xhigh",
+  sourceUrl: "https://livebench.ai/v1/table_2026_06_25.csv",
+  retrieved: RUN_DATE,
+  evidence: "question set table row",
+  ...extra,
+});
+
+test("the job saves the pinned LiveBench question set and accepts a score only as the sealed table's own category mean, whatever the agent's copy says", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t);
+  const research = { observations: [livebenchClaim({ score: 83 }), livebenchClaim({ benchmark: "livebench-data-analysis", score: 77.2 })] };
+  const forged = QUESTION_SET_TABLE.replace("85.727,44.923", "86.627,44.923");
+  const run = await runJob(sandbox, { ...feeds.env, STUB_FORGE_QUESTION_SET: forged, STUB_RESEARCH: JSON.stringify(research), STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.match(run.stdout, /research question sets 2026_06_25/);
+  assert.deepEqual(feedSources(await status(sandbox)), [["livebench-feed", "ok"], ["terminal-bench-feed", "ok"]]);
+  const observations = JSON.parse(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"));
+  const reasoning = observations.find((o) => o.model === "grok-4.7" && o.benchmark === "livebench-reasoning");
+  assert.deepEqual([reasoning.score, reasoning.note], [83, "LiveBench row grok-4.7-xhigh, 2026-06-25 question set"]);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.match(log, /REJECT observation grok-4\.7 \| LiveBench row grok-4\.7-xhigh averages 76\.9 on Data Analysis, not 77\.2/);
+});
+
+test("a pinned LiveBench question set that cannot be fetched fails the LiveBench feed and changes no LiveBench row", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t, { questionSet: false });
+  const before = await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8");
+  const run = await runJob(sandbox, { ...feeds.env, STUB_RESEARCH: JSON.stringify({ observations: [livebenchClaim({ score: 83 })] }), STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 8, run.stdout + run.stderr);
+  assert.match(run.stdout, /feed http:\/\/127\.0\.0\.1:\d+\/v1\/table_2026_06_25\.csv answered HTTP 404/);
+  assert.match(run.stdout, /research feeds none terminal-bench\/terminal-bench 4-0-0/);
+  assert.match(run.stdout, /research question sets none/);
+  assert.deepEqual(feedSources(await status(sandbox)), [["livebench-feed", "failed"], ["terminal-bench-feed", "ok"]]);
+  assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.match(log, /REJECT observation grok-4\.7 \| the LiveBench 2026-06-25 question set table was not fetched this run/);
 });
