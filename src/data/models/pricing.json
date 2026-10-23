@@ -4,153 +4,171 @@
     "inputPerM": 10,
     "outputPerM": 50,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-opus-5.5",
     "inputPerM": 4,
     "outputPerM": 20,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-opus-5",
     "inputPerM": 5,
     "outputPerM": 25,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/opus-5/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-sonnet-5.5",
     "inputPerM": 2,
     "outputPerM": 10,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/models/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-sonnet-5",
     "inputPerM": 2,
     "outputPerM": 10,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/sonnet-5/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-sonnet-4.6",
     "inputPerM": 3,
     "outputPerM": 15,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/sonnet-4-6/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-sonnet-4.5",
     "inputPerM": 3,
     "outputPerM": 15,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/sonnet-4-5/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "claude-haiku-4.5",
     "inputPerM": 1,
     "outputPerM": 5,
     "provider": "Anthropic API",
-    "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "retrieved": "2026-10-01"
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/haiku-4-5/overview",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-6-astra",
     "inputPerM": 10,
     "outputPerM": 50,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $20.00 / $75.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-6.1-sol",
     "inputPerM": 2,
     "outputPerM": 10,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $4.00 / $15.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-6-sol",
     "inputPerM": 2,
     "outputPerM": 10,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $4.00 / $15.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-6-luna",
     "inputPerM": 0.1,
     "outputPerM": 0.5,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $0.20 / $0.75",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-5.6-sol",
     "inputPerM": 4,
     "outputPerM": 20,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $8.00 / $30.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-5.6-terra",
     "inputPerM": 2,
     "outputPerM": 12,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $4.00 / $18.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-5.6-luna",
     "inputPerM": 0.2,
     "outputPerM": 1.2,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (up to 272K input tokens); long context $0.40 / $1.80",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-5.5",
     "inputPerM": 5,
     "outputPerM": 30,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (<272K input tokens); long context $10.00 / $45.00",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gpt-5.4",
     "inputPerM": 2.5,
     "outputPerM": 15,
     "provider": "OpenAI API",
+    "scope": "standard tier, short context (<272K input tokens); long context $5.00 / $22.50",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gemini-4-argon",
-    "inputPerM": 4,
-    "outputPerM": 20,
+    "inputPerM": 2,
+    "outputPerM": 10,
     "provider": "Gemini API",
+    "scope": "paid tier, standard; introductory price through 2026-11-30, then $4.00 input / $20.00 output from 2026-12-01",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-    "retrieved": "2026-10-01",
-    "note": "standard tier"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gemini-3.8-flash",
     "inputPerM": 0.75,
     "outputPerM": 3.75,
     "provider": "Gemini API",
+    "scope": "paid tier, standard; price through 2026-12-31, then $1.50 input / $7.50 output from 2027-01-01",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "gemini-3.7-flash",
@@ -165,18 +183,18 @@
     "inputPerM": 2,
     "outputPerM": 12,
     "provider": "Gemini API",
+    "scope": "paid tier, standard; prompts up to 200k tokens ($4.00 / $18.00 for prompts over 200k)",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
-    "retrieved": "2026-10-01",
-    "note": "prompts up to 200k tokens"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "deepseek-v4-pro",
     "inputPerM": 1.32,
     "outputPerM": 3.96,
     "provider": "DeepSeek API",
-    "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
-    "retrieved": "2026-10-01",
-    "note": "peak-hour price; off-peak is discounted"
+    "scope": "peak hours, cache-miss input; off-peak is half price",
+    "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "deepseek-v4.1-flash",
@@ -217,32 +235,36 @@
     "inputPerM": 1.4,
     "outputPerM": 4.4,
     "provider": "Z.ai API",
+    "scope": "standard, single tier",
     "sourceUrl": "https://docs.z.ai/guides/overview/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "glm-5.3-flash",
     "inputPerM": 0.15,
     "outputPerM": 0.5,
     "provider": "Z.ai API",
+    "scope": "standard, single tier",
     "sourceUrl": "https://docs.z.ai/guides/overview/pricing",
-    "retrieved": "2026-10-01"
+    "retrieved": "2026-10-23"
   },
   {
     "model": "qwen3.8-max",
     "inputPerM": 1.65,
-    "outputPerM": 4.95,
-    "sourceUrl": "https://llm-stats.com/models/qwen3.8-max",
-    "retrieved": "2026-10-01",
-    "note": "hosted list price as aggregated by llm-stats"
+    "outputPerM": 4.951,
+    "provider": "Alibaba Cloud Model Studio",
+    "scope": "US (Virginia, Global) region, standard; Singapore (International) and US-scope regions list $2 / $6",
+    "sourceUrl": "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "minimax-m3",
-    "inputPerM": 0.28,
-    "outputPerM": 1.1,
-    "sourceUrl": "https://llm-stats.com/models/minimax-m3",
-    "retrieved": "2026-10-01",
-    "note": "hosted list price as aggregated by llm-stats"
+    "inputPerM": 0.3,
+    "outputPerM": 1.2,
+    "provider": "MiniMax API",
+    "scope": "standard tier, input up to 512k tokens, permanent 50% discount applied (list $0.60 / $2.40); over 512k input $0.60 / $2.40",
+    "sourceUrl": "https://platform.minimax.io/docs/guides/pricing",
+    "retrieved": "2026-10-23"
   },
   {
     "model": "deepseek-v4.1-flash-1017",
@@ -251,6 +273,69 @@
     "provider": "DeepSeek API",
     "scope": "peak hours, cache-miss input; off-peak is half price",
     "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-haiku-5.5",
+    "inputPerM": 0.1,
+    "outputPerM": 0.5,
+    "provider": "Anthropic API",
+    "scope": "prompts up to 100,000 tokens; $0.50 input / $2.50 output per MTok for prompts over 100,000 tokens",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/haiku-5-5/overview",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-fable-5",
+    "inputPerM": 10,
+    "outputPerM": 50,
+    "provider": "Anthropic API",
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/fable-5/overview",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-opus-4.8",
+    "inputPerM": 5,
+    "outputPerM": 25,
+    "provider": "Anthropic API",
+    "scope": "base price per MTok, standard tier",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/opus-4-8/overview",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "gpt-5.2",
+    "inputPerM": 1.75,
+    "outputPerM": 14,
+    "provider": "OpenAI API",
+    "scope": "standard tier, short context only",
+    "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "grok-4.7",
+    "inputPerM": 2,
+    "outputPerM": 6,
+    "provider": "xAI API",
+    "scope": "standard, prompts under 200k tokens ($4.00 / $12.00 at 200k or more)",
+    "sourceUrl": "https://docs.x.ai/developers/models/grok-4.7",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "grok-4.6",
+    "inputPerM": 2,
+    "outputPerM": 6,
+    "provider": "xAI API",
+    "scope": "standard, prompts under 200k tokens ($4.00 / $12.00 at 200k or more)",
+    "sourceUrl": "https://docs.x.ai/developers/models/grok-4.6",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "muse-spark-1.3",
+    "inputPerM": 1.25,
+    "outputPerM": 4.25,
+    "provider": "Meta Model API",
+    "scope": "Standard mode (muse-spark-1.3); Contributor mode muse-spark-1.3-contributor is $0.10 / $0.20 and permits training on submitted content",
+    "sourceUrl": "https://dev.meta.ai/docs/pricing-rate-limits",
     "retrieved": "2026-10-23"
   }
 ]

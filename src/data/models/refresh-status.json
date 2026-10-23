@@ -1,12 +1,195 @@
 {
-  "lastAttempt": null,
-  "lastSuccess": null,
-  "outcome": "never-run",
+  "lastAttempt": "2026-10-23T13:32:58Z",
+  "lastSuccess": "2026-10-23T13:32:58Z",
+  "outcome": "published",
   "failedStage": null,
-  "exitCode": null,
-  "catalogCommit": null,
-  "accepted": 0,
-  "rejected": 0,
-  "sources": [],
-  "notices": []
+  "exitCode": 0,
+  "catalogCommit": "ba1efadd69315f51310175ec2f779e298996f859",
+  "accepted": 120,
+  "rejected": 26,
+  "sources": [
+    {
+      "source": "ai.developer.meta.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "ai.developer.meta.com/docs/pricing/",
+      "status": "failed",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "ai.google.dev",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "ai.meta.com/tools/muse/",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "alibabacloud.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "api-docs.deepseek.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "api-docs.deepseek.com/news",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "api-docs.deepseek.com/quick_start/pricing",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "artificialanalysis.ai/evaluations/aa-lcr",
+      "status": "failed",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "artificialanalysis.ai/evaluations/long-context-reasoning",
+      "status": "failed",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "benchleader.com/benchmarks/aa_lcr",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "dev.meta.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "dev.meta.ai/docs/pricing.md",
+      "status": "failed",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "developers.openai.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "docs.mistral.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "docs.x.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "docs.z.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "labs.scale.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "livebench-feed",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "livesqlbench.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "omni-catalog",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "platform.claude.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "platform.kimi.ai",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "platform.kimi.ai/docs/pricing/chat",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "platform.kimi.ai/docs/pricing/chat.md",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "platform.minimax.io",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "platform.moonshot.ai/docs/pricing/chat.md",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "taubench.com",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    },
+    {
+      "source": "tbench.ai/leaderboard",
+      "status": "unresolved",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": null
+    },
+    {
+      "source": "terminal-bench-feed",
+      "status": "ok",
+      "checked": "2026-10-23T13:32:58Z",
+      "lastOk": "2026-10-23T13:32:58Z"
+    }
+  ],
+  "notices": [
+    "LiveBench published release 2026-10-14, which the composite does not use; its LiveBench scores stay pinned to the 2026-06-25 question set until the method is changed."
+  ]
 }

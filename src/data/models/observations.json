@@ -1226,5 +1226,45 @@
     "version": "τ³-bench Banking domain",
     "sourceUrl": "https://taubench.com/",
     "retrieved": "2026-10-01"
+  },
+  {
+    "model": "claude-sonnet-5.5",
+    "benchmark": "hle-no-tools",
+    "score": 46.12,
+    "version": "Scale AI leaderboard, 2026-09-17 refresh",
+    "sourceUrl": "https://labs.scale.com/leaderboard/humanitys_last_exam",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-haiku-5.5",
+    "benchmark": "hle-no-tools",
+    "score": 30.12,
+    "version": "Scale AI leaderboard, 2026-09-17 refresh",
+    "sourceUrl": "https://labs.scale.com/leaderboard/humanitys_last_exam",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "kimi-k3",
+    "benchmark": "tau3-banking",
+    "score": 37.1,
+    "version": "τ³-bench Banking domain",
+    "sourceUrl": "https://taubench.com/leaderboard/",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "gemini-3.1-pro",
+    "benchmark": "tau3-banking",
+    "score": 26,
+    "version": "τ³-bench Banking domain",
+    "sourceUrl": "https://taubench.com/leaderboard/",
+    "retrieved": "2026-10-23"
+  },
+  {
+    "model": "claude-sonnet-4.5",
+    "benchmark": "tau3-banking",
+    "score": 25.3,
+    "version": "τ³-bench Banking domain",
+    "sourceUrl": "https://taubench.com/leaderboard/",
+    "retrieved": "2026-10-23"
   }
 ]
