@@ -142,11 +142,12 @@ export interface Recorded {
 }
 
 const normalized = (s: string): string => s.toLowerCase().replaceAll(".", "-");
+const CONFIGURATION_SUFFIX = /^(?:-(?:\d{4}-\d{2}-\d{2}|\d{8}|\d+k|minimal|low|medium|high|xhigh|max|effort|thinking|auto))*$/;
 
 function reach(rowKey: string, model: ModelRecord): number {
   const key = normalized(rowKey);
   const names = [model.id, model.apiId].filter((n): n is string => n !== undefined).map(normalized);
-  return Math.max(0, ...names.filter((n) => key === n || key.startsWith(`${n}-`)).map((n) => n.length));
+  return Math.max(0, ...names.filter((n) => key.startsWith(n) && CONFIGURATION_SUFFIX.test(key.slice(n.length))).map((n) => n.length));
 }
 
 function checkLivebench(benchmark: BenchmarkRecord, model: ModelRecord, claim: BoardClaim, feeds: Feeds, recorded: Recorded): string {

@@ -219,6 +219,10 @@ const LB_TABLE = [
   "grok-4.6,86.538,95.5,98.0,82.0,78.148,43.423,100.0,71.783,69.333,78.267,68.083",
   "grok-4.7-xhigh,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
   "grok-4.7-low,84.615,,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "grok-4.7-codex-xhigh,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "grok-4.7-0731-xhigh,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "grok-4.7-preview-xhigh,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
+  "grok-4.7-2026-07-01-thinking-64k-high-effort,84.615,86.0,94.0,66.0,85.727,44.923,100.0,78.05,69.967,74.917,78.167",
 ].join("\n");
 const LB_CATEGORIES = JSON.stringify({
   Reasoning: ["theory_of_mind", "zebra_puzzle", "spatial", "logic_with_navigation"],
@@ -261,6 +265,7 @@ test("a LiveBench score is accepted when it is the pinned question set's own cat
     ["grok-4.7", "grok-4.7-xhigh", "livebench-reasoning", 82.7],
     ["grok-4.7", "grok-4.7-xhigh", "livebench-data-analysis", 76.9],
     ["grok-4.6", "grok-4.6", "livebench-instruction-following", 71.9],
+    ["grok-4.7", "grok-4.7-2026-07-01-thinking-64k-high-effort", "livebench-reasoning", 82.7],
   ] as const) {
     const out = lbRefresh(lbClaim({ model: m, sourceRow: row, benchmark, score }));
     assert.equal(out.rejected.length, 0, JSON.stringify(out.rejected));
@@ -278,7 +283,10 @@ test("a LiveBench score is rejected unless the pinned table, row, model, categor
     [{ sourceRow: undefined }, undefined, /needs sourceRow/],
     [{ sourceRow: "grok-4.8-xhigh" }, undefined, /has no row grok-4\.8-xhigh/],
     [{ model: "grok-4.6" }, undefined, /row grok-4\.7-xhigh does not name grok-4\.6/],
-    [{ model: "grok-4" }, undefined, /row grok-4\.7-xhigh names grok-4\.7 at least as closely as grok-4/],
+    [{ model: "grok-4" }, undefined, /row grok-4\.7-xhigh does not name grok-4$/],
+    [{ sourceRow: "grok-4.7-codex-xhigh" }, undefined, /row grok-4\.7-codex-xhigh does not name grok-4\.7$/],
+    [{ sourceRow: "grok-4.7-0731-xhigh" }, undefined, /row grok-4\.7-0731-xhigh does not name grok-4\.7$/],
+    [{ sourceRow: "grok-4.7-preview-xhigh" }, undefined, /row grok-4\.7-preview-xhigh does not name grok-4\.7$/],
     [{ sourceRow: "grok-4.7-low" }, undefined, /row grok-4\.7-low has no zebra_puzzle score/],
     [{}, { ...NO_FEEDS, livebenchRelease: "20261014" }, /2026-06-25 question set table was not fetched this run/],
     [{ sourceUrl: "https://livebench.ai/data/20261014/table.csv" }, undefined, /must cite the 2026-06-25 question set table https:\/\/livebench\.ai\/v1\/table_2026_06_25\.csv/],
@@ -300,7 +308,7 @@ test("a LiveBench score never switches a model to another configuration's row", 
 });
 
 test("a malformed or incomplete pinned LiveBench file leaves that question set absent", () => {
-  assert.equal(livebenchFeeds().livebenchQuestionSets.get("2026_06_25")?.rows.size, 3);
+  assert.equal(livebenchFeeds().livebenchQuestionSets.get("2026_06_25")?.rows.size, 7);
   const malformed: Record<string, string>[] = [
     { "table.csv": LB_TABLE },
     { "table.csv": LB_TABLE.replace("86.538", "86.5x"), "categories.json": LB_CATEGORIES },
