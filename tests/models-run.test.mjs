@@ -100,18 +100,20 @@ test("a changed run publishes data and status, and a repeat run records no chang
 test("failing gates exit 6, leave every data row alone and commit only the failed status", async (t) => {
   const sandbox = await makeSandbox(t);
   const before = git(sandbox.job, "rev-parse", "HEAD");
+  const prior = await status(sandbox);
   const run = await runJob(sandbox, { MODELS_GATES_CMD: "false", STUB_VERDICTS: verdicts });
   assert.equal(run.status, 6, run.stdout + run.stderr);
   assert.equal(git(sandbox.job, "rev-list", "--count", `${before}..HEAD`), "1");
   assert.deepEqual(changedFiles(sandbox.job), [STATUS]);
   assert.equal(git(sandbox.job, "status", "--porcelain"), "");
   const failed = await status(sandbox);
-  assert.deepEqual([failed.outcome, failed.failedStage, failed.exitCode, failed.lastSuccess], ["failed", "gates", 6, null]);
+  assert.deepEqual([failed.outcome, failed.failedStage, failed.exitCode, failed.lastSuccess], ["failed", "gates", 6, prior.lastSuccess]);
   assert.equal(git(sandbox.origin, "rev-parse", "main"), before);
 });
 
 test("an agent failure exits 4 and a missing catalog file exits 3, each recording the stage", async (t) => {
   const sandbox = await makeSandbox(t);
+  const prior = (await status(sandbox)).sources.find((s) => s.source === "omni-catalog");
   const agent = await runJob(sandbox, { STUB_FAIL_PHASE: "eligibility" });
   assert.equal(agent.status, 4, agent.stdout + agent.stderr);
   assert.equal((await status(sandbox)).failedStage, "eligibility");
@@ -123,7 +125,7 @@ test("an agent failure exits 4 and a missing catalog file exits 3, each recordin
     source: "omni-catalog",
     status: "failed",
     checked: recorded.lastAttempt,
-    lastOk: null,
+    lastOk: prior?.lastOk ?? null,
   });
 });
 

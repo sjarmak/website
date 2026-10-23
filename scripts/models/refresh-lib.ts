@@ -189,6 +189,12 @@ function sourced(batch: Batch, o: Raw): ReturnType<typeof dated> {
   return proof;
 }
 
+function feedProof(batch: Batch, o: Raw, benchmark: BenchmarkRecord): ReturnType<typeof dated> {
+  const proof = dated(o, batch.ctx.runDate);
+  if (proof.sourceUrl !== benchmark.url) throw new ItemError(`a ${benchmark.id} row is checked against the fetched leaderboard and must cite ${benchmark.url}`);
+  return proof;
+}
+
 function addModel(batch: Batch, o: Raw): void {
   onlyKeys(o, [...NEW_MODEL_KEYS, ...DATED_KEYS]);
   const proof = sourced(batch, o);
@@ -287,11 +293,11 @@ function relabelSource(batch: Batch, model: string, benchmark: string, score: nu
 
 function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
   onlyKeys(o, ["model", "benchmark", "score", "version", "note", "agent", "effort", ...DATED_KEYS]);
-  const proof = sourced(batch, o);
   const model = batch.model(text(o, "model", 64));
   const benchmarkId = text(o, "benchmark", 64);
   const benchmark = batch.ctx.benchmarks.find((b) => b.id === benchmarkId);
   if (!benchmark) throw new ItemError(`benchmark "${benchmarkId}" is not defined`);
+  const proof = benchmark.harness ? feedProof(batch, o, benchmark) : sourced(batch, o);
   const version = text(o, "version", 120);
   if (version !== benchmark.version) throw new ItemError(`version "${version}" differs from the pinned "${benchmark.version}"`);
   const score = finite(o, "score");

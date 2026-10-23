@@ -296,12 +296,24 @@ test("a Terminal-Bench row is accepted only from a displayed row on the recorded
     [{ feeds: board([boardRow({ displayed: false })]) }, {}, /not displayed/],
     [{ feeds: board([boardRow()]) }, { agent: undefined }, /needs the leaderboard's agent and effort/],
     [{ feeds: { livebenchRelease: "20260625", terminalBench: null } }, {}, /was not fetched this run/],
+    [{ feeds: board([boardRow()]) }, { sourceUrl: "https://bench.example/board" }, /must cite https:\/\/www\.tbench\.ai\/leaderboard/],
   ];
   for (const [over, claim, reason] of cases) {
     const out = refresh(tbData(), research({ observations: [tbClaim(claim)] }), eligibilityFile([]), ctx(over));
     assert.match(out.rejected[0]?.reason ?? "", reason);
     assert.equal(out.data.observations.length, 2);
   }
+});
+
+test("a Terminal-Bench row checked against the fetched leaderboard is accepted though the agent could not read the leaderboard page", () => {
+  const out = refresh(
+    tbData(),
+    research({ sources: [{ url: TBENCH.url, status: "unresolved" }], observations: [tbClaim()] }),
+    eligibilityFile([]),
+    ctx({ feeds: board([boardRow()]) }),
+  );
+  assert.equal(out.rejected.length, 0, JSON.stringify(out.rejected));
+  assert.equal(out.data.observations.find((o) => o.model === "acme-three-1" && o.benchmark === TBENCH.id)?.score, 57.9);
 });
 
 test("a page reported unresolved blocks items citing it without blocking the rest of its host", () => {
