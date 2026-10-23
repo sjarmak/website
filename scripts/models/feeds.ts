@@ -19,7 +19,6 @@ export interface Feeds {
 export const NO_FEEDS: Feeds = { livebenchRelease: null, terminalBench: null };
 
 const RELEASE = /^\d{8}$/;
-const LIVEBENCH_DATA = /^https:\/\/livebench\.ai\/data\/(\d{8})\//;
 const PRINTED_PRECISION = 0.05 + 1e-9;
 
 export const hostOf = (url: string): string => new URL(url).hostname.replace(/^www\./, "");
@@ -54,12 +53,10 @@ export function readFeeds(dir: string | undefined): Feeds {
   return { livebenchRelease: RELEASE.test(release) ? release : null, terminalBench };
 }
 
-function checkLivebench(benchmark: BenchmarkRecord, sourceUrl: string, feeds: Feeds): void {
-  const release = LIVEBENCH_DATA.exec(sourceUrl)?.[1] ?? feeds.livebenchRelease;
-  if (!release) throw new ItemError("the LiveBench release behind this score is unknown, because the source names none and the release feed was not fetched");
-  if (!benchmark.version.startsWith(label(release))) {
-    throw new ItemError(`LiveBench release ${label(release)} differs from the pinned "${benchmark.version}"`);
-  }
+function checkLivebench(benchmark: BenchmarkRecord): void {
+  throw new ItemError(
+    `${benchmark.id} is pinned to the "${benchmark.version}", and this job cannot yet check a LiveBench score against that question set's own table, so the existing score stays`,
+  );
 }
 
 export interface BoardClaim {
@@ -86,8 +83,8 @@ function checkHarness(benchmark: BenchmarkRecord, harness: string, model: ModelR
   return `agent ${row.agent}, effort ${row.effort}, leaderboard ${harness}`;
 }
 
-export function checkFeedRow(benchmark: BenchmarkRecord, model: ModelRecord, sourceUrl: string, claim: BoardClaim, feeds: Feeds): string | undefined {
-  if (hostOf(benchmark.url) === "livebench.ai") checkLivebench(benchmark, sourceUrl, feeds);
+export function checkFeedRow(benchmark: BenchmarkRecord, model: ModelRecord, claim: BoardClaim, feeds: Feeds): string | undefined {
+  if (hostOf(benchmark.url) === "livebench.ai") checkLivebench(benchmark);
   return benchmark.harness ? checkHarness(benchmark, benchmark.harness, model, claim, feeds) : undefined;
 }
 

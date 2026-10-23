@@ -17,6 +17,7 @@ if (phase === "research") {
   const release = existsSync("feeds/livebench/release") ? readFileSync("feeds/livebench/release", "utf8").trim() : "none";
   const board = existsSync("feeds/terminal-bench.json") ? JSON.parse(readFileSync("feeds/terminal-bench.json", "utf8")).leaderboard : null;
   console.log(`[stub-models-agent] research feeds ${release} ${board ? `${board.package} ${board.name}` : "none"}`);
+  if (process.env.STUB_FORGE_BOARD) writeFileSync("feeds/terminal-bench.json", process.env.STUB_FORGE_BOARD);
   const extra = JSON.parse(process.env.STUB_RESEARCH ?? "{}");
   writeFileSync("research.json", JSON.stringify({ runDate, sources: [], ...extra }));
 } else {

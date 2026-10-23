@@ -17,7 +17,8 @@ import { ProposalError, proposedModels, refresh, type DataSet, type RunContext }
 const RUN = "2026-10-23";
 const COMMIT = "a".repeat(40);
 const CATALOG = "const ids = ['acme-one-1', 'acme-two-1'];\nfamilies: acme-*\n";
-const BENCH = benchmarks[0];
+const BENCH = benchmarks.find((b) => b.id === "livesqlbench-base") as (typeof benchmarks)[number];
+const LIVEBENCH = benchmarks[0];
 const OTHER_BENCH = benchmarks[1];
 const DATA_DIR = path.resolve(import.meta.dirname, "..", "src", "data", "models");
 
@@ -198,7 +199,7 @@ test("an item citing a source the run reported as failed is rejected", () => {
   );
   assert.equal(out.data.observations.length, 2);
   assert.match(out.rejected[0].reason, /reported as failed/);
-  assert.deepEqual(out.sources, [{ source: "bench.example", status: "failed" }]);
+  assert.deepEqual(out.sources, [{ source: "bench.example/board", status: "failed" }]);
 });
 
 test("a score for a different benchmark version is rejected", () => {
@@ -211,20 +212,47 @@ test("a score for a different benchmark version is rejected", () => {
   assert.match(out.rejected[0].reason, /differs from the pinned/);
 });
 
-test("a LiveBench row from a release other than the pinned one is rejected, even when it restates the pinned version", () => {
-  const v2 = { model: "acme-three-1", benchmark: BENCH.id, score: 50, version: BENCH.version, ...proof };
-  const fromFile = refresh(
+test("a LiveBench row is rejected whatever release its URL names, so a pinned score never moves", () => {
+  const row = { model: "acme-three-1", benchmark: LIVEBENCH.id, score: 50, version: LIVEBENCH.version, ...proof };
+  for (const sourceUrl of ["https://livebench.ai/data/20261014/table.csv", "https://livebench.ai/data/20260625/v2/table.csv", "https://livebench.ai/"]) {
+    const out = refresh(baseData(), research({ observations: [{ ...row, sourceUrl }] }), eligibilityFile([]), ctx());
+    assert.equal(out.data.observations.length, 2, sourceUrl);
+    assert.match(out.rejected[0].reason, /pinned to the "2026-06-25 question set", and this job cannot yet check a LiveBench score/);
+  }
+});
+
+test("a failed page blocks its own citations even when another page on that host was fine", () => {
+  const price = { model: "acme-three-1", inputPerM: 9, outputPerM: 9, provider: "Acme API", ...proof, sourceUrl: "https://acme.example/pricing" };
+  const out = refresh(
     baseData(),
-    research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/data/20261014/table.csv" }] }),
+    research({
+      sources: [
+        { url: "https://acme.example/pricing", status: "failed" },
+        { url: "https://acme.example/docs", status: "ok" },
+      ],
+      pricing: [price],
+    }),
     eligibilityFile([]),
     ctx(),
   );
-  assert.match(fromFile.rejected[0].reason, /LiveBench release 2026-10-14 differs from the pinned "2026-06-25 question set"/);
-  const fromSite = refresh(baseData(), research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/" }] }), eligibilityFile([]), ctx({ feeds: { livebenchRelease: "20261014", terminalBench: null } }));
-  assert.match(fromSite.rejected[0].reason, /LiveBench release 2026-10-14 differs/);
-  const unknown = refresh(baseData(), research({ observations: [{ ...v2, sourceUrl: "https://livebench.ai/" }] }), eligibilityFile([]), ctx({ feeds: NO_FEEDS }));
-  assert.match(unknown.rejected[0].reason, /release behind this score is unknown/);
-  assert.equal(fromFile.data.observations.length + fromSite.data.observations.length + unknown.data.observations.length, 6);
+  assert.match(out.rejected[0].reason, /acme\.example\/pricing was reported as failed/);
+  assert.deepEqual(out.sources, [
+    { source: "acme.example/pricing", status: "failed" },
+    { source: "acme.example", status: "ok" },
+  ]);
+});
+
+test("an existing model's API id cannot be changed to another version's id", () => {
+  const data = baseData();
+  data.models = data.models.map((m) => (m.id === "acme-three-1" ? { ...m, apiId: "acme-three-1" } : m));
+  const out = refresh(
+    data,
+    research({ updateModels: [{ model: "acme-three-1", field: "apiId", value: "acme-four-0", ...proof }] }),
+    eligibilityFile([]),
+    ctx(),
+  );
+  assert.equal(out.data.models.find((m) => m.id === "acme-three-1")?.apiId, "acme-three-1");
+  assert.match(out.rejected[0].reason, /a different id is a different version and needs its own model record/);
 });
 
 const TBENCH = benchmarks.find((b) => b.harness) as (typeof benchmarks)[number];

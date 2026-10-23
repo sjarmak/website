@@ -7,6 +7,7 @@ readonly EXIT_AGENT=4
 readonly EXIT_INVALID=5
 readonly EXIT_GATES=6
 readonly EXIT_PUBLISH=7
+readonly EXIT_STALE=8
 readonly EXIT_BUSY=75
 readonly DATA_DIR=src/data/models
 readonly STATUS_FILE=src/data/models/refresh-status.json
@@ -120,6 +121,21 @@ fetch_feeds() {
   fi
 }
 
+seal_evidence() {
+  local sealed="$1" copy="$2"
+  mkdir -p "$sealed"
+  cp -R "$sealed" "$copy"
+  chmod -R a-w "$sealed"
+}
+
+report_stale() {
+  local stale
+  stale="$(node -e 'const s=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));process.stdout.write(s.sources.filter((x)=>x.status==="failed"&&x.checked===s.lastAttempt).map((x)=>x.source).join(" "))' "$STATUS_FILE")"
+  [ -n "$stale" ] || return 0
+  say "published what validated, but these sources failed this run and their rows stay as they were: $stale"
+  exit "$EXIT_STALE"
+}
+
 fill_prompt() {
   sed -e "s|{{RUN_DATE}}|$RUN_DATE|g" -e "s|{{CATALOG_COMMIT}}|${CATALOG_COMMIT:-}|g" -e "s|{{OUTPUT}}|$2|g" "$1"
 }
@@ -192,7 +208,7 @@ record_status() {
   [ ! -s "$WORK/summary.json" ] || args+=(--summary "$WORK/summary.json")
   [ "$stage" != catalog ] || args+=(--source "omni-catalog=failed")
   [ -z "${CATALOG_COMMIT:-}" ] || [ "$stage" = catalog ] || args+=(--source "omni-catalog=ok")
-  args+=("${FEED_SOURCES[@]}" --feeds "$WORK/research/feeds")
+  args+=("${FEED_SOURCES[@]}" --feeds "$WORK/evidence/feeds")
   node scripts/models/apply.ts "${args[@]}"
 }
 
@@ -261,7 +277,7 @@ main() {
   exec > >(tee -a "$LOG") 2>&1
   STARTED_AT="$(date -u +%FT%TZ)"
   WORK="$(mktemp -d)"
-  trap 'rm -rf "$WORK"' EXIT
+  trap 'chmod -R u+w "$WORK" 2>/dev/null; rm -rf "$WORK"' EXIT
   CATALOG_COMMIT=""
   FEED_SOURCES=()
   say "refresh for $RUN_DATE started $STARTED_AT from $BASE_REF (log $LOG)"
@@ -269,24 +285,26 @@ main() {
   sync_tree || fail "$EXIT_SOURCE" sync
   [ -s "$STATUS_FILE" ] || die "$EXIT_USAGE" "$BASE_REF has no $STATUS_FILE"
 
-  mkdir -p "$WORK/research" "$WORK/eligibility"
+  mkdir -p "$WORK/research" "$WORK/eligibility" "$WORK/evidence"
   node scripts/models/apply.ts reference --out "$WORK/research" || fail "$EXIT_INVALID" reference
-  fetch_feeds "$WORK/research/feeds"
+  fetch_feeds "$WORK/evidence/feeds"
+  seal_evidence "$WORK/evidence/feeds" "$WORK/research/feeds"
   run_agent research "$WORK/research" "$(fill_prompt scripts/models/refresh.md research.json)" \
     "Read,Write,Glob,Grep,WebFetch,WebSearch" research.json || fail "$EXIT_AGENT" research
 
-  fetch_catalog "$WORK/eligibility/catalog" || fail "$EXIT_SOURCE" catalog
+  fetch_catalog "$WORK/evidence/catalog" || fail "$EXIT_SOURCE" catalog
+  seal_evidence "$WORK/evidence/catalog" "$WORK/eligibility/catalog"
   say "catalog commit $CATALOG_COMMIT"
   node scripts/models/apply.ts models --research "$WORK/research/research.json" --run-date "$RUN_DATE" \
-    --log "$LOG" --out "$WORK/eligibility/models.json" --feeds "$WORK/research/feeds" || fail "$EXIT_INVALID" research-proposals
+    --log "$LOG" --out "$WORK/eligibility/models.json" --feeds "$WORK/evidence/feeds" || fail "$EXIT_INVALID" research-proposals
   cp "$WORK/research/gates.json" "$WORK/eligibility/gates.json"
   run_agent eligibility "$WORK/eligibility" "$(fill_prompt scripts/models/eligibility.md eligibility.json)" \
     "Read,Write,Glob,Grep" eligibility.json || fail "$EXIT_AGENT" eligibility
 
   node scripts/models/apply.ts apply --research "$WORK/research/research.json" \
-    --eligibility "$WORK/eligibility/eligibility.json" --catalog-dir "$WORK/eligibility/catalog" \
+    --eligibility "$WORK/eligibility/eligibility.json" --catalog-dir "$WORK/evidence/catalog" \
     --catalog-commit "$CATALOG_COMMIT" --run-date "$RUN_DATE" --log "$LOG" --summary "$WORK/summary.json" \
-    --feeds "$WORK/research/feeds" || fail "$EXIT_INVALID" apply
+    --feeds "$WORK/evidence/feeds" || fail "$EXIT_INVALID" apply
 
   local changed
   changed="$(node -e 'process.stdout.write(String(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).changed))' "$WORK/summary.json")"
@@ -304,6 +322,7 @@ main() {
       "$STATUS_FILE" || fail "$EXIT_PUBLISH" publish
   fi
   say "done; log: $LOG"
+  report_stale
 }
 
 main "$@"; exit $?

@@ -78,7 +78,8 @@ const verdicts = JSON.stringify([{ model: "claude-opus-5.5", verdict: "in-catalo
 
 test("a changed run publishes data and status, and a repeat run records no change", async (t) => {
   const sandbox = await makeSandbox(t);
-  const first = await runJob(sandbox, { MODELS_PUSH: "1", STUB_VERDICTS: verdicts });
+  const feeds = await serveFeeds(t);
+  const first = await runJob(sandbox, { ...feeds.env, MODELS_PUSH: "1", STUB_VERDICTS: verdicts });
   assert.equal(first.status, 0, first.stdout + first.stderr);
   assert.equal(git(sandbox.origin, "log", "-1", "--format=%s", "main"), `content(models): daily refresh ${RUN_DATE}`);
   assert.match(git(sandbox.origin, "log", "-1", "--format=%b", "main"), /^Why: /);
@@ -89,7 +90,7 @@ test("a changed run publishes data and status, and a repeat run records no chang
   const eligibility = JSON.parse(await readFile(path.join(sandbox.job, "src/data/models/omni-eligibility.json"), "utf8"));
   assert.equal(eligibility.find((e) => e.model === "claude-opus-5.5").verdict, "in-catalog");
 
-  const second = await runJob(sandbox, { MODELS_PUSH: "1", STUB_VERDICTS: verdicts });
+  const second = await runJob(sandbox, { ...feeds.env, MODELS_PUSH: "1", STUB_VERDICTS: verdicts });
   assert.equal(second.status, 0, second.stdout + second.stderr);
   assert.equal(git(sandbox.origin, "log", "-1", "--format=%s", "main"), `chore(models): refresh found no change on ${RUN_DATE}`);
   assert.deepEqual(changedFiles(sandbox.job), [STATUS]);
@@ -140,7 +141,8 @@ test("the account picker routes both agents to its account's config, and a refus
   await writeFile(path.join(homes, "account2", ".claude", ".credentials.json"), "{}\n");
   const picker = path.join(sandbox.root, "picker.sh");
   await writeFile(picker, "#!/usr/bin/env bash\n[ -z \"$PICKER_REFUSE\" ] || exit 75\necho 2\n", { mode: 0o755 });
-  const routed = await runJob(sandbox, { MODELS_ACCOUNT_PICKER: picker, MODELS_ACCOUNT_HOMES: homes, STUB_VERDICTS: verdicts });
+  const feeds = await serveFeeds(t);
+  const routed = await runJob(sandbox, { ...feeds.env, MODELS_ACCOUNT_PICKER: picker, MODELS_ACCOUNT_HOMES: homes, STUB_VERDICTS: verdicts });
   assert.equal(routed.status, 0, routed.stdout + routed.stderr);
   const config = path.join(homes, "account2", ".claude");
   assert.match(routed.stdout, new RegExp(`research config ${config}`));
@@ -236,20 +238,34 @@ test("the job saves both feeds for the agents, then checks Terminal-Bench rows a
   assert.deepEqual([accepted.score, accepted.note], [55, "agent Claude Code, effort xhigh, leaderboard terminal-bench/terminal-bench 4-0-0"]);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
   assert.match(log, /REJECT observation claude-opus-5\.5 \| no terminal-bench\/terminal-bench 4-0-0 row for Claude Opus 5\.5 with agent Terminus 2/);
-  assert.match(log, /REJECT observation claude-opus-5\.5 \| LiveBench release 2026-10-14 differs from the pinned "2026-06-25 question set"/);
+  assert.match(log, /REJECT observation claude-opus-5\.5 \| livebench-data-analysis is pinned to the "2026-06-25 question set", and this job cannot yet check a LiveBench score/);
 });
 
-test("unreachable feeds are recorded as failed sources, change no rows, and leave the run successful", async (t) => {
+test("unreachable feeds are recorded as failed sources, change no rows, and exit 8 after publishing what validated", async (t) => {
   const sandbox = await makeSandbox(t);
   const research = { observations: [observation({ model: "claude-opus-5", benchmark: "terminal-bench-4", score: 55, agent: "Claude Code", effort: "xhigh" })] };
   const before = await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8");
   const run = await runJob(sandbox, { STUB_RESEARCH: JSON.stringify(research), STUB_VERDICTS: verdicts });
-  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.equal(run.status, 8, run.stdout + run.stderr);
   assert.match(run.stdout, /research feeds none none/);
+  assert.match(run.stdout, /these sources failed this run and their rows stay as they were: livebench-feed terminal-bench-feed/);
   const recorded = await status(sandbox);
   assert.deepEqual(feedSources(recorded), [["livebench-feed", "failed"], ["terminal-bench-feed", "failed"]]);
   assert.deepEqual(recorded.notices, []);
   assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
   const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
   assert.match(log, /REJECT observation claude-opus-5 \| the terminal-bench\/terminal-bench 4-0-0 leaderboard was not fetched this run/);
+});
+
+test("a research agent that rewrites its copy of a feed cannot vouch for its own row", async (t) => {
+  const sandbox = await makeSandbox(t);
+  const feeds = await serveFeeds(t);
+  const forged = { leaderboard: { ...TBENCH_BODY }, rows: [boardRow("Forge", "Claude Opus 5.5", "max", 99)] };
+  const research = { observations: [observation({ model: "claude-opus-5.5", benchmark: "terminal-bench-4", score: 99, agent: "Forge", effort: "max" })] };
+  const before = await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8");
+  const run = await runJob(sandbox, { ...feeds.env, STUB_FORGE_BOARD: JSON.stringify(forged), STUB_RESEARCH: JSON.stringify(research), STUB_VERDICTS: verdicts });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.equal(await readFile(path.join(sandbox.job, "src/data/models/observations.json"), "utf8"), before);
+  const log = await readFile(path.join(sandbox.job, ".models-runs", `${RUN_DATE}.log`), "utf8");
+  assert.match(log, /REJECT observation claude-opus-5\.5 \| no terminal-bench\/terminal-bench 4-0-0 row for Claude Opus 5\.5 with agent Forge/);
 });

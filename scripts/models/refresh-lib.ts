@@ -232,6 +232,9 @@ function updateModel(batch: Batch, o: Raw): void {
   const value = parse(o);
   const previous = (model as unknown as Raw)[field];
   if (sameValue(previous, value)) return;
+  if (field === "apiId" && previous !== undefined) {
+    throw new ItemError(`${model.id} already has API id "${String(previous)}"; a different id is a different version and needs its own model record`);
+  }
   batch.remember({ table: "models", model: model.id, key: field, previous: previous ?? null, sourceUrl: proof.sourceUrl });
   batch.replaceModel({ ...model, [field]: value });
   batch.accepted.push({ item: `update ${model.id}.${field}`, reason: proof.sourceUrl, evidence: proof.evidence });
@@ -295,7 +298,7 @@ function addObservation(batch: Batch, o: Raw, seen: Set<string>): void {
   const [min, max] = scoreRange(benchmark);
   if (score < min || score > max) throw new ItemError(`score ${score} is outside ${min}..${max}`);
   const claim = { agent: optionalText(o, "agent", 80), effort: optionalText(o, "effort", 20), score };
-  const boardNote = checkFeedRow(benchmark, model, proof.sourceUrl, claim, batch.ctx.feeds);
+  const boardNote = checkFeedRow(benchmark, model, claim, batch.ctx.feeds);
   const key = `${model.id}/${benchmark.id}`;
   if (seen.has(key)) throw new ItemError(`${key} appears twice in this batch`);
   seen.add(key);
@@ -389,8 +392,9 @@ function sourceReports(batch: Batch, root: Raw): SourceReport[] {
         throw new ItemError(`source status must be ok, failed or unresolved, found ${status}`);
       }
       const url = httpsUrl(raw, "url");
-      const key = status === "unresolved" ? pageOf(url) : hostOf(url);
-      bySource.set(key, bySource.get(key) === "ok" ? "ok" : status);
+      const key = status === "ok" ? hostOf(url) : pageOf(url);
+      const previous = bySource.get(key);
+      bySource.set(key, previous && previous !== "ok" ? previous : status);
     });
   }
   return [...bySource].map(([source, status]) => ({ source, status }));
