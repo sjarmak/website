@@ -8,18 +8,21 @@ export type CapabilityId =
   | "cost"
   | "general";
 
-export type Vendor =
-  | "Anthropic"
-  | "OpenAI"
-  | "Google"
-  | "DeepSeek"
-  | "Alibaba"
-  | "Moonshot"
-  | "Zhipu"
-  | "Meta"
-  | "Mistral"
-  | "MiniMax"
-  | "xAI";
+export const VENDORS = [
+  "Anthropic",
+  "OpenAI",
+  "Google",
+  "DeepSeek",
+  "Alibaba",
+  "Moonshot",
+  "Zhipu",
+  "Meta",
+  "Mistral",
+  "MiniMax",
+  "xAI",
+] as const;
+
+export type Vendor = (typeof VENDORS)[number];
 
 export interface ModelRecord {
   id: string;
@@ -37,6 +40,70 @@ export interface ModelRecord {
   privacyVia?: string[];
   notes?: string;
   docsUrl?: string;
+  supersededBy?: Supersession;
+}
+
+export interface Supersession {
+  model: string;
+  sourceUrl: string;
+  retrieved: string;
+  note?: string;
+}
+
+export type OmniVerdict = "in-catalog" | "meets-constraints" | "unresolved" | "ineligible";
+
+export type OmniBasis =
+  | "exact-model-listed"
+  | "provider-family-supported"
+  | "evidence-inconclusive"
+  | "citation-not-found"
+  | "gates-unknown"
+  | "not-assessed"
+  | "provider-not-supported"
+  | "failed-catalog-constraint"
+  | "failed-gate";
+
+export interface OmniEligibility {
+  model: string;
+  verdict: OmniVerdict;
+  basis: OmniBasis;
+  gates?: string[];
+  catalogCommit: string;
+  retrieved: string;
+}
+
+export type SourceStatus = "ok" | "failed";
+
+export interface RefreshSource {
+  source: string;
+  status: SourceStatus;
+  checked: string;
+  lastOk: string | null;
+}
+
+export type RefreshOutcome = "never-run" | "published" | "no-change" | "failed";
+
+export interface RefreshStatus {
+  lastAttempt: string | null;
+  lastSuccess: string | null;
+  outcome: RefreshOutcome;
+  failedStage: string | null;
+  exitCode: number | null;
+  catalogCommit: string | null;
+  accepted: number;
+  rejected: number;
+  sources: RefreshSource[];
+}
+
+export type HistoryTable = "models" | "observations" | "pricing" | "omni";
+
+export interface HistoryEntry {
+  table: HistoryTable;
+  model: string;
+  key: string;
+  previous: unknown;
+  replacedOn: string;
+  sourceUrl?: string;
 }
 
 export interface LinearNormalization {
@@ -81,6 +148,8 @@ export interface PricingRecord {
   model: string;
   inputPerM: number;
   outputPerM: number;
+  provider?: string;
+  scope?: string;
   sourceUrl: string;
   retrieved: string;
   note?: string;

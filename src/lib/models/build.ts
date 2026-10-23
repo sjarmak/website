@@ -31,6 +31,7 @@ export interface TrackerInput {
   config: CompositeConfig;
   gates: Gate[];
   nearFrontierTolerance: number;
+  rankable?: (model: ModelRecord) => boolean;
 }
 
 export type ParetoStatus = "frontier" | "near" | "dominated" | "ineligible" | "unplaced";
@@ -107,7 +108,7 @@ export function buildTracker(input: TrackerInput): Tracker {
 
   const priced = partial.filter((r) => r.composite.value !== null && r.blendedPrice !== null);
   const points = priced
-    .filter((r) => r.eligibility === "pass")
+    .filter((r) => r.eligibility === "pass" && (input.rankable?.(r.model) ?? true))
     .map((r) => ({ id: r.model.id, cost: r.blendedPrice as number, value: r.composite.value as number }));
   const frontier = paretoFrontier(points);
   const near = nearFrontier(points, frontier, input.nearFrontierTolerance);

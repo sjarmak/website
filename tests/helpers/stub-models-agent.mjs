@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+import { writeFileSync } from "node:fs";
+
+const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
+const phase = prompt.includes("daily research step") ? "research" : "eligibility";
+if (process.env.STUB_FAIL_PHASE === phase) {
+  console.error(`[stub-models-agent] failing the ${phase} phase on request`);
+  process.exit(1);
+}
+const runDate = prompt.match(/Today is (\d{4}-\d{2}-\d{2})/)?.[1];
+if (phase === "research") {
+  const extra = JSON.parse(process.env.STUB_RESEARCH ?? "{}");
+  writeFileSync("research.json", JSON.stringify({ runDate, sources: [], ...extra }));
+} else {
+  const catalogCommit = prompt.match(/at commit `([0-9a-f]{40})`/)?.[1];
+  const verdicts = JSON.parse(process.env.STUB_VERDICTS ?? "[]");
+  writeFileSync("eligibility.json", JSON.stringify({ runDate, catalogCommit, verdicts }));
+}
+console.log(`[stub-models-agent] wrote the ${phase} proposal`);

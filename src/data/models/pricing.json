@@ -3,6 +3,7 @@
     "model": "claude-fable-5.1",
     "inputPerM": 10,
     "outputPerM": 50,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -10,6 +11,7 @@
     "model": "claude-opus-5.5",
     "inputPerM": 4,
     "outputPerM": 20,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -17,6 +19,7 @@
     "model": "claude-opus-5",
     "inputPerM": 5,
     "outputPerM": 25,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -24,6 +27,7 @@
     "model": "claude-sonnet-5.5",
     "inputPerM": 2,
     "outputPerM": 10,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -31,6 +35,7 @@
     "model": "claude-sonnet-5",
     "inputPerM": 2,
     "outputPerM": 10,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -38,6 +43,7 @@
     "model": "claude-sonnet-4.6",
     "inputPerM": 3,
     "outputPerM": 15,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -45,6 +51,7 @@
     "model": "claude-sonnet-4.5",
     "inputPerM": 3,
     "outputPerM": 15,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -52,6 +59,7 @@
     "model": "claude-haiku-4.5",
     "inputPerM": 1,
     "outputPerM": 5,
+    "provider": "Anthropic API",
     "sourceUrl": "https://platform.claude.com/docs/en/about-claude/pricing",
     "retrieved": "2026-10-01"
   },
@@ -59,6 +67,7 @@
     "model": "gpt-6-astra",
     "inputPerM": 10,
     "outputPerM": 50,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -66,6 +75,7 @@
     "model": "gpt-6.1-sol",
     "inputPerM": 2,
     "outputPerM": 10,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -73,6 +83,7 @@
     "model": "gpt-6-sol",
     "inputPerM": 2,
     "outputPerM": 10,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -80,6 +91,7 @@
     "model": "gpt-6-luna",
     "inputPerM": 0.1,
     "outputPerM": 0.5,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -87,6 +99,7 @@
     "model": "gpt-5.6-sol",
     "inputPerM": 4,
     "outputPerM": 20,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -94,6 +107,7 @@
     "model": "gpt-5.6-terra",
     "inputPerM": 2,
     "outputPerM": 12,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -101,6 +115,7 @@
     "model": "gpt-5.6-luna",
     "inputPerM": 0.2,
     "outputPerM": 1.2,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -108,6 +123,7 @@
     "model": "gpt-5.5",
     "inputPerM": 5,
     "outputPerM": 30,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -115,6 +131,7 @@
     "model": "gpt-5.4",
     "inputPerM": 2.5,
     "outputPerM": 15,
+    "provider": "OpenAI API",
     "sourceUrl": "https://developers.openai.com/api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -122,6 +139,7 @@
     "model": "gemini-4-argon",
     "inputPerM": 4,
     "outputPerM": 20,
+    "provider": "Gemini API",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
     "retrieved": "2026-10-01",
     "note": "standard tier"
@@ -130,6 +148,7 @@
     "model": "gemini-3.8-flash",
     "inputPerM": 0.75,
     "outputPerM": 3.75,
+    "provider": "Gemini API",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -137,6 +156,7 @@
     "model": "gemini-3.7-flash",
     "inputPerM": 0.75,
     "outputPerM": 3.75,
+    "provider": "Gemini API",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
     "retrieved": "2026-10-01"
   },
@@ -144,6 +164,7 @@
     "model": "gemini-3.1-pro",
     "inputPerM": 2,
     "outputPerM": 12,
+    "provider": "Gemini API",
     "sourceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
     "retrieved": "2026-10-01",
     "note": "prompts up to 200k tokens"
@@ -152,6 +173,7 @@
     "model": "deepseek-v4-pro",
     "inputPerM": 1.32,
     "outputPerM": 3.96,
+    "provider": "DeepSeek API",
     "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
     "retrieved": "2026-10-01",
     "note": "peak-hour price; off-peak is discounted"
@@ -160,6 +182,7 @@
     "model": "deepseek-v4.1-flash",
     "inputPerM": 0.3,
     "outputPerM": 1.2,
+    "provider": "DeepSeek API",
     "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
     "retrieved": "2026-10-01",
     "note": "Flash tier price as listed on the pricing page"
@@ -168,6 +191,7 @@
     "model": "deepseek-v4-flash",
     "inputPerM": 0.3,
     "outputPerM": 1.2,
+    "provider": "DeepSeek API",
     "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
     "retrieved": "2026-10-01",
     "note": "Flash tier price as listed on the pricing page"
@@ -176,13 +200,15 @@
     "model": "kimi-k3",
     "inputPerM": 3,
     "outputPerM": 15,
+    "provider": "Moonshot API",
     "sourceUrl": "https://platform.kimi.ai/docs/pricing/chat",
     "retrieved": "2026-10-01"
   },
   {
     "model": "kimi-k2.6",
     "inputPerM": 0.95,
-    "outputPerM": 4.0,
+    "outputPerM": 4,
+    "provider": "Moonshot API",
     "sourceUrl": "https://platform.kimi.ai/docs/pricing/chat",
     "retrieved": "2026-10-01"
   },
@@ -190,6 +216,7 @@
     "model": "glm-5.3",
     "inputPerM": 1.4,
     "outputPerM": 4.4,
+    "provider": "Z.ai API",
     "sourceUrl": "https://docs.z.ai/guides/overview/pricing",
     "retrieved": "2026-10-01"
   },
@@ -197,6 +224,7 @@
     "model": "glm-5.3-flash",
     "inputPerM": 0.15,
     "outputPerM": 0.5,
+    "provider": "Z.ai API",
     "sourceUrl": "https://docs.z.ai/guides/overview/pricing",
     "retrieved": "2026-10-01"
   },
@@ -215,5 +243,14 @@
     "sourceUrl": "https://llm-stats.com/models/minimax-m3",
     "retrieved": "2026-10-01",
     "note": "hosted list price as aggregated by llm-stats"
+  },
+  {
+    "model": "deepseek-v4.1-flash-1017",
+    "inputPerM": 0.3,
+    "outputPerM": 1.2,
+    "provider": "DeepSeek API",
+    "scope": "peak hours, cache-miss input; off-peak is half price",
+    "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+    "retrieved": "2026-10-23"
   }
 ]

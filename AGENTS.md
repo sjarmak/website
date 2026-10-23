@@ -58,6 +58,17 @@ cp -rf source dest          # NOT: cp -r source dest
 - Reuse the exact spelling of an existing `category` to file under it; a new string starts a new section. Then commit + push like any content change (CI check → Render deploy).
 - **Fetch the page/README before writing the `note`, `category`, or `kind` — summarize from the real content, never infer from the name, URL, or repo slug** (e.g. squeakyclean.ai is an agentic Clean-Architecture *codegen* tool, not an AI-writing tool as the name suggests).
 
+## Models page
+
+Standing rule for anyone editing `src/data/models` (Stephanie, 2026-10-23):
+
+- One daily job refreshes it at 09:00 UTC and publishes: `scripts/models/run.sh`, with the prompts `scripts/models/refresh.md` (research) and `scripts/models/eligibility.md` (Omni eligibility). It commits `refresh-status.json` on every run, failed or empty, and exits nonzero on any failure.
+- The active comparison shows only current versions. A superseded version moves to the history section (Fable 5 to 5.1, Sonnet 5 to 5.5, GPT-5.6 Luna to GPT-6 Luna).
+- Eligibility is re-read from the current Omni catalog on every run. The catalog is evidence, not an allowlist: `in-catalog` cites the exact model, `meets-constraints` cites provider or family support and passes the page gates, `unresolved` when the evidence does not settle it, `ineligible` only with a cited reason. Publish only the verdict, its basis, the catalog commit and the date, never catalog source, paths or internal identifiers.
+- Provenance is dated. Scores and prices match the exact model, version, provider and scope. Unknowns stay unknown, and scores never carry between versions.
+- Rows are never deleted; a replaced value goes to `history.json`, and a failed source changes nothing.
+- The scoring method does not change without her say. No paid data, no new credentials, no expanded access.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
 

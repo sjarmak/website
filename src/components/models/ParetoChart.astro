@@ -7,7 +7,7 @@ interface Props {
 
 const { rows } = Astro.props;
 
-const placed = rows.filter((r) => r.eligibility === "pass" && r.composite.value !== null && r.blendedPrice !== null);
+const placed = rows.filter((r) => r.pareto === "frontier" || r.pareto === "near" || r.pareto === "dominated");
 
 const width = 760;
 const height = 420;

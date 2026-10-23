@@ -1,12 +1,48 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro";
 import ParetoChart from "@/components/models/ParetoChart.astro";
-import { tracker, trackerInput } from "@/data/models";
+import { refreshStatus, selection, tracker, trackerInput } from "@/data/models";
 import { fullDate } from "@/lib/dates";
-import type { CapabilityId } from "@/data/models/types";
+import type { CapabilityId, OmniBasis, OmniEligibility } from "@/data/models/types";
 
 const { rows, scored, lastUpdated } = tracker;
 const { benchmarks, config, gates, nearFrontierTolerance } = trackerInput;
+const { eligibilityByModel, retired } = selection;
+
+const gateLabels = (ids: string[] | undefined) =>
+  (ids ?? []).map((id) => gates.find((g) => g.id === id)?.label ?? id).join(", ");
+const basisText: Record<OmniBasis, (e: OmniEligibility) => string> = {
+  "exact-model-listed": () => "the exact model is listed in the Omni catalog",
+  "provider-family-supported": () => "Omni supports this provider and model family, and the model passes every gate",
+  "evidence-inconclusive": () => "the Omni catalog evidence does not settle it",
+  "citation-not-found": () => "the cited catalog evidence could not be verified",
+  "gates-unknown": (e) => `Omni supports the provider, but these gates are unknown: ${gateLabels(e.gates)}`,
+  "not-assessed": () => "not yet assessed against the Omni catalog",
+  "provider-not-supported": () => "Omni does not support this provider",
+  "failed-catalog-constraint": () => "fails a support constraint stated in the Omni catalog",
+  "failed-gate": (e) => `fails ${gateLabels(e.gates)}`,
+};
+const omniLabel = { "in-catalog": "in Omni catalog", "meets-constraints": "meets Omni constraints", unresolved: "eligibility unresolved", ineligible: "not eligible" } as const;
+const omniOf = (id: string) => eligibilityByModel.get(id) as OmniEligibility;
+const omniProvenance = (e: OmniEligibility) =>
+  `Omni eligibility: ${omniLabel[e.verdict]}, because ${basisText[e.basis](e)}. Checked against catalog commit ${e.catalogCommit.slice(0, 7)} on ${e.retrieved}.`;
+const modelName = (id: string) => retired.find((r) => r.model.id === id)?.model.name ?? rows.find((r) => r.model.id === id)?.model.name ?? id;
+const retiredWhy = (r: (typeof retired)[number]) =>
+  r.reason === "superseded"
+    ? `Superseded by ${modelName(r.model.supersededBy?.model ?? "")}`
+    : r.reason === "ineligible"
+      ? `Not eligible: ${basisText[r.eligibility.basis](r.eligibility)}`
+      : `Eligibility unresolved (${basisText[r.eligibility.basis](r.eligibility)}); no verified benchmark yet`;
+const failingSources = refreshStatus.sources.filter((s) => s.status === "failed");
+const refreshLine = refreshStatus.lastSuccess
+  ? `Daily refresh last succeeded ${fullDate(new Date(refreshStatus.lastSuccess))}${
+      refreshStatus.outcome === "failed" && refreshStatus.lastAttempt
+        ? `; the attempt on ${fullDate(new Date(refreshStatus.lastAttempt))} failed, so the data below is from the last good run`
+        : ""
+    }.`
+  : refreshStatus.outcome === "failed"
+    ? "The daily refresh has not succeeded yet; its latest attempt failed."
+    : "The daily refresh has not run yet.";
 
 const weightedCapabilities = config.capabilities.filter((c) => c.weight > 0);
 const trackedOnly = config.capabilities.filter((c) => c.weight === 0);
@@ -77,9 +113,13 @@ const leaderboardView = (r: (typeof rows)[number]) => {
     : unknownGates.length
       ? `unknown: ${unknownGates.join(", ")}`
       : "passes every gate";
+  const omni = omniOf(r.model.id);
   return {
     dataAttrs,
     vendorLine,
+    omniText: omniLabel[omni.verdict],
+    omniTip: omniProvenance(omni),
+    omniUnresolved: omni.verdict === "unresolved",
     capabilityCells,
     priceTip,
     priceText: r.blendedPrice === null ? "—" : price(r.blendedPrice),
@@ -126,6 +166,13 @@ const observationCount = scored.length;
         {rows.length} models · {observationCount} benchmark observations · {eligibleCount} currently pass every gate
         {lastUpdated && ` · last retrieval ${fullDate(new Date(lastUpdated))}`}
       </p>
+      <p class="muted">
+        {refreshLine}
+        {failingSources.length > 0 &&
+          ` Sources that failed on the latest attempt: ${failingSources
+            .map((s) => `${s.source} (last good ${s.lastOk ? fullDate(new Date(s.lastOk)) : "never"})`)
+            .join(", ")}.`}
+      </p>
       <nav class="section-nav" aria-label="On this page">
         <a href="#leaderboard">Leaderboard</a>
         <a href="#pareto">Capability vs cost</a>
@@ -133,6 +180,7 @@ const observationCount = scored.length;
         <a href="#mapping">Benchmarks</a>
         <a href="#composite">Composite formula</a>
         <a href="#provenance">Provenance</a>
+        <a href="#history">Superseded and excluded</a>
         <a href="#calibration">Calibration</a>
       </nav>
     </section>
@@ -143,6 +191,13 @@ const observationCount = scored.length;
         Cells are normalized capability scores on 0–100. Hover a cell for the underlying benchmark results, or
         expand the model under Provenance. “—” means no public measurement on a mapped benchmark. Click a column
         header to sort; empty cells always sort last.
+      </p>
+      <p class="muted measure note">
+        Only current versions Omni can use are compared. “In Omni catalog” means the exact model is listed in Omni's
+        model catalog; “meets Omni constraints” means Omni supports its provider and family and the model passes every
+        gate. A model marked “eligibility unresolved” has verified benchmarks but the catalog evidence does not settle
+        whether Omni can use it, so it is shown and kept off the frontier. Superseded and ineligible models are listed
+        under <a href="#history">Superseded and excluded</a>.
       </p>
       <div class="table-wrap table-wrap--wide">
         <table class="tracker" data-sortable>
@@ -174,6 +229,9 @@ const observationCount = scored.length;
                   <th scope="row" class="model-cell">
                     <a href={`#prov-${r.model.id}`}>{r.model.name}</a>
                     <span class="muted model-cell__vendor">{v.vendorLine}</span>
+                    <span class:list={["model-cell__omni", { "model-cell__omni--unresolved": v.omniUnresolved }]} title={v.omniTip}>
+                      {v.omniText}
+                    </span>
                   </th>
                   {v.capabilityCells.map((c) => (
                     <td class:list={["num", { unavailable: c.unavailable, tracked: c.tracked }]} title={c.tip}>
@@ -206,8 +264,8 @@ const observationCount = scored.length;
         The frontier is the set of models no other model beats on both composite and price. Points within
         {Math.round(nearFrontierTolerance * 100)} composite points of the frontier at their price are ringed:
         those are the candidates that trade a little capability for a large cost reduction, which is what this
-        page exists to surface. Only models that pass every gate are plotted and compete for the frontier: a
-        model that fails a gate could not be adopted whatever its score.{" "}
+        page exists to surface. Only models that pass every gate and whose Omni eligibility is settled are plotted
+        and compete for the frontier: a model that fails a gate could not be adopted whatever its score.{" "}
         {ineligiblePricedCount > 0
           ? `${ineligiblePricedCount} priced ${ineligiblePricedCount === 1 ? "model is" : "models are"} left off for that reason.`
           : ""}{" "}
@@ -415,6 +473,7 @@ const observationCount = scored.length;
               </span>
             </summary>
             {r.model.notes && <p class="secondary prov__note">{r.model.notes}</p>}
+            <p class="secondary prov__note">{omniProvenance(omniOf(r.model.id))}</p>
             <div class="table-wrap">
               <table class="tracker tracker--prov">
                 <thead>
@@ -457,6 +516,8 @@ const observationCount = scored.length;
                         <a href={r.pricing.sourceUrl} rel="noopener" target="_blank">
                           {hostOf(r.pricing.sourceUrl)}
                         </a>
+                        {r.pricing.provider && <span class="muted"> · {r.pricing.provider}</span>}
+                        {r.pricing.scope && <span class="muted"> · {r.pricing.scope}</span>}
                         {r.pricing.note && <span class="muted"> · {r.pricing.note}</span>}
                       </td>
                       <td class="mono muted">{r.pricing.retrieved}</td>
@@ -492,6 +553,55 @@ const observationCount = scored.length;
           </details>
         ))}
       </div>
+    </section>
+
+    <section id="history">
+      <h2 class="sub">Superseded and excluded</h2>
+      <p class="muted measure note">
+        Models kept for history but left out of the comparison: older versions a newer release in the same family
+        replaces, models Omni cannot use, and models whose eligibility is unresolved with no verified benchmark yet.
+        Their records and past scores are retained; scores are never carried over to a newer version.
+      </p>
+      {
+        retired.length === 0 ? (
+          <p class="muted">Nothing is excluded right now.</p>
+        ) : (
+          <div class="table-wrap">
+            <table class="tracker tracker--prov">
+              <thead>
+                <tr>
+                  <th scope="col">Model</th>
+                  <th scope="col">Why</th>
+                  <th scope="col">Evidence</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {retired.map((r) => (
+                  <tr>
+                    <th scope="row" class="model-cell">
+                      {r.model.name}
+                      <span class="muted model-cell__vendor">{r.model.vendor}</span>
+                    </th>
+                    <td>{retiredWhy(r)}</td>
+                    <td>
+                      {r.model.supersededBy ? (
+                        <a href={r.model.supersededBy.sourceUrl} rel="noopener" target="_blank">
+                          {hostOf(r.model.supersededBy.sourceUrl)}
+                        </a>
+                      ) : (
+                        <span class="mono">catalog {r.eligibility.catalogCommit.slice(0, 7)}</span>
+                      )}
+                      {r.model.supersededBy?.note && <span class="muted"> · {r.model.supersededBy.note}</span>}
+                    </td>
+                    <td class="mono muted">{r.model.supersededBy?.retrieved ?? r.eligibility.retrieved}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      }
     </section>
 
     <section id="calibration" class="prose">
@@ -658,6 +768,16 @@ const observationCount = scored.length;
   }
   .mono {
     font-family: var(--font-mono);
+  }
+  .model-cell__omni {
+    display: block;
+    font-size: var(--step--2);
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+  }
+  .model-cell__omni--unresolved {
+    color: var(--color-accent);
+    font-weight: 600;
   }
   .unavailable {
     color: var(--color-text-muted);
