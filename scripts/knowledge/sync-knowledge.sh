@@ -117,10 +117,16 @@ echo "[knowledge-sync] ${MODE} ${DATE} — classifying (via ${CLAUDE_BIN})" | te
 # shellcheck disable=SC2086
 "$CLAUDE_BIN" -p "$PROMPT" $CLAUDE_FLAGS 2>&1 | tee -a "$LOG"
 
+if ! node scripts/knowledge/seed_concept_assignments.mjs 2>&1 | tee -a "$LOG"; then
+  echo "[knowledge-sync] reseeding concept assignments failed, so nothing was committed (see $LOG)" | tee -a "$LOG"
+  exit 1
+fi
+
 # Explorer edits are the only committed output; library proposals stay in the
 # gitignored sync dir until the human approves and runs the apply step.
 git add src/data/knowledge/explorers src/data/knowledge/explorers.json \
-        src/data/knowledge/paper-synthesis.json src/data/knowledge/explorer-pending.json 2>/dev/null || true
+        src/data/knowledge/paper-synthesis.json src/data/knowledge/explorer-pending.json \
+        src/data/knowledge/concept-assignments.json 2>/dev/null || true
 if git diff --cached --quiet; then
   echo "[knowledge-sync] no explorer changes to commit (see $SYNC_DIR/report.md)" | tee -a "$LOG"
 else

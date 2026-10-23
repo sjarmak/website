@@ -15,6 +15,7 @@ import os from "node:os";
 import path from "node:path";
 import { readHeartbeat } from "../scripts/concepts/lib/heartbeat.mjs";
 import { REPO_ROOT } from "../scripts/concepts/lib/pipeline-home.mjs";
+import { makeDigestSandbox } from "./helpers/digest-sandbox.mjs";
 
 const run = promisify(execFile);
 const SYNC_SCRIPT = path.join(REPO_ROOT, "scripts", "knowledge", "sync-knowledge.sh");
@@ -27,13 +28,9 @@ async function stub(dir, name, script) {
 }
 
 async function syncSandbox(t) {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "sync-rider-hook-"));
+  const sandbox = await makeDigestSandbox(t, { prefix: "sync-rider-hook-", withScripts: true });
+  const dir = sandbox.root;
   const fakeDate = `0000-rider-${path.basename(dir).slice(-6)}`;
-  const syncDir = path.join(REPO_ROOT, ".knowledge-sync", fakeDate);
-  t.after(async () => {
-    await rm(dir, { recursive: true, force: true });
-    await rm(syncDir, { recursive: true, force: true });
-  });
 
   const stubDir = path.join(dir, "bin");
   await mkdir(stubDir);
@@ -46,7 +43,7 @@ async function syncSandbox(t) {
   const env = {
     ...process.env,
     PATH: `${stubDir}${path.delimiter}${process.env.PATH}`,
-    WEBSITE_DIR: REPO_ROOT,
+    WEBSITE_DIR: sandbox.repo,
     CLAUDE_BIN: claudeBin,
     CONCEPTS_PIPELINE_HOME: path.join(dir, "pipeline-home"),
     CONCEPTS_HEARTBEAT_PATH: path.join(dir, "heartbeat.json"),
