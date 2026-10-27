@@ -4028,6 +4028,31 @@
           "why": "Observability platforms store traces without structured labelling, and text-annotation tools have no notion of a step, a delegation or a tool call, so each failure study has built throwaway tooling. A step-level unit that reads standard trace formats is what turns recorded telemetry into labelled failure data, and the successful run in the example is exactly the case a run-level outcome hides. The agreement evidence is small: six runs and 22 answers."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261032060P",
+      "title": "Understanding Communication Failures in Multi-Agent LLM Systems",
+      "firstAuthor": "Pitre, Priya",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.32060",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261032060P",
+      "branches": [
+        "reliability",
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "reliability",
+          "takeaway": "Pitre et al. built a failure taxonomy from 3,211 failed multi-round debates over eight datasets (FinQA, HotpotQA, MBPP, MMLU-Pro, MedQA, MuSiQue, Ethics, LiveCodeBench) run on open-weight agents from LLaMA-3.2-3B to GPT-OSS-120B. Recovery/correction failures appear in 94.9% of failed trajectories and consensus/decision failures in 83.4%. Against 500 successful debates, reasoning and tool/evidence errors occur at the same rates (0.35 and 0.38 of failed trajectories, 0.35 and 0.39 of successful ones); what separates failure is recovery failure (0.94 against 0.37), persistent wrong framing (0.60 against 0.08) and premature consensus (0.71 against 0.20). 91.2% of successful debates still contained at least one error. Consensus errors rise in round 2, the first round after agents see each other's answers. Once they appear before the final round, persistent wrong framing, failure to recover after an unknown answer, and failed recovery after disagreement are still present at the end about 81% of the time.",
+          "why": "This taxonomy locates failure in the interaction, not in individual reasoning: the same mistakes occur in debates that succeed, and the outcome turns on whether the group corrects them. That puts the reliability lever at disagreement handling and recovery checks before finalization, not at more rounds. Agents' self-reported confidence rose even on wrong answers, so confidence cannot serve as a stopping rule. The corpus is debate on QA-style and code tasks; software-development agents and coordination through files, memory or external state are outside it."
+        },
+        {
+          "branch": "topology",
+          "takeaway": "The authors compared configurations that differ in one factor on the same questions, with question fixed effects, clustered standard errors and Benjamini-Hochberg correction. Retrieval access had the largest effect, cutting the failure rate on HotpotQA and MuSiQue from 74.6% to 36.4%. Growing the team from three to seven agents did not significantly reduce failures: reasoning errors fell, while failures after abstention and suppression of correct minority answers rose. A hierarchy reduced answer oscillation without reducing overall failures, and explicit roles had no detectable effect. Homogeneous teams had more recovery failures and fewer communication failures than mixed-model teams. Premature consensus, wrong framing and ignored corrections were statistically unchanged across team size, roles, hierarchy and model choice. Overall, a wrong initial majority stayed wrong in 40.6% of trajectories and recovered in 20.7%; a correct minority was suppressed in 13.5% and changed the group's answer in 5.8%.",
+          "why": "Team structure changed how these systems failed more than whether they failed, and the failure types structure did not move are the ones most tied to the outcome. Adding agents or a supervisor without an evidence check buys little, and same-model teams agree easily because they share blind spots. The comparisons cover debate, roles and hierarchy on fixed-round tasks, not dynamic task graphs."
+        }
+      ]
     }
   ],
   "sections": [

@@ -1585,6 +1585,10 @@
     "concept": "information-retrieval",
     "takeaway": "Five offline transformations fold a knowledge graph's neighbourhood into node embeddings (one-hop and two-hop blends, a retrofitting pull, random-walk endpoint blends, Louvain cluster blends) so a plain vector index can answer relational questions without walking the graph at query time. Replacing the original embeddings outright hurt, but using the modified embeddings in a second query stage helped: a chained requery over random-walk embeddings lifted recall on the hard relational and collection questions from 51.0 to 60.8 percent at a 40-node budget, and matched plain retrieval's 40-node recall with 24 nodes."
   },
+  "paper:2026arXiv261032060P": {
+    "concept": "reliability",
+    "takeaway": "Pitre et al. built a failure taxonomy from 3,211 failed multi-round debates over eight datasets (FinQA, HotpotQA, MBPP, MMLU-Pro, MedQA, MuSiQue, Ethics, LiveCodeBench) run on open-weight agents from LLaMA-3.2-3B to GPT-OSS-120B. Recovery/correction failures appear in 94.9% of failed trajectories and consensus/decision failures in 83.4%. Against 500 successful debates, reasoning and tool/evidence errors occur at the same rates (0.35 and 0.38 of failed trajectories, 0.35 and 0.39 of successful ones); what separates failure is recovery failure (0.94 against 0.37), persistent wrong framing (0.60 against 0.08) and premature consensus (0.71 against 0.20). 91.2% of successful debates still contained at least one error. Consensus errors rise in round 2, the first round after agents see each other's answers. Once they appear before the final round, persistent wrong framing, failure to recover after an unknown answer, and failed recovery after disagreement are still present at the end about 81% of the time."
+  },
   "paper:ACRFence": {
     "concept": "ai-security"
   },

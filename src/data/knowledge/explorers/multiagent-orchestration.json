@@ -2814,6 +2814,25 @@
           "why": "Attribution methods answer which agent failed and when, starting from a failed run. This answers which record licenses the claim that a coordination rule broke, including in runs that succeeded, and turns portability across frameworks into something tested per binding. It also marks the open edge: every binding needed a manual source audit, one mechanism was broken at a time, and repairs were supplied rather than discovered."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261032060P",
+      "title": "Understanding Communication Failures in Multi-Agent LLM Systems",
+      "firstAuthor": "Pitre, Priya",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.32060",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261032060P",
+      "branches": [
+        "frontier"
+      ],
+      "notes": [
+        {
+          "branch": "frontier",
+          "takeaway": "Pitre et al. turn a communication-failure taxonomy (six parent categories, 24 child labels and 11 leaf labels, built from 3,211 failed debate traces) into round-ahead warnings. A random forest reads only answer dynamics after each round (disagreement, answer changes, oscillation, confidence), with no message text or dataset identity, and predicts whether premature consensus, failed recovery after disagreement, or failure to recover after an unknown answer begins in the next round. On 304 debates paired by question and correctness, under leave-one-pair-out validation, it had the best precision, accuracy and AUROC of the methods compared. Simple rules reached high recall by warning on nearly every debate, and an LLM judge performed near chance on premature consensus and failed recovery. Warning accuracy over never warning rose by 0.10, 0.03 and 0.20 for the three errors. In human validation on 200 trajectories, 93.4% of errors that annotators described without seeing the taxonomy mapped to a fine-grained label, and the automatic labeller reached 0.91 parent-level and 0.84 fine-grained micro-F1 against adjudicated labels.",
+          "why": "Calibrated consensus is an open problem on this branch, and the paper supplies a negative result and a partial instrument. Agents grew more confident on wrong answers and an LLM judge could not anticipate consensus failures, while a small model over answer dynamics could. Each predicted error points to a different intervention: an evidence check before consensus, conflict resolution before failed recovery, re-querying after an unknown answer. The paper measures warning accuracy and does not run those interventions, and the taxonomy itself was built with GPT-5.4-nano and GPT-4.1-mini."
+        }
+      ]
     }
   ],
   "sections": [
