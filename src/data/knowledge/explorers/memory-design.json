@@ -2016,6 +2016,25 @@
           "why": "Knowledge graphs commit to a fixed abstraction such as named entities, and flat vector stores commit to none; a learned filesystem is a representation whose structure is itself optimized for downstream answers. The trade is more reading per query in exchange for a richer, navigable layer with a verified path back to source."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261036264S",
+      "title": "The Inbox as a Coordination Primitive for LLM Agent Societies",
+      "firstAuthor": "Sreedhar, Karthik",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.36264",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261036264S",
+      "branches": [
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "context",
+          "takeaway": "An organizer running 2 to 20 concurrent meeting negotiations isolates the cost of the context boundary. Keeping every reply nearly matches a perfect-retrieval reference at every load but costs 10.5 times its tokens at 20 meetings. Once a bounded memory fills, dropping the oldest messages, the push default, makes 97% of new proposals repeat a time already rejected, because age-based eviction keeps part of a conversation and drops its earlier rejections. The repeat rate is 80% when whole conversations are kept, 58% when the model chooses which conversations to keep, and about 11% with the full history. The right rule depends on role: a participant answering 2 to 20 invitations offers already-committed times in 60% to 69% of cases even with full history, and a compact promise list of committed hours cuts that to 28% at 20 invitations.",
+          "why": "This is a measured case of what competes for the context window. Eviction by arrival order does more than lose old facts: it leaves partial histories the model then acts on as if complete. The results favor selection rules that keep decision-relevant units whole and fit the agent's role, and the participant result shows that a small structured store beats raw transcript even when nothing has been evicted."
+        }
+      ]
     }
   ],
   "sections": [

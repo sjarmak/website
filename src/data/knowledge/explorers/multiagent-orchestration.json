@@ -2833,6 +2833,25 @@
           "why": "Calibrated consensus is an open problem on this branch, and the paper supplies a negative result and a partial instrument. Agents grew more confident on wrong answers and an LLM judge could not anticipate consensus failures, while a small model over answer dynamics could. Each predicted error points to a different intervention: an evidence check before consensus, conflict resolution before failed recovery, re-querying after an unknown answer. The paper measures warning accuracy and does not run those interventions, and the taxonomy itself was built with GPT-5.4-nano and GPT-4.1-mini."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261036264S",
+      "title": "The Inbox as a Coordination Primitive for LLM Agent Societies",
+      "firstAuthor": "Sreedhar, Karthik",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.36264",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261036264S",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "The paper splits agent communication into push, where the sender decides when a message enters the recipient's context, and pull, where messages wait in an inbox outside the context until the recipient's rules select them. An inbox is four privately set rules: what to read, what to keep, what refundable deposit a sender may post for reading priority, and what a reply may disclose. In group formation under spam heavy enough that arrival-order reading finds none of the relevant agents, reading paid mail first with a directory or matcher finds about 60% of them at 1,000, 4,000 and 16,000 agents. On the SNAP email-Eu-core contact graph (1,005 members), a request missed at one inbox cannot be forwarded, so losses compound with hops: when half the agents read paid mail first, direct search keeps 42% to 53% of full-adoption reach while forwarded search keeps 26%, 10% and 5% as the network grows. Sorting into folders loses requests even without spam, because the model often files genuine requests as junk.",
+          "why": "The protocols this branch tracks standardize delivery. This paper shows delivery is not the constraint under load: the recipient's reading policy decides which coordination can happen at all, and because each agent's rules are private yet gate every agent behind it on a forwarding path, the inbox is part of the coordination layer, not a client detail. The partial-adoption result also warns that one well-designed agent does little for multi-hop routing when its neighbors read in arrival order."
+        }
+      ]
     }
   ],
   "sections": [

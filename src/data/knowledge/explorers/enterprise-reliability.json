@@ -4053,6 +4053,25 @@
           "why": "Team structure changed how these systems failed more than whether they failed, and the failure types structure did not move are the ones most tied to the outcome. Adding agents or a supervisor without an evidence check buys little, and same-model teams agree easily because they share blind spots. The comparisons cover debate, roles and hierarchy on fixed-round tasks, not dynamic task graphs."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261037434W",
+      "title": "FeatureArc: Benchmarking Coding Agents on Evolving Features",
+      "firstAuthor": "Wang, Yunlong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.37434",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261037434W",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Single-request scores overstate delegated feature work. Over 10 agents on 73 tasks, pooled success falls from 62.7% at the first stage to 28.5% on the whole feature; every agent loses 26.0 to 38.4 points, and Claude Opus 5.5 passes 83.6% of first stages but completes 49.3% of features. Rankings mostly hold (Spearman 0.87 between first stage and chain gate). Grading only the last stage also misleads: 69 of the 273 runs that pass the final stage gate (25.3%) fail the whole-feature check. Failures come early and persist: 36.2% of runs fail the first stage, another 20.7% first fail the second, next-stage F2P success is 70.2% after a passed stage and 22.6% after a failed one, only 14 of 525 runs with a failed stage recover, and chains of five or more stages pass 1.5% of the time.",
+          "why": "For assurance, where the check is placed decides what risk it sees. Grading each step in isolation, or only the latest step, misses most of the failure in multi-step unattended work, because 72.9% of failed later stages carry defects left from earlier ones. The chain gate, whole-feature F2P and P2P suites run on the final workspace, is an execution-grounded check a team can reproduce, and the result argues for checkpoints that retest earlier stages before an agent is trusted to extend its own code without review."
+        }
+      ]
     }
   ],
   "sections": [

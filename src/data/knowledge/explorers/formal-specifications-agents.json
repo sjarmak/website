@@ -3606,6 +3606,44 @@
           "why": "This is a concrete repair for the weak-oracle problem this theme tracks: an assertion can hold because the feature works or because the feature never ran, and the test alone cannot tell which. Positive controls make that precondition explicit and checkable. The source analysis adds a structural signal pass rates usually hide: at equal size, more fragmented harnesses scored lower."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261037434W",
+      "title": "FeatureArc: Benchmarking Coding Agents on Evolving Features",
+      "firstAuthor": "Wang, Yunlong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.37434",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261037434W",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "FeatureArc recovers same-feature chains of 2 to 10 stages from repository histories in Python, TypeScript, Rust and Go, hands the agent one stage specification at a time in a single persistent workspace, and withholds hidden test results and rollback. A stage passes only when its hidden fail-to-pass (F2P) and pass-to-pass (P2P) suites both pass, and a separate chain gate tests the whole feature on the final code. The agent's own tests turn out to be a weak oracle: 73.8% of stages end on a green self-test, yet only 52.7% of those pass the hidden F2P suite, against 50.4% over all stages, and right after a failed stage only 24.5% of green self-tests are correct. Of 367 stages that end red, the agent calls the failure unrelated or pre-existing in 321, and only 23 of those reran the test on the stage's starting code to check. Self-tests that exercise every acceptance criterion pass F2P 54.9% of the time against 42.1% when they cover only some; most remaining misses are wrong logic or a misread specification.",
+          "why": "This branch asks what coding agents are judged by and why tests are not enough. FeatureArc measures the agent-written test as an oracle and finds it carries almost no signal about hidden correctness, even when it targets every stated criterion, because a check can exercise the right behavior while encoding the wrong expected result. The breakdown is in detection, not repair: in 94.9% of stages that follow a failure the agent never notices the earlier error, but when it does notice, it fixes it in 34 of 50 cases."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261036346J",
+      "title": "Your Wish Is My Commit: Over-Compliant Refactoring in AI Coding Agents",
+      "firstAuthor": "Jiang, Haocong",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.36346",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261036346J",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "A simulated developer asks five models (GPT-5.4, GPT-5.4-mini and GPT-5.5 in Codex; Claude Opus 4.8 and Claude Sonnet 4.6 in Claude Code) to refactor already-clean Java code for 10 turns, never saying what to change. Only 454 of 3,000 turns leave the code unchanged. Before first stopping, models rewrite 8.22x (Sonnet 4.6) to 30.97x (GPT-5.4) the original size of the 50 algorithm files. Cognitive complexity, code smells and technical-debt ratio improve almost entirely in the first turn and then plateau, while coupling keeps rising, and every model performs many more Extract operations than Inline ones. Claude Opus 4.8 stops earliest on the algorithm suite (mean first stop near turn 3) but then accumulates the largest post-stop churn, 6.69x the codebase, and on the coursework programs it edits in 71.7% of the turns where it says no further change is needed.",
+          "why": "Functional benchmarks reward a correct change and never reward declining to make one, so restraint is one of the non-functional qualities this branch says no pass rate measures. The paper's six signals (pre- and post-convergence churn, edits that accompany a stop claim, rollback of agent-added code, delete-then-reintroduce loops, and repeated edits to the same region) make over-editing countable per session. The ablations remove the easy explanations: higher reasoning effort increased rollback and reimplementation, expert-style prompts increased churn, and the behavior persisted on large open-source Java repositories."
+        }
+      ]
     }
   ],
   "sections": [

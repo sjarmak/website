@@ -696,6 +696,25 @@
           "why": "Agentic search treats retrieval as an action taken at query time; this paper applies the same agency before any query arrives, with the builder learning what structure future searchers will need. Construction cost 178,926 tokens per document set and amortizes: at ten questions per corpus the trained builder used 33.8% fewer tokens per expected correct answer than the base builder, and the answerer still falls back to raw documents through provenance links when the synthetic layer omits a detail."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261037080H",
+      "title": "Tessera: Structure-Completed Evidence Units for Web Retrieval-Augmented Generation",
+      "firstAuthor": "Hua, Peichun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.37080",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261037080H",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Tracing quoted answer evidence from Wikipedia HTML to the reader in a hybrid dense and BM25 pipeline with a reranker, the paper finds evidence reaches the reader for 59.5% of 5,883 source-supported questions, although the top ten reranked chunks come from the right page for 92.7%. For 9.7% of questions one stored chunk holds all the evidence but misses the top three; putting it in the third slot lifts accuracy on them from 49.1% to 78.5%. Extraction drops 16% of quoted table cells, 40% of figure captions and 44% of table captions, against 1% of paragraph fragments, and 31% of surviving table cells sit in chunks without their column headers. Tessera keeps the top k-1 items and replaces the last slot with units rebuilt from the pages' HTML (table rows, list items, paragraphs), each carrying its page title, section path and headers, selected by a lexical prefilter and a cross-encoder. It adds 5 to 6 points on text and screenshot pipelines over 7,851 questions, beats fourteen alternatives at a matched budget, and 3K tokens with Tessera beat 12K tokens of chunks or tiles.",
+          "why": "It separates two jobs the original RAG design gives one object: a chunk sized for retrieval is a poor unit for the reader. Because the index, retriever and reader stay unchanged, the fix applies to existing text, screenshot and agentic pipelines, and the trace shows why fixes inside the coupled design fall short: re-extraction, neighboring chunks, structure prefixes and a four times larger reader budget each add at most 2.2 points."
+        }
+      ]
     }
   ],
   "sections": [
