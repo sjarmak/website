@@ -3644,6 +3644,25 @@
           "why": "Functional benchmarks reward a correct change and never reward declining to make one, so restraint is one of the non-functional qualities this branch says no pass rate measures. The paper's six signals (pre- and post-convergence churn, edits that accompany a stop claim, rollback of agent-added code, delete-then-reintroduce loops, and repeated edits to the same region) make over-editing countable per session. The ablations remove the easy explanations: higher reasoning effort increased rollback and reimplementation, expert-style prompts increased churn, and the behavior persisted on large open-source Java repositories."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261014460D",
+      "title": "Re-executing Coding-Agent Evaluations: Unchanged Decisions and Unresolved Policy Risk",
+      "firstAuthor": "Ding, Tianyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.14460",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261014460D",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "The test oracle that accepts a coding-agent patch is a property of the whole grading configuration, not of the tests. Ding and colleagues reconstruct Lego-RL's gold-bound Go module cache, validate it the usual way (the gold patch passes on all 11 selected tasks), and watch it reject 6 of 15 officially accepted alternatives from four models; on one Flipt task, three models each added a version of Masterminds/semver (v3.1.1 or v1.5.0) absent from the gold go.sum, and each resolved three of three baseline and restored runs and none under the cache. Every rejection recovered when the candidate's own declared dependencies were provisioned after submission. On the Darwin Gödel Machine archive, regrading the stored logs reproduced 5,999 of 6,006 verdicts, but live reruns disagreed with 23 archived verdicts in all six runs: seven traced to a revised reference test list, nine to required tests that fetch an external URL a network-isolated replay cannot reach, and seven on one Django task were never isolated and did not reproduce on a second host. In the SWE-bench Pro replay, 9 of 112 officially unresolved negative controls resolved in every run of every arm, so the replay does not reproduce the official rejection for them.",
+          "why": "This theme catalogs the leakage and weakness inside the tests coding agents are judged by. This paper adds a false negative that no test-augmentation fix addresses, because it is structured: it falls on correct solutions whose dependencies differ from the reference, and in RL the same error assigns a failed rollout's reward to a solved one. The authors keep acceptance and semantic correctness apart. Their claims concern acceptance losses, the quantity a leaderboard or reward consumes, and they state that semantic correctness requires separate validation, which is exactly the gap between passing tests and being correct that this branch exists to name."
+        }
+      ]
     }
   ],
   "sections": [

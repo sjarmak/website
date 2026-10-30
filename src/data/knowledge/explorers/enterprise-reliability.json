@@ -4072,6 +4072,25 @@
           "why": "For assurance, where the check is placed decides what risk it sees. Grading each step in isolation, or only the latest step, misses most of the failure in multi-step unattended work, because 72.9% of failed later stages carry defects left from earlier ones. The chain gate, whole-feature F2P and P2P suites run on the final workspace, is an execution-grounded check a team can reproduce, and the result argues for checkpoints that retest earlier stages before an agent is trusted to extend its own code without review."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261014460D",
+      "title": "Re-executing Coding-Agent Evaluations: Unchanged Decisions and Unresolved Policy Risk",
+      "firstAuthor": "Ding, Tianyu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.14460",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261014460D",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Ding and colleagues preregistered two re-execution studies of coding-agent test verdicts, sealing protocols, code, seeds and sample reservations in pushed commits before any confirmatory data. Study 1 replayed 312 officially accepted SWE-bench Pro v1 patches under the evaluator's offline option, three runs per arm in fresh four-CPU, 8 GiB, network-isolated containers (664 artefacts, 5,997 container runs). 281 patches were evaluable, from seven models on 110 tasks, and only the 59 Go patches on 25 tasks faced a configuration the no-network policy changes; the other 222 ran identical arms. None lost its verdict, so the preregistered gate returned KILL, but the post hoc one-sided 95% upper bound is 4.95% per candidate and 11.29% per task, neither of which excludes the 3% risk the study set out to test; 99 independent exposed candidates with zero rejections would be needed, and even all 91 Go tasks in the frame, eligible and rejection-free, would leave the task-level bound at 3.24%. In a deliberately selected feasibility stratum, a reconstructed gold-bound Go module cache passed the gold patch on all 11 tasks and rejected 6 of 15 accepted alternatives, every one recovered once its own declared dependencies were provisioned. Study 2 re-executed 1,929 archived Darwin Gödel Machine evaluations, three runs at four CPUs and three at a quarter CPU each. Best-node selection (100/200 against a runner-up at 87/200) and the arm ranking (100/200, 23/59, 14/60) did not move; only two cells were unstable, both on one Sphinx task. Yet 23 cells (1.19%) disagreed with the archived verdict in all six runs, seven of those did not recur on a second host, and rebuilt images changed 16 three-run majorities (0.83%).",
+          "why": "This branch asks for execution-grounded evaluation against an honest baseline, and this paper shows what that costs and what it fails to buy. A KILL on a preregistered gate is not a safety assurance when the policy-exposed stratum is too small to bound the risk. Validating a hermetic grader by passing the gold patch says nothing about accepted alternatives with different dependencies. An archive's verdicts drift with host, image and reference test list even when the decisions built on them survive. The paper's lessons, sample the policy-exposed stratum directly, preregister how intermittent crashes are handled, and check patch and grading inputs before replaying, are the grader-audit checklist this theme has lacked."
+        }
+      ]
     }
   ],
   "sections": [
