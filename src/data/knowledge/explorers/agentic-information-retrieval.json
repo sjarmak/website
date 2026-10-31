@@ -715,6 +715,25 @@
           "why": "It separates two jobs the original RAG design gives one object: a chunk sized for retrieval is a poor unit for the reader. Because the index, retriever and reader stay unchanged, the fix applies to existing text, screenshot and agentic pipelines, and the trace shows why fixes inside the coupled design fall short: re-extraction, neighboring chunks, structure prefixes and a four times larger reader budget each add at most 2.2 points."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261038854E",
+      "title": "Contextual Embeddings Beyond the Gold Chunk",
+      "firstAuthor": "Eslami, Sedigheh",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.38854",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261038854E",
+      "branches": [
+        "foundations"
+      ],
+      "notes": [
+        {
+          "branch": "foundations",
+          "takeaway": "Contextual embedding models encode a whole document in one pass and pool a vector per chunk, and they have been trained and graded on one gold chunk per query, which makes every sibling chunk a negative, including the one that names the entity or date the answer depends on. Eslami and colleagues replace gold-chunk labels with graded token-level relevance from Perplexity's query-aware context compression model, aggregated to whatever chunking a batch uses, and fit the embedder's chunk distribution to it with a KL loss alongside a document-level InfoNCE loss. Dropping the distillation term costs 15.2 points of Answer@10 on Q2D-Chunk and 14.6 points of nDCG@10 on ConTEB. On Q2D-Chunk, built from long production search queries whose answers sit in a median of four chunks per page and which labels evidence chunks separately, the 9B model reaches 86.4% Answer@10 against 83.9% for voyage-context-4 and 74.5% for its non-contextual sibling voyage-4-large, and covers every answer and evidence group in a median 1,954 tokens against 2,412 and 3,425. Non-contextual Nemotron-3-Embed-8B still leads on evidence recall (49.3% against 46.6% corpus-wide): context helps where the answer and evidence do not repeat the query's names, numbers or years, and adds little where they do.",
+          "why": "The foundations branch rests on a retriever finding the passage that answers. This paper argues that unit is wrong for RAG and for search agents: the reader also needs the chunk that identifies which lease, version or year the answer belongs to, and a single-gold benchmark gives no credit for retrieving it. Context-bench's lease case makes the failure concrete, with the same rent sentence repeated across thousands of near-identical contracts and the identifying address far away in each. Two results set expectations for anyone choosing an embedder. Context pays mainly in finding the right page and in pulling evidence from the whole corpus, not in ranking evidence inside a page already retrieved, where non-contextual models stay competitive. And the cost is not paid at query time: the compressor is only a training-time teacher, so the index still holds one vector per chunk."
+        }
+      ]
     }
   ],
   "sections": [

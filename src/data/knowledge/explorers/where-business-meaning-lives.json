@@ -2407,6 +2407,37 @@
           "why": "This theme holds that a result belongs to a model inside a scaffold. Self-HPO measures that dependence in both directions on one model: the harness and the weights each carry part of the gain, the joint gain exceeds their sum, and so neither can be credited alone. Its evolved harness changed execution and termination logic rather than prompts, which is the sense in which this map treats a semantic layer as a harness: it decides what happens to the model's output, not only what the model sees."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261037809O",
+      "title": "What Does an Ontology Catch? Curated, LLM-Generated and Data-Derived Ontologies as Checkers of LLM Agents over Knowledge Graphs",
+      "firstAuthor": "Orzechowski, Michal",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.37809",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261037809O",
+      "branches": [
+        "enforcement",
+        "context",
+        "gap"
+      ],
+      "notes": [
+        {
+          "branch": "enforcement",
+          "takeaway": "Orzechowski, Tawfiq and Kosciolek make the ontology-derived checker the thing under test. Seven agents answered 210 UniProt questions three times each by writing SPARQL; one compiler turned each ontology's domain, range, disjointness and declaration axioms into checks on the query and its bindings, and a flag triggered one retry. On real answers the curated ontology flagged 18.9% of wrong answers and 16.8% of correct ones, and its flags were right about as often as a random flag at the same rate (1.6 points better, with an interval spanning zero). The data-derived ontology flagged 3.5% of correct answers and the masked LLM-written ones 1.8%, but each caught fewer than one in ten wrong answers. Retrying whenever a query returns no rows caught 79.2% of artificial faults with no false alarm but only 2.5% of real wrong answers, because real wrong answers almost always return plausible rows. No ontology caught a change of meaning (COUNT to COUNT DISTINCT, MIN to MAX, a dropped grouping key), where a random flag at the curated check's rate would catch 44.9%, and in a blind audit almost none of the missed real errors, mostly wrong paths through the graph or wrong filters and scope, could be flagged by a structural check even over a correct schema. Combining the curated and data-derived checks gave no net detection gain, and the specific violation message did no detectably better than a generic request to re-check (0.2 points).",
+          "why": "This theme separates advice from mechanisms that make a class of wrong answer impossible. A schema-derived checker sits between the two: it cannot block an answer, only send the agent back, and this paper measures what that is worth. A check earns its place only on errors that running the query does not already expose, and the real agent errors that survive execution return rows and violate no type, so schema axioms have almost nothing to say about them. False alarms are the cost the enforcement argument tends to leave out: every undeclared term flags every correct answer that uses it, and retrying on the specific message fixed 28.3% of flagged wrong answers while corrupting 1.0% of flagged correct ones. An LLM judge caught more and was right more often than random, but acting on its reasons corrupted more correct answers than it fixed. Against the bar the authors borrow from Google's code review, effective false positives below 10%, every ontology check and the judge fell short by a wide margin on the generated questions."
+        },
+        {
+          "branch": "context",
+          "takeaway": "Each ontology was also rendered into the agent's prompt under a common token budget. Pooled over seven models, the data-derived ontology as context gave 2.1 points higher first-answer accuracy than the curated one (95% CI 0.9 to 3.4), a registered claim; equivalence within 3 points was not established for Qwen3.8 or Sonnet, and the difference did not replicate on Rhea. Giving the agent the same ontology that checks it weakened the check: the curated check caught 14.3 points fewer of the wrong answers produced with the curated ontology in the prompt than of those produced with the data-derived one, and the data-derived check showed the same pattern at 4.8 points. In the configuration the authors expect developers to deploy, data-derived context with a curated check, the retry gave each of the seven models a small gain or none on UniProt, and smaller gains or losses on the other graphs where retries were run.",
+          "why": "This theme asks how far written-down meaning gets a model. Here the published, expert-written schema was the worse document: a summary mined from the data, recording which classes each property actually connects, served the agents better than the ontology the graph's authors wrote. The effect is small and did not hold on a second graph. The overlap result applies to anyone who writes one document and uses it twice: a checker built from the text the agent was given shares the agent's blind spots."
+        },
+        {
+          "branch": "gap",
+          "takeaway": "Every curated ontology studied disagreed with its own data. UniProt's declares up:maximum as xsd:float while all 139 of its values are integers, and five data properties declared functional carry two distinct values for some subjects. Rhea's omits four properties the data uses between 15,032 and 90,295 times each. On the private graph of nearly 10^9 triples, 94.2% of triples use an identifier other than the ontology's own, mostly renamings of declared terms, and 19.9% use a term with no counterpart in it. In a blind audit of the curated check's false alarms, most came from a term the ontology does not declare and most of the rest from a closed-world reading of its axioms, and every audited false alarm was a correct answer. A summary derived from the data, or an ontology an LLM writes from a masked summary at under one US dollar each, raised fewer false alarms.",
+          "why": "This theme starts from the premise that a schema completely describes storage and says nothing about meaning. On these graphs the published schema fails even the first half: it leaves out terms the data uses heavily and asserts constraints the data breaks, so the mapping problem starts before any question is asked. The authors' standard follows directly: an ontology is a reliable check only if it declares every term its data uses and its axioms hold on that data. Their remedy is to publish the data-derived summary alongside the ontology or validate the ontology against it before each release, an audit any authored semantic model needs against the store it describes."
+        }
+      ]
     }
   ],
   "sections": [

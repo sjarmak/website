@@ -4091,6 +4091,87 @@
           "why": "This branch asks for execution-grounded evaluation against an honest baseline, and this paper shows what that costs and what it fails to buy. A KILL on a preregistered gate is not a safety assurance when the policy-exposed stratum is too small to bound the risk. Validating a hermetic grader by passing the gold patch says nothing about accepted alternatives with different dependencies. An archive's verdicts drift with host, image and reference test list even when the decisions built on them survive. The paper's lessons, sample the policy-exposed stratum directly, preregister how intermittent crashes are handled, and check patch and grading inputs before replaying, are the grader-audit checklist this theme has lacked."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261037734S",
+      "title": "When Skills Tell Agents Not to Ask: A Large-Scale Study of Oversight Directives in Agent Skills",
+      "firstAuthor": "Sanko, Timofey",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.37734",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261037734S",
+      "branches": [
+        "human",
+        "security"
+      ],
+      "notes": [
+        {
+          "branch": "human",
+          "takeaway": "Sanko and Tian labelled 2,097 SKILL.md units by hand and scaled their codebook with a detector across 1.53 million English skills from GitSkills. In the human-labelled sample, 13.3% of oversight-related candidate units loosen oversight and 36.4% tighten it, and 5.8% of English skills (about one in seventeen) carry at least one loosening directive. Loosening works mainly through permission flags (33.9%), skipped confirmation (27.4%) and instructions not to stop (16.0%), and 70.1% of it applies unconditionally rather than only in CI or with user authorization. Among the most-copied units, acting without telling the user becomes the top mechanism (22.6%, against 4.5% in the prevalence sample). At equal amounts of oversight language, skills with shell code blocks, package installs or sudo have 1.7 to 1.8 times the odds of a loosening directive and no higher odds of tightening; git writes are the exception, with 2.01 times the odds of tightening, typically rules against force-pushing or committing without approval.",
+          "why": "This branch asks whether humans stay on the reasoning chain, and the paper shows the chain being cut in shared configuration before any agent runs. Approval prompts and stop-when-blocked rules are often checkpoints that exist only because an instruction asks for them, so one line in a widely copied skill removes them for every agent that loads it, and the removal concentrates in skills that execute code, where a skipped confirmation matters most. The remedy the authors propose is narrow: a one-line scope clause such as \"pass --yes only in CI\" keeps the convenience and restores the checkpoint everywhere else, and agent vendors can warn about unscoped loosening at install time."
+        },
+        {
+          "branch": "security",
+          "takeaway": "Loosening spreads from upstream, not from adopters. Copying does not amplify it (5.8% of distinct skills against 5.4% of all occurrences), 93.4% of near-duplicate variants leave their ancestor's oversight directives untouched, 2.4% of loosening-carrying families account for half of all copies of loosening-carrying skills, and 960 of 86,048 distinct loosening units (1.1%) account for half of all loosening occurrences. 12,484 English skills (0.82%) pair a loosening directive with destructive commands, curl | sh or sudo. Two vendor scanners audited on 400 gold units (61 loosening) miss most of it. Offline, Cisco AI Defense skill-scanner reaches F1 0.03 and NVIDIA SkillSpector 0.21, below plain keyword matching at 0.33. With GPT-5.4 analysis enabled, recall rises to 0.15 and 0.46, the two together reach recall 0.51 at precision 0.28, and 23% to 29% of flags land on tightening directives (13% for Cisco with LLM analysis). The same GPT-5.4 prompted with the oversight codebook reaches precision 0.71, recall 0.61 and F1 0.65.",
+          "why": "Security guidance already lists human approval of high-risk actions as a mitigation for prompt injection, so a skill that tells an agent not to ask also removes the check that would catch an injected instruction or a misread task. Scanners that treat skills as a malware problem miss this because a loosening directive contains no attack; the paper shows the failure is the question asked, not the model behind it. For governance the leverage point is the skill supply chain: reviewing the 960 most common loosening units by hand covers half of all loosening occurrences, and editing the 100 families carrying the most loosening reaches 23% of loosening-carrying skill occurrences."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261039468N",
+      "title": "Soei: Structured Observability of Evidence and Intent for Multi-Agent AI Software Engineering",
+      "firstAuthor": "Nayeem Khan, Mohammed",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.39468",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261039468N",
+      "branches": [
+        "observability",
+        "eval",
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "Nayeem Khan and Sarun Kumar ran a passive observer over 45 real VS Code Copilot agent-mode sessions from one developer (102,233 raw records, 20,577 tool executions, 2,336 human-to-agent episodes, 23 April to 5 October 2026) and measured what a transcript or start-event view gets wrong. 40 of 3,548 edit requests (1.1%, in 30 episodes) never succeeded, so an observer that records a mutation at request time shows about 1 in 90 edits as applied when it never happened. 42% of sessions span more than 24 hours, and the 6 transcripts above 2 MiB hold 48.1% of all bytes, which a 2 MiB replay window would not reconstruct after a restart. 1,326 raw records in 16 of 45 sessions contain credential-like strings (208 high-confidence token matches), mostly in agent messages (654) and tool arguments (628). Soei's answer is one append-only, hash-chained ledger of normalised events with start/complete acknowledgement pairing and a privacy gate before persistence. On the corpus it reduced 76.1 MB of transcripts to a 15.2 MB ledger (19.96%) with zero stored content or secret matches, verified the chain at about 126k events/s, replayed to identical digests, and detected a single flipped acknowledgement.",
+          "why": "This branch holds that transcripts are not observability, and the paper turns that into measured failure modes: views that render requested state instead of acknowledged state, bounded history that drops the longest sessions, and raw logs that put secrets on screen. Every Soei view is a deterministic projection of one tamper-evident record, and every inferred edge carries its confidence, inference version and supporting event ids, so a supervisor who asks why a statement is shown gets raw evidence back. The cost figures address the usual objection: five months of one developer's agent activity fits in a 15 MB ledger that verifies in a third of a second."
+        },
+        {
+          "branch": "eval",
+          "takeaway": "Agent-reported completion and independent verification are different quantities. With a rule-based proof classifier revised over four versions and blind-audited on 30 episodes per version, 224 of 893 code-editing episodes (25.1%) end with no independent check after the last edit; corrected for audited precision of 83.3% on the unverified label and 96.7% on the verified label, the estimate is 23.4% (95% CI 17.1% to 35.7%). 186 of 322 to-dos the agent marked complete after editing (57.8%) had no verification between the edit and the completion. When agents do verify, they mostly run the changed thing (exec 40.3%, UI 20.5%, smoke 15.6%); formal tests are 166 of 3,697 verification actions (4.5%), and the first classifier version, which missed import checks and test-named scripts, reported 42.1% unverified. The authors use these as golden-harness baselines (unverified hand-back rate 23.4%, claim precision 42.2%) and propose autonomy levels L0 to L4 that an agent earns by meeting evidence gates and loses on regression.",
+          "why": "This branch asks for evaluation grounded in execution against a real baseline, and here the baseline is workplace sessions rather than a benchmark: a human was at the end of every episode and about one in four code changes still came back unverified. More than half of the to-dos an agent marks complete after editing have no proof behind them, so a dashboard that renders completed to-dos as delivered work overstates what was done. The audit history shows how easily a verification metric is mis-specified, since agents mostly verify by executing, probing localhost or opening a browser rather than running tests. Verified here means an independent check ran after the last edit, not that the code is correct, and the prototype detects that a check ran but not whether it passed."
+        },
+        {
+          "branch": "recovery",
+          "takeaway": "Session hand-offs in real work are slow. Content lineage over acknowledged writes and reads found 292 cross-session links across 24 distinct session pairs, with a median write-to-read gap of 12,742 minutes (about 8.8 days); only 4.5% of links fall within 10 minutes. A temporal heuristic that pairs sessions starting within 10 minutes of another's end flagged 7 pairs, 6 of them confirmed by lineage (85.7% precision), and recovered 6 of the 24 lineage-linked pairs (25.0% recall). Soei grades hand-offs from H0 (temporal adjacency) through H2 (a session used an artifact another session generated) to H3 (H2 plus an explicit receipt, of which the corpus had none), and its ledger keeps per-source checkpoints and segment manifests so the view after a crash equals the view before it.",
+          "why": "Durable state beats conversational handoff, and this paper shows why a timing rule cannot stand in for it: reuse between sessions happens across hours and weeks, so a heuristic that is right when it fires still misses three quarters of the sessions that build on each other's work, while lineage over a durable record of acknowledged writes and reads catches all of them. Lineage here is path-level, so an overwrite between write and read could create a spurious link; the authors name content-digest lineage as the next step and as the gate for multi-agent autonomy."
+        }
+      ]
+    },
+    {
+      "bibcode": "2026arXiv261038610L",
+      "title": "Repairs for Whom? Evaluator-Executor Mismatch in Selecting Repairs for Failed LLM Agents",
+      "firstAuthor": "Liao, Yijun",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.38610",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261038610L",
+      "branches": [
+        "eval",
+        "recovery"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "Liao and Liang hold failed trajectories and candidate single-step repairs fixed, label every candidate with held-out rollouts of the deployed agent, and measure how much deployment value each evaluator's pick gives up against selection with the deployed agent's own rollouts. On unscreened failures of Qwen2.5-7B and Llama-3.1-8B, all ten pre-specified primary tests held after Holm correction: greedy replay loses 0.08 to 0.13 in success probability in ALFWorld and 0.06 to 0.13 in reward in WebShop, and choosing with Qwen2.5-14B rollouts at five per candidate loses 0.25 in ALFWorld. WebShop's losses look small in absolute terms but forgo 41 to 55% of the attainable gain. More substitute samples close the gap slowly: twenty 14B rollouts per candidate select repairs worth 0.63 to the 7B agent, the value of one of its own rollouts, below its greedy replay (0.69) or five of its own (0.82). On 37 contested trajectories, fresh rollouts show the 7B agent preferring its own pick by 0.33 and the 14B model preferring its own by 0.18. On the screened pools an LLM judge reading the log loses 0.53 in ALFWorld, where the log hides what closed containers hold, and published acceptance rules (two of three replays succeed, a single replay flips the outcome) lose 0.23 to 0.43 because many accepted repairs succeeded by chance. The executor also moves labels: in ALFWorld the 14B model's best repair position agrees with the deployed agent's in 32% of trajectories, against 62% between two halves of the agent's own rollouts, and rankings of 17 selection methods correlate with the deployed agent's at Kendall tau 0.51 and 0.46, each executor ranking first the method that uses its own rollouts.",
+          "why": "This branch asks for evaluation grounded in execution, and this paper shows that execution is not enough when the wrong policy executes. Greedy replay, a stronger model's rollouts, a solvability oracle and an LLM judge all run or reason about the continuation, and each estimates a different quantity from the success of the agent that will carry the repair out. The selection-loss protocol (fixed candidates, held-out deployed-policy labels, cross-fitted matched selection, a positive control against random selection) is a template for auditing any evaluator that stands in for production behavior. Its rule for failure-attribution benchmarks applies to agent evals generally: a label defined by counterfactual replay measures value for the replaying executor and should name it."
+        },
+        {
+          "branch": "recovery",
+          "takeaway": "Verifying with the deployed agent is cheap when good candidates exist. Three of its rollouts per candidate lose 0.02 on the unscreened 7B ALFWorld pool relative to five, while greedy replay at a third of that budget loses 0.13. Environment signals know what to change but not where: the planner's action is the best candidate in 29 of 30 screened ALFWorld trajectories, yet the best net gain differs by 0.51 on average across a trajectory's three positions. A screen that keeps only the privileged signal's candidate at each position and spends deployed-agent rollouts on the survivors comes within 0.009 of matched selection on screened ALFWorld with 19% of its rollouts, and loses 0.04 on the unscreened 7B pool against 0.55 for keeping Qwen3.8-flash's first proposal. It fails in WebShop, where the privileged action is the best candidate in only 29% and 20% of trajectories and the screen loses 0.26 on the Llama pool, more than greedy replay. Without a privileged signal the candidates are the bottleneck: an LLM that reads the log, names a step and proposes two actions, applied when the deployed agent succeeds with one at least twice in three runs, gains 0.32 against 0.22 for its first proposal unverified, but the better of its two proposals is worth only 0.37 in hindsight, against 0.64 for matched selection over LLM-proposed candidates at three fixed positions.",
+          "why": "Recovery here means re-entering a failed run at a restored state and substituting one action, which works because each environment can be restored exactly to any history by replaying its action prefix. Given that durable state, the paper turns repair into a budgeted procedure: a privileged signal proposes what to change, a few rollouts of the agent that will execute decide where, and no repair is accepted on one lucky replay. It also marks the limit. Where no signal knows what to change, better verification cannot rescue a weak candidate set, so the investment belongs in proposing candidates."
+        }
+      ]
     }
   ],
   "sections": [

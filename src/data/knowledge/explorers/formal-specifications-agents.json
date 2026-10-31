@@ -3663,6 +3663,25 @@
           "why": "This theme catalogs the leakage and weakness inside the tests coding agents are judged by. This paper adds a false negative that no test-augmentation fix addresses, because it is structured: it falls on correct solutions whose dependencies differ from the reference, and in RL the same error assigns a failed rollout's reward to a solved one. The authors keep acceptance and semantic correctness apart. Their claims concern acceptance losses, the quantity a leaderboard or reward consumes, and they state that semantic correctness requires separate validation, which is exactly the gap between passing tests and being correct that this branch exists to name."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261039417J",
+      "title": "Well-Specified and Well-Tested? Assessing SWE-bench-Style Datasets with a Self-Evolving Agent",
+      "firstAuthor": "Jiang, Zhonghao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.39417",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261039417J",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Jiang and colleagues built SWE-TQ from the instances on which every SWE-bench and Multi-SWE-bench annotator agreed, then hand-removed two recurring annotation errors: tasks marked well-specified whose key information sits behind external links the agent cannot open, and test suites marked adequate that assert an exact error message the task never states. In the held-out splits, underspecified tasks are rare (6.0% Python, 4.5% across seven other languages) and inadequate test suites are not (33.9% and 17.8%). ExLabel, which retrieves judgment rules distilled by self-reflection from earlier annotations, had the best F1 in all 12 combinations of task, subset and backbone against direct prompting, few-shot retrieval, the fixed-rubric SPICE annotator, Codex and Claude Code. The two repository-exploring agents topped out at 52.6% F1 while spending 25.6k to 265.5k tokens per instance; in the paper's Django case they found neighbouring deprecation tests that also match exact messages and took that as proof the check was intended. Removing the experience bank cut Python test-coverage F1 from 79.4% to 12.7%. Filtering 5k SWE-rebench instances with ExLabel left 1,087 resolved trajectories, and Qwen3.5-9B-Base fine-tuned on them resolved 66.2% of SWE-bench Verified, against 54.4% when trained on all 2,309.",
+          "why": "This branch asks whether the tests used to judge coding agents can carry the verdict. Here human annotators unanimously call a third of the Python test-coverage instances inadequate, and the dominant failure is over-specification: a test that pins the golden patch's exact warning or error text rejects a correct fix worded differently. The case study matters for anyone auditing a benchmark, because repository exploration does not catch this. A codebase's habit of asserting exact messages shows how its developers write tests, not whether the tests accept every valid solution. The training result makes the same point from the other side: fewer, cleaner tasks beat more tasks."
+        }
+      ]
     }
   ],
   "sections": [
