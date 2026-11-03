@@ -495,3 +495,144 @@
     agents multiply merges.
   tags: [source-control, git, ci, monorepo, agentic-coding]
   added: 2026-10-23
+
+- title: "Self-reinforcing quality: adopting the verification pattern"
+  url: https://lethain.com/adopting-verification-pattern/
+  category: Agentic coding
+  kind: article
+  note: >-
+    Will Larson on how Imprint makes agent-written code check itself. Every
+    PR carries a verifications/{pr_num}.md file listing what the harness
+    verified and what it could not, and a draft cannot be marked ready
+    without it. An AI reviewer and humans comment, with /dismiss for
+    rejected comments, and a daily maintain-verification skill refreshes
+    feature maps and files issues for verification gaps. He argues for one
+    central guidance corpus that raises the floor for everyone. Read for a
+    concrete per-PR verification record that a team can copy.
+  tags: [verification, code-review, agent-harness, ci, engineering-management]
+  added: 2026-11-03
+
+- title: "The Skill of Using AI Agents Well"
+  url: https://www.lesswrong.com/posts/9xAwybDhtgzGYPnbs/the-skill-of-using-ai-agents-well
+  category: Agentic coding
+  kind: article
+  note: >-
+    A LessWrong practitioner's list for solo work with Claude Code and Codex
+    CLI, built on the claim that the user's attention is the bottleneck. Use
+    the strongest model at maximum effort, run parallel sessions in git
+    worktrees, keep verbose logs so the agent debugs from traces, switch
+    models on a bad day, have a fresh session review the work, and cut
+    permission prompts with allowlists, an AI reviewer or a sandbox. Comments
+    push containers. Worth reading for a checklist to compare against our
+    own seat setup.
+  tags: [claude-code, codex, worktrees, workflow, permissions]
+  added: 2026-11-03
+
+- title: "Craft Anything"
+  url: https://github.com/storytold/craft-anything
+  category: Agentic coding
+  kind: repo
+  note: >-
+    A pure-Rust reverse-engineering engine with 314 tools that inspects a
+    website, app, game or file, then hands the findings to a coding agent
+    (Claude Code first) to build a new version, compare it with the original
+    and refine. Ships as an egui desktop app, a CLI and an MCP server, with
+    optional Ghidra integration. Early alpha, needs Rust 1.97 or later,
+    MIT or Apache-2.0. Read for how it structures the inspect, rebuild and
+    compare loop as agent tools.
+  tags: [reverse-engineering, rust, mcp, claude-code, ghidra]
+  added: 2026-11-03
+
+- title: "How to give Cursor and Claude Code product context"
+  url: https://atono.io/blog/give-cursor-claude-code-product-context
+  category: Agentic coding
+  kind: article
+  note: >-
+    A vendor post from Atono comparing four ways to get product intent into
+    a coding agent: rules files such as CLAUDE.md, MCP connections to docs
+    in Notion, Drive or Confluence, work systems such as Linear, Jira or
+    Productboard, and a custom retrieval layer. It cites a 2026 study of
+    20,574 agent sessions where 38% of pushback was constraint violations,
+    27% misread intent and 23% inaccurate completion reports. Advice: use
+    the lightest source that answers consistently and check against
+    acceptance criteria. Read for the failure breakdown, not the product.
+  tags: [context-engineering, claude-code, cursor, mcp, requirements]
+  added: 2026-11-03
+
+- title: "Why Agents Are Soon Only Going to Have 1 Tool"
+  url: https://www.philschmid.de/code-mode
+  category: Agentic coding
+  kind: article
+  note: >-
+    Philipp Schmid on Code Mode, also called programmatic tool calling: the
+    agent gets one exec(code) tool and writes a TypeScript or Python script
+    that chains calls in a sandbox, with tool schemas compiled to
+    TypeScript declarations. His example runs 55 API calls and returns a
+    one-line summary. He reports Pi, Factory Droid and OpenAI Codex use the
+    pattern, and Factory saw 3.5 more points on Terminal-Bench at 15% lower
+    spend. Existing CLIs need rework to fit. Read for the case against
+    long tool lists.
+  tags: [tool-calling, code-mode, mcp, sandbox, agent-design]
+  added: 2026-11-03
+
+- title: "Sparks of Weight-Space Programming"
+  url: https://rikiyat.github.io/blog/weight-space-programming/
+  category: AI models
+  kind: article
+  note: >-
+    An MIT CSAIL post (Takehi, Teoh, Zhang, Khattab) claiming a frontier LLM
+    can read and write network weights directly. It identified which of four
+    games a 17,253-weight policy was trained on, named the training language
+    of small character models, fixed a PPO policy by editing 3.5% of its
+    weights, and wrote MinAtar networks that beat PPO at 100 million steps.
+    Editing 0.016% of Qwen3.5-0.8B lifted MATH-500 from 7.9% to 48.1%. Read
+    with Sean Goedecke's rebuttal, filed next to it.
+  tags: [interpretability, weight-editing, llm-research, mechanistic-interpretability]
+  added: 2026-11-03
+
+- title: "LLMs are not superhuman at reading and writing neural network weights"
+  url: https://www.seangoedecke.com/llms-are-not-superhuman-at-reading-and-writing-neural-network-weights/
+  category: AI models
+  kind: article
+  note: >-
+    Sean Goedecke's rebuttal to the MIT weight-space post. The game
+    identification task falls to L2 norms of the first-layer weights,
+    because inputs map to labeled 8x8 grid cells, about three lines of
+    Python. The Qwen repair, which stopped looping after 32k tokens, came
+    from four pairs of looping and non-looping texts used to find and trim
+    the responsible weights, a standard method. His conclusion is that
+    training is still the practical route to better models. Read alongside
+    the original to calibrate the claims.
+  tags: [interpretability, weight-editing, llm-research, skepticism]
+  added: 2026-11-03
+
+- title: "Resisting Cognitive Surrender"
+  url: https://knlb.dev/essays/surrender
+  category: Agentic coding
+  kind: article
+  note: >-
+    Kunal on accepting agent output without understanding it, and what that
+    costs in hidden complexity, technical debt and lost understanding,
+    drawing on The Ironies of Automation. His remedies: name the tradeoff
+    you are making, set a personal "vibe limit" for risky changes, watch for automation bias, keep editing by hand, force
+    comprehension with annotated diffs, and add observability, shadow
+    traffic and deterministic checks when delegating. Read for a working
+    engineer's rules for staying in the loop.
+  tags: [automation-bias, code-review, comprehension, agentic-coding]
+  added: 2026-11-03
+
+- title: "The Coming Replication Revolution"
+  url: https://rogerpielkejr.substack.com/p/the-coming-replication-revolution
+  category: AI for science
+  kind: article
+  note: >-
+    Roger Pielke Jr. on AI-assisted replication. An anonymous AI audit of
+    138 Saez and Zucman papers flagged 147 serious problems but overturned
+    no core result and shared no code or data, and a Harvard working paper
+    found AI reviews preferred to human peer review. Pielke and Chris
+    Landsea redid their 1999 hurricane and ENSO paper with Claude Code: the
+    1925 to 1997 results held and the analysis gained 28 more seasons. He
+    proposes five norms for replications. Read for what changes when
+    checking a paper gets cheap.
+  tags: [replication, peer-review, claude-code, science-policy]
+  added: 2026-11-03
