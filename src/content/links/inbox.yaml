@@ -636,3 +636,19 @@
     checking a paper gets cheap.
   tags: [replication, peer-review, claude-code, science-policy]
   added: 2026-11-03
+
+- title: "How DoorDash reduced LLM search costs by 98% without losing accuracy"
+  url: https://careersatdoordash.com/blog/how-doordash-reduced-llm-search-costs-by-98-without-losing-accuracy/
+  category: RAG
+  kind: article
+  note: >-
+    DoorDash compares a provider-agnostic external search layer with the
+    models' native search. By DoorDash's own figures, external search scored
+    93.90% intent accuracy against 93.40% for native over 7,988 retail
+    queries. The 98% is the cut in search-provider charges and excludes model
+    inference. Native search still did better on the freshness-sensitive
+    FreshQA set across the five models tested. Read for when cheaper external
+    search holds up (stable retail or domain questions) and why a freshness
+    eval stays in the test set.
+  tags: [search, llm-cost, evaluation, rag]
+  added: 2026-11-03
