@@ -33,7 +33,7 @@ test("existing /media URLs are served by the isolated media service", () => {
   assert.deepEqual(mediaRoute, {
     type: "rewrite",
     source: "/media/*",
-    destination: "https://sjarmak-ai-media.onrender.com/*",
+    destination: "https://media.sjarmak.ai/*",
   });
 });
 
