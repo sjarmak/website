@@ -3682,6 +3682,25 @@
           "why": "This branch asks whether the tests used to judge coding agents can carry the verdict. Here human annotators unanimously call a third of the Python test-coverage instances inadequate, and the dominant failure is over-specification: a test that pins the golden patch's exact warning or error text rejects a correct fix worded differently. The case study matters for anyone auditing a benchmark, because repository exploration does not catch this. A codebase's habit of asserting exact messages shows how its developers write tests, not whether the tests accept every valid solution. The training result makes the same point from the other side: fewer, cleaner tasks beat more tasks."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261101181P",
+      "title": "Do Coding Agents Catch Their Own Bugs? (They Don't.)",
+      "firstAuthor": "Patel, Shaswat",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2611.01181",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261101181P",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Patel and colleagues pair merged pull requests in which a later PR repairs a defect an earlier one introduced, then keep only pairs whose tests behave correctly across four rebuilt repository states: 11,609 candidates yield 492 valid instances, from which 212 are drawn across 35 repositories in four languages. The agent gets only the first task. Its patch is scored on that PR's tests and on the later fix's held-out tests. Across eleven models the mean resolve rate is 60.7% and the mean foresight resolve rate (FRR), the share that passes both, is 14.8%. The best FRR is 24.5% (Claude Opus 5), and Qwen3.8 Flash Next resolves 92.0% of tasks with an FRR of 20.8%. A median of 88 days separated the two PRs, so these defects survived review and release. In 129 of 212 instances the later test fails on an assertion rather than an exception, a silent wrong result, and FRR on those is 12.5% against 18.5% on loud ones. Given the later PR's description instead, five models fix 91.2% of the same defects. A proactive edge-case prompt raised FRR by 13.2 points for GPT-5.6 Sol and 8.0 for Opus and lowered it for Claude Sonnet 5. The harnesses' own review commands (/self-review in Claude Code, /review in Codex) raised FRR for all three models tested and lowered resolve rate for all three, by 14.6 points for GPT-5.6 Sol.",
+          "why": "This branch asks what coding agents are judged by and why passing the stated tests is not enough. Foresight-SWE scores the gap directly: the task tests are the ones a maintainer wrote and merged, and the missed defect is whatever maintainers later had to fix. The split between 91.2% when the defect is named and 14.8% when it is not puts the failure in recognizing an unstated failure mode, not in repairing it, so the agent's own stopping signal, task tests passing, is the weak point. The review result complicates the common advice to add a self-review pass: it surfaced some latent defects and broke the original task more often. The authors note that FRR rewards anticipated defects without penalizing unnecessary defensive changes, so a higher score is not yet evidence of better code."
+        }
+      ]
     }
   ],
   "sections": [

@@ -2438,6 +2438,31 @@
           "why": "This theme starts from the premise that a schema completely describes storage and says nothing about meaning. On these graphs the published schema fails even the first half: it leaves out terms the data uses heavily and asserts constraints the data breaks, so the mapping problem starts before any question is asked. The authors' standard follows directly: an ontology is a reliable check only if it declares every term its data uses and its axioms hold on that data. Their remedy is to publish the data-derived summary alongside the ontology or validate the ontology against it before each release, an audit any authored semantic model needs against the store it describes."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261041090Z",
+      "title": "Verifying Text-to-SQL Queries under Changing Business Semantics",
+      "firstAuthor": "Zhu, Genliang",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.41090",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261041090Z",
+      "branches": [
+        "grading",
+        "context"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Zhu, Chen, Wang and Wang separate agreement on today's database from conformance on every legal database, and check fixed SQL against a named revision of a business definition (refund attribution, tax treatment, eligible statuses, exchange-rate date) under a knowledge cutoff. Test ledgers are synthesized from the public definitions without reading the query, must obey funding, refund and exchange-rate constraints, and an independently written Python evaluator labels every cell, including 300 ledgers per family no checker sees, with labels hashed before any checker runs. In the preregistered confirmation on 32 new revision families with SQL from gpt-oss-20b and gemma-4-12b, 144 of 192 query-definition cells were nonconforming and 63 of those returned the defined value on the current snapshot. Running the query on the snapshot caught 81. Eight ledgers in a generic legal order caught 127, and eight chosen to cover the definition's obligations caught 137, with zero false rejections among 36 agreeing cells (paired gain 6.9 points, family bootstrap 95% interval 2.1 to 13.6, exact sign-flip p = 0.0156). Scoring coverage against the current definition alone, or weighting every obligation equally, also caught 137, so the gain comes from covering the definition, not from knowing what changed. In the pilot, LLM judges given the same definition, schema and SQL rejected 29 and 32 of 33 agreeing cells. Checklist prompts tuned on development families moved them along a trade-off, 68 of 104 errors caught with 1 false rejection or 100 with 25, and neither reached the ledger check's 101 with none.",
+          "why": "This theme already carries Zhong, Yu and Klein's result that a single database instance cannot tell semantically different queries apart. This paper measures that failure for business definitions: execution against the current warehouse missed 63 of 144 wrong queries, because the data that separates two definitions (a refund in the following month, a non-unit exchange rate, a late-recorded event) was not there yet. Its scoring contract is the stricter one a benchmark could adopt. A query is bound to a requested revision and knowledge cutoff, a rejection must carry a replayable legal counterexample, and agreement is reported only as agreement on the recorded suite. The judge results show why a model verdict does not substitute for that: an untuned judge rejects nearly everything, a tuned one either misses about a third of the errors or still rejects most correct queries, and none gives a reason that can be replayed."
+        },
+        {
+          "branch": "context",
+          "takeaway": "In both local-model studies the prompt held the approved target definition, the schema, the request and a preview of the current data, and most of the resulting SQL still did not implement the definition. In the pilot's 24 test families, 104 of 144 cells were nonconforming, and 42 of 48 old queries carried forward after the definition changed no longer conformed. In the confirmation the counts were 144 of 192 and 56 of 64. The most frequent defect was arithmetic over separately aggregated sales and refund subtotals: with no qualifying refunds the refund subtotal is NULL, the difference becomes NULL, and an outer COALESCE returns zero. Others involved refund filters, exchange-rate dates and foreign currency, case-variant statuses and the knowledge cutoff. During development nearly every query applied SQLite integer division before rounding, and a dialect note alone did not change that, so the final prompt states the conversion formula outright. Regenerating each task three times at temperature 0.7 left 65 of 144 model, family and cell groups mixed between conforming and nonconforming samples.",
+          "why": "This theme asks how far writing the meaning down gets a model. Here the definition was written down and handed over with every query, and two small local models still produced SQL that matched it on the current data while disagreeing with it on legal data the warehouse could later contain. Supplying a definition does not establish that a query implements it, and a definition that is revised turns every cached or historical query into a revalidation obligation. The paper's controls keep that obligation bounded: in its authored old/new matrix, documentation-only and unrelated-metric revisions left queries agreeing, and a request for the historical revision stays valid. The scope is narrow, two models of 20B and 12B parameters on authored schemas, and the authors restrict their estimates to that frame."
+        }
+      ]
     }
   ],
   "sections": [
