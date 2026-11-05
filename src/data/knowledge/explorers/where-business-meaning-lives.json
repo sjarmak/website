@@ -2463,6 +2463,25 @@
           "why": "This theme asks how far writing the meaning down gets a model. Here the definition was written down and handed over with every query, and two small local models still produced SQL that matched it on the current data while disagreeing with it on legal data the warehouse could later contain. Supplying a definition does not establish that a query implements it, and a definition that is revised turns every cached or historical query into a revalidation obligation. The paper's controls keep that obligation bounded: in its authored old/new matrix, documentation-only and unrelated-metric revisions left queries agreeing, and a request for the historical revision stays valid. The scope is narrow, two models of 20B and 12B parameters on authored schemas, and the authors restrict their estimates to that frame."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260524183K",
+      "title": "AvalancheBench: Evaluating Enterprise Data Agents Through Latent World Recovery",
+      "firstAuthor": "Kleczek, Darek",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2605.24183",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260524183K",
+      "branches": [
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "grading",
+          "takeaway": "Kłeczek and co-authors at Snowflake and Brown generate the data from a latent world they specify in advance: customer personas with fixed population weights, product defect timelines, and one brand-wide shipping incident. The e-commerce case has 20 products, 23k transactions and 10k LLM-written reviews that carry no foreign key to the catalog. An 18-item rubric, derived from that latent world before any data exists, scores whether an agent recovers the segments, drivers and events, not whether its pipeline runs. Snowflake's Cortex Code agent on Claude Opus 4.7 scored 12.2% compiling to LOTUS, 17.0% compiling to AISQL, and 25.9% working interactively as an orchestrator, mean of three trials. A pipeline-completion benchmark would have recorded every one of these runs as a success: reports were produced, SQL executed, pipelines returned rows. The failures were structural. The compiled agent hard-coded plausible segments from a small sample of reviews instead of finding the golfer, patriotic and sports-fan personas in the data, and the compiled systems moved a product defect into the shipping-incident window, merging two events into one.",
+          "why": "This theme argues that the field's scores overstate correctness. Here the gap is measured for open-ended analysis, where no single reference SQL exists: execution success and a plausible report coexist with a quarter or less of the true structure recovered, and one wrong segmentation propagates into every downstream metric computed for groups that do not exist. A known generating world is one way to get ground truth for questions that have no reference query. The limits are stated by the authors: one synthetic use case, an LLM judge not yet calibrated against human experts, and a generator that cannot reproduce the quirks of real enterprise data."
+        }
+      ]
     }
   ],
   "sections": [
