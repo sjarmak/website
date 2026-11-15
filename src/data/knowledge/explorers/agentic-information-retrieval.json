@@ -734,6 +734,25 @@
           "why": "The foundations branch rests on a retriever finding the passage that answers. This paper argues that unit is wrong for RAG and for search agents: the reader also needs the chunk that identifies which lease, version or year the answer belongs to, and a single-gold benchmark gives no credit for retrieving it. Context-bench's lease case makes the failure concrete, with the same rent sentence repeated across thousands of near-identical contracts and the identifying address far away in each. Two results set expectations for anyone choosing an embedder. Context pays mainly in finding the right page and in pulling evidence from the whole corpus, not in ranking evidence inside a page already retrieved, where non-contextual models stay competitive. And the cost is not paid at query time: the compressor is only a training-time teacher, so the index still holds one vector per chunk."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260901870Y",
+      "title": "ArcticSwarm: Deferring Early Consensus in Long-Horizon Multi-Agent Research",
+      "firstAuthor": "Yoon, Soyoung",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2609.01870",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260901870Y",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "ArcticSwarm runs the search loop as a team: an orchestrator splits a BrowseComp question into tasks, browsing subagents retrieve with web_search and web_fetch (hybrid search over Arctic Embed L v2.0 with a reranker on the BrowseComp-Plus corpus), and findings go to a shared bulletin board. Isolation-mode tasks may post but not read the board, so an early candidate cannot steer their queries. Review verdicts (CHALLENGE, ALTERNATIVE, VERIFIED) are written per constraint and spawn new search tasks, so a failed check reopens retrieval instead of only rejecting the answer. A single subagent covers 128 distinct passages against 81 for an independent run, and ten isolated search paths cover 804 against 362 for ten independent runs and 618 without isolation. On all 830 BrowseComp-Plus questions with Qwen 3.5-27B it scores 82.6 percent; majority voting over single-agent rollouts tops out at 63.5 at N=40. On live-web BrowseComp with GPT-5 it scores 73.6 against 54.9 for OpenAI's deep research. Subagents compact full histories into summaries that keep candidates, evidence, open gaps and tried queries, and on the live web a compactor LLM shrinks fetched pages about 19x.",
+          "why": "Agentic search loops are usually studied one agent at a time, and parallel sampling is the default way to spend more compute. This paper shows that parallel loops which read each other's partial findings converge on the first candidate and stop exploring, and that independent runs with voting cannot add an answer no run retrieved. On about half of wrong cases the reference answer was already in the trajectory, so the remaining error is in judging retrieved candidates, which is what the review gates and the forced alternative-candidate search address. The retrieval-side lesson is that diversity of what gets fetched has to be designed in: gating who reads the shared store roughly doubled corpus coverage at the same number of search paths."
+        }
+      ]
     }
   ],
   "sections": [
