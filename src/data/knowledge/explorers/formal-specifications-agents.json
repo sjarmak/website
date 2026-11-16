@@ -3701,6 +3701,25 @@
           "why": "This branch asks what coding agents are judged by and why passing the stated tests is not enough. Foresight-SWE scores the gap directly: the task tests are the ones a maintainer wrote and merged, and the missed defect is whatever maintainers later had to fix. The split between 91.2% when the defect is named and 14.8% when it is not puts the failure in recognizing an unstated failure mode, not in repairing it, so the agent's own stopping signal, task tests passing, is the weak point. The review result complicates the common advice to add a self-review pass: it surfaced some latent defects and broke the original task more often. The authors note that FRR rewards anticipated defects without penalizing unnecessary defensive changes, so a higher score is not yet evidence of better code."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260818389N",
+      "title": "A Jagged Frontier: Evaluating Robustness of Code Agents to Semantics-Preserving Transformations",
+      "firstAuthor": "Najib Mahmud, Hasan",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.18389",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260818389N",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Najib Mahmud, Gupta and colleagues rewrite SWE-bench repositories with 14 semantics-preserving transformations (branch swaps, loop rewrites, local renames, dead code, decoy strings and methods that carry keywords from the issue), checked by differential testing against roughly 43,000 tests in SymPy, sqlfluff and xarray. Test files are left untouched, so the oracle is identical before and after. Each of 54 instances from SWE-bench Verified and Pro gets 20 runs on the original and one run on each of 20 random variants, across two scaffolds (mini-SWE agent, OpenCode) and four models. Mean resolve rate drops in 13 of 16 configurations and significantly in 6, by up to 6.7 points (Opus 4.5 under mini-SWE agent on Pro). No model ranking by robustness holds across scaffolds or benchmarks: Qwen 3.6-27B loses 0.2 points under mini-SWE agent on Verified and 5.5 under OpenCode. Among resolved runs, cost rises in all eight Verified configurations, by 4.0% to 22.9%. Three instances carry about two-thirds of the largest drop. Trajectories show agents grepping into decoy strings, rewriting the perturbed code, blaming a split string literal for a real test failure, and in one case reading git history and reverting the transformations.",
+          "why": "A resolve rate on a fixed benchmark snapshot is the main number coding agents are judged by. This paper shows that number moves under rewrites that change no behavior, that the movement depends on the model, the scaffold and the repository together, and that a pass-rate view hides a cost increase the agent pays even when it still succeeds. A leaderboard position does not transfer to a different scaffold or codebase."
+        }
+      ]
     }
   ],
   "sections": [
