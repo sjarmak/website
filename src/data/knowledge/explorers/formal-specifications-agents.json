@@ -3720,6 +3720,25 @@
           "why": "A resolve rate on a fixed benchmark snapshot is the main number coding agents are judged by. This paper shows that number moves under rewrites that change no behavior, that the movement depends on the model, the scaffold and the repository together, and that a pass-rate view hides a cost increase the agent pays even when it still succeeds. A leaderboard position does not transfer to a different scaffold or codebase."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261000890M",
+      "title": "Cross-Benchmark Transfer from RL on Agentic Coding Tasks",
+      "firstAuthor": "Mehta, Sushant",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.00890",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261000890M",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Mehta, Ritchie and Chen post-train Kimi K2.7 Code with one epoch of RL on 1,700 expert-built tasks whose reward is the fraction of hidden fail-to-pass checks passed, set to zero if any pass-to-pass test of existing behavior fails. Pass@1 rises on all six external benchmarks, from 4.7 points on SWE-Bench Pro to 20.0 on SWE-Marathon, including four benchmarks released after the training data was collected and two harnesses never used in training. Of 83 failed base runs on DeepSWE, the median still passed 86% of its target tests and 84% kept every pass-to-pass test. Paired trajectories show four failure modes the trained model avoids: dropped requirements, tests written around its own implementation instead of the specification, deleted behavior that had to stay, and validation against a reference built on the same wrong assumption.",
+          "why": "The base model's failures are near-misses that a pass rate scores the same as a total miss, and two of the four modes are failures of self-checking: the agent's own tests share its blind spots. The paper shows that a reward which enumerates requirements and hard-gates regressions changes how an agent checks its work, and that the change transfers across benchmarks. That makes the shape of the oracle, not only its strength, part of what determines agent correctness."
+        }
+      ]
     }
   ],
   "sections": [
