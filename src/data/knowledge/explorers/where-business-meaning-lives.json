@@ -2482,6 +2482,31 @@
           "why": "This theme argues that the field's scores overstate correctness. Here the gap is measured for open-ended analysis, where no single reference SQL exists: execution success and a plausible report coexist with a quarter or less of the true structure recovered, and one wrong segmentation propagates into every downstream metric computed for groups that do not exist. A known generating world is one way to get ground truth for questions that have no reference query. The limits are stated by the authors: one synthetic use case, an LLM judge not yet calibrated against human experts, and a generator that cannot reproduce the quirks of real enterprise data."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261030499L",
+      "title": "Can LLMs Improve Their Own Harness? A Controlled Study on ARC-AGI-3",
+      "firstAuthor": "Lehmann, Jens",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.30499",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261030499L",
+      "branches": [
+        "harness",
+        "improvement"
+      ],
+      "notes": [
+        {
+          "branch": "harness",
+          "takeaway": "Lehmann and Vahdati hold the model fixed and let it write the harness: each of nine model and effort conditions builds an ARC-AGI-3 game harness from a minimal repository through a fixed coding agent (OpenCode), three independent lineages per condition, 27 in all. The resulting designs range from compact direct model controllers to heuristic-first systems, strategist-executor hybrids, explicit world models, replay systems and inference-budget managers, and architectures differ even between replicates of the same condition. Held-out scores span zero to near ceiling. Single revisions move a lineage far in either direction with the model unchanged: one Sol-high revision that changed action budgeting, memory management and observations raised held-out RHAE from 29.24 to 53.56 at about the same cost, while a Sol-xhigh lineage that replaced response chaining with independent calls and bounded memory fell from 43.95 to 21.99 as cost per game dropped from $31.39 to $7.18. Human-steered harnesses on the same Opus 5 xhigh setting reach 100 RHAE on every public game, against a 39.95 mean for the autonomous revision-2 harnesses.",
+          "why": "This branch argues that a reported score belongs to a model inside a scaffold. Here the model is constant within a lineage and the harness alone moves held-out performance by more than 20 points in both directions, and moves cost independently of score. A result that names the model but not the harness is not reproducible."
+        },
+        {
+          "branch": "improvement",
+          "takeaway": "Each harness gets two revisions driven by traces, scores and costs from five development games, and every frozen snapshot is then scored on twenty held-out games that never feed back. Two revisions raise mean development RHAE by 8.42 points and held-out RHAE by 2.80 (95% interval -1.44 to 7.35), with 15 lineages gaining and 12 losing. The mean adaptation gap, development gain minus held-out gain, is 5.62 points (interval 1.78 to 9.77). Every one of the 54 revision episodes inspected item-level evidence, targeted an evidence-backed issue and passed its operational checks, yet held-out outcomes still varied in both directions. No revision kept its parent unchanged. A post hoc rule that deploys whichever snapshot scored best on development raises the held-out gain to 4.53 points (0.81 to 8.68), at $9.15 rather than $7.57 per game; the authors flag it as untested prospectively. A ten-run repeat of one frozen harness gives a standard deviation of 3.99 RHAE, the same order as the mean gain.",
+          "why": "This is the adaptive-holdout problem measured directly on an agent tuning loop: development gains overstate held-out gains by a quantified margin, and a disciplined process (evidence inspection, targeted edits, passing checks) does not close it. The paper separates generating a revision from deciding to deploy it and shows the deployment decision, with the parent kept as a baseline, is where gains are recovered."
+        }
+      ]
     }
   ],
   "sections": [
