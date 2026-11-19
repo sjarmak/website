@@ -3739,6 +3739,25 @@
           "why": "The base model's failures are near-misses that a pass rate scores the same as a total miss, and two of the four modes are failures of self-checking: the agent's own tests share its blind spots. The paper shows that a reward which enumerates requirements and hard-gates regressions changes how an agent checks its work, and that the change transfers across benchmarks. That makes the shape of the oracle, not only its strength, part of what determines agent correctness."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261024206D",
+      "title": "SWE-Bench Pro V2: A Cleaner, Harder-to-Game Coding Benchmark",
+      "firstAuthor": "Dan, Soham",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.24206",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261024206D",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Dan, Da and colleagues audited all 731 public SWE-Bench Pro tasks and repaired or retired 480 of them (66%). The largest defect classes were verifier or environment faults (228 repaired, 19 discarded), tests that require behavior the instruction never states (119 repaired, 22 discarded), and tests too weak to check the change (33 discarded, since engineers did not write new tests). In one flipt task the tests covered only error paths, so a getJSON that always returns false passed. Repairs edited instructions, never hidden tests, and each shipped only after a second engineer who had not seen the reference patch implemented the edited instruction and passed the hidden tests. Of 27 instruction repairs, 18 had been failed by every v1 configuration and 15 are now solved by all frontier systems.",
+          "why": "The paper puts numbers on how far tests-as-oracle drift from correctness in a widely reported benchmark: two thirds of tasks needed a fix, and many failures it attributed to agents were failures of the task. Its rule, state in the instruction whatever a hidden test checks but not how the reference implements it, is a concrete specification discipline for benchmark authors."
+        }
+      ]
     }
   ],
   "sections": [

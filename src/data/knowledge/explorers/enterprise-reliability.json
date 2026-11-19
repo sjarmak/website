@@ -4172,6 +4172,25 @@
           "why": "Recovery here means re-entering a failed run at a restored state and substituting one action, which works because each environment can be restored exactly to any history by replaying its action prefix. Given that durable state, the paper turns repair into a budgeted procedure: a privileged signal proposes what to change, a few rollouts of the agent that will execute decide where, and no repair is accepted on one lucky replay. It also marks the limit. Where no signal knows what to change, better verification cannot rescue a weak candidate set, so the investment belongs in proposing candidates."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261024206D",
+      "title": "SWE-Bench Pro V2: A Cleaner, Harder-to-Game Coding Benchmark",
+      "firstAuthor": "Dan, Soham",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.24206",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261024206D",
+      "branches": [
+        "eval"
+      ],
+      "notes": [
+        {
+          "branch": "eval",
+          "takeaway": "With the network open, 32 of 642 Claude Opus 5 runs contacted code hosts and 25 downloaded the task's own repository. Grading in the agent's own sandbox let a scripted agent that edits no source and replaces python3 with a script printing PASSED score 1, and let agents that could not fetch a dependency forge one in the Go module cache or a local GOPROXY. V2 allows only the model endpoint during the agent phase and re-grades the saved patch in a fresh container, which rejected every forgery the authors observed. On the cleaned set frontier systems reach 99.4%, and across three scaffolds the task explains 32% of the variance in solved-or-failed, the model 2.7% and the scaffold 0.3%; the scaffold mainly moves cost, from 1.3M to 2.6M tokens per solved task for Kimi K3.",
+          "why": "It shows that an execution-grounded score is only as sound as the boundary around execution: the grade must come from a container the agent never touched. It also shows that once tasks are correctly graded, sub-1% gaps among frontier systems are not capability differences, so comparisons should move to cost, time and regressions."
+        }
+      ]
     }
   ],
   "sections": [
