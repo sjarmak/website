@@ -2852,6 +2852,25 @@
           "why": "The protocols this branch tracks standardize delivery. This paper shows delivery is not the constraint under load: the recipient's reading policy decides which coordination can happen at all, and because each agent's rules are private yet gate every agent behind it on a forwarding path, the inbox is part of the coordination layer, not a client detail. The partial-adoption result also warns that one well-designed agent does little for multi-hop routing when its neighbors read in arrival order."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260823740C",
+      "title": "AgentRoom: Concurrent Multi-Agent Coding in a CRDT-Backed Shared Workspace",
+      "firstAuthor": "Cho, Seonglae",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.23740",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260823740C",
+      "branches": [
+        "frameworks"
+      ],
+      "notes": [
+        {
+          "branch": "frameworks",
+          "takeaway": "AgentRoom gives concurrent coding agents a shared filesystem merged by a character-level CRDT plus five MCP tools: claim, release, state, broadcast and read. A claim on a file another agent holds returns a conflict error, so ownership is enforced by the room rather than parsed from chat. On a 15-file ledger task at matched compute with Claude Sonnet 4.6, quality ordered ChatDev-style sequential pipeline 0.333, parallel-merge 0.456, solo 0.544, shared workspace without signalling 0.575, shared workspace plus collaboration prompt 0.588, full AgentRoom 0.669. In a small chat-backend comparison, one of two runs failed when both agents announced claims for the same file as free text and neither noticed.",
+          "why": "It isolates which part of a coordination pattern carries the gain: concurrency without coordination did worse than one agent because the second agent overwrote the first agent's files, and the largest observed step came from the structured claim channel, not the merge substrate or the prompt."
+        }
+      ]
     }
   ],
   "sections": [

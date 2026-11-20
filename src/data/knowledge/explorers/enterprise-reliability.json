@@ -4191,6 +4191,25 @@
           "why": "It shows that an execution-grounded score is only as sound as the boundary around execution: the grade must come from a container the agent never touched. It also shows that once tasks are correctly graded, sub-1% gaps among frontier systems are not capability differences, so comparisons should move to cost, time and regressions."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260823740C",
+      "title": "AgentRoom: Concurrent Multi-Agent Coding in a CRDT-Backed Shared Workspace",
+      "firstAuthor": "Cho, Seonglae",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.23740",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260823740C",
+      "branches": [
+        "topology"
+      ],
+      "notes": [
+        {
+          "branch": "topology",
+          "takeaway": "Across 12 model-by-task strata, a lone agent was 13.7 times as likely as a two-agent room to abandon a hard task by writing a one-file stub and exiting (95% CI 3.9 to 48), and run-to-run standard deviation fell 30 to 45%. Quality peaked at two agents (0.669) and declined at three (0.553) and four (0.489) while broadcast traffic grew super-linearly past three, so compute rose linearly for lower quality. Sequential role pipelines did worst: 4 of 6 genuine ChatDev-style runs ended in a one-file implementation abandonment, and 7 of 13 attempts crashed in the orchestrator before writing code.",
+          "why": "It gives a measured operating point for team size and shows the topology choice matters more than adding agents: uncoordinated fan-out and phase handoffs both amplified the single-agent failure mode, while two coordinated agents suppressed it."
+        }
+      ]
     }
   ],
   "sections": [
