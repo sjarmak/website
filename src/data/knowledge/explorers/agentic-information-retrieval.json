@@ -753,6 +753,25 @@
           "why": "Agentic search loops are usually studied one agent at a time, and parallel sampling is the default way to spend more compute. This paper shows that parallel loops which read each other's partial findings converge on the first candidate and stop exploring, and that independent runs with voting cannot add an answer no run retrieved. On about half of wrong cases the reference answer was already in the trajectory, so the remaining error is in judging retrieved candidates, which is what the review gates and the forced alternative-candidate search address. The retrieval-side lesson is that diversity of what gets fetched has to be designed in: gating who reads the shared store roughly doubled corpus coverage at the same number of search paths."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260820627P",
+      "title": "When Failures Propagate: Causal Failure Attribution in Agentic Retrieval-Augmented Generation",
+      "firstAuthor": "Pothuru, Lauren",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.20627",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260820627P",
+      "branches": [
+        "agentic-loops"
+      ],
+      "notes": [
+        {
+          "branch": "agentic-loops",
+          "takeaway": "Because each hop's sub-query depends on earlier evidence, a fault at one hop changes what the agent asks next. In content-corruption runs (GPT-4o-mini and Claude Haiku 4.5, HotpotQA and MuSiQue, BM25), 15% of hop-1 corruptions are copied into the answer, 58% are resisted and 26% derail it; 20 of 22 copied cases were corruptions of the answer fact itself, against 0 of 40 for salient-entity corruptions. Re-retrieval from the clean corpus heals many faults, with content-fault recovery between 0.54 and 0.85. At depth 2, suffix regeneration localizes 0.11 and frozen-hop repair 0.67 (18 failed cases, exploratory).",
+          "why": "It shows the loop both spreads and repairs errors, so answer accuracy alone cannot tell a robust retrieval loop from a lucky one. Which repair probe works depends on whether later hops depend on the corrupted fact, which is a design input for any loop that tries to self-diagnose."
+        }
+      ]
     }
   ],
   "sections": [

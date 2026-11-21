@@ -4210,6 +4210,25 @@
           "why": "It gives a measured operating point for team size and shows the topology choice matters more than adding agents: uncoordinated fan-out and phase handoffs both amplified the single-agent failure mode, while two coordinated agents suppressed it."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv260820627P",
+      "title": "When Failures Propagate: Causal Failure Attribution in Agentic Retrieval-Augmented Generation",
+      "firstAuthor": "Pothuru, Lauren",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2608.20627",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv260820627P",
+      "branches": [
+        "observability"
+      ],
+      "notes": [
+        {
+          "branch": "observability",
+          "takeaway": "AgenticRAG-FP injects a known fault at one hop of a multi-hop RAG trajectory, lets the same agent re-run every later hop, then asks diagnosers to name the injected hop from the resulting trace. On the strict dense Claude Haiku 4.5 MuSiQue sweep, the coverage-based localizer finds the hop 0.91 of the time when the fault is at hop 1 and 0.00 at hops 2 and 3 (43, 36 and 21 failed trajectories). An LLM judge reading the trace scores 0.25 to 0.43 at later hops and frozen-hop counterfactual repair 0.25 to 0.48. Only 3 of 129 content corruptions show up in a later sub-query.",
+          "why": "The final trace often no longer carries the evidence needed to find the root cause: a regenerated suffix overwrites the local signature of the fault, and watching query text misses almost all propagation. Root-cause attribution needs interventions or replay with the downstream hops held fixed, not a better threshold on the logged transcript."
+        }
+      ]
     }
   ],
   "sections": [
