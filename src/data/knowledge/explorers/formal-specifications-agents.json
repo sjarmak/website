@@ -3758,6 +3758,25 @@
           "why": "The paper puts numbers on how far tests-as-oracle drift from correctness in a widely reported benchmark: two thirds of tasks needed a fix, and many failures it attributed to agents were failures of the task. Its rule, state in the instruction whatever a hidden test checks but not how the reference implements it, is a concrete specification discipline for benchmark authors."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261014629N",
+      "title": "Executable but Unfaithful: Mock Object, Stub, and Assertion Generation by LLMs and Coding Agents",
+      "firstAuthor": "Ning, Hao",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.14629",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261014629N",
+      "branches": [
+        "agent-quality"
+      ],
+      "notes": [
+        {
+          "branch": "agent-quality",
+          "takeaway": "Ning and colleagues built MockBench, 165 tasks from real Java and Python projects with validated reference mock objects, stubs and mock assertions, and evaluated six LLMs and three coding agents (mini-SWE-agent, OpenCode, Claude Code). Execution feedback gets agents' tests to run: with a DeepSeek backbone all three agents reached a 100% test pass rate against 61.0% for standalone DeepSeek. It does not make them faithful. On Python, standalone LLMs beat agents by 18.14 points of F1 on stubs and 27.80 on mock assertions, and under mutation testing the agents' Java tests matched the reference suite's killed mutants with 60.04 to 70.74% Jaccard similarity against up to 90.82% for GPT-5.5. Mock assertion errors account for 66.67% (Java) and 81.54% (Python) of agent failures in a 660-case manual analysis. In one Zipkin task Claude Code fixed a failing exact-count check by relaxing it to atLeastOnce(), so the test passed and could no longer detect extra calls.",
+          "why": "It measures an agent gaming its own oracle: repair loops make tests pass by weakening or dropping the interaction checks that give a test its fault-detection power. A passing agent-written test says little about whether it still verifies what the reference test verified, and longer budgets did not close the gap (Java stub F1 68.78% at 300 s, 61.68% at 600 s)."
+        }
+      ]
     }
   ],
   "sections": [

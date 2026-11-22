@@ -2507,6 +2507,31 @@
           "why": "This is the adaptive-holdout problem measured directly on an agent tuning loop: development gains overstate held-out gains by a quantified margin, and a disciplined process (evidence inspection, targeted edits, passing checks) does not close it. The paper separates generating a revision from deciding to deploy it and shows the deployment decision, with the parent kept as a baseline, is where gains are recovered."
         }
       ]
+    },
+    {
+      "bibcode": "2026arXiv261017256V",
+      "title": "Does a Governed Confidence Score Know When a Text-to-SQL Answer Is Right? An Exploratory Study on BIRD and a Pre-registered Confirmation on Spider",
+      "firstAuthor": "Venkat, Raghu",
+      "year": "2026",
+      "citationCount": 0,
+      "arxiv": "2610.17256",
+      "url": "https://ui.adsabs.harvard.edu/abs/2026arXiv261017256V",
+      "branches": [
+        "boundary",
+        "grading"
+      ],
+      "notes": [
+        {
+          "branch": "boundary",
+          "takeaway": "Venkat and Anjali audit a production confidence score that decides, answer by answer, whether a text-to-SQL result is shown, shown with a warning, or withheld. On 1,515 labelled BIRD dev answers from GPT-5.1, five samples per question, the designed score reached AUROC 0.624 and withheld 35.7% of correct answers against 43.7% of wrong ones. Nearly all of its ranking signal came from agreement among the samples, and most of that was lost where agreement was combined by a minimum with a checklist that dropped to zero on any unsupported claim, including claims in commentary. A rule frozen and hashed before any Spider answer existed, with agreement as the score and deterministic checks as vetoes and caps, raised Spider dev AUROC from 0.566 to 0.725 (+0.159, 95% CI +0.097 to +0.221) and cut correct answers withheld from 49.0% to 8.8% at 95.7% pass accuracy. The deterministic checks withheld every planted fake table, bad join and stand-in value, but on real Spider answers they moved 157 correct and 9 wrong answers out of pass and withheld no additional wrong answer.",
+          "why": "It prices a system that is willing to decline: the designed gate withheld about half the correct answers on Spider. Agreement among samples ranks answers well, but when every sample makes the same wrong choice of meaning, agreement is complete and every check passes. The authors name that case, a business definition absent from the evidence, as the open problem, and propose checks built from expert-approved definitions as the next test."
+        },
+        {
+          "branch": "grading",
+          "takeaway": "The benchmarks' exact-result rule marked only 54.2% of BIRD answers correct, rejecting names in place of ids and 0.83 in place of 83%, so answers were labelled by a GPT-5.4 grader that also ruled 161 BIRD references (10.5%) and 127 Spider references wrong. A rebuilt grader agreed with the original on 90.8% of 1,430 BIRD answers (kappa 0.721) yet moved accuracy from 72.9% to 82.6%. On the same 983 Spider answers, agreement alone outranked the rule with checks under model-judged labels (0.749 against 0.725) and the order reversed under execution match (0.663 against 0.639). A pre-registered empty-result signal, a strong wrong-answer marker on both BIRD runs, failed on Spider, where flagged answers were right 73.0% of the time.",
+          "why": "Two scoring rules swapped places when only the definition of a correct answer changed, so whether a check helps is partly a property of the label. The paper reports its failed hypothesis and its post-registration harness rebuild instead of adjusting the rule, and every correctness result still waits on a blinded human audit."
+        }
+      ]
     }
   ],
   "sections": [
